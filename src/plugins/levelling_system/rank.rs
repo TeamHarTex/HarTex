@@ -140,7 +140,6 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     // Region: Progress Bar Drawing - Stage I (First Overlapping Rectangle)
 
-
     image.save("rank_card/card.png")?;
 
     ctx.http_client
