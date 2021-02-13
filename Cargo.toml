@@ -45,6 +45,9 @@ twilight-standby = "0.3.0"
 twilight-util = { version = "0.3.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
 
+# The lexical-core crate on GitHub is broken - I think Nightly might have reverted the stabilization of `<integer>::BITS`; 
+# I am going to override the crate with my local fork nonetheless
+
 [patch.crates-io]
 lexical-core = { path = "lexical-core" }
 
