@@ -16,9 +16,13 @@ use std::{
     collections::HashMap,
     fmt::Debug,
     hash::Hash,
+    sync::Arc
 };
 
 use tokio::{
+    sync::{
+        Notify
+    },
     time::{
         Duration,
         Instant
@@ -30,14 +34,18 @@ mod entry;
 crate use entry::CachedEntry;
 
 #[derive(Debug, Clone)]
-crate struct SystemCache<K: Hash + Eq + Debug + Clone + Send, V: Clone + Debug + Send> {
-    crate cache_table: HashMap<K, CachedEntry<V>>
+crate struct SystemCache<K: Hash + Eq + Debug + Send + Clone, V: Clone + Debug + Send> {
+    crate cache_table: HashMap<K, CachedEntry<V>>,
+
+    background_task: Arc<Notify>
 }
 
-impl<K: Hash + Eq + Debug + Clone + Send + 'static, V: Clone + Debug + Send + 'static> SystemCache<K, V> {
+impl<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 'static> SystemCache<K, V> {
     crate fn new() -> Self {
         let cache = Self {
             cache_table: HashMap::new(),
+
+            background_task: Arc::new(Notify::new())
         };
 
         tokio::spawn(purge_expired_background_task(cache.clone()));
@@ -85,10 +93,16 @@ impl<K: Hash + Eq + Debug + Clone + Send + 'static, V: Clone + Debug + Send + 's
     }
 }
 
-async fn purge_expired_background_task<K: Hash + Eq + Debug + Clone + Send + 'static, V: Clone + Debug + Send + 'static>(mut cache: SystemCache<K, V>) {
+async fn purge_expired_background_task<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 'static>(mut cache: SystemCache<K, V>) {
     loop {
         if let Some(when) = cache.purge_expired_items() {
-            tokio::join!(tokio::time::sleep_until(when));
+            tokio::select! {
+                _ = tokio::time::sleep_until(when) => {}
+                _ = cache.background_task.notified() => {}
+            }
+        }
+        else {
+            cache.background_task.notified().await;
         }
     }
 }
