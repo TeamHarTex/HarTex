@@ -272,8 +272,6 @@ use crate::plugins::{
     }
 };
 
-use crate::utilities::levelling_system::random_experience;
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Creates a new stopwatch.
@@ -542,40 +540,23 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             Either::Left(event) => {
                 hartex_cache.update(&event.0.clone().unwrap().1);
 
-                let client = hartex_http.clone();
-                let cluster = hartex_cluster.clone();
-                let parser = command_parser.clone();
-                let cache = hartex_cache.clone();
-                let watch = stopwatch.clone();
-                let event_emitter = emitter.clone();
-
                 let levelling = (*levelling_borrow).clone();
-                let cloned_event = event.0.clone();
 
-                let cache = tokio::spawn(
-                    async move {
-                        let new_cache = match handle_event(
-                            Some(cloned_event.clone().unwrap().0),
-                            EventType::TwilightEvent,
-                            Some(cloned_event.unwrap().1),
-                            None,
-                            client,
-                            cluster,
-                            parser,
-                            cache,
-                            watch,
-                            event_emitter,
-                            levelling.clone()
-                        ).await {
-                            Ok(cache) => cache,
-                            Err(_) => levelling
-                        };
-
-                        Ok::<SystemCache<String, bool>, Box<dyn Error+ Send + Sync>>(new_cache)
-                    }
-                ).await??;
-
-                levelling_cache = cache;
+                tokio::spawn(
+                    handle_event(
+                        Some(event.0.clone().unwrap().0),
+                        EventType::TwilightEvent,
+                        Some(event.0.unwrap().1),
+                        None,
+                        hartex_http.clone(),
+                        hartex_cluster.clone(),
+                        command_parser.clone(),
+                        hartex_cache.clone(),
+                        stopwatch,
+                        emitter.clone(),
+                        levelling.clone()
+                    )
+                );
             },
             Either::Right(event) => {
                 let levelling = (*levelling_borrow).clone();
@@ -3690,3 +3671,4 @@ async fn handle_command(message: Message,
 
     Ok(())
 }
+
