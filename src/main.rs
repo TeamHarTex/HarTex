@@ -34,6 +34,8 @@ extern crate sha3;
 use std::{
     env::*,
     error::Error,
+    fmt::Debug,
+    hash::Hash,
     pin::Pin,
     sync::Arc
 };
@@ -334,9 +336,15 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Cloned cluster for tokio spawn
     let cluster_spawn = hartex_cluster.clone();
 
+    Logger::log_debug("Initializing levelling cache.");
+    let mut levelling_cache = SystemCache::new();
+    let cache = levelling_cache.clone();
+
     // Spawns a tokio task to startup the cluster.
     tokio::spawn(async move {
         cluster_spawn.up().await;
+
+        purge_expired_background_task(cache)
     });
 
     Logger::log_debug("Building HTTP client.");
@@ -520,9 +528,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Cluster events
     let mut events = hartex_cluster.some_events(event_types);
     let mut command_events = framework.events();
-
-    Logger::log_debug("Initializing levelling cache.");
-    let mut levelling_cache = SystemCache::new();
 
     // Sets the Ctrl+C handler.
     ctrlc::set_handler(|| {
@@ -3672,3 +3677,16 @@ async fn handle_command(message: Message,
     Ok(())
 }
 
+async fn purge_expired_background_task<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 'static>(mut cache: SystemCache<K, V>) {
+    loop {
+        if let Some(when) = cache.purge_expired_items() {
+            tokio::join! {
+                tokio::time::sleep_until(when),
+                cache.background_task.notified()
+            };
+        }
+        else {
+            cache.background_task.notified().await;
+        }
+    }
+}
