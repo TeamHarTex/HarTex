@@ -151,7 +151,7 @@ async fn request(guild_id: GuildId, user_id: UserId, experience: u64) -> ClientE
         }
     }
 
-    Logger::log_debug("Adding experience to a user.".to_string());
+    Logger::log_debug(format!("Adding experience to a user. [{} experience]", experience));
 
     if let Ok(Some(row)) = sqlx::query(
         &format!(
