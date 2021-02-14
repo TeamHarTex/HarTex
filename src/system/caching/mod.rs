@@ -16,9 +16,12 @@ use std::{
     collections::HashMap,
     fmt::Debug,
     hash::Hash,
+};
+
+use tokio::{
     time::{
         Duration,
-        SystemTime
+        Instant
     }
 };
 
@@ -27,68 +30,65 @@ mod entry;
 crate use entry::CachedEntry;
 
 #[derive(Debug, Clone)]
-crate struct SystemCache<K: Hash + Eq + Debug, V: Clone + Debug> {
+crate struct SystemCache<K: Hash + Eq + Debug + Clone + Send, V: Clone + Debug + Send> {
     crate cache_table: HashMap<K, CachedEntry<V>>
 }
 
-impl<K: Hash + Eq + Debug, V: Clone + Debug> SystemCache<K, V> {
+impl<K: Hash + Eq + Debug + Clone + Send + 'static, V: Clone + Debug + Send + 'static> SystemCache<K, V> {
     crate fn new() -> Self {
-        Self {
+        let cache = Self {
             cache_table: HashMap::new(),
-        }
+        };
+
+        tokio::spawn(purge_expired_background_task(cache.clone()));
+
+        cache
     }
 
     crate fn contains_key(&self, key: &K) -> bool {
-        let now = SystemTime::now();
-
         self
             .cache_table
             .get(key)
-            .filter(|entry| !entry.is_expired(now))
             .is_some()
     }
 
     crate fn get(&mut self, key: &K) -> Option<&V> {
-        let now = SystemTime::now();
-
-        self.try_full_scan_expired_items(now);
-
         self
             .cache_table
             .get(&key)
-            .filter(|entry| !entry.is_expired(now))
             .map(|entry| &entry.value)
     }
 
     crate fn insert(&mut self, key: K, value: V, lifetime: Option<Duration>) -> Option<V> {
-        let now = SystemTime::now();
+        if let Some(lifetime) = lifetime {
+            return self
+                .cache_table
+                .insert(key, CachedEntry::new(value, lifetime))
+                .map(|entry| entry.value)
+        }
 
-        self.try_full_scan_expired_items(now);
-
-        self
-            .cache_table
-            .insert(key, CachedEntry::new(value, lifetime))
-            .filter(|entry| !entry.is_expired(now))
-            .map(|entry| entry.value)
+        None
     }
 
-    /*
-    crate fn remove(&mut self, key: &K) -> Option<V> {
-        let now = SystemTime::now();
+    crate fn purge_expired_items(&mut self) -> Option<Instant> {
+        let current_time = Instant::now();
 
-        self.try_full_scan_expired_items(now);
+        while let Some((key, CachedEntry { expiration_time, .. })) = self.cache_table.clone().iter().next() {
+            if *expiration_time > current_time {
+                return Some(*expiration_time);
+            }
 
-        self
-            .cache_table
-            .remove(key)
-            .filter(|entry| !entry.is_expired(now))
-            .map(|entry| entry.value)
+            self.cache_table.remove(key);
+        }
+
+        None
     }
-     */
+}
 
-    fn try_full_scan_expired_items(&mut self, current_time: SystemTime) {
-        self
-            .cache_table
-            .retain(|_, entry| !entry.is_expired(current_time));
+async fn purge_expired_background_task<K: Hash + Eq + Debug + Clone + Send + 'static, V: Clone + Debug + Send + 'static>(mut cache: SystemCache<K, V>) {
+    loop {
+        if let Some(when) = cache.purge_expired_items() {
+            tokio::join!(tokio::time::sleep_until(when));
+        }
     }
 }
