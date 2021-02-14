@@ -148,6 +148,15 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     // Region: Progress Bar Drawing - The Overlapping Rectangles
     draw_filled_rect_mut(&mut image, first_rectangle, Rgb([163u8, 160u8, 152u8]));
     draw_filled_rect_mut(&mut image, second_rectangle, Rgb([163u8, 160u8, 152u8]));
+    
+    // Region: Progress Bar Background Drawing - The Four Circles for Rounded Corners
+    let circle_radii = 10;
+
+    let circle_one_centre = (30 + 10, 225);
+    draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // First Circle
+
+    let circle_two_centre = (30 + 10, 245);
+    draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));
 
     image.save("rank_card/card.png")?;
 
