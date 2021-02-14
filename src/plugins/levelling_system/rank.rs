@@ -102,6 +102,13 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     };
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
+    
+    // Sets each pixel to RGB Colour 60, 61, 64.
+
+    image.pixels_mut().for_each(|pixel| {
+        *pixel = Rgb([60u8, 61u8, 64u8])
+    });
+    
     let regular_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Regular.ttf") as &[u8]);
     let bold_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Bold.ttf") as &[u8]);
     let montserrat_regular = Font::try_from_vec(regular_vector).unwrap();
