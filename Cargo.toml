@@ -18,6 +18,7 @@ dashmap = "4.0.2"
 dotenv = "0.15.0"
 futures-channel = "0.3.12"
 futures-util = "0.3.12"
+lexical-core = "0.7.5"
 image = "0.23.13"
 imageproc = "0.22.0"
 pad = "0.1.6"
@@ -44,17 +45,6 @@ twilight-model = "0.3.2"
 twilight-standby = "0.3.0"
 twilight-util = { version = "0.3.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
-
-# The lexical-core crate on GitHub is broken - I think Nightly might have reverted the stabilization of `<integer>::BITS`; 
-# I am going to override the crate with my local fork nonetheless
-
-[patch.crates-io]
-lexical-core = { path = "lexical-core" }
-
-[workspace]
-members = [
-    "lexical-core"
-]
 
 [profile.dev]
 opt-level = 1
