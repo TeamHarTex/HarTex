@@ -104,7 +104,6 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let mut image: RgbImage = ImageBuffer::new(934, 282);
     
     // Sets each pixel to RGB Colour 60, 61, 64.
-
     image.pixels_mut().for_each(|pixel| {
         *pixel = Rgb([60u8, 61u8, 64u8])
     });
@@ -134,7 +133,6 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let percentage = experience / total_experience_to_next_level;
 
     // Region: Progress Bar Drawing
-
     let progress_bar_max_length = 840u32;
 
     // Region: Progress Bar Drawing Preparation - First Rectangle
@@ -146,6 +144,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let second_rectangle_height = first_rectangle_height + 40u32;
 
     // Region: Progress Bar Drawing - Stage I (First Overlapping Rectangle)
+    draw_filled_rect(&mut image, Rect::at(15, 200).of_size(first_rectangle_width, first_rectangle_height), Rgb([163u8, 160u8, 152u8]));
 
     image.save("rank_card/card.png")?;
 
