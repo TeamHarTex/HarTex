@@ -157,6 +157,9 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let circle_two_centre = (30 + 10, 244);
     draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));
+    
+    let circle_three_centre = ((30 + 9 + second_rectangle_width) as i32, 225);
+    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));
 
     image.save("rank_card/card.png")?;
 
