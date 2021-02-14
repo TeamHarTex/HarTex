@@ -156,10 +156,13 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // First Circle
 
     let circle_two_centre = (30 + 10, 244);
-    draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));
-    
+    draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Second Circle
+
     let circle_three_centre = ((30 + 9 + second_rectangle_width) as i32, 225);
-    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));
+    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Third Circle
+
+    let circle_four_centre = ((30 + 9 + second_rectangle_width) as i32, 244);
+    draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Fourth Circle
 
     image.save("rank_card/card.png")?;
 
