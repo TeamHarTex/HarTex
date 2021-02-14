@@ -37,7 +37,7 @@ crate use entry::CachedEntry;
 crate struct SystemCache<K: Hash + Eq + Debug + Send + Clone, V: Clone + Debug + Send> {
     crate cache_table: HashMap<K, CachedEntry<V>>,
 
-    background_task: Arc<Notify>
+    crate background_task: Arc<Notify>
 }
 
 impl<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 'static> SystemCache<K, V> {
@@ -47,8 +47,6 @@ impl<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 's
 
             background_task: Arc::new(Notify::new())
         };
-
-        tokio::spawn(purge_expired_background_task(cache.clone()));
 
         cache
     }
@@ -75,6 +73,8 @@ impl<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 's
                 .map(|entry| entry.value)
         }
 
+        self.background_task.notified();
+
         None
     }
 
@@ -90,19 +90,5 @@ impl<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 's
         }
 
         None
-    }
-}
-
-async fn purge_expired_background_task<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 'static>(mut cache: SystemCache<K, V>) {
-    loop {
-        if let Some(when) = cache.purge_expired_items() {
-            tokio::select! {
-                _ = tokio::time::sleep_until(when) => {}
-                _ = cache.background_task.notified() => {}
-            }
-        }
-        else {
-            cache.background_task.notified().await;
-        }
     }
 }
