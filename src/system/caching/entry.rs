@@ -14,31 +14,30 @@
 
 use std::{
     fmt::Debug,
+};
+
+use tokio::{
     time::{
         Duration,
-        SystemTime
+        Instant
     }
 };
 
 #[derive(Clone, Debug)]
 crate struct CachedEntry<V: Clone + Debug> {
     crate value: V,
-
-    expiration_time: Option<SystemTime>
+    crate expiration_time: Instant
 }
 
 impl<V: Clone + Debug> CachedEntry<V> {
-    crate fn new(value: V, lifetime: Option<Duration>) -> Self {
+    crate fn new(value: V, lifetime: Duration) -> Self {
         Self {
             value,
-
-            expiration_time: lifetime.map(|duration| SystemTime::now() + duration)
+            expiration_time: Instant::now() + lifetime
         }
     }
 
-    crate fn is_expired(&self, current: SystemTime) -> bool {
-        self
-            .expiration_time
-            .map_or(false, |time| current >= time)
+    crate fn is_expired(&self, current: Instant) -> bool {
+        current >= self.expiration_time
     }
 }
