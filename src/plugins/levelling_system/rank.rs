@@ -135,7 +135,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     // Region: Progress Bar Drawing
     let progress_bar_max_length = 840u32;
 
-    // Region: Progress Bar Drawing Preparation - First Rectangle
+   // Region: Progress Bar Drawing Preparation - First Rectangle
     let first_rectangle_width = progress_bar_max_length;
     let first_rectangle_height = 20u32;
     let first_rectangle = Rect::at(20, 225).of_size(first_rectangle_width, first_rectangle_height);
@@ -143,9 +143,11 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     // Region: Progress Bar Drawing Preparation - Second Rectangle
     let second_rectangle_width = progress_bar_max_length - 40u32;
     let second_rectangle_height = first_rectangle_height + 40u32;
+    let second_rectangle = Rect::at(40, 205).of_size(second_rectangle_width, second_rectangle_height);
 
-    // Region: Progress Bar Drawing - Stage I (First Overlapping Rectangle)
-    draw_filled_rect(&mut image, first_rectangle, Rgb([163u8, 160u8, 152u8]));
+    // Region: Progress Bar Drawing - The Overlapping Rectangles
+    draw_filled_rect_mut(&mut image, first_rectangle, Rgb([163u8, 160u8, 152u8]));
+    draw_filled_rect_mut(&mut image, second_rectangle, Rgb([163u8, 160u8, 152u8]));
 
     image.save("rank_card/card.png")?;
 
