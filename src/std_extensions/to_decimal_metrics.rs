@@ -1,3 +1,0 @@
-crate trait ToDecimalMetrics {
-    
-}
