@@ -1,1 +1,1 @@
-mod format_as_ice_80000_13_prefix_postfix_string;
+mod format_as_iec_80000_13_prefix_postfix_string;
