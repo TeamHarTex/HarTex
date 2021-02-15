@@ -26,11 +26,14 @@ use image::{
 
 use imageproc::{
     drawing::{
-        draw_text_mut,
-        draw_filled_rect
+        draw_filled_rect_mut,
+        draw_filled_circle_mut,
+        draw_text_mut
     },
     rect::Rect
 };
+
+use num::FromPrimitive;
 
 use rusttype::{
     Font,
@@ -102,12 +105,12 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     };
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
-    
+
     // Sets each pixel to RGB Colour 60, 61, 64.
     image.pixels_mut().for_each(|pixel| {
         *pixel = Rgb([60u8, 61u8, 64u8])
     });
-    
+
     let regular_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Regular.ttf") as &[u8]);
     let bold_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Bold.ttf") as &[u8]);
     let montserrat_regular = Font::try_from_vec(regular_vector).unwrap();
@@ -126,29 +129,29 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let (_, level, experience) =  ctx.http_client.clone().get_user_experience(ctx.message.guild_id.unwrap(), user_id).await?;
 
-    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), 720, 35, level_scale, &montserrat_regular, "Level");
-    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), 800, 16, level_int_scale, &montserrat_bold, &level.to_string());
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), 780, 35, level_scale, &montserrat_regular, "Level");
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), 860, 16, level_int_scale, &montserrat_bold, &level.to_string());
 
     let total_experience_to_next_level = (5 * level).pow(2) + 50 * level + 100;
-    let percentage = experience / total_experience_to_next_level;
+    let percentage = f64::from_u64(experience).unwrap() / f64::from_u64(total_experience_to_next_level).unwrap();
 
-    // Region: Progress Bar Drawing
+    // Region: Progress Bar Background Drawing
     let progress_bar_max_length = 840u32;
 
-    // Region: Progress Bar Drawing Preparation - First Rectangle
+    // Region: Progress Bar Background Drawing Preparation - First Rectangle
     let first_rectangle_width = progress_bar_max_length;
     let first_rectangle_height = 20u32;
     let first_rectangle = Rect::at(30, 225).of_size(first_rectangle_width, first_rectangle_height);
 
-    // Region: Progress Bar Drawing Preparation - Second Rectangle
+    // Region: Progress Bar Background Drawing Preparation - Second Rectangle
     let second_rectangle_width = progress_bar_max_length - 20u32;
     let second_rectangle_height = first_rectangle_height + 20u32;
     let second_rectangle = Rect::at(40, 215).of_size(second_rectangle_width, second_rectangle_height);
 
-    // Region: Progress Bar Drawing - The Overlapping Rectangles
+    // Region: Progress Bar Background Drawing - The Overlapping Rectangles
     draw_filled_rect_mut(&mut image, first_rectangle, Rgb([163u8, 160u8, 152u8]));
     draw_filled_rect_mut(&mut image, second_rectangle, Rgb([163u8, 160u8, 152u8]));
-    
+
     // Region: Progress Bar Background Drawing - The Four Circles for Rounded Corners
     let circle_radii = 10;
 
@@ -163,6 +166,37 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let circle_four_centre = ((30 + 9 + second_rectangle_width) as i32, 244);
     draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Fourth Circle
+
+    // Region: Progress Bar Foreground Drawing - First Rectangle
+    let foreground_first_rectangle_width = u32::from_f64((f64::from(progress_bar_max_length) * percentage).round()).unwrap();
+    let foreground_first_rectangle = Rect::at(30, 225).of_size(foreground_first_rectangle_width, 20u32);
+    draw_filled_rect_mut(&mut image, foreground_first_rectangle, Rgb([66u8, 135u8, 245u8]));
+
+    // Region: Progress Bar Foreground Drawing - Second Rectangle
+    let foreground_second_rectangle_width = if (0u32..=8u32).contains(&foreground_first_rectangle_width) {
+        0
+    }
+    else {
+        foreground_first_rectangle_width - 20u32
+    };
+
+    if foreground_second_rectangle_width != 0 {
+        let foreground_second_rectangle = Rect::at(40, 215).of_size(foreground_second_rectangle_width, 40u32);
+        draw_filled_rect_mut(&mut image, foreground_second_rectangle, Rgb([66u8, 135u8, 245u8]));
+    }
+
+    // Progress Bar Foreground Drawing - The Four Circles for Rounded Corners
+    draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // First Circle
+
+    draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Second Circle
+
+    /*
+    let circle_three_centre = ((30 + 9 + second_rectangle_width) as i32, 225);
+    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Third Circle
+
+    let circle_four_centre = ((30 + 9 + second_rectangle_width) as i32, 244);
+    draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Fourth Circle
+     */
 
     image.save("rank_card/card.png")?;
 
