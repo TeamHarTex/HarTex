@@ -187,7 +187,6 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     // Progress Bar Foreground Drawing - The Four Circles for Rounded Corners
     draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // First Circle
-
     draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Second Circle
 
     /*
