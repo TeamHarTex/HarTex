@@ -195,7 +195,6 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let circle_four_centre = (foreground_first_rectangle.right() - 10, 244);
     draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Fourth Circle
 
-
     image.save("rank_card/card.png")?;
 
     ctx.http_client
