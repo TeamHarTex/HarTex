@@ -129,8 +129,8 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let (_, level, experience) =  ctx.http_client.clone().get_user_experience(ctx.message.guild_id.unwrap(), user_id).await?;
 
-    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), 780, 35, level_scale, &montserrat_regular, "Level");
-    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), 860, 16, level_int_scale, &montserrat_bold, &level.to_string());
+    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 780, 35, level_scale, &montserrat_regular, "Level");
+    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 860, 16, level_int_scale, &montserrat_bold, &level.to_string());
 
     let total_experience_to_next_level = (5 * level).pow(2) + 50 * level + 100;
     let percentage = f64::from_u64(experience).unwrap() / f64::from_u64(total_experience_to_next_level).unwrap();
@@ -189,13 +189,12 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // First Circle
     draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Second Circle
 
-    /*
-    let circle_three_centre = ((30 + 9 + second_rectangle_width) as i32, 225);
-    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Third Circle
+    let circle_three_centre = (foreground_first_rectangle.right() - 10, 225);
+    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Third Circle
 
-    let circle_four_centre = ((30 + 9 + second_rectangle_width) as i32, 244);
-    draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([163u8, 160u8, 152u8]));  // Fourth Circle
-     */
+    let circle_four_centre = (foreground_first_rectangle.right() - 10, 244);
+    draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Fourth Circle
+
 
     image.save("rank_card/card.png")?;
 
