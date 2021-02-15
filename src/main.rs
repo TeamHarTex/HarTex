@@ -96,6 +96,7 @@ crate mod content_distribution_network;
 crate mod logging;
 crate mod parsers;
 crate mod plugins;
+crate mod std_extensions;
 crate mod system;
 crate mod utilities;
 crate mod xml_deserialization;
