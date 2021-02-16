@@ -107,6 +107,10 @@ async fn request(guild_id: GuildId, user_id: UserId, experience: u64) -> ClientE
     else {
         return Err(box CommandError("Credentials is none.".to_string()))
     };
+    
+    if experience == 0 {
+        return Ok((false, 0));
+    }
 
     let connection = PgPool::connect(
         &database_credentials
