@@ -129,7 +129,7 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<(U
             Ok((user_id, level, xp))
         },
         Err(error) => {
-            Logger::log_error(format!("Could not get user level and experience due to an error: '{}'", error.as_database_error().unwrap()));
+            Logger::log_error(format!("Could not get user level and experience due to an error: '{:?}'", error));
 
             Err(box error)
         }
