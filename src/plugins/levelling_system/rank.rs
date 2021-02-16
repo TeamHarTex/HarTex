@@ -194,6 +194,25 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let circle_four_centre = (foreground_first_rectangle.right() - 10, 244);
     draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Fourth Circle
+    
+    // Region: " / {integer & IEC 80000-13 Decimal Multiplier Standard} XP
+
+    let mut temp_width = 0.0;
+    let text = format!(
+        "/ {} XP",
+        total_experience_to_next_level.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string()
+    );
+
+    text.clone().chars()
+        .for_each(|character| {
+            let glyph_width = montserrat_regular.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
+                
+            temp_width += glyph_width;
+        });
+
+    let expected_text_width = u32::from_f32(temp_width).unwrap();
+    
+    draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), 860 - expected_text_width, 170, Scale { x: 28.5, y: 28.5 }, &montserrat_regular, &text);
 
     image.save("rank_card/card.png")?;
 
