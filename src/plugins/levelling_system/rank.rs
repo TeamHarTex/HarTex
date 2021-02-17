@@ -169,31 +169,34 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     // Region: Progress Bar Foreground Drawing - First Rectangle
     let foreground_first_rectangle_width = u32::from_f64((f64::from(progress_bar_max_length) * percentage).round()).unwrap();
-    let foreground_first_rectangle = Rect::at(30, 225).of_size(foreground_first_rectangle_width, 20u32);
-    draw_filled_rect_mut(&mut image, foreground_first_rectangle, Rgb([66u8, 135u8, 245u8]));
+    
+    if foreground_first_rectangle_width != 0 {
+        let foreground_first_rectangle = Rect::at(30, 225).of_size(foreground_first_rectangle_width, 20u32);
+        draw_filled_rect_mut(&mut image, foreground_first_rectangle, Rgb([66u8, 135u8, 245u8]));
+    
+        // Region: Progress Bar Foreground Drawing - Second Rectangle
+        let foreground_second_rectangle_width = if (0u32..=8u32).contains(&foreground_first_rectangle_width) {
+            0
+        }
+        else {
+            foreground_first_rectangle_width - 20u32
+        };
 
-    // Region: Progress Bar Foreground Drawing - Second Rectangle
-    let foreground_second_rectangle_width = if (0u32..=8u32).contains(&foreground_first_rectangle_width) {
-        0
+        if foreground_second_rectangle_width != 0 {
+            let foreground_second_rectangle = Rect::at(40, 215).of_size(foreground_second_rectangle_width, 40u32);
+            draw_filled_rect_mut(&mut image, foreground_second_rectangle, Rgb([66u8, 135u8, 245u8]));
+
+            // Progress Bar Foreground Drawing - The Four Circles for Rounded Corners
+            draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // First Circle
+            draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Second Circle
+
+            let circle_three_centre = (foreground_first_rectangle.right() - 10, 225);
+            draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Third Circle
+
+            let circle_four_centre = (foreground_first_rectangle.right() - 10, 244);
+            draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Fourth Circle
+        }
     }
-    else {
-        foreground_first_rectangle_width - 20u32
-    };
-
-    if foreground_second_rectangle_width != 0 {
-        let foreground_second_rectangle = Rect::at(40, 215).of_size(foreground_second_rectangle_width, 40u32);
-        draw_filled_rect_mut(&mut image, foreground_second_rectangle, Rgb([66u8, 135u8, 245u8]));
-    }
-
-    // Progress Bar Foreground Drawing - The Four Circles for Rounded Corners
-    draw_filled_circle_mut(&mut image, circle_one_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // First Circle
-    draw_filled_circle_mut(&mut image, circle_two_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Second Circle
-
-    let circle_three_centre = (foreground_first_rectangle.right() - 10, 225);
-    draw_filled_circle_mut(&mut image, circle_three_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Third Circle
-
-    let circle_four_centre = (foreground_first_rectangle.right() - 10, 244);
-    draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Fourth Circle
     
     // Region: / {integer & IEC 80000-13 Decimal Multiplier Standard} XP
 
