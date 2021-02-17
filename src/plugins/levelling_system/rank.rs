@@ -18,6 +18,15 @@ use std::{
     pin::Pin
 };
 
+use hyper::{
+    Body,
+    Client,
+    Request,
+    Uri,
+};
+
+use hyper_tls::HttpsConnector;
+
 use image::{
     ImageBuffer,
     Rgb,
@@ -103,6 +112,14 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     else {
         ctx.author.id
     };
+    
+    let https_connector = HttpsConnector::new();
+    let hyper_client = Client::builder().build::<_, Body>(https_connector);
+    let request = Request::builder()
+        .method("GET")
+        .uri(Uri::from_str(&user_avatar)?)
+        .body(Body::empty())?;
+    let response = hyper_client.request(request).await?;
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
 
