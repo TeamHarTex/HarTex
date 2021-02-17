@@ -222,7 +222,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let expected_text_width = u32::from_f32(temp_width).unwrap();
     let out_of_xp_text_position = 860 - expected_text_width;
-    let xp_expected_text_width = u32::from_f32(xp_temp_width).unwrap();
+    let xp_expected_text_width = u32::from_f32(xp_temp_width).unwrap() + 5;
     
     draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), out_of_xp_text_position, 170, Scale { x: 28.5, y: 28.5 }, &montserrat_regular, &text);
     draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), out_of_xp_text_position - xp_expected_text_width, 170, Scale { x: 28.5, y: 28.5 } , &montserrat_bold, &experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string());
