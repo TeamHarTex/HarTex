@@ -202,12 +202,22 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         "/ {} XP",
         total_experience_to_next_level.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string()
     );
+    
+    let mut xp_temp_width = 0.0;
+    let xp_text = experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string();
 
     text.clone().chars()
         .for_each(|character| {
             let glyph_width = montserrat_regular.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
                 
             temp_width += glyph_width;
+        });
+
+    xp_text.clone().chars()
+        .for_each(|character| {
+            let glyph_width = montserrat_bold.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
+
+            xp_temp_width += glyph_width;
         });
 
     let expected_text_width = u32::from_f32(temp_width).unwrap();
