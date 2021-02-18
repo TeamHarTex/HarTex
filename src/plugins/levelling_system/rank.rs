@@ -113,6 +113,19 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         ctx.author.id
     };
     
+    let user = ctx.http_client.clone().user(user_id).await?;
+    let user_avatar = if let Some(user_found) = user {
+        if let Some(avatar_hash) = user_found.avatar {
+            ContentDistributionNetwork::user_avatar(user_id, avatar_hash.clone(), avatar_hash.starts_with("a_"))?
+        }
+        else {
+            ContentDistributionNetwork::default_user_avatar(user_found.discriminator.parse()?)?
+        }
+    }
+    else {
+        return Err(box CommandError("user not found.".to_string()));
+    };
+    
     let https_connector = HttpsConnector::new();
     let hyper_client = Client::builder().build::<_, Body>(https_connector);
     let request = Request::builder()
