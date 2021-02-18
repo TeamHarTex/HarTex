@@ -160,7 +160,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     }
     else {
         DynamicImage::from_decoder(PngDecoder::new(bytes.as_slice())?)
-    }?;
+    }?.to_rgb8();
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
 
