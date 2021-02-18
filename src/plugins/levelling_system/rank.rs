@@ -114,25 +114,33 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     };
     
     let user = ctx.http_client.clone().user(user_id).await?;
-    let user_avatar = if let Some(user_found) = user {
-        if let Some(avatar_hash) = user_found.avatar {
-            ContentDistributionNetwork::user_avatar(user_id, avatar_hash.clone(), avatar_hash.starts_with("a_"))?
+    let (user_avatar, animated, user) = if let Some(user_found) = user {
+        if let Some(avatar_hash) = user_found.clone().avatar {
+            (avatar_hash.clone(), avatar_hash.starts_with("a_"), user_found.clone())
         }
         else {
-            ContentDistributionNetwork::default_user_avatar(user_found.discriminator.parse()?)?
+            (String::new(), false, user_found)
         }
     }
     else {
         return Err(box CommandError("user not found.".to_string()));
     };
-    
+
     let https_connector = HttpsConnector::new();
     let hyper_client = Client::builder().build::<_, Body>(https_connector);
     let request = Request::builder()
         .method("GET")
-        .uri(Uri::from_str(&user_avatar)?)
+        .uri(Uri::from_str(&{
+            if !user_avatar.is_empty() {
+                ContentDistributionNetwork::user_avatar(user.id, user_avatar, animated)?
+            }
+            else {
+                ContentDistributionNetwork::default_user_avatar(user.discriminator.parse()?)?
+            }
+        })?)
         .body(Body::empty())?;
     let response = hyper_client.request(request).await?;
+    let bytes = hyper::body::to_bytes(response).await?;
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
 
