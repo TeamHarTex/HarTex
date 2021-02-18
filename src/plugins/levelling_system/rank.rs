@@ -15,7 +15,8 @@
 use std::{
     future::Future,
     fs,
-    pin::Pin
+    pin::Pin,
+    str::FromStr
 };
 
 use hyper::{
@@ -28,7 +29,13 @@ use hyper::{
 use hyper_tls::HttpsConnector;
 
 use image::{
+    codecs::{
+        gif::GifDecoder,
+        png::PngDecoder
+    },
+    DynamicImage,
     ImageBuffer,
+    ImageFormat,
     Rgb,
     RgbImage
 };
@@ -65,6 +72,12 @@ use crate::command_system::{
     CommandContext,
     CommandError,
     PrecommandCheckParameters
+};
+
+use crate::content_distribution_network::ContentDistributionNetwork;
+
+use crate::std_extensions::{
+    FormatAsIec8000013PrefixPostfixDecimalMultiplerString
 };
 
 use crate::system::{
@@ -112,7 +125,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     else {
         ctx.author.id
     };
-    
+
     let user = ctx.http_client.clone().user(user_id).await?;
     let (user_avatar, animated, user) = if let Some(user_found) = user {
         if let Some(avatar_hash) = user_found.clone().avatar {
@@ -142,6 +155,13 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let response = hyper_client.request(request).await?;
     let bytes = hyper::body::to_bytes(response).await?;
 
+    let image = if animated {
+        DynamicImage::from_decoder(GifDecoder::new(bytes))
+    }
+    else {
+        DynamicImage::from_decoder(PngDecoder::new(bytes))
+    }?;
+
     let mut image: RgbImage = ImageBuffer::new(934, 282);
 
     // Sets each pixel to RGB Colour 60, 61, 64.
@@ -154,10 +174,9 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let montserrat_regular = Font::try_from_vec(regular_vector).unwrap();
     let montserrat_bold = Font::try_from_vec(bold_vector).unwrap();
 
-    let level_text_height = 30.0;
     let level_scale = Scale {
-        x: level_text_height,
-        y: level_text_height
+        x: 30.0,
+        y: 30.0
     };
 
     let level_int_scale = Scale {
@@ -207,7 +226,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     // Region: Progress Bar Foreground Drawing - First Rectangle
     let foreground_first_rectangle_width = u32::from_f64((f64::from(progress_bar_max_length) * percentage).round()).unwrap();
-    
+
     if foreground_first_rectangle_width != 0 {
         let foreground_first_rectangle = Rect::at(30, 225).of_size(foreground_first_rectangle_width, 20u32);
         draw_filled_rect_mut(&mut image, foreground_first_rectangle, Rgb([66u8, 135u8, 245u8]));
@@ -235,7 +254,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
             draw_filled_circle_mut(&mut image, circle_four_centre, circle_radii, Rgb([66u8, 135u8, 245u8]));  // Fourth Circle
         }
     }
-    
+
     // Region: / {integer & IEC 80000-13 Decimal Multiplier Standard} XP
 
     let mut temp_width = 0.0;
@@ -243,7 +262,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         "/ {} XP",
         total_experience_to_next_level.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string()
     );
-    
+
     let mut xp_temp_width = 0.0;
     let xp_text = experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string();
 
@@ -264,14 +283,14 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let expected_text_width = u32::from_f32(temp_width).unwrap();
     let out_of_xp_text_position = 860 - expected_text_width;
     let xp_expected_text_width = u32::from_f32(xp_temp_width).unwrap() + 5;
-    
+
     draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), out_of_xp_text_position, 170, Scale { x: 28.5, y: 28.5 }, &montserrat_regular, &text);
     draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), out_of_xp_text_position - xp_expected_text_width, 170, Scale { x: 28.5, y: 28.5 } , &montserrat_bold, &experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string());
-    
+
     // Region: Draw User Avatar on Rank Card
     
     // Region: Draw User Status
-    
+
     image.save("rank_card/card.png")?;
 
     ctx.http_client
