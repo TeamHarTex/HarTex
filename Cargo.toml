@@ -20,7 +20,7 @@ futures-channel = "0.3.12"
 futures-util = "0.3.12"
 hyper = { version = "0.14.4", features = ["client", "http2", "runtime"] }
 hyper-tls = "0.5.0"
-image = "0.23.13"
+image = { version = "0.23.13", features = ["png", "gif"] }
 imageproc = "0.22.0"
 lexical-core = "0.7.5"
 pad = "0.1.6"
