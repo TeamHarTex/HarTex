@@ -156,10 +156,10 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let bytes = hyper::body::to_bytes(response).await?;
 
     let image = if animated {
-        DynamicImage::from_decoder(GifDecoder::new(bytes))
+        DynamicImage::from_decoder(GifDecoder::new(bytes)?)
     }
     else {
-        DynamicImage::from_decoder(PngDecoder::new(bytes))
+        DynamicImage::from_decoder(PngDecoder::new(bytes)?)
     }?;
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
