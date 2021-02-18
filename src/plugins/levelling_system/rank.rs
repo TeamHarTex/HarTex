@@ -153,7 +153,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         })?)
         .body(Body::empty())?;
     let response = hyper_client.request(request).await?;
-    let bytes = hyper::body::to_bytes(response).await?;
+    let bytes = hyper::body::to_bytes(response).await?.to_vec();
 
     let image = if animated {
         DynamicImage::from_decoder(GifDecoder::new(bytes)?)
