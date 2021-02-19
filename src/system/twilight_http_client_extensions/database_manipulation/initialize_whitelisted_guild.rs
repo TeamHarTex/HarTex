@@ -24,14 +24,9 @@ use std::{
 };
 
 use sqlx::{
-    error::{
-        Result as SqlxResult
-    },
     postgres::{
         PgPool,
-        PgRow
-    },
-    Row
+    }
 };
 
 use twilight_http::{
