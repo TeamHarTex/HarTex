@@ -17,8 +17,6 @@ use std::{
     pin::Pin,
 };
 
-use futures_util::future;
-
 use twilight_cache_inmemory::InMemoryCache;
 
 use twilight_model::{
