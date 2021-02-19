@@ -66,12 +66,12 @@ impl Command for RefreshWhitelistRolesCommand {
         Box::pin(owneronly_refresh_whitelist_roles_command(ctx, cache))
     }
 
-    fn precommand_checks<'asynchronous_trait, C>(ctx: CommandContext<'asynchronous_trait>,
+    fn precommand_checks<'asynchronous_trait, C: 'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>,
                                                  params: PrecommandCheckParameters, checks: Box<[C]>)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>>
         where
             C: Fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
+                -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> + Send + Sync {
         Box::pin(
             async move {
                 for check in checks.iter() {
