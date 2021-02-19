@@ -33,9 +33,11 @@ use image::{
         gif::GifDecoder,
         png::PngDecoder
     },
+    imageops::{
+        overlay
+    },
     DynamicImage,
     ImageBuffer,
-    ImageFormat,
     Rgb,
     RgbImage
 };
@@ -83,6 +85,10 @@ use crate::std_extensions::{
 use crate::system::{
     twilight_http_client_extensions::GetUserExperience,
     SystemResult
+};
+
+use crate::utilities::{
+    image_processing::pixel_is_in_circle
 };
 
 crate struct RankCommand;
@@ -155,12 +161,18 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let response = hyper_client.request(request).await?;
     let bytes = hyper::body::to_bytes(response).await?.to_vec();
 
-    let image = if animated {
+    let mut dynamic_image = if animated {
         DynamicImage::from_decoder(GifDecoder::new(bytes.as_slice())?)
     }
     else {
         DynamicImage::from_decoder(PngDecoder::new(bytes.as_slice())?)
     }?.to_rgb8();
+
+    dynamic_image.enumerate_pixels_mut().for_each(|(x, y, pixel)| {
+        if !pixel_is_in_circle(x, y, 50) {
+            *pixel = Rgb([60u8, 61u8, 64u8])
+        }
+    });
 
     let mut image: RgbImage = ImageBuffer::new(934, 282);
 
@@ -288,7 +300,9 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), out_of_xp_text_position - xp_expected_text_width, 170, Scale { x: 28.5, y: 28.5 } , &montserrat_bold, &experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string());
 
     // Region: Draw User Avatar on Rank Card
-    
+
+    overlay(&mut image, &dynamic_image, 0, 0);
+
     // Region: Draw User Status
 
     image.save("rank_card/card.png")?;
