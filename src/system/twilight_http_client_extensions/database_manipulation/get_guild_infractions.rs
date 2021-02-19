@@ -43,8 +43,7 @@ use twilight_model::{
 use crate::command_system::CommandError;
 use crate::system::{
     model::infractions::{
-        Infraction,
-        InfractionType
+        Infraction
     },
     twilight_http_client_extensions::{
         error::ClientExtensionResult,
