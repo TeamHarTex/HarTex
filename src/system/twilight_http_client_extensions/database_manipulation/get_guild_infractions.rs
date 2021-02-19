@@ -25,12 +25,8 @@ use std::{
 use dashmap::DashMap;
 
 use sqlx::{
-    error::{
-        Result as SqlxResult
-    },
     postgres::{
         PgPool,
-        PgRow
     },
     Row
 };
