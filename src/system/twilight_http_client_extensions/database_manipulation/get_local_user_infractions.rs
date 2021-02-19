@@ -23,12 +23,8 @@ use std::{
 };
 
 use sqlx::{
-    error::{
-        Result as SqlxResult
-    },
     postgres::{
         PgPool,
-        PgRow
     },
     Row
 };
@@ -41,7 +37,6 @@ use twilight_model::{
 };
 
 use crate::command_system::CommandError;
-use crate::logging::logger::Logger;
 use crate::system::{
     model::infractions::{
         Infraction,
