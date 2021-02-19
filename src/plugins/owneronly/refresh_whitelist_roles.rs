@@ -47,7 +47,6 @@ use crate::utilities::{
         hartex_guild_owner,
         verified_hartex_user
     },
-    FutureResult
 };
 
 use crate::xml_deserialization::{
@@ -73,11 +72,20 @@ impl Command for RefreshWhitelistRolesCommand {
         where
             C: Fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                 -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        checks.iter().for_each(|check| {
-            Box::pin(FutureResult::resolve(check(ctx.clone(), params.clone())));
-        });
+        Box::pin(
+            async move {
+                for check in checks.iter() {
+                    if let Err(error) = check(ctx.clone(), params.clone()).await {
+                        return Err(error);
+                    }
+                    else {
+                        continue;
+                    }
+                }
 
-        Box::pin(FutureResult::ok())
+                Ok(())
+            }
+        )
     }
 }
 
