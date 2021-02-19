@@ -21,7 +21,6 @@ use twilight_cache_inmemory::InMemoryCache;
 
 use twilight_model::{
     id::{
-        RoleId,
         UserId
     }
 };
