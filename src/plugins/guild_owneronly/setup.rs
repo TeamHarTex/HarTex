@@ -41,10 +41,6 @@ use crate::system::{
     SystemResult
 };
 
-use crate::utilities::{
-    FutureResult
-};
-
 crate struct SetupCommand;
 
 impl Command for SetupCommand {
