@@ -13,5 +13,5 @@
 ///  limitations under the License.
 
 crate fn pixel_is_in_circle(pixel_x: u32, pixel_y: u32, circle_radius: u32) -> bool {
-    pixel_x.pow(2) + pixel_y.pow(2) >= circle_radius.pow(2)
+    pixel_x.pow(2) + pixel_y.pow(2) < circle_radius.pow(2)
 }
