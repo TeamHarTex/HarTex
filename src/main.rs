@@ -26,6 +26,9 @@
 #![allow(clippy::unnecessary_wraps)]
 #![allow(incomplete_features)]
 
+// Globally Allow Warnings for now, will be removed in the future
+#![allow(warnings)]
+
 extern crate ctrlc;
 #[macro_use]
 extern crate serde_derive;
