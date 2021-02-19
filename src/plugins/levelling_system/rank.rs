@@ -167,8 +167,12 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         DynamicImage::from_decoder(PngDecoder::new(bytes.as_slice())?)
     }?.to_rgb8();
 
+    let radius = ((&dynamic_image).width() / 2);
     dynamic_image.enumerate_pixels_mut().for_each(|(x, y, pixel)| {
-        if !pixel_is_in_circle(x, y, 50) {
+        if !pixel_is_in_circle(
+            x - (radius),
+            y - (radius),
+            radius) {
             *pixel = Rgb([60u8, 61u8, 64u8])
         }
     });
@@ -300,7 +304,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     // Region: Draw User Avatar on Rank Card
 
-    overlay(&mut image, &dynamic_image, 10, 10);
+    overlay(&mut image, &dynamic_image, 50, 50);
 
     // Region: Draw User Status
 
