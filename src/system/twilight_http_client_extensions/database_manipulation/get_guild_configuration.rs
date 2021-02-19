@@ -27,12 +27,8 @@ use std::{
 use base64::decode;
 
 use sqlx::{
-    error::{
-        Result as SqlxResult
-    },
     postgres::{
         PgPool,
-        PgRow
     },
     Row
 };
