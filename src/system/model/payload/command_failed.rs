@@ -12,10 +12,6 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-use std::{
-    error::Error
-};
-
 #[derive(Clone)]
 crate struct CommandFailed {
     crate command: &'static str,

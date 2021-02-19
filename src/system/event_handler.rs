@@ -66,7 +66,7 @@ impl EventHandler {
             format!("{}#{} [ID: {}] has successfully startup, using Discord API v{}. Startup time is {} ms.",
                     current_user.name,
                     current_user.discriminator,
-                    current_user.id.to_string(),
+                    current_user.id.into_inner_u64(),
                     payload.version,
                     stopwatch.elapsed_milliseconds()
             )

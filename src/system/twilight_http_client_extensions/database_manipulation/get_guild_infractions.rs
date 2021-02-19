@@ -25,12 +25,8 @@ use std::{
 use dashmap::DashMap;
 
 use sqlx::{
-    error::{
-        Result as SqlxResult
-    },
     postgres::{
         PgPool,
-        PgRow
     },
     Row
 };
@@ -45,11 +41,9 @@ use twilight_model::{
 };
 
 use crate::command_system::CommandError;
-use crate::logging::logger::Logger;
 use crate::system::{
     model::infractions::{
-        Infraction,
-        InfractionType
+        Infraction
     },
     twilight_http_client_extensions::{
         error::ClientExtensionResult,
