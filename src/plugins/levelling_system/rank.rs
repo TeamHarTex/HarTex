@@ -300,7 +300,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     // Region: Draw User Avatar on Rank Card
 
-    overlay(&mut image, &dynamic_image, 0, 0);
+    overlay(&mut image, &dynamic_image, 10, 10);
 
     // Region: Draw User Status
 
