@@ -30,11 +30,11 @@ crate struct BotConfig {
     crate dashboard: Dashboard,
 
     #[serde(rename = "BotCustomization", default)]
-    crate bot_customization: BotCustomization,
+    crate bot_customization: Option<BotCustomization>,
 
     #[serde(rename = "RolePermissionLevels", default)]
-    crate role_permission_levels: RolePermissionLevels<u64, u32>,
+    crate role_permission_levels: Option<RolePermissionLevels<u64, u32>>,
 
     #[serde(rename = "Plugins")]
-    crate plugins: Plugins
+    crate plugins: Option<Plugins>
 }
