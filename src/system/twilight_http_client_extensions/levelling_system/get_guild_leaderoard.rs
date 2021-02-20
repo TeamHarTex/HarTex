@@ -12,6 +12,24 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-crate struct GetGuildLeaderboard {
+use twilight_model::{
+    id::GuildId
+};
 
+use crate::{
+    models::{
+        levelling_system::Leaderboard
+    },
+    system::{
+        twilight_http_client_extensions::{
+            error::ClientExtensionResult,
+            Pending
+        },
+    }
+};
+
+crate struct GetGuildLeaderboard {
+    future: Option<Pending<Leaderboard>>,
+    
+    guild_id: GuildId
 }
