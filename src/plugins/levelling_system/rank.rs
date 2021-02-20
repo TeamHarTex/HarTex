@@ -184,8 +184,8 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         *pixel = Rgb([60u8, 61u8, 64u8])
     });
 
-    let regular_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Regular.ttf") as &[u8]);
-    let bold_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Bold.ttf") as &[u8]);
+    let regular_vector = Vec::from(include_bytes!("../../../fonts/setofont.ttf") as &[u8]);
+    let bold_vector = Vec::from(include_bytes!("../../../fonts/setofont.ttf") as &[u8]);
     let montserrat_regular = Font::try_from_vec(regular_vector).unwrap();
     let montserrat_bold = Font::try_from_vec(bold_vector).unwrap();
 
