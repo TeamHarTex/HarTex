@@ -82,7 +82,10 @@ use crate::std_extensions::{
 };
 
 use crate::system::{
-    twilight_http_client_extensions::GetUserExperience,
+    twilight_http_client_extensions::{
+        GetGuildLeaderboard,
+        GetUserExperience
+    },
     SystemResult
 };
 
@@ -130,6 +133,8 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     else {
         ctx.author.id
     };
+    
+    let leaderboard = ctx.http_client.clone().get_guild_leaderboard(ctx.message.guild_id.unwrap()).await?;
 
     let user = ctx.http_client.clone().user(user_id).await?;
     let (user_avatar, animated, user) = if let Some(user_found) = user {
