@@ -42,6 +42,8 @@ impl Leaderboard {
                     now.user_id.into_inner_u64().cmp(&previous.user_id.into_inner_u64())
                 )
         });
+        
+        vector.reverse();
 
         Self {
             entries: vector
