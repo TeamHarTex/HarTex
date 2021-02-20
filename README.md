@@ -10,7 +10,7 @@ Issues and Pull Requests are welcome and will be reviewed by the Developer Team.
 
 It is not recommended to self-host this bot. But if you really want to, you need to comply with the following requirements:
 
-- Use the same license as the main repository is using: Apache-2.0;
+- Leave this README.md and the LICENSE file intact on your local copy of this bot;
 - Your self-hosted instance of the bot must not use the same avatar and the name of the bot; and
 - Support shall not be provided for the setup of the bot environment - the databases required, the language compiler required, etc.
 
