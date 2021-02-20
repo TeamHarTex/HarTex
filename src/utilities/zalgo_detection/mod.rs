@@ -13,3 +13,14 @@
 ///  limitations under the License.
 
 crate mod chars;
+
+crate fn zalgo_detected(string: &str) -> bool {
+    string.chars()
+        .any(|character| {
+            chars::ZALGO_UPPER_CHARACTERS
+                .iter()
+                .chain(chars::ZALGO_MIDDLE_CHARACTERS.iter())
+                .chain(chars::ZALGO_LOWER_CHARACTERS.iter())
+                .any(|&zalgo_character| zalgo_character == character)
+        })
+}
