@@ -16,6 +16,12 @@ use std::{
     cmp::Ordering
 };
 
+use crate::{
+    system::{
+        twilight_id_extensions::IntoInnerU64
+    }
+};
+
 mod entry;
 
 crate use entry::LeaderboardEntry;
@@ -28,14 +34,13 @@ crate struct Leaderboard {
 impl Leaderboard {
     crate fn new_with_vector(mut vector: Vec<LeaderboardEntry>) -> Self {
         vector.sort_unstable_by(|now, previous| {
-            let result = now.level.cmp(&previous.level);
-
-            if result == Ordering::Equal {
-                now.experience.cmp(&previous.experience)
-            }
-            else {
-                result
-            }
+            now.level.cmp(&previous.level)
+                .then_with(|| 
+                    now.experience.cmp(&previous.experience)
+                )
+                .then_with(|| 
+                    now.user_id.into_inner_u64().cmp(&previous.user_id.into_inner_u64())
+                )
         });
 
         Self {
