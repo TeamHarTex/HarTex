@@ -35,10 +35,10 @@ impl Leaderboard {
     crate fn new_with_vector(mut vector: Vec<LeaderboardEntry>) -> Self {
         vector.sort_unstable_by(|now, previous| {
             now.level.cmp(&previous.level)
-                .then_with(|| 
+                .then_with(||
                     now.experience.cmp(&previous.experience)
                 )
-                .then_with(|| 
+                .then_with(||
                     now.user_id.into_inner_u64().cmp(&previous.user_id.into_inner_u64())
                 )
         });
@@ -46,5 +46,9 @@ impl Leaderboard {
         Self {
             entries: vector
         }
+    }
+
+    crate fn iter(&self) -> impl Iterator<Item = LeaderboardEntry> + '_ {
+        self.entries.iter()
     }
 }
