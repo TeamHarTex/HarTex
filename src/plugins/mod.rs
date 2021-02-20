@@ -13,6 +13,7 @@
 ///  limitations under the License.
 
 crate mod administrator;
+crate mod censorship;
 crate mod general;
 crate mod guild_owneronly;
 crate mod levelling_system;
