@@ -20,5 +20,5 @@ use super::InfractionsPlugin;
 #[derive(Debug, Serialize, Deserialize)]
 crate struct Plugins {
     #[serde(rename = "InfractionsPlugin")]
-    crate infractions_plugin: InfractionsPlugin
+    crate infractions_plugin: Option<InfractionsPlugin>
 }
