@@ -13,6 +13,7 @@
 ///  limitations under the License.
 
 use std::{
+    env::*,
     future::Future,
     pin::Pin,
     task::{
@@ -21,20 +22,39 @@ use std::{
     }
 };
 
+use sqlx::{
+    error::{
+        Result as SqlxResult
+    },
+    postgres::{
+        PgPool,
+        PgRow
+    },
+    Row
+};
+
 use twilight_model::{
-    id::GuildId
+    id::{
+        GuildId,
+        UserId
+    }
 };
 
 use crate::{
+    command_system::CommandError,
     logging::logger::Logger,
     models::{
-        levelling_system::Leaderboard
+        levelling_system::{
+            Leaderboard,
+            LeaderboardEntry
+        }
     },
     system::{
         twilight_http_client_extensions::{
             error::ClientExtensionResult,
             Pending
         },
+        twilight_id_extensions::IntoInnerU64
     }
 };
 
@@ -83,5 +103,66 @@ impl Future for GetGuildLeaderboard {
 unsafe impl Send for GetGuildLeaderboard {}
 
 async fn request(guild_id: GuildId) -> ClientExtensionResult<Leaderboard> {
-    todo!()
+    let database_credentials = if let Ok(credentials) = var("PGSQL_CREDENTIALS_LEVELLING_SYSTEM") {
+        credentials
+    }
+    else {
+        return Err(box CommandError("Credentials is none.".to_string()))
+    };
+
+    let connection = PgPool::connect(
+        &database_credentials
+    ).await?;
+
+    let table_exists =  match sqlx::query(
+        // language=SQL
+        "SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = $1)"
+    )
+        .bind(format!("guild_{}", guild_id.into_inner_u64()))
+        .fetch_one(&connection)
+        .await {
+        Ok(row) => {
+            let exists: bool = row.get("exists");
+
+            exists
+        },
+        Err(error) => {
+            Logger::log_error(format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()));
+
+            return Err(box error);
+        }
+    };
+
+    if !table_exists {
+        return Ok(Leaderboard::new_with_vector(Vec::new()));
+    }
+
+    match sqlx::query(
+        &format!(
+            // language=SQL
+            "SELECT * FROM {}",
+            format!("guild_{}", guild_id.into_inner_u64())
+        )
+    )
+        .fetch_all(&connection)
+        .await {
+        Ok(rows) => {
+            let mut entries = Vec::new();
+            
+            for row in rows {
+                let user_id: String = row.get("user_id");
+                let level: String = row.get("lvl");
+                let experience: String = row.get("xp");
+                
+                entries.push(LeaderboardEntry::new(UserId(user_id.parse()?), level.parse()?, experience.parse()?))
+            }
+
+            Ok(Leaderboard::new_with_vector(entries))
+        },
+        Err(error) => {
+            Logger::log_error(format!("Failed to retrieve leaderboard. Error: {}", error.as_database_error().unwrap()));
+
+            Err(box error)
+        }
+    }
 }
