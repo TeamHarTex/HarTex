@@ -184,10 +184,10 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         *pixel = Rgb([60u8, 61u8, 64u8])
     });
 
-    let regular_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Regular.ttf") as &[u8]);
-    let bold_vector = Vec::from(include_bytes!("../../../fonts/Montserrat-Bold.ttf") as &[u8]);
-    let montserrat_regular = Font::try_from_vec(regular_vector).unwrap();
-    let montserrat_bold = Font::try_from_vec(bold_vector).unwrap();
+    let regular_vector = Vec::from(include_bytes!("../../../fonts/Microsoft Yahei.ttf") as &[u8]);
+    let bold_vector = Vec::from(include_bytes!("../../../fonts/Microsoft Yahei Bold.ttf") as &[u8]);
+    let yahei_regular = Font::try_from_vec(regular_vector).unwrap();
+    let yahei_bold = Font::try_from_vec(bold_vector).unwrap();
 
     let level_scale = Scale {
         x: 30.0,
@@ -201,8 +201,8 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let (_, level, experience) =  ctx.http_client.clone().get_user_experience(ctx.message.guild_id.unwrap(), user_id).await?;
 
-    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 780, 35, level_scale, &montserrat_regular, "Level");
-    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 860, 16, level_int_scale, &montserrat_bold, &level.to_string());
+    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 780, 35, level_scale, &yahei_regular, "Level");
+    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 860, 16, level_int_scale, &yahei_bold, &level.to_string());
 
     let total_experience_to_next_level = (5 * level).pow(2) + 50 * level + 100;
     let percentage = f64::from_u64(experience).unwrap() / f64::from_u64(total_experience_to_next_level).unwrap();
@@ -283,14 +283,14 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     text.clone().chars()
         .for_each(|character| {
-            let glyph_width = montserrat_regular.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
+            let glyph_width = yahei_regular.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
                 
             temp_width += glyph_width;
         });
 
     xp_text.clone().chars()
         .for_each(|character| {
-            let glyph_width = montserrat_bold.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
+            let glyph_width = yahei_bold.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
 
             xp_temp_width += glyph_width;
         });
@@ -299,8 +299,8 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let out_of_xp_text_position = 860 - expected_text_width;
     let xp_expected_text_width = u32::from_f32(xp_temp_width).unwrap() + 5;
 
-    draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), out_of_xp_text_position, 170, Scale { x: 28.5, y: 28.5 }, &montserrat_regular, &text);
-    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), out_of_xp_text_position - xp_expected_text_width, 170, Scale { x: 28.5, y: 28.5 } , &montserrat_bold, &experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string());
+    draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), out_of_xp_text_position, 170, Scale { x: 28.5, y: 28.5 }, &yahei_regular, &text);
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), out_of_xp_text_position - xp_expected_text_width, 170, Scale { x: 28.5, y: 28.5 } , &yahei_bold, &experience.format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string());
 
     // Region: Draw User Avatar on Rank Card
 
@@ -314,17 +314,17 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     let mut temp_username_text_width = 0.0;
 
     username_text.clone().chars().for_each(|character| {
-        let glpyh_width = montserrat_regular.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
+        let glpyh_width = yahei_regular.glyph(character).scaled(Scale { x: 50.0, y: 50.0 }).h_metrics().advance_width;
 
         temp_username_text_width += glpyh_width;
     });
 
-    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), base_position + 10, 135, Scale { x: 30.0, y: 30.0 }, &montserrat_regular, &username_text);
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), base_position + 10, 140, Scale { x: 50.0, y: 50.0 }, &yahei_regular, &username_text);
 
     // Region: Text - User Discriminator
     let expected_username_text_width = u32::from_f32(temp_username_text_width).unwrap();
 
-    draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), base_position + expected_username_text_width + 10, 135, Scale { x: 30.0, y: 30.0 }, &montserrat_regular, &format!("#{}", user.discriminator));
+    draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), base_position + expected_username_text_width + 10, 140, Scale { x: 50.0, y: 50.0 }, &yahei_regular, &format!("#{}", user.discriminator));
 
     image.save("rank_card/card.png")?;
 
