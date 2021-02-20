@@ -26,7 +26,7 @@ mod entry;
 
 crate use entry::LeaderboardEntry;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 crate struct Leaderboard {
     entries: Vec<LeaderboardEntry>
 }
@@ -48,7 +48,7 @@ impl Leaderboard {
         }
     }
 
-    crate fn iter(&self) -> impl Iterator<Item = LeaderboardEntry> + '_ {
+    crate fn iter(&self) -> impl Iterator<Item = &LeaderboardEntry> + '_ {
         self.entries.iter()
     }
 }
