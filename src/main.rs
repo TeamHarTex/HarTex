@@ -15,8 +15,9 @@
 #![feature(arbitrary_self_types)]
 #![feature(associated_type_defaults)]
 #![feature(box_syntax)]
-#![feature(crate_visibility_modifier)]
 #![feature(const_fn)]
+#![feature(crate_visibility_modifier)]
+#![feature(custom_inner_attributes)]
 #![feature(exclusive_range_pattern)]
 #![feature(in_band_lifetimes)]
 // In spite of this feature being incomplete, I will leave it there as I need it in the current existing codebase.
@@ -26,6 +27,9 @@
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::unnecessary_wraps)]
 #![allow(incomplete_features)]
+
+// Minimum Supported Rust Version
+#![clippy::msrv = "1.52.0"]
 
 // Globally Allow Warnings for now, will be removed in the future
 #![allow(warnings)]
