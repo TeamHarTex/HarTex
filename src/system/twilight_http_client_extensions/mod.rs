@@ -48,6 +48,7 @@ use database_manipulation::{
 
 use levelling_system::{
     AddUserExperience as AddUserExperienceStruct,
+    GetGuildLeaderboard as GetGuildLeaderboardStruct,
     GetUserExperience as GetUserExperienceStruct
 };
 
@@ -159,6 +160,10 @@ crate trait GetUserExperience {
     fn get_user_experience(self, guild_id: GuildId, user_id: UserId) -> GetUserExperienceStruct;
 }
 
+crate trait GetGuildLeaderboard {
+    fn get_guild_leaderboard(self, guild_id: GuildId) -> GetGuildLeaderboardStruct;
+}
+
 impl AddUserExperience for Client {
     fn add_user_experience(self, guild_id: GuildId, user_id: UserId, experience: u64) -> AddUserExperienceStruct {
         AddUserExperienceStruct::new(guild_id, user_id, experience)
@@ -168,5 +173,11 @@ impl AddUserExperience for Client {
 impl GetUserExperience for Client {
     fn get_user_experience(self, guild_id: GuildId, user_id: UserId) -> GetUserExperienceStruct {
         GetUserExperienceStruct::new(guild_id, user_id)
+    }
+}
+
+impl GetGuildLeaderboard for Client {
+    fn get_guild_leaderboard(self, guild_id: GuildId) -> GetGuildLeaderboardStruct {
+        GetGuildLeaderboardStruct::new(guild_id)
     }
 }
