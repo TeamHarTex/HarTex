@@ -306,7 +306,25 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     overlay(&mut image, &dynamic_image, 50, 50);
 
-    // Region: Draw User Status
+    // Region: Text - User Username
+    
+    let base_position = 50 + radius * 2;
+
+    let username_text = user.name;
+    let mut temp_username_text_width = 0.0;
+
+    username_text.clone().chars().for_each(|character| {
+        let glpyh_width = montserrat_regular.glyph(character).scaled(Scale { x: 30.0, y: 30.0 }).h_metrics().advance_width;
+
+        temp_username_text_width += glpyh_width;
+    });
+
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), base_position + 10, 135, Scale { x: 30.0, y: 30.0 }, &montserrat_regular, &username_text);
+
+    // Region: Text - User Discriminator
+    let expected_username_text_width = u32::from_f32(temp_username_text_width).unwrap();
+
+    draw_text_mut(&mut image, Rgb([164u8, 176u8, 176u8]), base_position + expected_username_text_width + 10, 135, Scale { x: 30.0, y: 30.0 }, &montserrat_regular, &format!("#{}", user.discriminator));
 
     image.save("rank_card/card.png")?;
 
