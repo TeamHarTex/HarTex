@@ -16,4 +16,5 @@ mod add_user_experience;
 mod get_user_experience;
 
 crate use add_user_experience::AddUserExperience;
+crate use get_guild_leaderoard::GetGuildLeaderboard;
 crate use get_user_experience::GetUserExperience;
