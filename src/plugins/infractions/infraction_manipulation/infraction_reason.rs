@@ -58,9 +58,13 @@ impl Command for InfractionReasonCommand {
         String::from("inf reason")
     }
 
-    fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, arguments: Arguments<'asynchronous_trait>, cache: InMemoryCache)
+    fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, mut arguments: Arguments<'asynchronous_trait>, _cache: InMemoryCache)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        unimplemented!()
+        let user_id = arguments.next().unwrap_or("");
+        let infraction_id = arguments.next().unwrap_or("unknown infraction");
+        let new_reason = arguments.into_remainder().unwrap_or("no reason specified.");
+
+        Box::pin(infractions_infraction_reason_command(ctx, user_id.to_string(), infraction_id.to_string(), new_reason.to_string()))
     }
 
     fn precommand_check<'asynchronous_trait, C>(ctx: CommandContext<'asynchronous_trait>, params: PrecommandCheckParameters, check: C)
@@ -72,7 +76,7 @@ impl Command for InfractionReasonCommand {
     }
 }
 
-async fn infractions_infraction_reason(ctx: CommandContext<'_>, user_id: String, infraction_id: String, new_reason: String) -> SystemResult<()> {
+async fn infractions_infraction_reason_command(ctx: CommandContext<'_>, user_id: String, infraction_id: String, new_reason: String) -> SystemResult<()> {
     let user_id = if let Ok(id) = UserId::parse(&user_id) {
         id
     }
