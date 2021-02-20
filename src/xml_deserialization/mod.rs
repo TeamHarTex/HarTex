@@ -15,7 +15,6 @@
 mod bot_config;
 mod bot_customization;
 mod dashboard;
-mod level;
 crate mod plugin_management;
 mod role_permission_level;
 mod role_permission_levels;
