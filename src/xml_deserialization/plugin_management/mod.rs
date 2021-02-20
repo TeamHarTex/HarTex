@@ -13,6 +13,7 @@
 ///  limitations under the License.
 
 crate mod command;
+crate mod levels;
 mod plugins;
 
 // Plugins
