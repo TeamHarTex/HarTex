@@ -29,14 +29,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for i16 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -49,14 +49,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for i32 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -69,14 +69,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for i64 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -89,14 +89,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for i128 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -115,14 +115,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for u16 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -135,14 +135,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for u32 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -155,14 +155,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for u64 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
@@ -175,14 +175,14 @@ impl FormatAsIec8000013PrefixPostfixDecimalMultiplerString for u128 {
         if *self < 1000 {
             return self.to_string();
         }
-        
+
         let mut index = 0;
         let mut value = *self;
         let mut decimal_place = 0;
 
         while value >= 1000 && index < MULTIPLIERS.len() {
             index += 1;
-            decimal_place = (value % 100) / 100;
+            decimal_place = (value % 1000) / 100;
             value /= 1000;
         }
 
