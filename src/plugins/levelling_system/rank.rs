@@ -133,8 +133,6 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     else {
         ctx.author.id
     };
-    
-    let leaderboard = ctx.http_client.clone().get_guild_leaderboard(ctx.message.guild_id.unwrap()).await?;
 
     let user = ctx.http_client.clone().user(user_id).await?;
     let (user_avatar, animated, user) = if let Some(user_found) = user {
@@ -148,6 +146,8 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     else {
         return Err(box CommandError("user not found.".to_string()));
     };
+
+    let leaderboard = ctx.http_client.clone().get_guild_leaderboard(ctx.message.guild_id.unwrap()).await?;
 
     let https_connector = HttpsConnector::new();
     let hyper_client = Client::builder().build::<_, Body>(https_connector);
@@ -206,8 +206,53 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
 
     let (_, level, experience) =  ctx.http_client.clone().get_user_experience(ctx.message.guild_id.unwrap(), user_id).await?;
 
-    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 780, 35, level_scale, &yahei_regular, "Level");
-    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), 860, 16, level_int_scale, &yahei_bold, &level.to_string());
+    let level_text = level.to_string();
+    let mut level_text_temp_width = 0.0;
+
+    level_text.clone().chars().for_each(|character| {
+        let glyph_width = yahei_bold.glyph(character).scaled(level_int_scale).h_metrics().advance_width;
+
+        level_text_temp_width += glyph_width;
+    });
+    let level_int_text_width = u32::from_f32(level_text_temp_width).unwrap();
+    let level_int_position = 860 - level_int_text_width;
+
+    let mut level_string_text_temp_width = 0.0;
+    "Level".chars().for_each(|character| {
+        let glyph_width = yahei_regular.glyph(character).scaled(level_int_scale).h_metrics().advance_width;
+
+        level_string_text_temp_width += glyph_width;
+    });
+    let level_string_width = u32::from_f32(level_string_text_temp_width).unwrap();
+
+    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), level_int_position, 16, level_int_scale, &yahei_bold, &level_text);
+    draw_text_mut(&mut image, Rgb([66u8, 135u8, 245u8]), level_int_position - level_string_width - 5 + 35, 35, level_scale, &yahei_regular, "Level");
+
+    let (rank_int, _) = leaderboard.iter().enumerate().find(|(index, entry)| {
+        entry.user_id == user.id
+    }).unwrap();
+    let rank_int_text = format!("#{}", (rank_int + 1).to_string());
+    let mut rank_int_text_temp_width = 0.0;
+
+    rank_int_text.clone().chars().for_each(|character| {
+        let glyph_width = yahei_bold.glyph(character).scaled(level_int_scale).h_metrics().advance_width;
+
+        rank_int_text_temp_width += glyph_width;
+    });
+
+    let rank_int_text_width = u32::from_f32(rank_int_text_temp_width).unwrap();
+    let rank_int_text_position = level_int_position - level_string_width - 5 - rank_int_text_width - 100;
+
+    let mut rank_string_text_temp_width = 0.0;
+    "Rank".chars().for_each(|character| {
+        let glyph_width = yahei_regular.glyph(character).scaled(level_int_scale).h_metrics().advance_width;
+
+        rank_string_text_temp_width += glyph_width;
+    });
+    let rank_string_width = u32::from_f32(rank_string_text_temp_width).unwrap();
+
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), rank_int_text_position, 16, level_int_scale, &yahei_bold, &rank_int_text);
+    draw_text_mut(&mut image, Rgb([255u8, 255u8, 255u8]), rank_int_text_position - rank_string_width - 5 + 35, 35, level_scale, &yahei_regular, "Rank");
 
     let total_experience_to_next_level = (5 * level).pow(2) + 50 * level + 100;
     let percentage = f64::from_u64(experience).unwrap() / f64::from_u64(total_experience_to_next_level).unwrap();
