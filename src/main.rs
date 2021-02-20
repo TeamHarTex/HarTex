@@ -19,6 +19,7 @@
 #![feature(const_fn)]
 #![feature(exclusive_range_pattern)]
 #![feature(in_band_lifetimes)]
+// In spite of this feature being incomplete, I will leave it there as I need it in the current existing codebase.
 #![feature(let_chains)]
 
 #![allow(clippy::needless_lifetimes)]
