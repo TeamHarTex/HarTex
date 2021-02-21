@@ -15,7 +15,10 @@
 extern crate serde;
 extern crate quick_xml;
 
+use crate::xml_deserialization::plugin_management::models::channel_id::ChannelId;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct ZalgoChannelWhitelist {
-
+    #[serde(rename = "ChannelIds")]
+    crate channel_ids: Vec<ChannelId>
 }
