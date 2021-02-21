@@ -15,8 +15,10 @@
 extern crate serde;
 extern crate quick_xml;
 
+crate mod zalgo_channel_whitelist;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct CensoredUri {
     #[serde(rename = "Uri")]
-    uri: String
+    crate uri: String
 }
