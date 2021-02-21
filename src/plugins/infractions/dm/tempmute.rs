@@ -157,13 +157,13 @@ async fn infractions_tempmute_command(ctx: CommandContext<'_>, user: String, dur
 
                     ctx.http_client.clone().remove_guild_member_role(guild_id, user_id, role_id).await?;
 
-                    if let Some(role_to_remove) = config.plugins.infractions_plugin.mute_command.role_to_remove {
+                    if let Some(role_to_remove) = mute_command.role_to_remove {
                         ctx.http_client.clone().add_guild_member_role(guild_id, user_id, RoleId(role_to_remove.role_id))
                             .await?;
                     }
 
                     Ok(())
-                } 
+                }
                 else {
                     Err(box CommandError("Muted role is not set.".to_string()))
                 }
