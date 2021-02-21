@@ -12,6 +12,10 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
+use tokio::{
+    time::Duration
+};
+
 use twilight_model::{
     gateway::{
         event::{
@@ -177,7 +181,7 @@ impl EventHandler {
                                   http: Client,
                                   mut levelling_cache: SystemCache<String, bool>)
         -> SystemResult<SystemCache<String, bool>> {
-        let xp = if let Some(_) = levelling_cache.get(&format!("guild_{}.user_{}", payload.guild_id.unwrap(), payload.author.id)) {
+        let xp = if let Some(_) = levelling_cache.get(&format!("user_{}", payload.author.id)) {
             0u64
         }
         else {
@@ -206,12 +210,11 @@ impl EventHandler {
         if xp > 0 {
             levelling_cache.insert(
                 format!(
-                    "guild_{}.user_{}",
-                    payload.guild_id.unwrap(),
+                    "user_{}",
                     payload.author.id
                 ),
                 true,
-                Some(std::time::Duration::from_secs(60))
+                Some(Duration::from_secs(60))
             );
         }
 
