@@ -121,47 +121,62 @@ async fn infractions_tempmute_command(ctx: CommandContext<'_>, user: String, dur
 
     let dur = parse_duration(duration.clone());
 
-    if let Some(muted_role) = config.plugins.infractions_plugin.mute_command.muted_role {
-        let role_id = RoleId(muted_role.role_id);
+    if let Some(plugins) = config.plugins {
+        return if let Some(infraction_plugin) = plugins.infractions_plugin {
+            if let Some(mute_command) = infraction_plugin.mute_command {
+                if let Some(muted_role) = mute_command.muted_role {
+                    let role_id = RoleId(muted_role.role_id);
 
-        ctx.http_client.clone()
-            .add_user_infraction(infraction_id.clone(), guild_id, user_id, reason.clone(), InfractionType::TemporaryMute)
-            .await?;
+                    ctx.http_client.clone()
+                        .add_user_infraction(infraction_id.clone(), guild_id, user_id, reason.clone(), InfractionType::TemporaryMute)
+                        .await?;
 
-        ctx.http_client.clone().add_guild_member_role(guild_id, user_id, role_id).await?;
+                    ctx.http_client.clone().add_guild_member_role(guild_id, user_id, role_id).await?;
 
-        if let Some(role_to_remove) = config.plugins.infractions_plugin.mute_command.role_to_remove {
-            ctx.http_client.clone().remove_guild_member_role(guild_id, user_id, RoleId(role_to_remove.role_id))
-                .await?;
+                    if let Some(role_to_remove) = mute_command.role_to_remove {
+                        ctx.http_client.clone().remove_guild_member_role(guild_id, user_id, RoleId(role_to_remove.role_id))
+                            .await?;
+                    }
+
+                    ctx.http_client.clone().create_message(ctx.message.channel_id)
+                        .content(
+                            format!(
+                                "<:green_check:705623382682632205> Successfully temporarily muted user {} (ID: `{}`) for `{}`. Reason: `{}`. Infraction ID: `{}`",
+                                user_id.mention(), user_id.0, duration.clone(), reason, infraction_id))?
+                        .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+
+                    let dm_channel = ctx.http_client.clone().create_private_channel(user_id).await?;
+
+                    ctx.http_client.clone()
+                        .create_message(dm_channel.id)
+                        .content(format!("You have been temporarily muted in guild `{}` for `{}` (ID: `{}`). Reason: `{}`",
+                                         guild_name, duration, guild_id.0, reason))?
+                        .await?;
+
+                    tokio::time::sleep(dur).await;
+
+                    ctx.http_client.clone().remove_guild_member_role(guild_id, user_id, role_id).await?;
+
+                    if let Some(role_to_remove) = config.plugins.infractions_plugin.mute_command.role_to_remove {
+                        ctx.http_client.clone().add_guild_member_role(guild_id, user_id, RoleId(role_to_remove.role_id))
+                            .await?;
+                    }
+
+                    Ok(())
+                } 
+                else {
+                    Err(box CommandError("Muted role is not set.".to_string()))
+                }
+            }
+            else {
+                Err(box CommandError("Cannot find MuteCommand in config.".to_string()))
+            }
         }
-
-        ctx.http_client.clone().create_message(ctx.message.channel_id)
-            .content(
-                format!(
-                    "<:green_check:705623382682632205> Successfully temporarily muted user {} (ID: `{}`) for `{}`. Reason: `{}`. Infraction ID: `{}`",
-                    user_id.mention(), user_id.0, duration.clone(), reason, infraction_id))?
-            .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
-
-        let dm_channel = ctx.http_client.clone().create_private_channel(user_id).await?;
-
-        ctx.http_client.clone()
-            .create_message(dm_channel.id)
-            .content(format!("You have been temporarily muted in guild `{}` for `{}` (ID: `{}`). Reason: `{}`",
-                             guild_name, duration, guild_id.0, reason))?
-            .await?;
-
-        tokio::time::sleep(dur).await;
-
-        ctx.http_client.clone().remove_guild_member_role(guild_id, user_id, role_id).await?;
-
-        if let Some(role_to_remove) = config.plugins.infractions_plugin.mute_command.role_to_remove {
-            ctx.http_client.clone().add_guild_member_role(guild_id, user_id, RoleId(role_to_remove.role_id))
-                .await?;
+        else {
+            Err(box CommandError("Cannot find InfractionsPlugin in config.".to_string()))
         }
-
-        Ok(())
     }
     else {
-        Err(box CommandError("Muted role is not set.".to_string()))
+        Err(box CommandError("Cannot find Plugins in config.".to_string()))
     }
 }
