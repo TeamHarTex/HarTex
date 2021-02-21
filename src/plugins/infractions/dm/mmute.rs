@@ -121,10 +121,10 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
     let guild_config = ctx.http_client.clone().get_guild_configuration(guild_id).await?;
     let config = quick_xml::de::from_str::<BotConfig>(guild_config.as_str())?;
 
-    let muted_role = if let Some(plugins) = config.plugins {
-        if let Some(infraction_plugin) = plugins.infractions_plugin {
-            if let Some(mute_command) = infraction_plugin.mute_command {
-                if let Some(muted_role) = mute_command.muted_role {
+    let muted_role = if let Some(ref plugins) = config.plugins {
+        if let Some(infraction_plugin) = &plugins.infractions_plugin {
+            if let Some(mute_command) = &infraction_plugin.mute_command {
+                if let Some(muted_role) = &mute_command.muted_role {
                     RoleId(muted_role.role_id)
                 }
                 else {
@@ -145,6 +145,9 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
 
     for member in members_to_mute {
         if let Ok(Some(user)) = ctx.http_client.user(member).await {
+            let warning_id = format!("{:x}", Sha3_224::digest(
+                format!("{}{}{}", guild_id, user.id, reason).as_str().as_bytes()));
+
             ctx.http_client.clone().add_user_infraction(warning_id.clone(),
                                                         guild_id, member, reason.clone(),
                                                         InfractionType::Mute).await?;
@@ -153,7 +156,7 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
 
             // Safe for some .unwrap() madness here as all the if checks are done even before entering this loop.
             if let Some(role_to_remove) = config
-                .plugins.unwrap()
+                .plugins.clone().unwrap()
                 .infractions_plugin.unwrap()
                 .mute_command.unwrap()
                 .role_to_remove {
