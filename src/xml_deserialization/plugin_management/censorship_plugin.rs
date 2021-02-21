@@ -18,15 +18,13 @@ extern crate quick_xml;
 use crate::{
     xml_deserialization::{
         plugin_management::{
-            models::censorship::{
-                CensoredUri
-            }
+            levels::censorship::CensorshipLevel
         }
     }
 };
 
 #[derive(Debug, Clone,  Serialize, Deserialize)]
 crate struct CensorshipPlugin {
-    #[serde(rename = "CensoredUris")]
-    censored_uris: Vec<CensoredUri>
+    #[serde(rename = "Levels")]
+    levels: Vec<CensorshipLevel>
 }
