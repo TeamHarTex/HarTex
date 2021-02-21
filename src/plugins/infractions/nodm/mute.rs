@@ -109,33 +109,48 @@ async fn infractions_mute_command(ctx: CommandContext<'_>, user_id: Option<UserI
         let warning_id = format!("{:x}", Sha3_224::digest(
             format!("{}{}{}", guild_id, uid, reason).as_str().as_bytes()));
 
-        if let Some(muted_role) = config.plugins.infractions_plugin.mute_command.muted_role {
-            let role_id = RoleId(muted_role.role_id);
+        if let Some(plugins) = config.plugins {
+            return if let Some(infraction_plugin) = plugins.infractions_plugin {
+                if let Some(mute_command) = infraction_plugin.mute_command {
+                    if let Some(muted_role) = mute_command.muted_role {
+                        let role_id = RoleId(muted_role.role_id);
 
-            if let Ok(Some(user)) = ctx.http_client.user(uid).await {
+                        if let Ok(Some(user)) = ctx.http_client.user(uid).await {
+                            ctx.http_client.clone().add_user_infraction(warning_id.clone(),
+                                                                        guild_id, uid, reason.clone(),
+                                                                        InfractionType::Mute).await?;
 
+                            ctx.http_client.clone().add_guild_member_role(guild_id, uid, role_id).await?;
 
-                ctx.http_client.clone().add_user_infraction(warning_id.clone(),
-                                                            guild_id, uid, reason.clone(),
-                                                            InfractionType::Mute).await?;
+                            if let Some(role_to_remove) = mute_command.role_to_remove {
+                                ctx.http_client.clone().remove_guild_member_role(guild_id, uid,
+                                                                                 RoleId(role_to_remove.role_id)).await?;
+                            }
 
-                ctx.http_client.clone().add_guild_member_role(guild_id, uid, role_id).await?;
+                            ctx.http_client.clone().create_message(ctx.message.channel_id)
+                                .content(
+                                    format!(
+                                        "<:green_check:705623382682632205> Successfully muted user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
+                                        user.mention(), uid.0, reason, warning_id))?
+                                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
 
-                if let Some(role_to_remove) = config.plugins.infractions_plugin.mute_command
-                    .role_to_remove {
-                    ctx.http_client.clone().remove_guild_member_role(guild_id, uid,
-                                                                     RoleId(role_to_remove.role_id)).await?;
+                            Ok(())
+                        }
+                        else {
+                            Err(box CommandError("User not found.".to_string()))
+                        }
+                    }
+                    else {
+                        Err(box CommandError("Muted role is not set.".to_string()))
+                    }
                 }
-
-                ctx.http_client.clone().create_message(ctx.message.channel_id)
-                    .content(
-                        format!(
-                            "<:green_check:705623382682632205> Successfully muted user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
-                            user.mention(), uid.0, reason, warning_id))?
-                    .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                else {
+                    Err(box CommandError("Cannot find MuteCommand property in configuration.".to_string()))
+                }
             }
-
-            Ok(())
+            else {
+                Err(box CommandError("Cannot find configuration for InfractionsPlugin.".to_string()))
+            }
         }
         else {
             ctx.http_client
