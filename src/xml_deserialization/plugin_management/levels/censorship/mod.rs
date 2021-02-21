@@ -22,8 +22,8 @@ use crate::xml_deserialization::plugin_management::models::censorship::{
 #[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct CensorshipLevel {
     #[serde(rename = "Level")]
-    level: u8,
+    crate level: u8,
 
     #[serde(rename = "FilterZalgo")]
-    filter_zalgo: Option<bool>
+    crate filter_zalgo: Option<bool>
 }
