@@ -15,8 +15,15 @@
 extern crate serde;
 extern crate quick_xml;
 
-#[derive(Debug, Serialize, Deserialize)]
+use crate::xml_deserialization::plugin_management::models::censorship::{
+    CensoredUri
+};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct CensorshipLevel {
     #[serde(rename = "Level")]
-    level: u8
+    level: u8,
+
+    #[serde(rename = "FilterZalgo")]
+    filter_zalgo: Option<bool>
 }
