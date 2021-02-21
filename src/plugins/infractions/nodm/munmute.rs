@@ -98,12 +98,6 @@ async fn infractions_munmute_command(ctx: CommandContext<'_>, users: Vec<String>
     let guild_id = ctx.message.guild_id.unwrap();
     let channel_id = ctx.message.channel_id;
 
-    let guild_name = if let Ok(Some(guild)) = ctx.http_client.clone().guild(guild_id).await {
-        guild.name
-    } else {
-        "unknown".to_string()
-    };
-
     for user in users {
         if let Ok(user_id) = UserId::parse(&user) {
             members_to_mute.push(user_id);
