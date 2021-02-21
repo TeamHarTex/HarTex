@@ -192,5 +192,6 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
             return Err(box CommandError("Muted role is not set.".to_string()))
         }
     }
+    
     Ok(())
 }
