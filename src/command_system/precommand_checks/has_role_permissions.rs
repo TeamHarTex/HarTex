@@ -74,23 +74,28 @@ async fn has_role_permissions(ctx: CommandContext<'asynchronous_trait>, params: 
                 now.position.cmp(&previous.position)
             });
 
-            if config.role_permission_levels.contains_key(&roles.first().unwrap().id.0) {
-                if let Some(minimum_permission_level) = params.minimum_permission_level {
-                    let set_level = config.role_permission_levels.get(&roles.first().unwrap().id.0).unwrap();
+            if let Some(role_permission_levels) = config.role_permission_levels {
+                if role_permission_levels.contains_key(&roles.first().unwrap().id.0) {
+                    if let Some(minimum_permission_level) = params.minimum_permission_level {
+                        let set_level = role_permission_levels.get(&roles.first().unwrap().id.0).unwrap();
 
-                    if minimum_permission_level <= *set_level {
-                        Ok(())
+                        if minimum_permission_level <= *set_level {
+                            Ok(())
+                        }
+                        else {
+                            Err(box CommandError("The user does not have the minimum required permission to execute this command.".to_string()))
+                        }
                     }
                     else {
-                        Err(box CommandError("The user does not have the minimum required permission to execute this command.".to_string()))
+                        Err(box CommandError("Minimum permission level required cannot be none, as required by the check.".to_string()))
                     }
                 }
                 else {
-                    Err(box CommandError("Minimum permission level required cannot be none, as required by the check.".to_string()))
+                    Err(box CommandError("The user does not have the minimum required permission to execute this command".to_string()))
                 }
             }
             else {
-                Err(box CommandError("The user does not have the minimum required permission to execute this command".to_string()))
+                Err(box CommandError("Permission levels are not set.".to_string()))
             }
         }
         else {
