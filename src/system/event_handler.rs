@@ -179,8 +179,7 @@ impl EventHandler {
     
     crate async fn message_create(payload: Box<MessageCreate>,
                                   http: Client,
-                                  mut levelling_cache: SystemCache<String, bool>)
-        -> SystemResult<SystemCache<String, bool>> {
+                                  mut levelling_cache: SystemCache<String, bool>) -> SystemResult<()> {
         let xp = if let Some(_) = levelling_cache.get(&format!("guild_{}.user_{}", payload.guild_id.unwrap(), payload.author.id)) {
             0u64
         }
@@ -217,7 +216,7 @@ impl EventHandler {
             );
         }
 
-        Ok(levelling_cache)
+        Ok(())
     }
 
     // Section: Custom Events
