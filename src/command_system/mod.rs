@@ -22,6 +22,7 @@ crate mod parser;
 crate mod precommand_checks;
 mod precommand_check_parameters;
 mod task;
+mod task_context;
 
 crate use command::Command;
 crate use command_context::{
@@ -34,3 +35,5 @@ crate use precommand_check_parameters::{
     PrecommandCheckParameters,
     PrecommandCheckParametersBuilder
 };
+crate use task::Task;
+crate use task_context::TaskContext;
