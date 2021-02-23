@@ -25,6 +25,9 @@ use crate::{
     system::{
         twilight_http_client_extensions::GetGuildConfiguration,
         SystemResult,
+    },
+    utilities::{
+        zalgo_detection::zalgo_detected
     }
 };
 
@@ -38,7 +41,14 @@ impl Task for ZalgoDetectionTask {
 
 async fn censorship_zalgo_detection_task(ctx: TaskContext) -> SystemResult<()> {
     if let TaskContext::MessageCreate(payload) = ctx {
-        todo!()
+        let message = payload.message.clone();
+        let zalgo_detected = zalgo_detected(&message.content);
+
+        if zalgo_detected {
+            payload.http_client.clone().delete_message(message.channel_id, message.id).await?;
+        }
+
+        Ok(())
     }
     else {
         unreachable!()
