@@ -13,6 +13,6 @@
 //!  limitations under the License.
 
 // Region: Commands
-mod antiraid;
 
 // Region: Tasks (To be ran when some events are fired)
+crate mod tasks;
