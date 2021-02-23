@@ -69,12 +69,14 @@ use crate::{
         },
         twilight_http_client_extensions::{
             AddUserExperience,
+            GetGuildConfiguration,
             GetWhitelistedGuilds
         },
         twilight_id_extensions::IntoInnerU64,
         Stopwatch,
         SystemResult
-    }
+    },
+    xml_deserialization::BotConfig
 };
 
 crate struct EventHandler;
@@ -139,6 +141,10 @@ impl EventHandler {
             },
             Err(_error) => ()
         };
+
+        // Update Current User nickname if a different one is set other than the default.
+        let config_string = http.clone().get_guild_configuration(guild_id).await?;
+        let guild_config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
 
         Ok(())
     }
@@ -242,7 +248,7 @@ impl EventHandler {
                         MessageCreateTaskContextRef::new(
                             http.clone(),
                             payload.author.clone(),
-                            *payload.0.clone()
+                            payload.0.clone()
                         )
                     )
                 )
