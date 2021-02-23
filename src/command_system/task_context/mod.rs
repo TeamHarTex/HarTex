@@ -14,7 +14,10 @@
 
 mod message_create;
 
-crate use message_create::MessageCreateTaskContext;
+crate use message_create::{
+    MessageCreateTaskContext,
+    MessageCreateTaskContextRef
+};
 
 crate enum TaskContext {
     MessageCreate(MessageCreateTaskContext),
