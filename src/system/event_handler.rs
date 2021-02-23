@@ -40,7 +40,21 @@ use twilight_http::Client;
 use twilight_mention::Mention;
 
 use crate::{
+    command_system::{
+        task_context::{
+            MessageCreateTaskContext
+        },
+        Task,
+        TaskContext,
+    },
     logging::logger::Logger,
+    plugins::{
+        censorship::{
+            tasks::{
+                ZalgoDetectionTask
+            }
+        }
+    },
     system::{
         caching::SystemCache,
         model::payload::{
