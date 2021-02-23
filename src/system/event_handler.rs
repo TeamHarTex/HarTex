@@ -12,6 +12,10 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+use std::{
+    sync::Arc
+};
+
 use tokio::{
     time::Duration
 };
@@ -42,7 +46,8 @@ use twilight_mention::Mention;
 use crate::{
     command_system::{
         task_context::{
-            MessageCreateTaskContext
+            MessageCreateTaskContext,
+            MessageCreateTaskContextRef
         },
         Task,
         TaskContext,
@@ -229,6 +234,20 @@ impl EventHandler {
                 Some(Duration::from_secs(60))
             );
         }
+
+        ZalgoDetectionTask::execute_task(
+            TaskContext::MessageCreate(
+                MessageCreateTaskContext(
+                    Arc::new(
+                        MessageCreateTaskContextRef::new(
+                            http.clone(),
+                            payload.author.clone(),
+                            *payload.0.clone()
+                        )
+                    )
+                )
+            )
+        ).await?;
 
         Ok(())
     }
