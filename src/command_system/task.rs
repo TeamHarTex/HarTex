@@ -11,3 +11,15 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
+use std::{
+    future::Future,
+    pin::Pin
+};
+
+use crate::command_system::task_context::TaskContext;
+use crate::system::SystemResult;
+
+crate trait Task {
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>>;
+}
