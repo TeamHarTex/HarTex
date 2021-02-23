@@ -17,5 +17,6 @@ mod message_create;
 use message_create::MessageCreateTaskContext;
 
 crate enum TaskContext {
-    MessageCreate(MessageCreateTaskContext)
+    MessageCreate(MessageCreateTaskContext),
+    MemberUpdate
 }
