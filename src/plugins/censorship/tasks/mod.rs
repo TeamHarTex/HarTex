@@ -13,3 +13,5 @@
 //!  limitations under the License.
 
 mod zalgo_detection;
+
+crate use zalgo_detection::ZalgoDetectionTask;
