@@ -145,6 +145,13 @@ impl EventHandler {
         // Update Current User nickname if a different one is set other than the default.
         let config_string = http.clone().get_guild_configuration(guild_id).await?;
         let guild_config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
+        let current_user = http.clone().current_user().await?.id;
+
+        if let Some(customization) = guild_config.bot_customization {
+            http.clone()
+                .update_guild_member(guild_id, current_user)
+                .nick(Some(customization.guild_nickname))
+        }
 
         Ok(())
     }
