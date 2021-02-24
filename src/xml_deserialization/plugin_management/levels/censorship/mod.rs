@@ -27,7 +27,10 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "FilterZalgo")]
     crate filter_zalgo: Option<bool>,
-    
+
     #[serde(rename = "ZalgoFilterWhitelistedChannels")]
-    crate zalgo_channel_whitelist: ZalgoChannelWhitelist,
+    crate zalgo_channel_whitelist: Option<ZalgoChannelWhitelist>,
+
+    #[serde(rename = "FilterInviteLinks")]
+    crate filter_invite_links: Option<bool>
 }
