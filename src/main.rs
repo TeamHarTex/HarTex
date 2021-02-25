@@ -604,7 +604,7 @@ async fn handle_event(_shard_id: Option<u64>,
                       stopwatch: Stopwatch,
                       emitter: CommandEventEmitter,
                       levelling_cache: SystemCache<String, bool>)
-    -> Result<SystemCache<String, bool>, Box<dyn Error + Send + Sync>> {
+    -> Result<(), Box<dyn Error + Send + Sync>> {
     match event_type {
         EventType::TwilightEvent => {
             if let Some(event) = event {
@@ -629,7 +629,7 @@ async fn handle_event(_shard_id: Option<u64>,
                     },
                     Event::MessageCreate(message_create) => {
                         if (*message_create).author.bot {
-                            return Ok(levelling_cache.clone());
+                            return Ok(());
                         }
 
                         if message_create.content.starts_with("hb.") {
@@ -718,9 +718,7 @@ async fn handle_event(_shard_id: Option<u64>,
                 return Err(box SystemError("EventType is CustomEvent but custom_event is None.".to_string()));
             }
         }
-    }?;
-
-    Ok(new_cache)
+    }
 }
 
 async fn handle_command(message: Message,
