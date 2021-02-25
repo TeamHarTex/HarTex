@@ -76,7 +76,14 @@ use crate::{
         Stopwatch,
         SystemResult
     },
-    xml_deserialization::BotConfig
+    xml_deserialization::{
+        plugin_management::{
+            models::{
+                channel_id::ChannelId
+            }
+        },
+        BotConfig
+    }
 };
 
 crate struct EventHandler;
@@ -150,7 +157,8 @@ impl EventHandler {
         if let Some(customization) = guild_config.bot_customization {
             http.clone()
                 .update_guild_member(guild_id, current_user)
-                .nick(Some(customization.guild_nickname))
+                .nick(Some(customization.guild_nickname))?
+                .await?;
         }
 
         Ok(())
@@ -248,19 +256,38 @@ impl EventHandler {
             );
         }
 
-        ZalgoDetectionTask::execute_task(
-            TaskContext::MessageCreate(
-                MessageCreateTaskContext(
-                    Arc::new(
-                        MessageCreateTaskContextRef::new(
-                            http.clone(),
-                            payload.author.clone(),
-                            payload.0.clone()
-                        )
-                    )
-                )
-            )
-        ).await?;
+        let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
+        let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
+
+        if let Some(plugins) = config.plugins {
+            if let Some(censorship) = plugins.censorship_plugin {
+                for level in censorship
+                    .levels {
+                    if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
+                        if !whitelist.channel_ids.contains(&ChannelId {
+                            id: payload.channel_id.into_inner_u64()
+                        }) {
+                            ZalgoDetectionTask::execute_task(
+                                TaskContext::MessageCreate(
+                                    MessageCreateTaskContext(
+                                        Arc::new(
+                                            MessageCreateTaskContextRef::new(
+                                                http.clone(),
+                                                payload.author.clone(),
+                                                payload.0.clone()
+                                            )
+                                        )
+                                    )
+                                )
+                            ).await?;
+
+                            // We already completed the task (when it can be executed); so we can just break out of the loop.
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
         Ok(())
     }
