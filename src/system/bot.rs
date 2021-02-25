@@ -46,5 +46,27 @@ crate struct Bot<'a> {
 }
 
 impl<'a> Bot<'a> {
-    
+    crate fn builder() -> BotBuilder<'a> {
+        BotBuilder::new()
+    }
+}
+
+crate struct BotBuilder<'a> {
+    cluster: Option<Cluster>,
+    http_client: Option<TwilightHttpClient>,
+    framework: Option<CommandFramework<'a>>,
+    parser: Option<CommandParser<'a>>,
+    inmemory_cache: Option<InMemoryCache>
+}
+
+impl<'a> BotBuilder<'a> {
+    fn new() -> Self {
+        Self {
+            cluster: None,
+            http_client: None,
+            framework: None,
+            parser: None,
+            inmemory_cache: None
+        }
+    }
 }
