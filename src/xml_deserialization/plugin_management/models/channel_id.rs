@@ -11,6 +11,7 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
 extern crate serde;
 extern crate quick_xml;
 
@@ -18,4 +19,10 @@ extern crate quick_xml;
 crate struct ChannelId {
     #[serde(rename = "Id")]
     crate id: u64
+}
+
+impl PartialEq for ChannelId {
+    fn eq(&self, other: ChannelId) -> bool {
+        self.id == other.id
+    }
 }
