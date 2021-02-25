@@ -36,6 +36,7 @@ use twilight_model::{
     }
 };
 
+mod bot;
 crate mod bot_configuration;
 crate mod caching;
 crate mod event_handler;
