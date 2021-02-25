@@ -16,6 +16,9 @@ extern crate serde;
 extern crate quick_xml;
 
 use crate::xml_deserialization::plugin_management::models::censorship::{
+    whitelisted_guild_invites::{
+        WhitelistedGuildInvites
+    },
     zalgo_channel_whitelist::ZalgoChannelWhitelist,
     CensoredUri
 };
@@ -32,5 +35,8 @@ crate struct CensorshipLevel {
     crate zalgo_channel_whitelist: Option<ZalgoChannelWhitelist>,
 
     #[serde(rename = "FilterInviteLinks")]
-    crate filter_invite_links: Option<bool>
+    crate filter_invite_links: Option<bool>,
+
+    #[serde(rename = "WhitelistedGuildInvites")]
+    crate whitelisted_guild_invites: Option<WhitelistedGuildInvites>
 }
