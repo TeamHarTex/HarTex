@@ -22,7 +22,7 @@ crate struct ChannelId {
 }
 
 impl PartialEq for ChannelId {
-    fn eq(&self, other: ChannelId) -> bool {
+    fn eq(&self, other: &ChannelId) -> bool {
         self.id == other.id
     }
 }
