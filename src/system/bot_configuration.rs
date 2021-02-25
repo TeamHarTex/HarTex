@@ -13,7 +13,7 @@
 //!  limitations under the License.
 
 crate struct BotConfiguration {
-    pub token: String
+    crate token: String
 }
 
 impl BotConfiguration {
