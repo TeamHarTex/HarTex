@@ -42,8 +42,6 @@ extern crate sha3;
 use std::{
     env::*,
     error::Error,
-    fmt::Debug,
-    hash::Hash,
     pin::Pin,
     sync::Arc
 };
@@ -537,7 +535,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let mut command_events = framework.events();
 
     // Sets the Ctrl+C handler.
-    ctrlc::set_handler(|| {
+    ctrlc::set_handler(move || {
         Logger::log_warning("Received a Ctrl-C signal; terminating process.");
 
         std::process::exit(0);
@@ -607,8 +605,6 @@ async fn handle_event(_shard_id: Option<u64>,
                       emitter: CommandEventEmitter,
                       levelling_cache: SystemCache<String, bool>)
     -> Result<SystemCache<String, bool>, Box<dyn Error + Send + Sync>> {
-    let mut new_cache = SystemCache::new();
-
     match event_type {
         EventType::TwilightEvent => {
             if let Some(event) = event {
@@ -675,17 +671,19 @@ async fn handle_event(_shard_id: Option<u64>,
                                 }
                             }
                         }
-                        else if message_create.content.to_lowercase().contains("harry") {
-                            http_client
-                                .clone()
-                                .create_reaction(message_create.channel_id,
-                                                 message_create.id, RequestReactionType::Custom {
-                                        id: EmojiId(683744109550108704),
-                                        name: None
-                                    }).await?;
-                        }
+                        else {
+                            if message_create.content.to_lowercase().contains("harry") {
+                                http_client
+                                    .clone()
+                                    .create_reaction(message_create.channel_id,
+                                                     message_create.id, RequestReactionType::Custom {
+                                            id: EmojiId(683744109550108704),
+                                            name: None
+                                        }).await?;
+                            }
 
-                        new_cache = EventHandler::message_create(message_create.clone(), http_client.clone(), levelling_cache.clone()).await?;
+                            EventHandler::message_create(message_create.clone(), http_client.clone(), levelling_cache.clone()).await?;
+                        }
 
                         Ok(())
                     },
@@ -3682,18 +3680,4 @@ async fn handle_command(message: Message,
     }
 
     Ok(())
-}
-
-async fn purge_expired_background_task<K: Hash + Eq + Debug + Send + Clone + 'static, V: Clone + Debug + Send + 'static>(mut cache: SystemCache<K, V>) {
-    loop {
-        if let Some(when) = cache.purge_expired_items() {
-            tokio::join! {
-                tokio::time::sleep_until(when),
-                cache.background_task.notified()
-            };
-        }
-        else {
-            cache.background_task.notified().await;
-        }
-    }
 }
