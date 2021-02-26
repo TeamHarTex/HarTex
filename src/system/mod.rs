@@ -41,6 +41,7 @@ crate mod caching;
 crate mod event_handler;
 crate mod internal_bot_error;
 crate mod model;
+crate mod state_machine;
 crate mod terminal;
 crate mod twilight_http_client_extensions;
 crate mod twilight_id_extensions;
