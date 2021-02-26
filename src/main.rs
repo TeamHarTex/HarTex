@@ -103,6 +103,7 @@ crate mod logging;
 crate mod models;
 crate mod parsers;
 crate mod plugins;
+crate mod state_enums;
 crate mod std_extensions;
 crate mod system;
 crate mod utilities;
