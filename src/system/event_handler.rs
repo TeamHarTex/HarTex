@@ -258,6 +258,20 @@ impl EventHandler {
 
         let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
         let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
+        let member = http.clone().guild_member(payload.guild_id.unwrap(), payload.author.id).await?.unwrap();
+        let member_available_roles = member
+            .roles
+            .iter()
+            .filter(|role_id| {
+                if let Some(levels) = config.role_permission_levels.clone() {
+                    levels.contains_key(&role_id.into_inner_u64())
+                }
+                else {
+                    false
+                }
+            })
+            .map(|role_id| role_id.into_inner_u64())
+            .collect::<Vec<_>>();
 
         if let Some(plugins) = config.plugins {
             if let Some(censorship) = plugins.censorship_plugin {
@@ -286,7 +300,7 @@ impl EventHandler {
                     }
 
                     if level.filter_invite_links == Some(true) {
-                        
+
                     }
 
                     // We already completed the task (when it can be executed); so we can just break out of the loop.
