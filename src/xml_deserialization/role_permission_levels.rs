@@ -38,12 +38,12 @@ use serde::{
 
 use super::RolePermissionLevel;
 
-#[derive(Debug)]
-crate struct RolePermissionLevels<K, V> {
+#[derive(Debug, Clone)]
+crate struct RolePermissionLevels<K: Clone, V: Clone> {
     items: Vec<(K, V)>
 }
 
-impl<K: Eq, V> RolePermissionLevels<K, V> {
+impl<K: Clone + Eq, V: Clone> RolePermissionLevels<K, V> {
     crate fn new() -> Self {
         Self {
             items: Vec::<(K, V)>::new()
@@ -96,7 +96,7 @@ impl<K: Eq, V> RolePermissionLevels<K, V> {
     }
 }
 
-impl<K: Eq, V> Default for RolePermissionLevels<K, V> {
+impl<K: Clone + Eq, V: Clone> Default for RolePermissionLevels<K, V> {
     fn default() -> Self {
         Self::new()
     }
@@ -108,14 +108,14 @@ struct Temporary<K, V> {
     vector: Vec<RolePermissionLevel<K, V>>
 }
 
-struct RolePermissionLevelsVisitor<K, V> {
+struct RolePermissionLevelsVisitor<K: Clone, V: Clone> {
     marker: PhantomData<RolePermissionLevels<K, V>>
 }
 
 impl<'deserialize, K: Eq, V> Visitor<'deserialize> for RolePermissionLevelsVisitor<K, V>
 where
-    K: Deserialize<'deserialize>,
-    V: Deserialize<'deserialize> {
+    K: Deserialize<'deserialize> + Clone,
+    V: Deserialize<'deserialize> + Clone {
     type Value = RolePermissionLevels<K, V>;
 
     fn expecting(&self, f: &mut Formatter) -> FmtResult {
