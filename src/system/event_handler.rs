@@ -263,28 +263,34 @@ impl EventHandler {
             if let Some(censorship) = plugins.censorship_plugin {
                 for level in censorship
                     .levels {
-                    if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
-                        if !whitelist.channel_ids.contains(&ChannelId {
-                            id: payload.channel_id.into_inner_u64()
-                        }) {
-                            ZalgoDetectionTask::execute_task(
-                                TaskContext::MessageCreate(
-                                    MessageCreateTaskContext(
-                                        Arc::new(
-                                            MessageCreateTaskContextRef::new(
-                                                http.clone(),
-                                                payload.author.clone(),
-                                                payload.0.clone()
+                    if level.filter_zalgo == Some(true) {
+                        if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
+                            if !whitelist.channel_ids.contains(&ChannelId {
+                                id: payload.channel_id.into_inner_u64()
+                            }) {
+                                ZalgoDetectionTask::execute_task(
+                                    TaskContext::MessageCreate(
+                                        MessageCreateTaskContext(
+                                            Arc::new(
+                                                MessageCreateTaskContextRef::new(
+                                                    http.clone(),
+                                                    payload.author.clone(),
+                                                    payload.0.clone()
+                                                )
                                             )
                                         )
                                     )
-                                )
-                            ).await?;
-
-                            // We already completed the task (when it can be executed); so we can just break out of the loop.
-                            break;
+                                ).await?;
+                            }
                         }
                     }
+
+                    if level.filter_invite_links == Some(true) {
+                        
+                    }
+
+                    // We already completed the task (when it can be executed); so we can just break out of the loop.
+                    break;
                 }
             }
         }
