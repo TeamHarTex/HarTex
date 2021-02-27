@@ -2,16 +2,24 @@
 
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
-This repository is solely for the transparency for the bot, as well as people who want to look at the inner workings of the bot.
+## Should I run HarTex locally?
 
-Issues and Pull Requests are welcome and will be reviewed by the Developer Team.
+Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having 
+the source code released and updated frequently, is to allow others to understand the bot's inner workings and audit its fuctionality.
+You *can* run a local instance of HarTex for your server (but **NOT** a public version).
 
-## Self-Hosting
+### Self-Hosting Agreement
 
-It is not recommended to self-host this bot. But if you really want to, you need to comply with the following requirements:
+- You may not use the HarTex logo or name within derivative bots;
+- You may not host a public version of HarTex;
+- You may not charge money for the usage of *your* instance of HarTex; and
+- You may not provide support for *your* instance of HarTex.
 
-- Leave this README.md and the LICENSE file intact on your local copy of this bot;
-- Your self-hosted instance of the bot must not use the same avatar and the name of the bot; and
-- Support shall not be provided for the setup of the bot environment - the databases required, the language compiler required, etc.
+## HarTex Development
+
+### Can I Contribute?
+
+Sure. Feel free to submit Issues and Pull Requests. They *may* be answered and reviewed by the Developer Team in a case-by-case basis,
+but it is **NOT** guaranteed.
 
 Made with :heart:, using [The Rust Programming Language](https://www.rust-lang.org/)
