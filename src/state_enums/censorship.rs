@@ -11,3 +11,18 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
+use crate::{
+    system::{
+        state_machine::StateEnum
+    }
+};
+
+#[derive(Debug, Clone)]
+crate enum CensorshipProcess {
+    ZalgoFiltered,
+
+    InvitesFiltered
+}
+
+impl StateEnum for CensorshipProcess {}
