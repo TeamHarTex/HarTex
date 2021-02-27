@@ -20,6 +20,8 @@ use crate::{
 
 #[derive(Debug, Clone)]
 crate enum CensorshipProcess {
+    Initialized,
+    
     ZalgoFiltered,
 
     InvitesFiltered
