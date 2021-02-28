@@ -19,3 +19,17 @@ use super::{
 };
 
 use regex::Regex;
+
+crate struct InviteParser;
+
+impl InviteParser {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for InviteParser {
+    fn default() -> Self {
+        Self
+    }
+}
