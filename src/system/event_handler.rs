@@ -60,8 +60,12 @@ use crate::{
             }
         }
     },
+    state_enums::{
+        censorship::CensorshipProcess
+    },
     system::{
         caching::SystemCache,
+        state_machine::StateMachine,
         model::payload::{
             CommandExecuted,
             CommandFailed,
@@ -256,6 +260,7 @@ impl EventHandler {
             );
         }
 
+        let mut state_machine = StateMachine::new_with_state_enum(CensorshipProcess::Initialized);
         let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
         let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
         let member = http.clone().guild_member(payload.guild_id.unwrap(), payload.author.id).await?.unwrap();
@@ -277,7 +282,7 @@ impl EventHandler {
             if let Some(censorship) = plugins.censorship_plugin {
                 for level in censorship
                     .levels {
-                    if level.filter_zalgo == Some(true) {
+                    if member_available_roles.iter().any(|id| &level.level as u64 == id) {
                         if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
                             if !whitelist.channel_ids.contains(&ChannelId {
                                 id: payload.channel_id.into_inner_u64()
@@ -297,10 +302,10 @@ impl EventHandler {
                                 ).await?;
                             }
                         }
-                    }
 
-                    if level.filter_invite_links == Some(true) {
+                        if level.filter_invite_links == Some(true) {
 
+                        }
                     }
 
                     // We already completed the task (when it can be executed); so we can just break out of the loop.
