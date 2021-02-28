@@ -260,7 +260,7 @@ impl EventHandler {
             );
         }
 
-        let mut state_machine = StateMachine::new_with_state_enum(CensorshipProcess::Initialized);
+        let mut state_machine = StateMachine::new_with_state(CensorshipProcess::Initialized);
         let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
         let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
         let member = http.clone().guild_member(payload.guild_id.unwrap(), payload.author.id).await?.unwrap();
@@ -277,39 +277,53 @@ impl EventHandler {
             })
             .map(|role_id| role_id.into_inner_u64())
             .collect::<Vec<_>>();
+        let mut roles_iter = member_available_roles.iter();
 
         if let Some(plugins) = config.plugins {
             if let Some(censorship) = plugins.censorship_plugin {
                 for level in censorship
                     .levels {
-                    if member_available_roles.iter().any(|id| &level.level as u64 == id) {
-                        if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
-                            if !whitelist.channel_ids.contains(&ChannelId {
-                                id: payload.channel_id.into_inner_u64()
-                            }) {
-                                ZalgoDetectionTask::execute_task(
-                                    TaskContext::MessageCreate(
-                                        MessageCreateTaskContext(
-                                            Arc::new(
-                                                MessageCreateTaskContextRef::new(
-                                                    http.clone(),
-                                                    payload.author.clone(),
-                                                    payload.0.clone()
+                    if roles_iter.any(|id| config.role_permission_levels.unwrap().get(id) >= level.level as u32) {
+                        if level.filter_zalgo == Some(true) {
+                            if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
+                                if !whitelist.channel_ids.contains(&ChannelId {
+                                    id: payload.channel_id.into_inner_u64()
+                                }) {
+                                    ZalgoDetectionTask::execute_task(
+                                        TaskContext::MessageCreate(
+                                            MessageCreateTaskContext(
+                                                Arc::new(
+                                                    MessageCreateTaskContextRef::new(
+                                                        http.clone(),
+                                                        payload.author.clone(),
+                                                        payload.0.clone()
+                                                    )
                                                 )
                                             )
                                         )
-                                    )
-                                ).await?;
+                                    ).await?;
+                                }
                             }
                         }
 
-                        if level.filter_invite_links == Some(true) {
+                        state_machine.update_state(CensorshipProcess::ZalgoFiltered);
 
+                        if level.filter_invite_links == Some(true) {
+                            if let Some(whitelist) = level.whitelisted_guild_invites {
+
+                            }
                         }
+
+                        state_machine.update_state(CensorshipProcess::InvitesFiltered);
+
+                        // TO BE IMPLEMEMTED
+
+                        state_machine.update_state(CensorshipProcess::Completed);
                     }
 
-                    // We already completed the task (when it can be executed); so we can just break out of the loop.
-                    break;
+                    if state_machine.state() == CensorshipProcess::Completed {
+                        break;
+                    }
                 }
             }
         }
