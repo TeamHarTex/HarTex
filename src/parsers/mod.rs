@@ -12,6 +12,10 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+use std::{
+    fmt::Debug
+};
+
 mod emoji;
 mod error;
 mod invite;
@@ -21,7 +25,7 @@ crate use emoji::EmojiParser;
 crate type ParseResult<T> = Result<T, error::ParseError>;
 
 crate trait Parser {
-    type Output;
+    type Output: Clone + Debug;
     type State = ();
 
     fn parse(&self, input: String) -> ParseResult<Self::Output>;
