@@ -14,6 +14,7 @@
 
 mod emoji;
 mod error;
+mod invite;
 
 crate use emoji::EmojiParser;
 
