@@ -22,6 +22,11 @@ use regex::Regex;
 
 crate struct InviteParser;
 
+#[derive(Clone, Debug)]
+crate struct Invite {
+    crate code: String
+}
+
 impl InviteParser {
     pub fn new() -> Self {
         Self::default()
@@ -31,5 +36,13 @@ impl InviteParser {
 impl Default for InviteParser {
     fn default() -> Self {
         Self
+    }
+}
+
+impl Parser for InviteParser {
+    type Output = Invite;
+
+    fn parse(&self, input: String) -> ParseResult<Self::Output> {
+        todo!()
     }
 }
