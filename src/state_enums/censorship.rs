@@ -12,4 +12,19 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
-crate mod censorship;
+use crate::{
+    system::{
+        state_machine::StateEnum
+    }
+};
+
+#[derive(Debug, Clone)]
+crate enum CensorshipProcess {
+    Initialized,
+    
+    ZalgoFiltered,
+
+    InvitesFiltered
+}
+
+impl StateEnum for CensorshipProcess {}
