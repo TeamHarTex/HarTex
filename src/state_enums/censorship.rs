@@ -21,10 +21,18 @@ use crate::{
 #[derive(Debug, Clone)]
 crate enum CensorshipProcess {
     Initialized,
-    
+
     ZalgoFiltered,
 
-    InvitesFiltered
+    InvitesFiltered,
+
+    Completed
 }
 
 impl StateEnum for CensorshipProcess {}
+
+impl PartialEq for CensorshipProcess {
+    fn eq(&self, other: &Self) -> bool {
+        self == other
+    }
+}
