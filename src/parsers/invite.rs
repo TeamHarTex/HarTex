@@ -44,5 +44,7 @@ impl Parser for InviteParser {
 
     fn parse(&self, input: String) -> ParseResult<Self::Output> {
         let regex = Regex::new(r#"(https:\/\/discord\.gg\/)(([a-z]|[A-Z]|[0-9]){10})"#).unwrap();
+
+        todo!()
     }
 }
