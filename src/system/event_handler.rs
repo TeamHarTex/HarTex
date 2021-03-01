@@ -279,11 +279,18 @@ impl EventHandler {
             .collect::<Vec<_>>();
         let mut roles_iter = member_available_roles.iter();
 
-        if let Some(plugins) = config.plugins {
-            if let Some(censorship) = plugins.censorship_plugin {
+        if let Some(ref plugins) = config.plugins {
+            if let Some(censorship) = plugins.censorship_plugin.clone() {
                 for level in censorship
                     .levels {
-                    if roles_iter.any(|id| config.role_permission_levels.unwrap().get(id) >= level.level as u32) {
+                    if roles_iter.any(|id| {
+                        if let Some(lvl) = config.role_permission_levels.clone().unwrap().get(id) {
+                            *lvl >= level.level as u32
+                        }
+                        else {
+                            false
+                        }
+                    }) {
                         if level.filter_zalgo == Some(true) {
                             if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
                                 if !whitelist.channel_ids.contains(&ChannelId {
