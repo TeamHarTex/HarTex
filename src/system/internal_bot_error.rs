@@ -20,13 +20,26 @@ use std::{
 
 use crate::{
     command_system::CommandContext,
-    system::SystemResult
+    logging::logger::Logger,
+    system::{
+        terminal::Ansi256,
+        SystemResult
+    },
+    utilities::{
+        constants::{
+            bot_support_server
+        }
+    }
 };
 
-crate const BOT_SUPPORT_SERVER: &str = "https://discord.gg/s8qjxZK";
+crate fn report_ibe(panic_info: &PanicInfo<'_>) -> SystemResult<()> {
+    Logger::log_error("An unexpected panic has taken place. See below for more information:");
 
-crate async fn report_ibe(context: CommandContext<'_>, panic_info: &PanicInfo<'_>) -> SystemResult<()> {
-    let channel_id = context.message.channel_id;
+    println!("{}error: internal bot error: unexpected panic{}\n", Ansi256 { colour: 1 }, Ansi256::reset());
+    println!("note: the bot unexpectedly panicked. this is a bug.\n");
+    println!("note: we would appreciate a bug report: https://github.com/HT-Studios/HarTex-rust-discord-bot/issues/new?labels=B-IBE&template=internal-bot-error.md\n");
+
+    println!("note: panic location: {}", panic_info.location().unwrap());
 
     Ok(())
 }
