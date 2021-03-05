@@ -542,6 +542,10 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         std::process::exit(0);
     })?;
 
+    std::panic::set_hook(box |panic_info| {
+        report_ibe(panic_info);
+    });
+
     // Start an event loop to process each event in the stream as they come in.
     while let value = futures_util::future::select(
         StreamExt::next(&mut events), command_events.next()).await {
