@@ -2,7 +2,7 @@
 name: Internal Bot Error
 about: Create a report for an Internal Bot Error.
 title: ''
-labels: ''
+labels: B-IBE
 assignees: ''
 
 ---
