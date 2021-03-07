@@ -13,8 +13,13 @@
 //!  limitations under the License.
 
 use std::{
+    lazy::{
+        SyncLazy
+    },
     panic::{
-        PanicInfo
+        PanicInfo,
+        set_hook,
+        take_hook
     }
 };
 
@@ -32,14 +37,23 @@ use crate::{
     }
 };
 
-crate fn report_ibe(panic_info: &PanicInfo<'_>) -> SystemResult<()> {
-    Logger::log_error("An unexpected panic has taken place. See below for more information:");
+crate static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send + Sync + 'static>> =
+    SyncLazy::new(|| {
+        let hook = take_hook();
 
-    println!("{}error: internal bot error: unexpected panic{}\n", Ansi256 { colour: 1 }, Ansi256::reset());
-    println!("note: the bot unexpectedly panicked. this is a bug.\n");
-    println!("note: we would appreciate a bug report: https://github.com/HT-Studios/HarTex-rust-discord-bot/issues/new?labels=B-IBE&template=internal-bot-error.md\n");
+        set_hook(box |info| {
+            report_ibe(info)
+        });
 
-    println!("note: panic location: {}", panic_info.location().unwrap());
+        hook
+    });
 
-    Ok(())
+crate fn report_ibe(panic_info: &PanicInfo<'_>) {
+    Logger::log_error("An unexpected panic had taken place. See below for more information:");
+
+    eprintln!("{}error: internal bot error: unexpected panic{}\n", Ansi256 { colour: 1 }, Ansi256::reset());
+    eprintln!("note: the bot unexpectedly panicked. this is a bug.\n");
+    eprintln!("note: we would appreciate a bug report: https://github.com/HT-Studios/HarTex-rust-discord-bot/issues/new?labels=B-IBE&template=internal-bot-error.md\n");
+
+    (*RUST_DEFAULT_PANIC_HOOK)(panic_info);
 }
