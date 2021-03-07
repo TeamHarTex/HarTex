@@ -22,6 +22,7 @@
 #![feature(in_band_lifetimes)]
 // In spite of this feature being incomplete, I will leave it there as I need it in the current existing codebase.
 #![feature(let_chains)]
+#![feature(once_cell)]
 
 #![allow(clippy::needless_lifetimes)]
 #![allow(clippy::too_many_arguments)]
@@ -42,6 +43,7 @@ extern crate sha3;
 use std::{
     env::*,
     error::Error,
+    lazy::SyncLazy,
     pin::Pin,
     sync::Arc
 };
@@ -140,7 +142,10 @@ use crate::system::{
     bot_configuration::BotConfiguration,
     caching::SystemCache,
     event_handler::EventHandler,
-    internal_bot_error::report_ibe,
+    internal_bot_error::{
+        report_ibe,
+        RUST_DEFAULT_PANIC_HOOK
+    },
     twilight_http_client_extensions::AddUserExperience,
     model::{
         payload::{
@@ -542,9 +547,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         std::process::exit(0);
     })?;
 
-    std::panic::set_hook(box |panic_info| {
-        report_ibe(panic_info);
-    });
+    SyncLazy::force(&RUST_DEFAULT_PANIC_HOOK);
 
     // Start an event loop to process each event in the stream as they come in.
     while let value = futures_util::future::select(
