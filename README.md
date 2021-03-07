@@ -3,6 +3,7 @@
 [![commit](https://img.shields.io/github/last-commit/HT-Studios/HarTex-rust-discord-bot)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 ![GitHub top language](https://img.shields.io/github/languages/top/HT-Studios/HarTex-rust-discord-bot)
+![Lines of code](https://img.shields.io/tokei/lines/github/HT-Studios/HarTex-rust-discord-bot)
 
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
