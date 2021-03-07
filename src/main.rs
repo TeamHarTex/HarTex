@@ -1758,7 +1758,7 @@ async fn handle_command(message: Message,
                         format!("Command '{}' failed due to an error: 'command not found'.", message.content))
                 }
             },
-            Command { name: "invites", .. } => {
+            Command { name: "invites", arguments, .. } => {
                 match InvitesCommand::precommand_check(
                     context.clone(),
                     PrecommandCheckParametersBuilder::new()
@@ -1768,10 +1768,32 @@ async fn handle_command(message: Message,
                             HasRolePermissions::execute_check(ctx, params)
                 ).await {
                     Ok(()) => {
+                        match InvitesCommand::execute_command(context.clone(), arguments, cache.clone()).await {
+                            Ok(()) => {
+                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
+                                    Some(guild) => guild.name,
+                                    None => String::new()
+                                };
 
+                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
+                                    command: "invites",
+                                    guild_name: guild,
+                                    context: context.clone()
+                                }))
+                            },
+                            Err(error) => {
+                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
+                                    command: "invites",
+                                    error: format!("{}", error)
+                                }))
+                            }
+                        }
                     },
-                    Err(_error) => {
-                        
+                    Err(error) => {
+                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
+                            command: "invites",
+                            error: format!("{}", error)
+                        }))
                     }
                 }
             },
