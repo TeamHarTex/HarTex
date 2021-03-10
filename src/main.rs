@@ -750,42 +750,23 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("all") => {
-                        match CleanAllCommand::precommand_check(context.clone(),
-                                                               PrecommandCheckParametersBuilder::new()
-                                                                   .in_memory_cache(cache.clone())
-                                                                   .minimum_permission_level(60).build(),
-                                                               |ctx, params|
-                                                                   Box::pin(HasRolePermissions::execute_check(ctx, params)))
-                            .await {
-                            Ok(()) => {
-                                match CleanAllCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "clean all",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "clean all",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "clean all",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                        execute_command!(
+                            CleanAllCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                            context.clone(),
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "clean all"
+                        );
                     },
                     Some("user") => {
                         match CleanUserCommand::precommand_check(context.clone(), 
