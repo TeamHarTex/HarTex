@@ -24,7 +24,7 @@ crate macro execute_command {
                 $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box CommandExecuted {
                     command: $command_struct::fully_qualified_name(),
                     guild_name: guild,
-                    context: context.clone()
+                    context: $context
                 }))
             },
             Err(error) => {
@@ -50,7 +50,7 @@ crate macro execute_command {
                         $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box CommandExecuted {
                             command: $command_struct::fully_qualified_name(),
                             guild_name: guild,
-                            context: context.clone()
+                            context: $context
                         }))
                     },
                     Err(error) => {
