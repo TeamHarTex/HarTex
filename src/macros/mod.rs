@@ -21,14 +21,14 @@ crate macro execute_command {
                     None => String::new()
                 };
 
-                $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box CommandExecuted {
+                $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box $crate::system::model::payload::CommandExecuted {
                     command: $command_struct::fully_qualified_name(),
                     guild_name: guild,
                     context: $context
                 }))
             },
             Err(error) => {
-                $emitter.event($crate::command_system::events::eventsSystemEvent::CommandFailed(box CommandFailed {
+                $emitter.event($crate::command_system::events::eventsSystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
                     command: $command_struct::fully_qualified_name(),
                     error: format!("{}", error)
                 }))
@@ -47,19 +47,25 @@ crate macro execute_command {
                             None => String::new()
                         };
 
-                        $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box CommandExecuted {
+                        $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box $crate::system::model::payload::CommandExecuted {
                             command: $command_struct::fully_qualified_name(),
                             guild_name: guild,
                             context: $context
                         }))
                     },
                     Err(error) => {
-                        $emitter.event($crate::command_system::events::eventsSystemEvent::CommandFailed(box CommandFailed {
+                        $emitter.event($crate::command_system::events::events::SystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
                             command: $command_struct::fully_qualified_name(),
                             error: format!("{}", error)
                         }))
                     }
                 }
+            },
+            Err(error) => {
+                $emitter.event($crate::command_system::events::events::SystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
+                    command: $command_struct::fully_qualified_name(),
+                    error: format!("{}", error)
+                }))
             }
         }
     }
