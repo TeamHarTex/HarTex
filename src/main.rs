@@ -140,30 +140,12 @@ use crate::command_system::{
     PrecommandCheckParametersBuilder
 };
 
-use crate::system::{
-    bot_configuration::BotConfiguration,
-    caching::SystemCache,
-    event_handler::EventHandler,
-    internal_bot_error::{
-        report_ibe,
-        RUST_DEFAULT_PANIC_HOOK
-    },
-    twilight_http_client_extensions::AddUserExperience,
-    model::{
-        payload::{
-            CommandExecuted,
-            CommandFailed,
-            CommandReceived
-        }
-    },
-    EventType,
-    Stopwatch,
-    SystemError,
-    set_bot_activity,
-};
-
 use crate::logging::{
     logger::Logger
+};
+
+use crate::macros::{
+    execute_command
 };
 
 use crate::plugins::{
@@ -288,6 +270,28 @@ use crate::plugins::{
     whitelist::{
         AcceptCommand
     }
+};
+
+use crate::system::{
+    bot_configuration::BotConfiguration,
+    caching::SystemCache,
+    event_handler::EventHandler,
+    internal_bot_error::{
+        report_ibe,
+        RUST_DEFAULT_PANIC_HOOK
+    },
+    twilight_http_client_extensions::AddUserExperience,
+    model::{
+        payload::{
+            CommandExecuted,
+            CommandFailed,
+            CommandReceived
+        }
+    },
+    EventType,
+    Stopwatch,
+    SystemError,
+    set_bot_activity,
 };
 
 #[tokio::main]
