@@ -13,7 +13,11 @@
 //!  limitations under the License.
 
 crate macro execute_command {
-    ($command:ty, ) => {
-    
+    ($command_struct:ty) => {
+
     }
+
+    ($command_struct:ty, $precommand_checks:expr) => [
+        
+    ]
 }
