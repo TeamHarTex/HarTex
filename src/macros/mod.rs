@@ -34,7 +34,7 @@ crate macro execute_command {
                 }))
             }
         }
-    }
+    },
 
     ($command_struct:ty, $precommand_checks:expr, $precommand_checks_parameters:expr, $context:expr,
         $arguments:expr, $cache:expr, $http_client:expr, $message: expr, $emitter:expr) => {
