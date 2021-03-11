@@ -1893,785 +1893,433 @@ async fn handle_command(message: Message,
             },
             Command { name: "tempmute", arguments, .. } |
             Command { name: "dmtempmute", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match DmTempmuteCommand::precommand_check(
+                execute_command!(
+                    DmTempmuteCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match DmTempmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "dmtempmute",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "dmtempmute",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "tempmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "dmtempmute"
+                );
             },
             Command { name: "nodmtempmute", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match NodmTempmuteCommand::precommand_check(
+                execute_command!(
+                    NodmTempmuteCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match NodmTempmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "nodmtempmute",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nodmtempmute",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "nodmtempmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "nodmtempmute"
+                );
             },
             Command { name: "mmute", arguments, .. } |
             Command { name: "dmmmute", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match DmMmuteCommand::precommand_check(
+                execute_command!(
+                    DmMmuteCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match DmMmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "dmmute",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "dmmute",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "dmmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "dmmmute"
+                );
             },
             Command { name: "nodmmmute", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match NodmMmuteCommand::precommand_check(
+                execute_command!(
+                    NodmMmuteCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match NodmMmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "nodmmute",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nodmmute",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "nodmmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "nodmmmute"
+                );
             },
             Command { name: "munmute", arguments, .. } |
             Command { name: "dmmunmute", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match DmMunmuteCommand::precommand_check(
+                execute_command!(
+                    DmMunmuteCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match DmMunmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "dmunmute",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "dmmute",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "dmmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "dmmunmute"
+                );
             },
             Command { name: "nodmmunmute", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match NodmMunmuteCommand::precommand_check(
+                execute_command!(
+                    NodmMunmuteCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match NodmMunmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "nodmmunmute",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nodmmunmute",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "nodmmunmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "nodmmunmute"
+                );
             },
             Command { name: "mwarn", arguments, .. } |
             Command { name: "dmmwarn", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match DmMwarnCommand::precommand_check(
+                execute_command!(
+                    DmMwarnCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match DmMwarnCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "dmmwarn",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "dmmwarn",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "dmmwarn",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "dmmwarn"
+                );
             },
             Command { name: "nodmmwarn", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match NodmMwarnCommand::precommand_check(
+                execute_command!(
+                    NodmMwarnCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match NodmMwarnCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "nodmmwarn",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nodmmwarn",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "nodmmwarn",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "nodmmwarn"
+                );
             },
             Command { name: "mban", arguments, .. }|
             Command { name: "dmmban", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match DmMbanCommand::precommand_check(
+                execute_command!(
+                    DmMbanCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match DmMbanCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "dmmban",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "dmmban",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "dmmban",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "dmmban"
+                );
             },
             Command { name: "nodmmban", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match NodmMbanCommand::precommand_check(
+                execute_command!(
+                    NodmMbanCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match NodmMbanCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "nodmmban",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nodmmban",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "nodmmban",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "nodmmban"
+                );
             },
             Command { name: "selfmute", arguments, .. } => {
-                match SelfmuteCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "selfmute",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "selfmute",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    SelfmuteCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "selfmute"
+                );
             },
             Command { name: "munban", arguments, .. }|
             Command { name: "dmmunban", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match DmMunbanCommand::precommand_check(
+                execute_command!(
+                    DmMunbanCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match DmMbanCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "dmmunban",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "dmmunban",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "dmmunban",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "dmmunban"
+                );
             },
             Command { name: "nodmmunban", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match NodmMunbanCommand::precommand_check(
+                execute_command!(
+                    NodmMunbanCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(60).build(),
-                    |ctx, params|
-                        Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match NodmMbanCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "nodmmunban",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nodmmunban",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "nodmmunban",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "nodmmunban"
+                );
             },
 
             // Levelling System Command Module
             Command { name: "rank", arguments, .. } => {
-                match RankCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "rank",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "rank",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    RankCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "rank"
+                );
             }
 
             // Owneronly Command Module
             Command { name: "restart", arguments, .. } => {
-                match RestartCommand::precommand_check(
-                    context.clone(),
+                execute_command!(
+                    RestartCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(BotOwnerOnly::execute_check(ctx, params))
+                    ]),
                     PrecommandCheckParametersBuilder::new().build(),
-                    |ctx, params|
-                        Box::pin(BotOwnerOnly::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match RestartCommand::execute_command(context.clone(), arguments, cache)
-                            .await {
-                            Ok(()) => {
-                                todo!()
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "restart",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "restart",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "restart"
+                );
             },
             Command { name: "stop", arguments, .. } => {
-                match StopCommand::precommand_check(
-                    context.clone(),
+                execute_command!(
+                    StopCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params|
+                            Box::pin(BotOwnerOnly::execute_check(ctx, params))
+                    ]),
                     PrecommandCheckParametersBuilder::new().build(),
-                    |ctx, params|
-                        Box::pin(BotOwnerOnly::execute_check(ctx, params))).await {
-                    Ok(()) => {
-                        match StopCommand::execute_command(
-                            context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                Logger::log_info("Bot stopping...");
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "stop",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "stop",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "stop"
+                );
             },
             Command { name: "support-info", arguments, .. } => {
-                match SupportinfoCommand::precommand_checks(
-                    context.clone(),
+                execute_command!(
+                    SupportinfoCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                        |ctx, params|
+                            Box::pin(BotOwnerOnly::execute_check(ctx, params)),
+                        |ctx, params| 
+                            SupportGuildOnly::execute_check(ctx, params)
+                    ]),
                     PrecommandCheckParametersBuilder::new().build(),
-                    Box::<[for<'asynchronous_trait>
-                    fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                        |ctx, params| BotOwnerOnly::execute_check(ctx, params),
-                        |ctx, params| SupportGuildOnly::execute_check(ctx, params)
-                    ])).await {
-                    Ok(()) => {
-                        match SupportinfoCommand::execute_command(context.clone(), arguments, cache)
-                            .await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "support-info",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "support-info",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "support-info",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "support-info"
+                );
             },
             Command { name: "refresh-whitelist-roles", arguments, .. } => {
-                match RefreshWhitelistRolesCommand::precommand_checks(
-                    context.clone(), PrecommandCheckParametersBuilder::new().build(),
-                    Box::<[for<'asynchronous_trait>
-                    fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                        -> Pin<Box<dyn std::future::Future<Output =std::result::Result<
-                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>
-                    ::new([
-                        |ctx, params| BotOwnerOnly::execute_check(ctx, params),
-                        |ctx, params| SupportGuildOnly::execute_check(ctx, params)
-                    ])).await {
-                    Ok(()) => {
-                        match RefreshWhitelistRolesCommand::execute_command(context.clone(), arguments,
-                                                                            cache).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "refresh-whitelist-roles",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "refresh-whitelist-roles",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "refresh-whitelist-roles",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    RefreshWhitelistRolesCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                        |ctx, params|
+                            Box::pin(BotOwnerOnly::execute_check(ctx, params)),
+                        |ctx, params| 
+                            SupportGuildOnly::execute_check(ctx, params)
+                    ]),
+                    PrecommandCheckParametersBuilder::new().build(),
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "support-info"
+                );
             },
             Command { name: "support-announce", arguments, .. } => {
-                match SupportAnnounceCommand::precommand_checks(
-                    context.clone(),
+                execute_command!(
+                    SupportAnnounceCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                        |ctx, params|
+                            Box::pin(BotOwnerOnly::execute_check(ctx, params)),
+                        |ctx, params| 
+                            SupportGuildOnly::execute_check(ctx, params)
+                    ]),
                     PrecommandCheckParametersBuilder::new().build(),
-                    Box::<[for<'asynchronous_trait>
-                    fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                       -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                           (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                        |ctx, params| BotOwnerOnly::execute_check(ctx, params),
-                        |ctx, params| SupportGuildOnly::execute_check(ctx, params)
-                    ])).await {
-                    Ok(()) => {
-                        match SupportAnnounceCommand::execute_command(context.clone(), arguments, cache)
-                            .await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "support-announce",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "support-announce",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "support-announce",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "support-announce"
+                );
             },
 
             // Utilities Command Module
             Command { name: "emoji", arguments, .. } => {
-                match EmojiCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "emoji",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "emoji",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    EmojiCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "emoji"
+                );
             },
             Command { name: "randint", arguments, .. } => {
-                match RandintCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "randint",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "randint",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    RandintCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "randint"
+                );
             },
             Command { name: "coinflip", arguments, .. } => {
-                match CoinflipCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "coinflip",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "coinflip",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    CoinflipCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "coinflip"
+                );
             },
             Command { name: "avatar", arguments, .. } => {
-                match AvatarCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "avatar",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "avatar",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    AvatarCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "avatar"
+                );
             }
 
             // Whitelist Command Module
@@ -2685,35 +2333,24 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("accept") => {
-                        match AcceptCommand::precommand_check(
-                            context.clone(), PrecommandCheckParametersBuilder::new().build(),
-                            |ctx, params|
-                                Box::pin(BotOwnerOnly::execute_check(ctx, params))).await {
-                            Ok(()) => {
-                                match AcceptCommand::execute_command(context.clone(), arguments,
-                                                                     cache).await {
-                                    Ok(()) => {
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "whitelist accept",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "whitelist accept",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "whitelist accept",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                        execute_command!(
+                            AcceptCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params|
+                                    Box::pin(BotOwnerOnly::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().build(),
+                            context.clone(),
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "whitelist accept"
+                        );
                     },
                     _ => {
                         Logger::log_error(
