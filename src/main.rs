@@ -1026,94 +1026,48 @@ async fn handle_command(message: Message,
 
                         match position {
                             Some("here") => {
-                                match SlowmodeEnableHereCommand::precommand_checks(
-                                    context.clone(),
-                                    PrecommandCheckParametersBuilder::new()
-                                        .in_memory_cache(cache.clone())
-                                        .minimum_permission_level(60).build(),
+                                execute_command!(
+                                    SlowmodeEnableHereCommand,
                                     Box::<[
-                                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                                         |ctx, params|
                                             HasRolePermissions::execute_check(ctx, params)
                                         , |ctx, params|
                                             GuildTextChannelOnly::execute_check(ctx, params)
-                                    ])).await {
-                                    Ok(()) => {
-                                        match SlowmodeEnableHereCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                            Ok(()) => {
-                                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                                    Some(guild) => guild.name,
-                                                    None => String::new()
-                                                };
-
-                                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                                    command: "slowmode enable here",
-                                                    guild_name: guild,
-                                                    context: context.clone()
-                                                }))
-                                            },
-                                            Err(error) => {
-                                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                                    command: "slowmode enable here",
-                                                    error: format!("{}", error)
-                                                }))
-                                            }
-                                        }
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "slowmode enable here",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
+                                    ]),
+                                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                                    context.clone(),
+                                    arguments,
+                                    cache.clone(),
+                                    http_client.clone(),
+                                    message,
+                                    emitter.clone(),
+                                    "slowmode enable here"
+                                );
                             },
                             Some("channel") => {
-                                match SlowmodeEnableChannelCommand::precommand_checks(
-                                    context.clone(),
-                                    PrecommandCheckParametersBuilder::new()
-                                        .in_memory_cache(cache.clone())
-                                        .minimum_permission_level(60).build(),
+                                execute_command!(
+                                    SlowmodeEnableHereCommand,
                                     Box::<[
-                                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                                         |ctx, params|
                                             HasRolePermissions::execute_check(ctx, params)
                                         , |ctx, params|
                                             GuildTextChannelOnly::execute_check(ctx, params)
-                                    ])).await {
-                                    Ok(()) => {
-                                        match SlowmodeEnableChannelCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                            Ok(()) => {
-                                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                                    Some(guild) => guild.name,
-                                                    None => String::new()
-                                                };
-
-                                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                                    command: "slowmode enable channel",
-                                                    guild_name: guild,
-                                                    context: context.clone()
-                                                }))
-                                            },
-                                            Err(error) => {
-                                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                                    command: "slowmode enable channel",
-                                                    error: format!("{}", error)
-                                                }))
-                                            }
-                                        }
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "slowmode enable channel",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
+                                    ]),
+                                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                                    context.clone(),
+                                    arguments,
+                                    cache.clone(),
+                                    http_client.clone(),
+                                    message,
+                                    emitter.clone(),
+                                    "slowmode enable channel"
+                                );
                             },
                             _ => Logger::log_error(
                                 format!("Command '{}' failed due to an error: 'command not found'.", message.content))
