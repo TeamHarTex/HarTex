@@ -1517,156 +1517,84 @@ async fn handle_command(message: Message,
                         );
                     },
                     Some("remove") => {
-                        match InfractionRemoveCommand::precommand_check(
+                        execute_command!(
+                            InfractionRemoveCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params|
+                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(80).build(),
-                            |ctx, params|
-                                Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                match InfractionRemoveCommand::execute_command(context.clone(), arguments, cache).await {
-                                    Ok(()) => {
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "inf remove",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "inf remove",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "inf remove",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "inf remove"
+                        );
                     },
                     Some("archive") => {
-                        match InfractionsArchiveCommand::precommand_check(
+                        execute_command!(
+                            InfractionArchiveCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params|
+                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(80).build(),
-                            |ctx, params|
-                                Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                match InfractionsArchiveCommand::execute_command(context.clone(), arguments, cache).await {
-                                    Ok(()) => {
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "inf archive",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "inf archive",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "inf archive",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "inf archive"
+                        );
                     },
                     Some("clear-all") => {
-                        match InfractionClearallCommand::precommand_check(
+                        execute_command!(
+                            InfractionClearallCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params|
+                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                match InfractionClearallCommand::execute_command(context.clone(), arguments, cache).await {
-                                    Ok(()) => {
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "inf clear-all",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "inf clear-all",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "inf clear-all",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "inf clear-all"
+                        );
                     },
                     Some("reason") => {
-                        match InfractionReasonCommand::precommand_check(
+                        execute_command!(
+                            InfractionReasonCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params|
+                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                Box::pin(HasRolePermissions::execute_check(ctx, params))).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                match InfractionReasonCommand::execute_command(context.clone(), arguments, cache).await {
-                                    Ok(()) => {
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "inf reason",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "inf reason",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "inf reason",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "inf reason"
+                        );
                     },
                     _ => {
                         emitter.event(SystemEvent::CommandFailed(box CommandFailed {
