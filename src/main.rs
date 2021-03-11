@@ -1134,80 +1134,42 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("enable") => {
-                        match VoicemuteEnableCommand::precommand_check(
+                        execute_command!(
+                            VoicemuteEnableCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                HasRolePermissions::execute_check(ctx, params)).await {
-                            Ok(()) => {
-                                match VoicemuteEnableCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "voicemute enable",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "voicemute enable",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "voicemut enable",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "voicemute enable"
+                        );
                     },
                     Some("disable") => {
-                        match VoicemuteDisableCommand::precommand_check(
+                        execute_command!(
+                            VoicemuteDisableCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                HasRolePermissions::execute_check(ctx, params)).await {
-                            Ok(()) => {
-                                match VoicemuteDisableCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "voicemute disable",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "voicemute disable",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "voicemute disable",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "voicemute disable"
+                        );
                     },
                     _ => Logger::log_error(
                         format!("Command '{}' failed due to an error: 'command not found'.", message.content))
@@ -1218,80 +1180,42 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("list") => {
-                        match NorolesListCommand::precommand_check(
+                        execute_command!(
+                            NorolesListCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                HasRolePermissions::execute_check(ctx, params)).await {
-                            Ok(()) => {
-                                match NorolesListCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "noroles list",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "noroles list",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "noroles list",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "noroles list"
+                        );
                     },
                     Some("kick") => {
-                        match NorolesKickCommand::precommand_check(
+                        execute_command!(
+                            NorolesKickCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(80).build(),
-                            |ctx, params|
-                                HasRolePermissions::execute_check(ctx, params)).await {
-                            Ok(()) => {
-                                match NorolesKickCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "noroles kick",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "noroles kick",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "noroles kick",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "noroles kick"
+                        );
                     },
                     _ => Logger::log_error(
                         format!("Command '{}' failed due to an error: 'command not found'.", message.content))
@@ -1302,42 +1226,23 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("change") => {
-                        match NicknameChangeCommand::precommand_check(
+                        execute_command!(
+                            NorolesKickCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                HasRolePermissions::execute_check(ctx, params)).await {
-                            Ok(()) => {
-                                match NicknameChangeCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "nickname change",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "nickname change",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nickname change",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "nickname change"
+                        );
                     },
                     Some("remove") => {
                         match NicknameRemoveCommand::precommand_check(
