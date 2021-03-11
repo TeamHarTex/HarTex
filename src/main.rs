@@ -1234,7 +1234,7 @@ async fn handle_command(message: Message,
                                                                 (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
                             arguments,
                             cache.clone(),
@@ -1245,42 +1245,23 @@ async fn handle_command(message: Message,
                         );
                     },
                     Some("remove") => {
-                        match NicknameRemoveCommand::precommand_check(
+                        execute_command!(
+                            NicknameRemoveCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(60).build(),
-                            |ctx, params|
-                                HasRolePermissions::execute_check(ctx, params)).await {
-                            Ok(()) => {
-                                match NicknameRemoveCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "nickname remove",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "nickname remove",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "nickname remove",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "nickname remove"
+                        );
                     },
                     _ => Logger::log_error(
                         format!("Command '{}' failed due to an error: 'command not found'.", message.content))
