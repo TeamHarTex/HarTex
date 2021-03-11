@@ -1139,7 +1139,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
@@ -1158,7 +1158,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
@@ -1185,7 +1185,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
@@ -1204,7 +1204,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
@@ -1231,7 +1231,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
@@ -1250,7 +1250,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
@@ -1277,7 +1277,7 @@ async fn handle_command(message: Message,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                                 |ctx, params| HasRolePermissions::execute_check(ctx, params)
                             ]),
                             PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
@@ -1300,7 +1300,7 @@ async fn handle_command(message: Message,
                     Box::<[
                         for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                     -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                         |ctx, params| HasRolePermissions::execute_check(ctx, params)
                     ]),
                     PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
@@ -1340,114 +1340,64 @@ async fn handle_command(message: Message,
                 );
             },
             Command { name: "help", arguments, .. } => {
-                match HelpCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "help",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "help",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    HelpCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "help"
+                );
             },
             Command { name: "about", arguments, .. } => {
-                match AboutCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "about",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "about",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    AboutCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "about"
+                );
             },
             Command { name: "team", arguments, .. } | Command { name: "staff", arguments, .. } => {
-                match TeamCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "team",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "team",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    TeamCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "team"
+                );
             },
             Command { name: "uptime", arguments, .. } => {
-                match UptimeCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "uptime",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "uptime",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    UptimeCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "uptime"
+                );
             },
             Command { name: "source", arguments, .. } => {
-                match SourceCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "source",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "source",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    SourceCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "source"
+                );
             },
 
             // Information Command Module
