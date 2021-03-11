@@ -1272,132 +1272,72 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("list") => {
-                        match WebconfigListCommand::precommand_check(
+                        execute_command!(
+                            WebconfigListCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
                             context.clone(),
-                            PrecommandCheckParametersBuilder::new()
-                                .in_memory_cache(cache.clone())
-                                .minimum_permission_level(80).build(),
-                                |ctx, params|
-                                    HasRolePermissions::execute_check(ctx, params)
-                        ).await {
-                            Ok(()) => {
-                                match WebconfigListCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "webconfig list",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "webconfig list",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "webconfig list",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "webconfig list"
+                        );
                     },
                     _ => Logger::log_error(
                         format!("Command '{}' failed due to an error: 'command not found'.", message.content))
                 }
             },
             Command { name: "invites", arguments, .. } => {
-                match InvitesCommand::precommand_check(
+                execute_command!(
+                    WebconfigListCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                        |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
                     context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .minimum_permission_level(80).build(),
-                        |ctx, params| 
-                            HasRolePermissions::execute_check(ctx, params)
-                ).await {
-                    Ok(()) => {
-                        match InvitesCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "invites",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "invites",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "invites",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "invites"
+                );
             },
 
             // General Command Module
             Command { name: "ping", arguments, .. } => {
-                match PingCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "ping",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "ping",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    PingCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "ping"
+                );
             },
             Command { name: "bot-info", arguments, .. } => {
-                match BotinfoCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "bot-info",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "bot-info",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    BotinfoCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "bot-info"
+                );
             },
             Command { name: "help", arguments, .. } => {
                 match HelpCommand::execute_command(context.clone(), arguments, cache).await {
