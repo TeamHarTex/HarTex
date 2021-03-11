@@ -46,6 +46,10 @@ crate trait Command {
                                             arguments: Arguments<'asynchronous_trait>, cache: InMemoryCache)
         -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>>;
 
+    #[deprecated(
+        since = "1.17.0-21w10a.1", 
+        note = "This method is redundant - you can pass in a boxed slice with one element to `precommand_checks` to do essentially the same thing."
+    )]
     fn precommand_check<'asynchronous_trait, C>(_ctx: CommandContext<'asynchronous_trait>,
                                                 _params: PrecommandCheckParameters, _check: C)
         -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>>
