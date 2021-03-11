@@ -789,7 +789,7 @@ async fn handle_command(message: Message,
                     },
                     Some("bots") => {
                         execute_command!(
-                            CleanUserCommand,
+                            CleanBotsCommand,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
