@@ -1402,96 +1402,52 @@ async fn handle_command(message: Message,
 
             // Information Command Module
             Command { name: "user-info", arguments, .. } => {
-                match UserinfoCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "user-info",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "user-info",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    UserinfoCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "user-info"
+                );
             },
             Command { name: "guild-info", arguments, .. } | Command { name: "server-info", arguments, .. } => {
-                match GuildinfoCommand::execute_command(context.clone(), arguments, cache).await {
-                    Ok(()) => {
-                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
-
-                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                            command: "guild-info",
-                            guild_name: guild,
-                            context: context.clone()
-                        }))
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "guild-info",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    GuildinfoCommand,
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "guild-info"
+                );
             },
 
             // Guild Owneronly Command Module
             Command { name: "setup", arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                match SetupCommand::precommand_checks(
-                    context.clone(),
-                    PrecommandCheckParametersBuilder::new()
-                        .in_memory_cache(cache.clone())
-                        .guild_id(context.clone().message.guild_id.unwrap()).build(),
+                execute_command!(
+                    SetupCommand,
                     Box::<[
-                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
                         |ctx, params|
-                            GuildOwnerOnly::execute_check(ctx, params)
-                        , |ctx, params|
-                            GuildIsAlreadySetup::execute_check(ctx, params)
-                    ])).await {
-                    Ok(()) => {
-                        match SetupCommand::execute_command(context.clone(), arguments, cache)
-                            .await {
-                            Ok(()) => {
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "setup",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "setup",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "setup",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                            Box::pin(GuildOwnerOnly::execute_check(ctx, params)),
+                        |ctx, params|
+                            Box::pin(GuildIsAlreadySetup::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).guild_id(context.clone().message.guild_id.unwrap()).build(),
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "setup"
+                );
             },
 
             // Infractions Command Module
