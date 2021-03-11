@@ -84,12 +84,22 @@ impl Command for MbanCommand {
         Box::pin(infractions_mban_command(ctx, users, reason.to_string()))
     }
 
-    fn precommand_check<'asynchronous_trait, C>(ctx: CommandContext<'asynchronous_trait>, params: PrecommandCheckParameters, check: C)
+    fn precommand_checks<'asynchronous_trait, C: 'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, params: PrecommandCheckParameters, checks: Box<[C]>)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>>
         where
             C: Fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        Box::pin(FutureResult::resolve(check(ctx, params)))
+                -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> + Send + Sync {
+        Box::pin(
+            async move {
+                for check in checks.iter() {
+                    if let Err(error) = check(ctx.clone(), params.clone()).await {
+                        return Err(error);
+                    } else {
+                        continue;
+                    }
+                } Ok(())
+            }
+        )
     }
 }
 
