@@ -815,80 +815,42 @@ async fn handle_command(message: Message,
 
                 match subcommand {
                     Some("add") => {
-                        match RoleAddCommand::precommand_check(context.clone(),
-                                                         PrecommandCheckParametersBuilder::new()
-                                                             .in_memory_cache(cache.clone())
-                                                             .minimum_permission_level(60).build(),
-                                                         |ctx, params|
-                                                             Box::pin(HasRolePermissions::execute_check(ctx, params)))
-                            .await {
-                            Ok(()) => {
-                                match RoleAddCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "role add",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "role add",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "role add",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                        execute_command!(
+                            RoleAddCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                            context.clone(),
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "role add"
+                        );
                     },
                     Some("remove") => {
-                        match RoleRemoveCommand::precommand_check(context.clone(),
-                                                               PrecommandCheckParametersBuilder::new()
-                                                                   .in_memory_cache(cache.clone())
-                                                                   .minimum_permission_level(60).build(),
-                                                               |ctx, params|
-                                                                   Box::pin(HasRolePermissions::execute_check(ctx, params)))
-                            .await {
-                            Ok(()) => {
-                                match RoleRemoveCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "role remove",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "role remove",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "role remove",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                        execute_command!(
+                            RoleRemoveCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                            context.clone(),
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "role remove"
+                        );
                     },
                     Some("global-add") => {
                         match RoleGlobalAddCommand::precommand_check(context.clone(),
