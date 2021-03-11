@@ -1433,7 +1433,7 @@ async fn handle_command(message: Message,
                     Box::<[
                         for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                     -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                         |ctx, params|
                             Box::pin(GuildOwnerOnly::execute_check(ctx, params)),
                         |ctx, params|
@@ -1538,7 +1538,7 @@ async fn handle_command(message: Message,
                     },
                     Some("archive") => {
                         execute_command!(
-                            InfractionArchiveCommand,
+                            InfractionsArchiveCommand,
                             Box::<[
                                 for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
                                                             -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
@@ -2214,7 +2214,7 @@ async fn handle_command(message: Message,
                                                         (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                         |ctx, params|
                             Box::pin(BotOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params| 
+                        |ctx, params|
                             SupportGuildOnly::execute_check(ctx, params)
                     ]),
                     PrecommandCheckParametersBuilder::new().build(),
@@ -2236,7 +2236,7 @@ async fn handle_command(message: Message,
                                                         (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                         |ctx, params|
                             Box::pin(BotOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params| 
+                        |ctx, params|
                             SupportGuildOnly::execute_check(ctx, params)
                     ]),
                     PrecommandCheckParametersBuilder::new().build(),
@@ -2258,7 +2258,7 @@ async fn handle_command(message: Message,
                                                         (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
                         |ctx, params|
                             Box::pin(BotOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params| 
+                        |ctx, params|
                             SupportGuildOnly::execute_check(ctx, params)
                     ]),
                     PrecommandCheckParametersBuilder::new().build(),
