@@ -853,122 +853,65 @@ async fn handle_command(message: Message,
                         );
                     },
                     Some("global-add") => {
-                        match RoleGlobalAddCommand::precommand_check(context.clone(),
-                                                                     PrecommandCheckParametersBuilder::new()
-                                                                         .in_memory_cache(cache.clone())
-                                                                         .minimum_permission_level(80).build(),
-                                                                     |ctx, params|
-                                                                         Box::pin(HasRolePermissions::execute_check(ctx, params)))
-                            .await {
-                            Ok(()) => {
-                                match RoleGlobalAddCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "role global-add",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "role gloabl-add",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "role global-add",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                        execute_command!(
+                            RoleGlobalAddCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                            context.clone(),
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "role global-add"
+                        );
                     },
                     Some("global-remove") => {
-                        match RoleGlobalRemoveCommand::precommand_check(context.clone(),
-                                                                     PrecommandCheckParametersBuilder::new()
-                                                                         .in_memory_cache(cache.clone())
-                                                                         .minimum_permission_level(80).build(),
-                                                                     |ctx, params|
-                                                                         Box::pin(HasRolePermissions::execute_check(ctx, params)))
-                            .await {
-                            Ok(()) => {
-                                match RoleGlobalRemoveCommand::execute_command(context.clone(), arguments, cache.clone()).await {
-                                    Ok(()) => {
-                                        let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                            Some(guild) => guild.name,
-                                            None => String::new()
-                                        };
-
-                                        emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                            command: "role global-remove",
-                                            guild_name: guild,
-                                            context: context.clone()
-                                        }))
-                                    },
-                                    Err(error) => {
-                                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                            command: "role global-remove",
-                                            error: format!("{}", error)
-                                        }))
-                                    }
-                                }
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "role global-remove",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
+                        execute_command!(
+                            RoleGlobalRemoveCommand,
+                            Box::<[
+                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                            ]),
+                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                            context.clone(),
+                            arguments,
+                            cache.clone(),
+                            http_client.clone(),
+                            message,
+                            emitter.clone(),
+                            "role global-remove"
+                        );
                     },
                     _ => Logger::log_error(
                         format!("Command '{}' failed due to an error: 'command not found'.", message.content))
                 }
             },
             Command { name: "role-info", arguments, .. } => {
-                match RoleinfoCommand::precommand_check(context.clone(),
-                                                        PrecommandCheckParametersBuilder::new()
-                                                            .in_memory_cache(cache.clone())
-                                                            .minimum_permission_level(80).build(),
-                                                        |ctx, params|
-                                                            Box::pin(HasRolePermissions::execute_check(ctx, params)))
-                    .await {
-                    Ok(()) => {
-                        match RoleinfoCommand::execute_command(context.clone(), arguments, cache).await {
-                            Ok(()) => {
-                                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                                    Some(guild) => guild.name,
-                                    None => String::new()
-                                };
-
-                                emitter.event(SystemEvent::CommandExecuted(box CommandExecuted {
-                                    command: "role-info",
-                                    guild_name: guild,
-                                    context: context.clone()
-                                }))
-                            },
-                            Err(error) => {
-                                emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                                    command: "role-info",
-                                    error: format!("{}", error)
-                                }))
-                            }
-                        }
-                    },
-                    Err(error) => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "role-info",
-                            error: format!("{}", error)
-                        }))
-                    }
-                }
+                execute_command!(
+                    RoleinfoCommand,
+                    Box::<[
+                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                        |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                    ]),
+                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                    context.clone(),
+                    arguments,
+                    cache.clone(),
+                    http_client.clone(),
+                    message,
+                    emitter.clone(),
+                    "role-info"
+                );
             },
             Command { name: "lockdown", mut arguments, .. } => {
                 let subcommand = arguments.next();
