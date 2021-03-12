@@ -56,6 +56,7 @@ use crate::{
     plugins::{
         censorship::{
             tasks::{
+                InviteDetectionTask,
                 ZalgoDetectionTask
             }
         }
@@ -306,8 +307,9 @@ impl EventHandler {
                                                         payload.0.clone()
                                                     )
                                                 )
-                                            )
-                                        )
+                                            ),
+                                        ),
+                                        config.clone()
                                     ).await?;
                                 }
                             }
@@ -316,13 +318,20 @@ impl EventHandler {
                         state_machine.update_state(CensorshipProcess::ZalgoFiltered);
 
                         if level.filter_invite_links == Some(true) {
-                            if let Some(whitelist) = level.whitelisted_guild_invites {
-                                todo!()
-                            }
-                            // FIXME: Add Invite Channel Whitelist
-                            else {
-
-                            }
+                            InviteDetectionTask::execute_task(
+                                TaskContext::MessageCreate(
+                                    MessageCreateTaskContext(
+                                        Arc::new(
+                                            MessageCreateTaskContextRef::new(
+                                                http.clone(),
+                                                payload.author.clone(),
+                                                payload.0.clone()
+                                            )
+                                        )
+                                    ),
+                                ),
+                                config.clone()
+                            ).await?;
                         }
 
                         state_machine.update_state(CensorshipProcess::InvitesFiltered);
