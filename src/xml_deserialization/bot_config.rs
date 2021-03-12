@@ -24,7 +24,7 @@ use super::{
     RolePermissionLevels
 };
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct BotConfig {
     #[serde(rename = "Dashboard")]
     crate dashboard: Dashboard,
