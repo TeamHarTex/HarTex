@@ -40,5 +40,13 @@ impl Task for InviteDetectionTask {
 }
 
 async fn censorship_invite_detection_task(ctx: TaskContext) -> SystemResult<()> {
-    todo!()
+    if let TaskContext::MessageCreate(payload) = ctx {
+        let message = payload.message.clone();
+        let (invite_detected, invite) = invite_detected(message.content);
+
+        todo!()
+    }
+    else {
+        unreachable!()
+    }
 }
