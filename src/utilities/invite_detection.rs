@@ -12,3 +12,21 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+use crate::{
+    parsers::{
+        Invite,
+        InviteParser,
+        Parser
+    }
+};
+
+crate fn invite_detected(input: String) -> (bool, Option<Invite>) {
+    let parser = InviteParser::new();
+
+    if let Ok(invite) = parser.parse(input) {
+        (true, Some(invite))
+    }
+    else {
+        (false, None)
+    }
+}
