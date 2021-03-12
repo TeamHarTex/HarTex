@@ -15,6 +15,7 @@
 crate mod constants;
 crate mod duration;
 crate mod image_processing;
+crate mod invite_detection;
 crate mod levelling_system;
 crate mod zalgo_detection;
 
