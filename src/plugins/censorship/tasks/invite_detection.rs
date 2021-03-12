@@ -31,3 +31,14 @@ use crate::{
 };
 
 crate struct InviteDetectionTask;
+
+impl Task for InviteDetectionTask {
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext)
+        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send>> {
+        Box::pin(censorship_invite_detection_task(ctx))
+    }
+}
+
+async fn censorship_invite_detection_task(ctx: TaskContext) -> SystemResult<()> {
+    todo!()
+}
