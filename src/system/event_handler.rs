@@ -317,6 +317,10 @@ impl EventHandler {
 
                         if level.filter_invite_links == Some(true) {
                             if let Some(whitelist) = level.whitelisted_guild_invites {
+                                todo!()
+                            }
+                            // FIXME: Add Invite Channel Whitelist
+                            else {
 
                             }
                         }
