@@ -15,7 +15,7 @@
 extern crate serde;
 extern crate quick_xml;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct BotCustomization {
     #[serde(rename = "CommandPrefix")]
     crate command_prefix: String,
