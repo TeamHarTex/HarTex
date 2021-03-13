@@ -28,15 +28,15 @@ crate struct CensorshipLevel {
     #[serde(rename = "Level")]
     crate level: u8,
 
-    #[serde(rename = "FilterZalgo")]
+    #[serde(rename = "FilterZalgo", default)]
     crate filter_zalgo: Option<bool>,
 
-    #[serde(rename = "ZalgoFilterWhitelistedChannels")]
+    #[serde(rename = "ZalgoFilterWhitelistedChannels", default)]
     crate zalgo_channel_whitelist: Option<ZalgoChannelWhitelist>,
 
-    #[serde(rename = "FilterInviteLinks")]
+    #[serde(rename = "FilterInviteLinks", default)]
     crate filter_invite_links: Option<bool>,
 
-    #[serde(rename = "WhitelistedGuildInvites")]
+    #[serde(rename = "WhitelistedGuildInvites", default)]
     crate whitelisted_guild_invites: Option<WhitelistedGuildInvites>
 }
