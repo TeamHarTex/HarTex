@@ -31,7 +31,7 @@ crate macro execute_command {
                 }))
             },
             Err(error) => {
-                $emitter.event($crate::command_system::events::eventsSystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
+                $emitter.event($crate::command_system::events::events::SystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
                     command: $command_name,
                     error: format!("{}", error)
                 }))
@@ -73,5 +73,25 @@ crate macro execute_command {
                 }))
             }
         }
+    }
+}
+
+crate macro logger_dbg {
+    ($expression:expr) => {
+        $crate::logging::logger::Logger::log_debug(
+            match $expression {
+                any_expr => {
+                    format!(
+                        "[{}:{}] {} = {:#?}",
+                        std::file!(),
+                        std::line!(),
+                        std::stringify!($expression),
+                        &any_expr
+                    )
+                }
+            }
+        )
+
+        $expression
     }
 }
