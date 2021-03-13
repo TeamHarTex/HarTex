@@ -35,6 +35,6 @@ crate struct BotConfig {
     #[serde(rename = "RolePermissionLevels", default)]
     crate role_permission_levels: Option<RolePermissionLevels<u64, u32>>,
 
-    #[serde(rename = "Plugins")]
+    #[serde(rename = "Plugins", default)]
     crate plugins: Option<Plugins>
 }
