@@ -15,10 +15,16 @@
 extern crate serde;
 extern crate quick_xml;
 
-use super::InfractionsPlugin;
+use super::{
+    CensorshipPlugin,
+    InfractionsPlugin
+};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct Plugins {
-    #[serde(rename = "InfractionsPlugin")]
-    crate infractions_plugin: Option<InfractionsPlugin>
+    #[serde(rename = "InfractionsPlugin", default)]
+    crate infractions_plugin: Option<InfractionsPlugin>,
+
+    #[serde(rename = "CensorshipPlugin", default)]
+    crate censorship_plugin: Option<CensorshipPlugin>
 }
