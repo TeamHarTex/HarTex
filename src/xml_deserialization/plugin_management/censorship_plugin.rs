@@ -25,6 +25,6 @@ use crate::{
 
 #[derive(Debug, Clone,  Serialize, Deserialize)]
 crate struct CensorshipPlugin {
-    #[serde(rename = "Levels")]
-    levels: Vec<CensorshipLevel>
+    #[serde(rename = "Levels", default)]
+    crate levels: Vec<CensorshipLevel>
 }
