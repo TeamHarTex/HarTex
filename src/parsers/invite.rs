@@ -46,13 +46,9 @@ impl Parser for InviteParser {
         let regex = Regex::new(r#"((https://)?discord\.gg/)(([a-z]|[A-Z]|[0-9])+)"#).unwrap();
 
         if let Some(captures) = regex.captures(&input) {
-            dbg!(captures.get(0));
-            dbg!(captures.get(1));
-            dbg!(captures.get(2));
-            dbg!(captures.get(3));
-            dbg!(captures.get(4));
+            return Ok(Invite { code: captures.get(3).unwrap().as_str().into() });
         }
 
-        Err(ParseError("Intentional error".to_string()))
+        Err(ParseError("No invite detected.".to_string()))
     }
 }
