@@ -2,7 +2,7 @@
 
 [![commit](https://img.shields.io/github/last-commit/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
 ![GitHub top language](https://img.shields.io/github/languages/top/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
-![Lines of code](https://img.shields.io/tokei/lines/github/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
+
 ![GitHub](https://img.shields.io/github/license/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.52-93450a.svg?style=for-the-badge&logo=rust)
