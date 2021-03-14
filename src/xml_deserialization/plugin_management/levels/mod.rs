@@ -12,4 +12,13 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+extern crate serde;
+extern crate quick_xml;
+
 crate mod censorship;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+crate struct Level {
+    #[serde(rename = "LevelInteger")]
+    crate level_integer: u8
+}
