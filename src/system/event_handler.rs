@@ -53,6 +53,9 @@ use crate::{
         TaskContext,
     },
     logging::logger::Logger,
+    macros::{
+        logger_dbg
+    },
     plugins::{
         censorship::{
             tasks::{
@@ -262,8 +265,8 @@ impl EventHandler {
         }
 
         let mut state_machine = StateMachine::new_with_state(CensorshipProcess::Initialized);
-        let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
-        let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
+        let config_string = dbg!(http.clone().get_guild_configuration(payload.guild_id.unwrap()).await)?;
+        let config = dbg!(quick_xml::de::from_str::<BotConfig>(&config_string))?;
         let member = http.clone().guild_member(payload.guild_id.unwrap(), payload.author.id).await?.unwrap();
         let member_available_roles = member
             .roles
@@ -286,7 +289,7 @@ impl EventHandler {
                     .levels {
                     if roles_iter.any(|id| {
                         if let Some(lvl) = config.role_permission_levels.clone().unwrap().get(id) {
-                            *lvl >= level.level as u32
+                            *lvl >= level.level.level_integer as u32
                         }
                         else {
                             false
