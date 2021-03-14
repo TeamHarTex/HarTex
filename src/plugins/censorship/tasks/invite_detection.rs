@@ -30,7 +30,12 @@ use crate::{
     utilities::{
         invite_detection::invite_detected
     },
-    xml_deserialization::BotConfig
+    xml_deserialization::{
+        plugin_management::{
+            models::channel_id::ChannelId
+        },
+        BotConfig
+    }
 };
 
 crate struct InviteDetectionTask;
@@ -49,8 +54,14 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
         if let (true, Some(invite)) = invite_detected(message.content) {
             if let Some(ref plugin) = config.plugins {
                 if let Some(ref censorship) = plugin.censorship_plugin {
-                    for level in &censorship.levels {
+                    for level in &censorship.censorship_levels.levels {
                         if level.filter_invite_links == Some(true) {
+                            if let Some(whitelisted_channels) = level.clone().invites_channel_whitelist {
+                                if whitelisted_channels.channel_ids.contains(&ChannelId { id: message.channel_id.into_inner_u64() }) {
+                                    return Ok(());
+                                }
+                            }
+
                             if let Some(whitelisted) = level.clone().whitelisted_guild_invites {
                                 let twilight_invite = payload.http_client.clone().invite(invite.clone().code).await?;
 
