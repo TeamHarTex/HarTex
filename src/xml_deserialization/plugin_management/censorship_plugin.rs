@@ -23,8 +23,14 @@ use crate::{
     }
 };
 
-#[derive(Debug, Clone,  Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct CensorshipPlugin {
-    #[serde(rename = "Levels", default)]
+    #[serde(rename = "CensorshipLevels", default)]
+    crate censorship_levels: CensorshipLevels
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+crate struct CensorshipLevels {
+    #[serde(rename = "CensorshipLevel", default)]
     crate levels: Vec<CensorshipLevel>
 }
