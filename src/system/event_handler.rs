@@ -285,8 +285,7 @@ impl EventHandler {
 
         if let Some(ref plugins) = config.plugins {
             if let Some(censorship) = plugins.censorship_plugin.clone() {
-                for level in censorship
-                    .levels {
+                for level in censorship.censorship_levels.levels {
                     if roles_iter.any(|id| {
                         if let Some(lvl) = config.role_permission_levels.clone().unwrap().get(id) {
                             *lvl >= level.level.level_integer as u32
