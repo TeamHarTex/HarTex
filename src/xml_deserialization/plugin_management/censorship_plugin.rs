@@ -34,3 +34,11 @@ crate struct CensorshipLevels {
     #[serde(rename = "CensorshipLevel", default)]
     crate levels: Vec<CensorshipLevel>
 }
+
+impl Default for CensorshipLevels {
+    fn default() -> Self {
+        Self {
+            levels: Default::default()
+        }
+    }
+}
