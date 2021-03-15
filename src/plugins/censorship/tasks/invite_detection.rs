@@ -64,6 +64,7 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
 
                             if let Some(whitelisted) = level.clone().whitelisted_guild_invites {
                                 let twilight_invite = payload.http_client.clone().invite(invite.clone().code).await?;
+                                let guild_vanity = payload.http_client.clone().guild_vanity_url(payload.message.guild_id.unwrap()).await?;
 
                                 if let Some(actual_invite) = twilight_invite {
                                     if let Some(invite_guild) = actual_invite.guild {
@@ -71,6 +72,19 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
                                             .any(|whitelist|
                                                 whitelist.id == Some(invite_guild.id.into_inner_u64())
                                             ) {
+                                            payload.http_client.clone()
+                                                .delete_message(payload.message.channel_id, payload.message.id)
+                                                .await?;
+                                        }
+                                        else if !whitelisted.whitelists.iter()
+                                            .any(|whitelist| {
+                                                if let (Some(vanity), Some(option_vanity)) = (whitelist.clone().vanity, guild_vanity) {
+                                                    vanity == option_vanity
+                                                }
+                                                else { 
+                                                    false
+                                                }
+                                            }) {
                                             payload.http_client.clone()
                                                 .delete_message(payload.message.channel_id, payload.message.id)
                                                 .await?;
