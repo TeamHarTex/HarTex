@@ -78,16 +78,24 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
                                         }
                                         else if !whitelisted.whitelists.iter()
                                             .any(|whitelist| {
-                                                if let (Some(vanity), Some(option_vanity)) = (whitelist.clone().vanity, guild_vanity) {
-                                                    vanity == option_vanity
+                                                if let (Some(vanity), Some(option_vanity)) = (whitelist.clone().vanity, guild_vanity.as_ref()) {
+                                                    vanity == *option_vanity
                                                 }
-                                                else { 
+                                                else {
                                                     false
                                                 }
                                             }) {
                                             payload.http_client.clone()
                                                 .delete_message(payload.message.channel_id, payload.message.id)
                                                 .await?;
+                                        }
+                                        else if let Some(blacklist) = level.clone().blacklisted_invite_codes {
+                                            if blacklist.invite_codes.iter().any(|blacklisted_invite_code| 
+                                                blacklisted_invite_code.to_lowercase() == invite.clone().code.to_lowercase()) {
+                                                payload.http_client.clone()
+                                                    .delete_message(payload.message.channel_id, payload.message.id)
+                                                    .await?;
+                                            }
                                         }
                                     }
                                 }
