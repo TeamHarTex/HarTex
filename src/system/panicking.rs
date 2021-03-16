@@ -42,13 +42,13 @@ crate static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send
         let hook = take_hook();
 
         set_hook(box |info| {
-            report_ibe(info)
+            hartex_begin_panic(info)
         });
 
         hook
     });
 
-crate fn report_ibe(panic_info: &PanicInfo<'_>) {
+crate fn hartex_begin_panic(panic_info: &PanicInfo<'_>) {
     Logger::log_error("An unexpected panic had taken place. See below for more information:");
 
     eprintln!("{}error: internal bot error: unexpected panic{}\n", Ansi256 { colour: 1 }, Ansi256::reset());
