@@ -145,7 +145,7 @@ use crate::logging::{
 };
 
 use crate::macros::{
-    execute_command
+    execute_command,
 };
 
 use crate::plugins::{
@@ -277,7 +277,6 @@ use crate::system::{
     caching::SystemCache,
     event_handler::EventHandler,
     panicking::{
-        hartex_begin_panic,
         RUST_DEFAULT_PANIC_HOOK
     },
     twilight_http_client_extensions::AddUserExperience,
