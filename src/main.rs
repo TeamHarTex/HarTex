@@ -276,8 +276,8 @@ use crate::system::{
     bot_configuration::BotConfiguration,
     caching::SystemCache,
     event_handler::EventHandler,
-    internal_bot_error::{
-        report_ibe,
+    panicking::{
+        hartex_begin_panic,
         RUST_DEFAULT_PANIC_HOOK
     },
     twilight_http_client_extensions::AddUserExperience,
