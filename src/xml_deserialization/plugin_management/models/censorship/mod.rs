@@ -15,7 +15,10 @@
 extern crate serde;
 extern crate quick_xml;
 
+crate mod blacklisted_invite_codes;
+crate mod invites_channel_whitelist;
 crate mod whitelisted_guild_invites;
+crate mod whitelisted_invite_codes;
 crate mod zalgo_channel_whitelist;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
