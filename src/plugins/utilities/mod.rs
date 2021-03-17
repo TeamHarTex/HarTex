@@ -15,9 +15,11 @@
 mod avatar;
 mod coinflip;
 mod emoji;
+mod interesting;
 mod randint;
 
 crate use avatar::AvatarCommand;
 crate use coinflip::CoinflipCommand;
 crate use emoji::EmojiCommand;
+crate use interesting::InterestingCommand;
 crate use randint::RandintCommand;
