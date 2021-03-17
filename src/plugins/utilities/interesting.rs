@@ -39,7 +39,7 @@ impl Command for InterestingCommand {
     }
 
     fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, _arguments: Arguments<'asynchronous_trait>, _cache: InMemoryCache)
-        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send>> {
+        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
         Box::pin(utilities_interesting_command(ctx))
     }
 }
@@ -52,6 +52,6 @@ async fn utilities_interesting_command(ctx: CommandContext<'_>) -> SystemResult<
         .build()
         .reply(ctx.message.id)
         .await?;
-    
+
     Ok(())
 }
