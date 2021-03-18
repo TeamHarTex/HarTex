@@ -45,13 +45,21 @@ impl Task for DomainDetectionTask {
 async fn censorship_domain_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
     if let TaskContext::MessageCreate(payload) = ctx {
         let message_parts = payload.message.content.split(" ").collect::<Vec<_>>();
-        
+
         if message_parts.iter().any(|part| {
             url_detected(part.to_string()).is_some()
         }) {
-            
+            if let Some(ref plugins) = config.plugins {
+                if let Some(ref censorship) = plugins.censorship_plugin {
+                    for level in &censorship.censorship_levels.levels {
+                        if level.filter_domains == Some(true) {
+                            payload.http_client.clone().delete_message(payload.message.channel_id, payload.message.id).await?;
+                        }
+                    }
+                }
+            }
         }
-        
+
         Ok(())
     }
     else {
