@@ -16,6 +16,7 @@ extern crate serde;
 extern crate quick_xml;
 
 crate mod blacklisted_invite_codes;
+crate mod domains_channel_whitelist;
 crate mod invites_channel_whitelist;
 crate mod whitelisted_guild_invites;
 crate mod whitelisted_invite_codes;
