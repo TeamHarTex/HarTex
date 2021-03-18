@@ -19,12 +19,16 @@ use std::{
 
 use crate::{
     command_system::{
+        precommand_checks::{
+            SystemResult
+        },
         Task,
         TaskContext
+    },
+    xml_deserialization::{
+        BotConfig
     }
 };
-use crate::xml_deserialization::BotConfig;
-use crate::command_system::precommand_checks::SystemResult;
 
 crate struct DomainDetectionTask;
 
