@@ -47,6 +47,7 @@ twilight-model = "0.3.3"
 twilight-standby = "0.3.0"
 twilight-util = { version = "0.3.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
+url = "2.2.1"
 
 [profile.dev]
 opt-level = 1
