@@ -20,13 +20,11 @@ use crate::{
     }
 };
 
-crate fn invite_detected(input: String) -> (bool, Option<Invite>) {
-    let parser = InviteParser::new();
-
-    if let Ok(invite) = parser.parse(input) {
-        (true, Some(invite))
+crate fn invite_detected(input: String) -> Option<Invite> {
+    if let Ok(invite) = InviteParser::new().parse(input) {
+        Some(invite)
     }
     else {
-        (false, None)
+        None
     }
 }
