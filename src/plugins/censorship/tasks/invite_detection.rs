@@ -51,7 +51,7 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
     if let TaskContext::MessageCreate(payload) = ctx {
         let message = payload.message.clone();
 
-        if let (true, Some(invite)) = invite_detected(message.content) {
+        if let Some(invite) = invite_detected(message.content) {
             if let Some(ref plugin) = config.plugins {
                 if let Some(ref censorship) = plugin.censorship_plugin {
                     for level in &censorship.censorship_levels.levels {
@@ -90,7 +90,7 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
                                                 .await?;
                                         }
                                         else if let Some(blacklist) = level.clone().blacklisted_invite_codes {
-                                            if blacklist.invite_codes.iter().any(|blacklisted_invite_code| 
+                                            if blacklist.invite_codes.iter().any(|blacklisted_invite_code|
                                                 blacklisted_invite_code.to_lowercase() == invite.clone().code.to_lowercase()) {
                                                 payload.http_client.clone()
                                                     .delete_message(payload.message.channel_id, payload.message.id)
