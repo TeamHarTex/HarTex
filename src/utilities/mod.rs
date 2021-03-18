@@ -17,6 +17,7 @@ crate mod duration;
 crate mod image_processing;
 crate mod invite_detection;
 crate mod levelling_system;
+crate mod url_detection;
 crate mod zalgo_detection;
 
 use std::{
