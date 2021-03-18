@@ -49,7 +49,10 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "WhitelistedInviteCodes", default)]
     crate whitelisted_invite_codes: Option<WhitelistedInviteCodes>,
-    
+
     #[serde(rename = "BlacklistedInviteCodes", default)]
-    crate blacklisted_invite_codes: Option<BlacklistedInviteCodes>
+    crate blacklisted_invite_codes: Option<BlacklistedInviteCodes>,
+
+    #[serde(rename = "FilterDomains", default)]
+    crate filter_domains: Option<bool>
 }
