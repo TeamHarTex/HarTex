@@ -25,6 +25,9 @@ use crate::{
         Task,
         TaskContext
     },
+    utilities::{
+        url_detection::url_detected
+    },
     xml_deserialization::{
         BotConfig
     }
@@ -41,6 +44,14 @@ impl Task for DomainDetectionTask {
 
 async fn censorship_domain_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
     if let TaskContext::MessageCreate(payload) = ctx {
+        let message_parts = payload.message.content.split(" ").collect::<Vec<_>>();
+        
+        if message_parts.iter().any(|part| {
+            url_detected(part.to_string()).is_some()
+        }) {
+            
+        }
+        
         Ok(())
     }
     else {
