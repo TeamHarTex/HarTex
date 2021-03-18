@@ -12,7 +12,9 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+mod domain_detection;
 mod invite_detection;
 mod zalgo_detection;
 
+crate use invite_detection::InviteDetectionTask;
 crate use zalgo_detection::ZalgoDetectionTask;
