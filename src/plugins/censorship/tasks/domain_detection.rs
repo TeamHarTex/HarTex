@@ -29,12 +29,17 @@ use crate::command_system::precommand_checks::SystemResult;
 crate struct DomainDetectionTask;
 
 impl Task for DomainDetectionTask {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) 
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
         Box::pin(censorship_domain_detection_task(ctx, config))
     }
 }
 
 async fn censorship_domain_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
-    todo!()
+    if let TaskContext::MessageCreate(payload) = ctx {
+        Ok(())
+    }
+    else {
+        unreachable!()
+    }
 }
