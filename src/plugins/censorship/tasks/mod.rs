@@ -12,6 +12,7 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+mod blocked_words_or_tokens_detection;
 mod domain_detection;
 mod invite_detection;
 mod zalgo_detection;
