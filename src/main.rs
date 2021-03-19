@@ -265,7 +265,6 @@ use crate::plugins::{
         AvatarCommand,
         CoinflipCommand,
         EmojiCommand,
-        InterestingCommand,
         RandintCommand
     },
     whitelist::{
@@ -479,7 +478,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             .command(EmojiCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
             .command(RandintCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
             .command(AvatarCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
-            .command(InterestingCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
 
             // Whitelist Command Module
             .command(AcceptCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
@@ -2320,18 +2318,6 @@ async fn handle_command(message: Message,
                     message,
                     emitter.clone(),
                     "avatar"
-                );
-            },
-            Command { name: "interesting", arguments, .. } => {
-                execute_command!(
-                    InterestingCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "interesting"
                 );
             },
 
