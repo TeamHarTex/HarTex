@@ -18,9 +18,11 @@ extern crate quick_xml;
 use crate::xml_deserialization::plugin_management::{
     levels::Level,
     models::censorship::{
+        blacklisted_domains::BlacklistedDomains,
         blacklisted_invite_codes::BlacklistedInviteCodes,
         domains_channel_whitelist::DomainsChannelWhitelist,
         invites_channel_whitelist::InvitesChannelWhitelist,
+        whitelisted_domains::WhitelistedDomains,
         whitelisted_guild_invites::WhitelistedGuildInvites,
         whitelisted_invite_codes::WhitelistedInviteCodes,
         zalgo_channel_whitelist::ZalgoChannelWhitelist,
@@ -58,5 +60,11 @@ crate struct CensorshipLevel {
     crate filter_domains: Option<bool>,
 
     #[serde(rename = "DomainsChannelWhitelist", default)]
-    crate domains_channel_whitelist: Option<DomainsChannelWhitelist>
+    crate domains_channel_whitelist: Option<DomainsChannelWhitelist>,
+
+    #[serde(rename = "WhitelistedDomains", default)]
+    crate whitelisted_domains: Option<WhitelistedDomains>,
+
+    #[serde(rename = "BlacklistedDomains")]
+    crate blacklisted_domains: Option<BlacklistedDomains>
 }
