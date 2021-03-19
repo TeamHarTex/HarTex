@@ -53,7 +53,20 @@ async fn censorship_domain_detection_task(ctx: TaskContext, config: BotConfig) -
                 if let Some(ref censorship) = plugins.censorship_plugin {
                     for level in &censorship.censorship_levels.levels {
                         if level.filter_domains == Some(true) {
-                            payload.http_client.clone().delete_message(payload.message.channel_id, payload.message.id).await?;
+                            if let Some(whitelisteds) = level.whitelisted_domains.clone() {
+                                if !whitelisteds.domains.iter().any(|domain| {
+                                    payload.message.content.to_lowercase().contains(domain.to_lowercase())
+                                }) {
+                                    payload.http_client.clone().delete_message(payload.message.channel_id, payload.message.id).await?;
+                                }
+                            }
+                            else if let Some(blacklisteds) = level.blacklisted_domains.clone() {
+                                if blacklisteds.domains.iter().any(|domain| {
+                                    payload.message.content.to_lowercase().contains(domain.to_lowercase())
+                                }) {
+                                    payload.http_client.clone().delete_message(payload.message.channel_id, payload.message.id).await?;
+                                }
+                            }
                         }
                     }
                 }
