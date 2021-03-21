@@ -23,6 +23,12 @@ use std::{
     },
     lazy::{
         SyncLazy
+    },
+    ops::{
+        Add,
+        AddAssign,
+        Sub,
+        SubAssign
     }
 };
 
@@ -149,6 +155,80 @@ impl ProfanityCensorshipOptions {
 impl Default for ProfanityCensorshipOptions {
     fn default() -> Self {
         Self::UseStandardWordSetOnly
+    }
+}
+
+impl PartialEq for ProfanityCensorshipOptions {
+    fn eq(&self, other: Self) -> bool {
+        self.set() == other.set()
+    }
+}
+
+impl AddAssign for ProfanityCensorshipOptions {
+    fn add_assign(&mut self, rhs: Self) {
+        *self = Self::UseCustomWordSet(self.set().union(rhs.set()).cloned().collect())
+    }
+}
+
+impl<S> AddAssign<S> for ProfanityCensorshipOptions
+where
+    S: Into<String> {
+    fn add_assign(&mut self, rhs: S) {
+        *self = Self::UseCustomWordSet(self.iter().cloned().chain(Some(rhs.into())).collect())
+    }
+}
+
+impl SubAssign for ProfanityCensorshipOptions {
+    fn sub_assign(&mut self, rhs: Self) {
+        *self = Self::UseCustomWordSet(self.set().difference(rhs.set()).cloned().collect())
+    }
+}
+
+impl<S> SubAssign<S> for ProfanityCensorshipOptions
+    where
+        S: Into<String> {
+    fn sub_assign(&mut self, rhs: S) {
+        *self = Self::UseCustomWordSet(self.iter().filter(|&s| s != &rhs).collect())
+    }
+}
+
+impl Add for ProfanityCensorshipOptions {
+    type Output = Self;
+
+    fn add(mut self, rhs: Self) -> Self::Output {
+        self += rhs;
+        self
+    }
+}
+
+impl<S> Add<S> for ProfanityCensorshipOptions
+where
+    S: Into<String> {
+    type Output = Self;
+
+    fn add(mut self, rhs: S) -> Self::Output {
+        self += rhs;
+        self
+    }
+}
+
+impl Sub for ProfanityCensorshipOptions {
+    type Output = Self;
+
+    fn sub(mut self, rhs: Self) -> Self::Output {
+        self -= rhs;
+        self
+    }
+}
+
+impl<S> Sub<S> for ProfanityCensorshipOptions
+    where
+        S: Into<String> {
+    type Output = Self;
+
+    fn sub(mut self, rhs: S) -> Self::Output {
+        self -= rhs;
+        self
     }
 }
 
