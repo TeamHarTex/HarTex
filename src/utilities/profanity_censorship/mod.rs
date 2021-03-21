@@ -126,5 +126,70 @@ static CHARACTER_ALIASES: SyncLazy<HashMap<char, char>> = SyncLazy::new(|| {
             hashmap.insert(*character, 'p');
         });
 
+    // aliases for the letter Q
+
+    // aliases for the letter R
+    ['®']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'r');
+        });
+
+    // aliases for the letter S
+    ['5', '$']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 's');
+        });
+
+    // aliases for the letter T
+    ['τ', 'Τ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 't');
+        });
+
+    // aliases for the letter U
+    ['Ù', 'Ú', 'Û', 'Ü', 'ù', 'ú', 'û', 'ü', 'μ', 'υ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'u');
+        });
+
+    // aliases for the letter V
+    ['ν']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'v');
+        });
+
+    // aliases for the letter W
+    ['ω', '₩']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'w');
+        });
+
+    // aliases for the letter X
+    ['×', 'χ', 'Χ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'x');
+        });
+
+    // aliases for the letter Y
+    ['¥', 'Ý', 'ý', 'ÿ', 'γ', 'Υ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'y');
+        });
+
+    // aliases for the letter Z
+    ['2', 'Ζ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'z');
+        });
+
     hashmap
 });
