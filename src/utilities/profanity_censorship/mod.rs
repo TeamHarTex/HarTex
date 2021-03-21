@@ -29,5 +29,40 @@ static CHARACTER_ALIASES: SyncLazy<HashMap<char, char>> = SyncLazy::new(|| {
         hashmap.insert(character as char, (character + CASE_DIFFERENCE) as char);
     }
 
+    // aliases for the letter A.
+    ['4', '@', 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'à', 'á', 'â', 'ã', 'ä', 'å', 'α', 'Α']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'a');
+        });
+
+    // aliases for the letter B.
+    ['ß', 'Β', '฿']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'b');
+        });
+
+    // aliases for the letter C.
+    ['¢', 'ç', 'Ç', '©']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'c');
+        });
+
+    // aliases for the letter D.
+    ['Ð', '₫']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'd');
+        });
+
+    // aliases for the letter E.
+    ['3', '£', '€', 'È', 'É', 'Ê', 'Ë', 'è', 'é', 'ê', 'ë', 'ε', 'Ε', 'Ξ', 'Σ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'e');
+        });
+
     hashmap
 });
