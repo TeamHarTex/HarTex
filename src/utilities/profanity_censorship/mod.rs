@@ -64,5 +64,67 @@ static CHARACTER_ALIASES: SyncLazy<HashMap<char, char>> = SyncLazy::new(|| {
             hashmap.insert(*character, 'e');
         });
 
+    // aliases for the letter F
+
+    // aliases for the letter G
+    ['6']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'g');
+        });
+
+    // aliases for the letter H
+    ['Η']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'h');
+        });
+
+    // aliases for the letter I
+    ['1', '|', '!', 'Ì', 'Í', 'Î', 'Ï', 'ì', 'í', 'î', 'ï', 'Ι']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'i');
+        });
+
+    // aliases for the letter J
+
+    // aliases for the letter K
+    ['κ', 'Κ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'k');
+        });
+
+    // aliases for the letter L
+
+    // aliases for the letter M
+    ['Μ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'm');
+        });
+
+    // aliases for the letter N
+    ['ñ', 'Ñ', 'η', 'Ν', 'Π']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'n');
+        });
+
+    // aliases for the letter O
+    ['0', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'ò', 'ó', 'ô', 'õ', 'ö', 'Ø', 'ø', 'θ', 'ο', 'σ', 'Θ', 'Ο', 'Φ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'o');
+        });
+
+    // aliases for the letter P
+    ['ρ', 'Ρ', '₱', '℗', 'Þ', 'þ']
+        .iter()
+        .for_each(|character| {
+            hashmap.insert(*character, 'p');
+        });
+
     hashmap
 });
