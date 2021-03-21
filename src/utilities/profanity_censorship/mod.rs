@@ -21,7 +21,9 @@ use std::{
     }
 };
 
-static CHARACTER_ALIASES: SyncLazy<HashMap<char, char>> = SyncLazy::new(|| {
+crate mod word_sets;
+
+crate static CHARACTER_ALIASES: SyncLazy<HashMap<char, char>> = SyncLazy::new(|| {
     let mut hashmap = HashMap::<char, char>::new();
     const CASE_DIFFERENCE: u8 = b'a' - b'A';
 
