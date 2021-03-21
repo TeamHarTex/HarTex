@@ -11,3 +11,35 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
+use std::{
+    collections::{
+        HashSet
+    },
+    iter::{
+        FromIterator
+    },
+    lazy::{
+        SyncLazy
+    }
+};
+
+crate static STAMDARD_WORD_SET: SyncLazy<HashSet<&str>> = SyncLazy::new(|| {
+    HashSet::from_iter(vec![
+        "ass",
+        "asshole",
+        "bitch",
+        "cock",
+        "cunt",
+        "fag",
+        "fagot",
+        "faggot",
+        "fuck",
+        "nigger",
+        "piss",
+        "pussy",
+        "shit",
+        "twat",
+        "whore"
+    ])
+});
