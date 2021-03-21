@@ -14,7 +14,7 @@
 
 use std::{
     collections::{
-        HashMap
+        HashSet
     },
     lazy::{
         SyncLazy
@@ -24,3 +24,37 @@ use std::{
 crate mod character_aliases;
 crate mod word_sets;
 
+crate enum ProfanityCensorshipOptions {
+    UseStandardWordSetOnly,
+
+    UseSexWordSetOnly,
+
+    UseZealousWordSetOnly,
+
+    UseCustomWordSet(HashSet<String>)
+}
+
+impl ProfanityCensorshipOptions {
+    crate fn empty() -> Self {
+        Self::UseCustomWordSet(HashSet::new())
+    }
+
+    crate fn custom<I, T>(words: I) -> Self
+    where
+        I: IntoIterator<Item = T>,
+        T: Into<String> {
+        Self::UseCustomWordSet(words.into_iter().map(Into::into).collect())
+    }
+}
+
+impl Default for ProfanityCensorshipOptions {
+    fn default() -> Self {
+        Self::UseStandardWordSetOnly
+    }
+}
+
+fn alias(text: &str) -> String {
+    text.chars()
+        .map(|character| character_aliases::CHARACTER_ALIASES.get(&character).copied().unwrap_or(character))
+        .collect()
+}
