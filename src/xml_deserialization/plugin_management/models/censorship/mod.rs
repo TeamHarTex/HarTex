@@ -19,6 +19,7 @@ crate mod blacklisted_domains;
 crate mod blacklisted_invite_codes;
 crate mod domains_channel_whitelist;
 crate mod invites_channel_whitelist;
+crate mod prohibited_tokens;
 crate mod prohibited_words;
 crate mod whitelisted_domains;
 crate mod whitelisted_guild_invites;
