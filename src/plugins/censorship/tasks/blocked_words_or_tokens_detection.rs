@@ -56,6 +56,15 @@ async fn censorship_blocked_words_or_tokens_detection_task(ctx: TaskContext, con
                         vec![]
                     };
 
+                    blocked.append(&mut {
+                        if let Some(tokens) = level.clone().prohibited_tokens {
+                            tokens.prohibited_token
+                        }
+                        else {
+                            vec![]
+                        }
+                    });
+
                     if blocked_words_or_tokens_detected(message.clone(), Some(blocked)) {
                         payload.http_client.delete_message(
                             payload.message.channel_id,
