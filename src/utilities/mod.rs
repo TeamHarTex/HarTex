@@ -12,6 +12,7 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+crate mod blocked_words_or_tokens_detection;
 crate mod constants;
 crate mod duration;
 crate mod image_processing;
