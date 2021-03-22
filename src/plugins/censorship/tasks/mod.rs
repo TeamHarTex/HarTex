@@ -17,6 +17,7 @@ mod domain_detection;
 mod invite_detection;
 mod zalgo_detection;
 
+crate use blocked_words_or_tokens_detection::BlockedWordsOrTokensDetectionTask;
 crate use domain_detection::DomainDetectionTask;
 crate use invite_detection::InviteDetectionTask;
 crate use zalgo_detection::ZalgoDetectionTask;
