@@ -25,6 +25,9 @@ use crate::{
         Task,
         TaskContext
     },
+    utilities::{
+        blocked_words_or_tokens_detection::blocked_words_or_tokens_detected
+    },
     xml_deserialization::{
         BotConfig
     }
@@ -33,12 +36,39 @@ use crate::{
 crate struct BlockedWordsOrTokensDetectionTask;
 
 impl Task for BlockedWordsOrTokensDetectionTask {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) 
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
         Box::pin(censorship_blocked_words_or_tokens_detection_task(ctx, config))
     }
 }
 
 async fn censorship_blocked_words_or_tokens_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
+    if let TaskContext::MessageCreate(payload) = ctx {
+        let message = payload.message.content.clone();
+
+        if let Some(ref plugins) = config.plugins {
+            if let Some(ref censorship) = plugins.censorship_plugin {
+                for level in &censorship.censorship_levels.levels {
+                    let mut blocked = if let Some(words) = level.clone().prohibited_words {
+                        words.prohibited_word
+                    }
+                    else {
+                        vec![]
+                    };
+
+                    if blocked_words_or_tokens_detected(message.clone(), Some(blocked)) {
+                        payload.http_client.delete_message(
+                            payload.message.channel_id,
+                            payload.message.id
+                        ).await?;
+                    }
+                }
+            }
+        }
+    }
+    else {
+        unreachable!()
+    }
+
     Ok(())
 }
