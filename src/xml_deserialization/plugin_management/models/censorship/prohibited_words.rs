@@ -14,3 +14,9 @@
 
 extern crate serde;
 extern crate quick_xml;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+crate struct ProhibitedWords {
+    #[serde(rename = "ProhibitedWord")]
+    crate prohibited_word: Vec<String>
+}
