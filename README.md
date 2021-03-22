@@ -13,6 +13,8 @@
 ![Github Open Pull Requests](https://img.shields.io/github/issues-pr-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Github Closed Pull Requests](https://img.shields.io/github/issues-pr-closed-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 
+![GitHub Milestones](https://img.shields.io/github/milestones/open/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
+
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
 ## Should I run HarTex locally?
