@@ -22,6 +22,7 @@ use crate::xml_deserialization::plugin_management::{
         blacklisted_invite_codes::BlacklistedInviteCodes,
         domains_channel_whitelist::DomainsChannelWhitelist,
         invites_channel_whitelist::InvitesChannelWhitelist,
+        prohibited_words::ProhibitedWords,
         whitelisted_domains::WhitelistedDomains,
         whitelisted_guild_invites::WhitelistedGuildInvites,
         whitelisted_invite_codes::WhitelistedInviteCodes,
@@ -66,5 +67,8 @@ crate struct CensorshipLevel {
     crate whitelisted_domains: Option<WhitelistedDomains>,
 
     #[serde(rename = "BlacklistedDomains")]
-    crate blacklisted_domains: Option<BlacklistedDomains>
+    crate blacklisted_domains: Option<BlacklistedDomains>,
+
+    #[serde(rename = "ProhibitedWords", default)]
+    crate prohibited_words: Option<ProhibitedWords>
 }
