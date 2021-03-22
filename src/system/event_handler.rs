@@ -59,6 +59,7 @@ use crate::{
     plugins::{
         censorship::{
             tasks::{
+                BlockedWordsOrTokensDetectionTask,
                 DomainDetectionTask,
                 InviteDetectionTask,
                 ZalgoDetectionTask
@@ -338,7 +339,7 @@ impl EventHandler {
                         }
 
                         state_machine.update_state(CensorshipProcess::InvitesFiltered);
-                        
+
                         if level.filter_domains == Some(true) {
                             DomainDetectionTask::execute_task(
                                 TaskContext::MessageCreate(
@@ -355,8 +356,25 @@ impl EventHandler {
                                 config.clone()
                             ).await?;
                         }
-                        
+
                         state_machine.update_state(CensorshipProcess::DomainsFiltered);
+
+                        BlockedWordsOrTokensDetectionTask::execute_task(
+                            TaskContext::MessageCreate(
+                                MessageCreateTaskContext(
+                                    Arc::new(
+                                        MessageCreateTaskContextRef::new(
+                                            http.clone(),
+                                            payload.author.clone(),
+                                            payload.0.clone()
+                                        )
+                                    )
+                                )
+                            ),
+                            config.clone()
+                        ).await?;
+
+                        state_machine.update_state(CensorshipProcess::BlockedWordsOrTokensFiltered);
 
                         // TO BE IMPLEMEMTED
 
