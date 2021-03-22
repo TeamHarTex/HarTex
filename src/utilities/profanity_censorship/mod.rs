@@ -123,7 +123,7 @@ impl ProfanityCensorshipOptions {
                    for jndex in start_offset..word.len().saturating_sub(end_offset) {
                        let kndex = index + jndex;
 
-                       if let Some(vector) = dedup_hashmap.get(&k) {
+                       if let Some(vector) = dedup_hashmap.get(&kndex) {
                            for l in vector {
                                if let Some(k) = hashmap.get(l) {
                                    set.insert(*k);
@@ -159,7 +159,7 @@ impl Default for ProfanityCensorshipOptions {
 }
 
 impl PartialEq for ProfanityCensorshipOptions {
-    fn eq(&self, other: Self) -> bool {
+    fn eq(&self, other: &Self) -> bool {
         self.set() == other.set()
     }
 }
@@ -188,7 +188,8 @@ impl<S> SubAssign<S> for ProfanityCensorshipOptions
     where
         S: Into<String> {
     fn sub_assign(&mut self, rhs: S) {
-        *self = Self::UseCustomWordSet(self.iter().filter(|&s| s != &rhs).collect())
+        let other = rhs.into();
+        *self = Self::UseCustomWordSet(self.iter().filter(|&s| s != &other).cloned().collect())
     }
 }
 
