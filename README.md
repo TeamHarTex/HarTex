@@ -9,7 +9,6 @@
 
 ![Github Open Issues](https://img.shields.io/github/issues-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Github Closed Issues](https://img.shields.io/github/issues-closed-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
-
 ![Github Open Pull Requests](https://img.shields.io/github/issues-pr-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Github Closed Pull Requests](https://img.shields.io/github/issues-pr-closed-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 
