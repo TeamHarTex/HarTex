@@ -25,10 +25,16 @@ use crate::{
         Task,
         TaskContext
     },
+    system::{
+        twilight_id_extensions::IntoInnerU64
+    },
     utilities::{
         blocked_words_or_tokens_detection::blocked_words_or_tokens_detected
     },
     xml_deserialization::{
+        plugin_management::{
+            models::channel_id::ChannelId
+        },
         BotConfig
     }
 };
@@ -49,6 +55,12 @@ async fn censorship_blocked_words_or_tokens_detection_task(ctx: TaskContext, con
         if let Some(ref plugins) = config.plugins {
             if let Some(ref censorship) = plugins.censorship_plugin {
                 for level in &censorship.censorship_levels.levels {
+                    if let Some(whitelist) = level.clone().blocked_words_or_tokens_channel_whitelist {
+                        if whitelist.channel_ids.contains(&ChannelId { id: payload.message.channel_id.into_inner_u64() }) {
+                            return Ok(());
+                        }
+                    }
+
                     let mut blocked = if let Some(words) = level.clone().prohibited_words {
                         words.prohibited_word
                     }
