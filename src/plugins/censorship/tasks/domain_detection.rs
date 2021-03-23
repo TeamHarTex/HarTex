@@ -25,10 +25,14 @@ use crate::{
         Task,
         TaskContext
     },
+    system::{
+        twilight_id_extensions::IntoInnerU64
+    },
     utilities::{
         url_detection::url_detected
     },
     xml_deserialization::{
+        plugin_management::models::channel_id::ChannelId,
         BotConfig
     }
 };
@@ -53,16 +57,22 @@ async fn censorship_domain_detection_task(ctx: TaskContext, config: BotConfig) -
                 if let Some(ref censorship) = plugins.censorship_plugin {
                     for level in &censorship.censorship_levels.levels {
                         if level.filter_domains == Some(true) {
+                            if let Some(whitelisted) = level.clone().domains_channel_whitelist {
+                                if whitelisted.channel_ids.contains(&ChannelId { id: payload.message.channel_id.into_inner_u64() }) {
+                                    return Ok(());
+                                }
+                            }
+                            
                             if let Some(whitelisteds) = level.whitelisted_domains.clone() {
                                 if !whitelisteds.domains.iter().any(|domain| {
-                                    payload.message.content.to_lowercase().contains(domain.to_lowercase())
+                                    payload.message.content.to_lowercase().contains(&domain.to_lowercase())
                                 }) {
                                     payload.http_client.clone().delete_message(payload.message.channel_id, payload.message.id).await?;
                                 }
                             }
                             else if let Some(blacklisteds) = level.blacklisted_domains.clone() {
                                 if blacklisteds.domains.iter().any(|domain| {
-                                    payload.message.content.to_lowercase().contains(domain.to_lowercase())
+                                    payload.message.content.to_lowercase().contains(&domain.to_lowercase())
                                 }) {
                                     payload.http_client.clone().delete_message(payload.message.channel_id, payload.message.id).await?;
                                 }
