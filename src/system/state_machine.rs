@@ -24,7 +24,7 @@ crate struct StateMachine<S: Debug + Clone + StateEnum> {
 }
 
 impl<S: Debug + Clone + StateEnum> StateMachine<S> {
-    crate fn new_with_state_enum(state: S) -> Self {
+    crate fn new_with_state(state: S) -> Self {
         Self {
             state
         }
@@ -33,7 +33,7 @@ impl<S: Debug + Clone + StateEnum> StateMachine<S> {
     crate fn update_state(&mut self, new_state: S) {
         self.state = new_state
     }
-    
+
     crate fn state(&self) -> S {
         self.state.clone()
     }
