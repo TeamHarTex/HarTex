@@ -15,7 +15,7 @@
 extern crate serde;
 extern crate quick_xml;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone,  Serialize, Deserialize)]
 crate struct MuteCommand {
     #[serde(rename = "MutedRole", default)]
     crate muted_role: Option<MutedRole>,
@@ -24,7 +24,7 @@ crate struct MuteCommand {
     crate role_to_remove: Option<RoleToRemove>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct MutedRole {
     #[serde(rename = "RoleId")]
     crate role_id: u64,
