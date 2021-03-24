@@ -25,8 +25,10 @@ crate enum CensorshipProcess {
     ZalgoFiltered,
 
     InvitesFiltered,
-    
+
     DomainsFiltered,
+
+    BlockedWordsOrTokensFiltered,
 
     Completed
 }

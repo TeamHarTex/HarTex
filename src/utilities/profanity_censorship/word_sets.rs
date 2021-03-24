@@ -24,7 +24,7 @@ use std::{
     }
 };
 
-crate static STAMDARD_WORD_SET: SyncLazy<HashSet<String>> = SyncLazy::new(|| {
+crate static STANDARD_WORD_SET: SyncLazy<HashSet<String>> = SyncLazy::new(|| {
     HashSet::from_iter(vec![
         "ass".to_string(),
         "asshole".to_string(),

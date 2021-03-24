@@ -31,3 +31,7 @@ crate const fn verified_hartex_user() -> RoleId {
 crate const fn hartex_version() -> &'static str {
     env!("CARGO_PKG_VERSION")
 }
+
+crate const fn bot_support_server() -> &'static str {
+    "https://discord.gg/s8qjxZK"
+}

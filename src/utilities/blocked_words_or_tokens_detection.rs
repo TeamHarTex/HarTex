@@ -11,3 +11,22 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
+use crate::{
+    utilities::{
+        profanity_censorship::ProfanityCensorshipOptions
+    }
+};
+
+crate fn blocked_words_or_tokens_detected(input: String, blocked_words_or_tokens: Option<Vec<String>>) -> bool {
+    let blocked = if let Some(blocked) = blocked_words_or_tokens {
+        ProfanityCensorshipOptions::custom(blocked)
+    }
+    else {
+        ProfanityCensorshipOptions::UseStandardWordSetOnly +
+            ProfanityCensorshipOptions::UseZealousWordSetOnly +
+            ProfanityCensorshipOptions::UseSexWordSetOnly
+    };
+
+    blocked.check(&input)
+}

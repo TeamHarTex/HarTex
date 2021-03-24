@@ -39,8 +39,8 @@ use twilight_model::{
 crate mod bot_configuration;
 crate mod caching;
 crate mod event_handler;
-crate mod internal_bot_error;
 crate mod model;
+crate mod panicking;
 crate mod state_machine;
 crate mod terminal;
 crate mod twilight_http_client_extensions;

@@ -21,6 +21,10 @@ mod error;
 mod invite;
 
 crate use emoji::EmojiParser;
+crate use invite::{
+    Invite,
+    InviteParser
+};
 
 crate type ParseResult<T> = Result<T, error::ParseError>;
 
