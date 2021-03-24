@@ -19,7 +19,7 @@ use super::command::infractions::{
     MuteCommand
 };
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 crate struct InfractionsPlugin {
     #[serde(rename = "MuteCommand")]
     crate mute_command: Option<MuteCommand>,

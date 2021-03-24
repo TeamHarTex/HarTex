@@ -19,7 +19,8 @@ use std::{
 
 use crate::command_system::task_context::TaskContext;
 use crate::system::SystemResult;
+use crate::xml_deserialization::BotConfig;
 
 crate trait Task {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>>;
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>>;
 }

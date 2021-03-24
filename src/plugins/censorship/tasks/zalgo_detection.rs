@@ -23,18 +23,18 @@ use crate::{
         TaskContext
     },
     system::{
-        twilight_http_client_extensions::GetGuildConfiguration,
         SystemResult,
     },
     utilities::{
         zalgo_detection::zalgo_detected
-    }
+    },
+    xml_deserialization::BotConfig
 };
 
 crate struct ZalgoDetectionTask;
 
 impl Task for ZalgoDetectionTask {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>> {
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, _config: BotConfig) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>> {
         Box::pin(censorship_zalgo_detection_task(ctx))
     }
 }

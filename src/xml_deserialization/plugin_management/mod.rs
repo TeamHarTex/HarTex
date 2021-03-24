@@ -14,6 +14,7 @@
 
 crate mod command;
 crate mod levels;
+crate mod models;
 mod plugins;
 
 // Plugins
@@ -22,5 +23,5 @@ mod infractions_plugin;
 
 crate use plugins::Plugins;
 
-crate use censorship_plugin::CensorhipPlugin;
+crate use censorship_plugin::CensorshipPlugin;
 crate use infractions_plugin::InfractionsPlugin;
