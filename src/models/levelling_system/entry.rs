@@ -16,7 +16,7 @@ use twilight_model::{
     id::UserId
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 crate struct LeaderboardEntry {
     crate user_id: UserId,
     crate level: u64,
