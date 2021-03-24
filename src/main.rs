@@ -31,7 +31,7 @@
 #![allow(incomplete_features)]
 
 // Minimum Supported Rust Version
-#![clippy::msrv = "1.52.0"]
+#![clippy::msrv = "1.53.0"]
 
 // Globally Allow Warnings for now, will be removed in the future
 #![allow(warnings)]
