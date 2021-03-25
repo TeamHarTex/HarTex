@@ -19,14 +19,11 @@ crate macro execute_command {
 
         match <$command_struct>::execute_command($context, $arguments, $cache).await {
             Ok(()) => {
-                let guild = match $http_client.guild($message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
+                let guild_name = $http_client.guild($message.guild_id.unwrap()).await?.map_or("unknown".to_string(), |guild| guild.name);
 
                 $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box $crate::system::model::payload::CommandExecuted {
                     command: $command_name,
-                    guild_name: guild,
+                    guild_name,
                     context: $context
                 }))
             },
@@ -47,14 +44,11 @@ crate macro execute_command {
             Ok(()) => {
                 match <$command_struct>::execute_command($context, $arguments, $cache).await {
                     Ok(()) => {
-                        let guild = match $http_client.guild($message.guild_id.unwrap()).await? {
-                            Some(guild) => guild.name,
-                            None => String::new()
-                        };
+                        let guild_name = $http_client.guild($message.guild_id.unwrap()).await?.map_or("unknown".to_string(), |guild| guild.name);
 
                         $emitter.event($crate::command_system::events::events::SystemEvent::CommandExecuted(box $crate::system::model::payload::CommandExecuted {
                             command: $command_name,
-                            guild_name: guild,
+                            guild_name,
                             context: $context
                         }))
                     },
@@ -90,7 +84,7 @@ crate macro logger_dbg {
                     )
                 }
             }
-        )
+        );
 
         $expression
     }
