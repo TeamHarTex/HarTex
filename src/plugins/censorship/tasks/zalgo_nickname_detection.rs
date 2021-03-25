@@ -34,7 +34,8 @@ use crate::{
 crate struct ZalgoNicknameDetectionTask;
 
 impl Task for ZalgoNicknameDetectionTask {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send>> {
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) 
+        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
         todo!()
     }
 }
