@@ -12,8 +12,13 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+mod member_update;
 mod message_create;
 
+crate use member_update::{
+    MemberUpdateTaskContext,
+    MemberUpdateTaskContextRef
+};
 crate use message_create::{
     MessageCreateTaskContext,
     MessageCreateTaskContextRef
@@ -21,5 +26,5 @@ crate use message_create::{
 
 crate enum TaskContext {
     MessageCreate(MessageCreateTaskContext),
-    MemberUpdate
+    MemberUpdate(MemberUpdateTaskContext)
 }
