@@ -19,10 +19,8 @@ use std::{
     }
 };
 
-crate trait IntegerDivRemSimultaneously: Sized + PartialOrd + Ord + Eq
-where
-    Self: Div + Rem {
-    fn div_rem(&self, other: &Self) -> (Self, Self) {
+crate trait IntegerDivRemSimultaneously: Sized + PartialOrd + Ord + Eq + Div + Rem {
+    fn div_rem(&self, other: &Self) -> (<Self as Div>::Output, <Self as Rem>::Output) {
         (*self / *other, *self % *other)
     }
 }
