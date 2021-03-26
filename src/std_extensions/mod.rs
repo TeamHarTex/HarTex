@@ -13,5 +13,6 @@
 //!  limitations under the License.
 
 mod format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string;
+mod integer_div_rem_simultaneously;
 
 crate use format_as_iec_80000_13_prefix_postfix_decimal_multiplier_string::FormatAsIec8000013PrefixPostfixDecimalMultiplerString;
