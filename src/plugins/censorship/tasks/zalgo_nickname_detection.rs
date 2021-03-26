@@ -34,8 +34,17 @@ use crate::{
 crate struct ZalgoNicknameDetectionTask;
 
 impl Task for ZalgoNicknameDetectionTask {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) 
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
         todo!()
+    }
+}
+
+async fn censorship_zalgo_nickname_detection(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
+    if let TaskContext::MemberUpdate(payload) = ctx {
+        todo!()
+    }
+    else {
+        unreachable!()
     }
 }
