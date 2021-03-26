@@ -20,9 +20,7 @@ use std::{
 };
 
 crate trait IntegerDivRemSimultaneously: Sized + PartialOrd + Ord + Eq + Div + Rem {
-    type Output = (Self, Self);
-
-    fn div_rem(&self, other: &Self) -> Self::Output {
+    fn div_rem(&self, other: &Self) -> (Self, Self) {
         (*self / *other, *self % *other)
     }
 }
