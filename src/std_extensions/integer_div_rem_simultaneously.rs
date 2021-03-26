@@ -19,7 +19,7 @@ use std::{
     }
 };
 
-crate trait IntegerDivRemSimultaneously: Sized + PartialOrd + Ord + Eq + Div + Rem {
+crate trait IntegerDivRemSimultaneously: Sized + PartialOrd + Ord + Eq + Div + Rem + Copy {
     fn div_rem(&self, other: &Self) -> (<Self as Div>::Output, <Self as Rem>::Output) {
         (*self / *other, *self % *other)
     }
