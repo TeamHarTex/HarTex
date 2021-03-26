@@ -16,6 +16,10 @@ use std::{
     time::Duration
 };
 
+use crate::{
+    std_extensions::IntegerDivRemSimultaneously
+};
+
 crate fn parse_duration(duration: String) -> Duration {
     let mut acc = 0u64;
     let mut dur = 0u64;
@@ -42,9 +46,18 @@ crate fn parse_duration(duration: String) -> Duration {
                 dur += acc * 60;
                 acc = 0;
             },
-            _ => unreachable!(),
+            _ => panic!("Entered unexpected branch of match in utilities/duration/mod.rs:45.")
         }
     }
 
     Duration::from_secs(dur)
+}
+
+crate fn duration_to_ymwdhms(duration: Duration) -> (u64, u64, u64, u64, u64, u64, u64) {
+    let (minutes, seconds): (u64, u64) = duration.as_secs().div_rem(&60);
+    let (hours, minutes): (u64, u64) = minutes.div_rem(&60);
+    let (days, hours): (u64, u64) = hours.div_rem(&24);
+    let (weeks, days): (u64, u64) = days.div_rem(&7);
+
+    (0, 0, weeks, days, hours, minutes, seconds)
 }
