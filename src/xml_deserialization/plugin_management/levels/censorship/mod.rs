@@ -40,6 +40,9 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "FilterZalgo", default)]
     crate filter_zalgo: Option<bool>,
+    
+    #[serde(rename = "FilterZalgoNicknames", default)]
+    crate filter_zalgo_nicknames: Option<bool>,
 
     #[serde(rename = "ZalgoFilterWhitelistedChannels", default)]
     crate zalgo_channel_whitelist: Option<ZalgoChannelWhitelist>,
@@ -70,7 +73,7 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "BlacklistedDomains")]
     crate blacklisted_domains: Option<BlacklistedDomains>,
-    
+
     #[serde(rename = "BlockedWordsOrTokensChannelWhitelist", default)]
     crate blocked_words_or_tokens_channel_whitelist: Option<BlockedWordsOrTokensChannelWhitelist>,
 
