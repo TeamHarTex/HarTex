@@ -1,6 +1,6 @@
 [package]
 name = "hartex_rewrite"
-version = "1.17.0"
+version = "1.17.1-21w12a.1"
 description = "HarTex Rewrite Discord Bot in Rust, as a replacement for the C# version."
 edition = "2018"
 authors = ["The HarTex Project Developers"]
@@ -50,7 +50,7 @@ unicase = "2.6.0"
 url = "2.2.1"
 
 [profile.dev]
-opt-level = 1
+opt-level = 0
 
 [profile.release]
-opt-level = 3
+opt-level = 1
