@@ -25,9 +25,6 @@ use crate::{
     system::{
         SystemResult,
     },
-    utilities::{
-        zalgo_detection::zalgo_detected
-    },
     xml_deserialization::BotConfig
 };
 
@@ -41,5 +38,36 @@ impl Task for BlockedNicknameDetectionTask {
 }
 
 async fn censorship_blocked_nickname_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
-    Ok(())
+    if let TaskContext::MemberUpdate(payload) = ctx {
+        if let Some(ref plugins) = config.plugins {
+            if let Some(ref censorship_plugin) = plugins.censorship_plugin {
+                for level in &censorship_plugin.censorship_levels.levels {
+                    if level.filter_zalgo_nicknames == Some(true) {
+                        if let Some(nickname) = payload.member.nick.clone() {
+                            if let Some(ref list) = level.blocked_nicknames {
+                                if list.blocked_nicknames.contains(&nickname) {
+                                    payload.http_client
+                                        .update_guild_member(payload.member.guild_id, payload.member.user.id)
+                                        .nick(Some(if let Some(default_name) = level.zalgo_filtered_default_nickname.clone() {
+                                            default_name
+                                        }
+                                        else {
+                                            String::from("Censored Nickname")
+                                        }))?
+                                        .await;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+    else {
+        unreachable!()
+    }
 }
