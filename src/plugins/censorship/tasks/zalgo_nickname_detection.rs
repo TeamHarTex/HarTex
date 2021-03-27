@@ -44,7 +44,7 @@ async fn censorship_zalgo_nickname_detection(ctx: TaskContext, config: BotConfig
     if let TaskContext::MemberUpdate(payload) = ctx {
         if let Some(ref plugins) = config.plugins {
             if let Some(ref censorship_plugin) = plugins.censorship_plugin {
-                for level in censorship_plugin.censorship_levels.levels {
+                for level in &censorship_plugin.censorship_levels.levels {
                     if level.filter_zalgo_nicknames == Some(true) {
                         if let Some(nickname) = payload.member.nick.clone() {
                             if zalgo_detected(&nickname) {
