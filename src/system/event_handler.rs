@@ -32,8 +32,9 @@ use twilight_model::{
             }
         },
         payload::{
-            MessageCreate,
             GuildCreate,
+            MemberUpdate,
+            MessageCreate,
             Ready
         }
     }
@@ -46,6 +47,8 @@ use twilight_mention::Mention;
 use crate::{
     command_system::{
         task_context::{
+            MemberUpdateTaskContext,
+            MemberUpdateTaskContextRef,
             MessageCreateTaskContext,
             MessageCreateTaskContextRef
         },
@@ -62,7 +65,8 @@ use crate::{
                 BlockedWordsOrTokensDetectionTask,
                 DomainDetectionTask,
                 InviteDetectionTask,
-                ZalgoDetectionTask
+                ZalgoDetectionTask,
+                ZalgoNicknameDetectionTask
             }
         }
     },
@@ -387,6 +391,28 @@ impl EventHandler {
                 }
             }
         }
+
+        Ok(())
+    }
+
+    crate async fn member_update(payload: Box<MemberUpdate>, http: Client) -> SystemResult<()> {
+        let config_string = http.clone().get_guild_configuration(payload.guild_id).await?;
+        let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
+        let member = http.clone().guild_member(payload.guild_id, payload.user.id).await?.unwrap();
+
+        ZalgoNicknameDetectionTask::execute_task(
+            TaskContext::MemberUpdate(
+                MemberUpdateTaskContext(
+                    Arc::new(
+                        MemberUpdateTaskContextRef::new(
+                            http.clone(),
+                            member,
+                        )
+                    )
+                )
+            ),
+            config
+        ).await?;
 
         Ok(())
     }
