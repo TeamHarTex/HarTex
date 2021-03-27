@@ -12,6 +12,7 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+mod blocked_nickname_detection;
 mod blocked_words_or_tokens_detection;
 mod domain_detection;
 mod invite_detection;
@@ -22,3 +23,4 @@ crate use blocked_words_or_tokens_detection::BlockedWordsOrTokensDetectionTask;
 crate use domain_detection::DomainDetectionTask;
 crate use invite_detection::InviteDetectionTask;
 crate use zalgo_detection::ZalgoDetectionTask;
+crate use zalgo_nickname_detection::ZalgoNicknameDetectionTask;
