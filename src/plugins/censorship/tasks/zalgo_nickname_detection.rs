@@ -36,13 +36,32 @@ crate struct ZalgoNicknameDetectionTask;
 impl Task for ZalgoNicknameDetectionTask {
     fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        todo!()
+        Box::pin(censorship_zalgo_nickname_detection(ctx, config))
     }
 }
 
 async fn censorship_zalgo_nickname_detection(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
     if let TaskContext::MemberUpdate(payload) = ctx {
-        todo!()
+        if let Some(ref plugins) = config.plugins {
+            if let Some(ref censorship_plugin) = plugins.censorship_plugin {
+                for level in censorship_plugin.censorship_levels.levels {
+                    if level.filter_zalgo_nicknames == Some(true) {
+                        if let Some(nickname) = payload.member.nick.clone() {
+                            if zalgo_detected(&nickname) {
+                                payload.http_client
+                                    .update_guild_member(payload.member.guild_id, payload.member.user.id)
+                                    .nick(Some(String::from("Censored Nickname")))?
+                                    .await;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        Ok(())
     }
     else {
         unreachable!()
