@@ -11,3 +11,30 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
+extern crate serde;
+extern crate quick_xml;
+
+use serde::de::Deserialize;
+use serde::Deserializer;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+crate struct BlockedMentions {
+    #[serde(rename = "BlockedMention", default)]
+    crate blocked_mentions: Vec<BlockedMention>
+}
+
+#[derive(Clone, Debug, Serialize)]
+crate enum BlockedMention {
+    ChannelId(u64),
+    RoleId(u64),
+    UserId(u64)
+}
+
+impl Deserialize<'deserialize> for BlockedMention {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de> {
+        todo!()
+    }
+}
