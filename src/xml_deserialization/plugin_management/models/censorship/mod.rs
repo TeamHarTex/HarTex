@@ -17,6 +17,7 @@ extern crate quick_xml;
 
 crate mod blacklisted_domains;
 crate mod blacklisted_invite_codes;
+crate mod blocked_mentions;
 crate mod blocked_nicknames;
 crate mod blocked_words_or_tokens_channel_whitelist;
 crate mod domains_channel_whitelist;
