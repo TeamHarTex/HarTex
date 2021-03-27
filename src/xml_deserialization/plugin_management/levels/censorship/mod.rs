@@ -20,6 +20,7 @@ use crate::xml_deserialization::plugin_management::{
     models::censorship::{
         blacklisted_domains::BlacklistedDomains,
         blacklisted_invite_codes::BlacklistedInviteCodes,
+        blocked_nicknames::BlockedNicknames,
         blocked_words_or_tokens_channel_whitelist::BlockedWordsOrTokensChannelWhitelist,
         domains_channel_whitelist::DomainsChannelWhitelist,
         invites_channel_whitelist::InvitesChannelWhitelist,
@@ -43,6 +44,9 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "FilterZalgoNicknames", default)]
     crate filter_zalgo_nicknames: Option<bool>,
+
+    #[serde(rename = "BlockedNicknames", default)]
+    crate blocked_nicknames: Option<BlockedNicknames>,
 
     #[serde(rename = "ZalgoFilteredDefaultNickname")]
     crate zalgo_filtered_default_nickname: Option<String>,
