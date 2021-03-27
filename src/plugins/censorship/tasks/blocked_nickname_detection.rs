@@ -12,4 +12,34 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+use std::{
+    future::Future,
+    pin::Pin
+};
 
+use crate::{
+    command_system::{
+        Task,
+        TaskContext
+    },
+    system::{
+        SystemResult,
+    },
+    utilities::{
+        zalgo_detection::zalgo_detected
+    },
+    xml_deserialization::BotConfig
+};
+
+crate struct BlockedNicknameDetectionTask;
+
+impl Task for BlockedNicknameDetectionTask {
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
+        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
+        Box::pin(censorship_blocked_nickname_detection_task(ctx, config))
+    }
+}
+
+async fn censorship_blocked_nickname_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
+    Ok(())
+}
