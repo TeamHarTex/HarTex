@@ -40,9 +40,12 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "FilterZalgo", default)]
     crate filter_zalgo: Option<bool>,
-    
+
     #[serde(rename = "FilterZalgoNicknames", default)]
     crate filter_zalgo_nicknames: Option<bool>,
+
+    #[serde(rename = "ZalgoFilteredDefaultNickname")]
+    crate zalgo_filtered_default_nickname: Option<String>,
 
     #[serde(rename = "ZalgoFilterWhitelistedChannels", default)]
     crate zalgo_channel_whitelist: Option<ZalgoChannelWhitelist>,
