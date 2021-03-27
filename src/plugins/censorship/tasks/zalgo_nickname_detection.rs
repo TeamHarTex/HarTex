@@ -50,7 +50,12 @@ async fn censorship_zalgo_nickname_detection(ctx: TaskContext, config: BotConfig
                             if zalgo_detected(&nickname) {
                                 payload.http_client
                                     .update_guild_member(payload.member.guild_id, payload.member.user.id)
-                                    .nick(Some(String::from("Censored Nickname")))?
+                                    .nick(Some(if let Some(default_name) = level.zalgo_filtered_default_nickname.clone() {
+                                        default_name
+                                    }
+                                    else {
+                                        String::from("Censored Nickname")
+                                    }))?
                                     .await;
                             }
                         }
