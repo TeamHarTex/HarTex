@@ -34,7 +34,7 @@ crate enum BlockedMention {
 impl Deserialize<'deserialize> for BlockedMention {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: Deserializer<'de> {
+        D: Deserializer<'deserialize> {
         todo!()
     }
 }
