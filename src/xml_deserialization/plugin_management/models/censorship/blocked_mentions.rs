@@ -15,8 +15,21 @@
 extern crate serde;
 extern crate quick_xml;
 
-use serde::de::Deserialize;
-use serde::Deserializer;
+use std::{
+    fmt::{
+        Formatter,
+        Result as FmtResult
+    }
+};
+
+use serde::{
+    de::{
+        Deserialize, Visitor
+    },
+    Deserializer
+};
+use std::prelude::rust_2015::Result::Err;
+use serde::de::{Unexpected, Error};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 crate struct BlockedMentions {
@@ -35,6 +48,34 @@ impl Deserialize<'deserialize> for BlockedMention {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'deserialize> {
+        todo!()
+    }
+}
+
+struct BlockedMentionVisitor;
+
+impl Visitor<'visitor> for BlockedMentionVisitor {
+    type Value = BlockedMention;
+
+    fn expecting(&self, f: &mut Formatter<'a>) -> FmtResult {
+        f.write_str("A string to parse into a `BlockedMention`.")
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+        where
+            E: Error {
+        todo!()
+    }
+
+    fn visit_borrowed_str<E>(self, v: &'visitor str) -> Result<Self::Value, E>
+        where
+            E: Error {
+        todo!()
+    }
+
+    fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+        where
+            E: Error {
         todo!()
     }
 }
