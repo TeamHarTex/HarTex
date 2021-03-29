@@ -66,16 +66,4 @@ impl Visitor<'visitor> for BlockedMentionVisitor {
             E: Error {
         todo!()
     }
-
-    fn visit_borrowed_str<E>(self, v: &'visitor str) -> Result<Self::Value, E>
-        where
-            E: Error {
-        todo!()
-    }
-
-    fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
-        where
-            E: Error {
-        todo!()
-    }
 }
