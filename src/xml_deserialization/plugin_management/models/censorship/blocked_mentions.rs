@@ -54,10 +54,10 @@ impl Deserialize<'deserialize> for BlockedMention {
 
 struct BlockedMentionVisitor;
 
-impl Visitor<'visitor> for BlockedMentionVisitor {
+impl Visitor<'_> for BlockedMentionVisitor {
     type Value = BlockedMention;
 
-    fn expecting(&self, f: &mut Formatter<'a>) -> FmtResult {
+    fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.write_str("A string to parse into a `BlockedMention`.")
     }
 
