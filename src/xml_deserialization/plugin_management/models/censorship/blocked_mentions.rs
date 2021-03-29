@@ -17,6 +17,8 @@ extern crate quick_xml;
 
 use std::{
     fmt::{
+        Debug,
+        Display,
         Formatter,
         Result as FmtResult
     }
@@ -24,12 +26,12 @@ use std::{
 
 use serde::{
     de::{
-        Deserialize, Visitor
+        Deserialize,
+        Error as SerdeError,
+        Visitor
     },
     Deserializer
 };
-use std::prelude::rust_2015::Result::Err;
-use serde::de::{Unexpected, Error};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 crate struct BlockedMentions {
@@ -62,8 +64,29 @@ impl Visitor<'_> for BlockedMentionVisitor {
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-        where
-            E: Error {
+    where
+        E: SerdeError {
+        match &v[0..12] {
+            "RoleIdOfU64" => {
+
+            },
+            "UserIdOfU64" => {
+
+            },
+            _ => return Err(
+                SerdeError::custom("method call length known to be 12 but not one of `RoleIdOfU64` or `UserIdOfU64`")
+            )
+        }
+        
+        match &v[0..15] {
+            "ChannelIdOfU64" => {
+
+            },
+            _ => return Err(
+                SerdeError::custom("method call length known to be 15 but not `ChannelIdOfU64`")
+            )
+        }
+
         todo!()
     }
 }
