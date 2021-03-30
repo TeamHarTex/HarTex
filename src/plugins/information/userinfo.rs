@@ -70,6 +70,12 @@ use crate::command_system::{
     CommandContext,
 };
 
+use crate::{
+    utilities::{
+        duration::seconds_to_ymwdhms
+    }
+};
+
 use crate::system::{
     SystemResult,
 };
@@ -127,7 +133,13 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
     let member_joined_at = 
         DateTime::parse_from_str(member.joined_at.unwrap().as_str(), "%Y-%m-%dT%H:%M:%S%.f%:z")?
             .format("%Y-%m-%d %H:%M:%S");
-    let user_created_at = Local.timestamp_millis(user.id.timestamp()).format("%Y-%m-%d %H:%M:%S");
+
+    let user_created_at = Local.timestamp_millis(user.id.timestamp());
+    let now = Local::now() - user_created_at;
+    let seconds = now.num_seconds();
+    assert!(seconds.is_positive());
+
+    let placeholder = seconds_to_ymwdhms(seconds as u64);
 
     let embed = EmbedBuilder::new()
         .color(0x03_BE_FC)?
@@ -176,7 +188,7 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
         })?)
         .field(EmbedFieldBuilder::new("Guild Permission Integer", format!("{:?}", default))?)
         .field(EmbedFieldBuilder::new("Joined Guild At", format!("{}+08:00", member_joined_at))?)
-        .field(EmbedFieldBuilder::new("Account Created At", format!("{}+08:00", user_created_at))?)
+        .field(EmbedFieldBuilder::new("Account Created At", format!("{}+08:00", user_created_at.format("%Y-%m-%d %H:%M:%S")))?)
         .thumbnail(ImageSource::url(format!("https://cdn.discordapp.com/avatars/{}/{}.png",
                                             user.id, user.avatar.unwrap()))?)
         .build()?;
