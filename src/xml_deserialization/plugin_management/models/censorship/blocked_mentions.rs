@@ -52,8 +52,8 @@ crate enum BlockedMention {
 
 impl Serialize for BlockedMention {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer {
+    where
+        S: Serializer {
         match *self {
             Self::ChannelId(channel_id) => {
                 serializer.serialize_str(&format!("ChannelIdOfU64({})", channel_id))
