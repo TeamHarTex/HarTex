@@ -60,33 +60,43 @@ impl Visitor<'_> for BlockedMentionVisitor {
     type Value = BlockedMention;
 
     fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.write_str("A string to parse into a `BlockedMention`.")
+        f.write_str("A string to parse into a `BlockedMention`")
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
         E: SerdeError {
+        if !v.ends_with(")") {
+            return Err(SerdeError::custom(
+                "method call does not end with `)`"
+            ))
+        }
+
         match &v[0..12] {
             "RoleIdOfU64" => {
-
+                if let Ok(parsed) = &v[12..v.len() - 1].parse() {
+                    Ok(BlockedMention::RoleId(*parsed))
+                } else {
+                    Err(SerdeError::custom("could not parse role ID passed into `RoleIdOfU64`"))
+                }
             },
             "UserIdOfU64" => {
-
+                if let Ok(parsed) = &v[12..v.len() - 1].parse() {
+                    Ok(BlockedMention::UserId(*parsed))
+                } else {
+                    Err(SerdeError::custom("could not parse role ID passed into `UserIdOfU64`"))
+                }
             },
-            _ => return Err(
-                SerdeError::custom("method call length known to be 12 but not one of `RoleIdOfU64` or `UserIdOfU64`")
+            "ChannelIdOf" => {
+                if let Ok(parsed) = &v[15..v.len() - 1].parse() {
+                    Ok(BlockedMention::UserId(*parsed))
+                } else {
+                    Err(SerdeError::custom("could not parse role ID passed into `ChannelIdOfU64`"))
+                }
+            }
+            _ => Err(
+                SerdeError::custom("method call not found")
             )
         }
-        
-        match &v[0..15] {
-            "ChannelIdOfU64" => {
-
-            },
-            _ => return Err(
-                SerdeError::custom("method call length known to be 15 but not `ChannelIdOfU64`")
-            )
-        }
-
-        todo!()
     }
 }
