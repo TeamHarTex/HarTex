@@ -30,6 +30,10 @@ use serde::{
         Error as SerdeError,
         Visitor
     },
+    ser::{
+        Serialize,
+        Serializer
+    },
     Deserializer
 };
 
@@ -39,18 +43,36 @@ crate struct BlockedMentions {
     crate blocked_mentions: Vec<BlockedMention>
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug)]
 crate enum BlockedMention {
     ChannelId(u64),
     RoleId(u64),
     UserId(u64)
 }
 
+impl Serialize for BlockedMention {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer {
+        match *self {
+            Self::ChannelId(channel_id) => {
+                serializer.serialize_str(&format!("ChannelIdOfU64({})", channel_id))
+            },
+            Self::RoleId(role_id) => {
+                serializer.serialize_str(&format!("RoleIdOfU64({})", role_id))
+            },
+            Self::UserId(user_id) => {
+                serializer.serialize_str(&format!("UserIdOfU64({})", user_id))
+            }
+        }
+    }
+}
+
 impl Deserialize<'deserialize> for BlockedMention {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'deserialize> {
-        todo!()
+        deserializer.deserialize_str(BlockedMentionVisitor)
     }
 }
 
