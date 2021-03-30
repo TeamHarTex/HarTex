@@ -53,8 +53,8 @@ crate fn parse_duration(duration: String) -> Duration {
     Duration::from_secs(dur)
 }
 
-crate fn duration_to_ymwdhms(duration: Duration) -> (u64, u64, u64, u64, u64, u64, u64) {
-    let (minutes, seconds): (u64, u64) = duration.as_secs().div_rem(&60);
+crate fn seconds_to_ymwdhms(duration: u64) -> (u64, u64, u64, u64, u64, u64, u64) {
+    let (minutes, seconds): (u64, u64) = duration.div_rem(&60);
     let (hours, minutes): (u64, u64) = minutes.div_rem(&60);
     let (days, hours): (u64, u64) = hours.div_rem(&24);
     let (weeks, days): (u64, u64) = days.div_rem(&7);
