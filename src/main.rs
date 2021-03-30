@@ -102,6 +102,7 @@ use twilight_model::{
 
 crate mod command_system;
 crate mod content_distribution_network;
+crate mod hartex_configuration_dsl;
 crate mod logging;
 crate mod macros;
 crate mod models;
