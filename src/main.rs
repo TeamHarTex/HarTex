@@ -102,6 +102,7 @@ use twilight_model::{
 
 crate mod command_system;
 crate mod content_distribution_network;
+crate mod hartex_configuration_dsl;
 crate mod logging;
 crate mod macros;
 crate mod models;
@@ -739,1632 +740,1634 @@ async fn handle_command(message: Message,
                         http_client: TwilightHttpClient,
                         cache: InMemoryCache,
                         emitter: CommandEventEmitter) -> Result<(), Box<dyn Error + Send + Sync>> {
-    if let Some(command) = context.command_parser.parse(&message.content) {
-        emitter.event(SystemEvent::CommandIdentified(command.name.to_string()));
+    let command = context.command_parser.parse(&message.content);
 
-        match command {
-            // Administrator Command Module
-            Command { name: "clean", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("all") => {
-                        execute_command!(
-                            CleanAllCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "clean all"
-                        );
-                    },
-                    Some("user") => {
-                        execute_command!(
-                            CleanUserCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "clean user"
-                        );
-                    },
-                    Some("bots") => {
-                        execute_command!(
-                            CleanBotsCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "clean bots"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "role", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("add") => {
-                        execute_command!(
-                            RoleAddCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "role add"
-                        );
-                    },
-                    Some("remove") => {
-                        execute_command!(
-                            RoleRemoveCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "role remove"
-                        );
-                    },
-                    Some("global-add") => {
-                        execute_command!(
-                            RoleGlobalAddCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "role global-add"
-                        );
-                    },
-                    Some("global-remove") => {
-                        execute_command!(
-                            RoleGlobalRemoveCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "role global-remove"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "role-info", arguments, .. } => {
-                execute_command!(
-                    RoleinfoCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "role-info"
-                );
-            },
-            Command { name: "lockdown", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("channel") => {
-                        execute_command!(
-                            LockdownChannelCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                |ctx, params|
-                                    HasRolePermissions::execute_check(ctx, params)
-                                , |ctx, params|
-                                    GuildTextChannelOnly::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "lockdown channel"
-                        );
-                    },
-                    Some("guild") => {
-                        execute_command!(
-                            LockdownGuildCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                |ctx, params|
-                                    HasRolePermissions::execute_check(ctx, params)
-                                , |ctx, params|
-                                    GuildTextChannelOnly::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "lockdown guild"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "unlockdown", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("channel") => {
-                        execute_command!(
-                            UnlockdownChannelCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                |ctx, params|
-                                    HasRolePermissions::execute_check(ctx, params)
-                                , |ctx, params|
-                                    GuildTextChannelOnly::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "unlockdown channel"
-                        );
-                    },
-                    Some("guild") => {
-                        execute_command!(
-                            UnlockdownGuildCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                |ctx, params|
-                                    HasRolePermissions::execute_check(ctx, params)
-                                , |ctx, params|
-                                    GuildTextChannelOnly::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "unlockdown guild"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "slowmode", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("enable") => {
-                        let position = arguments.next();
-
-                        match position {
-                            Some("here") => {
-                                execute_command!(
-                                    SlowmodeEnableHereCommand,
-                                    Box::<[
-                                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                        |ctx, params|
-                                            HasRolePermissions::execute_check(ctx, params)
-                                        , |ctx, params|
-                                            GuildTextChannelOnly::execute_check(ctx, params)
-                                    ]),
-                                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                                    context.clone(),
-                                    arguments,
-                                    cache.clone(),
-                                    http_client.clone(),
-                                    message,
-                                    emitter.clone(),
-                                    "slowmode enable here"
-                                );
-                            },
-                            Some("channel") => {
-                                execute_command!(
-                                    SlowmodeEnableHereCommand,
-                                    Box::<[
-                                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                        |ctx, params|
-                                            HasRolePermissions::execute_check(ctx, params)
-                                        , |ctx, params|
-                                            GuildTextChannelOnly::execute_check(ctx, params)
-                                    ]),
-                                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                                    context.clone(),
-                                    arguments,
-                                    cache.clone(),
-                                    http_client.clone(),
-                                    message,
-                                    emitter.clone(),
-                                    "slowmode enable channel"
-                                );
-                            },
-                            _ => Logger::log_error(
-                                format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                        }
-                    },
-                    Some("disable") => {
-                        let position = arguments.next();
-
-                        match position {
-                            Some("here") => {
-                                execute_command!(
-                                    SlowmodeDisableHereCommand,
-                                    Box::<[
-                                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                        |ctx, params|
-                                            HasRolePermissions::execute_check(ctx, params)
-                                        , |ctx, params|
-                                            GuildTextChannelOnly::execute_check(ctx, params)
-                                    ]),
-                                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                                    context.clone(),
-                                    arguments,
-                                    cache.clone(),
-                                    http_client.clone(),
-                                    message,
-                                    emitter.clone(),
-                                    "slowmode disable here"
-                                );
-                            },
-                            Some("channel") => {
-                                execute_command!(
-                                    SlowmodeDisableChannelCommand,
-                                    Box::<[
-                                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                                        |ctx, params|
-                                            HasRolePermissions::execute_check(ctx, params)
-                                        , |ctx, params|
-                                            GuildTextChannelOnly::execute_check(ctx, params)
-                                    ]),
-                                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                                    context.clone(),
-                                    arguments,
-                                    cache.clone(),
-                                    http_client.clone(),
-                                    message,
-                                    emitter.clone(),
-                                    "slowmode disable channel"
-                                );
-                            },
-                            _ => Logger::log_error(
-                                format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                        }
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "voicemute", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("enable") => {
-                        execute_command!(
-                            VoicemuteEnableCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "voicemute enable"
-                        );
-                    },
-                    Some("disable") => {
-                        execute_command!(
-                            VoicemuteDisableCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "voicemute disable"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "noroles", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("list") => {
-                        execute_command!(
-                            NorolesListCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "noroles list"
-                        );
-                    },
-                    Some("kick") => {
-                        execute_command!(
-                            NorolesKickCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "noroles kick"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "nickname", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("change") => {
-                        execute_command!(
-                            NorolesKickCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "nickname change"
-                        );
-                    },
-                    Some("remove") => {
-                        execute_command!(
-                            NicknameRemoveCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "nickname remove"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "webconfig", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("list") => {
-                        execute_command!(
-                            WebconfigListCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "webconfig list"
-                        );
-                    },
-                    _ => Logger::log_error(
-                        format!("Command '{}' failed due to an error: 'command not found'.", message.content))
-                }
-            },
-            Command { name: "invites", arguments, .. } => {
-                execute_command!(
-                    WebconfigListCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params| HasRolePermissions::execute_check(ctx, params)
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "invites"
-                );
-            },
-
-            // General Command Module
-            Command { name: "ping", arguments, .. } => {
-                execute_command!(
-                    PingCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "ping"
-                );
-            },
-            Command { name: "bot-info", arguments, .. } => {
-                execute_command!(
-                    BotinfoCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "bot-info"
-                );
-            },
-            Command { name: "help", arguments, .. } => {
-                execute_command!(
-                    HelpCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "help"
-                );
-            },
-            Command { name: "about", arguments, .. } => {
-                execute_command!(
-                    AboutCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "about"
-                );
-            },
-            Command { name: "team", arguments, .. } | Command { name: "staff", arguments, .. } => {
-                execute_command!(
-                    TeamCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "team"
-                );
-            },
-            Command { name: "uptime", arguments, .. } => {
-                execute_command!(
-                    UptimeCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "uptime"
-                );
-            },
-            Command { name: "source", arguments, .. } => {
-                execute_command!(
-                    SourceCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "source"
-                );
-            },
-
-            // Information Command Module
-            Command { name: "user-info", arguments, .. } => {
-                execute_command!(
-                    UserinfoCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "user-info"
-                );
-            },
-            Command { name: "guild-info", arguments, .. } | Command { name: "server-info", arguments, .. } => {
-                execute_command!(
-                    GuildinfoCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "guild-info"
-                );
-            },
-
-            // Guild Owneronly Command Module
-            Command { name: "setup", arguments, .. } => {
-                execute_command!(
-                    SetupCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                        |ctx, params|
-                            Box::pin(GuildOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params|
-                            Box::pin(GuildIsAlreadySetup::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).guild_id(context.clone().message.guild_id.unwrap()).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "setup"
-                );
-            },
-
-            // Infractions Command Module
-            Command { name: "warn", arguments, .. }  |
-            Command { name: "dmwarn", arguments, .. } => {
-                execute_command!(
-                    DmWarnCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmwarn"
-                );
-            },
-            Command { name: "nodmwarn", arguments, .. } => {
-                execute_command!(
-                    NodmWarnCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmwarn"
-                );
-            },
-            Command { name: "inf", mut arguments, .. } => {
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("search") => {
-                        execute_command!(
-                            InfractionSearchCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params|
-                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "inf search"
-                        );
-                    },
-                    Some("remove") => {
-                        execute_command!(
-                            InfractionRemoveCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params|
-                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "inf remove"
-                        );
-                    },
-                    Some("archive") => {
-                        execute_command!(
-                            InfractionsArchiveCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params|
-                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "inf archive"
-                        );
-                    },
-                    Some("clear-all") => {
-                        execute_command!(
-                            InfractionClearallCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params|
-                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "inf clear-all"
-                        );
-                    },
-                    Some("reason") => {
-                        execute_command!(
-                            InfractionReasonCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params|
-                                    Box::pin(HasRolePermissions::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "inf reason"
-                        );
-                    },
-                    _ => {
-                        emitter.event(SystemEvent::CommandFailed(box CommandFailed {
-                            command: "unknown",
-                            error: String::from("command not found.")
-                        }))
-                    }
-                }
-            },
-            Command { name: "mute", arguments, .. } |
-            Command { name: "dmmute", arguments, .. } => {
-                execute_command!(
-                    DmMuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmute"
-                );
-            },
-            Command { name: "nodmmute", arguments, .. } => {
-                execute_command!(
-                    NodmMuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmute"
-                );
-            },
-            Command { name: "unmute", arguments, .. } |
-            Command { name: "dmunmute", arguments, .. } => {
-                execute_command!(
-                    DmUnmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmunmute"
-                );
-            },
-            Command { name: "nodmunmute", arguments, .. } => {
-                execute_command!(
-                    NodmMuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmunmute"
-                );
-            },
-            Command { name: "kick", arguments, .. } |
-            Command { name: "dmkick", arguments, .. } => {
-                execute_command!(
-                    DmKickCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmkick"
-                );
-            },
-            Command { name: "nodmkick", arguments, .. } => {
-                execute_command!(
-                    NodmMuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmkick"
-                );
-            },
-            Command { name: "ban", arguments, .. } |
-            Command { name: "dmban", arguments, .. } => {
-                execute_command!(
-                    DmBanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmban"
-                );
-            },
-            Command { name: "nodmban", arguments, .. } => {
-                execute_command!(
-                    NodmBanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmban"
-                );
-            },
-            Command { name: "mkick", arguments, .. } |
-            Command { name: "dmmkick", arguments, .. } => {
-                execute_command!(
-                    DmMkickCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmkick"
-                );
-            },
-            Command { name: "nodmmkick", arguments, .. } => {
-                execute_command!(
-                    NodmMkickCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmkick"
-                );
-            },
-            Command { name: "cleanban", arguments, .. } |
-            Command { name: "dmcleanban", arguments, .. } => {
-                execute_command!(
-                    DmCleanBanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmcleanban"
-                );
-            },
-            Command { name: "nodmcleanban", arguments, .. } => {
-                execute_command!(
-                    NodmCleanBanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmcleanban"
-                );
-            },
-            Command { name: "unban", arguments, .. } |
-            Command { name: "dmunban", arguments, .. } => {
-                execute_command!(
-                    DmUnbanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmunban"
-                );
-            },
-            Command { name: "nodmunban", arguments, .. } => {
-                execute_command!(
-                    NodmUnbanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmunban"
-                );
-            },
-            Command { name: "tempmute", arguments, .. } |
-            Command { name: "dmtempmute", arguments, .. } => {
-                execute_command!(
-                    DmTempmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmtempmute"
-                );
-            },
-            Command { name: "nodmtempmute", arguments, .. } => {
-                execute_command!(
-                    NodmTempmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmtempmute"
-                );
-            },
-            Command { name: "mmute", arguments, .. } |
-            Command { name: "dmmmute", arguments, .. } => {
-                execute_command!(
-                    DmMmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmmute"
-                );
-            },
-            Command { name: "nodmmmute", arguments, .. } => {
-                execute_command!(
-                    NodmMmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmmute"
-                );
-            },
-            Command { name: "munmute", arguments, .. } |
-            Command { name: "dmmunmute", arguments, .. } => {
-                execute_command!(
-                    DmMunmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmunmute"
-                );
-            },
-            Command { name: "nodmmunmute", arguments, .. } => {
-                execute_command!(
-                    NodmMunmuteCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmunmute"
-                );
-            },
-            Command { name: "mwarn", arguments, .. } |
-            Command { name: "dmmwarn", arguments, .. } => {
-                execute_command!(
-                    DmMwarnCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmwarn"
-                );
-            },
-            Command { name: "nodmmwarn", arguments, .. } => {
-                execute_command!(
-                    NodmMwarnCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmwarn"
-                );
-            },
-            Command { name: "mban", arguments, .. }|
-            Command { name: "dmmban", arguments, .. } => {
-                execute_command!(
-                    DmMbanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmban"
-                );
-            },
-            Command { name: "nodmmban", arguments, .. } => {
-                execute_command!(
-                    NodmMbanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmban"
-                );
-            },
-            Command { name: "selfmute", arguments, .. } => {
-                execute_command!(
-                    SelfmuteCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "selfmute"
-                );
-            },
-            Command { name: "munban", arguments, .. }|
-            Command { name: "dmmunban", arguments, .. } => {
-                execute_command!(
-                    DmMunbanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "dmmunban"
-                );
-            },
-            Command { name: "nodmmunban", arguments, .. } => {
-                execute_command!(
-                    NodmMunbanCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(HasRolePermissions::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "nodmmunban"
-                );
-            },
-
-            // Levelling System Command Module
-            Command { name: "rank", arguments, .. } => {
-                execute_command!(
-                    RankCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "rank"
-                );
-            }
-
-            // Owneronly Command Module
-            Command { name: "restart", arguments, .. } => {
-                execute_command!(
-                    RestartCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(BotOwnerOnly::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "restart"
-                );
-            },
-            Command { name: "stop", arguments, .. } => {
-                execute_command!(
-                    StopCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                        |ctx, params|
-                            Box::pin(BotOwnerOnly::execute_check(ctx, params))
-                    ]),
-                    PrecommandCheckParametersBuilder::new().build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "stop"
-                );
-            },
-            Command { name: "support-info", arguments, .. } => {
-                execute_command!(
-                    SupportinfoCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                        |ctx, params|
-                            Box::pin(BotOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params|
-                            SupportGuildOnly::execute_check(ctx, params)
-                    ]),
-                    PrecommandCheckParametersBuilder::new().build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "support-info"
-                );
-            },
-            Command { name: "refresh-whitelist-roles", arguments, .. } => {
-                execute_command!(
-                    RefreshWhitelistRolesCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                        |ctx, params|
-                            Box::pin(BotOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params|
-                            SupportGuildOnly::execute_check(ctx, params)
-                    ]),
-                    PrecommandCheckParametersBuilder::new().build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "support-info"
-                );
-            },
-            Command { name: "support-announce", arguments, .. } => {
-                execute_command!(
-                    SupportAnnounceCommand,
-                    Box::<[
-                        for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                    -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                        (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
-                        |ctx, params|
-                            Box::pin(BotOwnerOnly::execute_check(ctx, params)),
-                        |ctx, params|
-                            SupportGuildOnly::execute_check(ctx, params)
-                    ]),
-                    PrecommandCheckParametersBuilder::new().build(),
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "support-announce"
-                );
-            },
-
-            // Utilities Command Module
-            Command { name: "emoji", arguments, .. } => {
-                execute_command!(
-                    EmojiCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "emoji"
-                );
-            },
-            Command { name: "randint", arguments, .. } => {
-                execute_command!(
-                    RandintCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "randint"
-                );
-            },
-            Command { name: "coinflip", arguments, .. } => {
-                execute_command!(
-                    CoinflipCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "coinflip"
-                );
-            },
-            Command { name: "avatar", arguments, .. } => {
-                execute_command!(
-                    AvatarCommand,
-                    context.clone(),
-                    arguments,
-                    cache.clone(),
-                    http_client.clone(),
-                    message,
-                    emitter.clone(),
-                    "avatar"
-                );
-            },
-
-            // Whitelist Command Module
-            Command { name: "whitelist", mut arguments, .. } => {
-                let guild = match http_client.guild(message.guild_id.unwrap()).await? {
-                    Some(guild) => guild.name,
-                    None => String::new()
-                };
-
-                let subcommand = arguments.next();
-
-                match subcommand {
-                    Some("accept") => {
-                        execute_command!(
-                            AcceptCommand,
-                            Box::<[
-                                for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
-                                                            -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
-                                                                (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
-                                |ctx, params|
-                                    Box::pin(BotOwnerOnly::execute_check(ctx, params))
-                            ]),
-                            PrecommandCheckParametersBuilder::new().build(),
-                            context.clone(),
-                            arguments,
-                            cache.clone(),
-                            http_client.clone(),
-                            message,
-                            emitter.clone(),
-                            "whitelist accept"
-                        );
-                    },
-                    _ => {
-                        Logger::log_error(
-                            format!(
-                                "Command '{}' failed due to an error: 'command not found'.", message.content
-                            )
-                        );
-                    }
-                }
-            },
-
-            _ => ()
-        }
+    if command.is_none() {
+        return Ok(());
     }
-    else {
+
+    emitter.event(SystemEvent::CommandIdentified(command.clone().unwrap().name.to_string()));
+
+    match command.unwrap() {
+        // Administrator Command Module
+        Command { name: "clean", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("all") => {
+                    execute_command!(
+                        CleanAllCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "clean all"
+                    );
+                },
+                Some("user") => {
+                    execute_command!(
+                        CleanUserCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "clean user"
+                    );
+                },
+                Some("bots") => {
+                    execute_command!(
+                        CleanBotsCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "clean bots"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "role", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("add") => {
+                    execute_command!(
+                        RoleAddCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "role add"
+                    );
+                },
+                Some("remove") => {
+                    execute_command!(
+                        RoleRemoveCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "role remove"
+                    );
+                },
+                Some("global-add") => {
+                    execute_command!(
+                        RoleGlobalAddCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "role global-add"
+                    );
+                },
+                Some("global-remove") => {
+                    execute_command!(
+                        RoleGlobalRemoveCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "role global-remove"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "role-info", arguments, .. } => {
+            execute_command!(
+                RoleinfoCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params| Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "role-info"
+            );
+        },
+        Command { name: "lockdown", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("channel") => {
+                    execute_command!(
+                        LockdownChannelCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                            |ctx, params|
+                                HasRolePermissions::execute_check(ctx, params)
+                            , |ctx, params|
+                                GuildTextChannelOnly::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "lockdown channel"
+                    );
+                },
+                Some("guild") => {
+                    execute_command!(
+                        LockdownGuildCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                            |ctx, params|
+                                HasRolePermissions::execute_check(ctx, params)
+                            , |ctx, params|
+                                GuildTextChannelOnly::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "lockdown guild"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "unlockdown", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("channel") => {
+                    execute_command!(
+                        UnlockdownChannelCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                            |ctx, params|
+                                HasRolePermissions::execute_check(ctx, params)
+                            , |ctx, params|
+                                GuildTextChannelOnly::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "unlockdown channel"
+                    );
+                },
+                Some("guild") => {
+                    execute_command!(
+                        UnlockdownGuildCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                            |ctx, params|
+                                HasRolePermissions::execute_check(ctx, params)
+                            , |ctx, params|
+                                GuildTextChannelOnly::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "unlockdown guild"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "slowmode", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("enable") => {
+                    let position = arguments.next();
+
+                    match position {
+                        Some("here") => {
+                            execute_command!(
+                                SlowmodeEnableHereCommand,
+                                Box::<[
+                                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                    |ctx, params|
+                                        HasRolePermissions::execute_check(ctx, params)
+                                    , |ctx, params|
+                                        GuildTextChannelOnly::execute_check(ctx, params)
+                                ]),
+                                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                                context.clone(),
+                                arguments,
+                                cache.clone(),
+                                http_client.clone(),
+                                message,
+                                emitter.clone(),
+                                "slowmode enable here"
+                            );
+                        },
+                        Some("channel") => {
+                            execute_command!(
+                                SlowmodeEnableHereCommand,
+                                Box::<[
+                                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                    |ctx, params|
+                                        HasRolePermissions::execute_check(ctx, params)
+                                    , |ctx, params|
+                                        GuildTextChannelOnly::execute_check(ctx, params)
+                                ]),
+                                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                                context.clone(),
+                                arguments,
+                                cache.clone(),
+                                http_client.clone(),
+                                message,
+                                emitter.clone(),
+                                "slowmode enable channel"
+                            );
+                        },
+                        _ => Logger::log_error(
+                            format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    }
+                },
+                Some("disable") => {
+                    let position = arguments.next();
+
+                    match position {
+                        Some("here") => {
+                            execute_command!(
+                                SlowmodeDisableHereCommand,
+                                Box::<[
+                                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                    |ctx, params|
+                                        HasRolePermissions::execute_check(ctx, params)
+                                    , |ctx, params|
+                                        GuildTextChannelOnly::execute_check(ctx, params)
+                                ]),
+                                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                                context.clone(),
+                                arguments,
+                                cache.clone(),
+                                http_client.clone(),
+                                message,
+                                emitter.clone(),
+                                "slowmode disable here"
+                            );
+                        },
+                        Some("channel") => {
+                            execute_command!(
+                                SlowmodeDisableChannelCommand,
+                                Box::<[
+                                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                                    |ctx, params|
+                                        HasRolePermissions::execute_check(ctx, params)
+                                    , |ctx, params|
+                                        GuildTextChannelOnly::execute_check(ctx, params)
+                                ]),
+                                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                                context.clone(),
+                                arguments,
+                                cache.clone(),
+                                http_client.clone(),
+                                message,
+                                emitter.clone(),
+                                "slowmode disable channel"
+                            );
+                        },
+                        _ => Logger::log_error(
+                            format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    }
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "voicemute", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("enable") => {
+                    execute_command!(
+                        VoicemuteEnableCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "voicemute enable"
+                    );
+                },
+                Some("disable") => {
+                    execute_command!(
+                        VoicemuteDisableCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "voicemute disable"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "noroles", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("list") => {
+                    execute_command!(
+                        NorolesListCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "noroles list"
+                    );
+                },
+                Some("kick") => {
+                    execute_command!(
+                        NorolesKickCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "noroles kick"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "nickname", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("change") => {
+                    execute_command!(
+                        NorolesKickCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "nickname change"
+                    );
+                },
+                Some("remove") => {
+                    execute_command!(
+                        NicknameRemoveCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "nickname remove"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "webconfig", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("list") => {
+                    execute_command!(
+                        WebconfigListCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "webconfig list"
+                    );
+                },
+                _ => Logger::log_error(
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+            }
+        },
+        Command { name: "invites", arguments, .. } => {
+            execute_command!(
+                WebconfigListCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params| HasRolePermissions::execute_check(ctx, params)
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "invites"
+            );
+        },
+
+        // General Command Module
+        Command { name: "ping", arguments, .. } => {
+            execute_command!(
+                PingCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "ping"
+            );
+        },
+        Command { name: "bot-info", arguments, .. } => {
+            execute_command!(
+                BotinfoCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "bot-info"
+            );
+        },
+        Command { name: "help", arguments, .. } => {
+            execute_command!(
+                HelpCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "help"
+            );
+        },
+        Command { name: "about", arguments, .. } => {
+            execute_command!(
+                AboutCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "about"
+            );
+        },
+        Command { name: "team", arguments, .. } | Command { name: "staff", arguments, .. } => {
+            execute_command!(
+                TeamCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "team"
+            );
+        },
+        Command { name: "uptime", arguments, .. } => {
+            execute_command!(
+                UptimeCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "uptime"
+            );
+        },
+        Command { name: "source", arguments, .. } => {
+            execute_command!(
+                SourceCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "source"
+            );
+        },
+
+        // Information Command Module
+        Command { name: "user-info", arguments, .. } => {
+            execute_command!(
+                UserinfoCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "user-info"
+            );
+        },
+        Command { name: "guild-info", arguments, .. } | Command { name: "server-info", arguments, .. } => {
+            execute_command!(
+                GuildinfoCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "guild-info"
+            );
+        },
+
+        // Guild Owneronly Command Module
+        Command { name: "setup", arguments, .. } => {
+            execute_command!(
+                SetupCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                    |ctx, params|
+                        Box::pin(GuildOwnerOnly::execute_check(ctx, params)),
+                    |ctx, params|
+                        Box::pin(GuildIsAlreadySetup::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).guild_id(context.clone().message.guild_id.unwrap()).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "setup"
+            );
+        },
+
+        // Infractions Command Module
+        Command { name: "warn", arguments, .. }  |
+        Command { name: "dmwarn", arguments, .. } => {
+            execute_command!(
+                DmWarnCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmwarn"
+            );
+        },
+        Command { name: "nodmwarn", arguments, .. } => {
+            execute_command!(
+                NodmWarnCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmwarn"
+            );
+        },
+        Command { name: "inf", mut arguments, .. } => {
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("search") => {
+                    execute_command!(
+                        InfractionSearchCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params|
+                                Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "inf search"
+                    );
+                },
+                Some("remove") => {
+                    execute_command!(
+                        InfractionRemoveCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params|
+                                Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "inf remove"
+                    );
+                },
+                Some("archive") => {
+                    execute_command!(
+                        InfractionsArchiveCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params|
+                                Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(80).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "inf archive"
+                    );
+                },
+                Some("clear-all") => {
+                    execute_command!(
+                        InfractionClearallCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params|
+                                Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "inf clear-all"
+                    );
+                },
+                Some("reason") => {
+                    execute_command!(
+                        InfractionReasonCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params|
+                                Box::pin(HasRolePermissions::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "inf reason"
+                    );
+                },
+                _ => {
+                    emitter.event(SystemEvent::CommandFailed(box CommandFailed {
+                        command: "unknown",
+                        error: String::from("command not found.")
+                    }))
+                }
+            }
+        },
+        Command { name: "mute", arguments, .. } |
+        Command { name: "dmmute", arguments, .. } => {
+            execute_command!(
+                DmMuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmute"
+            );
+        },
+        Command { name: "nodmmute", arguments, .. } => {
+            execute_command!(
+                NodmMuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmute"
+            );
+        },
+        Command { name: "unmute", arguments, .. } |
+        Command { name: "dmunmute", arguments, .. } => {
+            execute_command!(
+                DmUnmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmunmute"
+            );
+        },
+        Command { name: "nodmunmute", arguments, .. } => {
+            execute_command!(
+                NodmMuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmunmute"
+            );
+        },
+        Command { name: "kick", arguments, .. } |
+        Command { name: "dmkick", arguments, .. } => {
+            execute_command!(
+                DmKickCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmkick"
+            );
+        },
+        Command { name: "nodmkick", arguments, .. } => {
+            execute_command!(
+                NodmMuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmkick"
+            );
+        },
+        Command { name: "ban", arguments, .. } |
+        Command { name: "dmban", arguments, .. } => {
+            execute_command!(
+                DmBanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmban"
+            );
+        },
+        Command { name: "nodmban", arguments, .. } => {
+            execute_command!(
+                NodmBanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmban"
+            );
+        },
+        Command { name: "mkick", arguments, .. } |
+        Command { name: "dmmkick", arguments, .. } => {
+            execute_command!(
+                DmMkickCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmkick"
+            );
+        },
+        Command { name: "nodmmkick", arguments, .. } => {
+            execute_command!(
+                NodmMkickCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmkick"
+            );
+        },
+        Command { name: "cleanban", arguments, .. } |
+        Command { name: "dmcleanban", arguments, .. } => {
+            execute_command!(
+                DmCleanBanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmcleanban"
+            );
+        },
+        Command { name: "nodmcleanban", arguments, .. } => {
+            execute_command!(
+                NodmCleanBanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmcleanban"
+            );
+        },
+        Command { name: "unban", arguments, .. } |
+        Command { name: "dmunban", arguments, .. } => {
+            execute_command!(
+                DmUnbanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmunban"
+            );
+        },
+        Command { name: "nodmunban", arguments, .. } => {
+            execute_command!(
+                NodmUnbanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmunban"
+            );
+        },
+        Command { name: "tempmute", arguments, .. } |
+        Command { name: "dmtempmute", arguments, .. } => {
+            execute_command!(
+                DmTempmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmtempmute"
+            );
+        },
+        Command { name: "nodmtempmute", arguments, .. } => {
+            execute_command!(
+                NodmTempmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmtempmute"
+            );
+        },
+        Command { name: "mmute", arguments, .. } |
+        Command { name: "dmmmute", arguments, .. } => {
+            execute_command!(
+                DmMmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmmute"
+            );
+        },
+        Command { name: "nodmmmute", arguments, .. } => {
+            execute_command!(
+                NodmMmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmmute"
+            );
+        },
+        Command { name: "munmute", arguments, .. } |
+        Command { name: "dmmunmute", arguments, .. } => {
+            execute_command!(
+                DmMunmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmunmute"
+            );
+        },
+        Command { name: "nodmmunmute", arguments, .. } => {
+            execute_command!(
+                NodmMunmuteCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmunmute"
+            );
+        },
+        Command { name: "mwarn", arguments, .. } |
+        Command { name: "dmmwarn", arguments, .. } => {
+            execute_command!(
+                DmMwarnCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmwarn"
+            );
+        },
+        Command { name: "nodmmwarn", arguments, .. } => {
+            execute_command!(
+                NodmMwarnCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmwarn"
+            );
+        },
+        Command { name: "mban", arguments, .. }|
+        Command { name: "dmmban", arguments, .. } => {
+            execute_command!(
+                DmMbanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmban"
+            );
+        },
+        Command { name: "nodmmban", arguments, .. } => {
+            execute_command!(
+                NodmMbanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmban"
+            );
+        },
+        Command { name: "selfmute", arguments, .. } => {
+            execute_command!(
+                SelfmuteCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "selfmute"
+            );
+        },
+        Command { name: "munban", arguments, .. }|
+        Command { name: "dmmunban", arguments, .. } => {
+            execute_command!(
+                DmMunbanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "dmmunban"
+            );
+        },
+        Command { name: "nodmmunban", arguments, .. } => {
+            execute_command!(
+                NodmMunbanCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(HasRolePermissions::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().in_memory_cache(cache.clone()).minimum_permission_level(60).build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "nodmmunban"
+            );
+        },
+
+        // Levelling System Command Module
+        Command { name: "rank", arguments, .. } => {
+            execute_command!(
+                RankCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "rank"
+            );
+        }
+
+        // Owneronly Command Module
+        Command { name: "restart", arguments, .. } => {
+            execute_command!(
+                RestartCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(BotOwnerOnly::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "restart"
+            );
+        },
+        Command { name: "stop", arguments, .. } => {
+            execute_command!(
+                StopCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                    |ctx, params|
+                        Box::pin(BotOwnerOnly::execute_check(ctx, params))
+                ]),
+                PrecommandCheckParametersBuilder::new().build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "stop"
+            );
+        },
+        Command { name: "support-info", arguments, .. } => {
+            execute_command!(
+                SupportinfoCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                    |ctx, params|
+                        Box::pin(BotOwnerOnly::execute_check(ctx, params)),
+                    |ctx, params|
+                        SupportGuildOnly::execute_check(ctx, params)
+                ]),
+                PrecommandCheckParametersBuilder::new().build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "support-info"
+            );
+        },
+        Command { name: "refresh-whitelist-roles", arguments, .. } => {
+            execute_command!(
+                RefreshWhitelistRolesCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                    |ctx, params|
+                        Box::pin(BotOwnerOnly::execute_check(ctx, params)),
+                    |ctx, params|
+                        SupportGuildOnly::execute_check(ctx, params)
+                ]),
+                PrecommandCheckParametersBuilder::new().build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "support-info"
+            );
+        },
+        Command { name: "support-announce", arguments, .. } => {
+            execute_command!(
+                SupportAnnounceCommand,
+                Box::<[
+                    for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                    (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 2]>::new([
+                    |ctx, params|
+                        Box::pin(BotOwnerOnly::execute_check(ctx, params)),
+                    |ctx, params|
+                        SupportGuildOnly::execute_check(ctx, params)
+                ]),
+                PrecommandCheckParametersBuilder::new().build(),
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "support-announce"
+            );
+        },
+
+        // Utilities Command Module
+        Command { name: "emoji", arguments, .. } => {
+            execute_command!(
+                EmojiCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "emoji"
+            );
+        },
+        Command { name: "randint", arguments, .. } => {
+            execute_command!(
+                RandintCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "randint"
+            );
+        },
+        Command { name: "coinflip", arguments, .. } => {
+            execute_command!(
+                CoinflipCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "coinflip"
+            );
+        },
+        Command { name: "avatar", arguments, .. } => {
+            execute_command!(
+                AvatarCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "avatar"
+            );
+        },
+
+        // Whitelist Command Module
+        Command { name: "whitelist", mut arguments, .. } => {
+            let guild = match http_client.guild(message.guild_id.unwrap()).await? {
+                Some(guild) => guild.name,
+                None => String::new()
+            };
+
+            let subcommand = arguments.next();
+
+            match subcommand {
+                Some("accept") => {
+                    execute_command!(
+                        AcceptCommand,
+                        Box::<[
+                            for<'asynchronous_trait> fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
+                                                        -> Pin<Box<dyn std::future::Future<Output = std::result::Result<
+                                                            (), Box<(dyn Error + Send + Sync)>>> + Send + 'asynchronous_trait>>; 1]>::new([
+                            |ctx, params|
+                                Box::pin(BotOwnerOnly::execute_check(ctx, params))
+                        ]),
+                        PrecommandCheckParametersBuilder::new().build(),
+                        context.clone(),
+                        arguments,
+                        cache.clone(),
+                        http_client.clone(),
+                        message,
+                        emitter.clone(),
+                        "whitelist accept"
+                    );
+                },
+                _ => {
+                    Logger::log_error(
+                        format!(
+                            "Command '{}' failed due to an error: 'command not found'.", message.content
+                        )
+                    );
+                }
+            }
+        },
+
+        _ => ()
     }
 
     Ok(())
