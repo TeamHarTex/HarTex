@@ -20,6 +20,7 @@ use crate::xml_deserialization::plugin_management::{
     models::censorship::{
         blacklisted_domains::BlacklistedDomains,
         blacklisted_invite_codes::BlacklistedInviteCodes,
+        blocked_mentions::BlockedMentions,
         blocked_nicknames::BlockedNicknames,
         blocked_words_or_tokens_channel_whitelist::BlockedWordsOrTokensChannelWhitelist,
         domains_channel_whitelist::DomainsChannelWhitelist,
@@ -51,7 +52,7 @@ crate struct CensorshipLevel {
     #[serde(rename = "ZalgoFilteredDefaultNickname")]
     crate zalgo_filtered_default_nickname: Option<String>,
 
-    #[serde(rename = "ZalgoFilterWhitelistedChannels", default)]
+    #[serde(rename = "ZalgoFilterChannelWhitelist", default)]
     crate zalgo_channel_whitelist: Option<ZalgoChannelWhitelist>,
 
     #[serde(rename = "FilterInviteLinks", default)]
@@ -81,12 +82,15 @@ crate struct CensorshipLevel {
     #[serde(rename = "BlacklistedDomains")]
     crate blacklisted_domains: Option<BlacklistedDomains>,
 
-    #[serde(rename = "BlockedWordsOrTokensChannelWhitelist", default)]
+    #[serde(rename = "ProhibitedWordsOrTokensChannelWhitelist", default)]
     crate blocked_words_or_tokens_channel_whitelist: Option<BlockedWordsOrTokensChannelWhitelist>,
 
     #[serde(rename = "ProhibitedWords", default)]
     crate prohibited_words: Option<ProhibitedWords>,
 
     #[serde(rename = "ProhibitedTokens", default)]
-    crate prohibited_tokens: Option<ProhibitedTokens>
+    crate prohibited_tokens: Option<ProhibitedTokens>,
+    
+    #[serde(rename = "ProhibitedMentions", default)]
+    crate prohibited_mentions: Option<BlockedMentions>
 }
