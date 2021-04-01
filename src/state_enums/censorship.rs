@@ -30,6 +30,8 @@ crate enum CensorshipProcess {
 
     BlockedWordsOrTokensFiltered,
 
+    BlockedMentionsFiltered,
+
     Completed
 }
 
