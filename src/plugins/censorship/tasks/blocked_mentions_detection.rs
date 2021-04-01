@@ -45,8 +45,8 @@ async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: Bo
     if let TaskContext::MessageCreate(payload) = ctx {
         let regex = Regex::new(r"<((@)|(#)|(@&))([0-9]+)>").unwrap();
 
-        if let Some(_captures) = regex.captures(&payload.message.content) {
-
+        if let Some(captures) = regex.captures(&payload.message.content) {
+            dbg!(captures);
         }
 
         todo!()
