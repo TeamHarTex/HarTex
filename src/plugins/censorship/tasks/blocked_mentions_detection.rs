@@ -32,9 +32,9 @@ use crate::{
     xml_deserialization::BotConfig
 };
 
-crate struct BlockedMentionsDetection;
+crate struct BlockedMentionsDetectionTask;
 
-impl Task for BlockedMentionsDetection {
+impl Task for BlockedMentionsDetectionTask {
     fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
         Box::pin(censorship_blocked_mentions_detection_task(ctx, config))
