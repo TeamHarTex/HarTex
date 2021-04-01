@@ -28,24 +28,42 @@ use crate::{
     utilities::{
         zalgo_detection::zalgo_detected
     },
-    xml_deserialization::BotConfig
+    xml_deserialization::{
+        plugin_management::{
+            models::channel_id::ChannelId
+        },
+        BotConfig
+    }
 };
 
 crate struct ZalgoDetectionTask;
 
 impl Task for ZalgoDetectionTask {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext, _config: BotConfig) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>> {
-        Box::pin(censorship_zalgo_detection_task(ctx))
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) -> Pin<Box<dyn Future<Output = SystemResult<()>> + Send + 'asynchronous_trait>> {
+        Box::pin(censorship_zalgo_detection_task(ctx, config))
     }
 }
 
-async fn censorship_zalgo_detection_task(ctx: TaskContext) -> SystemResult<()> {
+async fn censorship_zalgo_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
     if let TaskContext::MessageCreate(payload) = ctx {
         let message = payload.message.clone();
-        let zalgo_detected = zalgo_detected(&message.content);
 
-        if zalgo_detected {
-            payload.http_client.clone().delete_message(message.channel_id, message.id).await?;
+        if let Some(ref plugins) = config.plugins {
+            if let Some(ref censorship) = plugins.censorship_plugin {
+                for level in &censorship.censorship_levels.levels {
+                    if let Some(whitelist) = level.clone().blocked_words_or_tokens_channel_whitelist {
+                        if whitelist.channel_ids.contains(&ChannelId { id: payload.message.channel_id.into_inner_u64() }) {
+                            return Ok(());
+                        }
+
+                        let zalgo_detected = zalgo_detected(&message.content);
+
+                        if zalgo_detected {
+                            payload.http_client.clone().delete_message(message.channel_id, message.id).await?;
+                        }
+                    }
+                }
+            }
         }
 
         Ok(())
