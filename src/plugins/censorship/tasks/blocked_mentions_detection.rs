@@ -33,6 +33,10 @@ crate struct BlockedMentionsDetection;
 impl Task for BlockedMentionsDetection {
     fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        todo!()
+        Box::pin(censorship_blocked_mentions_detection_task(ctx, config))
     }
+}
+
+async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
+    todo!()
 }
