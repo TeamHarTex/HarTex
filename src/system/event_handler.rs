@@ -62,6 +62,8 @@ use crate::{
     plugins::{
         censorship::{
             tasks::{
+                BlockedMentionsDetectionTask,
+                BlockedNicknameDetectionTask,
                 BlockedWordsOrTokensDetectionTask,
                 DomainDetectionTask,
                 InviteDetectionTask,
@@ -401,6 +403,20 @@ impl EventHandler {
         let member = http.clone().guild_member(payload.guild_id, payload.user.id).await?.unwrap();
 
         ZalgoNicknameDetectionTask::execute_task(
+            TaskContext::MemberUpdate(
+                MemberUpdateTaskContext(
+                    Arc::new(
+                        MemberUpdateTaskContextRef::new(
+                            http.clone(),
+                            member.clone(),
+                        )
+                    )
+                )
+            ),
+            config.clone()
+        ).await?;
+
+        BlockedNicknameDetectionTask::execute_task(
             TaskContext::MemberUpdate(
                 MemberUpdateTaskContext(
                     Arc::new(
