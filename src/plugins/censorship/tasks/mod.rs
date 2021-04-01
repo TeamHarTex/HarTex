@@ -20,6 +20,8 @@ mod invite_detection;
 mod zalgo_detection;
 mod zalgo_nickname_detection;
 
+crate use blocked_mentions_detection::BlockedMentionsDetectionTask;
+crate use blocked_nickname_detection::BlockedNicknameDetectionTask;
 crate use blocked_words_or_tokens_detection::BlockedWordsOrTokensDetectionTask;
 crate use domain_detection::DomainDetectionTask;
 crate use invite_detection::InviteDetectionTask;
