@@ -382,6 +382,23 @@ impl EventHandler {
 
                         state_machine.update_state(CensorshipProcess::BlockedWordsOrTokensFiltered);
 
+                        BlockedMentionsDetectionTask::execute_task(
+                            TaskContext::MessageCreate(
+                                MessageCreateTaskContext(
+                                    Arc::new(
+                                        MessageCreateTaskContextRef::new(
+                                            http.clone(),
+                                            payload.author.clone(),
+                                            payload.0.clone()
+                                        )
+                                    )
+                                )
+                            ),
+                            config.clone()
+                        ).await?;
+
+                        state_machine.update_state(CensorshipProcess::BlockedMentionsFiltered);
+
                         // TO BE IMPLEMEMTED
 
                         state_machine.update_state(CensorshipProcess::Completed);
