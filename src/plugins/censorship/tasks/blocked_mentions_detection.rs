@@ -11,3 +11,28 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+
+use std::{
+    future::Future,
+    pin::Pin
+};
+
+use crate::{
+    command_system::{
+        Task,
+        TaskContext
+    },
+    system::{
+        SystemResult,
+    },
+    xml_deserialization::BotConfig
+};
+
+crate struct BlockedMentionsDetection;
+
+impl Task for BlockedMentionsDetection {
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
+        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
+        todo!()
+    }
+}
