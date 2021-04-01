@@ -17,6 +17,10 @@ use std::{
     pin::Pin
 };
 
+use regex::{
+    Regex
+};
+
 use crate::{
     command_system::{
         Task,
@@ -39,6 +43,12 @@ impl Task for BlockedMentionsDetection {
 
 async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
     if let TaskContext::MessageCreate(payload) = ctx {
+        let regex = Regex::new(r"<((@)|(#)|(@&))([0-9]+)>").unwrap();
+
+        if let Some(_captures) = regex.captures(&payload.message.content) {
+
+        }
+
         todo!()
     }
     else {
