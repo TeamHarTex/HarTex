@@ -12,6 +12,7 @@
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
 
+mod blocked_mentions_detection;
 mod blocked_nickname_detection;
 mod blocked_words_or_tokens_detection;
 mod domain_detection;
