@@ -38,5 +38,10 @@ impl Task for BlockedMentionsDetection {
 }
 
 async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: BotConfig) -> SystemResult<()> {
-    todo!()
+    if let TaskContext::MessageCreate(payload) = ctx {
+        todo!()
+    }
+    else {
+        unreachable!()
+    }
 }
