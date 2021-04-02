@@ -36,7 +36,8 @@ use crate::{
                     blocked_mentions::{
                         BlockedMention
                     }
-                }
+                },
+                channel_id::ChannelId
             }
         },
         BotConfig
@@ -60,6 +61,12 @@ async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: Bo
                 for level in &censorship_plugin.censorship_levels.levels {
                     if let Some(ref blocked_mentions) = level.prohibited_mentions {
                         if let Some(captures) = regex.captures(&payload.message.content) {
+                            if let Some(whitelisted_channels) = level.clone().blocked_mentions_channel_whitelist {
+                                if whitelisted_channels.channel_ids.contains(&ChannelId { id: message.channel_id.into_inner_u64() }) {
+                                    return Ok(());
+                                }
+                            }
+                            
                             for blocked in &blocked_mentions.blocked_mentions {
                                 match blocked {
                                     BlockedMention::ChannelId(value) => {
