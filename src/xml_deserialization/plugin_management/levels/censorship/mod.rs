@@ -128,6 +128,9 @@ crate struct CensorshipLevel {
     #[serde(rename = "BlockedMentionsChannelWhitelist")]
     crate blocked_mentions_channel_whitelist: Option<BlockedMentionsChannelWhitelist>,
 
-    #[serde(rename = "FilterCapitalLetters")]
-    crate filter_capital_letters: Option<bool>
+    #[serde(rename = "FilterCapitalLetters", default)]
+    crate filter_capital_letters: Option<bool>,
+
+    #[serde(rename = "MinimumConsecutiveCapitalLetters", default)]
+    crate minimum_consecutive_capital_letters: Option<u64>
 }
