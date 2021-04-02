@@ -302,28 +302,20 @@ impl EventHandler {
                             false
                         }
                     }) {
-                        if level.filter_zalgo == Some(true) {
-                            if let Some(whitelist) = level.zalgo_channel_whitelist.clone() {
-                                if !whitelist.channel_ids.contains(&ChannelId {
-                                    id: payload.channel_id.into_inner_u64()
-                                }) {
-                                    ZalgoDetectionTask::execute_task(
-                                        TaskContext::MessageCreate(
-                                            MessageCreateTaskContext(
-                                                Arc::new(
-                                                    MessageCreateTaskContextRef::new(
-                                                        http.clone(),
-                                                        payload.author.clone(),
-                                                        payload.0.clone()
-                                                    )
-                                                )
-                                            ),
-                                        ),
-                                        config.clone()
-                                    ).await?;
-                                }
-                            }
-                        }
+                        ZalgoDetectionTask::execute_task(
+                            TaskContext::MessageCreate(
+                                MessageCreateTaskContext(
+                                    Arc::new(
+                                        MessageCreateTaskContextRef::new(
+                                            http.clone(),
+                                            payload.author.clone(),
+                                            payload.0.clone()
+                                        )
+                                    )
+                                ),
+                            ),
+                            config.clone()
+                        ).await?;
 
                         state_machine.update_state(CensorshipProcess::ZalgoFiltered);
 
