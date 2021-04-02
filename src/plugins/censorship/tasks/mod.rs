@@ -15,6 +15,7 @@
 mod blocked_mentions_detection;
 mod blocked_nickname_detection;
 mod blocked_words_or_tokens_detection;
+mod consecutive_capital_letters_detection;
 mod domain_detection;
 mod invite_detection;
 mod zalgo_detection;
