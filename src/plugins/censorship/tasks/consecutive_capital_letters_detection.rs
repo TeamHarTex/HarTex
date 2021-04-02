@@ -33,8 +33,11 @@ crate struct ConsecutiveCapitalLettersDetectionTask;
 impl Task for ConsecutiveCapitalLettersDetectionTask {
     fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        todo!()
+        Box::pin(censorship_consecutive_capital_letters_detection_task(ctx, config))
     }
 }
 
-
+async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext, config: BotConfig)
+    -> SystemResult<()> {
+    Ok(())
+}
