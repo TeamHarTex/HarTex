@@ -17,22 +17,52 @@ extern crate quick_xml;
 
 use crate::xml_deserialization::plugin_management::{
     levels::Level,
-    models::censorship::{
-        blacklisted_domains::BlacklistedDomains,
-        blacklisted_invite_codes::BlacklistedInviteCodes,
-        blocked_mentions::BlockedMentions,
-        blocked_mentions_channel_whitelist::BlockedMentionsChannelWhitelist,
-        blocked_nicknames::BlockedNicknames,
-        blocked_words_or_tokens_channel_whitelist::BlockedWordsOrTokensChannelWhitelist,
-        domains_channel_whitelist::DomainsChannelWhitelist,
-        invites_channel_whitelist::InvitesChannelWhitelist,
-        prohibited_tokens::ProhibitedTokens,
-        prohibited_words::ProhibitedWords,
-        whitelisted_domains::WhitelistedDomains,
-        whitelisted_guild_invites::WhitelistedGuildInvites,
-        whitelisted_invite_codes::WhitelistedInviteCodes,
-        zalgo_channel_whitelist::ZalgoChannelWhitelist,
-        CensoredUri
+    models::{
+        censorship::{
+            blacklisted_domains::{
+                BlacklistedDomains
+            },
+            blacklisted_invite_codes::{
+                BlacklistedInviteCodes
+            },
+            blocked_mentions::{
+                BlockedMentions
+            },
+            blocked_mentions_channel_whitelist::{
+                BlockedMentionsChannelWhitelist
+            },
+            blocked_nicknames::{
+                BlockedNicknames
+            },
+            blocked_words_or_tokens_channel_whitelist::{
+                BlockedWordsOrTokensChannelWhitelist
+            },
+            domains_channel_whitelist::{
+                DomainsChannelWhitelist
+            },
+            invites_channel_whitelist::{
+                InvitesChannelWhitelist
+            },
+            prohibited_tokens::{
+                ProhibitedTokens
+            },
+            prohibited_words::{
+                ProhibitedWords
+            },
+            whitelisted_domains::{
+                WhitelistedDomains
+            },
+            whitelisted_guild_invites::{
+                WhitelistedGuildInvites
+            },
+            whitelisted_invite_codes::{
+                WhitelistedInviteCodes
+            },
+            zalgo_channel_whitelist::{
+                ZalgoChannelWhitelist
+            },
+            CensoredUri
+        }
     }
 };
 
@@ -96,5 +126,8 @@ crate struct CensorshipLevel {
     crate prohibited_mentions: Option<BlockedMentions>,
 
     #[serde(rename = "BlockedMentionsChannelWhitelist")]
-    crate blocked_mentions_channel_whitelist: Option<BlockedMentionsChannelWhitelist>
+    crate blocked_mentions_channel_whitelist: Option<BlockedMentionsChannelWhitelist>,
+
+    #[serde(rename = "FilterCapitalLetters")]
+    crate filter_capital_letters: Option<bool>
 }
