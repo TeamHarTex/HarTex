@@ -24,6 +24,7 @@ mod zalgo_nickname_detection;
 crate use blocked_mentions_detection::BlockedMentionsDetectionTask;
 crate use blocked_nickname_detection::BlockedNicknameDetectionTask;
 crate use blocked_words_or_tokens_detection::BlockedWordsOrTokensDetectionTask;
+crate use consecutive_capital_letters_detection::ConsecutiveCapitalLettersDetectionTask;
 crate use domain_detection::DomainDetectionTask;
 crate use invite_detection::InviteDetectionTask;
 crate use zalgo_detection::ZalgoDetectionTask;
