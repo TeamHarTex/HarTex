@@ -65,6 +65,7 @@ use crate::{
                 BlockedMentionsDetectionTask,
                 BlockedNicknameDetectionTask,
                 BlockedWordsOrTokensDetectionTask,
+                ConsecutiveCapitalLettersDetectionTask,
                 DomainDetectionTask,
                 InviteDetectionTask,
                 ZalgoDetectionTask,
@@ -390,6 +391,23 @@ impl EventHandler {
                         ).await?;
 
                         state_machine.update_state(CensorshipProcess::BlockedMentionsFiltered);
+                        
+                        ConsecutiveCapitalLettersDetectionTask::execute_task(
+                            TaskContext::MessageCreate(
+                                MessageCreateTaskContext(
+                                    Arc::new(
+                                        MessageCreateTaskContextRef::new(
+                                            http.clone(),
+                                            payload.author.clone(),
+                                            payload.0.clone()
+                                        )
+                                    )
+                                )
+                            ),
+                            config.clone()
+                        ).await?;
+
+                        state_machine.update_state(CensorshipProcess::ConsecutiveCapitalLettersFiltered);
 
                         // TO BE IMPLEMEMTED
 
