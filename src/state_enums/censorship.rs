@@ -32,6 +32,8 @@ crate enum CensorshipProcess {
 
     BlockedMentionsFiltered,
 
+    ConsecutiveCapitalLettersFiltered,
+
     Completed
 }
 
