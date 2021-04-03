@@ -39,5 +39,33 @@ impl Task for ConsecutiveCapitalLettersDetectionTask {
 
 async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext, config: BotConfig)
     -> SystemResult<()> {
+    if let TaskContext::MessageCreate(payload) = ctx {
+        if let Some(ref plugins) = config.plugins {
+            if let Some(ref censorship_plugin) = plugins.censorship_plugin {
+                for level in &censorship_plugin.censorship_levels.levels {
+                    if level.filter_capital_letters != Some(true) {
+                        return Ok(());
+                    }
+
+                    let minimum_caps = if let Some(minimum) = level.minimum_consecutive_capital_letters {
+                        minimum
+                    }
+                    else {
+                        5
+                    };
+
+                    let mut message = payload.message.content.clone();
+
+                    // We remove all spaces from the string to count consecutive capital letters,
+                    // whilst completely ignoing spaces.
+                    message.retain(|character| !character.is_whitespace());
+                }
+            }
+        }
+    }
+    else {
+        unreachable!()
+    }
+
     Ok(())
 }
