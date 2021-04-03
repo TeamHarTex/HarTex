@@ -43,6 +43,9 @@ use crate::xml_deserialization::plugin_management::{
             invites_channel_whitelist::{
                 InvitesChannelWhitelist
             },
+            minimum_consecutive_capital_letters_channel_whitelist::{
+                MinimumConsecutiveCapitalLettersChannelWhitelist
+            },
             prohibited_tokens::{
                 ProhibitedTokens
             },
@@ -132,5 +135,8 @@ crate struct CensorshipLevel {
     crate filter_capital_letters: Option<bool>,
 
     #[serde(rename = "MinimumConsecutiveCapitalLetters", default)]
-    crate minimum_consecutive_capital_letters: Option<u64>
+    crate minimum_consecutive_capital_letters: Option<u64>,
+    
+    #[serde(rename = "MinimumConsecutiveCapitalLettersChannelWhitelist", default)]
+    crate minimum_consecutive_capital_letters_channel_whitelist: Option<MinimumConsecutiveCapitalLettersChannelWhitelist>
 }
