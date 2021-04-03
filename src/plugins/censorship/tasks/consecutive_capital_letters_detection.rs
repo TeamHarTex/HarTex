@@ -17,6 +17,10 @@ use std::{
     pin::Pin
 };
 
+use itertools::{
+    Itertools
+};
+
 use crate::{
     command_system::{
         Task,
@@ -57,8 +61,10 @@ async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext,
                     let mut message = payload.message.content.clone();
 
                     // We remove all spaces from the string to count consecutive capital letters,
-                    // whilst completely ignoing spaces.
+                    // whilst completely ignoring spaces.
                     message.retain(|character| !character.is_whitespace());
+
+
                 }
             }
         }
