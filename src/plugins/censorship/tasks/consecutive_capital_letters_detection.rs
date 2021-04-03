@@ -29,9 +29,17 @@ use crate::{
         TaskContext
     },
     system::{
+        twilight_id_extensions::IntoInnerU64,
         SystemResult,
     },
-    xml_deserialization::BotConfig
+    xml_deserialization::{
+        plugin_management::{
+            models::{
+                channel_id::ChannelId
+            }
+        },
+        BotConfig
+    }
 };
 
 crate struct ConsecutiveCapitalLettersDetectionTask;
@@ -59,6 +67,13 @@ async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext,
                     else {
                         5
                     };
+
+                    if let Some(whitelisted_channels) = level.clone()
+                        .minimum_consecutive_capital_letters_channel_whitelist {
+                        if whitelisted_channels.channel_ids.contains(&ChannelId { id: payload.message.channel_id.into_inner_u64() }) {
+                            return Ok(());
+                        }
+                    }
 
                     let mut message = payload.message.content.clone();
                     let is_uppercase = char::is_uppercase;
