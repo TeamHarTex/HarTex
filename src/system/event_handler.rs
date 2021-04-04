@@ -56,9 +56,6 @@ use crate::{
         TaskContext,
     },
     logging::logger::Logger,
-    macros::{
-        logger_dbg
-    },
     plugins::{
         censorship::{
             tasks::{
@@ -118,7 +115,8 @@ impl EventHandler {
                     current_user.id.into_inner_u64(),
                     payload.version,
                     stopwatch.elapsed_milliseconds()
-            )
+            ),
+            "system::event_handler::EventHandler::ready"
         );
 
         Ok(())
@@ -132,14 +130,17 @@ impl EventHandler {
             Ok(vector) => {
                 Logger::log_debug(
                     format!("Joined a new guild with ID {}. Checking whether the guild is whitelisted.",
-                            guild_id)
+                            guild_id),
+                    "system::event_handler::EventHandler::guild_create"
                 );
 
                 if vector.contains(&guild_id) {
-                    Logger::log_debug("Guild is whitelisted.");
+                    Logger::log_debug("Guild is whitelisted.",
+                                      "system::event_handler::EventHandler::guild_create");
                 }
                 else {
-                    Logger::log_debug("Guild is not whitelisted. Leaving guild.");
+                    Logger::log_debug("Guild is not whitelisted. Leaving guild.",
+                                      "system::event_handler::EventHandler::guild_create");
 
                     if let Some(g) =  guild {
                         let owner_id = g.owner_id;
@@ -182,7 +183,8 @@ impl EventHandler {
     }
 
     crate async fn shard_connecting(payload: Connecting) -> SystemResult<()> {
-        Logger::log_verbose(format!("Shard {} is connecting to the Discord gateway.", payload.shard_id));
+        Logger::log_verbose(format!("Shard {} is connecting to the Discord gateway.", payload.shard_id),
+                            "system::event_handler::EventHandler::shard_connecting");
 
         Ok(())
     }
@@ -193,7 +195,8 @@ impl EventHandler {
                 "Shard {} is connected to the Discord gateway. The heartbeat interval is {} ms.",
                 payload.shard_id,
                 payload.heartbeat_interval
-            )
+            ),
+            "system::event_handler::EventHandler::shard_connected"
         );
 
         Ok(())
@@ -204,7 +207,8 @@ impl EventHandler {
             format!(
                 "Shard {} is reconnecting to the Discord gateway.",
                 payload.shard_id
-            )
+            ),
+            "system::event_handler::EventHandler::shard_reconnecting"
         );
 
         Ok(())
@@ -217,7 +221,8 @@ impl EventHandler {
                 payload.shard_id,
                 payload.reason,
                 payload.code
-            )
+            ),
+            "system::event_handler::EventHandler::shard_disconnected"
         );
 
         Ok(())
@@ -228,7 +233,8 @@ impl EventHandler {
             format!(
                 "Shard {} is identifying with the Discord gateway.",
                 payload.shard_id,
-            )
+            ),
+            "system::event_handler::EventHandler::shard_identifying"
         );
 
         Ok(())
@@ -391,7 +397,7 @@ impl EventHandler {
                         ).await?;
 
                         state_machine.update_state(CensorshipProcess::BlockedMentionsFiltered);
-                        
+
                         ConsecutiveCapitalLettersDetectionTask::execute_task(
                             TaskContext::MessageCreate(
                                 MessageCreateTaskContext(
@@ -465,7 +471,8 @@ impl EventHandler {
     crate async fn command_executed(payload: Box<CommandExecuted>) -> SystemResult<()> {
         Logger::log_info(
             format!("Command '{}' is successfully executed in {}.",
-                    payload.command, payload.guild_name)
+                    payload.command, payload.guild_name),
+            "system::event_handler::EventHandler::command_executed"
         );
 
         Ok(())
@@ -474,20 +481,23 @@ impl EventHandler {
     crate async fn command_failed(payload: Box<CommandFailed>) -> SystemResult<()> {
         Logger::log_error(
             format!("Command '{}' failed due to an error: '{}'.",
-                    payload.command, payload.error)
+                    payload.command, payload.error),
+            "system::event_handler::EventHandler::command_failed"
         );
 
         Ok(())
     }
 
     crate async fn command_received(_payload: Box<CommandReceived>) -> SystemResult<()> {
-        Logger::log_verbose("Command received; identifying command.");
+        Logger::log_verbose("Command received; identifying command.",
+                            "system::event_handler::EventHandler::command_received");
 
         Ok(())
     }
 
     crate async fn command_identified(payload: String) -> SystemResult<()> {
-        Logger::log_verbose(format!("Command identified: '{}'", payload));
+        Logger::log_verbose(format!("Command identified: '{}'", payload),
+                            "system::event_handler::EventHandler::command_identified");
 
         Ok(())
     }

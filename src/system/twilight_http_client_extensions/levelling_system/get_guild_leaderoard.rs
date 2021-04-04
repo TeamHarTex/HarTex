@@ -74,7 +74,8 @@ impl GetGuildLeaderboard {
     }
 
     fn start(&mut self) -> ClientExtensionResult<()> {
-        Logger::log_debug("Attempting to create connection to HarTexBetaLevellingSystem database.");
+        Logger::log_debug("Attempting to create connection to HarTexBetaLevellingSystem database.",
+        "system::twilight_http_client_extensions::levelling_system::get_guild_leaderboard::GetGuildLeaderboard::start");
 
         self.future.replace(Box::pin(
             request(self.guild_id)
@@ -127,7 +128,8 @@ async fn request(guild_id: GuildId) -> ClientExtensionResult<Leaderboard> {
             exists
         },
         Err(error) => {
-            Logger::log_error(format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()));
+            Logger::log_error(format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()),
+                              "system::twilight_http_client_extensions::levelling_system::get_guild_leaderboard::request");
 
             return Err(box error);
         }
@@ -148,19 +150,20 @@ async fn request(guild_id: GuildId) -> ClientExtensionResult<Leaderboard> {
         .await {
         Ok(rows) => {
             let mut entries = Vec::new();
-            
+
             for row in rows {
                 let user_id: String = row.get("user_id");
                 let level: String = row.get("lvl");
                 let experience: String = row.get("xp");
-                
+
                 entries.push(LeaderboardEntry::new(UserId(user_id.parse()?), level.parse()?, experience.parse()?))
             }
 
             Ok(Leaderboard::new_with_vector(entries))
         },
         Err(error) => {
-            Logger::log_error(format!("Failed to retrieve leaderboard. Error: {}", error.as_database_error().unwrap()));
+            Logger::log_error(format!("Failed to retrieve leaderboard. Error: {}", error.as_database_error().unwrap()),
+                              "system::twilight_http_client_extensions::levelling_system::get_guild_leaderboard::request");
 
             Err(box error)
         }
