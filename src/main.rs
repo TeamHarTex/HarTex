@@ -537,7 +537,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         .resource_types(resource_types)
         .build();
 
-    Logger::log_debug("Registered events.", "main");
+    Logger::log_debug("Registered events.", "main::main");
 
     // Framework Listeners
     let listeners = framework.clone().listeners();
