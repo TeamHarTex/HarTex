@@ -11,6 +11,8 @@
 //!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //!  See the License for the specific language governing permissions and
 //!  limitations under the License.
+//!
+//! # HarTex - A Discord Bot for Administration and Moderation
 
 #![feature(arbitrary_self_types)]
 #![feature(associated_type_defaults)]
@@ -298,7 +300,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Creates a new stopwatch.
     let stopwatch = Stopwatch::new();
 
-    Logger::log_debug("Loading bot token from environment.");
+    Logger::log_debug("Loading bot token from environment.", "main::main");
     dotenv().ok();  // Loads the .env file.
 
     // Sets the token only if no errors are encountered when attempting to retrieve the token.
@@ -307,12 +309,12 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             token
         },
         Err(_) => {
-            Logger::log_error("Failed to retrieve bot token.");
+            Logger::log_error("Failed to retrieve bot token.", "main::main");
             panic!("Failed to retrieve bot token.");
         }
     };
 
-    Logger::log_debug("Bot token successfully retrieved.".to_string());
+    Logger::log_debug("Bot token successfully retrieved.".to_string(), "main::main");
 
     // Creates a new configuration object.
     let bot_configuration = BotConfiguration::new(hartex_token);
@@ -320,9 +322,9 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Sharding scheme
     let shard_scheme = ShardScheme::Auto;
 
-    Logger::log_debug("Building bot cluster.");
-    Logger::log_debug("Registering gateway intents [ALL].");
-    Logger::log_debug("Registering presence.");
+    Logger::log_debug("Building bot cluster.", "main::main");
+    Logger::log_debug("Registering gateway intents [ALL].", "main::main");
+    Logger::log_debug("Registering presence.", "main::main");
 
     let intents =
         Intents::GUILDS |
@@ -350,12 +352,12 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         .build()
         .await?;
 
-    Logger::log_debug("Bot cluster successfully created.");
+    Logger::log_debug("Bot cluster successfully created.", "main::main");
 
     // Cloned cluster for tokio spawn
     let cluster_spawn = hartex_cluster.clone();
 
-    Logger::log_debug("Initializing levelling cache.");
+    Logger::log_debug("Initializing levelling cache.", "main::main");
     let mut levelling_cache = SystemCache::new();
 
     // Spawns a tokio task to startup the cluster.
@@ -363,18 +365,18 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         cluster_spawn.up().await;
     });
 
-    Logger::log_debug("Building HTTP client.");
+    Logger::log_debug("Building HTTP client.", "main::main");
 
     // HarTex HTTP client
     let hartex_http = TwilightHttpClient::new(&bot_configuration.token);
 
     // HarTex command framework
-    Logger::log_debug("Initializing command framework.");
+    Logger::log_debug("Initializing command framework.", "main::main");
     let framework = CommandFramework::new();
 
     // Initialization of command parser.
     let command_parser = {
-        Logger::log_debug("Registering commands.");
+        Logger::log_debug("Registering commands.", "main::main");
 
         framework
             .clone()
@@ -535,7 +537,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         .resource_types(resource_types)
         .build();
 
-    Logger::log_debug("Registered events.");
+    Logger::log_debug("Registered events.", "main");
 
     // Framework Listeners
     let listeners = framework.clone().listeners();
@@ -547,7 +549,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     // Sets the Ctrl+C handler.
     ctrlc::set_handler(move || {
-        Logger::log_warning("Received a Ctrl-C signal; terminating process.");
+        Logger::log_warning("Received a Ctrl-C signal; terminating process.", "main::main");
 
         std::process::exit(0);
     })?;
@@ -667,7 +669,7 @@ async fn handle_event(_shard_id: Option<u64>,
                             ).await {
                                 Ok(()) => (),
                                 Err(error) => {
-                                    Logger::log_error(format!("Failed to handle message: {}", error));
+                                    Logger::log_error(format!("Failed to handle message: {}", error), "main::handle_event");
 
                                     let error_hash =
                                         format!("{:x}",
@@ -811,7 +813,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "role", mut arguments, .. } => {
@@ -895,7 +897,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "role-info", arguments, .. } => {
@@ -966,7 +968,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "unlockdown", mut arguments, .. } => {
@@ -1018,7 +1020,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "slowmode", mut arguments, .. } => {
@@ -1074,7 +1076,7 @@ async fn handle_command(message: Message,
                             );
                         },
                         _ => Logger::log_error(
-                            format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                            format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
                     }
                 },
                 Some("disable") => {
@@ -1126,11 +1128,11 @@ async fn handle_command(message: Message,
                             );
                         },
                         _ => Logger::log_error(
-                            format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                            format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
                     }
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "voicemute", mut arguments, .. } => {
@@ -1176,7 +1178,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "noroles", mut arguments, .. } => {
@@ -1222,7 +1224,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "nickname", mut arguments, .. } => {
@@ -1268,7 +1270,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "webconfig", mut arguments, .. } => {
@@ -1295,7 +1297,7 @@ async fn handle_command(message: Message,
                     );
                 },
                 _ => Logger::log_error(
-                    format!("Command '{}' failed due to an error: 'command not found'.", message.content))
+                    format!("Command '{}' failed due to an error: 'command not found'.", message.content), "main::handle_command")
             }
         },
         Command { name: "invites", arguments, .. } => {
@@ -2360,7 +2362,8 @@ async fn handle_command(message: Message,
                     Logger::log_error(
                         format!(
                             "Command '{}' failed due to an error: 'command not found'.", message.content
-                        )
+                        ),
+                        "main::handle_command"
                     );
                 }
             }
