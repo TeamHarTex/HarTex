@@ -69,23 +69,3 @@ crate macro execute_command {
         }
     }
 }
-
-crate macro logger_dbg {
-    ($expression:expr) => {
-        $crate::logging::logger::Logger::log_debug(
-            match $expression {
-                any_expr => {
-                    format!(
-                        "[{}:{}] {} = {:#?}",
-                        std::file!(),
-                        std::line!(),
-                        std::stringify!($expression),
-                        &any_expr
-                    )
-                }
-            }
-        );
-
-        $expression
-    }
-}

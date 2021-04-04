@@ -49,7 +49,8 @@ crate static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send
     });
 
 crate fn hartex_begin_panic(panic_info: &PanicInfo<'_>) {
-    Logger::log_error("An unexpected panic has taken place. See below for more information:");
+    Logger::log_error("An unexpected panic has taken place. See below for more information:",
+    "system::panicking::hartex_begin_panic");
 
     eprintln!("{}error: internal bot error: unexpected panic{}\n", Ansi256 { colour: 1 }, Ansi256::reset());
     eprintln!("note: the bot unexpectedly panicked. this is a bug.\n");

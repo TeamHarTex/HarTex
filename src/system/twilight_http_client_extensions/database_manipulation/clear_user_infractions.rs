@@ -1,16 +1,16 @@
-///  Copyright 2020 - 2021 The HarTex Project Developers
-///
-///  Licensed under the Apache License, Version 2.0 (the "License");
-///  you may not use this file except in compliance with the License.
-///  You may obtain a copy of the License at
-///
-///      http://www.apache.org/licenses/LICENSE-2.0
-///
-///  Unless required by applicable law or agreed to in writing, software
-///  distributed under the License is distributed on an "AS IS" BASIS,
-///  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-///  See the License for the specific language governing permissions and
-///  limitations under the License.
+//!  Copyright 2020 - 2021 The HarTex Project Developers
+//!
+//!  Licensed under the Apache License, Version 2.0 (the "License");
+//!  you may not use this file except in compliance with the License.
+//!  You may obtain a copy of the License at
+//!
+//!      http://www.apache.org/licenses/LICENSE-2.0
+//!
+//!  Unless required by applicable law or agreed to in writing, software
+//!  distributed under the License is distributed on an "AS IS" BASIS,
+//!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//!  See the License for the specific language governing permissions and
+//!  limitations under the License.
 
 use std::{
     future::Future,
@@ -68,7 +68,9 @@ impl ClearUserInfractions {
     }
 
     fn start(&mut self) -> ClientExtensionResult<()> {
-        Logger::log_debug("Attempting to create connection to HarTexBetaGuildInfractions database.".to_string());
+        Logger::log_debug(
+            "Attempting to create connection to HarTexBetaGuildInfractions database.".to_string(),
+        "system::twilight_http_client_extensions::database_manipulation::clear_user_infractions::ClearUserInfractions::start");
 
         self.future.replace(Box::pin(request(self.guild_id, self.user_id)));
 
@@ -108,7 +110,8 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<()
 
     Logger::log_debug(
         format!(
-            "Making query to database. [Checking if guild schema exists in the database: {}]", guild_id));
+            "Making query to database. [Checking if guild schema exists in the database: {}]", guild_id),
+        "system::twilight_http_client_extensions::database_manipulation::clear_user_infractions::request");
 
     let schema_query_result: SqlxResult<PgRow> = sqlx::query(
         // language=SQL
@@ -119,7 +122,8 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<()
 
     let schema_exists = match schema_query_result {
         Ok(row) => {
-            Logger::log_verbose("Successfully made query.");
+            Logger::log_verbose("Successfully made query.",
+                                "system::twilight_http_client_extensions::database_manipulation::clear_user_infractions::request");
 
             let exists: bool = row.get("exists");
 
@@ -127,7 +131,8 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<()
         },
         Err(error) => {
             Logger::log_error(
-                format!("Failed check if schema exists. Error: {}", error.as_database_error().unwrap()));
+                format!("Failed check if schema exists. Error: {}", error.as_database_error().unwrap()),
+                "system::twilight_http_client_extensions::database_manipulation::clear_user_infractions::request");
 
             return Err(box error);
         }
@@ -147,14 +152,16 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<()
         .await;
     let table_exists = match table_query_result {
         Ok(row) => {
-            Logger::log_verbose("Successfully made query.");
+            Logger::log_verbose("Successfully made query.",
+                                "system::twilight_http_client_extensions::database_manipulation::clear_user_infractions::request");
 
             let exists: bool = row.get("exists");
 
             exists
         },
         Err(error) => {
-            Logger::log_error(format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()));
+            Logger::log_error(format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()),
+                              "system::twilight_http_client_extensions::database_manipulation::clear_user_infractions::request");
 
             return Err(box error);
         }
@@ -175,5 +182,5 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<()
         return Err(box error)
     }
 
-    todo!()
+    Ok(())
 }
