@@ -1,16 +1,16 @@
-///  Copyright 2020 - 2021 The HarTex Project Developers
-///
-///  Licensed under the Apache License, Version 2.0 (the "License");
-///  you may not use this file except in compliance with the License.
-///  You may obtain a copy of the License at
-///
-///      http://www.apache.org/licenses/LICENSE-2.0
-///
-///  Unless required by applicable law or agreed to in writing, software
-///  distributed under the License is distributed on an "AS IS" BASIS,
-///  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-///  See the License for the specific language governing permissions and
-///  limitations under the License.
+//!  Copyright 2020 - 2021 The HarTex Project Developers
+//!
+//!  Licensed under the Apache License, Version 2.0 (the "License");
+//!  you may not use this file except in compliance with the License.
+//!  You may obtain a copy of the License at
+//!
+//!      http://www.apache.org/licenses/LICENSE-2.0
+//!
+//!  Unless required by applicable law or agreed to in writing, software
+//!  distributed under the License is distributed on an "AS IS" BASIS,
+//!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//!  See the License for the specific language governing permissions and
+//!  limitations under the License.
 
 use std::{
     future::Future,
@@ -76,7 +76,8 @@ impl AddUserInfraction {
     }
 
     fn start(&mut self) -> ClientExtensionResult<()> {
-        Logger::log_debug("Attempting to create connection to HarTexBetaGuildInfractions database.".to_string());
+        Logger::log_debug("Attempting to create connection to HarTexBetaGuildInfractions database.".to_string(),
+        "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::AddUserInfraction::start");
 
         self.future.replace(Box::pin(request(self.infraction_id.clone(), self.guild_id, self.user_id,
                                              self.reason.clone(), self.infraction_type)));
@@ -129,7 +130,9 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
 
     let schema_exists = match schema_query_result {
         Ok(row) => {
-            Logger::log_verbose("Successfully made query.");
+            Logger::log_verbose(
+                "Successfully made query.",
+                "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
             let exists: bool = row.get("exists");
 
@@ -137,7 +140,8 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
         },
         Err(error) => {
             Logger::log_error(
-                format!("Failed check if schema exists. Error: {}", error.as_database_error().unwrap()));
+                format!("Failed check if schema exists. Error: {}", error.as_database_error().unwrap()),
+                "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
             return Err(box error);
         }
@@ -151,7 +155,9 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
             .bind(format!("inf_{}", guild_id.0))
             .fetch_one(&connection)
             .await {
-            Logger::log_error(format!("Could not create schema. Error: {}", error.as_database_error().unwrap()));
+            Logger::log_error(
+                format!("Could not create schema. Error: {}", error.as_database_error().unwrap()),
+                "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
             return Err(box error);
         }
@@ -167,14 +173,18 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
         .await;
     let table_exists = match table_query_result {
         Ok(row) => {
-            Logger::log_verbose("Successfully made query.");
+            Logger::log_verbose(
+                "Successfully made query.",
+                "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
             let exists: bool = row.get("exists");
 
             exists
         },
         Err(error) => {
-            Logger::log_error(format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()));
+            Logger::log_error(
+                format!("Failed to check if table exists. Error: {}", error.as_database_error().unwrap()),
+                "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
             return Err(box error);
         }
@@ -191,7 +201,9 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
         )
             .fetch_all(&connection)
             .await {
-            Logger::log_error(format!("Could not create table. Error: {}", error.as_database_error().unwrap()));
+            Logger::log_error(
+                format!("Could not create table. Error: {}", error.as_database_error().unwrap()),
+                "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
             return Err(box error)
         }
@@ -208,7 +220,9 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
         .bind(infraction_type.to_string())
         .fetch_all(&connection)
         .await {
-        Logger::log_error(format!("Could not delete infraction. Error: {}", error));
+        Logger::log_error(
+            format!("Could not insert infraction. Error: {}", error),
+            "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
         return Err(box error)
     }
