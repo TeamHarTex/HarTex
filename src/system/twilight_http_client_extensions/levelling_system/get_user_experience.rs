@@ -68,7 +68,8 @@ impl GetUserExperience {
     }
 
     fn start(&mut self) -> ClientExtensionResult<()> {
-        Logger::log_debug("Attempting to create connection to HarTexBetaLevellingSystem database.".to_string());
+        Logger::log_debug("Attempting to create connection to HarTexBetaLevellingSystem database.".to_string(),
+        "system::twilight_http_client_extensions::levelling_system::get_user_experience::GetUserExperience::start");
 
         self.future.replace(
             Box::pin(
