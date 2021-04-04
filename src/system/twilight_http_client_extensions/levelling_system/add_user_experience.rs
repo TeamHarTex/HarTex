@@ -71,7 +71,7 @@ impl AddUserExperience {
 
     fn start(&mut self) -> ClientExtensionResult<()> {
         Logger::log_debug("Attempting to create connection to HarTexBetaLevellingSystem database.".to_string(),
-        "system::twilight_http_extensions::levelling_system::AddUserExperience::start");
+        "system::twilight_http_extensions::levelling_system::add_user_experience::AddUserExperience::start");
 
         self.future.replace(Box::pin(
             request(
@@ -135,7 +135,7 @@ async fn request(guild_id: GuildId, user_id: UserId, experience: u64) -> ClientE
         },
         Err(error) => {
             Logger::log_error(format!("Failed to check if schema exists. Error: {}", error.as_database_error().unwrap()),
-                              "system::twilight_http_extensions::levelling_system::request");
+                              "system::twilight_http_extensions::levelling_system::add_user_experience::request");
 
             return Err(box error);
         }
@@ -152,14 +152,14 @@ async fn request(guild_id: GuildId, user_id: UserId, experience: u64) -> ClientE
             .fetch_all(&connection)
             .await {
             Logger::log_error(format!("Failed to create table. Error: {}", error.as_database_error().unwrap()),
-                              "system::twilight_http_extensions::levelling_system::request");
+                              "system::twilight_http_extensions::levelling_system::add_user_experience::request");
 
             return Err(box error);
         }
     }
 
     Logger::log_debug(format!("Adding experience to a user. [{} experience]", experience),
-                      "system::twilight_http_extensions::levelling_system::request");
+                      "system::twilight_http_extensions::levelling_system::add_user_experience::request");
 
     if let Ok(Some(row)) = sqlx::query(
         &format!(
@@ -188,7 +188,7 @@ async fn request(guild_id: GuildId, user_id: UserId, experience: u64) -> ClientE
             .fetch_all(&connection)
             .await {
             Logger::log_error(format!("Failed to insert xp row. Error: {}", error.as_database_error().unwrap()),
-                              "system::twilight_http_extensions::levelling_system::request");
+                              "system::twilight_http_extensions::levelling_system::add_user_experience::request");
 
             return Err(box error);
         }
@@ -218,7 +218,7 @@ async fn request(guild_id: GuildId, user_id: UserId, experience: u64) -> ClientE
         .fetch_all(&connection)
         .await {
         Logger::log_error(format!("Failed to update xp row. Error: {}", error.as_database_error().unwrap()),
-                          "system::twilight_http_extensions::levelling_system::request");
+                          "system::twilight_http_extensions::levelling_system::add_user_experience::request");
 
         return Err(box error);
     }
