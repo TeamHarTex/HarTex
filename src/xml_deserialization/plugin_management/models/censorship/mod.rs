@@ -24,6 +24,7 @@ crate mod blocked_words_or_tokens_channel_whitelist;
 crate mod domains_channel_whitelist;
 crate mod invites_channel_whitelist;
 crate mod minimum_consecutive_capital_letters_channel_whitelist;
+crate mod prohibited_nickname_prefixes;
 crate mod prohibited_tokens;
 crate mod prohibited_words;
 crate mod whitelisted_domains;
