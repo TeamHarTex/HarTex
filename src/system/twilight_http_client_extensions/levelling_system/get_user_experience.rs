@@ -130,7 +130,8 @@ async fn request(guild_id: GuildId, user_id: UserId) -> ClientExtensionResult<(U
             Ok((user_id, level, xp))
         },
         Err(error) => {
-            Logger::log_error(format!("Could not get user level and experience due to an error: '{:?}'", error));
+            Logger::log_error(format!("Could not get user level and experience due to an error: '{:?}'", error),
+                              "system::twilight_http_client_extensions::levelling_system::get_user_experience::request");
 
             Err(box error)
         }
