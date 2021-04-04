@@ -92,7 +92,8 @@ impl InitializeWhitelistedGuild {
 
     fn start(&mut self) -> ClientExtensionResult<()> {
         Logger::log_debug(
-            "Attempting to create connection to HarTexBetaGuildConfiguration database.".to_string());
+            "Attempting to create connection to HarTexBetaGuildConfiguration database.".to_string(),
+        "system::twilight_http_client_extensions::database_manipulation::initialize_whitelisted_guild::InitializeWhitelistedGuild::start");
 
         self.future.replace(Box::pin(request(self.guild_id.clone(), self.http.clone())));
 
@@ -152,7 +153,6 @@ async fn request(guild_id: GuildId, http: Client) -> ClientExtensionResult<BotCo
         let bytes = writer.into_inner().into_inner();
 
         // Assuming when this is executed, all pre-execution checks are done: the schema and tables for the guild does NOT exist.
-        
         
         let result = sqlx::query(
             &format!(
