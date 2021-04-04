@@ -1,16 +1,16 @@
-///  Copyright 2020 - 2021 The HarTex Project Developers
-///
-///  Licensed under the Apache License, Version 2.0 (the "License");
-///  you may not use this file except in compliance with the License.
-///  You may obtain a copy of the License at
-///
-///      http://www.apache.org/licenses/LICENSE-2.0
-///
-///  Unless required by applicable law or agreed to in writing, software
-///  distributed under the License is distributed on an "AS IS" BASIS,
-///  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-///  See the License for the specific language governing permissions and
-///  limitations under the License.
+//!  Copyright 2020 - 2021 The HarTex Project Developers
+//!
+//!  Licensed under the Apache License, Version 2.0 (the "License");
+//!  you may not use this file except in compliance with the License.
+//!  You may obtain a copy of the License at
+//!
+//!      http://www.apache.org/licenses/LICENSE-2.0
+//!
+//!  Unless required by applicable law or agreed to in writing, software
+//!  distributed under the License is distributed on an "AS IS" BASIS,
+//!  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//!  See the License for the specific language governing permissions and
+//!  limitations under the License.
 
 extern crate base64;
 
@@ -66,7 +66,8 @@ impl GetGuildConfiguration {
 
     fn start(&mut self) -> ClientExtensionResult<()> {
         Logger::log_debug("Attempting to create connection to HarTexBetaGuildConfiguration database."
-            .to_string());
+            .to_string(),
+                          "system::twilight_http_client_extensions::get_guild_configuration::GetGuildConfiguration::start");
 
         self.future.replace(Box::pin(request(self.guild_id)));
 
@@ -106,7 +107,8 @@ async fn request(guild_id: GuildId) -> ClientExtensionResult<String> {
 
     Logger::log_debug(
         format!("Making query to database. [Getting guild configuration for guild: {}]", guild_id
-        )
+        ),
+        "system::twilight_http_client_extensions::get_guild_configuration::request"
     );
 
     let query_result = sqlx::query(
