@@ -56,9 +56,6 @@ use crate::{
         TaskContext,
     },
     logging::logger::Logger,
-    macros::{
-        logger_dbg
-    },
     plugins::{
         censorship::{
             tasks::{
