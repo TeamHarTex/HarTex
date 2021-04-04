@@ -15,6 +15,7 @@
 extern crate serde;
 extern crate quick_xml;
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
 crate struct ProhibitedNicknamePrefixes {
     #[serde(rename = "ProhibitedNicknamePrefix")]
     crate prohibited_nickname_prefixes: Vec<String>
