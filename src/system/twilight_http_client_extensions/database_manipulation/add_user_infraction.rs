@@ -119,7 +119,8 @@ async fn request(infraction_id: String, guild_id: GuildId, user_id: UserId, reas
 
     Logger::log_debug(
         format!(
-            "Making query to database. [Checking if guild schema exists in the database: {}]", guild_id));
+            "Making query to database. [Checking if guild schema exists in the database: {}]", guild_id),
+        "system::twilight_http_client_extensions::database_manipulation::add_user_infraction::request");
 
     let schema_query_result: SqlxResult<PgRow> = sqlx::query(
         // language=SQL
