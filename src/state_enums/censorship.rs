@@ -60,7 +60,7 @@ crate enum NicknameCensorshipProcess {
 
 impl StateEnum for NicknameCensorshipProcess {}
 
-impl PartialEq for CensorshipProcess {
+impl PartialEq for NicknameCensorshipProcess {
     fn eq(&self, other: &Self) -> bool {
         self == other
     }
