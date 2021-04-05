@@ -49,6 +49,8 @@ impl PartialEq for CensorshipProcess {
 crate enum NicknameCensorshipProcess {
     Initialized,
 
+    ZalgoNicknamesFiltered,
+
     BlockedNicknamesFiltered,
 
     BlockedNicknamePrefixesFiltered,
