@@ -44,3 +44,22 @@ impl PartialEq for CensorshipProcess {
         self == other
     }
 }
+
+#[derive(Debug, Clone)]
+crate enum NicknameCensorshipProcess {
+    Initialized,
+
+    BlockedNicknamesFiltered,
+
+    BlockedNicknamePrefixesFiltered,
+
+    Completed
+}
+
+impl StateEnum for NicknameCensorshipProcess {}
+
+impl PartialEq for CensorshipProcess {
+    fn eq(&self, other: &Self) -> bool {
+        self == other
+    }
+}
