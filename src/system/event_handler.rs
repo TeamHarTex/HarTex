@@ -71,7 +71,10 @@ use crate::{
         }
     },
     state_enums::{
-        censorship::CensorshipProcess
+        censorship::{
+            CensorshipProcess,
+            NicknameCensorshipProcess
+        }
     },
     system::{
         caching::SystemCache,
@@ -434,6 +437,7 @@ impl EventHandler {
         let config_string = http.clone().get_guild_configuration(payload.guild_id).await?;
         let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
         let member = http.clone().guild_member(payload.guild_id, payload.user.id).await?.unwrap();
+        let mut state_machine = StateMachine::new_with_state(NicknameCensorshipProcess::Initialized);
 
         ZalgoNicknameDetectionTask::execute_task(
             TaskContext::MemberUpdate(
@@ -449,6 +453,8 @@ impl EventHandler {
             config.clone()
         ).await?;
 
+        state_machine.update_state(NicknameCensorshipProcess::ZalgoNicknamesFiltered);
+
         BlockedNicknameDetectionTask::execute_task(
             TaskContext::MemberUpdate(
                 MemberUpdateTaskContext(
@@ -462,6 +468,10 @@ impl EventHandler {
             ),
             config
         ).await?;
+
+        state_machine.update_state(NicknameCensorshipProcess::BlockedNicknamesFiltered);
+
+        state_machine.update_state(NicknameCensorshipProcess::Completed);
 
         Ok(())
     }
