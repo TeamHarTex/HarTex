@@ -56,5 +56,39 @@ impl Task for BlockedNicknamePrefixesDetection {
 
 async fn censorship_blocked_nickname_prefixes_detection_task(ctx: TaskContext, config: BotConfig)
     -> SystemResult<()> {
-    todo!()
+    if let TaskContext::MemberUpdate(payload) = ctx {
+        if let Some(ref plugins) = config.plugins {
+            if let Some(ref censorship_plugin) = plugins.censorship_plugin {
+                for level in &censorship_plugin.censorship_levels.levels {
+                    if let Some(ref prohibited_prefixes) = level.prohibited_nickname_prefixes {
+                        if prohibited_prefixes.prohibited_nickname_prefixes.clone()
+                            .into_iter()
+                            .any(|prefix| {
+                                if let Some(nickname) = payload.member.nick.clone() {
+                                    nickname.starts_with(&nickname)
+                                }
+                                else {
+                                    false
+                                }
+                            }) {
+                            payload.http_client
+                                .update_guild_member(payload.member.guild_id, payload.member.user.id)
+                                .nick(Some(if let Some(default_name) = level.zalgo_filtered_default_nickname.clone() {
+                                    default_name
+                                }
+                                else {
+                                    String::from("Censored Nickname")
+                                }))?
+                                .await;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        unreachable!()
+    }
+
+    Ok(())
 }
