@@ -48,9 +48,9 @@ use crate::{
 crate struct BlockedNicknamePrefixesDetection;
 
 impl Task for BlockedNicknamePrefixesDetection {
-    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig) 
+    fn execute_task<'asynchronous_trait>(ctx: TaskContext, config: BotConfig)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        todo!()
+        Box::pin(censorship_blocked_nickname_prefixes_detection_task(ctx, config))
     }
 }
 
