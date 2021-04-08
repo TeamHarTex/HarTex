@@ -62,6 +62,10 @@ async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext,
                     }
 
                     let minimum_caps = if let Some(minimum) = level.minimum_consecutive_capital_letters {
+                        if minimum == 0 {
+                            return Ok(());
+                        }
+                        
                         minimum
                     }
                     else {
