@@ -149,9 +149,9 @@ crate struct CensorshipLevel {
     #[serde(rename = "BlockedNicknamePrefixes", default)]
     crate prohibited_nickname_prefixes: Option<ProhibitedNicknamePrefixes>,
 
-    #[serde(rename = "MessageLengthLimit")]
+    #[serde(rename = "MessageLengthLimit", default)]
     crate message_length_limit: u64,
-    
-    #[serde(rename = "MessageLengthLimitChannelWhitelist")]
+
+    #[serde(rename = "MessageLengthLimitChannelWhitelist", default)]
     crate message_length_limit_channel_whitelist: Option<MessageCharLimitChannelWhitelist>
 }
