@@ -142,7 +142,10 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "MinimumConsecutiveCapitalLettersChannelWhitelist", default)]
     crate minimum_consecutive_capital_letters_channel_whitelist: Option<MinimumConsecutiveCapitalLettersChannelWhitelist>,
-    
+
     #[serde(rename = "BlockedNicknamePrefixes", default)]
-    crate prohibited_nickname_prefixes: Option<ProhibitedNicknamePrefixes>
+    crate prohibited_nickname_prefixes: Option<ProhibitedNicknamePrefixes>,
+    
+    #[serde(rename = "MaximumMessageLength")]
+    crate maximum_message_length: u64
 }
