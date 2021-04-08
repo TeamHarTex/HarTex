@@ -19,6 +19,7 @@ mod blocked_words_or_tokens_detection;
 mod consecutive_capital_letters_detection;
 mod domain_detection;
 mod invite_detection;
+mod message_char_limit_detection;
 mod zalgo_detection;
 mod zalgo_nickname_detection;
 
