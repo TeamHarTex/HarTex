@@ -43,6 +43,9 @@ use crate::xml_deserialization::plugin_management::{
             invites_channel_whitelist::{
                 InvitesChannelWhitelist
             },
+            message_char_limit_channel_whitelist::{
+                MessageCharLimitChannelWhitelist
+            },
             minimum_consecutive_capital_letters_channel_whitelist::{
                 MinimumConsecutiveCapitalLettersChannelWhitelist
             },
@@ -145,7 +148,10 @@ crate struct CensorshipLevel {
 
     #[serde(rename = "BlockedNicknamePrefixes", default)]
     crate prohibited_nickname_prefixes: Option<ProhibitedNicknamePrefixes>,
+
+    #[serde(rename = "MessageLengthLimit")]
+    crate message_length_limit: u64,
     
-    #[serde(rename = "MaximumMessageLength")]
-    crate maximum_message_length: u64
+    #[serde(rename = "MessageLengthLimitChannelWhitelist")]
+    crate message_length_limit_channel_whitelist: Option<MessageCharLimitChannelWhitelist>
 }
