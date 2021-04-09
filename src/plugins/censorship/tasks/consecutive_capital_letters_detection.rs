@@ -126,7 +126,7 @@ async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext,
                                         "{}{}{}",
                                         payload.message.guild_id.unwrap().0,
                                         payload.author.id.0,
-                                        String::from("Auto Moderation: Blocked mention censored.")
+                                        String::from("Auto Moderation: Too many consecutive capital letters.")
                                     ).as_bytes()
                                 )
                             );
@@ -135,7 +135,7 @@ async fn censorship_consecutive_capital_letters_detection_task(ctx: TaskContext,
                                 .add_user_infraction(warning_id,
                                                      payload.message.guild_id.unwrap(),
                                                      payload.message.author.id,
-                                                     String::from("Auto Moderation: Blocked mention censored."),
+                                                     String::from("Auto Moderation: Too many consecutive capital letters."),
                                                      InfractionType::Warning).await?;
                         }
                     }
