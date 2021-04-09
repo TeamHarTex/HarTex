@@ -17,12 +17,19 @@ use std::{
     pin::Pin
 };
 
+use sha3::{
+    Digest,
+    Sha3_224
+};
+
 use crate::{
     command_system::{
         Task,
         TaskContext
     },
     system::{
+        model::infractions::InfractionType,
+        twilight_http_client_extensions::AddUserInfraction,
         SystemResult,
     },
     xml_deserialization::BotConfig
@@ -55,6 +62,27 @@ async fn censorship_blocked_nickname_detection_task(ctx: TaskContext, config: Bo
                                             String::from("Censored Nickname")
                                         }))?
                                         .await;
+
+                                    if level.warn_on_censored == Some(true) {
+                                        let warning_id = format!(
+                                            "{:x}",
+                                            Sha3_224::digest(
+                                                format!(
+                                                    "{}{}{}",
+                                                    payload.message.guild_id.unwrap().0,
+                                                    payload.author.id.0,
+                                                    String::from("Auto Moderation: Blocked mention censored.")
+                                                ).as_bytes()
+                                            )
+                                        );
+
+                                        payload.http_client.clone()
+                                            .add_user_infraction(warning_id,
+                                                                 payload.message.guild_id.unwrap(),
+                                                                 payload.message.author.id,
+                                                                 String::from("Auto Moderation: Blocked mention censored."),
+                                                                 InfractionType::Warning).await?;
+                                    }
                                 }
                             }
                         }
