@@ -98,7 +98,7 @@ async fn censorship_blocked_words_or_tokens_detection_task(ctx: TaskContext, con
                                         "{}{}{}",
                                         payload.message.guild_id.unwrap().0,
                                         payload.author.id.0,
-                                        String::from("Auto Moderation: Blocked mention censored.")
+                                        String::from("Auto Moderation: Blocked word or token censored.")
                                     ).as_bytes()
                                 )
                             );
@@ -107,7 +107,7 @@ async fn censorship_blocked_words_or_tokens_detection_task(ctx: TaskContext, con
                                 .add_user_infraction(warning_id,
                                                      payload.message.guild_id.unwrap(),
                                                      payload.message.author.id,
-                                                     String::from("Auto Moderation: Blocked mention censored."),
+                                                     String::from("Auto Moderation: Blocked word or token censored."),
                                                      InfractionType::Warning).await?;
                         }
                     }
