@@ -153,5 +153,8 @@ crate struct CensorshipLevel {
     crate message_length_limit: u64,
 
     #[serde(rename = "MessageLengthLimitChannelWhitelist", default)]
-    crate message_length_limit_channel_whitelist: Option<MessageCharLimitChannelWhitelist>
+    crate message_length_limit_channel_whitelist: Option<MessageCharLimitChannelWhitelist>,
+
+    #[serde(rename = "WarnOnCensored")]
+    crate warn_on_censored: Option<bool>
 }
