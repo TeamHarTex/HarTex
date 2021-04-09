@@ -26,7 +26,13 @@ use crate::{
         Task,
         TaskContext
     },
+    plugins::{
+        infractions::dm::DmWarnCommand
+    },
     system::{
+        twilight_http_client_extensions::{
+            AddUserInfraction
+        },
         twilight_id_extensions::IntoInnerU64,
         SystemResult,
     },
@@ -80,10 +86,6 @@ async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: Bo
                                                 if value != &r#match.as_str().parse::<u64>().unwrap() {
                                                     return Ok(());
                                                 }
-
-                                                payload.http_client.clone()
-                                                    .delete_message(payload.message.channel_id, payload.message.id)
-                                                    .await?;
                                             }
                                         }
                                     },
@@ -97,10 +99,6 @@ async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: Bo
                                                 if value != &r#match.as_str().parse::<u64>().unwrap() {
                                                     return Ok(());
                                                 }
-
-                                                payload.http_client.clone()
-                                                    .delete_message(payload.message.channel_id, payload.message.id)
-                                                    .await?;
                                             }
                                         }
                                     },
@@ -114,13 +112,17 @@ async fn censorship_blocked_mentions_detection_task(ctx: TaskContext, config: Bo
                                                 if value != &r#match.as_str().parse::<u64>().unwrap() {
                                                     return Ok(());
                                                 }
-
-                                                payload.http_client.clone()
-                                                    .delete_message(payload.message.channel_id, payload.message.id)
-                                                    .await?;
                                             }
                                         }
                                     }
+                                }
+
+                                payload.http_client.clone()
+                                    .delete_message(payload.message.channel_id, payload.message.id)
+                                    .await?;
+
+                                if level.warn_on_censored == Some(true) {
+                                    todo!()
                                 }
                             }
                         }
