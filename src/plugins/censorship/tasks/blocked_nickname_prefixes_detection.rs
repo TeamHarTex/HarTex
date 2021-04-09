@@ -96,7 +96,7 @@ async fn censorship_blocked_nickname_prefixes_detection_task(ctx: TaskContext, c
                                             "{}{}{}",
                                             payload.member.guild_id.0,
                                             payload.member.user.id.0,
-                                            String::from("Auto Moderation: Blocked mention censored.")
+                                            String::from("Auto Moderation: Blocked nickname prefix censored.")
                                         ).as_bytes()
                                     )
                                 );
@@ -105,7 +105,7 @@ async fn censorship_blocked_nickname_prefixes_detection_task(ctx: TaskContext, c
                                     .add_user_infraction(warning_id,
                                                          payload.member.guild_id,
                                                          payload.member.user.id,
-                                                         String::from("Auto Moderation: Blocked mention censored."),
+                                                         String::from("Auto Moderation: Blocked nickname prefix censored."),
                                                          InfractionType::Warning).await?;
                             }
                         }
