@@ -69,18 +69,18 @@ async fn censorship_blocked_nickname_detection_task(ctx: TaskContext, config: Bo
                                             Sha3_224::digest(
                                                 format!(
                                                     "{}{}{}",
-                                                    payload.message.guild_id.unwrap().0,
-                                                    payload.author.id.0,
-                                                    String::from("Auto Moderation: Blocked mention censored.")
+                                                    payload.member.guild_id.0,
+                                                    payload.member.user.id.0,
+                                                    String::from("Auto Moderation: Blocked nickname censored.")
                                                 ).as_bytes()
                                             )
                                         );
 
                                         payload.http_client.clone()
                                             .add_user_infraction(warning_id,
-                                                                 payload.message.guild_id.unwrap(),
-                                                                 payload.message.author.id,
-                                                                 String::from("Auto Moderation: Blocked mention censored."),
+                                                                 payload.member.guild_id,
+                                                                 payload.member.user.id,
+                                                                 String::from("Auto Moderation: Blocked nickname censored."),
                                                                  InfractionType::Warning).await?;
                                     }
                                 }
