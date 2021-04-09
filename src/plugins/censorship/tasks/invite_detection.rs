@@ -17,13 +17,22 @@ use std::{
     pin::Pin
 };
 
+use sha3::{
+    Sha3_224,
+    Digest
+};
+
 use crate::{
     command_system::{
         Task,
         TaskContext
     },
     system::{
-        twilight_http_client_extensions::GetGuildConfiguration,
+        model::infractions::InfractionType,
+        twilight_http_client_extensions::{
+            AddUserInfraction,
+            GetGuildConfiguration
+        },
         twilight_id_extensions::IntoInnerU64,
         SystemResult,
     },
@@ -75,6 +84,27 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
                                             payload.http_client.clone()
                                                 .delete_message(payload.message.channel_id, payload.message.id)
                                                 .await?;
+
+                                            if level.warn_on_censored == Some(true) {
+                                                let warning_id = format!(
+                                                    "{:x}",
+                                                    Sha3_224::digest(
+                                                        format!(
+                                                            "{}{}{}",
+                                                            payload.message.guild_id.unwrap().0,
+                                                            payload.author.id.0,
+                                                            String::from("Auto Moderation: Blocked mention censored.")
+                                                        ).as_bytes()
+                                                    )
+                                                );
+
+                                                payload.http_client.clone()
+                                                    .add_user_infraction(warning_id,
+                                                                         payload.message.guild_id.unwrap(),
+                                                                         payload.message.author.id,
+                                                                         String::from("Auto Moderation: Blocked mention censored."),
+                                                                         InfractionType::Warning).await?;
+                                            }
                                         }
                                         else if !whitelisted.whitelists.iter()
                                             .any(|whitelist| {
@@ -88,6 +118,27 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
                                             payload.http_client.clone()
                                                 .delete_message(payload.message.channel_id, payload.message.id)
                                                 .await?;
+
+                                            if level.warn_on_censored == Some(true) {
+                                                let warning_id = format!(
+                                                    "{:x}",
+                                                    Sha3_224::digest(
+                                                        format!(
+                                                            "{}{}{}",
+                                                            payload.message.guild_id.unwrap().0,
+                                                            payload.author.id.0,
+                                                            String::from("Auto Moderation: Blocked mention censored.")
+                                                        ).as_bytes()
+                                                    )
+                                                );
+
+                                                payload.http_client.clone()
+                                                    .add_user_infraction(warning_id,
+                                                                         payload.message.guild_id.unwrap(),
+                                                                         payload.message.author.id,
+                                                                         String::from("Auto Moderation: Blocked mention censored."),
+                                                                         InfractionType::Warning).await?;
+                                            }
                                         }
                                         else if let Some(blacklist) = level.clone().blacklisted_invite_codes {
                                             if blacklist.invite_codes.iter().any(|blacklisted_invite_code|
@@ -95,6 +146,27 @@ async fn censorship_invite_detection_task(ctx: TaskContext, config: BotConfig) -
                                                 payload.http_client.clone()
                                                     .delete_message(payload.message.channel_id, payload.message.id)
                                                     .await?;
+
+                                                if level.warn_on_censored == Some(true) {
+                                                    let warning_id = format!(
+                                                        "{:x}",
+                                                        Sha3_224::digest(
+                                                            format!(
+                                                                "{}{}{}",
+                                                                payload.message.guild_id.unwrap().0,
+                                                                payload.author.id.0,
+                                                                String::from("Auto Moderation: Blocked mention censored.")
+                                                            ).as_bytes()
+                                                        )
+                                                    );
+
+                                                    payload.http_client.clone()
+                                                        .add_user_infraction(warning_id,
+                                                                             payload.message.guild_id.unwrap(),
+                                                                             payload.message.author.id,
+                                                                             String::from("Auto Moderation: Blocked mention censored."),
+                                                                             InfractionType::Warning).await?;
+                                                }
                                             }
                                         }
                                     }
