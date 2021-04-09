@@ -17,6 +17,11 @@ use std::{
     pin::Pin
 };
 
+use sha3::{
+    Sha3_224,
+    Digest
+};
+
 use crate::{
     command_system::{
         precommand_checks::{
@@ -26,6 +31,8 @@ use crate::{
         TaskContext
     },
     system::{
+        model::infractions::InfractionType,
+        twilight_http_client_extensions::AddUserInfraction,
         twilight_id_extensions::IntoInnerU64
     },
     utilities::{
@@ -82,6 +89,27 @@ async fn censorship_blocked_words_or_tokens_detection_task(ctx: TaskContext, con
                             payload.message.channel_id,
                             payload.message.id
                         ).await?;
+
+                        if level.warn_on_censored == Some(true) {
+                            let warning_id = format!(
+                                "{:x}",
+                                Sha3_224::digest(
+                                    format!(
+                                        "{}{}{}",
+                                        payload.message.guild_id.unwrap().0,
+                                        payload.author.id.0,
+                                        String::from("Auto Moderation: Blocked mention censored.")
+                                    ).as_bytes()
+                                )
+                            );
+
+                            payload.http_client.clone()
+                                .add_user_infraction(warning_id,
+                                                     payload.message.guild_id.unwrap(),
+                                                     payload.message.author.id,
+                                                     String::from("Auto Moderation: Blocked mention censored."),
+                                                     InfractionType::Warning).await?;
+                        }
                     }
                 }
             }
