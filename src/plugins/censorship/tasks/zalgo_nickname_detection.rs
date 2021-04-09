@@ -73,7 +73,7 @@ async fn censorship_zalgo_nickname_detection(ctx: TaskContext, config: BotConfig
                                                 "{}{}{}",
                                                 payload.member.guild_id.0,
                                                 payload.member.user.id.0,
-                                                String::from("Auto Moderation: Blocked mention censored.")
+                                                String::from("Auto Moderation: Zalgo nickname censored.")
                                             ).as_bytes()
                                         )
                                     );
@@ -82,7 +82,7 @@ async fn censorship_zalgo_nickname_detection(ctx: TaskContext, config: BotConfig
                                         .add_user_infraction(warning_id,
                                                              payload.member.guild_id,
                                                              payload.member.user.id,
-                                                             String::from("Auto Moderation: Blocked mention censored."),
+                                                             String::from("Auto Moderation: Zalgo nickname censored."),
                                                              InfractionType::Warning).await?;
                                 }
                             }
