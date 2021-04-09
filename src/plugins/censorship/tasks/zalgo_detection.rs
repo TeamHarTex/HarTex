@@ -77,7 +77,7 @@ async fn censorship_zalgo_detection_task(ctx: TaskContext, config: BotConfig) ->
                                             "{}{}{}",
                                             payload.message.guild_id.unwrap().0,
                                             payload.author.id.0,
-                                            String::from("Auto Moderation: Blocked mention censored.")
+                                            String::from("Auto Moderation: Zalgo censored.")
                                         ).as_bytes()
                                     )
                                 );
@@ -86,7 +86,7 @@ async fn censorship_zalgo_detection_task(ctx: TaskContext, config: BotConfig) ->
                                     .add_user_infraction(warning_id,
                                                          payload.message.guild_id.unwrap(),
                                                          payload.message.author.id,
-                                                         String::from("Auto Moderation: Blocked mention censored."),
+                                                         String::from("Auto Moderation: Zalgo censored."),
                                                          InfractionType::Warning).await?;
                             }
                         }
