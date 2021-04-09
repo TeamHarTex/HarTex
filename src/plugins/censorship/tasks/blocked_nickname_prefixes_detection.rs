@@ -21,12 +21,19 @@ use regex::{
     Regex
 };
 
+use sha3::{
+    Sha3_224,
+    Digest
+};
+
 use crate::{
     command_system::{
         Task,
         TaskContext
     },
     system::{
+        model::infractions::InfractionType,
+        twilight_http_client_extensions::AddUserInfraction,
         twilight_id_extensions::IntoInnerU64,
         SystemResult,
     },
@@ -80,6 +87,27 @@ async fn censorship_blocked_nickname_prefixes_detection_task(ctx: TaskContext, c
                                     String::from("Censored Nickname")
                                 }))?
                                 .await;
+
+                            if level.warn_on_censored == Some(true) {
+                                let warning_id = format!(
+                                    "{:x}",
+                                    Sha3_224::digest(
+                                        format!(
+                                            "{}{}{}",
+                                            payload.member.guild_id.0,
+                                            payload.member.user.id.0,
+                                            String::from("Auto Moderation: Blocked mention censored.")
+                                        ).as_bytes()
+                                    )
+                                );
+
+                                payload.http_client.clone()
+                                    .add_user_infraction(warning_id,
+                                                         payload.member.guild_id,
+                                                         payload.member.user.id,
+                                                         String::from("Auto Moderation: Blocked mention censored."),
+                                                         InfractionType::Warning).await?;
+                            }
                         }
                     }
                 }
