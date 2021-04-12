@@ -54,7 +54,7 @@ impl Leaderboard {
         self.entries.iter()
     }
 
-    crate fn into_iter(self) -> impl Iterator<Item = LeaderboardEntry> + '_ {
+    crate fn into_iter(self) -> impl Iterator<Item = LeaderboardEntry> {
         self.entries.into_iter()
     }
 }
