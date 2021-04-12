@@ -62,5 +62,8 @@ impl Command for LeaderboardCommand {
 }
 
 async fn levelling_system_leaderboard_command(ctx: CommandContext<'_>) -> SystemResult<()> {
-    todo!()
+    let guild_id = ctx.message.guild_id.unwrap();
+    let leaderboard = ctx.http_client.clone().get_guild_leaderboard(guild_id).await?;
+    
+    Ok(())
 }
