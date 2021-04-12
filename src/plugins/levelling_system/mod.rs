@@ -15,4 +15,5 @@
 mod leaderboard;
 mod rank;
 
+crate use leaderboard::LeaderboardCommand;
 crate use rank::RankCommand;
