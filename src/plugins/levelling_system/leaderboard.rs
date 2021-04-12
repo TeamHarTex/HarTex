@@ -55,9 +55,9 @@ impl Command for LeaderboardCommand {
         String::from("leaderboard")
     }
 
-    fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, arguments: Arguments<'asynchronous_trait>, cache: InMemoryCache)
+    fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, _arguments: Arguments<'asynchronous_trait>, _cache: InMemoryCache)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        todo!()
+        Box::pin(levelling_system_leaderboard_command(ctx))
     }
 }
 
