@@ -42,7 +42,7 @@ impl Leaderboard {
                     now.user_id.into_inner_u64().cmp(&previous.user_id.into_inner_u64())
                 )
         });
-        
+
         vector.reverse();
 
         Self {
@@ -52,5 +52,9 @@ impl Leaderboard {
 
     crate fn iter(&self) -> impl Iterator<Item = &LeaderboardEntry> + '_ {
         self.entries.iter()
+    }
+
+    crate fn into_iter(self) -> impl Iterator<Item = LeaderboardEntry> + '_ {
+        self.entries.into_iter()
     }
 }
