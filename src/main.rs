@@ -467,6 +467,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             .command(SelfmuteCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
 
             // Levelling System Command Module
+            .command(LeaderboardCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
             .command(RankCommand, CaseSensitive, FullyQualifiedName, DisableAliases)
 
             // Owneronly Command Module
@@ -2169,7 +2170,19 @@ async fn handle_command(message: Message,
                 emitter.clone(),
                 "rank"
             );
-        }
+        },
+        Command { name: "leaderboard", arguments, .. } => {
+            execute_command!(
+                LeaderboardCommand,
+                context.clone(),
+                arguments,
+                cache.clone(),
+                http_client.clone(),
+                message,
+                emitter.clone(),
+                "leaderboard"
+            );
+        },
 
         // Owneronly Command Module
         Command { name: "restart", arguments, .. } => {
