@@ -1,6 +1,6 @@
 [package]
 name = "hartex_rewrite"
-version = "1.17.1-21w14a.2"
+version = "1.17.1-21w15a.1"
 description = "HarTex Rewrite Discord Bot in Rust, as a replacement for the C# version."
 edition = "2018"
 authors = ["The HarTex Project Developers"]
@@ -38,13 +38,13 @@ sqlx = { version = "0.5.1", default-features = false, features = [ "postgres", "
 sysinfo = "0.16.5"
 tokio = { version = "1.4.0", features = [ "full" ] }
 tokio-stream = "0.1.5"
-twilight-cache-inmemory = "0.3.4"
+twilight-cache-inmemory = "0.3.5"
 twilight-embed-builder = "0.3.0"
 twilight-gateway = "0.3.4"
 twilight-gateway-queue = "0.3.0"
 twilight-http = "0.3.6"
 twilight-mention = "0.3.0"
-twilight-model = "0.3.4"
+twilight-model = "0.3.5"
 twilight-standby = "0.3.0"
 twilight-util = { version = "0.3.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
