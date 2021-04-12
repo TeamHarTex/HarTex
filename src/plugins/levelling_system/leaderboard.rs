@@ -77,15 +77,15 @@ async fn levelling_system_leaderboard_command(ctx: CommandContext<'_>, cache: In
         .title(format!("{}'s Levelling System Leaderboard", guild.name))?;
 
     for (index, entry) in leaderboard.into_iter().enumerate() {
-        let member = cache.member(guild_id, entry.user_id).expect("Cannot find member.");
+        let user = cache.user(entry.user_id).expect("Cannot find user.");
 
         embed.clone().field(
             EmbedFieldBuilder::new(
                 format!(
                     "Rank #{} - {}#{}",
                     index + 1,
-                    member.nick.as_ref().unwrap_or(&member.user.name.clone()),
-                    member.user.discriminator
+                    user.name,
+                    user.discriminator
                 ), format!("Level {}: {} XP", entry.level, entry.experience)
             )?
         );
