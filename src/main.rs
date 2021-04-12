@@ -254,6 +254,7 @@ use crate::plugins::{
         SelfmuteCommand,
     },
     levelling_system::{
+        LeaderboardCommand,
         RankCommand
     },
     owneronly::{
