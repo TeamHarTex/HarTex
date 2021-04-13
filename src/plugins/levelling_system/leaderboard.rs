@@ -72,14 +72,20 @@ async fn levelling_system_leaderboard_command(ctx: CommandContext<'_>, cache: In
     let leaderboard = ctx.http_client.clone().get_guild_leaderboard(guild_id).await?;
     let channel_id = ctx.message.channel_id;
 
-    let embed = EmbedBuilder::new()
+    let mut embed = EmbedBuilder::new()
         .color(0x03_BE_FC)?
         .title(format!("{}'s Levelling System Leaderboard", guild.name))?;
 
-    for (index, entry) in leaderboard.into_iter().enumerate() {
-        let user = cache.user(entry.user_id).expect("Cannot find user.");
+    for (index, entry) in leaderboard.iter().enumerate() {
+        let user = ctx.http_client.user(entry.user_id).await.expect("Cannot find user.").expect("User is none.");
+        
+        if index > 9 {
+            break;
+        }
 
-        embed.clone().field(
+        let temp = embed.clone();
+        
+        embed = temp.field(
             EmbedFieldBuilder::new(
                 format!(
                     "Rank #{} - {}#{}",
@@ -88,7 +94,7 @@ async fn levelling_system_leaderboard_command(ctx: CommandContext<'_>, cache: In
                     user.discriminator
                 ), format!("Level {}: {} XP", entry.level, entry.experience)
             )?
-        );
+        );;
     }
 
     ctx.http_client.create_message(channel_id).embed(embed.build()?)?.reply(ctx.message.id).allowed_mentions()
