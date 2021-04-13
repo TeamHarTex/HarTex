@@ -17,5 +17,6 @@ extern crate quick_xml;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 crate struct LevellingSystemPlugin {
-    
+    #[serde(rename = "SecondsPerPoint", default)]
+    crate seconds_per_point: Option<u64>
 }
