@@ -20,8 +20,10 @@ mod plugins;
 // Plugins
 mod censorship_plugin;
 mod infractions_plugin;
+mod levelling_system_plugin;
 
 crate use plugins::Plugins;
 
 crate use censorship_plugin::CensorshipPlugin;
 crate use infractions_plugin::InfractionsPlugin;
+crate use levelling_system_plugin::LevellingSystemPlugin;
