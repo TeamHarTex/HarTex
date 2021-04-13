@@ -17,7 +17,8 @@ extern crate quick_xml;
 
 use super::{
     CensorshipPlugin,
-    InfractionsPlugin
+    InfractionsPlugin,
+    LevellingSystemPlugin
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -26,5 +27,8 @@ crate struct Plugins {
     crate infractions_plugin: Option<InfractionsPlugin>,
 
     #[serde(rename = "CensorshipPlugin", default)]
-    crate censorship_plugin: Option<CensorshipPlugin>
+    crate censorship_plugin: Option<CensorshipPlugin>,
+
+    #[serde(rename = "LevellingSystemPlugin", default)]
+    crate levelling_system_plugin: Option<LevellingSystemPlugin>
 }
