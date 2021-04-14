@@ -1,6 +1,6 @@
 [package]
 name = "hartex_rewrite"
-version = "1.17.1-21w15a.2"
+version = "1.17.1-21w15a.3"
 description = "HarTex Rewrite Discord Bot in Rust, as a replacement for the C# version."
 edition = "2018"
 authors = ["The HarTex Project Developers"]
@@ -13,7 +13,7 @@ base64 = "0.13.0"
 chrono = "0.4.19"
 compound_duration = "1.2.0"
 csv = "1.1.6"
-ctrlc = "3.1.8"
+ctrlc = "3.1.9"
 dashmap = "4.0.2"
 dotenv = "0.15.0"
 funty = "=1.1.0"
