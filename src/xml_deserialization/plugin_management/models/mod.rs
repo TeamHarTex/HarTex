@@ -15,3 +15,4 @@
 crate mod censorship;
 crate mod channel_id;
 crate mod levelling_system;
+crate mod role_id;
