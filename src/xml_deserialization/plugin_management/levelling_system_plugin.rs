@@ -15,8 +15,13 @@
 extern crate serde;
 extern crate quick_xml;
 
+use crate::xml_deserialization::plugin_management::models::levelling_system::included_roles::IncludedRoles;
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 crate struct LevellingSystemPlugin {
     #[serde(rename = "SecondsPerPoint", default)]
-    crate seconds_per_point: Option<u64>
+    crate seconds_per_point: Option<u64>,
+
+    #[serde(rename = "IncludedRoles", default)]
+    crate included_roles: Option<IncludedRoles>
 }
