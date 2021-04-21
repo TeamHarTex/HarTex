@@ -96,7 +96,8 @@ use crate::{
     xml_deserialization::{
         plugin_management::{
             models::{
-                channel_id::ChannelId
+                channel_id::ChannelId,
+                role_id::RoleId
             }
         },
         BotConfig
@@ -246,45 +247,77 @@ impl EventHandler {
     crate async fn message_create(payload: Box<MessageCreate>,
                                   http: Client,
                                   mut levelling_cache: SystemCache<String, bool>) -> SystemResult<()> {
-        let xp = if let Some(_) = levelling_cache.get(&format!("guild_{}.user_{}", payload.guild_id.unwrap(), payload.author.id)) {
-            0u64
-        }
-        else {
-            crate::utilities::levelling_system::random_experience(15, 25)
-        };
+        let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
+        let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
 
-        let (level_up, level) = http.clone().add_user_experience(payload.guild_id.unwrap(), payload.author.id, xp).await?;
+        if let Some(ref plugins) = config.clone().plugins {
+            if let Some(ref levelling_system) = plugins.levelling_system_plugin {
+                let cooldown = if let Some(ref seconds_per_point) = levelling_system.seconds_per_point {
+                    *seconds_per_point
+                }
+                else {
+                    60
+                };
 
-        if level_up {
-            http.clone()
-                .create_message(payload.channel_id)
-                .content(
-                    format!(
-                        "Congratulations, {}! You reached **Level {}**!",
-                        payload.author.mention(),
-                        level
-                    )
-                )?
-                .allowed_mentions()
-                .replied_user(false)
-                .build()
-                .reply(payload.id)
-                .await?;
-        }
+                if !{
+                    let member = http.guild_member(payload.guild_id.unwrap(), payload.author.id)
+                        .await?.expect("Member is none.");
 
-        if xp > 0 {
-            levelling_cache.insert(
-                format!(
-                    "guild_{}.user_{}", payload.guild_id.unwrap(), payload.author.id
-                ),
-                true,
-                Some(Duration::from_secs(60))
-            );
+                    if let Some(ref included) = levelling_system.included_roles {
+                        if included.role_ids.is_empty() {
+                            true
+                        }
+                        else {
+                            member.roles.iter()
+                                .any(|role_id| included.role_ids.contains(&RoleId { id: role_id.into_inner_u64()} ))
+                        }
+                    }
+                    else {
+                        false
+                    }
+                } {
+                    return Ok(());
+                }
+
+                let xp = if let Some(_) = levelling_cache.get(&format!("guild_{}.user_{}", payload.guild_id.unwrap(), payload.author.id)) {
+                    0u64
+                }
+                else {
+                    crate::utilities::levelling_system::random_experience(15, 25)
+                };
+
+                let (level_up, level) = http.clone().add_user_experience(payload.guild_id.unwrap(), payload.author.id, xp).await?;
+
+                if level_up {
+                    http.clone()
+                        .create_message(payload.channel_id)
+                        .content(
+                            format!(
+                                "Congratulations, {}! You reached **Level {}**!",
+                                payload.author.mention(),
+                                level
+                            )
+                        )?
+                        .allowed_mentions()
+                        .replied_user(false)
+                        .build()
+                        .reply(payload.id)
+                        .await?;
+                }
+
+                if xp > 0 {
+                    levelling_cache.insert(
+                        format!(
+                            "guild_{}.user_{}", payload.guild_id.unwrap(), payload.author.id
+                        ),
+                        true,
+                        Some(Duration::from_secs(cooldown))
+                    );
+                }
+            }
         }
 
         let mut state_machine = StateMachine::new_with_state(CensorshipProcess::Initialized);
-        let config_string = http.clone().get_guild_configuration(payload.guild_id.unwrap()).await?;
-        let config = quick_xml::de::from_str::<BotConfig>(&config_string)?;
         let member = http.clone().guild_member(payload.guild_id.unwrap(), payload.author.id).await?.unwrap();
         let member_available_roles = member
             .roles
