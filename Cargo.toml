@@ -19,12 +19,12 @@ dotenv = "0.15.0"
 funty = "=1.1.0"
 futures-channel = "0.3.14"
 futures-util = "0.3.14"
-hyper = { version = "0.14.5", features = ["client", "http2", "runtime"] }
+hyper = { version = "0.14.6", features = ["client", "http2", "runtime"] }
 hyper-tls = "0.5.0"
 image = { version = "0.23.14", features = ["png", "gif"] }
 imageproc = "0.22.0"
 itertools = "0.10.0"
-lexical-core = "0.7.5"
+lexical-core = "0.7.6"
 num = "0.3.1"
 pad = "0.1.6"
 quick-xml = { version = "0.22.0", features = [ "serialize" ] }
@@ -42,9 +42,9 @@ twilight-cache-inmemory = "0.3.5"
 twilight-embed-builder = "0.3.0"
 twilight-gateway = "0.3.4"
 twilight-gateway-queue = "0.3.0"
-twilight-http = "0.3.6"
+twilight-http = "0.3.7"
 twilight-mention = "0.3.0"
-twilight-model = "0.3.5"
+twilight-model = "0.3.6"
 twilight-standby = "0.3.0"
 twilight-util = { version = "0.3.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
