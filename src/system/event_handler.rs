@@ -264,13 +264,10 @@ impl EventHandler {
                         .await?.expect("Member is none.");
 
                     if let Some(ref included) = levelling_system.included_roles {
-                        if included.role_ids.is_empty() {
-                            true
-                        }
-                        else {
-                            member.roles.iter()
-                                .any(|role_id| included.role_ids.contains(&RoleId { id: role_id.into_inner_u64()} ))
-                        }
+                        included.role_ids.is_empty() || 
+                            member.roles.iter().any(|role_id| 
+                                included.role_ids.contains(&RoleId { id: role_id.into_inner_u64()} )
+                            )
                     }
                     else {
                         false
