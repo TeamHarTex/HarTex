@@ -146,7 +146,7 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
         .field(EmbedFieldBuilder::new("Maximum Members", format!("{}", guild.max_members.unwrap()))?)
         .field(EmbedFieldBuilder::new("Maximum Presences", if let Some(max) = guild.max_presences { max.to_string() } else { "unknown".to_string() })?)
         .field(EmbedFieldBuilder::new("Channels",
-                                      format!("Categories: {}\nText Channels: {}\nVoice Channels: {}\nStage Channels:{}", categories,
+                                      format!("Categories: {}\nText Channels: {}\nVoice Channels: {}\nStage Channels: {}", categories,
                                               texts, voices, stages))?.inline())
         .field(EmbedFieldBuilder::new("Roles", format!("{}", guild_roles_len))?.inline())
         .field(EmbedFieldBuilder::new("Guild Features", features)?)
