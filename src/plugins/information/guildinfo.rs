@@ -106,6 +106,7 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
     let mut categories: u32 = 0;
     let mut texts: u32 = 0;
     let mut voices: u32 = 0;
+    let mut stages: u32 = 0;
 
     for ch_id in guild_channels {
         if let Some(channel) =  cache.guild_channel(ch_id) {
@@ -118,6 +119,9 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
                 },
                 GuildChannel::Voice(_) => {
                     voices += 1;
+                },
+                GuildChannel::Stage(_) => {
+                    stages += 1;
                 }
             }
         }
@@ -142,8 +146,8 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
         .field(EmbedFieldBuilder::new("Maximum Members", format!("{}", guild.max_members.unwrap()))?)
         .field(EmbedFieldBuilder::new("Maximum Presences", if let Some(max) = guild.max_presences { max.to_string() } else { "unknown".to_string() })?)
         .field(EmbedFieldBuilder::new("Channels",
-                                      format!("Categories: {}\nText Channels: {}\nVoice Channels: {}", categories,
-                                              texts, voices))?.inline())
+                                      format!("Categories: {}\nText Channels: {}\nVoice Channels: {}\nStage Channels:{}", categories,
+                                              texts, voices, stages))?.inline())
         .field(EmbedFieldBuilder::new("Roles", format!("{}", guild_roles_len))?.inline())
         .field(EmbedFieldBuilder::new("Guild Features", features)?)
         .field(EmbedFieldBuilder::new("Guild Voice Region", guild.region.clone())?)
