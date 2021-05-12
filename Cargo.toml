@@ -1,6 +1,6 @@
 [package]
 name = "hartex_rewrite"
-version = "1.17.2-21w16a.1"
+version = "1.17.2-21w19a.1"
 description = "HarTex Rewrite Discord Bot in Rust, as a replacement for the C# version."
 edition = "2018"
 authors = ["The HarTex Project Developers"]
@@ -17,8 +17,8 @@ ctrlc = "3.1.9"
 dashmap = "4.0.2"
 dotenv = "0.15.0"
 funty = "=1.1.0"
-futures-channel = "0.3.14"
-futures-util = "0.3.14"
+futures-channel = "0.3.15"
+futures-util = "0.3.15"
 hyper = { version = "0.14.7", features = ["client", "http2", "runtime"] }
 hyper-tls = "0.5.0"
 image = { version = "0.23.14", features = ["png", "gif"] }
@@ -42,7 +42,7 @@ twilight-cache-inmemory = "0.3.6"
 twilight-embed-builder = "0.3.0"
 twilight-gateway = "0.3.4"
 twilight-gateway-queue = "0.3.0"
-twilight-http = "0.3.8"
+twilight-http = "0.3.9"
 twilight-mention = "0.3.0"
 twilight-model = "0.3.7"
 twilight-standby = "0.3.0"
