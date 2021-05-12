@@ -112,14 +112,13 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
                     .count();
 
             let embed = EmbedBuilder::new()
-                .title(format!("Role ID: {}", r_id))?
-                .color(0x03_BE_FC)?
+                .title(format!("Role ID: {}", r_id))
+                .color(0x03_BE_FC)
                 .field(EmbedFieldBuilder::new("Role Name", &role.name)?.inline())
                 .field(EmbedFieldBuilder::new("Role ID", &role.id.0.to_string())?.inline())
                 .field(EmbedFieldBuilder::new("Role Colour", format!("0x{:X}", role.color))?.inline())
                 .field(EmbedFieldBuilder::new("Role Mention", format!("{}", role.mention()))?.inline())
-                .field(EmbedFieldBuilder::
-                new("Role Members", members_who_have_the_role.to_string())?.inline())
+                .field(EmbedFieldBuilder::new("Role Members", members_who_have_the_role.to_string())?.inline())
                 .field(EmbedFieldBuilder::new("Role Hoisted", role.hoist.to_string())?.inline())
                 .field(EmbedFieldBuilder::new("Role Position", role.position.to_string())?.inline())
                 .field(EmbedFieldBuilder::new("Role Mentionable", role.mentionable.to_string())?.inline())
