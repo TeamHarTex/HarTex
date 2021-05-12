@@ -78,13 +78,13 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
     ctx.http_client.delete_message(channel_id, ctx.message.id).await?;
 
     let first_embed = EmbedBuilder::new()
-        .title("**__Information About HarTex__**")?
+        .title("**__Information About HarTex__**")
         .description(
             "HarTex is built and optimized for infractions and administration, for Discord guilds. It is meant to be".to_owned()
                 + " flexible and highly configurable by guild administrators and moderators to fit the specific needs"
                 + " of their guilds.\n\nPlease note that the bot adopts a whitelist system. Meaning of you want to"
                 + " invite the bot to your guild, you need to apply for a whitelist beforehand. If the bot joins a"
-                + " guild that is not whitelisted, it leaves it immediately. ")?
+                + " guild that is not whitelisted, it leaves it immediately. ")
         .field(
             EmbedFieldBuilder::new(
                 "**__Bot Support__**",
@@ -93,15 +93,15 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
                     + " dashboard, to the guild configuration, of a guild.\n\nGuild owners with the bot in their guild"
                     + " will have an additional `HarTex Guild Owner` role which grants access to the"
                     + " <#791588967874691072>.")?)
-        .color(0x03_BE_FC)?
+        .color(0x03_BE_FC)
         .build()?;
 
     let second_embed = EmbedBuilder::new()
-        .title("**__Minimum Whitelist Requirements__**")?
+        .title("**__Minimum Whitelist Requirements__**")
         .description(
             "Whitelist applications are reviewed at a case-by-case basis. The following are the minimum requirements".to_owned()
                 + " for a whitelist application. If your guild does not meet the following requirements, do not"
-                + " apply. We preserve the right to approve or deny any whitelist application at my discretion.")?
+                + " apply. We preserve the right to approve or deny any whitelist application at my discretion.")
         .field(EmbedFieldBuilder::new("**__Member Count__**",
                                       "Your guild should have at least **250 - 500** members.")?)
         .field(EmbedFieldBuilder::new("**__Stay Abide By The Discord ToS__**",
@@ -118,11 +118,11 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
         .field(EmbedFieldBuilder::new("**__Whitelist Application__**",
                                       "If your guild meets the above criteria, you may apply for a whitelist".to_owned()
                                           + " here: *Link Not Available Yet*")?)
-        .color(0x03_BE_FC)?
+        .color(0x03_BE_FC)
         .build()?;
 
     let third_embed = EmbedBuilder::new()
-        .title("**__Useful Links__**")?
+        .title("**__Useful Links__**")
         .field(EmbedFieldBuilder::new("**__Bot Dashboard__**", "*Coming Soon...*")?)
         .field(EmbedFieldBuilder::new("**__Configuration Documentation__**", "*Coming Soon...*")?)
         .field(EmbedFieldBuilder::new("**__Basic Configuration Template__**", "*Coming Soon...*")?)
@@ -130,7 +130,7 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
                                       "Once you receive a confirmation DM from either the bot or one of the".to_owned()
                                           + " developers, you may invite the bot with"
                                           + " [this link](https://discordapp.com/api/oauth2/authorize?client_id=688970404391550987&permissions=470150390&scope=bot).")?)
-        .color(0x03_BE_FC)?
+        .color(0x03_BE_FC)
         .build()?;
 
     ctx.http_client.create_message(channel_id).embed(first_embed)?.await?;
