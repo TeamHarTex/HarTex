@@ -128,10 +128,10 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
     }
 
     let embed = EmbedBuilder::new()
-        .title(format!("Information About Guild {}", guild.clone().name))?
+        .title(format!("Information About Guild {}", guild.clone().name))
         .thumbnail(ImageSource::url(format!("https://cdn.discordapp.com/icons/{}/{}",
                                             guild.id, guild.icon.clone().unwrap()))?)
-        .color(0x03_BE_FC)?
+        .color(0x03_BE_FC)
         .field(EmbedFieldBuilder::new("Guild ID", format!("{}", guild.id))?)
         .field(EmbedFieldBuilder::new("Owner",
                                       format!("{}#{}", owner.name, owner.discriminator))?)
