@@ -19,6 +19,8 @@ use std::{
 
 use twilight_cache_inmemory::InMemoryCache;
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -73,7 +75,7 @@ async fn owneronly_stop_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let channel_id = ctx.message.channel_id;
 
     ctx.http_client.create_message(channel_id).content("Bot is now shutting down...")?
-        .reply(ctx.message.id).allowed_mentions().replied_user(false).build().await?;
+        .reply(ctx.message.id).allowed_mentions(AllowedMentions::default()).await?;
 
     ctx.cluster.down();
 
