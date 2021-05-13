@@ -92,7 +92,7 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
                     + " receive support for the bot. In order to get the role, you need to be able to access the web"
                     + " dashboard, to the guild configuration, of a guild.\n\nGuild owners with the bot in their guild"
                     + " will have an additional `HarTex Guild Owner` role which grants access to the"
-                    + " <#791588967874691072>.")?)
+                    + " <#791588967874691072>."))
         .color(0x03_BE_FC)
         .build()?;
 
@@ -103,33 +103,33 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
                 + " for a whitelist application. If your guild does not meet the following requirements, do not"
                 + " apply. We preserve the right to approve or deny any whitelist application at my discretion.")
         .field(EmbedFieldBuilder::new("**__Member Count__**",
-                                      "Your guild should have at least **250 - 500** members.")?)
+                                      "Your guild should have at least **250 - 500** members."))
         .field(EmbedFieldBuilder::new("**__Stay Abide By The Discord ToS__**",
                                       "Your guild should be always abide by the".to_owned()
                                           + " [Discord ToS](https://discord.com/terms) and"
-                                          + " [Community Guidelines](https://discord.com/guidelines).")?)
+                                          + " [Community Guidelines](https://discord.com/guidelines)."))
         .field(EmbedFieldBuilder::new("**__Communication Protocol__**",
                                       "At least one member of your guild, specifically needs to be on the".to_owned()
                                           + " `Dashboard` section of your guild configuration, needs to maintain"
-                                          + " membership in this guild for contact purposes.")?)
+                                          + " membership in this guild for contact purposes."))
         .field(EmbedFieldBuilder::new("**__Other Things I May Consider, But Not Limited To:__**",
                                       "- Guild Subject / Topic / Community;\n- Age and Activity of the Guild;".to_owned()
-                                          + " and\n- Application Strength.")?)
+                                          + " and\n- Application Strength."))
         .field(EmbedFieldBuilder::new("**__Whitelist Application__**",
                                       "If your guild meets the above criteria, you may apply for a whitelist".to_owned()
-                                          + " here: *Link Not Available Yet*")?)
+                                          + " here: *Link Not Available Yet*"))
         .color(0x03_BE_FC)
         .build()?;
 
     let third_embed = EmbedBuilder::new()
         .title("**__Useful Links__**")
         .field(EmbedFieldBuilder::new("**__Bot Dashboard__**", "*Coming Soon...*")?)
-        .field(EmbedFieldBuilder::new("**__Configuration Documentation__**", "*Coming Soon...*")?)
-        .field(EmbedFieldBuilder::new("**__Basic Configuration Template__**", "*Coming Soon...*")?)
+        .field(EmbedFieldBuilder::new("**__Configuration Documentation__**", "*Coming Soon...*"))
+        .field(EmbedFieldBuilder::new("**__Basic Configuration Template__**", "*Coming Soon...*"))
         .field(EmbedFieldBuilder::new("**__Bot Invitation__**",
                                       "Once you receive a confirmation DM from either the bot or one of the".to_owned()
                                           + " developers, you may invite the bot with"
-                                          + " [this link](https://discordapp.com/api/oauth2/authorize?client_id=688970404391550987&permissions=470150390&scope=bot).")?)
+                                          + " [this link](https://discordapp.com/api/oauth2/authorize?client_id=688970404391550987&permissions=470150390&scope=bot)."))
         .color(0x03_BE_FC)
         .build()?;
 
