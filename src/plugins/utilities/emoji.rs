@@ -22,6 +22,7 @@ use twilight_cache_inmemory::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::EmojiId
 };
 
@@ -68,9 +69,7 @@ async fn utilities_emoji_command(ctx: CommandContext<'_>, emoji_id: String) -> S
             ctx.http_client
                 .clone()
                 .create_message(channel_id)
-                .allowed_mentions()
-                .replied_user(false)
-                .build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .content(format!("Couldn't parse the emoji due to an error: {}", error))?
                 .await?;
@@ -89,9 +88,7 @@ async fn utilities_emoji_command(ctx: CommandContext<'_>, emoji_id: String) -> S
     ctx.http_client
         .clone()
         .create_message(channel_id)
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .content(message)?
         .await?;
