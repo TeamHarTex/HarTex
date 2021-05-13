@@ -63,7 +63,7 @@ async fn utilities_randint_command(ctx: CommandContext<'_>, range_start: u128, r
         .clone()
         .create_message(ctx.message.channel_id)
         .content("Generating random number; please wait...")?
-        .allowed_mentions(allowed_mentions)
+        .allowed_mentions(allowed_mentions.clone())
         .reply(ctx.message.id)
         .await?;
 
@@ -73,7 +73,7 @@ async fn utilities_randint_command(ctx: CommandContext<'_>, range_start: u128, r
         .clone()
         .update_message(ctx.message.channel_id, message.id)
         .content(format!("The random number from {} to {} is: `{}`", range_start, range_end, generated_number))?
-        .allowed_mentions(allowed_mentions.clone()).await?;
+        .allowed_mentions(allowed_mentions).await?;
 
     Ok(())
 }
