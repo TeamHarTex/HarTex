@@ -21,6 +21,8 @@ use twilight_cache_inmemory::{
     InMemoryCache
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -49,9 +51,7 @@ async fn general_source_command(ctx: CommandContext<'_>) -> SystemResult<()> {
         .clone()
         .create_message(ctx.message.channel_id)
         .content("The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>.")?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

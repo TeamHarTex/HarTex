@@ -29,6 +29,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         UserId
     }
@@ -124,9 +125,7 @@ async fn infractions_unban_command(ctx: CommandContext<'_>, user_id: Option<User
         ctx.http_client.clone().create_message(channel_id)
             .content(format!(
                 "<:green_check:705623382682632205> Successfully unbanned user with ID: `{}` for `{}`", uid, reason))?
-            .allowed_mentions()
-            .replied_user(false)
-            .build()
+            .allowed_mentions(AllowedMentions::default())
             .reply(ctx.message.id)
             .await?;
 
@@ -135,9 +134,7 @@ async fn infractions_unban_command(ctx: CommandContext<'_>, user_id: Option<User
     else {
         ctx.http_client.clone().create_message(channel_id)
             .content("<:red_x:705623424675872859> The specified user ID is invalid.")?
-            .allowed_mentions()
-            .replied_user(false)
-            .build()
+            .allowed_mentions(AllowedMentions::default())
             .reply(ctx.message.id)
             .await?;
 

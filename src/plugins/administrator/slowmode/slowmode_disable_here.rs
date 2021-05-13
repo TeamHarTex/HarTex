@@ -21,6 +21,8 @@ use twilight_cache_inmemory::{
     InMemoryCache,
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -82,9 +84,7 @@ async fn administrator_slowmode_disable_here_command(ctx: CommandContext<'_>) ->
     ctx.http_client.clone().update_channel(channel_id).rate_limit_per_user(0)?.await?;
     ctx.http_client.clone().create_message(channel_id)
         .content("<:green_check:705623382682632205> Disabled channel slowmode.")?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

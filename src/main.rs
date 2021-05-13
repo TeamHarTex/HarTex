@@ -17,7 +17,6 @@
 #![feature(arbitrary_self_types)]
 #![feature(associated_type_defaults)]
 #![feature(box_syntax)]
-#![feature(const_fn)]
 #![feature(crate_visibility_modifier)]
 #![feature(custom_inner_attributes)]
 #![feature(decl_macro)]
@@ -33,7 +32,7 @@
 #![allow(incomplete_features)]
 
 // Minimum Supported Rust Version
-#![clippy::msrv = "1.53.0"]
+#![clippy::msrv = "1.54.0"]
 
 // Globally Allow Warnings for now, will be removed in the future
 #![allow(warnings)]

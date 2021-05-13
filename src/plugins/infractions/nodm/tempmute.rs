@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId,
         UserId
@@ -142,7 +143,8 @@ async fn infractions_tempmute_command(ctx: CommandContext<'_>, user: String, dur
                             format!(
                                 "<:green_check:705623382682632205> Successfully temporarily muted user {} (ID: `{}`) for `{}`. Reason: `{}`. Infraction ID: `{}`",
                                 user_id.mention(), user_id.0, duration.clone(), reason, infraction_id))?
-                        .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                        .allowed_mentions(AllowedMentions::default())
+                        .reply(ctx.message.id).await?;
 
                     tokio::time::sleep(dur).await;
 

@@ -20,6 +20,7 @@ use std::{
 use twilight_cache_inmemory::InMemoryCache;
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         GuildId,
     }
@@ -84,9 +85,7 @@ async fn guild_owneronly_setup_command(ctx: CommandContext<'_>, guild_id: GuildI
     ctx.http_client.clone()
         .create_message(ctx.message.channel_id)
         .content("<:green_check:705623382682632205> Setup complete!")?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

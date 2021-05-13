@@ -21,6 +21,8 @@ use twilight_cache_inmemory::{
     InMemoryCache,
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -101,9 +103,7 @@ async fn administrator_webconfig_list_command(ctx: CommandContext<'_>) -> System
         .clone()
         .create_message(ctx.message.channel_id)
         .content(content)?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

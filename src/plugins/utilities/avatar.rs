@@ -24,6 +24,7 @@ use twilight_cache_inmemory::{
 use twilight_mention::ParseMention;
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -86,9 +87,7 @@ async fn utilities_avatar_command(ctx: CommandContext<'_>, user: String) -> Syst
         .clone()
         .create_message(ctx.message.channel_id)
         .content(message)?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

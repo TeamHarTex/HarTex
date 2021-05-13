@@ -26,6 +26,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId,
     }
@@ -98,7 +99,7 @@ async fn administrator_role_global_add_command(ctx: CommandContext<'_>, role_id:
         else {
             ctx.http_client.clone().create_message(channel_id)
                 .content(format!("<:red_x:705623424675872859> Role `{}` not found.", role_id))?
-                .allowed_mentions().replied_user(false).build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .await?;
 
@@ -111,7 +112,7 @@ async fn administrator_role_global_add_command(ctx: CommandContext<'_>, role_id:
 
         ctx.http_client.clone().create_message(channel_id)
             .content(format!("<:green_check:705623382682632205> Added role `{}` to every member in the guild..", role.mention()))?
-            .allowed_mentions().replied_user(false).build()
+            .allowed_mentions(AllowedMentions::default())
             .reply(ctx.message.id)
             .await?;
 
@@ -120,7 +121,7 @@ async fn administrator_role_global_add_command(ctx: CommandContext<'_>, role_id:
     else {
         ctx.http_client.clone().create_message(channel_id)
             .content(format!("<:red_x:705623424675872859> Cannot find role `{}` in guild.", role_id))?
-            .allowed_mentions().replied_user(false).build()
+            .allowed_mentions(AllowedMentions::default())
             .reply(ctx.message.id)
             .await?;
 

@@ -24,6 +24,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -110,7 +111,7 @@ async fn infractions_remove_command(ctx: CommandContext<'_>, user_id: Option<Use
                 format!("<:green_check:705623382682632205> Infraction ID: `{}` is successfully removed.",
                         infraction_id
                 )
-            )?.allowed_mentions().replied_user(false).build().await?;
+            )?.allowed_mentions(AllowedMentions::default()).await?;
 
         Ok(())
     }

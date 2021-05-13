@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId,
         UserId
@@ -140,7 +141,8 @@ async fn infractions_unmute_command(ctx: CommandContext<'_>, user_id: Option<Use
                                 format!(
                                     "<:green_check:705623382682632205> Successfully unmuted user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
                                     user.mention(), uid.0, reason, warning_id))?
-                                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                                .allowed_mentions(AllowedMentions::default())
+                                .reply(ctx.message.id).await?;
                         }
 
                         Ok(())

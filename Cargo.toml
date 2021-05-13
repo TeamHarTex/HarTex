@@ -1,6 +1,6 @@
 [package]
 name = "hartex_rewrite"
-version = "1.17.2-21w19a.1"
+version = "1.18.0-21w19a.1"
 description = "HarTex Rewrite Discord Bot in Rust, as a replacement for the C# version."
 edition = "2018"
 authors = ["The HarTex Project Developers"]
@@ -31,22 +31,22 @@ quick-xml = { version = "0.22.0", features = [ "serialize" ] }
 rand = "0.8.3"
 regex = "1.5.4"
 rusttype = "0.9.2"
-serde = "1.0.125"
-serde_derive = "1.0.125"
+serde = "1.0.126"
+serde_derive = "1.0.126"
 sha3 = "0.9.1"
 sqlx = { version = "0.5.2", default-features = false, features = [ "postgres", "runtime-tokio-native-tls" ] }
 sysinfo = "0.16.5"
 tokio = { version = "1.5.0", features = [ "full" ] }
 tokio-stream = "0.1.5"
-twilight-cache-inmemory = "0.3.6"
-twilight-embed-builder = "0.3.0"
-twilight-gateway = "0.3.4"
-twilight-gateway-queue = "0.3.0"
-twilight-http = "0.3.9"
-twilight-mention = "0.3.0"
-twilight-model = "0.3.7"
-twilight-standby = "0.3.0"
-twilight-util = { version = "0.3.0", features = [ "snowflake" ] }
+twilight-cache-inmemory = "0.4.0"
+twilight-embed-builder = "0.4.0"
+twilight-gateway = "0.4.0"
+twilight-gateway-queue = "0.4.0"
+twilight-http = "0.4.0"
+twilight-mention = "0.4.0"
+twilight-model = "0.4.0"
+twilight-standby = "0.4.0"
+twilight-util = { version = "0.4.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
 url = "2.2.2"
 

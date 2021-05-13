@@ -26,6 +26,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::ChannelId
 };
 
@@ -102,9 +103,7 @@ async fn administrator_slowmode_disable_channel_command(ctx: CommandContext<'_>,
     ctx.http_client
         .clone()
         .create_message(channel_id)
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .content(
             format!("<:green_check:705623382682632205> Disabled slowmode for channel <#{}>", channel_id.0)
         )?

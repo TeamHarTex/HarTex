@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         UserId
     }
@@ -146,7 +147,7 @@ async fn infractions_mkick_command(ctx: CommandContext<'_>, users: Vec<String>, 
             .content(
                 format!("<:green_check:705623382682632205> Successfully kicked user with ID: `{}` for `{}`",
                         user_to_kick, reason.clone()))?
-            .allowed_mentions().replied_user(false).build()
+            .allowed_mentions(AllowedMentions::default())
             .reply(ctx.message.id)
             .await?;
 

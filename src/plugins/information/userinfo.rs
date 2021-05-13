@@ -42,6 +42,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     gateway::{
         presence::{
             Activity,
@@ -142,15 +143,15 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
     let placeholder = seconds_to_ymwdhms(seconds as u64);
 
     let embed = EmbedBuilder::new()
-        .color(0x03_BE_FC)?
-        .title(format!("About {}", user.name))?
-        .field(EmbedFieldBuilder::new("Username", user.clone().name)?.inline())
-        .field(EmbedFieldBuilder::new("Discriminator", user.clone().discriminator)?.inline())
+        .color(0x03_BE_FC)
+        .title(format!("About {}", user.name))
+        .field(EmbedFieldBuilder::new("Username", user.clone().name).inline())
+        .field(EmbedFieldBuilder::new("Discriminator", user.clone().discriminator).inline())
         .field(EmbedFieldBuilder::new("Nickname", match member.nick {
             Some(nickname) => nickname,
             None => "none".to_string()
-        })?)
-        .field(EmbedFieldBuilder::new("User ID", user.id.to_string())?)
+        }))
+        .field(EmbedFieldBuilder::new("User ID", user.id.to_string()))
         .field(EmbedFieldBuilder::new("Status", match presence.clone() {
             Some(presence) => {
                 match presence.status {
@@ -162,9 +163,9 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
                 }
             },
             None => "unknown"
-        })?)
+        }))
         .field(EmbedFieldBuilder::new("Highest Role in Guild", format!("{}",
-                                                                       roles.first().unwrap().mention()))?)
+                                                                       roles.first().unwrap().mention())))
         .field(EmbedFieldBuilder::new("Custom Status", match presence.clone() {
             Some(presence) => {
                 let activities: &Vec<Activity> = &presence.activities;
@@ -185,16 +186,16 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
             None => {
                 "none".to_string()
             }
-        })?)
-        .field(EmbedFieldBuilder::new("Guild Permission Integer", format!("{:?}", default))?)
-        .field(EmbedFieldBuilder::new("Joined Guild At", format!("{}+08:00", member_joined_at))?)
-        .field(EmbedFieldBuilder::new("Account Created At", format!("{}+08:00", user_created_at.format("%Y-%m-%d %H:%M:%S")))?)
+        }))
+        .field(EmbedFieldBuilder::new("Guild Permission Integer", format!("{:?}", default)))
+        .field(EmbedFieldBuilder::new("Joined Guild At", format!("{}+08:00", member_joined_at)))
+        .field(EmbedFieldBuilder::new("Account Created At", format!("{}+08:00", user_created_at.format("%Y-%m-%d %H:%M:%S"))))
         .thumbnail(ImageSource::url(format!("https://cdn.discordapp.com/avatars/{}/{}.png",
                                             user.id, user.avatar.unwrap()))?)
         .build()?;
 
-    ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).allowed_mentions()
-        .replied_user(false).build().embed(embed)?.await?;
+    ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).allowed_mentions(AllowedMentions::default())
+        .embed(embed)?.await?;
 
     Ok(())
 }

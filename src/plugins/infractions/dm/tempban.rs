@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         UserId
     }
@@ -135,7 +136,8 @@ async fn infractions_tempban_command(ctx: CommandContext<'_>, user: String, dura
             format!(
                 "<:green_check:705623382682632205> Successfully temporarily banned user {} (ID: `{}`) for `{}`. Reason: `{}`. Infraction ID: `{}`",
                 user_id.mention(), user_id.0, duration.clone(), reason, infraction_id))?
-        .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+        .allowed_mentions(AllowedMentions::default())
+        .reply(ctx.message.id).await?;
 
     let dm_channel = ctx.http_client.clone().create_private_channel(user_id).await?;
     ctx.http_client.clone()

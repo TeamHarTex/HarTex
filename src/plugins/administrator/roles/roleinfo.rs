@@ -31,6 +31,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId
     }
@@ -112,23 +113,22 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
                     .count();
 
             let embed = EmbedBuilder::new()
-                .title(format!("Role ID: {}", r_id))?
-                .color(0x03_BE_FC)?
-                .field(EmbedFieldBuilder::new("Role Name", &role.name)?.inline())
-                .field(EmbedFieldBuilder::new("Role ID", &role.id.0.to_string())?.inline())
-                .field(EmbedFieldBuilder::new("Role Colour", format!("0x{:X}", role.color))?.inline())
-                .field(EmbedFieldBuilder::new("Role Mention", format!("{}", role.mention()))?.inline())
-                .field(EmbedFieldBuilder::
-                new("Role Members", members_who_have_the_role.to_string())?.inline())
-                .field(EmbedFieldBuilder::new("Role Hoisted", role.hoist.to_string())?.inline())
-                .field(EmbedFieldBuilder::new("Role Position", role.position.to_string())?.inline())
-                .field(EmbedFieldBuilder::new("Role Mentionable", role.mentionable.to_string())?.inline())
-                .field(EmbedFieldBuilder::new("Role Managed", role.managed.to_string())?.inline())
+                .title(format!("Role ID: {}", r_id))
+                .color(0x03_BE_FC)
+                .field(EmbedFieldBuilder::new("Role Name", &role.name).inline())
+                .field(EmbedFieldBuilder::new("Role ID", &role.id.0.to_string()).inline())
+                .field(EmbedFieldBuilder::new("Role Colour", format!("0x{:X}", role.color)).inline())
+                .field(EmbedFieldBuilder::new("Role Mention", format!("{}", role.mention())).inline())
+                .field(EmbedFieldBuilder::new("Role Members", members_who_have_the_role.to_string()).inline())
+                .field(EmbedFieldBuilder::new("Role Hoisted", role.hoist.to_string()).inline())
+                .field(EmbedFieldBuilder::new("Role Position", role.position.to_string()).inline())
+                .field(EmbedFieldBuilder::new("Role Mentionable", role.mentionable.to_string()).inline())
+                .field(EmbedFieldBuilder::new("Role Managed", role.managed.to_string()).inline())
                 .build()?;
 
             ctx.http_client.clone()
                 .create_message(channel_id).embed(embed)?
-                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                .allowed_mentions(AllowedMentions::default()).reply(ctx.message.id).await?;
 
             Ok(())
         }
@@ -137,7 +137,7 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
                 .create_message(channel_id).content(
                     format!("<:red_x:705623424675872859> Could not find role with role id `{}` in guild.", r_id)
                 )?
-                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                .allowed_mentions(AllowedMentions::default()).reply(ctx.message.id).await?;
 
             Err(box CommandError("The role id points to an invalid role.".to_string()))
         }
@@ -146,7 +146,7 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
         ctx.http_client.clone()
             .create_message(channel_id).content(
                 format!("<:red_x:705623424675872859> Could not find role with role id `{}` in guild.", role_id))?
-            .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+            .allowed_mentions(AllowedMentions::default()).reply(ctx.message.id).await?;
 
         Err(box CommandError("The specified role_id is invalid.".to_string()))
     }
