@@ -25,6 +25,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId,
         UserId
@@ -101,7 +102,7 @@ async fn administrator_role_remove_command(ctx: CommandContext<'_>, user_id: Str
             else {
                 ctx.http_client.clone().create_message(channel_id)
                     .content(format!("<:red_x:705623424675872859> Role `{}` not found.", role_id))?
-                    .allowed_mentions().replied_user(false).build()
+                    .allowed_mentions(AllowedMentions::default())
                     .reply(ctx.message.id)
                     .await?;
 
@@ -112,7 +113,7 @@ async fn administrator_role_remove_command(ctx: CommandContext<'_>, user_id: Str
             ctx.http_client.clone().create_message(channel_id)
                 .content(format!("<:green_check:705623382682632205> Removed role {} from user `{}` for `{}`",
                                  role.mention(), uid, reason))?
-                .allowed_mentions().replied_user(false).build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .await?;
 
@@ -121,7 +122,7 @@ async fn administrator_role_remove_command(ctx: CommandContext<'_>, user_id: Str
         else {
             ctx.http_client.clone().create_message(channel_id)
                 .content(format!("<:red_x:705623424675872859> Could not find role `{}` in guild.", role_id))?
-                .allowed_mentions().replied_user(false).build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .await?;
 
@@ -131,7 +132,7 @@ async fn administrator_role_remove_command(ctx: CommandContext<'_>, user_id: Str
     else {
         ctx.http_client.clone().create_message(channel_id)
             .content(format!("<:red_x:705623424675872859> Could not find user `{}` in guild.", user_id))?
-            .allowed_mentions().replied_user(false).build()
+            .allowed_mentions(AllowedMentions::default())
             .reply(ctx.message.id)
             .await?;
 
