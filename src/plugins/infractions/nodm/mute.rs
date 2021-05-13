@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId,
         UserId
@@ -141,7 +142,8 @@ async fn infractions_mute_command(ctx: CommandContext<'_>, user_id: Option<UserI
                                     format!(
                                         "<:green_check:705623382682632205> Successfully muted user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
                                         user.mention(), uid.0, reason, warning_id))?
-                                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                                .allowed_mentions(AllowedMentions::default())
+                                .reply(ctx.message.id).await?;
 
                             Ok(())
                         }
@@ -165,9 +167,7 @@ async fn infractions_mute_command(ctx: CommandContext<'_>, user_id: Option<UserI
             ctx.http_client
                 .clone().create_message(channel_id)
                 .content("<:red_x:705623424675872859> Muted role is not set.")?
-                .allowed_mentions()
-                .replied_user(false)
-                .build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .await?;
 
