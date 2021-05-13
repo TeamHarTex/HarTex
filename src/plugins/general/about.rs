@@ -19,6 +19,7 @@ use std::{
 
 use sysinfo::{
     ProcessExt,
+    ProcessorExt,
     SystemExt
 };
 
@@ -63,18 +64,19 @@ async fn general_about_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let guilds_count = ctx.http_client.current_user_guilds().await?.len();
 
     let system_information = sysinfo::System::new_all();
+    let processors = system_information.get_processors();
 
     let hartex_process = system_information.get_processes().iter().find(|(_, process)| {
         process.name() == "hartex_rewrite.exe"
     });
 
     let embed = EmbedBuilder::new()
-        .title("About HarTex Beta")?
+        .title("About HarTex Beta")
         .description(
             "HarTex Beta is the in-development version of HarTex, built and optimized for moderation and administration"
-                .to_owned() + " for Discord guilds.")?
-        .color(0x03_BE_FC)?
-        .field(EmbedFieldBuilder::new("Whitelisted Guilds", format!("{}", guilds_count))?)
+                .to_owned() + " for Discord guilds.")
+        .color(0x03_BE_FC)
+        .field(EmbedFieldBuilder::new("Whitelisted Guilds", format!("{}", guilds_count)))
         .field(EmbedFieldBuilder::new("Hardware Usage",
                                       format!("RAM Usage: `{}`MB\nCPU Usage: `{}`%", match hartex_process {
             Some((_, process)) => {
@@ -87,7 +89,7 @@ async fn general_about_command(ctx: CommandContext<'_>) -> SystemResult<()> {
                 process.cpu_usage().to_string()
             },
             None => "unavailable".to_string()
-        }))?)
+        })))
         .build()?;
 
     ctx.http_client.create_message(channel_id).embed(embed)?.reply(message_id).allowed_mentions()
