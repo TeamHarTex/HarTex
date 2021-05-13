@@ -32,6 +32,7 @@ use twilight_embed_builder::{
 
 use twilight_model::{
     channel::{
+        message::AllowedMentions,
         GuildChannel,
     }, 
     guild::{
@@ -179,8 +180,8 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
         }))
         .build()?;
 
-    ctx.http_client.create_message(channel_id).embed(embed)?.reply(ctx.message.id).allowed_mentions()
-        .replied_user(false).build().await?;
+    ctx.http_client.create_message(channel_id).embed(embed)?.reply(ctx.message.id).allowed_mentions(AllowedMentions::default())
+        .await?;
 
     Ok(())
 }
