@@ -26,6 +26,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -119,8 +120,8 @@ async fn infractions_infraction_search_command(ctx: CommandContext<'_>, query: S
 
         message.push_str("\n```");
 
-        ctx.http_client.clone().create_message(ctx.message.channel_id).content(message)?.allowed_mentions()
-            .replied_user(false).build().reply(ctx.message.id).await?;
+        ctx.http_client.clone().create_message(ctx.message.channel_id).content(message)?.allowed_mentions(AllowedMentions::default())
+            .reply(ctx.message.id).await?;
     }
 
     Ok(())
