@@ -32,6 +32,8 @@ use twilight_embed_builder::{
     EmbedFieldBuilder
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -64,7 +66,6 @@ async fn general_about_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let guilds_count = ctx.http_client.current_user_guilds().await?.len();
 
     let system_information = sysinfo::System::new_all();
-    let processors = system_information.get_processors();
 
     let hartex_process = system_information.get_processes().iter().find(|(_, process)| {
         process.name() == "hartex_rewrite.exe"
@@ -92,8 +93,8 @@ async fn general_about_command(ctx: CommandContext<'_>) -> SystemResult<()> {
         })))
         .build()?;
 
-    ctx.http_client.create_message(channel_id).embed(embed)?.reply(message_id).allowed_mentions()
-        .replied_user(false).build().await?;
+    ctx.http_client.create_message(channel_id).embed(embed)?.reply(message_id).allowed_mentions(AllowedMentions::default())
+        .await?;
 
     Ok(())
 }
