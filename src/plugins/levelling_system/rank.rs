@@ -63,6 +63,7 @@ use twilight_cache_inmemory::InMemoryCache;
 use twilight_mention::ParseMention;
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -121,9 +122,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
                 .clone()
                 .create_message(ctx.message.channel_id)
                 .content("<:red_x:705623424675872859> Cannot find user.")?
-                .allowed_mentions()
-                .replied_user(false)
-                .build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .await?;
 
@@ -381,9 +380,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
     ctx.http_client
         .clone()
         .create_message(ctx.message.channel_id)
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .attachment("rank_card.png", fs::read("rank_card/card.png")?)
         .await?;
