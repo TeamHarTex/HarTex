@@ -42,6 +42,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     gateway::{
         presence::{
             Activity,
@@ -193,8 +194,8 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
                                             user.id, user.avatar.unwrap()))?)
         .build()?;
 
-    ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).allowed_mentions()
-        .replied_user(false).build().embed(embed)?.await?;
+    ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).allowed_mentions(AllowedMentions::default())
+        .embed(embed)?.await?;
 
     Ok(())
 }
