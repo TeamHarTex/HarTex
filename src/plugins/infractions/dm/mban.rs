@@ -148,7 +148,7 @@ async fn infractions_mban_command(ctx: CommandContext<'_>, users: Vec<String>, r
                         guild_name, guild_id.0, reason.clone()
                     ))?.await?;
 
-                users_.push_str(&format!("{}, ", user_.name));
+                users_.push_str(&format!("{}, ", user_.id));
             }
         }
         else {
