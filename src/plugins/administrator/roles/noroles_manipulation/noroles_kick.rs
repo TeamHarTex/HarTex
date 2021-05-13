@@ -23,6 +23,8 @@ use twilight_cache_inmemory::{
     InMemoryCache,
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -95,12 +97,9 @@ async fn administrator_noroles_kick_command(ctx: CommandContext<'_>, cache: InMe
         .clone()
         .create_message(ctx.message.channel_id)
         .content(format!("<:green_check:705623382682632205> Kicked `{}` members with no roles.", members.len()))?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 
     Ok(())
 }
-

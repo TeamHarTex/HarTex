@@ -107,9 +107,9 @@ impl Command for SupportAnnounceCommand {
 
 async fn owneronly_support_announce_command(ctx: CommandContext<'_>, title: String, description: String) -> SystemResult<()> {
     let embed = EmbedBuilder::new()
-        .title(title)?
-        .description(description)?
-        .color(0x03_BE_FC)?
+        .title(title)
+        .description(description)
+        .color(0x03_BE_FC)
         .build()?;
 
     ctx.http_client.clone().create_reaction(ctx.message.channel_id, ctx.message.id, RequestReactionType::Custom {

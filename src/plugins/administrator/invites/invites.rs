@@ -30,6 +30,8 @@ use crate::command_system::{
     PrecommandCheckParameters
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::system::{
     SystemResult,
 };
@@ -49,8 +51,8 @@ impl Command for InvitesCommand {
     }
 
     fn precommand_checks<'asynchronous_trait, C: 'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>,
-                                                 params: PrecommandCheckParameters, checks: Box<[C]>)
-        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> where
+                                                                      params: PrecommandCheckParameters, checks: Box<[C]>)
+                                                                      -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> where
         C: Fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
             -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> + Send + Sync {
         Box::pin(
@@ -83,9 +85,7 @@ async fn administrator_invites_command(ctx: CommandContext<'_>, cache: InMemoryC
 
     ctx.http_client.clone().create_message(ctx.message.channel_id)
         .content(message)?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

@@ -20,10 +20,13 @@ use std::{
 use twilight_cache_inmemory::{
     InMemoryCache
 };
+
 use twilight_embed_builder::{
     EmbedBuilder,
     EmbedFieldBuilder
 };
+
+use twilight_model::channel::message::AllowedMentions;
 
 use crate::command_system::{
     parser::{
@@ -57,14 +60,14 @@ impl Command for TeamCommand {
 
 async fn general_team_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let embed = EmbedBuilder::new()
-        .title("HarTex Team")?
-        .color(0x03_BE_FC)?
-        .field(EmbedFieldBuilder::new("Global Administrator & Lead Developer", "HTGAzureX1212.")?)
-        .field(EmbedFieldBuilder::new("Partner Bot Developer", "Mrcomputer1")?)
+        .title("HarTex Team")
+        .color(0x03_BE_FC)
+        .field(EmbedFieldBuilder::new("Global Administrator & Lead Developer", "HTGAzureX1212."))
+        .field(EmbedFieldBuilder::new("Partner Bot Developer", "Mrcomputer1"))
         .build()?;
 
-    ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).embed(embed)?.allowed_mentions()
-        .replied_user(false).build().await?;
+    ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).embed(embed)?.allowed_mentions(AllowedMentions::default())
+        .await?;
 
     Ok(())
 }

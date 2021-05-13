@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         UserId
     }
@@ -137,7 +138,8 @@ async fn infractions_mwarn_command(ctx: CommandContext<'_>, users: Vec<String>, 
                     format!(
                         "<:green_check:705623382682632205> Successfully warned user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`"
                         , user_.mention(), user.0, reason.clone(), warning_id.clone()))?
-                    .reply(ctx.message.id).allowed_mentions().replied_user(false).build().await?;
+                    .reply(ctx.message.id).allowed_mentions(AllowedMentions::default())
+                    .await?;
 
                 let dm_channel = ctx.http_client.clone().create_private_channel(user).await?;
 

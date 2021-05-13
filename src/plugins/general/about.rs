@@ -19,6 +19,7 @@ use std::{
 
 use sysinfo::{
     ProcessExt,
+    ProcessorExt,
     SystemExt
 };
 
@@ -30,6 +31,8 @@ use twilight_embed_builder::{
     EmbedBuilder,
     EmbedFieldBuilder
 };
+
+use twilight_model::channel::message::AllowedMentions;
 
 use crate::command_system::{
     parser::{
@@ -69,12 +72,12 @@ async fn general_about_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     });
 
     let embed = EmbedBuilder::new()
-        .title("About HarTex Beta")?
+        .title("About HarTex Beta")
         .description(
             "HarTex Beta is the in-development version of HarTex, built and optimized for moderation and administration"
-                .to_owned() + " for Discord guilds.")?
-        .color(0x03_BE_FC)?
-        .field(EmbedFieldBuilder::new("Whitelisted Guilds", format!("{}", guilds_count))?)
+                .to_owned() + " for Discord guilds.")
+        .color(0x03_BE_FC)
+        .field(EmbedFieldBuilder::new("Whitelisted Guilds", format!("{}", guilds_count)))
         .field(EmbedFieldBuilder::new("Hardware Usage",
                                       format!("RAM Usage: `{}`MB\nCPU Usage: `{}`%", match hartex_process {
             Some((_, process)) => {
@@ -87,11 +90,11 @@ async fn general_about_command(ctx: CommandContext<'_>) -> SystemResult<()> {
                 process.cpu_usage().to_string()
             },
             None => "unavailable".to_string()
-        }))?)
+        })))
         .build()?;
 
-    ctx.http_client.create_message(channel_id).embed(embed)?.reply(message_id).allowed_mentions()
-        .replied_user(false).build().await?;
+    ctx.http_client.create_message(channel_id).embed(embed)?.reply(message_id).allowed_mentions(AllowedMentions::default())
+        .await?;
 
     Ok(())
 }

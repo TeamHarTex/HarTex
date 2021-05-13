@@ -24,6 +24,8 @@ use chrono::{
 
 use twilight_cache_inmemory::InMemoryCache;
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -114,9 +116,7 @@ async fn infractions_infractions_archive_command(ctx: CommandContext<'_>) -> Sys
     ctx.http_client
         .clone()
         .create_message(ctx.message.channel_id)
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .attachment(
             format!("{}_guildinfs_{}.csv", now, guild_id),
             std::fs::read(format!(

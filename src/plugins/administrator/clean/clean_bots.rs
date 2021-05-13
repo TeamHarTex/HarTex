@@ -22,9 +22,10 @@ use twilight_cache_inmemory::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         MessageId,
-    },
+    }
 };
 
 use crate::command_system::{
@@ -62,8 +63,8 @@ impl Command for CleanBotsCommand {
     }
 
     fn precommand_checks<'asynchronous_trait, C: 'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>,
-                                                 params: PrecommandCheckParameters, checks: Box<[C]>)
-        -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> where
+                                                                      params: PrecommandCheckParameters, checks: Box<[C]>)
+                                                                      -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> where
         C: Fn(CommandContext<'asynchronous_trait>, PrecommandCheckParameters)
             -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> + Send + Sync {
         Box::pin(
@@ -109,9 +110,7 @@ async fn administrator_clean_bots_command(ctx: CommandContext<'_>, number_of_mes
     ctx.http_client.clone().delete_messages(channel_id, message_ids.clone()).await?;
     ctx.http_client.clone().create_message(channel_id).content(
         format!("<:green_check:705623382682632205> Deleted `{}` messages successfully!", message_ids.len()))?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 

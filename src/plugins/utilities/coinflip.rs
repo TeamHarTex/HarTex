@@ -25,15 +25,7 @@ use twilight_cache_inmemory::{
     InMemoryCache
 };
 
-use twilight_http::{
-    request::{
-        channel::{
-            allowed_mentions::{
-                AllowedMentions
-            }
-        }
-    }
-};
+use twilight_model::channel::message::AllowedMentions;
 
 use crate::command_system::{
     parser::{
@@ -66,9 +58,7 @@ async fn utilities_coinflip_command(ctx: CommandContext<'_>) -> SystemResult<()>
         .clone()
         .create_message(ctx.message.channel_id)
         .content("Flipping a coin; please wait...")?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
     let allowed_mentions = AllowedMentions::default();

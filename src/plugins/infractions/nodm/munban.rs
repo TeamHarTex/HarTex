@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         UserId
     }
@@ -130,7 +131,8 @@ async fn infractions_munban_command(ctx: CommandContext<'_>, users: Vec<String>,
                     format!(
                         "<:green_check:705623382682632205> Successfully banned user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`"
                         , user_.mention(), user.0, reason.clone(), infraction_id.clone()))?
-                    .reply(ctx.message.id).allowed_mentions().replied_user(false).build().await?;
+                    .reply(ctx.message.id).allowed_mentions(AllowedMentions::default())
+                    .await?;
 
                 ctx.http_client.clone().delete_ban(guild_id, user).await?;
             }
