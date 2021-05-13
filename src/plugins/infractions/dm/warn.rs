@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         UserId
     }
@@ -57,34 +58,31 @@ use crate::system::{
 
 use crate::utilities::FutureResult;
 
-crate struct WarnCommand;
+crate struct MwarnCommand;
 
-impl Command for WarnCommand {
+impl Command for MwarnCommand {
     fn fully_qualified_name(&self) -> String {
-        String::from("warn")
+        String::from("mwarn")
     }
 
     fn aliases(&self) -> Vec<String> {
-        vec![String::from("dmwarn")]
+        vec![String::from("dmmwarn")]
     }
 
-    fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>,
-                                            mut arguments: Arguments<'asynchronous_trait>, _cache: InMemoryCache)
+    fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, mut arguments: Arguments<'asynchronous_trait>, _cache: InMemoryCache)
         -> Pin<Box<dyn Future<Output=SystemResult<()>> + Send + 'asynchronous_trait>> {
-        let id = arguments.next().unwrap_or("");
-        let user_id = if let Ok(uid) = UserId::parse(id) {
-            Some(uid)
-        }
-        else if let Ok(uid) = id.parse() {
-            Some(UserId(uid))
-        }
-        else {
-            None
-        };
+        let mut users = Vec::<String>::new();
 
-        let remainder = arguments.into_remainder().unwrap_or("No reason specified").to_string();
+        while let Some(string) = arguments.next() {
+            match string {
+                "-r" | "--reason" => break,
+                _ => users.push(string.to_string())
+            }
+        }
 
-        Box::pin(infractions_warn_command(ctx, user_id, remainder))
+        let reason = arguments.into_remainder().unwrap_or("No reason specified.");
+
+        Box::pin(infractions_mwarn_command(ctx, users, reason.to_string()))
     }
 
     fn precommand_checks<'asynchronous_trait, C: 'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, params: PrecommandCheckParameters, checks: Box<[C]>)
@@ -106,35 +104,47 @@ impl Command for WarnCommand {
     }
 }
 
-async fn infractions_warn_command(ctx: CommandContext<'_>, id: Option<UserId>, reason: String)
-                                  -> SystemResult<()> {
-    if let Some(uid) = id {
-        let channel_id = ctx.message.channel_id;
-        let guild_id = ctx.message.guild_id.unwrap();
+async fn infractions_mwarn_command(ctx: CommandContext<'_>, users: Vec<String>, reason: String) -> SystemResult<()> {
+    let mut users_to_warn = Vec::new();
+    let guild_id = ctx.message.guild_id.unwrap();
+    let channel_id = ctx.message.channel_id;
 
-        let guild_name = if let Ok(Some(guild)) = ctx.http_client.clone().guild(guild_id).await {
-            guild.name
+    let guild_name = if let Ok(Some(guild)) = ctx.http_client.clone().guild(guild_id).await {
+        guild.name
+    }
+    else {
+        "unknown".to_string()
+    };
+
+    for user in users {
+        if let Ok(user_id) = UserId::parse(&user) {
+            users_to_warn.push(user_id);
+        }
+        else if let Ok(user_id) = user.parse() {
+            users_to_warn.push(UserId(user_id));
         }
         else {
-            "unknown".to_string()
-        };
+            return Err(box CommandError("Specified User ID is invalid.".to_string()));
+        }
+    };
 
+    for user in users_to_warn {
         let warning_id = format!("{:x}", Sha3_224::digest(
-            format!("{}{}{}", guild_id.0, uid.0, reason.clone()).as_bytes()));
+            format!("{}{}{}", guild_id.0, user.0, reason.clone()).as_bytes()));
 
-        return if ctx.author.id != uid {
-            if let Ok(Some(user)) = ctx.http_client.user(uid).await {
+        if ctx.author.id != user {
+            if let Ok(Some(user_)) = ctx.http_client.user(user).await {
                 ctx.http_client.clone().add_user_infraction(
-                    warning_id.clone(), ctx.message.guild_id.unwrap(), uid,
+                    warning_id.clone(), ctx.message.guild_id.unwrap(), user,
                     reason.clone(), InfractionType::Warning).await?;
 
                 ctx.http_client.clone().create_message(channel_id).content(
                     format!(
-                        "<:green_check:705623382682632205> Successfully warned user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`"
-                        , user.mention(), uid.0, reason.clone(), warning_id.clone()))?
-                    .reply(ctx.message.id).allowed_mentions().replied_user(false).build().await?;
+                        "<:green_check:705623382682632205> Successfully warned user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
+                        user_.mention(), user.0, reason.clone(), warning_id.clone()))?
+                    .reply(ctx.message.id).allowed_mentions(AllowedMentions::default()).await?;
 
-                let dm_channel = ctx.http_client.clone().create_private_channel(uid).await?;
+                let dm_channel = ctx.http_client.clone().create_private_channel(user).await?;
 
                 ctx.http_client.clone().create_message(dm_channel.id).content(
                     format!(
@@ -142,14 +152,11 @@ async fn infractions_warn_command(ctx: CommandContext<'_>, id: Option<UserId>, r
                         guild_name, guild_id.0, reason.clone()
                     ))?.await?;
             }
-
-            Ok(())
         }
         else {
-            Err(box CommandError("Cannot give a warning to the command executor himself/herself.".to_string()))
+            return Err(box CommandError("Cannot give a warning to the command executor himself/herself.".to_string()))
         }
-    }
-    else {
-        Err(box CommandError("There is no user to give a warning to.".to_string()))
-    }
+    };
+
+    Ok(())
 }
