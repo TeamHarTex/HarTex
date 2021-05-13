@@ -108,6 +108,7 @@ async fn infractions_mban_command(ctx: CommandContext<'_>, users: Vec<String>, r
     let mut users_to_ban = Vec::new();
     let guild_id = ctx.message.guild_id.unwrap();
     let channel_id = ctx.message.channel_id;
+    let mut users_ = String::new();
 
     let guild_name = if let Ok(Some(guild)) = ctx.http_client.clone().guild(guild_id).await {
         guild.name
@@ -138,12 +139,6 @@ async fn infractions_mban_command(ctx: CommandContext<'_>, users: Vec<String>, r
                     infraction_id.clone(), ctx.message.guild_id.unwrap(), user,
                     reason.clone(), InfractionType::Ban).await?;
 
-                ctx.http_client.clone().create_message(channel_id).content(
-                    format!(
-                        "<:green_check:705623382682632205> Successfully banned user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
-                        user_.mention(), user.0, reason.clone(), infraction_id.clone()))?
-                    .reply(ctx.message.id).allowed_mentions(AllowedMentions::default()).await?;
-
                 let dm_channel = ctx.http_client.clone().create_private_channel(user).await?;
 
                 ctx.http_client.clone().create_ban(guild_id, user).await?;
@@ -152,12 +147,19 @@ async fn infractions_mban_command(ctx: CommandContext<'_>, users: Vec<String>, r
                         "You are banned from guild {} (ID: `{}`). Reason: `{}`",
                         guild_name, guild_id.0, reason.clone()
                     ))?.await?;
+
+                users_.push_str(&format!("{}, ", user_.name));
             }
         }
         else {
             return Err(box CommandError("Cannot ban the command executor himself/herself.".to_string()))
         }
     };
+
+    ctx.http_client.clone().create_message(channel_id).content(
+        format!(
+            "<:green_check:705623382682632205> Successfully banned user(s) {} reason: `{}`.", users_, reason.clone()))?
+        .reply(ctx.message.id).allowed_mentions(AllowedMentions::default()).await?;
 
     Ok(())
 }
