@@ -51,7 +51,7 @@ impl Command for PingCommand {
 async fn general_ping_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let channel_id = ctx.message.channel_id;
     let message = ctx.http_client.create_message(channel_id).reply(ctx.message.id)
-        .allowed_mentions().replied_user(false).build().content("Hello! Did you need anything?")?.await?;
+        .allowed_mentions(AllowedMentions::default()).content("Hello! Did you need anything?")?.await?;
 
     let info = ctx.cluster.shards().first().unwrap().info().unwrap();
     let latency = info.latency().recent().front();
