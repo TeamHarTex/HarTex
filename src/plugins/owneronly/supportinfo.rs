@@ -123,7 +123,7 @@ async fn owneronly_supportinfo_command(ctx: CommandContext<'_>) -> SystemResult<
 
     let third_embed = EmbedBuilder::new()
         .title("**__Useful Links__**")
-        .field(EmbedFieldBuilder::new("**__Bot Dashboard__**", "*Coming Soon...*")?)
+        .field(EmbedFieldBuilder::new("**__Bot Dashboard__**", "*Coming Soon...*"))
         .field(EmbedFieldBuilder::new("**__Configuration Documentation__**", "*Coming Soon...*"))
         .field(EmbedFieldBuilder::new("**__Basic Configuration Template__**", "*Coming Soon...*"))
         .field(EmbedFieldBuilder::new("**__Bot Invitation__**",
