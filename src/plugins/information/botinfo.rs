@@ -27,6 +27,8 @@ use twilight_embed_builder::{
     EmbedFieldBuilder
 };
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::command_system::{
     parser::{
         Arguments
@@ -61,15 +63,14 @@ async fn general_botinfo_command(ctx: CommandContext<'_>) -> SystemResult<()> {
         .arg("--version").output().unwrap().stdout).unwrap();
 
     let embed = EmbedBuilder::new()
-        .color(0x03_BE_FC)?
-        .title("About HarTex")?
-        .description("Information about me.")?
-        .field(EmbedFieldBuilder::new("Bot Version", hartex_version())?)
-        .field(EmbedFieldBuilder::new("Programming Language Version: Rust", rust_version)?)
+        .color(0x03_BE_FC)
+        .title("About HarTex")
+        .description("Information about me.")
+        .field(EmbedFieldBuilder::new("Bot Version", hartex_version()))
+        .field(EmbedFieldBuilder::new("Programming Language Version: Rust", rust_version))
         .build()?;
     
-    ctx.http_client.create_message(channel_id).reply(ctx.message.id).allowed_mentions().replied_user(false)
-        .build().embed(embed)?.await?;
+    ctx.http_client.create_message(channel_id).reply(ctx.message.id).allowed_mentions(AllowedMentions::default()).embed(embed)?.await?;
 
     Ok(())
 }
