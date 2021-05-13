@@ -58,7 +58,7 @@ async fn utilities_coinflip_command(ctx: CommandContext<'_>) -> SystemResult<()>
         .clone()
         .create_message(ctx.message.channel_id)
         .content("Flipping a coin; please wait...")?
-        .allowed_mentions()
+        .allowed_mentions(AllowedMentions::default())
         .replied_user(false)
         .build()
         .reply(ctx.message.id)
