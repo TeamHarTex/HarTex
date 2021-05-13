@@ -132,27 +132,27 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
         .thumbnail(ImageSource::url(format!("https://cdn.discordapp.com/icons/{}/{}",
                                             guild.id, guild.icon.clone().unwrap()))?)
         .color(0x03_BE_FC)
-        .field(EmbedFieldBuilder::new("Guild ID", format!("{}", guild.id))?)
+        .field(EmbedFieldBuilder::new("Guild ID", format!("{}", guild.id)))
         .field(EmbedFieldBuilder::new("Owner",
-                                      format!("{}#{}", owner.name, owner.discriminator))?)
+                                      format!("{}#{}", owner.name, owner.discriminator)))
         .field(EmbedFieldBuilder::new("Members",
                                       format!("Humans: {}\nBots: {}\n**Grand Total:** {}",
                                               guild_members.iter().filter(|&&user_id|
                                                   !cache.user(user_id).unwrap().bot).count(),
                                               guild_members.iter().filter(|&&user_id|
                                                   cache.user(user_id).unwrap().bot).count(),
-                                              guild_members.len()))?)
-        .field(EmbedFieldBuilder::new("Emojis", format!("{}", guild_emojis.len()))?)
-        .field(EmbedFieldBuilder::new("Maximum Members", format!("{}", guild.max_members.unwrap()))?)
-        .field(EmbedFieldBuilder::new("Maximum Presences", if let Some(max) = guild.max_presences { max.to_string() } else { "unknown".to_string() })?)
+                                              guild_members.len())))
+        .field(EmbedFieldBuilder::new("Emojis", format!("{}", guild_emojis.len())))
+        .field(EmbedFieldBuilder::new("Maximum Members", format!("{}", guild.max_members.unwrap())))
+        .field(EmbedFieldBuilder::new("Maximum Presences", if let Some(max) = guild.max_presences { max.to_string() } else { "unknown".to_string() }))
         .field(EmbedFieldBuilder::new("Channels",
                                       format!("Categories: {}\nText Channels: {}\nVoice Channels: {}\nStage Channels: {}", categories,
-                                              texts, voices, stages))?.inline())
-        .field(EmbedFieldBuilder::new("Roles", format!("{}", guild_roles_len))?.inline())
-        .field(EmbedFieldBuilder::new("Guild Features", features)?)
-        .field(EmbedFieldBuilder::new("Guild Voice Region", guild.region.clone())?)
+                                              texts, voices, stages)).inline())
+        .field(EmbedFieldBuilder::new("Roles", format!("{}", guild_roles_len)).inline())
+        .field(EmbedFieldBuilder::new("Guild Features", features))
+        .field(EmbedFieldBuilder::new("Guild Voice Region", guild.region.clone()))
         .field(EmbedFieldBuilder::new("Guild Created At", format!("{}+08:00", 
-            Local.timestamp_millis(guild.id.timestamp()).format("%Y-%m-%d %H:%M:%S")))?)
+            Local.timestamp_millis(guild.id.timestamp()).format("%Y-%m-%d %H:%M:%S"))))
         .field(EmbedFieldBuilder::new(
             format!("Premium - {}",
                     match guild.premium_tier {
@@ -169,14 +169,14 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
                     None => 0
                 }
             )
-        )?)
+        ))
         .field(EmbedFieldBuilder::new("Guild Verification Level", match guild.verification_level {
             VerificationLevel::None => "none",
             VerificationLevel::Low => "low",
             VerificationLevel::Medium => "medium",
             VerificationLevel::High => "high",
             VerificationLevel::VeryHigh => "very high"
-        })?)
+        }))
         .build()?;
 
     ctx.http_client.create_message(channel_id).embed(embed)?.reply(ctx.message.id).allowed_mentions()
