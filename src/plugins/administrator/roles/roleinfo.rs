@@ -31,6 +31,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId
     }
@@ -127,7 +128,7 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
 
             ctx.http_client.clone()
                 .create_message(channel_id).embed(embed)?
-                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                .allowed_mentions(AllowedMentions::default()).reply(ctx.message.id).await?;
 
             Ok(())
         }
@@ -136,7 +137,7 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
                 .create_message(channel_id).content(
                     format!("<:red_x:705623424675872859> Could not find role with role id `{}` in guild.", r_id)
                 )?
-                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                .allowed_mentions(AllowedMentions::default()).reply(ctx.message.id).await?;
 
             Err(box CommandError("The role id points to an invalid role.".to_string()))
         }
@@ -145,7 +146,7 @@ async fn administrator_roleinfo_command(ctx: CommandContext<'_>, role_id: String
         ctx.http_client.clone()
             .create_message(channel_id).content(
                 format!("<:red_x:705623424675872859> Could not find role with role id `{}` in guild.", role_id))?
-            .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+            .allowed_mentions(AllowedMentions::default()).reply(ctx.message.id).await?;
 
         Err(box CommandError("The specified role_id is invalid.".to_string()))
     }
