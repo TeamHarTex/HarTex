@@ -22,15 +22,7 @@ use twilight_cache_inmemory::{
     InMemoryCache
 };
 
-use twilight_http::{
-    request::{
-        channel::{
-            allowed_mentions::{
-                AllowedMentions
-            }
-        }
-    }
-};
+use twilight_model::channel::message::AllowedMentions;
 
 use crate::command_system::{
     parser::{
