@@ -61,7 +61,7 @@ async fn general_uptime_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let embed = EmbedBuilder::new()
         .title("Bot Uptime")
         .color(0x03_BE_FC)
-        .field(EmbedFieldBuilder::new("Current Uptime", format_dhms(elapsed))?)
+        .field(EmbedFieldBuilder::new("Current Uptime", format_dhms(elapsed)))
         .build()?;
 
     ctx.http_client.create_message(ctx.message.channel_id).reply(ctx.message.id).embed(embed)?.allowed_mentions(AllowedMentions::default())
