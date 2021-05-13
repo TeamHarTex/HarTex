@@ -57,8 +57,8 @@ impl Command for UptimeCommand {
 async fn general_uptime_command(ctx: CommandContext<'_>) -> SystemResult<()> {
     let elapsed = ctx.stopwatch.elapsed_seconds();
     let embed = EmbedBuilder::new()
-        .title("Bot Uptime")?
-        .color(0x03_BE_FC)?
+        .title("Bot Uptime")
+        .color(0x03_BE_FC)
         .field(EmbedFieldBuilder::new("Current Uptime", format_dhms(elapsed))?)
         .build()?;
 
