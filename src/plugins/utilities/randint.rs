@@ -26,15 +26,7 @@ use twilight_cache_inmemory::{
     InMemoryCache
 };
 
-use twilight_http::{
-    request::{
-        channel::{
-            allowed_mentions::{
-                AllowedMentions
-            }
-        }
-    }
-};
+use twilight_model::channel::message::AllowedMentions;
 
 use crate::command_system::{
     parser::{
@@ -65,17 +57,15 @@ impl Command for RandintCommand {
 }
 
 async fn utilities_randint_command(ctx: CommandContext<'_>, range_start: u128, range_end: u128) -> SystemResult<()> {
+    let allowed_mentions = AllowedMentions::default();
     let message = ctx
         .http_client
         .clone()
         .create_message(ctx.message.channel_id)
         .content("Generating random number; please wait...")?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(allowed_mentions)
         .reply(ctx.message.id)
         .await?;
-    let allowed_mentions = AllowedMentions::default();
 
     let generated_number = thread_rng().gen_range(range_start..=range_end);
 
@@ -83,7 +73,7 @@ async fn utilities_randint_command(ctx: CommandContext<'_>, range_start: u128, r
         .clone()
         .update_message(ctx.message.channel_id, message.id)
         .content(format!("The random number from {} to {} is: `{}`", range_start, range_end, generated_number))?
-        .allowed_mentions(allowed_mentions).await?;
+        .allowed_mentions(allowed_mentions.clone()).await?;
 
     Ok(())
 }
