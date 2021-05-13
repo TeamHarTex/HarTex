@@ -30,6 +30,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::{
         RoleId,
         UserId
@@ -121,9 +122,11 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
     for user in users {
         if let Ok(user_id) = UserId::parse(&user) {
             members_to_mute.push(user_id);
-        } else if let Ok(user_id) = user.parse() {
+        }
+        else if let Ok(user_id) = user.parse() {
             members_to_mute.push(UserId(user_id));
-        } else {
+        }
+        else {
             return Err(box CommandError("Specified User ID is invalid.".to_string()))
         }
     }
@@ -179,7 +182,8 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
                     format!(
                         "<:green_check:705623382682632205> Successfully muted user {} (ID: `{}`). Reason: `{}`. Infraction ID: `{}`",
                         user.mention(), member.0, reason, warning_id))?
-                .allowed_mentions().replied_user(false).build().reply(ctx.message.id).await?;
+                .allowed_mentions(AllowedMentions::default())
+                .reply(ctx.message.id).await?;
 
             let dm_channel = ctx.http_client.clone().create_private_channel(member).await?;
 
@@ -193,9 +197,7 @@ async fn infractions_mmute_command(ctx: CommandContext<'_>, users: Vec<String>, 
             ctx.http_client
                 .clone().create_message(channel_id)
                 .content("<:red_x:705623424675872859> Muted role is not set.")?
-                .allowed_mentions()
-                .replied_user(false)
-                .build()
+                .allowed_mentions(AllowedMentions::default())
                 .reply(ctx.message.id)
                 .await?;
 
