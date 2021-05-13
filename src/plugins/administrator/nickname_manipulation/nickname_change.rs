@@ -26,6 +26,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -130,9 +131,7 @@ async fn administrator_nickname_change_command(ctx: CommandContext<'_>, user: St
                 new_nickname
             )
         )?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 
