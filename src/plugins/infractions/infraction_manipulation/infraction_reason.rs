@@ -24,6 +24,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -104,9 +105,7 @@ async fn infractions_infraction_reason_command(ctx: CommandContext<'_>, user_id:
     ctx.http_client
         .clone()
         .create_message(ctx.message.channel_id)
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .content("<:green_check:705623382682632205> Operation successful.")?
         .await?;
