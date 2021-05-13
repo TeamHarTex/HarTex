@@ -29,6 +29,7 @@ use twilight_embed_builder::{
 use twilight_mention::ParseMention;
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -73,18 +74,18 @@ async fn levelling_system_leaderboard_command(ctx: CommandContext<'_>, cache: In
     let channel_id = ctx.message.channel_id;
 
     let mut embed = EmbedBuilder::new()
-        .color(0x03_BE_FC)?
-        .title(format!("{}'s Levelling System Leaderboard", guild.name))?;
+        .color(0x03_BE_FC)
+        .title(format!("{}'s Levelling System Leaderboard", guild.name));
 
     for (index, entry) in leaderboard.iter().enumerate() {
         let user = ctx.http_client.user(entry.user_id).await.expect("Cannot find user.").expect("User is none.");
-        
+
         if index > 9 {
             break;
         }
 
         let temp = embed.clone();
-        
+
         embed = temp.field(
             EmbedFieldBuilder::new(
                 format!(
@@ -93,12 +94,12 @@ async fn levelling_system_leaderboard_command(ctx: CommandContext<'_>, cache: In
                     user.name,
                     user.discriminator
                 ), format!("Level {}: {} XP", entry.level, entry.experience)
-            )?
-        );;
+            )
+        );
     }
 
-    ctx.http_client.create_message(channel_id).embed(embed.build()?)?.reply(ctx.message.id).allowed_mentions()
-        .replied_user(false).build().await?;
+    ctx.http_client.create_message(channel_id).embed(embed.build()?)?.reply(ctx.message.id).allowed_mentions(AllowedMentions::default())
+        .await?;
 
     Ok(())
 }
