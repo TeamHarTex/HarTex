@@ -108,6 +108,7 @@ impl Command for MkickCommand {
 async fn infractions_mkick_command(ctx: CommandContext<'_>, users: Vec<String>, reason: String) -> SystemResult<()> {
     let mut users_to_kick = Vec::new();
     let guild_id = ctx.message.guild_id.unwrap();
+    let mut users_ = String::new();
 
     let guild_name = if let Ok(Some(guild)) = ctx.http_client.clone().guild(guild_id).await {
         guild.name
@@ -142,17 +143,18 @@ async fn infractions_mkick_command(ctx: CommandContext<'_>, users: Vec<String>, 
                 format!("You have been kicked from guild `{}` (ID: `{}`). Reason: `{}`",
                         guild_name, guild_id.0, reason.clone()))?.await?;
         ctx.http_client.remove_guild_member(guild_id, user_to_kick);
-        ctx.http_client.clone()
-            .create_message(ctx.message.channel_id)
-            .content(
-                format!("<:green_check:705623382682632205> Successfully kicked user with ID: `{}` for `{}`",
-                        user_to_kick, reason.clone()))?
-            .allowed_mentions(AllowedMentions::default())
-            .reply(ctx.message.id)
-            .await?;
 
         tokio::time::sleep(Duration::from_millis(10)).await;
     }
+
+    ctx.http_client.clone()
+        .create_message(ctx.message.channel_id)
+        .content(
+            format!("<:green_check:705623382682632205> Successfully kicked user(s) `{}` reason: `{}`",
+                    users_, reason.clone()))?
+        .allowed_mentions(AllowedMentions::default())
+        .reply(ctx.message.id)
+        .await?;
 
     Ok(())
 }
