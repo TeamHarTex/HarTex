@@ -44,6 +44,8 @@ use twilight_http::Client;
 
 use twilight_mention::Mention;
 
+use twilight_model::channel::message::AllowedMentions;
+
 use crate::{
     command_system::{
         task_context::{
@@ -264,8 +266,8 @@ impl EventHandler {
                         .await?.expect("Member is none.");
 
                     if let Some(ref included) = levelling_system.included_roles {
-                        included.role_ids.is_empty() || 
-                            member.roles.iter().any(|role_id| 
+                        included.role_ids.is_empty() ||
+                            member.roles.iter().any(|role_id|
                                 included.role_ids.contains(&RoleId { id: role_id.into_inner_u64()} )
                             )
                     }
@@ -295,9 +297,7 @@ impl EventHandler {
                                 level
                             )
                         )?
-                        .allowed_mentions()
-                        .replied_user(false)
-                        .build()
+                        .allowed_mentions(AllowedMentions::default())
                         .reply(payload.id)
                         .await?;
                 }
