@@ -26,6 +26,7 @@ use twilight_mention::{
 };
 
 use twilight_model::{
+    channel::message::AllowedMentions,
     id::UserId
 };
 
@@ -127,9 +128,7 @@ async fn administrator_nickname_remove_command(ctx: CommandContext<'_>, user: St
                 user.discriminator
             )
         )?
-        .allowed_mentions()
-        .replied_user(false)
-        .build()
+        .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
         .await?;
 
