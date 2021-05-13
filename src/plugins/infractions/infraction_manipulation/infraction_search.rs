@@ -104,8 +104,8 @@ async fn infractions_infraction_search_command(ctx: CommandContext<'_>, query: S
 
     if infractions.is_empty() {
         ctx.http_client.clone().create_message(ctx.message.channel_id)
-            .content("The user has no infractions.")?.allowed_mentions()
-            .replied_user(false).build().reply(ctx.message.id).await?;
+            .content("The user has no infractions.")?.allowed_mentions(AllowedMentions::default())
+            .reply(ctx.message.id).await?;
     }
     else {
         let mut message: String =
