@@ -142,8 +142,8 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
     let placeholder = seconds_to_ymwdhms(seconds as u64);
 
     let embed = EmbedBuilder::new()
-        .color(0x03_BE_FC)?
-        .title(format!("About {}", user.name))?
+        .color(0x03_BE_FC)
+        .title(format!("About {}", user.name))
         .field(EmbedFieldBuilder::new("Username", user.clone().name)?.inline())
         .field(EmbedFieldBuilder::new("Discriminator", user.clone().discriminator)?.inline())
         .field(EmbedFieldBuilder::new("Nickname", match member.nick {
