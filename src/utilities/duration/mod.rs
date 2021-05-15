@@ -26,7 +26,7 @@ crate fn parse_duration(duration: String) -> Duration {
 
     for c in duration.chars() {
         match c {
-            | '0'..'9' => {
+            | '0'..='9' => {
                 acc *= 10;
                 acc += c.to_digit(10).unwrap() as u64;
             },
@@ -43,10 +43,10 @@ crate fn parse_duration(duration: String) -> Duration {
                 acc = 0;
             },
             | 's' | 'S' => {
-                dur += acc * 60;
+                dur += acc;
                 acc = 0;
             },
-            _ => panic!("Entered unexpected branch of match in utilities/duration/mod.rs:45.")
+            _ => panic!("Entered unexpected branch of match in utilities/duration/mod.rs:49.")
         }
     }
 
