@@ -29,6 +29,7 @@ use crate::command_system::{
     },
     Command,
     CommandContext,
+    CommandError,
     PrecommandCheckParameters
 };
 
@@ -84,7 +85,12 @@ impl Command for SlowmodeEnableHereCommand {
 async fn administrator_slowmode_enable_here_command(ctx: CommandContext<'_>, duration: String) -> SystemResult<()> {
     let channel_id = ctx.message.channel_id;
 
-    let duration = parse_duration(duration);
+    let duration = if let Ok(dur) = parse_duration(duration) {
+        dur
+    }
+    else {
+        return Err(box CommandError(String::from("Invalid duration to parse.")))
+    };
     let seconds = duration.as_secs();
 
     ctx.http_client.clone().update_channel(channel_id).rate_limit_per_user(seconds)?.await?;

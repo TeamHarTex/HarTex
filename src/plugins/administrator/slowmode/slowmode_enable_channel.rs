@@ -91,7 +91,12 @@ impl Command for SlowmodeEnableChannelCommand {
 }
 
 async fn administrator_slowmode_enable_channel_command(ctx: CommandContext<'_>, channel: String, duration: String) -> SystemResult<()> {
-    let duration = parse_duration(duration);
+    let duration = if let Ok(dur) = parse_duration(duration) {
+        dur
+    }
+    else {
+        return Err(box CommandError(String::from("Invalid duration to parse.")))
+    };
     let channel_id = if let Ok(id) = ChannelId::parse(&channel) {
         id
     }
