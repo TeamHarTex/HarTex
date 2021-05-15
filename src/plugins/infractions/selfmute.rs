@@ -106,7 +106,12 @@ async fn infractions_selfmute_command(ctx: CommandContext<'_>, user: String, dur
     let infraction_id = format!("{:x}", Sha3_224::digest(
         format!("{}{}{}", guild_id, user_id, reason.clone()).as_str().as_bytes()));
 
-    let dur = parse_duration(duration.clone());
+    let dur = if let Ok(duration_) = parse_duration(duration.clone()) {
+        duration_
+    }
+    else {
+        return Err(box CommandError(String::from("Invalid duration to parse.")))
+    };
 
     if let Some(plugins) = config.plugins {
         return if let Some(infraction_plugin) = plugins.infractions_plugin {
