@@ -1,6 +1,6 @@
 [package]
 name = "hartex_rewrite"
-version = "1.18.0-21w19a.1"
+version = "1.18.0-21w19a.2"
 description = "HarTex Rewrite Discord Bot in Rust, as a replacement for the C# version."
 edition = "2018"
 authors = ["The HarTex Project Developers"]
@@ -25,7 +25,7 @@ image = { version = "0.23.14", features = ["png", "gif"] }
 imageproc = "0.22.0"
 itertools = "0.10.0"
 lexical-core = "0.7.6"
-num = "0.3.1"
+num = "0.4.0"
 pad = "0.1.6"
 quick-xml = { version = "0.22.0", features = [ "serialize" ] }
 rand = "0.8.3"
