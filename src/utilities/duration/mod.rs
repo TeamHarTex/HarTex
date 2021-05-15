@@ -43,10 +43,10 @@ crate fn parse_duration(duration: String) -> Duration {
                 acc = 0;
             },
             | 's' | 'S' => {
-                dur += acc * 60;
+                dur += acc;
                 acc = 0;
             },
-            _ => panic!("Entered unexpected branch of match in utilities/duration/hartex_configuration_language:45.")
+            _ => panic!("Entered unexpected branch of match in utilities/duration/mod.rs:49.")
         }
     }
 
