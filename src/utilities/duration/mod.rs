@@ -26,7 +26,7 @@ crate fn parse_duration(duration: String) -> Duration {
 
     for c in duration.chars() {
         match c {
-            | '0'..'9' => {
+            | '0'..='9' => {
                 acc *= 10;
                 acc += c.to_digit(10).unwrap() as u64;
             },
@@ -46,7 +46,7 @@ crate fn parse_duration(duration: String) -> Duration {
                 dur += acc * 60;
                 acc = 0;
             },
-            _ => panic!("Entered unexpected branch of match in utilities/duration/mod.rs:45.")
+            _ => panic!("Entered unexpected branch of match in utilities/duration/hartex_configuration_language:45.")
         }
     }
 
