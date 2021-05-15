@@ -4,7 +4,7 @@ use std::{
 };
 
 #[derive(Debug)]
-pub struct ParseToDurationError(String);
+pub struct ParseToDurationError(crate String);
 
 impl fmt::Display for ParseToDurationError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
