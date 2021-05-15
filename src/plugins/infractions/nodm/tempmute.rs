@@ -69,11 +69,7 @@ crate struct TempmuteCommand;
 
 impl Command for TempmuteCommand {
     fn fully_qualified_name(&self) -> String {
-        String::from("tempmute")
-    }
-
-    fn aliases(&self) -> Vec<String> {
-        vec![String::from("dmtempmute")]
+        String::from("nodmtempmute")
     }
 
     fn execute_command<'asynchronous_trait>(ctx: CommandContext<'asynchronous_trait>, mut arguments: Arguments<'asynchronous_trait>, _cache: InMemoryCache)
@@ -107,13 +103,6 @@ impl Command for TempmuteCommand {
 async fn infractions_tempmute_command(ctx: CommandContext<'_>, user: String, duration: String, reason: String) -> SystemResult<()> {
     let guild_id = ctx.message.guild_id.unwrap();
 
-    let guild_name = if let Ok(Some(guild)) = ctx.http_client.clone().guild(guild_id).await {
-        guild.name
-    }
-    else {
-        "unknown".to_string()
-    };
-
     let user_id = if let Ok(uid) = UserId::parse(user.as_str()) {
         uid
     }
@@ -135,7 +124,7 @@ async fn infractions_tempmute_command(ctx: CommandContext<'_>, user: String, dur
     }
     else {
         return Err(box CommandError(String::from("Invalid duration to parse.")))
-    };
+    };;
 
     if let Some(plugins) = config.plugins {
         return if let Some(infraction_plugin) = plugins.infractions_plugin {
@@ -161,14 +150,6 @@ async fn infractions_tempmute_command(ctx: CommandContext<'_>, user: String, dur
                                 user_id.mention(), user_id.0, duration.clone(), reason, infraction_id))?
                         .allowed_mentions(AllowedMentions::default())
                         .reply(ctx.message.id).await?;
-
-                    let dm_channel = ctx.http_client.clone().create_private_channel(user_id).await?;
-
-                    ctx.http_client.clone()
-                        .create_message(dm_channel.id)
-                        .content(format!("You have been temporarily muted in guild `{}` for `{}` (ID: `{}`). Reason: `{}`",
-                                         guild_name, duration, guild_id.0, reason))?
-                        .await?;
 
                     tokio::time::sleep(dur).await;
 
