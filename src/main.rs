@@ -2265,7 +2265,7 @@ async fn handle_command(message: Message,
                 http_client.clone(),
                 message,
                 emitter.clone(),
-                "support-info"
+                "refresh-whitelist-roles"
             );
         },
         Command { name: "support-announce", arguments, .. } => {
