@@ -123,7 +123,12 @@ async fn infractions_tempban_command(ctx: CommandContext<'_>, user: String, dura
     let infraction_id = format!("{:x}", Sha3_224::digest(
         format!("{}{}{}", guild_id, user_id, reason.clone()).as_str().as_bytes()));
 
-    let dur = parse_duration(duration.clone());
+    let dur = if let Ok(duration) = parse_duration(duration.clone()) {
+        duration
+    }
+    else {
+        return Err(box CommandError(String::from("Invalid duration to parse.")))
+    };
 
     ctx.http_client.clone()
         .add_user_infraction(infraction_id.clone(), guild_id, user_id, reason.clone(), InfractionType::Ban)

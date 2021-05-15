@@ -16,11 +16,13 @@ use std::{
     time::Duration
 };
 
+crate mod error;
+
 use crate::{
     std_extensions::IntegerDivRemSimultaneously
 };
 
-crate fn parse_duration(duration: String) -> Duration {
+crate fn parse_duration(duration: String) -> Result<Duration, error::ParseToDurationError> {
     let mut acc = 0u64;
     let mut dur = 0u64;
 
@@ -46,11 +48,11 @@ crate fn parse_duration(duration: String) -> Duration {
                 dur += acc;
                 acc = 0;
             },
-            _ => panic!("Entered unexpected branch of match in utilities/duration/mod.rs:49.")
+            _ => return Err(error::ParseToDurationError(String::from("Invalid duration to parse.")))
         }
     }
 
-    Duration::from_secs(dur)
+    Ok(Duration::from_secs(dur))
 }
 
 crate fn seconds_to_ymwdhms(duration: u64) -> (u64, u64, u64, u64, u64, u64, u64) {
