@@ -107,6 +107,7 @@ async fn owneronly_refresh_whitelist_roles_command(ctx: CommandContext<'_>, cach
         }
         else {
             ctx.http_client.clone().remove_guild_member_role(current_guild_id, owner, hartex_guild_owner())
+                .await?;
         }
 
         for user in config.dashboard.users {
