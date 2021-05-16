@@ -19,32 +19,12 @@ use std::{
     }
 };
 
-crate trait IntegerDivRemSimultaneously: Sized + PartialOrd + Ord + Eq + Div + Rem + Copy {
+crate trait IntegerDivRemSimultaneously: Div + Rem + Copy {
     fn div_rem(&self, other: &Self) -> (<Self as Div>::Output, <Self as Rem>::Output) {
         (*self / *other, *self % *other)
     }
 }
 
-impl IntegerDivRemSimultaneously for i8 {}
-
-impl IntegerDivRemSimultaneously for i16 {}
-
-impl IntegerDivRemSimultaneously for i32 {}
-
-impl IntegerDivRemSimultaneously for i64 {}
-
-impl IntegerDivRemSimultaneously for i128 {}
-
-impl IntegerDivRemSimultaneously for isize {}
-
-impl IntegerDivRemSimultaneously for u8 {}
-
-impl IntegerDivRemSimultaneously for u16 {}
-
-impl IntegerDivRemSimultaneously for u32 {}
-
-impl IntegerDivRemSimultaneously for u64 {}
-
-impl IntegerDivRemSimultaneously for u128 {}
-
-impl IntegerDivRemSimultaneously for usize {}
+impl<T> IntegerDivRemSimultaneously for T
+where
+    T: Div + Rem + Copy { }
