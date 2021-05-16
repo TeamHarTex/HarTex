@@ -31,7 +31,9 @@ crate macro execute_command {
                 $emitter.event($crate::command_system::events::events::SystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
                     command: $command_name,
                     error: format!("{}", error)
-                }))
+                }));
+
+                return Err(error);
             }
         }
     },
@@ -56,7 +58,9 @@ crate macro execute_command {
                         $emitter.event($crate::command_system::events::events::SystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
                             command: $command_name,
                             error: format!("{}", error)
-                        }))
+                        }));
+
+                        return Err(error);
                     }
                 }
             },
@@ -64,7 +68,9 @@ crate macro execute_command {
                 $emitter.event($crate::command_system::events::events::SystemEvent::CommandFailed(box $crate::system::model::payload::CommandFailed {
                     command: $command_name,
                     error: format!("{}", error)
-                }))
+                }));
+
+                return Err(error);
             }
         }
     }
