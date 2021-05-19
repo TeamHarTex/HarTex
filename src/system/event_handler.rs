@@ -544,6 +544,25 @@ impl EventHandler {
     }
 
     crate async fn internal_panic(panic_information: Box<PanicInformation>, http: Client, message: crate::state_enums::message::MessageState) -> SystemResult<()> {
+        let channel = match message {
+            crate::state_enums::message::MessageState::Initialized => twilight_model::id::ChannelId(844448774058278952),
+            crate::state_enums::message::MessageState::Message(message) => message.channel_id
+        };
+
+        http.clone().create_message(channel).content(
+            format!(r"error: internal bot error: unexpected panic
+note: the bot unexpectedly panicked. this is a bug.
+note: we would appreciate a bug report: https://github.com/HT-Studios/HarTex-rust-discord-bot/issues/new?labels=B-IBE&template=internal-bot-error.md
+
+thread '{}' panicked at '{}', {}:{}:{}",
+            std::thread::current().name().unwrap(),
+            panic_information.message,
+            panic_information.location.0,
+            panic_information.location.1,
+            panic_information.location.2
+        ))?
+            .await?;
+
         Ok(())
     }
 }
