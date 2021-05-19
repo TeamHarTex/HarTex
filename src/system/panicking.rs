@@ -59,6 +59,7 @@ crate struct PanicInformation {
 }
 
 crate fn initialize_panic_hook(emitter: CommandEventEmitter) {
+    Logger::log_debug("Registering panic hook.", "system::panicking");
     SyncLazy::force(&RUST_DEFAULT_PANIC_HOOK);
 
     set_hook(
