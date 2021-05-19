@@ -25,7 +25,6 @@
 // In spite of this feature being incomplete, I will leave it there as I need it in the current existing codebase.
 #![feature(let_chains)]
 #![feature(once_cell)]
-#![feature(panic_info_message)]
 
 #![allow(clippy::needless_lifetimes)]
 #![allow(clippy::too_many_arguments)]
