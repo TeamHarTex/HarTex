@@ -67,7 +67,13 @@ crate fn initialize_panic_hook(emitter: CommandEventEmitter) {
 
             hartex_begin_panic(
                 info, PanicInformation {
-                    payload: format!("{}", info.payload().downcast_ref::<&str>().unwrap_or(&"Box<Any>")),
+                    payload: format!("{}", match info.payload().downcast_ref::<&'static str>() {
+                        Some(s) => *s,
+                        None => match info.payload().downcast_ref::<String>() {
+                            Some(s) => &s[..],
+                            None => "Box<Any>",
+                        },
+                    }),
                     location: (location.file().to_string(), location.line(), location.column())
                 },
                 emitter.clone()
