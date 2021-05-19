@@ -562,12 +562,14 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     while let value = futures_util::future::select(
         StreamExt::next(&mut events), command_events.next()).await {
         let levelling_borrow = &mut levelling_cache;
+        let state = &mut message_state;
 
         match value {
             Either::Left(event) => {
                 hartex_cache.update(&event.0.clone().unwrap().1);
 
                 let levelling = (*levelling_borrow).clone();
+                let state = (*state).clone();
 
                 tokio::spawn(
                     handle_event(
@@ -581,12 +583,14 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                         hartex_cache.clone(),
                         stopwatch,
                         emitter.clone(),
-                        levelling.clone()
+                        levelling.clone(),
+                        state
                     )
                 );
             },
             Either::Right(event) => {
                 let levelling = (*levelling_borrow).clone();
+                let state = (*state).clone();
 
                 tokio::spawn(
                     handle_event(
@@ -600,7 +604,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                         hartex_cache.clone(),
                         stopwatch,
                         emitter.clone(),
-                        levelling
+                        levelling,
+                        state
                     )
                 );
             }
@@ -733,7 +738,7 @@ async fn handle_event(_shard_id: Option<u64>,
                         EventHandler::command_identified(command_identified.clone()).await
                     },
                     SystemEvent::InternalPanic(internal_panic) => {
-                        EventHandler::internal_panic(internal_panic, http_client, message_state.state())
+                        EventHandler::internal_panic(internal_panic, http_client, message_state.state()).await
                     }
                 }
             }
