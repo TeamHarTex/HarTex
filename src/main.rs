@@ -287,6 +287,7 @@ use crate::system::{
             CommandReceived
         }
     },
+    state_machine::StateMachine,
     EventType,
     Stopwatch,
     SystemError,
@@ -358,8 +359,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     Logger::log_debug("Initializing levelling cache.", "main::main");
     let mut levelling_cache = SystemCache::new();
 
-    Logger::log_debug("Initializing message cache.", "main::main");
-    let mut message_cache = SystemCache::new();
+    let mut message_state = StateMachine::new_with_state(crate::state_enums::message::MessageState::Initialized);
 
     // Spawns a tokio task to startup the cluster.
     tokio::spawn(async move {
@@ -620,7 +620,8 @@ async fn handle_event(_shard_id: Option<u64>,
                       cache: InMemoryCache,
                       stopwatch: Stopwatch,
                       emitter: CommandEventEmitter,
-                      levelling_cache: SystemCache<String, bool>)
+                      levelling_cache: SystemCache<String, bool>,
+                      mut message_state: StateMachine<crate::state_enums::message::MessageState>)
     -> Result<(), Box<dyn Error + Send + Sync>> {
     match event_type {
         EventType::TwilightEvent => {
@@ -648,6 +649,8 @@ async fn handle_event(_shard_id: Option<u64>,
                         if (*message_create).author.bot {
                             return Ok(());
                         }
+
+                        message_state.update_state(crate::state_enums::message::MessageState::Message((*message_create).clone().0));
 
                         if message_create.content.starts_with("hb.") {
                             emitter.event(SystemEvent::CommandReceived(box CommandReceived));
@@ -730,7 +733,7 @@ async fn handle_event(_shard_id: Option<u64>,
                         EventHandler::command_identified(command_identified.clone()).await
                     },
                     SystemEvent::InternalPanic(internal_panic) => {
-                        todo!()
+                        EventHandler::internal_panic(internal_panic, http_client, message_state.state())
                     }
                 }
             }
