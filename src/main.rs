@@ -358,6 +358,9 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     Logger::log_debug("Initializing levelling cache.", "main::main");
     let mut levelling_cache = SystemCache::new();
 
+    Logger::log_debug("Initializing message cache.", "main::main");
+    let mut message_cache = SystemCache::new();
+
     // Spawns a tokio task to startup the cluster.
     tokio::spawn(async move {
         cluster_spawn.up().await;
