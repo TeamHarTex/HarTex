@@ -13,6 +13,7 @@
 //!  limitations under the License.
 
 use std::{
+    any::Any,
     lazy::{
         SyncLazy
     },
@@ -20,11 +21,17 @@ use std::{
         PanicInfo,
         set_hook,
         take_hook
-    }
+    },
 };
 
 use crate::{
-    command_system::CommandContext,
+    command_system::{
+        events::{
+            emitter::CommandEventEmitter,
+            events::SystemEvent
+        },
+        CommandContext
+    },
     logging::logger::Logger,
     system::{
         terminal::Ansi256,
@@ -41,16 +48,40 @@ crate static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send
     SyncLazy::new(|| {
         let hook = take_hook();
 
-        set_hook(box |info| {
-            hartex_begin_panic(info)
-        });
-
         hook
     });
 
-crate fn hartex_begin_panic(panic_info: &PanicInfo<'_>) {
+#[derive(Clone)]
+crate struct PanicInformation {
+    crate payload: String,
+    crate message: String,
+    crate location: (String, u32, u32)
+}
+
+crate fn initialize_panic_hook(emitter: CommandEventEmitter) {
+    SyncLazy::force(&RUST_DEFAULT_PANIC_HOOK);
+
+    set_hook(
+        box move |info| {
+            let location = info.location().unwrap();
+
+            hartex_begin_panic(
+                info, PanicInformation {
+                    payload: format!("{:?}", info.payload()),
+                    message: format!("{}", info.message().unwrap()),
+                    location: (location.file().to_string(), location.line(), location.column())
+                },
+                emitter.clone()
+            );
+        }
+    );
+}
+
+crate fn hartex_begin_panic(panic_info: &PanicInfo<'_>, panic_information: PanicInformation, emitter: CommandEventEmitter) {
     Logger::log_error("An unexpected panic has taken place. See below for more information:",
     "system::panicking::hartex_begin_panic");
+
+    emitter.event(SystemEvent::InternalPanic(box panic_information));
 
     eprintln!("{}error: internal bot error: unexpected panic{}\n", Ansi256 { colour: 1 }, Ansi256::reset());
     eprintln!("note: the bot unexpectedly panicked. this is a bug.\n");
