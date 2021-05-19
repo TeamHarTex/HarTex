@@ -54,7 +54,6 @@ crate static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send
 #[derive(Clone)]
 crate struct PanicInformation {
     crate payload: String,
-    crate message: String,
     crate location: (String, u32, u32)
 }
 
@@ -69,7 +68,6 @@ crate fn initialize_panic_hook(emitter: CommandEventEmitter) {
             hartex_begin_panic(
                 info, PanicInformation {
                     payload: format!("{:?}", info.payload()),
-                    message: format!("{}", info.message().unwrap()),
                     location: (location.file().to_string(), location.line(), location.column())
                 },
                 emitter.clone()
