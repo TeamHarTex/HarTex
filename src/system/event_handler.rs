@@ -86,6 +86,7 @@ use crate::{
             CommandFailed,
             CommandReceived,
         },
+        panicking::PanicInformation,
         twilight_http_client_extensions::{
             AddUserExperience,
             GetGuildConfiguration,
@@ -539,6 +540,10 @@ impl EventHandler {
         Logger::log_verbose(format!("Command identified: '{}'", payload),
                             "system::event_handler::EventHandler::command_identified");
 
+        Ok(())
+    }
+
+    crate async fn internal_panic(panic_information: Box<PanicInformation>, http: Client, message: crate::state_enums::message::MessageState) -> SystemResult<()> {
         Ok(())
     }
 }
