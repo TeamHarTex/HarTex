@@ -25,6 +25,7 @@
 // In spite of this feature being incomplete, I will leave it there as I need it in the current existing codebase.
 #![feature(let_chains)]
 #![feature(once_cell)]
+#![feature(panic_info_message)]
 
 #![allow(clippy::needless_lifetimes)]
 #![allow(clippy::too_many_arguments)]
@@ -278,9 +279,6 @@ use crate::system::{
     bot_configuration::BotConfiguration,
     caching::SystemCache,
     event_handler::EventHandler,
-    panicking::{
-        RUST_DEFAULT_PANIC_HOOK
-    },
     twilight_http_client_extensions::AddUserExperience,
     model::{
         payload::{
@@ -548,14 +546,14 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let mut events = hartex_cluster.some_events(event_types);
     let mut command_events = framework.events();
 
+    crate::system::panicking::initialize_panic_hook(emitter.clone());
+
     // Sets the Ctrl+C handler.
     ctrlc::set_handler(move || {
         Logger::log_warning("Received a Ctrl-C signal; terminating process.", "main::main");
 
         std::process::exit(0);
     })?;
-
-    SyncLazy::force(&RUST_DEFAULT_PANIC_HOOK);
 
     // Start an event loop to process each event in the stream as they come in.
     while let value = futures_util::future::select(
@@ -727,6 +725,9 @@ async fn handle_event(_shard_id: Option<u64>,
                     },
                     SystemEvent::CommandIdentified(command_identified) => {
                         EventHandler::command_identified(command_identified.clone()).await
+                    },
+                    SystemEvent::InternalPanic(internal_panic) => {
+                        todo!()
                     }
                 }
             }
