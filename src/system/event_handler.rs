@@ -556,7 +556,7 @@ note: we would appreciate a bug report: https://github.com/HT-Studios/HarTex-rus
 
 thread '{}' panicked at '{}', {}:{}:{}",
             std::thread::current().name().unwrap(),
-            panic_information.message,
+            panic_information.payload,
             panic_information.location.0,
             panic_information.location.1,
             panic_information.location.2
