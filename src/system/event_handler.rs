@@ -551,7 +551,9 @@ impl EventHandler {
 
         http.clone().create_message(channel).content(
             format!(r"error: internal bot error: unexpected panic
+
 note: the bot unexpectedly panicked. this is a bug.
+
 note: we would appreciate a bug report: https://github.com/HT-Studios/HarTex-rust-discord-bot/issues/new?labels=B-IBE&template=internal-bot-error.md
 
 thread '{}' panicked at '{}', {}:{}:{}",
