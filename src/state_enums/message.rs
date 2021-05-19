@@ -20,6 +20,7 @@ use crate::{
 
 #[derive(Debug, Clone)]
 crate enum MessageState {
+    Initialized,
     Message(twilight_model::channel::Message)
 }
 
