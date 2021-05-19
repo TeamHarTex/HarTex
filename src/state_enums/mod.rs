@@ -13,3 +13,4 @@
 //!  limitations under the License.
 
 crate mod censorship;
+crate mod message;
