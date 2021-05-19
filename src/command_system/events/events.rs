@@ -13,6 +13,7 @@
 //!  limitations under the License.
 
 use std::{
+    panic::PanicInfo,
     pin::Pin,
     task::{
         Context,
@@ -26,10 +27,13 @@ use futures_util::{
     StreamExt
 };
 
-use crate::system::model::payload::{
-    CommandExecuted,
-    CommandFailed,
-    CommandReceived
+use crate::system::{
+    model::payload::{
+        CommandExecuted,
+        CommandFailed,
+        CommandReceived,
+    },
+    panicking::PanicInformation
 };
 
 /// Represents some events.
@@ -61,4 +65,5 @@ crate enum SystemEvent {
     CommandIdentified(String),
     CommandExecuted(Box<CommandExecuted>),
     CommandFailed(Box<CommandFailed>),
+    InternalPanic(Box<PanicInformation>)
 }
