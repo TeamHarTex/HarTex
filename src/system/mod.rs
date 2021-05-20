@@ -30,7 +30,9 @@ use chrono::{
 use twilight_model::{
     gateway::{
         presence::{
+            activity_button::ActivityButtonLink,
             Activity,
+            ActivityButton,
             ActivityType,
         },
     }
@@ -101,6 +103,12 @@ crate fn set_bot_activity() -> Activity {
     Activity {
         application_id: None,
         assets: None,
+        buttons: vec![
+            ActivityButton::Link(ActivityButtonLink {
+                label: String::from("GitHub Source Code Repository"),
+                url: String::from("https://github.com/HT-Studios/HarTex-rust-discord-bot")
+            })
+        ],
         created_at: None,
         details: None,
         emoji: None,
