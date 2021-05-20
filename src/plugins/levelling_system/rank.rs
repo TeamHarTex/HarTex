@@ -382,7 +382,7 @@ async fn levelling_system_rank_command(ctx: CommandContext<'_>, user: Option<Str
         .create_message(ctx.message.channel_id)
         .allowed_mentions(AllowedMentions::default())
         .reply(ctx.message.id)
-        .attachment("rank_card.png", fs::read("rank_card/card.png")?)
+        .file("rank_card.png", fs::read("rank_card/card.png")?)
         .await?;
 
     Ok(())
