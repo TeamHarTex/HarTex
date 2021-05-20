@@ -117,7 +117,7 @@ async fn infractions_infractions_archive_command(ctx: CommandContext<'_>) -> Sys
         .clone()
         .create_message(ctx.message.channel_id)
         .allowed_mentions(AllowedMentions::default())
-        .attachment(
+        .file(
             format!("{}_guildinfs_{}.csv", now, guild_id),
             std::fs::read(format!(
                 "csv/{}_guildinfs_{}.csv",
