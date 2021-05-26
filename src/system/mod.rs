@@ -103,12 +103,7 @@ crate fn set_bot_activity() -> Activity {
     Activity {
         application_id: None,
         assets: None,
-        buttons: vec![
-            ActivityButton::Link(ActivityButtonLink {
-                label: String::from("GitHub Source Code Repository"),
-                url: String::from("https://github.com/HT-Studios/HarTex-rust-discord-bot")
-            })
-        ],
+        buttons: Vec::new(),
         created_at: None,
         details: None,
         emoji: None,
