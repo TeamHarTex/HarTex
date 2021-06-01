@@ -115,7 +115,13 @@ crate mod utilities;
 crate mod xml_deserialization;
 
 use crate::command_system::{
-    cfg::*,
+    cfg::{
+        CaseSensitive,
+        DisableAliases,
+        EnableAliases,
+        FullyQualifiedName,
+        NoFullyQualifiedName,
+    },
     events::{
         emitter::CommandEventEmitter,
         events::SystemEvent
