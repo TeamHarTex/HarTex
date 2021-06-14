@@ -23,7 +23,7 @@ hyper = { version = "0.14.9", features = ["client", "http2", "runtime"] }
 hyper-tls = "0.5.0"
 image = { version = "0.23.14", features = ["png", "gif"] }
 imageproc = "0.22.0"
-itertools = "0.10.0"
+itertools = "0.10.1"
 lexical-core = "0.7.6"
 num = "0.4.0"
 pad = "0.1.6"
@@ -38,15 +38,15 @@ sqlx = { version = "0.5.3", default-features = false, features = [ "postgres", "
 sysinfo = "0.17.5"
 tokio = { version = "1.6.1", features = [ "full" ] }
 tokio-stream = "0.1.6"
-twilight-cache-inmemory = "0.4.2"
-twilight-embed-builder = "0.4.1"
-twilight-gateway = "0.4.1"
-twilight-gateway-queue = "0.4.0"
-twilight-http = "0.4.2"
-twilight-mention = "0.4.1"
-twilight-model = "0.4.2"
-twilight-standby = "0.4.0"
-twilight-util = { version = "0.4.1", features = [ "snowflake" ] }
+twilight-cache-inmemory = "0.5.0"
+twilight-embed-builder = "0.5.0"
+twilight-gateway = "0.5.0"
+twilight-gateway-queue = "0.5.0"
+twilight-http = "0.5.0"
+twilight-mention = "0.5.0"
+twilight-model = "0.5.0"
+twilight-standby = "0.5.0"
+twilight-util = { version = "0.5.0", features = [ "snowflake" ] }
 unicase = "2.6.0"
 url = "2.2.2"
 
