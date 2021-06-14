@@ -359,7 +359,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     Logger::log_debug("Bot cluster successfully created.", "main::main");
 
     // Cloned cluster for tokio spawn
-    let (cluster_spawn, _) = hartex_cluster.clone();
+    let cluster_spawn = hartex_cluster.clone();
 
     Logger::log_debug("Initializing levelling cache.", "main::main");
     let mut levelling_cache = SystemCache::new();
