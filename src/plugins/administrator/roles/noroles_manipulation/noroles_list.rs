@@ -86,12 +86,13 @@ async fn administrator_noroles_list_command(ctx: CommandContext<'_>, cache: InMe
         .unwrap()
         .iter()
         .map(|user_id| cache.member(guild_id, *user_id).unwrap())
-        .filter(|member| (*member).roles.is_empty()).collect::<Vec<Arc<CachedMember>>>();
+        .filter(|member| (*member).roles.is_empty()).collect::<Vec<CachedMember>>();
     let mut message = String::from("**__Members Without Roles__**\n");
 
-    members.iter().for_each(|member| {
-        message.push_str(&format!("{}#{}", member.user.name, member.user.discriminator));
-    });
+    for member in members {
+        let user = ctx.http_client.user(member.user_id).await?.unwrap();
+        message.push_str(&format!("{}#{}", user.name, user.discriminator));
+    }
 
     ctx.http_client
         .clone()
