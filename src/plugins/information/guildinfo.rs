@@ -151,7 +151,6 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
                                               texts, voices, stages)).inline())
         .field(EmbedFieldBuilder::new("Roles", format!("{}", guild_roles_len)).inline())
         .field(EmbedFieldBuilder::new("Guild Features", features))
-        .field(EmbedFieldBuilder::new("Guild Voice Region", guild.region.clone()))
         .field(EmbedFieldBuilder::new("Guild Created At", format!("{}+08:00", 
             Local.timestamp_millis(guild.id.timestamp()).format("%Y-%m-%d %H:%M:%S"))))
         .field(EmbedFieldBuilder::new(
