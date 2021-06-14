@@ -111,7 +111,7 @@ async fn information_guildinfo_command(ctx: CommandContext<'_>, cache: InMemoryC
 
     for ch_id in guild_channels {
         if let Some(channel) =  cache.guild_channel(ch_id) {
-            match *channel {
+            match channel {
                 GuildChannel::Category(_) => {
                     categories += 1;
                 },
