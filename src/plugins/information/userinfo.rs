@@ -120,7 +120,7 @@ async fn information_userinfo_command(ctx: CommandContext<'_>, id: Option<UserId
 
     let member = ctx.http_client.guild_member(guild_id, user.id).await?.unwrap();
     let mut roles = member.roles.iter().map(|role_id| cache.role(*role_id)
-        .unwrap()).collect::<Vec<Arc<Role>>>();
+        .unwrap()).collect::<Vec<Role>>();
 
     roles.sort_by(|previous, now| {
         now.position.cmp(&previous.position)
