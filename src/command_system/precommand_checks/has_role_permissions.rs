@@ -68,7 +68,7 @@ async fn has_role_permissions(ctx: CommandContext<'asynchronous_trait>, params: 
                 .map(|&role| {
                     cache.role(role).unwrap()
                 })
-                .collect::<Vec<Arc<Role>>>();
+                .collect::<Vec<Role>>();
 
             roles.sort_by(|previous, now| {
                 now.position.cmp(&previous.position)

@@ -86,10 +86,10 @@ async fn administrator_noroles_kick_command(ctx: CommandContext<'_>, cache: InMe
             .unwrap()
             .iter()
             .map(|user_id| cache.member(guild_id, *user_id).unwrap())
-            .filter(|member| (*member).roles.is_empty()).collect::<Vec<Arc<CachedMember>>>();
+            .filter(|member| (*member).roles.is_empty()).collect::<Vec<CachedMember>>();
 
     for member in &members {
-        ctx.http_client.clone().remove_guild_member(guild_id, member.user.id).await?;
+        ctx.http_client.clone().remove_guild_member(guild_id, member.user_id).await?;
         tokio::time::sleep(std::time::Duration::from_millis(10)).await;
     }
 

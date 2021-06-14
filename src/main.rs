@@ -90,7 +90,7 @@ use twilight_model::{
     },
     gateway::{
         payload::{
-            update_status::UpdateStatusInfo
+            update_presence::UpdatePresencePayload
         },
         presence::{
             Status
@@ -120,7 +120,7 @@ use crate::command_system::{
         DisableAliases,
         EnableAliases,
         FullyQualifiedName,
-        NoFullyQualifiedName,
+        NoFullyQualifiedName
     },
     events::{
         emitter::CommandEventEmitter,
@@ -152,7 +152,7 @@ use crate::logging::{
 };
 
 use crate::macros::{
-    execute_command,
+    execute_command
 };
 
 use crate::plugins::{
@@ -230,7 +230,7 @@ use crate::plugins::{
             DmTempmuteCommand,
             DmUnbanCommand,
             DmUnmuteCommand,
-            DmWarnCommand,
+            DmWarnCommand
         },
         infraction_manipulation::{
             InfractionClearallCommand,
@@ -256,7 +256,7 @@ use crate::plugins::{
             NodmUnmuteCommand,
             NodmWarnCommand
         },
-        SelfmuteCommand,
+        SelfmuteCommand
     },
     levelling_system::{
         LeaderboardCommand,
@@ -296,7 +296,7 @@ use crate::system::{
     EventType,
     Stopwatch,
     SystemError,
-    set_bot_activity,
+    set_bot_activity
 };
 
 #[tokio::main]
@@ -350,9 +350,9 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let activities = vec![set_bot_activity()];
 
     // HarTex Bot cluster for Discord gateway
-    let hartex_cluster = Cluster::builder(&bot_configuration.token, intents)
+    let (hartex_cluster, mut events) = Cluster::builder(&bot_configuration.token, intents)
         .shard_scheme(shard_scheme)
-        .presence(UpdateStatusInfo::new(activities, false, None, Status::Online))
+        .presence(UpdatePresencePayload::new(activities, false, None, Status::Online)?)
         .build()
         .await?;
 
@@ -550,8 +550,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let listeners = framework.clone().listeners();
     let emitter = CommandEventEmitter::new(listeners);
 
-    // Cluster events
-    let mut events = hartex_cluster.some_events(event_types);
     let mut command_events = framework.events();
 
     crate::system::panicking::initialize_panic_hook(emitter.clone());
