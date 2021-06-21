@@ -22,13 +22,6 @@ Probably not. HarTex has so many moving pieces that running a local instance of 
 the source code released and updated frequently, is to allow others to understand the bot's inner workings and audit its fuctionality.
 You *can* run a local instance of HarTex for your server (but **NOT** a public version).
 
-### Self-Hosting Agreement
-
-- You may not use the HarTex logo or name within derivative bots;
-- You may not host a public version of HarTex;
-- You may not charge money for the usage of *your* instance of HarTex; and
-- You may not provide support for *your* instance of HarTex.
-
 ## HarTex Development
 
 ### Can I Contribute?
