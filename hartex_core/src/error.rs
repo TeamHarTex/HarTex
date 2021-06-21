@@ -6,7 +6,7 @@
 ///
 /// An enumeration representing the various error types used within HarTex.
 pub enum HarTexError {
-    /// # Enum Variant `Custom`
+    /// # Enum Variant `HarTexError::Custom`
     ///
     /// Represents a custom error that cannot be represented with any other variants of this
     /// enumeration.
