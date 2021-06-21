@@ -1,0 +1,24 @@
+[package]
+name = "hartex_core"
+version = "1.19.0"
+edition = "2018"
+description = """
+The `hartex_core` library provides the core minimal functionality for the bot to function.
+
+This library is supposed to be used in other `hartex_*` dependencies, but not use any of them.
+"""
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+twilight-cache-inmemory = { version = "0.5.0", optional = true }
+twilight-embed-builder = { version = "0.5.0", optional = true }
+twilight-gateway = { version = "0.5.0", optional = true }
+twilight-http = { version = "0.5.0", optional = true }
+twilight-mention = { version = "0.5.0", optional = true }
+twilight-model = { version = "0.5.0", optional = true }
+twilight-standby = { version = "0.5.0", optional = true }
+twilight-util = { version = "0.5.0", features = [ "snowflake" ], optional = true }
+
+[features]
+twilight-bundled = [ "twilight-cache-inmemory", "twilight-embed-builder", "twilight-gateway", "twilight-http", "twilight-mention", "twilight-model", "twilight-standby", "twilight-util" ]
