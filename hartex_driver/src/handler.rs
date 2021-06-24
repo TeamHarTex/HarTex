@@ -19,13 +19,16 @@ impl EventHandler {
     pub async fn ready(payload: Box<Ready>) -> HarTexResult<()> {
         let user = payload.user;
 
-        Logger::info(format!(
-            "{}#{} [id: {}] has successfully startup; using discord api v{}",
-            user.name,
-            user.discriminator,
-            user.id,
-            payload.version
-        ), Some(module_path!()));
+        Logger::info(
+            format!(
+                "{}#{} [id: {}] has successfully startup; using discord api v{}",
+                user.name,
+                user.discriminator,
+                user.id,
+                payload.version
+            ), 
+            Some(module_path!())
+        );
 
         Ok(())
     }
