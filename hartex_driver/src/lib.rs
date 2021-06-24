@@ -26,7 +26,8 @@ use hartex_core::{
             ResourceType
         }
     },
-    error::HarTexResult
+    error::HarTexResult,
+    events::EventType
 };
 
 use hartex_logging::Logger;
@@ -102,6 +103,10 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     while let Some((shard_id, event)) = StreamExt::next(&mut events).await {
         cache.update(&event);
+
+        tokio::spawn(
+            events::handle_event(shard_id, (EventType::Twilight, Some(event)))
+        );
     }
 
     Ok(())
