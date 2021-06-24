@@ -33,6 +33,7 @@ use hartex_core::{
 use hartex_logging::Logger;
 
 pub mod events;
+pub mod handler;
 
 /// # Asynchronous Function `hartex_main`
 ///
