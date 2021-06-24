@@ -8,6 +8,8 @@
 //!                       removes the need to include the dependencies repeatedly across the
 //!                       HarTex crates.
 
+pub mod ansi;
+
 #[cfg(feature = "twilight-bundled")]
 pub mod discord;
 
