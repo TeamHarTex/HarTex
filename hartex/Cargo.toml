@@ -1,6 +1,6 @@
 [package]
 name = "hartex"
-version = "0.1.0"
+version = "1.19.0"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,3 +8,4 @@ edition = "2018"
 [dependencies]
 hartex_core = { path = "../hartex_core" }
 hartex_driver = { path = "../hartex_driver" }
+tokio = { version = "1.7.1", features = [ "full" ] }
