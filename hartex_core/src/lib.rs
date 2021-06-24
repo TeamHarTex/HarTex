@@ -13,3 +13,8 @@ pub mod ansi;
 pub mod discord;
 pub mod error;
 pub mod time;
+
+/// # Static `HARTEX_VERSION`
+/// 
+/// Represents the current version of HarTex Discord bot.
+pub static HARTEX_VERSION: &'static str = "1.19.0";
