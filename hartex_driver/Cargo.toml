@@ -6,6 +6,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+ctrlc = "3.1.9"
 dotenv = "0.15.0"
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
 hartex_logging = { path = "../hartex_logging" }
+tokio = { version = "1.7.1", features = [ "full" ] }
