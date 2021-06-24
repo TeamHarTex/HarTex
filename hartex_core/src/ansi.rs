@@ -115,13 +115,15 @@ pub enum SgrParam {
     /// invoked on this variant.
     Underline,
 
-    /// # Enum Variant `SgrParam::SetForegroundColour`
+    /// # Enum Variant `SgrParam::SetColour`
     ///
-    /// Sets the foreground colour.
+    /// Sets the colour, either foreground or background.
     ///
     /// ## Fields
     /// - `colour`, type `AnsiColour`: the colour to set.
-    SetForegroundColour {
-        colour: AnsiColour
+    /// - `foreground`, type `bool`:
+    SetColour {
+        colour: AnsiColour,
+        foreground: bool
     }
 }
