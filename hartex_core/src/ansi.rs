@@ -102,8 +102,8 @@ impl AnsiColour {
             Self::Magenta => vec![ if foreground { 35 } else { 45 } ],
             Self::Cyan => vec![ if foreground { 36 } else { 46} ],
             Self::White => vec![ if foreground { 37 } else { 47 } ],
-            Self::CustomU8 { n } => vec![ if foreground { 38 } else { 48 }, n ],
-            Self::CustomRgb { r, g, b} => vec![ if foreground { 38 } else { 48 }, r, g, b]
+            Self::CustomU8 { n } => vec![ if foreground { 38 } else { 48 }, n.into() ],
+            Self::CustomRgb { r, g, b} => vec![ if foreground { 38 } else { 48 }, r.into(), g.into(), b.into() ]
         }
     }
 }
@@ -183,11 +183,13 @@ impl SgrParam {
 }
 
 /// # Function `ansi_display`
-/// 
+///
 /// Converts the provided parameters to a string that is `Display`able.
-/// 
+///
 /// ## Parameters
 /// - `params`, type `Vec<i32>`: the parameters to convert
 pub fn ansi_display(params: Vec<i32>) -> impl Display {
-    format!("{}[{}m", ANSI_ESC_CHAR, params.join(";"))
+    let strings = params.iter().map(|i| i.to_string()).collect::<Vec<_>>();
+
+    format!("{}[{}m", ANSI_ESC_CHAR, strings.join(";"))
 }
