@@ -8,7 +8,10 @@ use std::{
     process
 };
 
+use futures_util::StreamExt;
+
 use hartex_core::{
+    ctrlc,
     discord::{
         gateway::{
             cluster::{
@@ -27,6 +30,8 @@ use hartex_core::{
 };
 
 use hartex_logging::Logger;
+
+pub mod events;
 
 /// # Asynchronous Function `hartex_main`
 ///
@@ -94,6 +99,10 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
         process::exit(0)
     })?;
+
+    while let Some((shard_id, event)) = StreamExt::next(&mut events).await {
+        cache.update(&event);
+    }
 
     Ok(())
 }
