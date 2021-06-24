@@ -23,18 +23,13 @@ impl Logger {
     ///
     /// Logs a message to the console with the provided log level (the `log_level` parameter).
     ///
-    /// ## Generic Parameters
-    /// - `T`; `Into<String>`
-    ///
     /// ## Parameters
     ///
-    /// - `message`, type `T`: the message to be loged
+    /// - `message`, type `impl Into<String>`: the message to be loged
     /// - `log_level`, type `level::LogLevel`: the log level to use
-    /// - `module`, type `Option<T>`: the module where the static method is invoked; can be `None`,
-    ///                               and defaults to the `hartex_logging` module.
-    pub fn log<T>(message: T, log_level: level::LogLevel, module: Option<T>)
-    where
-        T: Into<String> {
+    /// - `module`, type `Option<&'static str>`: the module where the static method is invoked; can be `None`,
+    ///                                          and defaults to the `hartex_logging` module.
+    pub fn log(message: impl Into<String>, log_level: level::LogLevel, module: Option<&'static str>) {
         match log_level {
             level::LogLevel::Info => Logger::info(message, module),
             _ => todo!()
@@ -45,16 +40,11 @@ impl Logger {
     ///
     /// Logs a message to the console with the "information" log level.
     ///
-    /// ## Generic Parameters
-    /// - `T`; `Into<String>`
-    ///
     /// ## Parameters
-    /// - `message`, type `T`: the message to be logged
-    /// - `module`, type `Option<T>`: the module the where the static method is invoked; can be
-    ///                               `None`, and defaults to the `hartex_logging` module.
-    pub fn info<T>(message: T, module: Option<T>)
-    where
-        T: Into<String> {
+    /// - `message`, type `impl Into<String>`: the message to be logged
+    /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
+    ///                                          `None`, and defaults to the `hartex_logging` module.
+    pub fn info(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
 
         println!(
@@ -69,7 +59,7 @@ impl Logger {
             }.into_i32s()),
             level::LogLevel::Info.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
-            module_name.into(),
+            module_name,
             message.into()
         );
     }
@@ -78,16 +68,11 @@ impl Logger {
     ///
     /// Logs a message to the console with the "debug" log level.
     ///
-    /// ## Generic Parameters
-    /// - `T`; `Into<String>`
-    ///
     /// ## Parameters
-    /// - `message`, type `T`: the message to be logged
-    /// - `module`, type `Option<T>`: the module the where the static method is invoked; can be
-    ///                               `None`, and defaults to the `hartex_logging` module.
-    pub fn debug<T>(message: T, module: Option<T>)
-    where
-        T: Into<String> {
+    /// - `message`, type `impl Into<String>`: the message to be logged
+    /// - `module`, type `Option<&'static str`: the module the where the static method is invoked; can be
+    ///                                         `None`, and defaults to the `hartex_logging` module.
+    pub fn debug(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
 
         println!(
@@ -102,7 +87,7 @@ impl Logger {
             }.into_i32s()),
             level::LogLevel::Debug.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
-            module_name.into(),
+            module_name,
             message.into()
         );
     }
@@ -111,16 +96,11 @@ impl Logger {
     ///
     /// Logs a message to the console with the "warning" log level.
     ///
-    /// ## Generic Parameters
-    /// - `T`; `Into<String>`
-    ///
     /// ## Parameters
-    /// - `message`, type `T`: the message to be logged
-    /// - `module`, type `Option<T>`: the module the where the static method is invoked; can be
-    ///                               `None`, and defaults to the `hartex_logging` module.
-    pub fn warn<T>(message: T, module: Option<T>)
-    where
-        T: Into<String> {
+    /// - `message`, type `impl Into<String>`: the message to be logged
+    /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
+    ///                                          `None`, and defaults to the `hartex_logging` module.
+    pub fn warn(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
 
         println!(
@@ -135,7 +115,7 @@ impl Logger {
             }.into_i32s()),
             level::LogLevel::Warn.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
-            module_name.into(),
+            module_name,
             message.into()
         );
     }
@@ -144,16 +124,11 @@ impl Logger {
     ///
     /// Logs a message to the console with the "error" log level.
     ///
-    /// ## Generic Parameters
-    /// - `T`; `Into<String>`
-    ///
     /// ## Parameters
-    /// - `message`, type `T`: the message to be logged
-    /// - `module`, type `Option<T>`: the module the where the static method is invoked; can be
-    ///                               `None`, and defaults to the `hartex_logging` module.
-    pub fn error<T>(message: T, module: Option<T>)
-    where
-        T: Into<String> {
+    /// - `message`, type `impl Into<String>`: the message to be logged
+    /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
+    ///                                          `None`, and defaults to the `hartex_logging` module.
+    pub fn error(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
 
         println!(
@@ -168,7 +143,7 @@ impl Logger {
             }.into_i32s()),
             level::LogLevel::Error.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
-            module_name.into(),
+            module_name,
             message.into()
         );
     }
@@ -177,16 +152,11 @@ impl Logger {
     ///
     /// Logs a message to the console with the "verbose" log level.
     ///
-    /// ## Generic Parameters
-    /// - `T`; `Into<String>`
-    ///
     /// ## Parameters
-    /// - `message`, type `T`: the message to be logged
-    /// - `module`, type `Option<T>`: the module the where the static method is invoked; can be
-    ///                               `None`, and defaults to the `hartex_logging` module.
-    pub fn verbose<T>(message: T, module: Option<T>)
-    where
-        T: Into<String> {
+    /// - `message`, type `impl Into<String>`: the message to be logged
+    /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
+    ///                                          `None`, and defaults to the `hartex_logging` module.
+    pub fn verbose(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
 
         println!(
@@ -201,7 +171,7 @@ impl Logger {
             }.into_i32s()),
             level::LogLevel::Verbose.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
-            module_name.into(),
+            module_name,
             message.into()
         );
     }
