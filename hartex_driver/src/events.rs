@@ -22,6 +22,9 @@ pub async fn handle_event(_shard_id: u64, (event_type, twilight): (EventType, Op
                 Event::Ready(payload) => {
                     EventHandler::ready(payload).await?
                 },
+                Event::ShardIdentifying(payload) => {
+                    EventHandler::shard_identifying(payload).await?
+                }
                 _ => ()
             }
         },
