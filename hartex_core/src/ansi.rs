@@ -2,6 +2,8 @@
 //!
 //! This module contains utilities for using ANSI Escape Sequences for use when printing to stdout.
 
+use std::fmt::Display;
+
 /// # Constant `ANSI_ESC_CHAR`
 ///
 /// The ANSI escape character used when creating an ANSI escape sequence.
@@ -87,7 +89,7 @@ impl AnsiColour {
     ///
     /// ## Parameters
     /// - `foreground`, type `bool`: whether the colour specified is foreground
-    /// 
+    ///
     /// ## Return Type
     /// `Vec<i32>`
     pub fn into_i32s(self, foreground: bool) -> Vec<i32> {
@@ -160,7 +162,7 @@ impl SgrParam {
     /// # Instance Method `SgrParam::into_i32s`
     ///
     /// Converts the current `SgrParam` instance to an `i32` for terminal usage.
-    /// 
+    ///
     /// ## Return Type
     /// `Vec<i32>`
     pub fn into_i32s(self) -> Vec<i32> {
@@ -178,4 +180,14 @@ impl SgrParam {
             }
         }
     }
+}
+
+/// # Function `ansi_display`
+/// 
+/// Converts the provided parameters to a string that is `Display`able.
+/// 
+/// ## Parameters
+/// - `params`, type `Vec<i32>`: the parameters to convert
+pub fn ansi_display(params: Vec<i32>) -> impl Display {
+    format!("{}[{}m", ANSI_ESC_CHAR, params.join(";"))
 }
