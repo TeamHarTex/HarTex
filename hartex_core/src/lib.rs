@@ -9,8 +9,7 @@
 //!                       HarTex crates.
 
 pub mod ansi;
-
 #[cfg(feature = "twilight-bundled")]
 pub mod discord;
-
 pub mod error;
+pub mod time;
