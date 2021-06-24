@@ -5,6 +5,7 @@
 /// # Enum `HarTexError`
 ///
 /// An enumeration representing the various error types used within HarTex.
+#[derive(Debug)]
 pub enum HarTexError {
     /// # Enum Variant `HarTexError::Custom`
     ///
