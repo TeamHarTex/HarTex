@@ -4,7 +4,10 @@
 //! individual events.
 
 use hartex_core::{
-    discord::model::gateway::payload::Ready,
+    discord::model::gateway::{
+        event::shard::Identifying,
+        payload::Ready
+    },
     error::HarTexResult
 };
 
@@ -26,10 +29,23 @@ impl EventHandler {
                 user.discriminator,
                 user.id,
                 payload.version
-            ), 
+            ),
             Some(module_path!())
         );
 
+        Ok(())
+    }
+
+    pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
+        Logger::verbose(
+            format!(
+                "shard {} out of {} is identifying with the discord gateway",
+                payload.shard_id,
+                payload.shard_total
+            ),
+            Some(module_path!())
+        );
+        
         Ok(())
     }
 }
