@@ -11,6 +11,7 @@ use hartex_core::error::HarTexResult;
 
 pub fn main() -> HarTexResult<()> {
     let tokio_runtime = Builder::new_multi_thread()
+        .enable_io()
         .enable_time()
         .thread_name("hartex")
         .build()
