@@ -8,6 +8,8 @@
 //!                       removes the need to include the dependencies repeatedly across the
 //!                       HarTex crates.
 
+pub use ctrlc;
+
 pub mod ansi;
 #[cfg(feature = "twilight-bundled")]
 pub mod discord;
@@ -15,6 +17,6 @@ pub mod error;
 pub mod time;
 
 /// # Static `HARTEX_VERSION`
-/// 
+///
 /// Represents the current version of HarTex Discord bot.
 pub static HARTEX_VERSION: &'static str = "1.19.0";
