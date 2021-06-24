@@ -2,6 +2,8 @@
 //!
 //! This module defines several types for error handling in the HarTex Discord bot.
 
+use ctrlc::Error;
+
 use crate::discord::gateway::cluster::ClusterStartError;
 
 /// # Enum `HarTexError`
@@ -20,6 +22,16 @@ pub enum HarTexError {
         error: ClusterStartError
     },
 
+    /// # Enum Variant `HarTexError::CtrlcError`
+    ///
+    /// A wrapper around `ctrlc::Error`.
+    ///
+    /// ## Fields
+    /// - `error`, type `Error`: the ctrlc error returned when setting the ctrl-c handler.
+    CtrlcError {
+        error: Error
+    },
+
     /// # Enum Variant `HarTexError::Custom`
     ///
     /// Represents a custom error that cannot be represented with any other variants of this
@@ -35,6 +47,14 @@ pub enum HarTexError {
 impl From<ClusterStartError> for HarTexError {
     fn from(error: ClusterStartError) -> Self {
         Self::ClusterStartError {
+            error
+        }
+    }
+}
+
+impl From<Error> for HarTexError {
+    fn from(error: Error) -> Self {
+        Self::CtrlcError {
             error
         }
     }
