@@ -165,7 +165,7 @@ impl Logger {
             Local::now().format("%Y-%m-%d %H:%M:%S"),
             ansi_display(SgrParam::SetColour {
                 colour: AnsiColour::CustomU8 {
-                    n: 1
+                    n: 240
                 },
                 foreground: true
             }.into_i32s()),
