@@ -16,7 +16,12 @@ pub async fn handle_event(shard_id: u64, (event_type, twilight): (EventType, Opt
 
     match event_type {
         EventType::Twilight if twilight.is_some() => {
-
+            match twilight.unwrap() {
+                Event::Ready(_) => {
+                    Logger::info("bot is ready", Some(module_path!()));
+                },
+                _ => ()
+            }
         },
         _ => todo!()
     }
