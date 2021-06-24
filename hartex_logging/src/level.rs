@@ -2,6 +2,8 @@
 //!
 //! This module contains definitions for various log levels used for the logger.
 
+use std::fmt::Display;
+
 /// # Enum `LogLevel`
 ///
 /// An enumeration represents various log levels used within the logger for the HarTex Discord bot.
@@ -36,4 +38,16 @@ pub enum LogLevel {
     /// information. Can also be used for very useful debugging as if a bug occurs and its cause
     /// is difficult to track down.
     Verbose
+}
+
+impl LogLevel {
+    pub fn display(self) -> impl Display {
+        match self {
+            Self::Info => "INFO   ",
+            Self::Debug => "DEBUG  ",
+            Self::Warn => "WARN   ",
+            Self::Error => "ERROR  ",
+            Self::Verbose => "VERBOSE"
+        }
+    }
 }
