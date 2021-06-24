@@ -2,11 +2,24 @@
 //!
 //! This module defines several types for error handling in the HarTex Discord bot.
 
+use crate::discord::gateway::cluster::ClusterStartError;
+
 /// # Enum `HarTexError`
 ///
 /// An enumeration representing the various error types used within HarTex.
 #[derive(Debug)]
 pub enum HarTexError {
+    /// # Enum Variant HarTexError::ClusterStartError
+    ///
+    /// A wrapper around `twilight_gateway::cluster::ClusterStartError`.
+    ///
+    /// ## Fields
+    /// - `error`, type `ClusterStartError`: the cluster start error returned when building the
+    ///                                      cluster.
+    ClusterStartError {
+        error: ClusterStartError
+    },
+
     /// # Enum Variant `HarTexError::Custom`
     ///
     /// Represents a custom error that cannot be represented with any other variants of this
@@ -16,6 +29,14 @@ pub enum HarTexError {
     /// - `message`, type `String`: the error message.
     Custom {
         message: String
+    }
+}
+
+impl From<ClusterStartError> for HarTexError {
+    fn from(error: ClusterStartError) -> Self {
+        Self::ClusterStartError {
+            error
+        }
     }
 }
 
