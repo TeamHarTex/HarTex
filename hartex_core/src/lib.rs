@@ -14,6 +14,7 @@ pub mod ansi;
 #[cfg(feature = "twilight-bundled")]
 pub mod discord;
 pub mod error;
+pub mod events;
 pub mod time;
 
 /// # Static `HARTEX_VERSION`
