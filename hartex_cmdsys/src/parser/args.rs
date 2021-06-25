@@ -2,7 +2,14 @@
 //!
 //! This module contains an implementation of a command-argument iterator
 
-use std::str::CharIndices;
+use std::{
+    fmt::{
+        Debug,
+        Formatter,
+        Result as FmtResult
+    },
+    str::CharIndices
+};
 
 /// # Struct `CommandArgs`
 ///
@@ -28,10 +35,19 @@ impl<'a> CommandArgs<'a> {
     /// # Instance Method `CommandArgs::into_remainder`
     ///
     /// Returns the remainder of the buffer that has not been parsed.
-    /// 
+    ///
     /// If the string has been completely parsed, then this method returns `None`.
     pub fn into_remainder(self) -> Option<&'a str> {
         self.buffer.get(self.index..)
+    }
+}
+
+impl<'a> Debug for CommandArgs<'a> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        f.debug_struct("CommandArgs")
+            .field("buffer", &self.buffer)
+            .field("index", &self.index)
+            .finish()
     }
 }
 
