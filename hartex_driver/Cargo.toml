@@ -2,11 +2,16 @@
 name = "hartex_driver"
 version = "1.19.0"
 edition = "2018"
+description = """
+This crate contains effectively the "main function" of HarTex Discord bot.
+"""
+license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 dotenv = "0.15.0"
+futures-util = "0.3.15"
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
 hartex_logging = { path = "../hartex_logging" }
 tokio = { version = "1.7.1", features = [ "full" ] }
