@@ -4,7 +4,10 @@
 
 use ctrlc::Error as CtrlcError;
 
-use crate::discord::gateway::cluster::ClusterStartError;
+use crate::discord::{
+    gateway::cluster::ClusterStartError,
+    model::gateway::payload::update_presence::UpdatePresenceError
+};
 
 /// # Enum `HarTexError`
 ///
@@ -32,6 +35,17 @@ pub enum HarTexError {
         error: CtrlcError
     },
 
+    /// # Enum Variant `HarTexError::UpdatePresenceError`
+    ///
+    /// A wrapper around `twilight_model::gateway::paylod::update_presence::UpdatePresenceError`.
+    /// 
+    /// ## Fields
+    /// - `error`, type `UpdatePresenceError`: the error presence update error returned when
+    ///                                        attempting to update the bot's presence.
+    UpdatePresenceError {
+        error: UpdatePresenceError
+    },
+
     /// # Enum Variant `HarTexError::Custom`
     ///
     /// Represents a custom error that cannot be represented with any other variants of this
@@ -55,6 +69,14 @@ impl From<ClusterStartError> for HarTexError {
 impl From<CtrlcError> for HarTexError {
     fn from(error: CtrlcError) -> Self {
         Self::CtrlcError {
+            error
+        }
+    }
+}
+
+impl From<UpdatePresenceError> for HarTexError {
+    fn from(error: UpdatePresenceError) -> Self {
+        Self::UpdatePresenceError {
             error
         }
     }
