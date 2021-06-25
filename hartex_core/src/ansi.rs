@@ -89,9 +89,6 @@ impl AnsiColour {
     ///
     /// ## Parameters
     /// - `foreground`, type `bool`: whether the colour specified is foreground
-    ///
-    /// ## Return Type
-    /// `Vec<i32>`
     pub fn into_i32s(self, foreground: bool) -> Vec<i32> {
         match self {
             Self::Black => vec![ if foreground { 30 } else { 40 } ],
@@ -162,9 +159,6 @@ impl SgrParam {
     /// # Instance Method `SgrParam::into_i32s`
     ///
     /// Converts the current `SgrParam` instance to an `i32` for terminal usage.
-    ///
-    /// ## Return Type
-    /// `Vec<i32>`
     pub fn into_i32s(self) -> Vec<i32> {
         match self {
             Self::Reset => vec![0],
