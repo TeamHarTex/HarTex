@@ -13,17 +13,25 @@ use futures_util::StreamExt;
 use hartex_core::{
     ctrlc,
     discord::{
+        cache_inmemory::{
+            InMemoryCache,
+            ResourceType
+        },
         gateway::{
             cluster::{
                 Cluster,
-                ShardScheme,
+                ShardScheme
             },
             Intents,
         },
         http::Client,
-        cache_inmemory::{
-            InMemoryCache,
-            ResourceType
+        model::gateway::{
+            payload::update_presence::UpdatePresencePayload,
+            presence::{
+                Activity,
+                ActivityType,
+                Status
+            }
         }
     },
     error::HarTexResult,
@@ -69,10 +77,30 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     Logger::verbose("building bot cluster", Some(module_path!()));
     Logger::verbose("registering gateway intents [all]", Some(module_path!()));
+    Logger::verbose("registering presence", Some(module_path!()));
 
+    let presence = Activity {
+        application_id: None,
+        assets: None,
+        buttons: Vec::new(),
+        created_at: None,
+        details: None,
+        emoji: None,
+        flags: None,
+        id: None,
+        instance: None,
+        kind: ActivityType::Watching,
+        name: "being developed & stabilized".into(),
+        party: None,
+        secrets: None,
+        state: None,
+        timestamps: None,
+        url: None
+    };
     let intents = Intents::all();
 
     let (cluster, mut events) = Cluster::builder(&token, intents)
+        .presence(UpdatePresencePayload::new(vec![presence], false, None, Status::Online)?)
         .shard_scheme(shard_scheme)
         .build()
         .await?;
@@ -85,7 +113,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     Logger::verbose("building http client", Some(module_path!()));
 
-    let http = Client::new(&token);
+    let _http = Client::new(&token);
 
     Logger::verbose("building in-memory cache", Some(module_path!()));
 
