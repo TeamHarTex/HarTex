@@ -39,13 +39,12 @@ impl EventHandler {
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
         Logger::verbose(
             format!(
-                "shard {} out of {} is identifying with the discord gateway",
-                payload.shard_id,
-                payload.shard_total
+                "shard {} is identifying with the discord gateway",
+                payload.shard_id
             ),
             Some(module_path!())
         );
-        
+
         Ok(())
     }
 }
