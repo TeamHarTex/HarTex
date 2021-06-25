@@ -90,7 +90,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
         id: None,
         instance: None,
         kind: ActivityType::Watching,
-        name: "being developed & stabilized".into(),
+        name: "codebase revamp".into(),
         party: None,
         secrets: None,
         state: None,
