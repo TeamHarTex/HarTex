@@ -62,3 +62,54 @@ impl<'a> From<&'a str> for CommandArgs<'a> {
         }
     }
 }
+
+impl<'a> Iterator for CommandArgs<'a> {
+    type Item = &'a str;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index > self.buffer.len() {
+            return None;
+        }
+
+        let mut start_index = self.index;
+        let mut quoted = false;
+        let mut started = false;
+
+        while let Some((index, character)) = self.indices.next() {
+            match character {
+                '"' if quoted => {
+                    let value = self.buffer.get(start_index..index);
+                    self.index = index + 1;
+
+                    return value.map(str::trim);
+                }
+                '"' => {
+                    start_index = index + 1;
+                    quoted = true;
+                }
+                ' ' if started => {
+                    let value = self.buffer.get(start_index..index);
+                    self.index = index + 1;
+
+                    return value.map(str::trim);
+                }
+                ' ' => {
+                    self.index = index;
+                    start_index = index;
+                    started = true;
+
+                    continue;
+                }
+                _ => {
+                    self.index = index;
+                    started = true;
+                }
+            }
+        }
+
+        match self.buffer.get(start_index..) {
+            Some("") | None => None,
+            Some(value) => Some(value.trim())
+        }
+    }
+}
