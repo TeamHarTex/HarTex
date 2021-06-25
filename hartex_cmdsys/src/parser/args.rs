@@ -24,6 +24,15 @@ impl<'a> CommandArgs<'a> {
     pub fn new(refstr: &'a str) -> Self {
         Self::from(refstr)
     }
+
+    /// # Instance Method `CommandArgs::into_remainder`
+    ///
+    /// Returns the remainder of the buffer that has not been parsed.
+    /// 
+    /// If the string has been completely parsed, then this method returns `None`.
+    pub fn into_remainder(self) -> Option<&'a str> {
+        self.buffer.get(self.index..)
+    }
 }
 
 impl<'a> From<&'a str> for CommandArgs<'a> {
