@@ -8,14 +8,26 @@ pub mod config;
 /// # Struct `CommandParser`
 ///
 /// The command parser.
-pub struct CommandParser {
-    config: config::CommandParserConfig
+pub struct CommandParser<'a> {
+    config: config::CommandParserConfig<'a>
 }
 
-impl CommandParser {
-    pub fn new(config: config::CommandParserConfig) -> Self {
+impl<'a> CommandParser<'a> {
+    pub fn new(config: config::CommandParserConfig<'a>) -> Self {
         Self {
             config
         }
     }
+
+    pub fn parse_command(&'a self, prefix: &'a str, buffer: &'a str) -> Option<ParsedCommand<'a>> {
+        todo!()
+    }
+}
+
+/// # Struct `ParsedCommand`
+/// 
+/// The command that is parsed by the parser.
+pub struct ParsedCommand<'a> {
+    pub args: args::CommandArgs<'a>,
+    pub name: &'a str
 }
