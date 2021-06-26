@@ -14,12 +14,12 @@ use crate::parser::{
 ///
 /// The command framework.
 #[derive(Clone, Default)]
-pub struct CommandFramework {
-    config: CommandParserConfig
+pub struct CommandFramework<'a> {
+    config: CommandParserConfig<'a>
 }
 
-impl CommandFramework {
-    pub fn command(self, config: CommandConfig) -> Self {
+impl<'a> CommandFramework<'a> {
+    pub fn command(self, config: CommandConfig<'a>) -> Self {
         let new_conf = self.config.command(config);
 
         Self {
@@ -27,7 +27,7 @@ impl CommandFramework {
         }
     }
 
-    pub fn build_parser(self) -> CommandParser {
+    pub fn build_parser(self) -> CommandParser<'a> {
         CommandParser::new(self.config)
     }
 }
