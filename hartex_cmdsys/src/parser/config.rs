@@ -53,7 +53,7 @@ impl<'a> CommandConfig<'a> {
 /// The command parser configuration.
 #[derive(Clone, Debug, Default)]
 pub struct CommandParserConfig<'a> {
-    commands: Vec<CommandConfig<'a>>
+    pub commands: Vec<CommandConfig<'a>>
 }
 
 impl<'a> CommandParserConfig<'a> {
