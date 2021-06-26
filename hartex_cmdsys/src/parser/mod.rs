@@ -13,6 +13,12 @@ pub struct CommandParser<'a> {
 }
 
 impl<'a> CommandParser<'a> {
+    /// # Constructor `CommandParser::new`
+    /// 
+    /// Creates a new `CommandParser` with the given `CommandParserConfig`.
+    /// 
+    /// ## Parameters
+    /// - `config`, type `CommandParserConfig`: the configuraiton to use for this parser
     pub fn new(config: config::CommandParserConfig<'a>) -> Self {
         Self {
             config
@@ -25,7 +31,7 @@ impl<'a> CommandParser<'a> {
 }
 
 /// # Struct `ParsedCommand`
-/// 
+///
 /// The command that is parsed by the parser.
 pub struct ParsedCommand<'a> {
     pub args: args::CommandArgs<'a>,
