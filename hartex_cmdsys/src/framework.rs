@@ -3,22 +3,31 @@
 //! This module contains the command framework, which glues the entire command system together.
 
 use crate::parser::{
-    config::CommandParserConfig
+    config::{
+        CommandConfig,
+        CommandParserConfig
+    },
+    CommandParser
 };
 
 /// # Struct `CommandFramework`
 ///
 /// The command framework.
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandFramework {
     config: CommandParserConfig
 }
 
 impl CommandFramework {
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
+    pub fn command(self, config: CommandConfig) -> Self {
+        let new_conf = self.config.command(config);
+
         Self {
-            config: Default::default()
+            config: new_conf
         }
+    }
+
+    pub fn build_parser(self) -> CommandParser {
+        CommandParser::new(self.config)
     }
 }
