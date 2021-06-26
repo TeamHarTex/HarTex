@@ -1,115 +1,71 @@
-//! # The `args` Module
+//! # The `config` Module
 //!
-//! This module contains an implementation of a command-argument iterator
+//! This module contains configuration utilities for a command and the command parser.
 
-use std::{
-    fmt::{
-        Debug,
-        Formatter,
-        Result as FmtResult
-    },
-    str::CharIndices
-};
-
-/// # Struct `CommandArgs`
+/// # Struct `CommandConfig`
 ///
-/// An iterator over the arguments of a command.
-#[derive(Clone)]
-pub struct CommandArgs<'a> {
-    buffer: &'a str,
-    indices: CharIndices<'a>,
-    index: usize
+/// Holds the configuration for a command.
+#[derive(Clone, Debug, Default)]
+pub struct CommandConfig<'a> {
+    name: &'a str,
+    aliases: Option<Vec<&'a str>>
 }
 
-impl<'a> CommandArgs<'a> {
-    /// # Constructor `CommandArgs::new`
+impl<'a> CommandConfig<'a> {
+    /// # Static Method `CommandConfig::with_name`
     ///
-    /// Creates a new `CommandArgs` with a `&str`.
+    /// Creates a new `CommandConfig` with the given name.
     ///
     /// ## Parameters
-    /// - `refstr`, type `&str`: the reference to a string to create the `CommandArgs` for.
-    pub fn new(refstr: &'a str) -> Self {
-        Self::from(refstr)
-    }
-
-    /// # Instance Method `CommandArgs::into_remainder`
-    ///
-    /// Returns the remainder of the buffer that has not been parsed.
-    ///
-    /// If the string has been completely parsed, then this method returns `None`.
-    pub fn into_remainder(self) -> Option<&'a str> {
-        self.buffer.get(self.index..)
-    }
-}
-
-impl<'a> Debug for CommandArgs<'a> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.debug_struct("CommandArgs")
-            .field("buffer", &self.buffer)
-            .field("index", &self.index)
-            .finish()
-    }
-}
-
-impl<'a> From<&'a str> for CommandArgs<'a> {
-    fn from(refstr: &'a str) -> Self {
-        let buffer = refstr.trim();
-
+    /// - `name`, type `&'a str`: the command name
+    pub fn with_name(name: &'a str) -> Self {
         Self {
-            buffer,
-            indices: buffer.char_indices(),
-            index: 0
+            name,
+            ..Default::default()
         }
+    }
+
+    /// # Instance Method `CommandConfig::alias`
+    ///
+    /// Adds an alias to the current command.
+    ///
+    /// ## Parameters
+    /// - `alias`, type `&'a str`: the alias to add
+    pub fn alias(mut self, alias: &'a str) -> Self {
+        if self.aliases.is_none() {
+            self.aliases = Some(vec![alias]);
+
+            return self;
+        }
+
+        self.aliases = self.aliases.map(|mut vec| {
+            vec.push(alias);
+
+            vec
+        });
+
+        self
     }
 }
 
-impl<'a> Iterator for CommandArgs<'a> {
-    type Item = &'a str;
+/// # Struct `CommandParserConfig`
+///
+/// The command parser configuration.
+#[derive(Clone, Debug, Default)]
+pub struct CommandParserConfig<'a> {
+    commands: Vec<CommandConfig<'a>>
+}
 
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.index > self.buffer.len() {
-            return None;
-        }
-
-        let mut start_index = self.index;
-        let mut quoted = false;
-        let mut started = false;
-
-        while let Some((index, character)) = self.indices.next() {
-            match character {
-                '"' if quoted => {
-                    let value = self.buffer.get(start_index..index);
-                    self.index = index + 1;
-
-                    return value.map(str::trim);
-                }
-                '"' => {
-                    start_index = index + 1;
-                    quoted = true;
-                }
-                ' ' if started => {
-                    let value = self.buffer.get(start_index..index);
-                    self.index = index + 1;
-
-                    return value.map(str::trim);
-                }
-                ' ' => {
-                    self.index = index;
-                    start_index = index;
-                    started = true;
-
-                    continue;
-                }
-                _ => {
-                    self.index = index;
-                    started = true;
-                }
-            }
-        }
-
-        match self.buffer.get(start_index..) {
-            Some("") | None => None,
-            Some(value) => Some(value.trim())
-        }
+impl<'a> CommandParserConfig<'a> {
+    /// # Instance Method `CommandParserConfig::command`
+    ///
+    /// Adds a command (its configuration) to the parser configuration.
+    ///
+    /// ## Parameters
+    /// - `config`, type `CommandConfig`: the command configuratino to add to the parser
+    ///                                   configuration
+    pub fn command(mut self, config: CommandConfig<'a>) -> Self {
+        self.commands.push(config);
+        self
     }
 }
