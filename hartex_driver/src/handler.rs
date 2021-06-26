@@ -19,6 +19,12 @@ use hartex_logging::Logger;
 pub struct EventHandler;
 
 impl EventHandler {
+    /// # Static Method `EventHandler::ready`
+    ///
+    /// Handles the `Ready` event.
+    ///
+    /// ## Parameters
+    /// - `payload`, type `Box<Ready>`: the `Ready` event payload
     pub async fn ready(payload: Box<Ready>) -> HarTexResult<()> {
         let user = payload.user;
 
@@ -36,6 +42,13 @@ impl EventHandler {
         Ok(())
     }
 
+    /// # Static Method `EventHandler::shard_identifying`
+    ///
+    /// Handles the `Identifying` event.
+    ///
+    /// ## Parameters
+    ///
+    /// - `payload`, type `Identifying`: the `Identifying` event payload
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
         Logger::verbose(
             format!(
