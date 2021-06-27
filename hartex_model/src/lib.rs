@@ -1,7 +1,6 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+//! # `hartex_model` - Models for HarTex Discord bot
+//!
+//! The `hartex_model` crate contains various models for use in HarTex Discord bot for its various
+//! functionalities.
+
+pub mod payload;
