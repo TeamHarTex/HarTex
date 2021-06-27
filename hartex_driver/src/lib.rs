@@ -10,6 +10,11 @@ use std::{
 
 use futures_util::StreamExt;
 
+use hartex_cmdsys::{
+    framework::CommandFramework,
+    parser::config::CommandConfig
+};
+
 use hartex_core::{
     ctrlc,
     discord::{
@@ -46,9 +51,6 @@ pub mod handler;
 /// # Asynchronous Function `hartex_main`
 ///
 /// This is the main entry point of HarTex Discord Bot.
-///
-/// ## Return Type
-/// `HarTexResult<()>`
 pub async fn hartex_main() -> HarTexResult<()> {
     // loads the .env file to obtain environment variables
     dotenv::dotenv().ok();
@@ -114,6 +116,17 @@ pub async fn hartex_main() -> HarTexResult<()> {
     Logger::verbose("building http client", Some(module_path!()));
 
     let _http = Client::new(&token);
+
+    Logger::verbose("initializing command framework", Some(module_path!()));
+    let framework = CommandFramework::default();
+
+    let _parser = {
+        Logger::verbose("configuring command parser", Some(module_path!()));
+
+        framework
+            .command(CommandConfig::with_name("help"))
+            .build_parser()
+    };
 
     Logger::verbose("building in-memory cache", Some(module_path!()));
 
