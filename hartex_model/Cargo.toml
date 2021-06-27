@@ -1,0 +1,12 @@
+[package]
+name = "hartex_model"
+version = "1.19.0"
+edition = "2018"
+description = """
+The `hartex_models` library provides various models for HarTex Discord bot, used for most of its functionalities.
+"""
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
