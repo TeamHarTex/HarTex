@@ -155,7 +155,7 @@ pub async fn hartex_main<'a>() -> HarTexResult<'a, ()> {
         cache.update(&event);
 
         tokio::spawn(
-            events::handle_event(shard_id, (EventType::Twilight, Some(event)))
+            events::handle_event(shard_id, (EventType::Twilight, Some(event), None))
         );
     }
 
