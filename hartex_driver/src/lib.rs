@@ -8,7 +8,9 @@ use std::{
     process
 };
 
-use futures_util::StreamExt;
+use futures_util::future::Either;
+
+use tokio_stream::StreamExt;
 
 use hartex_cmdsys::{
     framework::CommandFramework,
@@ -103,7 +105,7 @@ pub async fn hartex_main<'a>() -> HarTexResult<'a, ()> {
     };
     let intents = Intents::all();
 
-    let (cluster, mut events) = Cluster::builder(&token, intents)
+    let (cluster, events) = Cluster::builder(&token, intents)
         .presence(UpdatePresencePayload::new(vec![presence], false, None, Status::Online)?)
         .shard_scheme(shard_scheme)
         .build()
@@ -134,12 +136,12 @@ pub async fn hartex_main<'a>() -> HarTexResult<'a, ()> {
     let listeners = framework.clone().listeners();
     let _emitter = EventEmitter::new(listeners);
 
-    let _framework_events = framework.events();
+    let framework_events = framework.events();
 
     Logger::verbose("building in-memory cache", Some(module_path!()));
 
     let resource_types = ResourceType::all();
-    let cache = InMemoryCache::builder()
+    let _cache = InMemoryCache::builder()
         .resource_types(resource_types)
         .build();
 
@@ -151,12 +153,21 @@ pub async fn hartex_main<'a>() -> HarTexResult<'a, ()> {
         process::exit(0)
     })?;
 
-    while let Some((shard_id, event)) = StreamExt::next(&mut events).await {
-        cache.update(&event);
+    let mut events = events.map(Either::Left).merge(framework_events.map(Either::Right));
 
-        tokio::spawn(
-            events::handle_event(shard_id, (EventType::Twilight, Some(event), None))
-        );
+    while let Some(event) = events.next().await {
+        match event {
+            Either::Left((_, twilight)) => {
+                tokio::spawn(events::handle_event(
+                    (EventType::Twilight, Some(twilight), None)
+                ));
+            }
+            Either::Right(custom) => {
+                tokio::spawn(events::handle_event(
+                    (EventType::Custom, None, Some(custom))
+                ));
+            }
+        }
     }
 
     Ok(())
