@@ -12,6 +12,9 @@ license = "Apache-2.0"
 [dependencies]
 dotenv = "0.15.0"
 futures-util = "0.3.15"
+hartex_cmdsys = { path = "../hartex_cmdsys" }
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
+hartex_eventsys = { path = "../hartex_eventsys" }
 hartex_logging = { path = "../hartex_logging" }
 tokio = { version = "1.7.1", features = [ "full" ] }
+tokio-stream = { version = "0.1.6" }
