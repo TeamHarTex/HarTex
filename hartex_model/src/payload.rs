@@ -10,6 +10,7 @@ use hartex_core::discord::model::guild::Guild;
 /// # Struct `CommandExecuted`
 ///
 /// The payload for which when the command is executed.
+#[derive(Clone)]
 pub struct CommandExecuted<'a> {
     pub command: &'a str,
     pub guild: Guild,
