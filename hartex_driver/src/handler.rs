@@ -25,7 +25,7 @@ impl EventHandler {
     ///
     /// ## Parameters
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
-    pub async fn ready(payload: Box<Ready>) -> HarTexResult<()> {
+    pub async fn ready<'a>(payload: Box<Ready>) -> HarTexResult<'a, ()> {
         let user = payload.user;
 
         Logger::info(
@@ -49,7 +49,7 @@ impl EventHandler {
     /// ## Parameters
     ///
     /// - `payload`, type `Identifying`: the `Identifying` event payload
-    pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
+    pub async fn shard_identifying<'a>(payload: Identifying) -> HarTexResult<'a, ()> {
         Logger::verbose(
             format!(
                 "shard {} is identifying with the discord gateway",
