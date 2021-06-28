@@ -5,9 +5,14 @@
 
 use hartex_core::{
     discord::gateway::Event,
-    error::HarTexResult,
+    error::{
+        HarTexError,
+        HarTexResult
+    },
     events::EventType
 };
+
+use hartex_eventsys::events::HarTexEvent;
 
 use crate::handler::EventHandler;
 
@@ -21,7 +26,11 @@ use crate::handler::EventHandler;
 ///                                   a twilight event
 /// - `twilight`, type `Option<Event>`: the twilight event; should only be set to `Some(...)` when
 ///                                     the `event_type` parameter is set to `EventType::twilight`
-pub async fn handle_event(_shard_id: u64, (event_type, twilight): (EventType, Option<Event>)) -> HarTexResult<()> {
+/// - `custom`, type `Option<HarTexEvent>`: the custom event; should only be set to `Some(...)`
+///                                         when the `event_type` parameter is set to
+///                                         `EventType::Custom`
+#[allow(clippy::needless_lifetimes)] 
+pub async fn handle_event<'a>(_shard_id: u64, (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>)) -> HarTexResult<'a, ()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
@@ -34,7 +43,12 @@ pub async fn handle_event(_shard_id: u64, (event_type, twilight): (EventType, Op
                 _ => ()
             }
         },
-        _ => todo!()
+        EventType::Custom if custom.is_some() => {
+            todo!()
+        }
+        _ => return Err(HarTexError::Custom {
+            message: "event type mismatch"
+        })
     }
 
     Ok(())
