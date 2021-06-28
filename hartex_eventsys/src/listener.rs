@@ -23,7 +23,7 @@ pub struct Listener<T> {
 /// # Struct `Listeners`
 ///
 /// Represents a series of `Listener`s.
-#[derive(Debug, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct Listeners<T> {
     inner: Arc<ListenersInner<T>>
 }
