@@ -13,7 +13,7 @@ pub struct CommandContext {
 }
 
 #[derive(Clone)]
-struct CommandContextInner {
+pub struct CommandContextInner {
 }
 
 impl Deref for CommandContext {
