@@ -43,6 +43,13 @@ impl<T> Listeners<T> {
         receiver
     }
 
+    /// # Instance Method `Listeners::len`
+    ///
+    /// Returns the total number of listeners present.
+    pub fn len(&self) -> usize {
+        self.inner.listeners.len()
+    }
+
     /// # Instance Method `Listeners::listeners`
     ///
     /// Returns all the listeners.
