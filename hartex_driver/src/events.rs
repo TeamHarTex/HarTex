@@ -29,8 +29,8 @@ use crate::handler::EventHandler;
 /// - `custom`, type `Option<HarTexEvent>`: the custom event; should only be set to `Some(...)`
 ///                                         when the `event_type` parameter is set to
 ///                                         `EventType::Custom`
-#[allow(clippy::needless_lifetimes)] 
-pub async fn handle_event<'a>(_shard_id: u64, (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>)) -> HarTexResult<'a, ()> {
+#[allow(clippy::needless_lifetimes)]
+pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>)) -> HarTexResult<'a, ()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
