@@ -13,5 +13,5 @@ use hartex_core::discord::model::guild::Guild;
 pub struct CommandExecuted<'a> {
     pub command: &'a str,
     pub guild: Guild,
-    pub context: context::CommandContext<'a>
+    pub context: context::CommandContext
 }
