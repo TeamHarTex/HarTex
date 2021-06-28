@@ -13,7 +13,7 @@ use crate::discord::{
 ///
 /// An enumeration representing the various error types used within HarTex.
 #[derive(Debug)]
-pub enum HarTexError {
+pub enum HarTexError<'a> {
     /// # Enum Variant HarTexError::ClusterStartError
     ///
     /// A wrapper around `twilight_gateway::cluster::ClusterStartError`.
@@ -38,7 +38,7 @@ pub enum HarTexError {
     /// # Enum Variant `HarTexError::UpdatePresenceError`
     ///
     /// A wrapper around `twilight_model::gateway::paylod::update_presence::UpdatePresenceError`.
-    /// 
+    ///
     /// ## Fields
     /// - `error`, type `UpdatePresenceError`: the error presence update error returned when
     ///                                        attempting to update the bot's presence.
@@ -54,11 +54,11 @@ pub enum HarTexError {
     /// ## Fields
     /// - `message`, type `String`: the error message.
     Custom {
-        message: String
+        message: &'a str
     }
 }
 
-impl From<ClusterStartError> for HarTexError {
+impl<'a> From<ClusterStartError> for HarTexError<'a> {
     fn from(error: ClusterStartError) -> Self {
         Self::ClusterStartError {
             error
@@ -66,7 +66,7 @@ impl From<ClusterStartError> for HarTexError {
     }
 }
 
-impl From<CtrlcError> for HarTexError {
+impl<'a> From<CtrlcError> for HarTexError<'a> {
     fn from(error: CtrlcError) -> Self {
         Self::CtrlcError {
             error
@@ -74,7 +74,7 @@ impl From<CtrlcError> for HarTexError {
     }
 }
 
-impl From<UpdatePresenceError> for HarTexError {
+impl<'a> From<UpdatePresenceError> for HarTexError<'a> {
     fn from(error: UpdatePresenceError) -> Self {
         Self::UpdatePresenceError {
             error
@@ -85,4 +85,4 @@ impl From<UpdatePresenceError> for HarTexError {
 /// # Type Alias `HarTexResult<T>`
 ///
 /// A type alias for `Result<T, HarTexError>`, used for error-handling.
-pub type HarTexResult<T> = Result<T, HarTexError>;
+pub type HarTexResult<'a, T> = Result<T, HarTexError<'a>>;
