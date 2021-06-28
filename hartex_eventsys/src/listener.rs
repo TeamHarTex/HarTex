@@ -23,9 +23,17 @@ pub struct Listener<T> {
 /// # Struct `Listeners`
 ///
 /// Represents a series of `Listener`s.
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Clone)]
 pub struct Listeners<T> {
     inner: Arc<ListenersInner<T>>
+}
+
+impl<T> Default for Listeners<T> {
+    fn default() -> Self {
+        Self {
+            inner: Arc::new(ListenersInner::default())
+        }
+    }
 }
 
 impl<T> Listeners<T> {
