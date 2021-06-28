@@ -28,6 +28,12 @@ pub struct Events<'a> {
 }
 
 impl<'a> Events<'a> {
+    /// # Constructor `Events::new`
+    /// 
+    /// Creates a new `Events` with the given `UnboundedReceiver`
+    /// 
+    /// ## Parameters
+    /// - `receiver`, type `UnboundedReceiver`: the unbounded receiver to create this instance with
     pub fn new(receiver: UnboundedReceiver<HarTexEvent<'a>>) -> Self {
         Self {
             receiver
@@ -46,6 +52,7 @@ impl<'a> Stream for Events<'a> {
 /// # Enum `HarTexEvent`
 ///
 /// An enumeration represents the various custom-defined events that is used within HarTex.
+#[derive(Clone)]
 pub enum HarTexEvent<'a> {
     /// # Enum Variant `HarTexEvent::CommandExecuted`
     ///
