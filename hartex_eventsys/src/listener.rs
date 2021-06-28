@@ -58,6 +58,7 @@ impl<T> Listeners<T> {
     }
 }
 
+#[derive(Debug)]
 struct ListenersInner<T> {
     id: u64,
     listeners: DashMap<u64, Listener<T>>
