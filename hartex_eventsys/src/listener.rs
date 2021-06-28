@@ -29,6 +29,9 @@ pub struct Listeners<T> {
 }
 
 impl<T> Listeners<T> {
+    /// # Instance Method `Listeners:add`
+    ///
+    /// Creates a new listener.
     pub fn add(&self) -> UnboundedReceiver<T> {
         let id = self.inner.id + 1;
         let (sender, receiver) = mpsc::unbounded();
@@ -38,6 +41,13 @@ impl<T> Listeners<T> {
         });
 
         receiver
+    }
+
+    /// # Instance Method `Listeners::listeners`
+    ///
+    /// Returns all the listeners.
+    pub fn listeners(&self) -> &DashMap<u64, Listener<T>> {
+        &self.inner.listeners
     }
 }
 
