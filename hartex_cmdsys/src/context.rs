@@ -7,12 +7,13 @@ use std::{
     sync::Arc
 };
 
+#[derive(Clone)]
 pub struct CommandContext {
     inner: Arc<CommandContextInner>
 }
 
 #[derive(Clone)]
-pub struct CommandContextInner {
+struct CommandContextInner {
 }
 
 impl Deref for CommandContext {
