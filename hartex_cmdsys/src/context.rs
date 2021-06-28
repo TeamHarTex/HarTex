@@ -4,12 +4,10 @@
 
 use std::sync::Arc;
 
-use hartex_core::discord::http::Client;
-
-pub struct CommandContext<'a> {
-    inner: Arc<CommandContextInner<'a>>
+pub struct CommandContext {
+    inner: Arc<CommandContextInner>
 }
 
 #[derive(Clone)]
-pub struct CommandContextInner<'a> {
+pub struct CommandContextInner {
 }
