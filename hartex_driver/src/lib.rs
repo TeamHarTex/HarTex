@@ -43,6 +43,8 @@ use hartex_core::{
     events::EventType
 };
 
+use hartex_eventsys::emitter::EventEmitter;
+
 use hartex_logging::Logger;
 
 pub mod events;
@@ -51,7 +53,7 @@ pub mod handler;
 /// # Asynchronous Function `hartex_main`
 ///
 /// This is the main entry point of HarTex Discord Bot.
-pub async fn hartex_main() -> HarTexResult<()> {
+pub async fn hartex_main<'a>() -> HarTexResult<'a, ()> {
     // loads the .env file to obtain environment variables
     dotenv::dotenv().ok();
 
@@ -124,9 +126,15 @@ pub async fn hartex_main() -> HarTexResult<()> {
         Logger::verbose("configuring command parser", Some(module_path!()));
 
         framework
+            .clone()
             .command(CommandConfig::with_name("help"))
             .build_parser()
     };
+
+    let listeners = framework.clone().listeners();
+    let _emitter = EventEmitter::new(listeners);
+
+    let _framework_events = framework.events();
 
     Logger::verbose("building in-memory cache", Some(module_path!()));
 
