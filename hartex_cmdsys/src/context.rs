@@ -2,7 +2,10 @@
 //!
 //! This module provides a command context used in commands.
 
-use std::sync::Arc;
+use std::{
+    ops::Deref,
+    sync::Arc
+};
 
 pub struct CommandContext {
     inner: Arc<CommandContextInner>
@@ -10,4 +13,12 @@ pub struct CommandContext {
 
 #[derive(Clone)]
 pub struct CommandContextInner {
+}
+
+impl Deref for CommandContext {
+    type Target = CommandContextInner;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
 }
