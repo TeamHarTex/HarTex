@@ -4,7 +4,7 @@ version = "1.19.0"
 edition = "2018"
 description = """
 The `hartex_confdsl` library contains an implementation of the HarTex Configuration DSL. It provides an interface
-for parsing the DSL and returns usable Rust objects for various functionalities of the bot.
+for serializing and deserialization the DSL and returns usable Rust objects for various functionalities of the bot.
 """
 license = "Apache-2.0"
 
