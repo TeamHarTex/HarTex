@@ -4,6 +4,8 @@
 
 use hartex_core::error::HarTexResult;
 
+use crate::read::util::Ref;
+
 mod sealed {
     /// # Trait `SealedTrait`
     ///
@@ -12,6 +14,8 @@ mod sealed {
     pub trait SealedTrait { }
 }
 mod util;
+
+pub mod slice;
 
 /// # Struct `Position`
 ///
@@ -24,7 +28,7 @@ struct Pos {
 /// # Trait `Read`
 ///
 /// Trait that is used by the deserializer for iterating over the input.
-pub trait Read<'de>: sealed::SealedTrait {
+pub trait Read<'deserialize>: sealed::SealedTrait {
     fn discard(&mut self) -> HarTexResult<Option<u8>>;
     fn next(&mut self) -> HarTexResult<Option<u8>>;
     fn peek(&mut self) -> HarTexResult<Option<u8>>;
@@ -34,4 +38,7 @@ pub trait Read<'de>: sealed::SealedTrait {
 
     fn byte_offset(&mut self) -> usize;
 
+    fn parse_str<'refstr>(&'refstr self, scratch: &'refstr mut Vec<u8>) -> HarTexResult<Ref<'deserialize, 'refstr, str>>;
+
+    unsafe fn parse_str_unchecked<'refstr>(&'refstr self, scratch: &'refstr mut Vec<u8>) -> HarTexResult<Ref<'deserialize, 'refstr, [u8]>>;
 }
