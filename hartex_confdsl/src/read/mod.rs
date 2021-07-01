@@ -29,16 +29,16 @@ struct Pos {
 ///
 /// Trait that is used by the deserializer for iterating over the input.
 pub trait Read<'deserialize>: sealed::SealedTrait {
-    fn discard(&mut self) -> HarTexResult<Option<u8>>;
+    fn discard(&mut self);
     fn next(&mut self) -> HarTexResult<Option<u8>>;
     fn peek(&mut self) -> HarTexResult<Option<u8>>;
 
-    fn pos(&mut self) -> Pos;
-    fn peek_pos(&mut self) -> Pos;
+    fn pos(&self) -> Pos;
+    fn peek_pos(&self) -> Pos;
 
     fn byte_offset(&mut self) -> usize;
 
-    fn parse_str<'refstr>(&'refstr self, scratch: &'refstr mut Vec<u8>) -> HarTexResult<Ref<'deserialize, 'refstr, str>>;
+    fn parse_str<'refstr>(&'refstr mut self, scratch: &'refstr mut Vec<u8>) -> HarTexResult<Ref<'deserialize, 'refstr, str>>;
 
-    unsafe fn parse_str_unchecked<'refstr>(&'refstr self, scratch: &'refstr mut Vec<u8>) -> HarTexResult<Ref<'deserialize, 'refstr, [u8]>>;
+    unsafe fn parse_str_unchecked<'refstr>(&'refstr mut self, scratch: &'refstr mut Vec<u8>) -> HarTexResult<Ref<'deserialize, 'refstr, [u8]>>;
 }
