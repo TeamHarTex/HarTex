@@ -7,11 +7,17 @@ use std::{
     sync::Arc
 };
 
+/// # Struct `CommandContext`
+///
+/// The command context used for command invocation.
 #[derive(Clone)]
 pub struct CommandContext {
     inner: Arc<CommandContextInner>
 }
 
+/// # Struct `CommandContextInner`
+///
+/// The inner structure for `CommandContext`.
 #[derive(Clone)]
 pub struct CommandContextInner {
 }
