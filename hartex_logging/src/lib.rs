@@ -8,7 +8,7 @@ use hartex_core::{
         AnsiColour,
         SgrParam
     },
-    time::Local,
+    time::Local
 };
 
 pub mod level;
@@ -32,7 +32,10 @@ impl Logger {
     pub fn log(message: impl Into<String>, log_level: level::LogLevel, module: Option<&'static str>) {
         match log_level {
             level::LogLevel::Info => Logger::info(message, module),
-            _ => todo!()
+            level::LogLevel::Debug => Logger::debug(message, module),
+            level::LogLevel::Warn => Logger::warn(message, module),
+            level::LogLevel::Error => Logger::error(message, module),
+            level::LogLevel::Verbose => Logger::verbose(message, module)
         }
     }
 
@@ -46,17 +49,20 @@ impl Logger {
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn info(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
+        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
+
+        params.append(&mut SgrParam::SetColour {
+            colour: AnsiColour::CustomU8 {
+                n: 2
+            },
+            foreground: true
+        }.into_i32s());
 
         println!(
             "[HarTex v{}: {}+08:00] [{}{}{}] [{}] {}",
             env!("CARGO_PKG_VERSION"),
             Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(SgrParam::SetColour {
-                colour: AnsiColour::CustomU8 {
-                    n: 2
-                },
-                foreground: true
-            }.into_i32s()),
+            ansi_display(params),
             level::LogLevel::Info.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
@@ -74,17 +80,20 @@ impl Logger {
     ///                                         `None`, and defaults to the `hartex_logging` module.
     pub fn debug(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
+        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
+
+        params.append(&mut SgrParam::SetColour {
+            colour: AnsiColour::CustomU8 {
+                n: 33
+            },
+            foreground: true
+        }.into_i32s());
 
         println!(
             "[HarTex v{}: {}+08:00] [{}{}{}] [{}] {}",
             env!("CARGO_PKG_VERSION"),
             Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(SgrParam::SetColour {
-                colour: AnsiColour::CustomU8 {
-                    n: 33
-                },
-                foreground: true
-            }.into_i32s()),
+            ansi_display(params),
             level::LogLevel::Debug.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
@@ -102,17 +111,20 @@ impl Logger {
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn warn(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
+        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
+
+        params.append(&mut SgrParam::SetColour {
+            colour: AnsiColour::CustomU8 {
+                n: 226
+            },
+            foreground: true
+        }.into_i32s());
 
         println!(
             "[HarTex v{}: {}+08:00] [{}{}{}] [{}] {}",
             env!("CARGO_PKG_VERSION"),
             Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(SgrParam::SetColour {
-                colour: AnsiColour::CustomU8 {
-                    n: 226
-                },
-                foreground: true
-            }.into_i32s()),
+            ansi_display(params),
             level::LogLevel::Warn.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
@@ -130,17 +142,20 @@ impl Logger {
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn error(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
+        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
+
+        params.append(&mut SgrParam::SetColour {
+            colour: AnsiColour::CustomU8 {
+                n: 1
+            },
+            foreground: true
+        }.into_i32s());
 
         println!(
             "[HarTex v{}: {}+08:00] [{}{}{}] [{}] {}",
             env!("CARGO_PKG_VERSION"),
             Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(SgrParam::SetColour {
-                colour: AnsiColour::CustomU8 {
-                    n: 1
-                },
-                foreground: true
-            }.into_i32s()),
+            ansi_display(params),
             level::LogLevel::Error.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
@@ -158,17 +173,20 @@ impl Logger {
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn verbose(message: impl Into<String>, module: Option<&'static str>) {
         let module_name = module.unwrap_or(module_path!());
+        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
+
+        params.append(&mut SgrParam::SetColour {
+            colour: AnsiColour::CustomU8 {
+                n: 240
+            },
+            foreground: true
+        }.into_i32s());
 
         println!(
             "[HarTex v{}: {}+08:00] [{}{}{}] [{}] {}",
             env!("CARGO_PKG_VERSION"),
             Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(SgrParam::SetColour {
-                colour: AnsiColour::CustomU8 {
-                    n: 240
-                },
-                foreground: true
-            }.into_i32s()),
+            ansi_display(params),
             level::LogLevel::Verbose.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
