@@ -33,6 +33,8 @@ use hartex_logging::Logger;
 
 use crate::PendingFuture;
 
+pub mod model;
+
 /// # Struct `GetWhitelistedGuilds`
 ///
 /// Gets the whitelisted guilds of the bot.
