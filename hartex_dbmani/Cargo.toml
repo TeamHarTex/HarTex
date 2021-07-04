@@ -1,0 +1,12 @@
+[package]
+name = "hartex_dbmani"
+version = "1.19.0"
+edition = "2018"
+description = """
+The `hartex_dbmani` crate provides an interface to manipulate its PostgreSQL databases.
+"""
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
