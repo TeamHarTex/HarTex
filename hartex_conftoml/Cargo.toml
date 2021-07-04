@@ -1,0 +1,14 @@
+[package]
+name = "hartex_conftoml"
+version = "1.19.0"
+edition = "2018"
+description = """
+The `hartex_conftoml` library provides configuration serialization and deserialization capabilities.
+"""
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0.126", features = [ "derive" ] }
+toml = "0.5.8"
