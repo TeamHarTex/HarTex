@@ -32,21 +32,21 @@ impl EventHandler {
             format!("joined a new guild with name `{}` with id {}; checking whether the guild is whitelisted", payload.name, payload.id),
             Some(module_path!())
         );
-        
+
         let res = GetWhitelistedGuilds::default().await?;
 
         if !res.iter().any(|refmulti| {
-            refmulti.value() == payload.id
+            *refmulti == payload.id.0
         }) {
             Logger::error("guild is not whitelisted; leaving guild", Some(module_path!()));
-            
+
             // TODO: add prodcedure to DM the guild owner about the whitelist status
-            
+
             return Err(HarTexError::Custom {
                 message: String::from("guild is not whitelisted")
             });
         }
-        
+
         Ok(())
     }
 
