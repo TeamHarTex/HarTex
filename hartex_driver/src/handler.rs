@@ -55,7 +55,7 @@ impl EventHandler {
             *refmulti == guild_id.0
         }) {
             Logger::error("guild is not whitelisted", Some(module_path!()));
-            
+
             let guild = http.guild(guild_id).await?;
 
             Logger::verbose("dming guild owner about the whitelist status", Some(module_path!()));
@@ -95,12 +95,12 @@ impl EventHandler {
                 + " - your experience level with TOML to configure the bot before using it.\n\n"
                 + "You may join our Support Guild at <discord.gg/s8qjxZK> for more information, including the application link in which you may use"
                 + "to apply for a whitelist application. Good luck!";
-            
+
             http.create_message(dm_channel.id).content(message)?.await?;
 
             Logger::error("leaving guild", Some(module_path!()));
-            
-            http.leave_guild(guild_id)?;
+
+            http.leave_guild(guild_id).await?;
 
             return Err(HarTexError::Custom {
                 message: String::from("guild is not whitelisted")
