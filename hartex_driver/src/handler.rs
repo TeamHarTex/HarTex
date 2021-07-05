@@ -46,6 +46,8 @@ impl EventHandler {
                 message: String::from("guild is not whitelisted")
             });
         }
+        
+        Logger::info("guild is whitelisted", Some(module_path!()));
 
         Ok(())
     }
