@@ -17,10 +17,8 @@ use dashmap::DashMap;
 
 use sqlx::{
     error::Result as SqlxResult,
-    postgres::{
-        PgPool,
-        PgRow
-    },
+    postgres::PgPool,
+    Postgres,
     Row
 };
 
@@ -31,7 +29,10 @@ use hartex_core::error::{
 
 use hartex_logging::Logger;
 
-use crate::PendingFuture;
+use crate::{
+    whitelist::model::WhitelistedGuild,
+    PendingFuture
+};
 
 pub mod model;
 
@@ -40,6 +41,22 @@ pub mod model;
 /// Gets the whitelisted guilds of the bot.
 pub struct GetWhitelistedGuilds<'a> {
     pending: Option<PendingFuture<'a, DashMap<&'a str, u64>>>
+}
+
+impl GetWhitelistedGuilds {
+    /// # Private Function `GetWhitelistedGuilds::start`
+    ///
+    /// Starts the future.
+    fn start(&mut self) -> HarTexResult<()> {
+        Logger::verbose(
+            "executing future `GetWhitelistedGuilds`",
+            Some(module_path!())
+        );
+
+        self.pending.replace(Box::pin(exec_future()));
+
+        Ok(())
+    }
 }
 
 impl<'a> Default for GetWhitelistedGuilds<'a> {
@@ -54,7 +71,15 @@ impl<'a> Future for GetWhitelistedGuilds<'a> {
     type Output = HarTexResult<'a, DashMap<&'a str, u64>>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        todo!()
+        loop {
+            if let Some(pending) = self.pending.as_mut() {
+                return pending.as_mut().poll(cx);
+            }
+
+            if let Err(error) = self.start() {
+                return Poll::Ready(Err(error))
+            }
+        }
     }
 }
 
@@ -94,4 +119,28 @@ async fn exec_future<'a>() -> HarTexResult<'a, DashMap<&'a str, u64>> {
             });
         }
     };
+
+    match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist""#).fetch_all(&connection).await {
+        Ok(guilds) => {
+            let mut map = DashMap::new();
+
+            guilds.iter().for_each(|guild| {
+                map.insert(guild.GuildName, guild.GuildId);
+            });
+
+            Ok(map)
+        }
+        Err(error) => {
+            let message = format!("failed to execute sql query; error `{:?}`", error);
+
+            Logger::error(
+                &message,
+                Some(module_path!())
+            );
+
+            Err(HarTexError::Custom {
+                message: &message
+            })
+        }
+    }
 }
