@@ -120,7 +120,7 @@ async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
 
     match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist""#).fetch_all(&connection).await {
         Ok(guilds) => {
-            let mut map = DashMap::new();
+            let map = DashMap::new();
 
             guilds.iter().for_each(|guild| {
                 map.insert(guild.GuildName.to_string(), guild.GuildId);
