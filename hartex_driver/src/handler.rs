@@ -4,11 +4,14 @@
 //! individual events.
 
 use hartex_core::{
-    discord::model::gateway::{
-        event::shard::Identifying,
-        payload::{
-            GuildCreate,
-            Ready
+    discord::{
+        http::Client,
+        model::gateway::{
+            event::shard::Identifying,
+            payload::{
+                GuildCreate,
+                Ready,
+            },
         }
     },
     error::{
@@ -27,7 +30,7 @@ use hartex_logging::Logger;
 pub struct EventHandler;
 
 impl EventHandler {
-    pub async fn guild_create(payload: Box<GuildCreate>) -> HarTexResult<()> {
+    pub async fn guild_create(payload: Box<GuildCreate>, http: Client) -> HarTexResult<()> {
         Logger::verbose(
             format!("joined a new guild with name `{}` with id {}; checking whether the guild is whitelisted", payload.name, payload.id),
             Some(module_path!())
@@ -46,7 +49,7 @@ impl EventHandler {
                 message: String::from("guild is not whitelisted")
             });
         }
-        
+
         Logger::info("guild is whitelisted", Some(module_path!()));
 
         Ok(())
