@@ -24,6 +24,7 @@ use crate::handler::EventHandler;
 /// Handles the incoming event asynchronously.
 ///
 /// ## Parameters
+/// - `shard_id`, type `u64`: the shard id of the shard that received the event
 /// - `event_type`, type `EventType`: the event type of the event, whether it is a custom event or
 ///                                   a twilight event
 /// - `twilight`, type `Option<Event>`: the twilight event; should only be set to `Some(...)` when
@@ -31,6 +32,7 @@ use crate::handler::EventHandler;
 /// - `custom`, type `Option<HarTexEvent>`: the custom event; should only be set to `Some(...)`
 ///                                         when the `event_type` parameter is set to
 ///                                         `EventType::Custom`
+/// - `http`, type `Client`: the Twilight HTTP Client to use for some specific events that need it
 #[allow(clippy::needless_lifetimes)]
 pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>), http: Client) -> HarTexResult<()> {
     match event_type {
