@@ -43,7 +43,7 @@ pub struct GetWhitelistedGuilds<'a> {
     pending: Option<PendingFuture<'a, DashMap<&'a str, u64>>>
 }
 
-impl GetWhitelistedGuilds {
+impl<'a> GetWhitelistedGuilds<'a> {
     /// # Private Function `GetWhitelistedGuilds::start`
     ///
     /// Starts the future.
