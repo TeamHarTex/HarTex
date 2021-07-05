@@ -119,7 +119,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     Logger::verbose("building http client", Some(module_path!()));
 
-    let _http = Client::new(&token);
+    let http = Client::new(&token);
 
     Logger::verbose("initializing command framework", Some(module_path!()));
     let framework = CommandFramework::default();
@@ -159,12 +159,14 @@ pub async fn hartex_main() -> HarTexResult<()> {
         match event {
             Either::Left((_, twilight)) => {
                 tokio::spawn(events::handle_event(
-                    (EventType::Twilight, Some(twilight), None)
+                    (EventType::Twilight, Some(twilight), None),
+                    http.clone()
                 ));
             }
             Either::Right(custom) => {
                 tokio::spawn(events::handle_event(
-                    (EventType::Custom, None, Some(custom))
+                    (EventType::Custom, None, Some(custom)),
+                    http.clone()
                 ));
             }
         }
