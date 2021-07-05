@@ -13,7 +13,7 @@ use crate::discord::{
 ///
 /// An enumeration representing the various error types used within HarTex.
 #[derive(Debug)]
-pub enum HarTexError<'a> {
+pub enum HarTexError {
     /// # Enum Variant HarTexError::ClusterStartError
     ///
     /// A wrapper around `twilight_gateway::cluster::ClusterStartError`.
@@ -54,11 +54,11 @@ pub enum HarTexError<'a> {
     /// ## Fields
     /// - `message`, type `&str`: the error message.
     Custom {
-        message: &'a str
+        message: String
     }
 }
 
-impl<'a> From<ClusterStartError> for HarTexError<'a> {
+impl From<ClusterStartError> for HarTexError {
     fn from(error: ClusterStartError) -> Self {
         Self::ClusterStartError {
             error
@@ -66,7 +66,7 @@ impl<'a> From<ClusterStartError> for HarTexError<'a> {
     }
 }
 
-impl<'a> From<CtrlcError> for HarTexError<'a> {
+impl From<CtrlcError> for HarTexError {
     fn from(error: CtrlcError) -> Self {
         Self::CtrlcError {
             error
@@ -74,7 +74,7 @@ impl<'a> From<CtrlcError> for HarTexError<'a> {
     }
 }
 
-impl<'a> From<UpdatePresenceError> for HarTexError<'a> {
+impl From<UpdatePresenceError> for HarTexError {
     fn from(error: UpdatePresenceError) -> Self {
         Self::UpdatePresenceError {
             error
@@ -85,4 +85,4 @@ impl<'a> From<UpdatePresenceError> for HarTexError<'a> {
 /// # Type Alias `HarTexResult<T>`
 ///
 /// A type alias for `Result<T, HarTexError>`, used for error-handling.
-pub type HarTexResult<'a, T> = Result<T, HarTexError<'a>>;
+pub type HarTexResult<T> = Result<T, HarTexError>;
