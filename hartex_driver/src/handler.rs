@@ -68,9 +68,10 @@ impl EventHandler {
                 });
             }
 
+            let guild_unwrap = guild.unwrap();
             // it is OK to call `.unwrap()` here as thorough checking has been done before reaching
             // this code
-            let guild_owner = guild.unwrap().owner_id;
+            let guild_owner = guild_unwrap.owner_id;
 
             let user = http.user(guild_owner).await?;
 
@@ -84,7 +85,7 @@ impl EventHandler {
 
             let dm_channel = http.create_private_channel(user.unwrap().id).await?;
             let message = "Hey there! It looks like you added HarTex to your guild by the name of \"".to_string()
-                + &guild.unwrap().name + "\".\n\n"
+                + &guild_unwrap.name + "\".\n\n"
                 + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
                 + "invited to your guild until you apply for a whitelist and that the application is "
                 + "accepted.\n\n"
