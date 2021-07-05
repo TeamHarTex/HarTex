@@ -32,7 +32,7 @@ use crate::{
     PendingFuture
 };
 
-pub mod model;
+mod model;
 
 /// # Struct `GetWhitelistedGuilds`
 ///
