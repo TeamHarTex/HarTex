@@ -35,21 +35,6 @@ pub enum HarTexError<'a> {
         error: CtrlcError
     },
 
-    /// # Enum Variant `HarTexError::DslError`
-    /// 
-    /// Represents an error generated when working with the Configuration DSL.
-    /// 
-    /// ## Fields
-    /// - `line`, type `usize`: the line of the generated error
-    /// - `column`, type `usize`: the column of the generated error
-    /// - `message`, type `&str`: the message of the generated error to provide information about
-    ///                           the error
-    DslError {
-        line: usize,
-        column: usize,
-        message: &'a str
-    },
-
     /// # Enum Variant `HarTexError::UpdatePresenceError`
     ///
     /// A wrapper around `twilight_model::gateway::paylod::update_presence::UpdatePresenceError`.
