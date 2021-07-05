@@ -81,6 +81,8 @@ impl Future for GetWhitelistedGuilds {
     }
 }
 
+unsafe impl Send for GetWhitelistedGuilds { }
+
 
 /// # Asynchronous Function `exec_future`
 ///
