@@ -4,7 +4,10 @@
 //! loop.
 
 use hartex_core::{
-    discord::gateway::Event,
+    discord::{
+        gateway::Event,
+        http::Client
+    },
     error::{
         HarTexError,
         HarTexResult
@@ -21,7 +24,6 @@ use crate::handler::EventHandler;
 /// Handles the incoming event asynchronously.
 ///
 /// ## Parameters
-/// - `shard_id`, type `u64`: the shard id of the shard that received the event
 /// - `event_type`, type `EventType`: the event type of the event, whether it is a custom event or
 ///                                   a twilight event
 /// - `twilight`, type `Option<Event>`: the twilight event; should only be set to `Some(...)` when
@@ -30,12 +32,12 @@ use crate::handler::EventHandler;
 ///                                         when the `event_type` parameter is set to
 ///                                         `EventType::Custom`
 #[allow(clippy::needless_lifetimes)]
-pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>)) -> HarTexResult<()> {
+pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>), http: Client) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
                 Event::GuildCreate(payload) => {
-                    EventHandler::guild_create(payload).await?
+                    EventHandler::guild_create(payload, http).await?
                 }
                 Event::Ready(payload) => {
                     EventHandler::ready(payload).await?
