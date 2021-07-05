@@ -9,7 +9,7 @@ use tokio::runtime::Builder;
 
 use hartex_core::error::HarTexResult;
 
-pub fn main() -> HarTexResult<'static, ()> {
+pub fn main() -> HarTexResult<()> {
     let tokio_runtime = Builder::new_multi_thread()
         .enable_io()
         .enable_time()
