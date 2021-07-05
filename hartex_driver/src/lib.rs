@@ -55,7 +55,7 @@ pub mod handler;
 /// # Asynchronous Function `hartex_main`
 ///
 /// This is the main entry point of HarTex Discord Bot.
-pub async fn hartex_main<'a>() -> HarTexResult<'a, ()> {
+pub async fn hartex_main() -> HarTexResult<()> {
     // loads the .env file to obtain environment variables
     dotenv::dotenv().ok();
 
