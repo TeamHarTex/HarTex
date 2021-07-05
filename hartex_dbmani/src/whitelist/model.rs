@@ -9,8 +9,8 @@ use sqlx::{
 };
 
 pub struct WhitelistedGuild<'a> {
-    GuildName: &'a str,
-    GuildId: u64
+    pub GuildName: &'a str,
+    pub GuildId: u64
 }
 
 impl<'a> sqlx::FromRow<'a, PgRow> for WhitelistedGuild<'a> {
