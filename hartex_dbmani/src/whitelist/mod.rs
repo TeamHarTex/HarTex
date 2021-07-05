@@ -16,10 +16,8 @@ use std::{
 use dashmap::DashMap;
 
 use sqlx::{
-    error::Result as SqlxResult,
     postgres::PgPool,
-    Postgres,
-    Row
+    Postgres
 };
 
 use hartex_core::error::{
