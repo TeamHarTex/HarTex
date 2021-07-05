@@ -37,11 +37,11 @@ pub mod model;
 /// # Struct `GetWhitelistedGuilds`
 ///
 /// Gets the whitelisted guilds of the bot.
-pub struct GetWhitelistedGuilds<'a> {
-    pending: Option<PendingFuture<'a, DashMap<&'a str, u64>>>
+pub struct GetWhitelistedGuilds {
+    pending: Option<PendingFuture<DashMap<String, u64>>>
 }
 
-impl<'a> GetWhitelistedGuilds<'a> {
+impl GetWhitelistedGuilds {
     /// # Private Function `GetWhitelistedGuilds::start`
     ///
     /// Starts the future.
@@ -57,7 +57,7 @@ impl<'a> GetWhitelistedGuilds<'a> {
     }
 }
 
-impl<'a> Default for GetWhitelistedGuilds<'a> {
+impl Default for GetWhitelistedGuilds {
     fn default() -> Self {
         Self {
             pending: None
@@ -65,8 +65,8 @@ impl<'a> Default for GetWhitelistedGuilds<'a> {
     }
 }
 
-impl<'a> Future for GetWhitelistedGuilds<'a> {
-    type Output = HarTexResult<'a, DashMap<&'a str, u64>>;
+impl Future for GetWhitelistedGuilds {
+    type Output = HarTexResult<DashMap<String, u64>>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         loop {
@@ -85,7 +85,7 @@ impl<'a> Future for GetWhitelistedGuilds<'a> {
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
-async fn exec_future<'a>() -> HarTexResult<'a, DashMap<&'a str, u64>> {
+async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDS") {
         Ok(credentials) => credentials,
         Err(error) => {
@@ -97,7 +97,7 @@ async fn exec_future<'a>() -> HarTexResult<'a, DashMap<&'a str, u64>> {
             );
 
             return Err(HarTexError::Custom {
-                message: &message
+                message
             });
         }
     };
@@ -113,7 +113,7 @@ async fn exec_future<'a>() -> HarTexResult<'a, DashMap<&'a str, u64>> {
             );
 
             return Err(HarTexError::Custom {
-                message: &message
+                message
             });
         }
     };
@@ -123,7 +123,7 @@ async fn exec_future<'a>() -> HarTexResult<'a, DashMap<&'a str, u64>> {
             let mut map = DashMap::new();
 
             guilds.iter().for_each(|guild| {
-                map.insert(guild.GuildName, guild.GuildId);
+                map.insert(guild.GuildName.to_string(), guild.GuildId);
             });
 
             Ok(map)
@@ -137,7 +137,7 @@ async fn exec_future<'a>() -> HarTexResult<'a, DashMap<&'a str, u64>> {
             );
 
             Err(HarTexError::Custom {
-                message: &message
+                message
             })
         }
     }
