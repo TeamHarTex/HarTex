@@ -6,7 +6,10 @@
 use hartex_core::{
     discord::model::gateway::{
         event::shard::Identifying,
-        payload::Ready
+        payload::{
+            GuildCreate,
+            Ready
+        }
     },
     error::HarTexResult
 };
@@ -19,13 +22,17 @@ use hartex_logging::Logger;
 pub struct EventHandler;
 
 impl EventHandler {
+    pub async fn guild_create(_: Box<GuildCreate>) -> HarTexResult<()> {
+        todo!()
+    }
+
     /// # Static Method `EventHandler::ready`
     ///
     /// Handles the `Ready` event.
     ///
     /// ## Parameters
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
-    pub async fn ready<'a>(payload: Box<Ready>) -> HarTexResult<'a, ()> {
+    pub async fn ready(payload: Box<Ready>) -> HarTexResult< ()> {
         let user = payload.user;
 
         Logger::info(
@@ -49,7 +56,7 @@ impl EventHandler {
     /// ## Parameters
     ///
     /// - `payload`, type `Identifying`: the `Identifying` event payload
-    pub async fn shard_identifying<'a>(payload: Identifying) -> HarTexResult<'a, ()> {
+    pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
         Logger::verbose(
             format!(
                 "shard {} is identifying with the discord gateway",
