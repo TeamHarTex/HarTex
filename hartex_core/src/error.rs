@@ -6,7 +6,10 @@ use ctrlc::Error as CtrlcError;
 
 use crate::discord::{
     gateway::cluster::ClusterStartError,
-    http::error::Error as HttpError,
+    http::{
+        error::Error as HttpError,
+        request::channel::message::create_message::CreateMessageError
+    },
     model::gateway::payload::update_presence::UpdatePresenceError
 };
 
@@ -24,6 +27,16 @@ pub enum HarTexError {
     ///                                      cluster.
     ClusterStartError {
         error: ClusterStartError
+    },
+
+    /// # Enum Variant `HHarTexError::CreateMessageError`
+    ///
+    /// A wrapper around `twilight_http::request::channel::message::create_message::CreateMessageError`.
+    ///
+    /// ## Fields
+    /// - `error`, type `CreateMessageError`: the error returned when attempting to send a message,
+    CreateMessageError {
+        error: CreateMessageError
     },
 
     /// # Enum Variant `HarTexError::CtrlcError`
@@ -72,6 +85,14 @@ pub enum HarTexError {
 impl From<ClusterStartError> for HarTexError {
     fn from(error: ClusterStartError) -> Self {
         Self::ClusterStartError {
+            error
+        }
+    }
+}
+
+impl From<CreateMessageError> for HarTexError {
+    fn from(error: CreateMessageError) -> Self {
+        Self::CreateMessageError {
             error
         }
     }
