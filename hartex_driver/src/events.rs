@@ -30,13 +30,16 @@ use crate::handler::EventHandler;
 ///                                         when the `event_type` parameter is set to
 ///                                         `EventType::Custom`
 #[allow(clippy::needless_lifetimes)]
-pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>)) -> HarTexResult<'a, ()> {
+pub async fn handle_event((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>)) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
+                Event::GuildCreate(payload) => {
+                    EventHandler::guild_create(payload).await?
+                }
                 Event::Ready(payload) => {
                     EventHandler::ready(payload).await?
-                },
+                }
                 Event::ShardIdentifying(payload) => {
                     EventHandler::shard_identifying(payload).await?
                 }
@@ -47,7 +50,7 @@ pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option
             todo!()
         }
         _ => return Err(HarTexError::Custom {
-            message: "event type mismatch"
+            message: String::from("event type mismatch")
         })
     }
 
