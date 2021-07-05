@@ -6,6 +6,7 @@ use ctrlc::Error as CtrlcError;
 
 use crate::discord::{
     gateway::cluster::ClusterStartError,
+    http::error::Error as HttpError,
     model::gateway::payload::update_presence::UpdatePresenceError
 };
 
@@ -33,6 +34,16 @@ pub enum HarTexError {
     /// - `error`, type `Error`: the ctrlc error returned when setting the ctrl-c handler.
     CtrlcError {
         error: CtrlcError
+    },
+    
+    /// # Enum Variant `HHarTexError::TwilightHttpError`
+    /// 
+    /// A wrapper around `twilight_http::error::Error`.
+    /// 
+    /// ## Fields
+    /// - `error`, type `Error`: the error returned when executing an HTTP request.
+    TwilightHttpError {
+        error: HttpError
     },
 
     /// # Enum Variant `HarTexError::UpdatePresenceError`
@@ -69,6 +80,14 @@ impl From<ClusterStartError> for HarTexError {
 impl From<CtrlcError> for HarTexError {
     fn from(error: CtrlcError) -> Self {
         Self::CtrlcError {
+            error
+        }
+    }
+}
+
+impl From<HttpError> for HarTexError {
+    fn from(error: HttpError) -> Self {
+        Self::TwilightHttpError {
             error
         }
     }
