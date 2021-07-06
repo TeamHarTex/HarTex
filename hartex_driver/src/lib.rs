@@ -129,12 +129,12 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
         framework
             .clone()
-            .command(CommandConfig::with_name("help"))
+            .command(CommandConfig::with_name("team"))
             .build_parser()
     };
 
     let listeners = framework.clone().listeners();
-    let _emitter = EventEmitter::new(listeners);
+    let emitter = EventEmitter::new(listeners);
 
     let framework_events = framework.events();
 
@@ -160,13 +160,15 @@ pub async fn hartex_main() -> HarTexResult<()> {
             Either::Left((_, twilight)) => {
                 tokio::spawn(events::handle_event(
                     (EventType::Twilight, Some(twilight), None),
-                    http.clone()
+                    http.clone(),
+                        emitter.clone()
                 ));
             }
             Either::Right(custom) => {
                 tokio::spawn(events::handle_event(
                     (EventType::Custom, None, Some(custom)),
-                    http.clone()
+                    http.clone(),
+                    emitter.clone()
                 ));
             }
         }
