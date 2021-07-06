@@ -24,11 +24,14 @@ use hartex_dbmani::whitelist::GetWhitelistedGuilds;
 
 use hartex_logging::Logger;
 
+use hartex_model::payload::CommandExecuted;
+
 /// # Struct `EventHandler`
 ///
 /// This structure defines various function handlers for individual events.
 pub struct EventHandler;
 
+// Twilight Events
 impl EventHandler {
     /// # Static Method `EventHandler::guild_create`
     ///
@@ -149,6 +152,18 @@ impl EventHandler {
                 "shard {} is identifying with the discord gateway",
                 payload.shard_id
             ),
+            Some(module_path!())
+        );
+
+        Ok(())
+    }
+}
+
+// Custom Events
+impl EventHandler {
+    pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
+        Logger::info(
+            format!("command `{}` is executed in guild {}", payload.command, payload.guild.name),
             Some(module_path!())
         );
 
