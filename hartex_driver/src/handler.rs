@@ -10,6 +10,7 @@ use hartex_core::{
             event::shard::Identifying,
             payload::{
                 GuildCreate,
+                MessageCreate,
                 Ready,
             },
         }
@@ -21,6 +22,8 @@ use hartex_core::{
 };
 
 use hartex_dbmani::whitelist::GetWhitelistedGuilds;
+
+use hartex_eventsys::emitter::EventEmitter;
 
 use hartex_logging::Logger;
 
@@ -116,13 +119,24 @@ impl EventHandler {
         Ok(())
     }
 
+    /// # Static Asynchronous Method `EventHandler::message_create`
+    ///
+    /// Handles the `MessageCreate` event.
+    ///
+    /// ## Parameters
+    /// - `payload`, type `Box<MessageCreate>`: the `MessageCreate` event payload
+    /// - `emitter`, type `EventEmitter`: the event emitter to use when the message contains an actual command to execute
+    pub async fn message_create(payload: Box<MessageCreate>, emitter: EventEmitter) -> HarTexResult<()> {
+        Ok(())
+    }
+
     /// # Static Asynchronous Method `EventHandler::ready`
     ///
     /// Handles the `Ready` event.
     ///
     /// ## Parameters
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
-    pub async fn ready(payload: Box<Ready>) -> HarTexResult< ()> {
+    pub async fn ready(payload: Box<Ready>) -> HarTexResult<()> {
         let user = payload.user;
 
         Logger::info(
@@ -162,11 +176,11 @@ impl EventHandler {
 // Custom Events
 impl EventHandler {
     /// # Static Asynchronous Method `EventHandler::command_executed`
-    /// 
+    ///
     /// Handles the `CommandExecuted` event.
-    /// 
+    ///
     /// ## Parameters
-    /// 
+    ///
     /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
     pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
         Logger::info(
