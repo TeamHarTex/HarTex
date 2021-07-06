@@ -24,7 +24,7 @@ use crate::parser::{
 #[derive(Clone, Default)]
 pub struct CommandFramework<'a> {
     config: CommandParserConfig<'a>,
-    listeners: Listeners<HarTexEvent<'a>>
+    listeners: Listeners<HarTexEvent>
 }
 
 impl<'a> CommandFramework<'a> {
@@ -53,7 +53,7 @@ impl<'a> CommandFramework<'a> {
     /// # Instance Method `CommandFramework::events`
     ///
     /// Returns a stream of events and consumes the framework.
-    pub fn events(self) -> Events<'a> {
+    pub fn events(self) -> Events {
         let receiver = self.listeners.add();
 
         Events::new(receiver)
@@ -62,7 +62,7 @@ impl<'a> CommandFramework<'a> {
     /// # Instance Method `CommandFramework::listeners`
     ///
     /// Returns the listeners of the current framework and consumes it.
-    pub fn listeners(self) -> Listeners<HarTexEvent<'a>> {
+    pub fn listeners(self) -> Listeners<HarTexEvent> {
         self.listeners
     }
 }
