@@ -7,7 +7,10 @@ use std::{
     sync::Arc
 };
 
-use hartex_core::discord::http::Client;
+use hartex_core::discord::{
+    http::Client,
+    model::channel::Message,
+};
 
 /// # Struct `CommandContext`
 ///
@@ -22,7 +25,8 @@ pub struct CommandContext {
 /// The inner structure for `CommandContext`.
 #[derive(Clone)]
 pub struct CommandContextInner {
-    pub http: Client
+    pub http: Client,
+    pub message: Message
 }
 
 impl Deref for CommandContext {
