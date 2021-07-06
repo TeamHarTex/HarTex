@@ -7,6 +7,8 @@ use std::{
     sync::Arc
 };
 
+use hartex_core::discord::http::Client;
+
 /// # Struct `CommandContext`
 ///
 /// The command context used for command invocation.
@@ -20,6 +22,7 @@ pub struct CommandContext {
 /// The inner structure for `CommandContext`.
 #[derive(Clone)]
 pub struct CommandContextInner {
+    pub http: Client
 }
 
 impl Deref for CommandContext {
