@@ -13,7 +13,10 @@ use std::{
     }
 };
 
-use sqlx::postgres::PgPool;
+use sqlx::{
+    postgres::PgPool,
+    Row
+};
 
 use hartex_conftoml::TomlConfig;
 
@@ -42,7 +45,7 @@ impl GetGuildConfig {
     /// # Constructor `GetGuildConfig::new`
     ///
     /// Creates a new `GetGuildConfig` with the provided `guild_id`.
-    /// 
+    ///
     /// ## Parameters
     /// - `guild_id`, type `GuildId`: the guild id to get the configuration for.
     pub fn new(guild_id: GuildId) -> Self {
@@ -122,5 +125,24 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
-    todo!()
+    match sqlx::query(&format!("SELECT * FROM \"Guild{}\"; --", guild_id)).fetch_one(&connection)
+        .await {
+        Ok(row) => {
+            let config = row.get::<String, &str>("TomlConfig");
+
+            hartex_conftoml::from_string(config)
+        },
+        Err(error) => {
+            let message = format!("failed to execute sql query; error `{:?}`", error);
+
+            Logger::error(
+                &message,
+                Some(module_path!())
+            );
+
+            Err(HarTexError::Custom {
+                message
+            })
+        }
+    }
 }
