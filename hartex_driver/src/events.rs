@@ -15,7 +15,10 @@ use hartex_core::{
     events::EventType
 };
 
-use hartex_eventsys::events::HarTexEvent;
+use hartex_eventsys::{
+    emitter::EventEmitter,
+    events::HarTexEvent
+};
 
 use crate::handler::EventHandler;
 
@@ -34,12 +37,18 @@ use crate::handler::EventHandler;
 ///                                         `EventType::Custom`
 /// - `http`, type `Client`: the Twilight HTTP Client to use for some specific events that need it
 #[allow(clippy::needless_lifetimes)]
-pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>), http: Client) -> HarTexResult<()> {
+pub async fn handle_event<'a>(
+    (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>),
+    http: Client,
+    emitter: EventEmitter<'a>) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
                 Event::GuildCreate(payload) => {
                     EventHandler::guild_create(payload, http).await?
+                }
+                Event::MessageCreate(payload) => {
+
                 }
                 Event::Ready(payload) => {
                     EventHandler::ready(payload).await?
@@ -51,7 +60,11 @@ pub async fn handle_event<'a>((event_type, twilight, custom): (EventType, Option
             }
         },
         EventType::Custom if custom.is_some() => {
-            todo!()
+            match custom.unwrap() {
+                HarTexEvent::CommandExecuted(payload) => {
+                    EventHandler::command_executed(payload).await?
+                }
+            }
         }
         _ => return Err(HarTexError::Custom {
             message: String::from("event type mismatch")
