@@ -4,6 +4,8 @@
 
 use ctrlc::Error as CtrlcError;
 
+use toml::de::Error as TomlDeserializationError;
+
 use crate::discord::{
     gateway::cluster::ClusterStartError,
     http::{
@@ -48,11 +50,23 @@ pub enum HarTexError {
     CtrlcError {
         error: CtrlcError
     },
-    
+
+    /// # Enum Variant `TomlDeserializationError`
+    ///
+    /// A wrapper around `toml::de::Error`
+    ///
+    /// ## Fields
+    ///
+    /// - `error`, type `Error`: the TOML deserialization error returned when attempting to
+    ///                          deserializing TOML.
+    TomlDeserializationError {
+        error: TomlDeserializationError
+    },
+
     /// # Enum Variant `HHarTexError::TwilightHttpError`
-    /// 
+    ///
     /// A wrapper around `twilight_http::error::Error`.
-    /// 
+    ///
     /// ## Fields
     /// - `error`, type `Error`: the error returned when executing an HTTP request.
     TwilightHttpError {
@@ -109,6 +123,14 @@ impl From<CtrlcError> for HarTexError {
 impl From<HttpError> for HarTexError {
     fn from(error: HttpError) -> Self {
         Self::TwilightHttpError {
+            error
+        }
+    }
+}
+
+impl From<TomlDeserializationError> for HarTexError {
+    fn from(error: TomlDeserializationError) -> Self {
+        Self::TomlDeserializationError {
             error
         }
     }
