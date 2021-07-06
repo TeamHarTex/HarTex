@@ -33,7 +33,7 @@ pub struct EventHandler;
 
 // Twilight Events
 impl EventHandler {
-    /// # Static Method `EventHandler::guild_create`
+    /// # Static Asynchronous Method `EventHandler::guild_create`
     ///
     /// Handles the `GuildCreate` event.
     ///
@@ -116,7 +116,7 @@ impl EventHandler {
         Ok(())
     }
 
-    /// # Static Method `EventHandler::ready`
+    /// # Static Asynchronous Method `EventHandler::ready`
     ///
     /// Handles the `Ready` event.
     ///
@@ -139,7 +139,7 @@ impl EventHandler {
         Ok(())
     }
 
-    /// # Static Method `EventHandler::shard_identifying`
+    /// # Static Asynchronous Method `EventHandler::shard_identifying`
     ///
     /// Handles the `Identifying` event.
     ///
@@ -161,6 +161,13 @@ impl EventHandler {
 
 // Custom Events
 impl EventHandler {
+    /// # Static Asynchronous Method `EventHandler::command_executed`
+    /// 
+    /// Handles the `CommandExecuted` event.
+    /// 
+    /// ## Parameters
+    /// 
+    /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
     pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
         Logger::info(
             format!("command `{}` is executed in guild {}", payload.command, payload.guild.name),
