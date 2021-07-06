@@ -7,6 +7,8 @@
 
 use serde::Deserialize;
 
+use hartex_core::error::HarTexResult;
+
 pub mod dashacc;
 pub mod guildconf;
 
@@ -17,4 +19,8 @@ pub mod guildconf;
 pub struct TomlConfig<'a> {
     pub dashboardAccesses: Vec<dashacc::DashboardAccess>,
     pub guildConfiguration: guildconf::GuildConfiguration<'a>
+}
+
+pub fn from_string<'a>(input: String) -> HarTexResult<TomlConfig<'a>> {
+    toml::from_str(input.as_str())?
 }
