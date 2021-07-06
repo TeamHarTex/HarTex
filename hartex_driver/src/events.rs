@@ -37,10 +37,10 @@ use crate::handler::EventHandler;
 ///                                         `EventType::Custom`
 /// - `http`, type `Client`: the Twilight HTTP Client to use for some specific events that need it
 #[allow(clippy::needless_lifetimes)]
-pub async fn handle_event<'a>(
-    (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent<'a>>),
+pub async fn handle_event(
+    (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent>),
     http: Client,
-    emitter: EventEmitter<'a>) -> HarTexResult<()> {
+    emitter: EventEmitter) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
