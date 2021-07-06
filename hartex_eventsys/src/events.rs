@@ -23,26 +23,26 @@ use hartex_model::payload::CommandExecuted;
 ///
 /// This is basically a wrapper around `UnboundedReceiver<HarTexEvent>`; it receives event from
 /// the stream.
-pub struct Events<'a> {
-    receiver: UnboundedReceiver<HarTexEvent<'a>>
+pub struct Events {
+    receiver: UnboundedReceiver<HarTexEvent>
 }
 
 impl<'a> Events<'a> {
     /// # Constructor `Events::new`
-    /// 
+    ///
     /// Creates a new `Events` with the given `UnboundedReceiver`
-    /// 
+    ///
     /// ## Parameters
     /// - `receiver`, type `UnboundedReceiver`: the unbounded receiver to create this instance with
-    pub fn new(receiver: UnboundedReceiver<HarTexEvent<'a>>) -> Self {
+    pub fn new(receiver: UnboundedReceiver<HarTexEvent>) -> Self {
         Self {
             receiver
         }
     }
 }
 
-impl<'a> Stream for Events<'a> {
-    type Item = HarTexEvent<'a>;
+impl Stream for Events {
+    type Item = HarTexEvent;
 
     fn poll_next(mut self: Pin<&mut Self>, context: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         self.receiver.poll_next_unpin(context)
@@ -53,12 +53,12 @@ impl<'a> Stream for Events<'a> {
 ///
 /// An enumeration represents the various custom-defined events that is used within HarTex.
 #[derive(Clone)]
-pub enum HarTexEvent<'a> {
+pub enum HarTexEvent {
     /// # Enum Variant `HarTexEvent::CommandExecuted`
     ///
     /// A command is executed.
     ///
     /// ## Tuple Struct Parameters
     /// - `0`, type `Box<CommandExecuted<'a>>`: the payload of the event.
-    CommandExecuted(Box<CommandExecuted<'a>>)
+    CommandExecuted(Box<CommandExecuted>)
 }
