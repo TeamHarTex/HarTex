@@ -8,11 +8,11 @@ use serde::Deserialize;
 ///
 /// Represents guild-specific configuration.
 #[derive(Deserialize)]
-pub struct GuildConfiguration<'a> {
-    pub nickname: Option<&'a str>,
+pub struct GuildConfiguration {
+    pub nickname: Option<String>,
     #[serde(default = "!")]
-    pub commandPrefix: &'a str,
-    pub timezone: Option<&'a str>,
+    pub commandPrefix: String,
+    pub timezone: Option<String>,
     #[serde(default = "true")]
     pub dmCannotUseCommand: bool
 }
