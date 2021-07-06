@@ -8,18 +8,18 @@ use crate::{
 };
 
 #[derive(Clone)]
-pub struct EventEmitter<'a> {
-    listeners: listener::Listeners<events::HarTexEvent<'a>>
+pub struct EventEmitter {
+    listeners: listener::Listeners<events::HarTexEvent>
 }
 
-impl<'a> EventEmitter<'a> {
-    pub fn new(listeners: listener::Listeners<events::HarTexEvent<'a>>) -> Self {
+impl EventEmitter {
+    pub fn new(listeners: listener::Listeners<events::HarTexEvent>) -> Self {
         Self {
             listeners
         }
     }
 
-    pub fn emit(&self, event: events::HarTexEvent<'a>) {
+    pub fn emit(&self, event: events::HarTexEvent) {
         let count = self.listeners.len();
         let mut someevent = Some(event);
 
@@ -35,7 +35,7 @@ impl<'a> EventEmitter<'a> {
 
     fn send<F>(&self, mut function: F)
     where
-        F: FnMut(usize) -> events::HarTexEvent<'a> {
+        F: FnMut(usize) -> events::HarTexEvent {
         let mut index = 0;
 
         self.listeners.listeners().retain(|_, listener| {
