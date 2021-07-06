@@ -11,4 +11,7 @@ license = "Apache-2.0"
 
 [dependencies]
 dashmap = "4.0.2"
+hartex_conftoml = { path = "../hartex_conftoml" }
 hartex_core = { path = "../hartex_core" }
+hartex_logging = { path = "../hartex_logging" }
+sqlx = { version = "0.5.5", default-features = false, features = [ "postgres", "runtime-tokio-native-tls" ] }
