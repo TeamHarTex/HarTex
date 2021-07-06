@@ -48,7 +48,7 @@ pub async fn handle_event<'a>(
                     EventHandler::guild_create(payload, http).await?
                 }
                 Event::MessageCreate(payload) => {
-
+                    EventHandler::message_create(payload, emitter).await?
                 }
                 Event::Ready(payload) => {
                     EventHandler::ready(payload).await?
