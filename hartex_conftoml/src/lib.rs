@@ -16,11 +16,11 @@ pub mod guildconf;
 ///
 /// Represents the top-level configuration, all other configuration branches from here.
 #[derive(Deserialize)]
-pub struct TomlConfig<'a> {
+pub struct TomlConfig {
     pub dashboardAccesses: Vec<dashacc::DashboardAccess>,
-    pub guildConfiguration: guildconf::GuildConfiguration<'a>
+    pub guildConfiguration: guildconf::GuildConfiguration
 }
 
-pub fn from_string<'a>(input: String) -> HarTexResult<TomlConfig<'a>> {
+pub fn from_string(input: String) -> HarTexResult<TomlConfig> {
     toml::from_str(input.as_str())?
 }
