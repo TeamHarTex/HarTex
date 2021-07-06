@@ -4,6 +4,7 @@
 //! speciifc guild, and deserializing it into Rust structs so that it is usable in Rust code.
 
 use std::{
+    env,
     future::Future,
     pin::Pin,
     task::{
@@ -12,22 +13,46 @@ use std::{
     }
 };
 
+use sqlx::postgres::PgPool;
+
 use hartex_conftoml::TomlConfig;
 
-use hartex_core::error::HarTexResult;
+use hartex_core::{
+    discord::model::id::GuildId,
+    error::{
+        HarTexError,
+        HarTexResult,
+    }
+};
 
 use hartex_logging::Logger;
 
 use crate::PendingFuture;
 
 /// # Struct `GetGuildConfig`
-/// 
+///
 /// Gets the guild configuration from the database.
 pub struct GetGuildConfig {
-    pending: Option<PendingFuture<TomlConfig>>
+    pending: Option<PendingFuture<TomlConfig>>,
+
+    guild_id: GuildId
 }
 
 impl GetGuildConfig {
+    /// # Constructor `GetGuildConfig::new`
+    ///
+    /// Creates a new `GetGuildConfig` with the provided `guild_id`.
+    /// 
+    /// ## Parameters
+    /// - `guild_id`, type `GuildId`: the guild id to get the configuration for.
+    pub fn new(guild_id: GuildId) -> Self {
+        Self {
+            pending: None,
+
+            guild_id
+        }
+    }
+
     /// # Private Function `GetGuildConfig::start`
     ///
     /// Starts the future.
@@ -37,23 +62,15 @@ impl GetGuildConfig {
             Some(module_path!())
         );
 
-        self.pending.replace(Box::pin(exec_future()));
+        self.pending.replace(Box::pin(exec_future(self.guild_id)));
 
         Ok(())
     }
 }
 
-impl Default for GetGuildConfig {
-    fn default() -> Self {
-        Self {
-            pending: None
-        }
-    }
-}
-
 impl Future for GetGuildConfig {
     type Output = HarTexResult<TomlConfig>;
-    
+
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         loop {
             if let Some(pending) = self.pending.as_mut() {
@@ -72,6 +89,38 @@ unsafe impl Send for GetGuildConfig { }
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
-async fn exec_future() -> HarTexResult<TomlConfig> {
+async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
+    let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDCONFIG") {
+        Ok(credentials) => credentials,
+        Err(error) => {
+            let message = format!("failed to get database credentials; error: {}", error);
+
+            Logger::error(
+                &message,
+                Some(module_path!())
+            );
+
+            return Err(HarTexError::Custom {
+                message
+            });
+        }
+    };
+
+    let connection = match PgPool::connect(&db_credentials).await {
+        Ok(pool) => pool,
+        Err(error) => {
+            let message = format!("failed to connect to postgres database pool; error: `{:?}`", error);
+
+            Logger::error(
+                &message,
+                Some(module_path!())
+            );
+
+            return Err(HarTexError::Custom {
+                message
+            });
+        }
+    };
+
     todo!()
 }
