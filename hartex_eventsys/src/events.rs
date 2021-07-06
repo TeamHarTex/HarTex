@@ -27,7 +27,7 @@ pub struct Events {
     receiver: UnboundedReceiver<HarTexEvent>
 }
 
-impl<'a> Events<'a> {
+impl Events {
     /// # Constructor `Events::new`
     ///
     /// Creates a new `Events` with the given `UnboundedReceiver`
