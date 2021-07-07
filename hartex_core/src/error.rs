@@ -7,6 +7,7 @@ use ctrlc::Error as CtrlcError;
 use toml::de::Error as TomlDeserializationError;
 
 use crate::discord::{
+    embed_builder::EmbedError,
     gateway::cluster::ClusterStartError,
     http::{
         error::Error as HttpError,
@@ -49,6 +50,16 @@ pub enum HarTexError {
     /// - `error`, type `Error`: the ctrlc error returned when setting the ctrl-c handler.
     CtrlcError {
         error: CtrlcError
+    },
+
+    /// # Enum Variant `HarTexError::EmbedError`
+    ///
+    /// A wrapper around `twilight_embed_builder::EmbedError`.
+    ///
+    /// ## Fields
+    /// - `error`, type `EmbedError`: the embed error returned when building a Discord embed.
+    EmbedError {
+        error: EmbedError
     },
 
     /// # Enum Variant `TomlDeserializationError`
