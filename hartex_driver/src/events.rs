@@ -3,10 +3,13 @@
 //! The `events` module provides utility functions for handling events as they come into the event
 //! loop.
 
+use hartex_cmdsys::parser::CommandParser;
+
 use hartex_core::{
     discord::{
         gateway::Event,
-        http::Client
+        http::Client,
+        cache_inmemory::InMemoryCache
     },
     error::{
         HarTexError,
@@ -40,7 +43,10 @@ use crate::handler::EventHandler;
 pub async fn handle_event(
     (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent>),
     http: Client,
-    emitter: EventEmitter) -> HarTexResult<()> {
+    emitter: EventEmitter,
+    parser: CommandParser<'_>,
+    cache: InMemoryCache
+) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
@@ -48,7 +54,7 @@ pub async fn handle_event(
                     EventHandler::guild_create(payload, http).await?
                 }
                 Event::MessageCreate(payload) => {
-                    EventHandler::message_create(payload, emitter).await?
+                    EventHandler::message_create(payload, emitter, parser, cache, http).await?
                 }
                 Event::Ready(payload) => {
                     EventHandler::ready(payload).await?
