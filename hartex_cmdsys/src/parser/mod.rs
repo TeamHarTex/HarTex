@@ -8,6 +8,7 @@ pub mod config;
 /// # Struct `CommandParser`
 ///
 /// The command parser.
+#[derive(Clone)]
 pub struct CommandParser<'a> {
     config: config::CommandParserConfig<'a>
 }
