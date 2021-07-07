@@ -170,7 +170,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
     );
     let framework = CommandFramework::default();
 
-    let _parser = {
+    let parser = {
         Logger::verbose(
             "configuring command parser",
             Some(module_path!()),
@@ -199,7 +199,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
     );
 
     let resource_types = ResourceType::all();
-    let _cache = InMemoryCache::builder()
+    let cache = InMemoryCache::builder()
         .resource_types(resource_types)
         .build();
 
@@ -231,14 +231,18 @@ pub async fn hartex_main() -> HarTexResult<()> {
                 tokio::spawn(events::handle_event(
                     (EventType::Twilight, Some(twilight), None),
                     http.clone(),
-                    emitter.clone()
+                    emitter.clone(),
+                    parser.clone(),
+                    cache.clone()
                 ));
             }
             Either::Right(custom) => {
                 tokio::spawn(events::handle_event(
                     (EventType::Custom, None, Some(custom)),
                     http.clone(),
-                    emitter.clone()
+                    emitter.clone(),
+                    parser.clone(),
+                    cache.clone()
                 ));
             }
         }
