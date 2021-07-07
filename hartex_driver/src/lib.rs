@@ -59,7 +59,13 @@ pub async fn hartex_main() -> HarTexResult<()> {
     // loads the .env file to obtain environment variables
     dotenv::dotenv().ok();
 
-    Logger::verbose("loaded environment variables", Some(module_path!()));
+    Logger::verbose(
+        "loaded environment variables",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     // obtains the token from the environment variables
     let token = match env::var("HARTEX_TOKEN") {
@@ -80,13 +86,37 @@ pub async fn hartex_main() -> HarTexResult<()> {
         }
     };
 
-    Logger::verbose("successfully retrieved bot token", Some(module_path!()));
+    Logger::verbose(
+        "successfully retrieved bot token",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     let shard_scheme = ShardScheme::Auto;
 
-    Logger::verbose("building bot cluster", Some(module_path!()));
-    Logger::verbose("registering gateway intents [all]", Some(module_path!()));
-    Logger::verbose("registering presence", Some(module_path!()));
+    Logger::verbose(
+        "building bot cluster",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
+    Logger::verbose(
+        "registering gateway intents [all]",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
+    Logger::verbose(
+        "registering presence",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     let presence = Activity {
         application_id: None,
