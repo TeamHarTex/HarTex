@@ -17,7 +17,7 @@ pub mod guildconf;
 /// Represents the top-level configuration, all other configuration branches from here.
 #[derive(Deserialize)]
 pub struct TomlConfig {
-    pub DashboardAccesses: Vec<dashacc::DashboardAccess>,
+    pub DashboardAccess: Vec<dashacc::DashboardAccess>,
     pub GuildConfiguration: guildconf::GuildConfiguration
 }
 
