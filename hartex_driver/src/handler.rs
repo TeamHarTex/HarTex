@@ -3,7 +3,15 @@
 //! This module defines the `EventHandler` struct, which defines various function handlers for
 //! individual events.
 
-use hartex_cmdsys::parser::CommandParser;
+use std::sync::Arc;
+
+use hartex_cmdsys::{
+    context::{
+        CommandContext,
+        CommandContextInner
+    },
+    parser::CommandParser
+};
 
 use hartex_core::{
     discord::{
@@ -204,7 +212,12 @@ impl EventHandler {
             let command = parser.parse_command(&config.guildConfiguration.commandPrefix, &payload.content);
 
             if command.is_some() {
-                crate::commands::handle_command(command.unwrap(), emitter, http, cache).await?;
+                crate::commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
+                    inner: Arc::new(CommandContextInner {
+                        http,
+                        message: **payload
+                    })
+                }).await?;
             }
         }
 
