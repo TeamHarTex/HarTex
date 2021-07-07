@@ -62,7 +62,10 @@ impl GetGuildConfig {
     fn start(&mut self) -> HarTexResult<()> {
         Logger::verbose(
             "executing future `GetGuildConfig`",
-            Some(module_path!())
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
         );
 
         self.pending.replace(Box::pin(exec_future(self.guild_id)));
@@ -100,7 +103,10 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
             Logger::error(
                 &message,
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             return Err(HarTexError::Custom {
@@ -116,7 +122,10 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
             Logger::error(
                 &message,
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             return Err(HarTexError::Custom {
@@ -137,7 +146,10 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
             Logger::error(
                 &message,
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             Err(HarTexError::Custom {
