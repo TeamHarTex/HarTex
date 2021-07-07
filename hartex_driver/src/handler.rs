@@ -52,7 +52,10 @@ impl EventHandler {
 
         Logger::verbose(
             format!("joined a new guild with name `{}` with id {}; checking whether the guild is whitelisted", payload.name, guild_id.0),
-            Some(module_path!())
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
         );
 
         let res = GetWhitelistedGuilds::default().await?;
@@ -60,14 +63,32 @@ impl EventHandler {
         if !res.iter().any(|refmulti| {
             *refmulti == guild_id.0
         }) {
-            Logger::error("guild is not whitelisted", Some(module_path!()));
+            Logger::error(
+                "guild is not whitelisted",
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
 
             let guild = http.guild(guild_id).await?;
 
-            Logger::verbose("dming guild owner about the whitelist status", Some(module_path!()));
+            Logger::verbose(
+                "dming guild owner about the whitelist status",
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
 
             if guild.is_none() {
-                Logger::error(format!("failed to retrieve guild from its id: {}", guild_id), Some(module_path!()));
+                Logger::error(
+                    format!("failed to retrieve guild from its id: {}", guild_id),
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
 
                 return Err(HarTexError::Custom {
                     message: format!("failed to retrieve guild from its id: {}", guild_id)
@@ -82,7 +103,13 @@ impl EventHandler {
             let user = http.user(guild_owner).await?;
 
             if user.is_none() {
-                Logger::error(format!("failed to retrieve guild owner from his/her user id: {}", guild_owner), Some(module_path!()));
+                Logger::error(
+                    format!("failed to retrieve guild owner from his/her user id: {}", guild_owner),
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
 
                 return Err(HarTexError::Custom {
                     message: format!("failed to retrieve guild owner from his/her user id: {}", guild_owner)
@@ -105,7 +132,13 @@ impl EventHandler {
 
             http.create_message(dm_channel.id).content(message)?.await?;
 
-            Logger::error("leaving guild", Some(module_path!()));
+            Logger::error(
+                "leaving guild",
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
 
             http.leave_guild(guild_id).await?;
 
@@ -114,7 +147,13 @@ impl EventHandler {
             });
         }
 
-        Logger::info("guild is whitelisted", Some(module_path!()));
+        Logger::info(
+            "guild is whitelisted",
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
+        );
 
         Ok(())
     }
@@ -127,6 +166,23 @@ impl EventHandler {
     /// - `payload`, type `Box<MessageCreate>`: the `MessageCreate` event payload
     /// - `emitter`, type `EventEmitter`: the event emitter to use when the message contains an actual command to execute
     pub async fn message_create(payload: Box<MessageCreate>, emitter: EventEmitter) -> HarTexResult<()> {
+        let guild_id = match payload.guild_id {
+            Some(id) => id,
+            None => {
+                Logger::error(
+                    "entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered",
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
+
+                return Err(HarTexError::Custom {
+                    message: String::from("entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered")
+                });
+            }
+        };
+
         Ok(())
     }
 
@@ -147,7 +203,10 @@ impl EventHandler {
                 user.id,
                 payload.version
             ),
-            Some(module_path!())
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
         );
 
         Ok(())
@@ -166,7 +225,10 @@ impl EventHandler {
                 "shard {} is identifying with the discord gateway",
                 payload.shard_id
             ),
-            Some(module_path!())
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
         );
 
         Ok(())
@@ -185,7 +247,10 @@ impl EventHandler {
     pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
         Logger::info(
             format!("command `{}` is executed in guild {}", payload.command, payload.guild.name),
-            Some(module_path!())
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
         );
 
         Ok(())
