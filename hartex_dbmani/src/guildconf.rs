@@ -139,7 +139,43 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         Ok(row) => {
             let config = row.get::<String, &str>("TomlConfig");
 
-            hartex_conftoml::from_string(String::from_utf8(base64::decode(config)?)?)
+            let decoded = match base64::decode(config) {
+                Ok(bytes) => bytes,
+                Err(error) => {
+                    let message = format!("failed to decode base64; error `{:?}`", error);
+
+                    Logger::error(
+                        &message,
+                        Some(module_path!()),
+                        file!(),
+                        line!(),
+                        column!()
+                    );
+
+                    return Err(HarTexError::Base64DecodeError {
+                        error
+                    });
+                }
+            };
+
+            hartex_conftoml::from_string(match String::from_utf8(decoded) {
+                Ok(string) => string,
+                Err(error) => {
+                    let message = format!("failed to construct utf-8 string; error `{:?}`", error);
+
+                    Logger::error(
+                        &message,
+                        Some(module_path!()),
+                        file!(),
+                        line!(),
+                        column!()
+                    );
+
+                    return Err(HarTexError::Utf8ValidationError {
+                        error
+                    });
+                }
+            })
         },
         Err(error) => {
             let message = format!("failed to execute sql query; error `{:?}`", error);
