@@ -3,8 +3,11 @@
 //! This module defines the `EventHandler` struct, which defines various function handlers for
 //! individual events.
 
+use hartex_cmdsys::parser::CommandParser;
+
 use hartex_core::{
     discord::{
+        cache_inmemory::InMemoryCache,
         http::Client,
         model::gateway::{
             event::shard::Identifying,
@@ -168,7 +171,16 @@ impl EventHandler {
     /// ## Parameters
     /// - `payload`, type `Box<MessageCreate>`: the `MessageCreate` event payload
     /// - `emitter`, type `EventEmitter`: the event emitter to use when the message contains an actual command to execute
-    pub async fn message_create(payload: Box<MessageCreate>, emitter: EventEmitter) -> HarTexResult<()> {
+    /// - `parser`, type `CommandParser`: the command parser to use when the message starts with a command prefix
+    /// - `cache`, type `InMemoryCache`: the cache to pass to the command if the message is indeed a command
+    /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
+    pub async fn message_create(
+        payload: Box<MessageCreate>,
+        emitter: EventEmitter,
+        parser: CommandParser<'_>,
+        cache: InMemoryCache,
+        http: Client
+    ) -> HarTexResult<()> {
         let guild_id = match payload.guild_id {
             Some(id) => id,
             None => {
@@ -188,7 +200,12 @@ impl EventHandler {
 
         let config = GetGuildConfig::new(guild_id).await?;
 
-        if payload.content.starts_with(config.guildConfiguration.commandPrefix) {
+        if payload.content.starts_with(&config.guildConfiguration.commandPrefix) {
+            let command = parser.parse_command(&config.guildConfiguration.commandPrefix, &payload.content);
+
+            if command.is_some() {
+                crate::commands::handle_command(command.unwrap(), emitter, http, cache).await?;
+            }
         }
 
         Ok(())
