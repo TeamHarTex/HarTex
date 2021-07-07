@@ -2,6 +2,10 @@
 //!
 //! This module defines several types for error handling in the HarTex Discord bot.
 
+use std::string::FromUtf8Error;
+
+use base64::DecodeError;
+
 use ctrlc::Error as CtrlcError;
 
 use toml::de::Error as TomlDeserializationError;
@@ -32,7 +36,7 @@ pub enum HarTexError {
         error: ClusterStartError
     },
 
-    /// # Enum Variant `HHarTexError::CreateMessageError`
+    /// # Enum Variant `HarTexError::CreateMessageError`
     ///
     /// A wrapper around `twilight_http::request::channel::message::create_message::CreateMessageError`.
     ///
@@ -40,6 +44,16 @@ pub enum HarTexError {
     /// - `error`, type `CreateMessageError`: the error returned when attempting to send a message,
     CreateMessageError {
         error: CreateMessageError
+    },
+
+    /// # Enum Variant `HarTexError::Base64DecodeError`
+    ///
+    /// A wrapper around `base64::DecodeError`
+    ///
+    /// ## Fields
+    /// - `error`, type `DecodeError`: the error returned when attempting to decode base64.
+    Base64DecodeError {
+        error: DecodeError
     },
 
     /// # Enum Variant `HarTexError::CtrlcError`
@@ -94,6 +108,17 @@ pub enum HarTexError {
     UpdatePresenceError {
         error: UpdatePresenceError
     },
+    
+    /// # Enum Variant `HarTexError::Utf8ValidationError`
+    /// 
+    /// A wrapper around `std::string::FromUtf8Error`.
+    /// 
+    /// ## Fields
+    /// - `error`, type `FromUtf8Error`: the error returned when attempting to construct a string
+    ///                                  with a `Vec<u8>` with the UTF-8 encoding.
+    Utf8ValidationError {
+        error: FromUtf8Error
+    },
 
     /// # Enum Variant `HarTexError::Custom`
     ///
@@ -131,9 +156,25 @@ impl From<CtrlcError> for HarTexError {
     }
 }
 
+impl From<DecodeError> for HarTexError {
+    fn from(error: DecodeError) -> Self {
+        Self::Base64DecodeError {
+            error
+        }
+    }
+}
+
 impl From<EmbedError> for HarTexError {
     fn from(error: EmbedError) -> Self {
         Self::EmbedError {
+            error
+        }
+    }
+}
+
+impl From<FromUtf8Error> for HarTexError {
+    fn from(error: FromUtf8Error) -> Self {
+        Self::Utf8ValidationError {
             error
         }
     }
