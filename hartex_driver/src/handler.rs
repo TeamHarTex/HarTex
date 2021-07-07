@@ -206,16 +206,29 @@ impl EventHandler {
             }
         };
 
-        let config = GetGuildConfig::new(guild_id).await?;
+        let config = match GetGuildConfig::new(guild_id).await {
+            Ok(conf) => conf,
+            Err(error) => {
+                Logger::error(
+                    format!("failed to deserialize toml config; error: {:?}", error),
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
 
-        if payload.content.starts_with(&config.guildConfiguration.commandPrefix) {
-            let command = parser.parse_command(&config.guildConfiguration.commandPrefix, &payload.content);
+                return Err(error)
+            }
+        };
+
+        if payload.content.starts_with(&config.GuildConfiguration.commandPrefix) {
+            let command = parser.parse_command(&config.GuildConfiguration.commandPrefix, &payload.content);
 
             if command.is_some() {
                 crate::commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
                     inner: Arc::new(CommandContextInner {
                         http,
-                        message: **payload
+                        message: (**payload).clone()
                     })
                 }).await?;
             }
