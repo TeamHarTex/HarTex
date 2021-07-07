@@ -21,7 +21,10 @@ use hartex_core::{
     }
 };
 
-use hartex_dbmani::whitelist::GetWhitelistedGuilds;
+use hartex_dbmani::{
+    guildconf::GetGuildConfig,
+    whitelist::GetWhitelistedGuilds
+};
 
 use hartex_eventsys::emitter::EventEmitter;
 
@@ -182,6 +185,11 @@ impl EventHandler {
                 });
             }
         };
+
+        let config = GetGuildConfig::new(guild_id).await?;
+
+        if payload.content.starts_with(config.guildConfiguration.commandPrefix) {
+        }
 
         Ok(())
     }
