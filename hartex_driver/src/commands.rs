@@ -20,5 +20,12 @@ pub async fn handle_command(
     http: Client,
     cache: InMemoryCache
 ) -> HarTexResult<()> {
+    match command {
+        ParsedCommand { name: "team", .. } => {
+
+        },
+        _ => ()
+    }
+
     Ok(())
 }
