@@ -70,7 +70,10 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     "could not retrieve the bot token from the environment due to an error: {}",
                     var_error
                 ),
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             process::exit(-1)
@@ -117,15 +120,33 @@ pub async fn hartex_main() -> HarTexResult<()> {
         cluster_spawn.up().await
     });
 
-    Logger::verbose("building http client", Some(module_path!()));
+    Logger::verbose(
+        "building http client",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     let http = Client::new(&token);
 
-    Logger::verbose("initializing command framework", Some(module_path!()));
+    Logger::verbose(
+        "initializing command framework",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
     let framework = CommandFramework::default();
 
     let _parser = {
-        Logger::verbose("configuring command parser", Some(module_path!()));
+        Logger::verbose(
+            "configuring command parser",
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
+        );
 
         framework
             .clone()
@@ -138,17 +159,35 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     let framework_events = framework.events();
 
-    Logger::verbose("building in-memory cache", Some(module_path!()));
+    Logger::verbose(
+        "building in-memory cache",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     let resource_types = ResourceType::all();
     let _cache = InMemoryCache::builder()
         .resource_types(resource_types)
         .build();
 
-    Logger::verbose("registering ctrl-c handler", Some(module_path!()));
+    Logger::verbose(
+        "registering ctrl-c handler",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     ctrlc::set_handler(|| {
-        Logger::warn("ctrl-c signal received; terminating process", Some(module_path!()));
+        Logger::warn(
+            "ctrl-c signal received; terminating process",
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
+        );
 
         process::exit(0)
     })?;
