@@ -9,10 +9,7 @@ use hartex_cmdsys::{
 };
 
 use hartex_core::{
-    discord::{
-        http::Client,
-        cache_inmemory::InMemoryCache
-    },
+    discord::cache_inmemory::InMemoryCache,
     error::HarTexResult
 };
 
