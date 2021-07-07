@@ -230,7 +230,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
                 tokio::spawn(events::handle_event(
                     (EventType::Twilight, Some(twilight), None),
                     http.clone(),
-                        emitter.clone()
+                    emitter.clone()
                 ));
             }
             Either::Right(custom) => {
