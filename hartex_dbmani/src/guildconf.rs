@@ -139,7 +139,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         Ok(row) => {
             let config = row.get::<String, &str>("TomlConfig");
 
-            hartex_conftoml::from_string(config)
+            hartex_conftoml::from_string(String::from_utf8(base64::decode(config)?)?)
         },
         Err(error) => {
             let message = format!("failed to execute sql query; error `{:?}`", error);
