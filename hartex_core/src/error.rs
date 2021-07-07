@@ -131,6 +131,14 @@ impl From<CtrlcError> for HarTexError {
     }
 }
 
+impl From<EmbedError> for HarTexError {
+    fn from(error: EmbedError) -> Self {
+        Self::EmbedError {
+            error
+        }
+    }
+}
+
 impl From<HttpError> for HarTexError {
     fn from(error: HttpError) -> Self {
         Self::TwilightHttpError {
