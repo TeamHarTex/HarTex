@@ -7,7 +7,10 @@
 
 use serde::Deserialize;
 
-use hartex_core::error::HarTexResult;
+use hartex_core::error::{
+    HarTexError,
+    HarTexResult
+};
 
 pub mod dashacc;
 pub mod guildconf;
@@ -22,5 +25,8 @@ pub struct TomlConfig {
 }
 
 pub fn from_string(input: String) -> HarTexResult<TomlConfig> {
-    toml::from_str(input.as_str())?
+    match toml::from_str(input.as_str()) {
+        Ok(res) => Ok(res),
+        Err(error) => Err(HarTexError::from(error))
+    }
 }
