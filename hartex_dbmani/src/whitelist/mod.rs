@@ -48,7 +48,10 @@ impl GetWhitelistedGuilds {
     fn start(&mut self) -> HarTexResult<()> {
         Logger::verbose(
             "executing future `GetWhitelistedGuilds`",
-            Some(module_path!())
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
         );
 
         self.pending.replace(Box::pin(exec_future()));
@@ -83,7 +86,6 @@ impl Future for GetWhitelistedGuilds {
 
 unsafe impl Send for GetWhitelistedGuilds { }
 
-
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
@@ -95,7 +97,10 @@ async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
 
             Logger::error(
                 &message,
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             return Err(HarTexError::Custom {
@@ -111,7 +116,10 @@ async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
 
             Logger::error(
                 &message,
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             return Err(HarTexError::Custom {
@@ -120,7 +128,7 @@ async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
         }
     };
 
-    match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist""#).fetch_all(&connection).await {
+    match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist"; --"#).fetch_all(&connection).await {
         Ok(guilds) => {
             let map = DashMap::new();
 
@@ -135,7 +143,10 @@ async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
 
             Logger::error(
                 &message,
-                Some(module_path!())
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
             );
 
             Err(HarTexError::Custom {
