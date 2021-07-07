@@ -14,7 +14,9 @@ dotenv = "0.15.0"
 futures-util = "0.3.15"
 hartex_cmdsys = { path = "../hartex_cmdsys" }
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
+hartex_dbmani = { path = "../hartex_dbmani" }
 hartex_eventsys = { path = "../hartex_eventsys" }
 hartex_logging = { path = "../hartex_logging" }
-tokio = { version = "1.8.0", features = [ "full" ] }
+hartex_model = { path = "../hartex_model" }
+tokio = { version = "1.8.1", features = [ "full" ] }
 tokio-stream = { version = "0.1.6" }
