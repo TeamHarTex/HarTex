@@ -49,6 +49,7 @@ use hartex_eventsys::emitter::EventEmitter;
 
 use hartex_logging::Logger;
 
+pub mod commands;
 pub mod events;
 pub mod handler;
 
