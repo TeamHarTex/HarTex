@@ -22,9 +22,9 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
-    - name: Change Directory
-      run: cd hartex
     - name: Print Working Directory
       run: pwd
+    - name: Change Directory
+      run: cd hartex
     - name: Build
       run: cargo build --release
