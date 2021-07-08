@@ -56,6 +56,7 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
             .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
         )
         .description("HarTex is a Discord bot that is built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
+        .color(0x03BEFC)
         .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
         .build()?;
 
