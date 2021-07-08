@@ -24,5 +24,7 @@ jobs:
           profile: default
     - name: Change Directory
       run: cd hartex
+    - name: Print Working Directory
+      run: pwd
     - name: Build
       run: cargo build --release
