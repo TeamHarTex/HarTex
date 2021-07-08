@@ -15,7 +15,10 @@ use crate::discord::{
         image_source::ImageSourceUrlError,
         EmbedError
     },
-    gateway::cluster::ClusterStartError,
+    gateway::cluster::{
+        ClusterCommandError,
+        ClusterStartError
+    },
     http::{
         error::Error as HttpError,
         request::channel::message::create_message::CreateMessageError
@@ -28,6 +31,17 @@ use crate::discord::{
 /// An enumeration representing the various error types used within HarTex.
 #[derive(Debug)]
 pub enum HarTexError {
+    /// # Enum Variant `HarTexError::ClusterCommandError`
+    ///
+    /// A wrapper around `twilight_gateway::cluster::ClusterCommandError`.
+    /// 
+    /// ## Fields
+    /// - `error`, type: `ClusterCommandError`: the cluster command error when "commanding" the
+    ///                                         cluster.
+    ClusterCommandError {
+        error: ClusterCommandError
+    },
+
     /// # Enum Variant HarTexError::ClusterStartError
     ///
     /// A wrapper around `twilight_gateway::cluster::ClusterStartError`.
@@ -78,11 +92,11 @@ pub enum HarTexError {
     EmbedError {
         error: EmbedError
     },
-    
+
     /// # Enum Variant `HarTexError::EmbedImageSourceUrlError`
-    /// 
+    ///
     /// A wrapper around `twilight_embed_builder::image_source::ImageSourceUrlError`.
-    /// 
+    ///
     /// ## Fields
     /// - `error`, type `ImageSourceUrlError`: the error returned when trying to set a url for any
     ///                                        embed property.
@@ -143,6 +157,14 @@ pub enum HarTexError {
     /// - `message`, type `&str`: the error message.
     Custom {
         message: String
+    }
+}
+
+impl From<ClusterCommandError> for HarTexError {
+    fn from(error: ClusterCommandError) -> Self {
+        Self::ClusterCommandError {
+            error
+        }
     }
 }
 
