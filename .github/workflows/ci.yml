@@ -23,6 +23,6 @@ jobs:
           override: true
           profile: default
     - name: Change Directory
-      run: cd HarTex-rust-discord-bot/hartex
+      run: cd hartex
     - name: Build
       run: cargo build --release
