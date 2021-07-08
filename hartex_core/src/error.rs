@@ -11,7 +11,10 @@ use ctrlc::Error as CtrlcError;
 use toml::de::Error as TomlDeserializationError;
 
 use crate::discord::{
-    embed_builder::EmbedError,
+    embed_builder::{
+        image_source::ImageSourceUrlError,
+        EmbedError
+    },
     gateway::cluster::ClusterStartError,
     http::{
         error::Error as HttpError,
@@ -75,6 +78,17 @@ pub enum HarTexError {
     EmbedError {
         error: EmbedError
     },
+    
+    /// # Enum Variant `HarTexError::EmbedImageSourceUrlError`
+    /// 
+    /// A wrapper around `twilight_embed_builder::image_source::ImageSourceUrlError`.
+    /// 
+    /// ## Fields
+    /// - `error`, type `ImageSourceUrlError`: the error returned when trying to set a url for any
+    ///                                        embed property.
+    EmbedImageSourceUrlError {
+        error: ImageSourceUrlError
+    },
 
     /// # Enum Variant `TomlDeserializationError`
     ///
@@ -108,11 +122,11 @@ pub enum HarTexError {
     UpdatePresenceError {
         error: UpdatePresenceError
     },
-    
+
     /// # Enum Variant `HarTexError::Utf8ValidationError`
-    /// 
+    ///
     /// A wrapper around `std::string::FromUtf8Error`.
-    /// 
+    ///
     /// ## Fields
     /// - `error`, type `FromUtf8Error`: the error returned when attempting to construct a string
     ///                                  with a `Vec<u8>` with the UTF-8 encoding.
@@ -183,6 +197,14 @@ impl From<FromUtf8Error> for HarTexError {
 impl From<HttpError> for HarTexError {
     fn from(error: HttpError) -> Self {
         Self::TwilightHttpError {
+            error
+        }
+    }
+}
+
+impl From<ImageSourceUrlError> for HarTexError {
+    fn from(error: ImageSourceUrlError) -> Self {
+        Self::EmbedImageSourceUrlError {
             error
         }
     }
