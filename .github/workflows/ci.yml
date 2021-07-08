@@ -22,5 +22,7 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
+    - name: Change Directory
+      run: cd HarTex-rust-discord-bot/hartex
     - name: Build
-      run: cargo build --package hartex --release
+      run: cargo build --release
