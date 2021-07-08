@@ -181,6 +181,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
         framework
             .clone()
+            .command(CommandConfig::with_name("about"))
             .command(CommandConfig::with_name("team"))
             .build_parser()
     };
