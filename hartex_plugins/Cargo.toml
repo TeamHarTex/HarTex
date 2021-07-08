@@ -1,6 +1,6 @@
 [package]
 name = "hartex_plugins"
-version = "0.1.0"
+version = "1.19.0"
 edition = "2018"
 description = """
 The `hartex_plugins` library implements various bot plugins for its functionalities.
