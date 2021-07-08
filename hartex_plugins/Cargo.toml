@@ -12,4 +12,5 @@ license = "Apache-2.0"
 [dependencies]
 hartex_cmdsys = { path = "../hartex_cmdsys" }
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
+hartex_dbmani = { path = "../hartex_dbmani" }
 hartex_utils = { path = "../hartex_utils" }
