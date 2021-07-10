@@ -32,14 +32,6 @@ use hartex_core::{
             Intents,
         },
         http::Client,
-        model::gateway::{
-            payload::update_presence::UpdatePresencePayload,
-            presence::{
-                Activity,
-                ActivityType,
-                Status
-            }
-        }
     },
     error::HarTexResult,
     events::EventType
@@ -111,36 +103,10 @@ pub async fn hartex_main() -> HarTexResult<()> {
         line!(),
         column!()
     );
-    Logger::verbose(
-        "registering presence",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
 
-    let presence = Activity {
-        application_id: None,
-        assets: None,
-        buttons: Vec::new(),
-        created_at: None,
-        details: None,
-        emoji: None,
-        flags: None,
-        id: None,
-        instance: None,
-        kind: ActivityType::Watching,
-        name: "codebase revamp".into(),
-        party: None,
-        secrets: None,
-        state: None,
-        timestamps: None,
-        url: None
-    };
     let intents = Intents::all();
 
     let (cluster, events) = Cluster::builder(&token, intents)
-        .presence(UpdatePresencePayload::new(vec![presence], false, None, Status::Online)?)
         .shard_scheme(shard_scheme)
         .build()
         .await?;
@@ -148,7 +114,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
     let cluster_spawn = cluster.clone();
 
     tokio::spawn(async move {
-        cluster_spawn.up().await
+        cluster_spawn.up().await;
     });
 
     Logger::verbose(
@@ -234,7 +200,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     http.clone(),
                     emitter.clone(),
                     parser.clone(),
-                    cache.clone()
+                    cache.clone(),
+                    cluster.clone()
                 ));
             }
             Either::Right(custom) => {
@@ -243,7 +210,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     http.clone(),
                     emitter.clone(),
                     parser.clone(),
-                    cache.clone()
+                    cache.clone(),
+                    cluster.clone()
                 ));
             }
         }
