@@ -19,7 +19,8 @@ use hartex_core::{
         },
         model::channel::message::AllowedMentions
     },
-    error::HarTexResult
+    error::HarTexResult,
+    HARTEX_BUILD
 };
 
 use hartex_dbmani::whitelist::GetWhitelistedGuilds;
@@ -57,6 +58,7 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
         )
         .description("HarTex is a Discord bot that is built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
         .color(0x03BEFC)
+        .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
         .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
         .build()?;
 
