@@ -7,7 +7,10 @@ use hartex_cmdsys::parser::CommandParser;
 
 use hartex_core::{
     discord::{
-        gateway::Event,
+        gateway::{
+            Cluster,
+            Event
+        },
         http::Client,
         cache_inmemory::InMemoryCache
     },
@@ -39,13 +42,15 @@ use crate::handler::EventHandler;
 ///                                         when the `event_type` parameter is set to
 ///                                         `EventType::Custom`
 /// - `http`, type `Client`: the Twilight HTTP Client to use for some specific events that need it
+/// - `cluster`, type `Cluster`: the gateway cluster to use for some specific events that need it
 #[allow(clippy::needless_lifetimes)]
 pub async fn handle_event(
     (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent>),
     http: Client,
     emitter: EventEmitter,
     parser: CommandParser<'_>,
-    cache: InMemoryCache
+    cache: InMemoryCache,
+    cluster: Cluster
 ) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => {
@@ -57,7 +62,7 @@ pub async fn handle_event(
                     EventHandler::message_create(payload, emitter, parser, cache, http).await?
                 }
                 Event::Ready(payload) => {
-                    EventHandler::ready(payload).await?
+                    EventHandler::ready(payload, cluster).await?
                 }
                 Event::ShardIdentifying(payload) => {
                     EventHandler::shard_identifying(payload).await?
