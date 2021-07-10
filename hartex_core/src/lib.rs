@@ -17,7 +17,7 @@ pub mod error;
 pub mod events;
 pub mod time;
 
-/// # Static `HARTEX_VERSION`
+/// # Static `HARTEX_BUILD`
 ///
-/// Represents the current version of HarTex Discord bot.
-pub static HARTEX_VERSION: &'static str = "1.19.0";
+/// Represents the current version and build of HarTex Discord bot.
+pub static HARTEX_BUILD: &'static str = "Version 1.19.0 (Build 1)";
