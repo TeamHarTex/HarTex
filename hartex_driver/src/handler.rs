@@ -16,15 +16,22 @@ use hartex_cmdsys::{
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
+        gateway::Cluster,
         http::Client,
         model::gateway::{
             event::shard::Identifying,
             payload::{
+                update_presence::UpdatePresencePayload,
                 GuildCreate,
                 MessageCreate,
                 Ready,
             },
-        }
+            presence::{
+                Activity,
+                ActivityType,
+                Status
+            }
+        },
     },
     error::{
         HarTexError,
@@ -243,7 +250,8 @@ impl EventHandler {
     ///
     /// ## Parameters
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
-    pub async fn ready(payload: Box<Ready>) -> HarTexResult<()> {
+    /// - `cluster`, type `Cluster`: the gateway cluster
+    pub async fn ready(payload: Box<Ready>, cluster: Cluster) -> HarTexResult<()> {
         let user = payload.user;
 
         Logger::info(
@@ -259,6 +267,60 @@ impl EventHandler {
             line!(),
             column!()
         );
+
+        let mut presence = Activity {
+            application_id: None,
+            assets: None,
+            buttons: Vec::new(),
+            created_at: None,
+            details: None,
+            emoji: None,
+            flags: None,
+            id: None,
+            instance: None,
+            kind: ActivityType::Watching,
+            name: String::new(),
+            party: None,
+            secrets: None,
+            state: None,
+            timestamps: None,
+            url: None
+        };
+
+        Logger::verbose(
+            "registering presence(s)",
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
+        );
+
+        for shard in cluster.shards() {
+            let info = shard.info()?;
+            let shard_id = info.id();
+
+            presence.name = format!("codebase revamp | Shard {}", shard_id);
+
+            match shard.command(
+                &UpdatePresencePayload::new(
+                    vec![presence.clone()],
+                    false,
+                    None,
+                    Status::Online
+                )?
+            ).await {
+                Ok(()) => (),
+                Err(error) => {
+                    Logger::error(
+                        format!("failed to set presence for shard {}: {}", shard_id, error),
+                        Some(module_path!()),
+                        file!(),
+                        line!(),
+                        column!()
+                    );
+                }
+            }
+        }
 
         Ok(())
     }
