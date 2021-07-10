@@ -15,9 +15,12 @@ use crate::discord::{
         image_source::ImageSourceUrlError,
         EmbedError
     },
-    gateway::cluster::{
-        ClusterCommandError,
-        ClusterStartError
+    gateway::{
+        cluster::{
+            ClusterCommandError,
+            ClusterStartError,
+        },
+        shard::SessionInactiveError
     },
     http::{
         error::Error as HttpError,
@@ -34,7 +37,7 @@ pub enum HarTexError {
     /// # Enum Variant `HarTexError::ClusterCommandError`
     ///
     /// A wrapper around `twilight_gateway::cluster::ClusterCommandError`.
-    /// 
+    ///
     /// ## Fields
     /// - `error`, type: `ClusterCommandError`: the cluster command error when "commanding" the
     ///                                         cluster.
@@ -102,6 +105,16 @@ pub enum HarTexError {
     ///                                        embed property.
     EmbedImageSourceUrlError {
         error: ImageSourceUrlError
+    },
+
+    /// # Enum Variant `HarTexError::SessionInactiveError1
+    ///
+    /// A wrapper around `twilight_gateway::shard::SessionInactiveError`
+    ///
+    /// - `error`, type `SessionInactiveError`: the error returned when attempting to get
+    ///                                         information about a shard.
+    SessionInactiveError {
+        error: SessionInactiveError
     },
 
     /// # Enum Variant `TomlDeserializationError`
@@ -232,6 +245,14 @@ impl From<ImageSourceUrlError> for HarTexError {
     }
 }
 
+impl From<SessionInactiveError> for HarTexError {
+    fn from(error: SessionInactiveError) -> Self {
+        Self::SessionInactiveError {
+            error
+        }
+    }
+}
+
 impl From<TomlDeserializationError> for HarTexError {
     fn from(error: TomlDeserializationError) -> Self {
         Self::TomlDeserializationError {
@@ -251,4 +272,4 @@ impl From<UpdatePresenceError> for HarTexError {
 /// # Type Alias `HarTexResult<T>`
 ///
 /// A type alias for `Result<T, HarTexError>`, used for error-handling.
-pub type HarTexResult<T> = Result<T, HarTexError>;
+p
