@@ -5,7 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![GitHub repo size](https://img.shields.io/github/repo-size/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
-![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.54-93450a.svg?style=for-the-badge&logo=rust)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.55-93450a.svg?style=for-the-badge&logo=rust)
 
 ![Github Open Issues](https://img.shields.io/github/issues-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Github Closed Issues](https://img.shields.io/github/issues-closed-raw/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
@@ -21,13 +21,6 @@ HarTex is a Discord Bot primarily for moderation and administration. It is built
 Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having 
 the source code released and updated frequently, is to allow others to understand the bot's inner workings and audit its fuctionality.
 You *can* run a local instance of HarTex for your server (but **NOT** a public version).
-
-### Self-Hosting Agreement
-
-- You may not use the HarTex logo or name within derivative bots;
-- You may not host a public version of HarTex;
-- You may not charge money for the usage of *your* instance of HarTex; and
-- You may not provide support for *your* instance of HarTex.
 
 ## HarTex Development
 

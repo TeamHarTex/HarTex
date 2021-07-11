@@ -1,0 +1,16 @@
+[package]
+name = "hartex_eventsys"
+version = "1.19.0"
+edition = "2018"
+description = """
+The `hartex_eventsys` library provides custom events as well as custom listeners for HarTex Discord bot.
+"""
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dashmap = "4.0.2"
+futures-channel = "0.3.15"
+futures-util = "0.3.15"
+hartex_model = { path = "../hartex_model" }
