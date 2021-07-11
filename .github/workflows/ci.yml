@@ -1,4 +1,4 @@
-name: Rust
+name: Rust Build (Ubuntu 20.04)
 
 on:
   push:
@@ -22,9 +22,6 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
-    - name: List
-      run: ls -la
-    - name: Change Directory
-      run: cd hartex
     - name: Build
-      run: cargo build --release
+      run: cd hartex
+        | cargo build --release
