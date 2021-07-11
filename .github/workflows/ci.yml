@@ -19,9 +19,8 @@ jobs:
     - name: Install latest nightly
       uses: actions-rs/toolchain@v1
       with:
-          toolchain: nightly
-          override: true
-          profile: default
+        toolchain: nightly
+        override: true
+        profile: default
     - name: Build
-      run: cd hartex
-        | cargo build --release
+      run: cd hartex && cargo build --release
