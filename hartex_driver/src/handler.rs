@@ -287,17 +287,17 @@ impl EventHandler {
             url: None
         };
 
-        Logger::verbose(
-            "registering presence(s)",
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
-
         for shard in cluster.shards() {
             let info = shard.info()?;
             let shard_id = info.id();
+
+            Logger::verbose(
+                format!("registering presence for shard {}", shard_id),
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
 
             presence.name = format!("codebase revamp | Shard {}", shard_id);
 
