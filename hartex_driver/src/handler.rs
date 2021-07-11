@@ -268,25 +268,6 @@ impl EventHandler {
             column!()
         );
 
-        let mut presence = Activity {
-            application_id: None,
-            assets: None,
-            buttons: Vec::new(),
-            created_at: None,
-            details: None,
-            emoji: None,
-            flags: None,
-            id: None,
-            instance: None,
-            kind: ActivityType::Watching,
-            name: String::new(),
-            party: None,
-            secrets: None,
-            state: None,
-            timestamps: None,
-            url: None
-        };
-
         for shard in cluster.shards() {
             let info = shard.info()?;
             let shard_id = info.id();
@@ -299,11 +280,26 @@ impl EventHandler {
                 column!()
             );
 
-            presence.name = format!("codebase revamp | Shard {}", shard_id);
-
             match shard.command(
                 &UpdatePresencePayload::new(
-                    vec![presence.clone()],
+                    vec![Activity {
+                        application_id: None,
+                        assets: None,
+                        buttons: Vec::new(),
+                        created_at: None,
+                        details: None,
+                        emoji: None,
+                        flags: None,
+                        id: None,
+                        instance: None,
+                        kind: ActivityType::Watching,
+                        name: format!("codebase revamp | shard {}", shard_id),
+                        party: None,
+                        secrets: None,
+                        state: None,
+                        timestamps: None,
+                        url: None
+                    }],
                     false,
                     None,
                     Status::Online
