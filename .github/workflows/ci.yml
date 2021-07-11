@@ -22,8 +22,8 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
-    - name: Print Working Directory
-      run: pwd
+    - name: List
+      run: ls
     - name: Change Directory
       run: cd hartex
     - name: Build
