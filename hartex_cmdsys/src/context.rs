@@ -17,7 +17,7 @@ use hartex_core::discord::{
 /// The command context used for command invocation.
 #[derive(Clone)]
 pub struct CommandContext {
-    inner: Arc<CommandContextInner>
+    pub inner: Arc<CommandContextInner>
 }
 
 /// # Struct `CommandContextInner`

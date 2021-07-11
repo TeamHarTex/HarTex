@@ -12,6 +12,7 @@ use std::{
 
 use hartex_core::error::HarTexResult;
 
+pub mod guildconf;
 pub mod whitelist;
 
 /// # Typealias `PendingFuture`

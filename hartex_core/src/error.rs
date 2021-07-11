@@ -272,4 +272,4 @@ impl From<UpdatePresenceError> for HarTexError {
 /// # Type Alias `HarTexResult<T>`
 ///
 /// A type alias for `Result<T, HarTexError>`, used for error-handling.
-p
+pub type HarTexResult<T> = Result<T, HarTexError>;
