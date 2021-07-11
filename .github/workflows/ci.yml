@@ -1,17 +1,32 @@
-name: Rust Build (Ubuntu 20.04)
+name: Release Build (Full Optimizations)
 
 on:
   push:
-    branches: [ infdev ]
+    branches:
+      - infdev
   pull_request:
-    branches: [ infdev ]
+    branches:
+      - "**"
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  windows-latest:
+    runs-on: windows-2019
 
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Build
+        run: cd hartex && cargo build --release
+
+  ubuntu-latest:
     runs-on: ubuntu-20.04
 
     steps:
