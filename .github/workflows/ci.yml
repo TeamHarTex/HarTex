@@ -23,7 +23,7 @@ jobs:
           override: true
           profile: default
     - name: List
-      run: ls
+      run: ls -la
     - name: Change Directory
       run: cd hartex
     - name: Build
