@@ -12,9 +12,11 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+base64 = "0.13.0"
 chrono = "0.4.19"
 ctrlc = "3.1.9"
 serde = "1.0.126"
+toml = "0.5.8"
 twilight-cache-inmemory = { version = "0.5.1", optional = true }
 twilight-embed-builder = { version = "0.5.1", optional = true }
 twilight-gateway = { version = "0.5.2", optional = true }

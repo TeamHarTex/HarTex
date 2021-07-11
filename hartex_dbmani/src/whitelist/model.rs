@@ -8,15 +8,15 @@ use sqlx::{
     Row
 };
 
-pub struct WhitelistedGuild<'a> {
-    pub GuildName: &'a str,
+pub struct WhitelistedGuild {
+    pub GuildName: String,
     pub GuildId: u64
 }
 
-impl<'a> sqlx::FromRow<'a, PgRow> for WhitelistedGuild<'a> {
-    fn from_row(row: &'a PgRow) -> SqlxResult<Self> {
-        let name = row.try_get::<&'a str, &'a str>("GuildName")?;
-        let id = row.try_get::<i64, &'a str>("GuildId")?;
+impl<'r> sqlx::FromRow<'r, PgRow> for WhitelistedGuild {
+    fn from_row(row: &'r PgRow) -> SqlxResult<Self> {
+        let name = row.try_get::<String, &str>("GuildName")?;
+        let id = row.try_get::<i64, &str>("GuildId")?;
 
         Ok(Self {
             GuildName: name,

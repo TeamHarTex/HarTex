@@ -10,6 +10,7 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+base64 = "0.13.0"
 dashmap = "4.0.2"
 hartex_conftoml = { path = "../hartex_conftoml" }
 hartex_core = { path = "../hartex_core" }

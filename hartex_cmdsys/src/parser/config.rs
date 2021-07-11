@@ -7,8 +7,8 @@
 /// Holds the configuration for a command.
 #[derive(Clone, Debug, Default)]
 pub struct CommandConfig<'a> {
-    name: &'a str,
-    aliases: Option<Vec<&'a str>>
+    pub name: &'a str,
+    pub aliases: Option<Vec<&'a str>>
 }
 
 impl<'a> CommandConfig<'a> {
