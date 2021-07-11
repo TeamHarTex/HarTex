@@ -14,3 +14,6 @@ hartex_logging/Cargo.lock
 hartex_model/Cargo.lock
 hartex_plugins/Cargo.lock
 hartex_utils/Cargo.lock
+
+# environment variables
+.env
