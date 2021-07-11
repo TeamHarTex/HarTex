@@ -1,2 +1,16 @@
+# directories
 .idea
 hartex/target
+
+# .lock files
+hartex/Cargo.lock
+hartex_cmdsys/Cargo.lock
+hartex_conftoml/Cargo.lock
+hartex_core/Cargo.lock
+hartex_dbmani/Cargo.lock
+hartex_driver/Cargo.lock
+hartex_eventsys/Cargo.lock
+hartex_logging/Cargo.lock
+hartex_model/Cargo.lock
+hartex_plugins/Cargo.lock
+hartex_utils/Cargo.lock
