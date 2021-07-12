@@ -42,7 +42,7 @@ You *may* run a local instance of HarTex for your server.
 
 ### Can I Contribute?
 
-Sure. Feel free to submit Issues and Pull Requests. They *may* be answered and reviewed by the Developer Team in a case-by-case basis,
-but it is **NOT** guaranteed.
+Definitely! Feel free to file issues and pull requests, or even start discussions so discuss various issues or ideas to further
+improve the code of the bot or even its functionalities. Contributions are highly welcomed!
 
 Made with :heart:, using [The Rust Programming Language](https://www.rust-lang.org/)
