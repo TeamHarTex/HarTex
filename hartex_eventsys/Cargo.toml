@@ -1,6 +1,6 @@
 [package]
 name = "hartex_eventsys"
-version = "1.19.0"
+version = "1.19.0-21H2"
 edition = "2018"
 description = """
 The `hartex_eventsys` library provides custom events as well as custom listeners for HarTex Discord bot.
