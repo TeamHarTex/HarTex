@@ -1,6 +1,6 @@
 [package]
 name = "hartex_logging"
-version = "1.19.0"
+version = "1.19.0-21H2"
 edition = "2018"
 description = """
 The `hartex_logging` library provides logging functionality for HarTex Discord bot.

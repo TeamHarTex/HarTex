@@ -1,6 +1,6 @@
 [package]
 name = "hartex_utils"
-version = "0.1.0"
+version = "1.19.0-21H2"
 edition = "2018"
 description = """
 The `hartex_utils` library provides several utilies for the HarTex Discord bot.
