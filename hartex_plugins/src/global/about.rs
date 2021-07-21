@@ -64,7 +64,7 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
 
     ctx.http
         .create_message(ctx.message.channel_id)
-        .embed(embed)?
+        .embeds(vec![embed])?
         .reply(ctx.message.id)
         .allowed_mentions(AllowedMentions::default())
         .await?;
