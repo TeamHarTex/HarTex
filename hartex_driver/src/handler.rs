@@ -65,7 +65,7 @@ impl EventHandler {
     /// - `payload`, type `Box<GuildCreate>`: the `GuildCreate` event payload
     /// - `http`, type `Client`: the Twilight HTTP Client to use for sending a message to the guild
     ///                          owner about his/her guild's whitelist status if the guild is not
-    ///                          in the whitelis,t or that the whitelist has been removed, or that
+    ///                          in the whitelist or that the whitelist has been removed, or that
     ///                          the guild has been previously been whitelisted but the whitelist
     ///                          is deactivated with a reason.
     pub async fn guild_create(payload: Box<GuildCreate>, http: Client) -> HarTexResult<()> {
