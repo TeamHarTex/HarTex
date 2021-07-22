@@ -1,7 +1,9 @@
+cargo-features = ["edition2021"]
+
 [package]
 name = "hartex_cmdsys"
 version = "1.19.0-21H2"
-edition = "2018"
+edition = "2021"
 description = """
 This crate implements a command system for HarTex Discord bot, including a command parser as well as various utilities.
 """

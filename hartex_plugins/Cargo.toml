@@ -1,7 +1,9 @@
+cargo-features = ["edition2021"]
+
 [package]
 name = "hartex_plugins"
 version = "1.19.0-21H2"
-edition = "2018"
+edition = "2021"
 description = """
 The `hartex_plugins` library implements various bot plugins for its functionalities.
 """
