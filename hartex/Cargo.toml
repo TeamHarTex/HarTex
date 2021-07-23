@@ -14,4 +14,4 @@ license = "Apache-2.0"
 [dependencies]
 hartex_core = { path = "../hartex_core" }
 hartex_driver = { path = "../hartex_driver" }
-tokio = { version = "1.8.2", features = [ "full" ] }
+tokio = { version = "1.9.0", features = [ "full" ] }
