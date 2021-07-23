@@ -24,7 +24,10 @@ use crate::discord::{
     },
     http::{
         error::Error as HttpError,
-        request::channel::message::create_message::CreateMessageError
+        request::{
+            channel::message::create_message::CreateMessageError,
+            guild::member::update_guild_member::UpdateGuildMemberError
+        }
     },
     model::gateway::payload::update_presence::UpdatePresenceError
 };
@@ -129,7 +132,7 @@ pub enum HarTexError {
         error: TomlDeserializationError
     },
 
-    /// # Enum Variant `HHarTexError::TwilightHttpError`
+    /// # Enum Variant `HarTexError::TwilightHttpError`
     ///
     /// A wrapper around `twilight_http::error::Error`.
     ///
@@ -139,13 +142,24 @@ pub enum HarTexError {
         error: HttpError
     },
 
-    /// # Enum Variant `HarTexError::UpdatePresenceError`
+    /// # Enum Variant `HarTexError::UpdateGuildMemberError`
     ///
-    /// A wrapper around `twilight_model::gateway::paylod::update_presence::UpdatePresenceError`.
+    /// A wrapper around `twilight_http::request::guild::member::update_guild_member::UpdateGuildMemberError`.
     ///
     /// ## Fields
-    /// - `error`, type `UpdatePresenceError`: the error presence update error returned when
-    ///                                        attempting to update the bot's presence.
+    /// - `error`, type `UpdateGuildMemberError`: the error returned when attempting to update
+    ///                                           a guild member.
+    UpdateGuildMemberError {
+        error: UpdateGuildMemberError
+    },
+
+    /// # Enum Variant `HarTexError::UpdatePresenceError`
+    ///
+    /// A wrapper around `twilight_model::gateway::payload::update_presence::UpdatePresenceError`.
+    ///
+    /// ## Fields
+    /// - `error`, type `UpdatePresenceError`: the presence update error returned when
+    ///                                        attempting to update the presence.
     UpdatePresenceError {
         error: UpdatePresenceError
     },
@@ -256,6 +270,14 @@ impl From<SessionInactiveError> for HarTexError {
 impl From<TomlDeserializationError> for HarTexError {
     fn from(error: TomlDeserializationError) -> Self {
         Self::TomlDeserializationError {
+            error
+        }
+    }
+}
+
+impl From<UpdateGuildMemberError> for HarTexError {
+    fn from(error: UpdateGuildMemberError) -> Self {
+        Self::UpdateGuildMemberError {
             error
         }
     }
