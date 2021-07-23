@@ -176,6 +176,21 @@ impl EventHandler {
             column!()
         );
 
+        Logger::verbose(
+            "obtaining guild configuration",
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
+        );
+
+        let config = GetGuildConfig::new(guild_id).await?;
+        let current_user = http.current_user().await?;
+
+        http.update_guild_member(guild_id, current_user.id)
+            .nick(config.GuildConfiguration.nickname)?
+            .await?;
+
         Ok(())
     }
 
