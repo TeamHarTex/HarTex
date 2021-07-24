@@ -13,6 +13,6 @@ license = "Apache-2.0"
 
 [dependencies]
 dashmap = "4.0.2"
-futures-channel = "0.3.15"
-futures-util = "0.3.15"
+futures-channel = "0.3.16"
+futures-util = "0.3.16"
 hartex_model = { path = "../hartex_model" }
