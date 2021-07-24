@@ -187,6 +187,8 @@ impl EventHandler {
         let config = GetGuildConfig::new(guild_id).await?;
         let current_user = http.current_user().await?;
 
+        // changes the current user nickname as configured in the configuration.
+        // will only be synchronized by restarting.
         http.update_guild_member(guild_id, current_user.id)
             .nick(config.GuildConfiguration.nickname)?
             .await?;
