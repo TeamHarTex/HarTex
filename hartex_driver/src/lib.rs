@@ -106,8 +106,11 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     let intents = Intents::all();
 
+    let http = Client::new(&token);
+
     let (cluster, events) = Cluster::builder(&token, intents)
         .shard_scheme(shard_scheme)
+        .http_client(http.clone())
         .build()
         .await?;
 
@@ -124,8 +127,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
         line!(),
         column!()
     );
-
-    let http = Client::new(&token);
 
     Logger::verbose(
         "initializing command framework",
