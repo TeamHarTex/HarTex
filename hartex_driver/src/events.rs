@@ -62,7 +62,7 @@ pub async fn handle_event(
                     EventHandler::message_create(payload, emitter, parser, cache, http).await?
                 }
                 Event::Ready(payload) => {
-                    EventHandler::ready(payload, cluster).await?
+                    EventHandler::ready(payload, cluster, http).await?
                 }
                 Event::ShardIdentifying(payload) => {
                     EventHandler::shard_identifying(payload).await?
