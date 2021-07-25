@@ -286,8 +286,7 @@ impl EventHandler {
         );
 
         for shard in cluster.shards() {
-            let info = shard.info()?;
-            let shard_id = info.id();
+            let shard_id = shard.info()?.id();
 
             Logger::verbose(
                 format!("registering presence for shard {}", shard_id),
@@ -298,7 +297,7 @@ impl EventHandler {
             );
 
             match shard.command(
-                &UpdatePresencePayload::new(
+                & match UpdatePresencePayload::new(
                     vec![Activity {
                         application_id: None,
                         assets: None,
@@ -320,9 +319,30 @@ impl EventHandler {
                     false,
                     None,
                     Status::Online
-                )?
+                ) {
+                    Ok(val) => val,
+                    Err(error) => {
+                        Logger::error(
+                            format!("failed to construct presence for shard {}: {}", shard_id, error),
+                            Some(module_path!()),
+                            file!(),
+                            line!(),
+                            column!()
+                        );
+
+                        return Err(HarTexError::from(error));
+                    }
+                }
             ).await {
-                Ok(()) => (),
+                Ok(()) => {
+                    Logger::verbose(
+                        format!("successfully set presence for shard {}", shard_id),
+                        Some(module_path!()),
+                        file!(),
+                        line!(),
+                        column!()
+                    );
+                },
                 Err(error) => {
                     Logger::error(
                         format!("failed to set presence for shard {}: {}", shard_id, error),
