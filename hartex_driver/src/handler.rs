@@ -21,7 +21,7 @@ use hartex_core::{
         model::gateway::{
             event::shard::Identifying,
             payload::{
-                update_presence::UpdatePresencePayload,
+                update_presence::UpdatePresence,
                 GuildCreate,
                 MessageCreate,
                 Ready,
@@ -297,7 +297,7 @@ impl EventHandler {
             );
 
             match shard.command(
-                & match UpdatePresencePayload::new(
+                &match UpdatePresence::new(
                     vec![Activity {
                         application_id: None,
                         assets: None,
