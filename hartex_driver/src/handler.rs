@@ -252,7 +252,7 @@ impl EventHandler {
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
     /// - `cluster`, type `Cluster`: the gateway cluster
     /// - `http`, type `Client`: the http client
-    pub async fn ready(payload: Box<Ready>, cluster: Cluster, _: Client) -> HarTexResult<()> {
+    pub async fn ready(payload: Box<Ready>, cluster: Cluster, http: Client) -> HarTexResult<()> {
         let user = payload.user;
 
         Logger::info(
@@ -281,7 +281,7 @@ impl EventHandler {
             );
 
             match shard.command(
-                &match UpdatePresence::new(
+                &UpdatePresence::new(
                     vec![Activity {
                         application_id: None,
                         assets: None,
@@ -303,20 +303,7 @@ impl EventHandler {
                     false,
                     None,
                     Status::Online
-                ) {
-                    Ok(val) => val,
-                    Err(error) => {
-                        Logger::error(
-                            format!("failed to construct presence for shard {}: {}", shard_id, error),
-                            Some(module_path!()),
-                            file!(),
-                            line!(),
-                            column!()
-                        );
-
-                        return Err(HarTexError::from(error));
-                    }
-                }
+                )?
             ).await {
                 Ok(()) => {
                     Logger::verbose(
@@ -337,6 +324,9 @@ impl EventHandler {
                     );
                 }
             }
+        }
+
+        for _ in http.current_user_guilds().await? {
         }
 
         Ok(())
