@@ -21,7 +21,7 @@ serde = "1.0.126"
 toml = "0.5.8"
 twilight-cache-inmemory = { version = "0.5.3", optional = true }
 twilight-embed-builder = { version = "0.5.2", optional = true }
-twilight-gateway = { version = "0.5.4", optional = true }
+twilight-gateway = { version = "0.5.5", optional = true }
 twilight-http = { version = "0.5.6", optional = true }
 twilight-mention = { version = "0.5.1", optional = true }
 twilight-model = { version = "0.5.4", optional = true }
