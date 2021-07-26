@@ -11,6 +11,7 @@ use hartex_core::error::HarTexResult;
 
 pub mod dashacc;
 pub mod guildconf;
+pub mod nightly;
 
 /// # Struct `TomlConfig`
 ///
@@ -18,7 +19,9 @@ pub mod guildconf;
 #[derive(Deserialize)]
 pub struct TomlConfig {
     pub DashboardAccess: Vec<dashacc::DashboardAccess>,
-    pub GuildConfiguration: guildconf::GuildConfiguration
+    pub GuildConfiguration: guildconf::GuildConfiguration,
+    #[serde(default)]
+    pub NightlyFeatures: nightly::NightlyFeatures
 }
 
 pub fn from_string(input: String) -> HarTexResult<TomlConfig> {
