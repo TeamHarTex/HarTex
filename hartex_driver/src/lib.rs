@@ -29,7 +29,8 @@ use hartex_core::{
                 Cluster,
                 ShardScheme
             },
-            Intents,
+            EventTypeFlags,
+            Intents
         },
         http::Client,
     },
@@ -109,8 +110,9 @@ pub async fn hartex_main() -> HarTexResult<()> {
     let http = Client::new(&token);
 
     let (cluster, events) = Cluster::builder(&token, intents)
-        .shard_scheme(shard_scheme)
+        .event_types(EventTypeFlags::all())
         .http_client(http.clone())
+        .shard_scheme(shard_scheme)
         .build()
         .await?;
 
@@ -166,9 +168,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
         column!()
     );
 
-    let resource_types = ResourceType::all();
     let cache = InMemoryCache::builder()
-        .resource_types(resource_types)
+        .resource_types(ResourceType::all())
         .build();
 
     Logger::verbose(
