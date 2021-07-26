@@ -327,9 +327,10 @@ impl EventHandler {
         }
 
         for guild in http.current_user_guilds().await? {
-            http
-                .update_guild_member(guild.id, user.id)
-                .nick(String::from("Nickname Test"))?
+            let config = GetGuildConfig::new(guild.id).await?;
+
+            http.update_guild_member(guild.id, user.id)
+                .nick(config.GuildConfiguration.nickname)?
                 .await?;
         }
 

@@ -13,5 +13,6 @@ license = "Apache-2.0"
 
 [dependencies]
 hartex_core = { path = "../hartex_core" }
+hartex_logging = { path = "../hartex_logging" }
 serde = { version = "1.0.126", features = [ "derive" ] }
 toml = "0.5.8"
