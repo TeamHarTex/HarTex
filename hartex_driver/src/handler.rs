@@ -326,7 +326,11 @@ impl EventHandler {
             }
         }
 
-        for _ in http.current_user_guilds().await? {
+        for guild in http.current_user_guilds().await? {
+            http
+                .update_guild_member(guild.id, user.id)
+                .nick(String::from("Nickname Test"))?
+                .await?;
         }
 
         Ok(())
