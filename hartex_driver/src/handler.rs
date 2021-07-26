@@ -252,7 +252,7 @@ impl EventHandler {
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
     /// - `cluster`, type `Cluster`: the gateway cluster
     /// - `http`, type `Client`: the http client
-    pub async fn ready(payload: Box<Ready>, cluster: Cluster, http: Client) -> HarTexResult<()> {
+    pub async fn ready(payload: Box<Ready>, cluster: Cluster, _: Client) -> HarTexResult<()> {
         let user = payload.user;
 
         Logger::info(
@@ -337,26 +337,6 @@ impl EventHandler {
                     );
                 }
             }
-        }
-
-        let guilds = http.current_user_guilds().await?;
-
-        for guild in guilds {
-            Logger::verbose(
-                format!("obtaining guild configuration for guild {}", guild.id),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
-
-            let config = GetGuildConfig::new(guild.id).await?;
-
-            // changes the current user nickname as configured in the configuration.
-            // will only be synchronized by restarting.
-            http.update_guild_member(guild.id, user.id)
-                .nick(config.GuildConfiguration.nickname)?
-                .await?;
         }
 
         Ok(())
