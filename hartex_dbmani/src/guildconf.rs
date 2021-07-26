@@ -115,6 +115,14 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
+    Logger::verbose(
+        "connecting to database...",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
+
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
@@ -133,6 +141,14 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
             });
         }
     };
+
+    Logger::verbose(
+        "executing query...",
+        Some(module_path!()),
+        file!(),
+        line!(),
+        column!()
+    );
 
     match sqlx::query(&format!("SELECT * FROM \"Guild{}\"; --", guild_id)).fetch_one(&connection)
         .await {
@@ -157,6 +173,14 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                     });
                 }
             };
+
+            Logger::verbose(
+                "deserializing toml config...",
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
 
             hartex_conftoml::from_string(match String::from_utf8(decoded) {
                 Ok(string) => string,

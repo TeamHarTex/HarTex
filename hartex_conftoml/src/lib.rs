@@ -7,7 +7,12 @@
 
 use serde::Deserialize;
 
-use hartex_core::error::HarTexResult;
+use hartex_core::error::{
+    HarTexError,
+    HarTexResult
+};
+
+use hartex_logging::Logger;
 
 pub mod dashacc;
 pub mod guildconf;
@@ -25,5 +30,18 @@ pub struct TomlConfig {
 }
 
 pub fn from_string(input: String) -> HarTexResult<TomlConfig> {
-    Ok(toml::from_str(input.as_str())?)
+    Ok(match toml::from_str(input.as_str()) {
+        Ok(config) => config,
+        Err(error) => {
+            Logger::error(
+                &format!("failed to deserialize config: {}", error),
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
+
+            return Err(HarTexError::from(error))
+        }
+    })
 }
