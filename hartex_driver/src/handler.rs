@@ -327,11 +327,44 @@ impl EventHandler {
         }
 
         for guild in http.current_user_guilds().await? {
+            Logger::verbose(
+                format!("changing nickname in guild {}", guild.name),
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
+
             let config = GetGuildConfig::new(guild.id).await?;
 
-            http.update_guild_member(guild.id, user.id)
-                .nick(config.GuildConfiguration.nickname)?
-                .await?;
+            match match http.update_guild_member(guild.id, user.id)
+                .nick(config.GuildConfiguration.nickname) {
+                Ok(update) => update,
+                Err(error) => {
+                    Logger::error(
+                        format!("failed to initialize member update: {}", error),
+                        Some(module_path!()),
+                        file!(),
+                        line!(),
+                        column!()
+                    );
+
+                    return Err(HarTexError::from(error));
+                }
+            }.await {
+                Err(error) => {
+                    Logger::error(
+                        format!("failed to change nickname: {}", error),
+                        Some(module_path!()),
+                        file!(),
+                        line!(),
+                        column!()
+                    );
+
+                    return Err(HarTexError::from(error));
+                },
+                _ => ()
+            };
         }
 
         Ok(())
