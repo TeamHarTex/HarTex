@@ -43,5 +43,5 @@ fn default_dm_cant_use_cmd() -> bool {
 fn deserialize_timezone<'deserialize, Deserializer>(deserializer: Deserializer) -> Result<tz::Timezone, Deserializer::Error>
     where
         Deserializer: de::Deserializer<'deserialize> {
-    deserializer.deserialize_string(tz::TimezoneDeserializeStringVisitor)
+    deserializer.deserialize_str(tz::TimezoneDeserializeStringVisitor)
 }

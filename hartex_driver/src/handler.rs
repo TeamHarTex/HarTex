@@ -360,8 +360,6 @@ impl EventHandler {
                         line!(),
                         column!()
                     );
-
-                    return Err(HarTexError::from(error));
                 },
                 _ => ()
             };

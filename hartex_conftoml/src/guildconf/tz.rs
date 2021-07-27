@@ -13,9 +13,14 @@ use serde::de::{
 ///
 /// Represents a timezone.
 pub enum Timezone {
+    /// # Enum Variant `Timezone::AsiaHongKong`
+    ///
+    /// The "Asia/Hong_Kong" timezone.
+    AsiaHongKong,
+
     /// # Enum Variant `Timezone::UTC`
     ///
-    /// The UTC timezone.
+    /// The "UTC" timezone.
     UTC
 }
 
@@ -31,9 +36,10 @@ impl<'visitor> Visitor<'visitor> for TimezoneDeserializeStringVisitor {
         write!(formatter, "a string representing a timezone")
     }
 
-    fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where E: Error {
-        Ok(match v.as_str() {
+        Ok(match v {
+            "Asia/Hong_Kong" => Timezone::AsiaHongKong,
             "UTC" => Timezone::UTC,
             _ => return Err(Error::custom("invalid timezone"))
         })
