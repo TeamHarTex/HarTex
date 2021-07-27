@@ -337,19 +337,21 @@ impl EventHandler {
 
             let config = GetGuildConfig::new(guild.id).await?;
 
-            match match http.update_guild_member(guild.id, user.id)
-                .nick(config.GuildConfiguration.nickname) {
-                Ok(update) => update,
-                Err(error) => {
-                    Logger::error(
-                        format!("failed to initialize member update: {}", error),
-                        Some(module_path!()),
-                        file!(),
-                        line!(),
-                        column!()
-                    );
+            match {
+                match http.update_guild_member(guild.id, user.id)
+                    .nick(config.GuildConfiguration.nickname) {
+                    Ok(update) => update,
+                    Err(error) => {
+                        Logger::error(
+                            format!("failed to initialize member update: {}", error),
+                            Some(module_path!()),
+                            file!(),
+                            line!(),
+                            column!(),
+                        );
 
-                    return Err(HarTexError::from(error));
+                        return Err(HarTexError::from(error));
+                    }
                 }
             }.await {
                 Err(error) => {
