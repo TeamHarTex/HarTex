@@ -42,7 +42,6 @@ impl Command for Ping {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-/// - `cache`, type InMemoryCache`: the in-memory cache to use.
 async fn exec_ping_cmd(ctx: CommandContext) -> HarTexResult<()> {
     let channel_id = ctx.message.channel_id;
     let message = ctx.http
