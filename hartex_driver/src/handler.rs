@@ -348,7 +348,7 @@ impl EventHandler {
                         line!(),
                         column!()
                     );
-                },
+                }
                 _ => ()
             };
 

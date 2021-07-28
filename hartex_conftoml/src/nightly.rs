@@ -7,10 +7,20 @@
 
 use serde::Deserialize;
 
+/// # Struct `NightlyFeatures`
+///
+/// The opt-in nightly features that the bot provides.
 #[derive(Default, Deserialize)]
 pub struct NightlyFeatures {
+    // Experimental Support for the Discord Interactions API
     #[serde(default = "default_feature_enabled")]
-    pub interactions: bool
+    pub interactions: bool,
+    // Experimental Support for the Discord Threads API
+    #[serde(default = "default_feature_enabled")]
+    pub threads: bool,
+    // Experimental Support for Language Localization Facilities
+    #[serde(default = "default_feature_enabled")]
+    pub languageLocalization: bool
 }
 
 pub fn default_feature_enabled() -> bool {
