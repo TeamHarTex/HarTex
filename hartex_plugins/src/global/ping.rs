@@ -2,8 +2,6 @@
 //!
 //! This module implements the `ping` command.
 
-use std::time::Duration;
-
 use hartex_cmdsys::{
     command::Command,
     context::CommandContext,
@@ -13,14 +11,12 @@ use hartex_cmdsys::{
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
-        gateway::shard::raw_message::Message as RawGatewayMessage,
         model::channel::message::AllowedMentions
     },
     error::HarTexResult
 };
 
 use hartex_utils::{
-    stopwatch::Stopwatch,
     FutureRetType,
     shard_id
 };
