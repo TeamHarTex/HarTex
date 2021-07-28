@@ -9,6 +9,15 @@ use std::{
 
 use hartex_core::error::HarTexResult;
 
+pub mod stopwatch;
+
+/// # Constant Function `shard_id`
+///
+/// Computes the shard id for a specific guild by the guild id and the number of shards.
+///
+/// ## Parameters
+/// - `guild_id`, type `u64`: the guild id
+/// - `shards`, type `u64`: the total number of shards
 pub const fn shard_id(guild_id: u64, shards: u64) -> u64 {
     (guild_id >> 22) % shards
 }
