@@ -62,13 +62,7 @@ async fn exec_ping_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .get(&shard_id)
         .unwrap();
     let latency = shard_info.latency().average()
-        .unwrap_or_else(|| {
-            let stopwatch = Stopwatch::new();
-
-            Box::pin(ctx.cluster.send(shard_id, RawGatewayMessage::Ping(vec![])));
-
-            Duration::from_millis(stopwatch.elapsed_milliseconds() as _)
-        });
+        .unwrap();
     let new_content = format!("{} - `{}ms`", message.content, latency.as_millis());
 
     ctx.http
