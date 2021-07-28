@@ -1,0 +1,53 @@
+name: Internal Bot Error
+description: Report an unexpected panic.
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Issue Guidelines
+
+        - Search through [the existing IBEs](https://github.com/HT-Studios/HarTex-rust-discord-bot/labels/Bot%3A%20IBE) first to ensure that the IBE has not been previously reported;
+        - Use a descriptive title. Avoid over-generic or vague wordings; and
+        - Provide as much details as possible for easier debugging and tracking down of the issue. Screenshots, screen recordings, links or any material relating to the IBE may be included at your discretion, but is recommended.
+
+  - type: input
+    attributes:
+      label: Bot Version
+      description: Which version of the bot is affected by this IBE? (can be obtained using the "about" command)
+      placeholder: e.g. Version 21H1 (Build 105)
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: Describe the IBE you encountered.
+      placeholder: e.g. I was doing X, expecting Y to happen. However, Z happened instead.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: Describe the steps to reproduce the same IBE that you encountered.
+      placeholder: |
+        1. Execute command "..."
+        2. See IBE
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Error/Stack Backtrace
+      description: Copy and paste the provided backtrace here.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Extra Information
+      description: Attach any related screenshots, screen recordings, links or any material relating to the IBE at your discretion.
+    validations:
+      required: false
