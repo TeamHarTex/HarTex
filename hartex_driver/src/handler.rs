@@ -196,7 +196,8 @@ impl EventHandler {
         emitter: EventEmitter,
         parser: CommandParser<'_>,
         cache: InMemoryCache,
-        http: Client
+        http: Client,
+        cluster: Cluster
     ) -> HarTexResult<()> {
         let guild_id = match payload.guild_id {
             Some(id) => id,
@@ -237,7 +238,8 @@ impl EventHandler {
                 crate::commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
                     inner: Arc::new(CommandContextInner {
                         http,
-                        message: (**payload).clone()
+                        message: (**payload).clone(),
+                        cluster
                     })
                 }).await?;
             }

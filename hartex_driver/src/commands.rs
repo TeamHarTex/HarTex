@@ -21,6 +21,7 @@ use hartex_logging::Logger;
 
 use hartex_plugins::global::{
     about::About,
+    ping::Ping,
     team::Team
 };
 
@@ -42,9 +43,12 @@ pub async fn handle_command(
         ParsedCommand { name: "about", args } => {
             About::execute(context, args, cache).await?;
         }
+        ParsedCommand { name: "ping", args} => {
+            Ping::execute(context, args, cache).await?;
+        }
         ParsedCommand { name: "team", args } => {
             Team::execute(context, args, cache).await?;
-        },
+        }
         _ => ()
     }
 

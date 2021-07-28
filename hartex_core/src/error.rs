@@ -25,7 +25,10 @@ use crate::discord::{
     http::{
         error::Error as HttpError,
         request::{
-            channel::message::create_message::CreateMessageError,
+            channel::message::{
+                create_message::CreateMessageError,
+                update_message::UpdateMessageError
+            },
             guild::member::update_guild_member::UpdateGuildMemberError
         }
     },
@@ -155,6 +158,17 @@ pub enum HarTexError {
 
     /// # Enum Variant `HarTexError::UpdatePresenceError`
     ///
+    /// A wrapper around `twilight_http::request::channel::message::update_message::UpdateMessageError`.
+    ///
+    /// ## Fields
+    /// - `error`, type `UpdateMessageError`: the message update error returned when
+    ///                                       attempting to update a message.
+    UpdateMessageError {
+        error: UpdateMessageError
+    },
+
+    /// # Enum Variant `HarTexError::UpdatePresenceError`
+    ///
     /// A wrapper around `twilight_model::gateway::payload::update_presence::UpdatePresenceError`.
     ///
     /// ## Fields
@@ -278,6 +292,14 @@ impl From<TomlDeserializationError> for HarTexError {
 impl From<UpdateGuildMemberError> for HarTexError {
     fn from(error: UpdateGuildMemberError) -> Self {
         Self::UpdateGuildMemberError {
+            error
+        }
+    }
+}
+
+impl From<UpdateMessageError> for HarTexError {
+    fn from(error: UpdateMessageError) -> Self {
+        Self::UpdateMessageError {
             error
         }
     }
