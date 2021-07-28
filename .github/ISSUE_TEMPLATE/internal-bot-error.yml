@@ -1,5 +1,6 @@
 name: Internal Bot Error
 description: Report an unexpected panic.
+labels: ["Bot: Bug", "Bot: IBE"]
 
 body:
   - type: markdown
