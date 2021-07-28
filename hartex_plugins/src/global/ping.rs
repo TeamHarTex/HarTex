@@ -2,6 +2,8 @@
 //!
 //! This module implements the `ping` command.
 
+use std::time::Duration;
+
 use hartex_cmdsys::{
     command::Command,
     context::CommandContext,
@@ -11,12 +13,14 @@ use hartex_cmdsys::{
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
+        gateway::shard::raw_message::Message as RawGatewayMessage,
         model::channel::message::AllowedMentions
     },
-    error::HarTexResult,
+    error::HarTexResult
 };
 
 use hartex_utils::{
+    stopwatch::Stopwatch,
     FutureRetType,
     shard_id
 };
@@ -53,10 +57,18 @@ async fn exec_ping_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .await?;
 
     let shards = ctx.cluster.info();
+    let shard_id = shard_id(ctx.message.guild_id.unwrap().0, shards.len() as _);
     let shard_info = shards
-        .get(&shard_id(ctx.message.guild_id.unwrap().0, shards.len() as _))
+        .get(&shard_id)
         .unwrap();
-    let latency = shard_info.latency().average().unwrap();
+    let latency = shard_info.latency().average()
+        .unwrap_or_else(|| {
+            let stopwatch = Stopwatch::new();
+
+            Box::pin(ctx.cluster.send(shard_id, RawGatewayMessage::Ping(vec![])));
+
+            Duration::from_millis(stopwatch.elapsed_milliseconds() as _)
+        });
     let new_content = format!("{} - `{}ms`", message.content, latency.as_millis());
 
     ctx.http
