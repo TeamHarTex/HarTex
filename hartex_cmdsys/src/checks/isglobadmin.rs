@@ -32,12 +32,12 @@ pub struct IsGlobAdmin;
 impl Check for IsGlobAdmin {
     type CheckRetType = ();
 
-    fn execute<'asynchronous_trait>(_: CommandContext, params: CheckParams) -> FutureRetType<Self::CheckRetType> {
+    fn execute<'asynchronous_trait>(_: CommandContext, params: CheckParams) -> FutureRetType<'asynchronous_trait, Self::CheckRetType> {
         Box::pin(exec_check(params))
     }
 }
 
-async fn exec_check(params: CheckParams) -> HarTexResult<IsGlobAdmin::CheckRetType> {
+async fn exec_check(params: CheckParams) -> HarTexResult<<IsGlobAdmin as Check>::CheckRetType> {
     let user_id = match env::var("GLOBAL_ADMINISTRATOR_UID") {
         Ok(token) => UserId(token.parse().unwrap_or(0u64)),
         Err(var_error) => {

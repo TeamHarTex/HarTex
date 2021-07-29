@@ -19,7 +19,7 @@ pub mod isglobadmin;
 pub trait Check {
     type CheckRetType;
 
-    fn execute<'asynchronous_trait>(ctx: CommandContext, params: CheckParams) -> FutureRetType<Self::CheckRetType>;
+    fn execute<'asynchronous_trait>(ctx: CommandContext, params: CheckParams) -> FutureRetType<'asynchronous_trait, Self::CheckRetType>;
 }
 
 /// # Struct `CheckParams`
