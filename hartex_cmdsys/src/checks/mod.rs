@@ -2,12 +2,13 @@
 //!
 //! This module contains implementations of several pre-command checks.
 
-use hartex_core::{
-    discord::model::id::UserId,
-    error::HarTexResult
-};
+use hartex_core::discord::model::id::UserId;
+
+use hartex_utils::FutureRetType;
 
 use crate::context::CommandContext;
+
+pub mod isglobadmin;
 
 /// # Trait `Check`
 ///
@@ -18,7 +19,7 @@ use crate::context::CommandContext;
 pub trait Check {
     type CheckRetType;
 
-    fn execute<'asynchronous_trait>(ctx: CommandContext, params: CheckParams) -> HarTexResult<Self::CheckRetType>;
+    fn execute<'asynchronous_trait>(ctx: CommandContext, params: CheckParams) -> FutureRetType<Self::CheckRetType>;
 }
 
 /// # Struct `CheckParams`
