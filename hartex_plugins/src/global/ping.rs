@@ -46,9 +46,9 @@ async fn exec_ping_cmd(ctx: CommandContext) -> HarTexResult<()> {
     let channel_id = ctx.message.channel_id;
     let message = ctx.http
         .create_message(channel_id)
-        .reply(ctx.message.id)
         .allowed_mentions(AllowedMentions::default())
         .content("Hello! Did you need anything? :eyes:")?
+        .reply(ctx.message.id)
         .await?;
 
     let shards = ctx.cluster.info();
@@ -62,8 +62,8 @@ async fn exec_ping_cmd(ctx: CommandContext) -> HarTexResult<()> {
 
     ctx.http
         .update_message(channel_id, message.id)
-        .content(new_content)?
         .allowed_mentions(AllowedMentions::default())
+        .content(new_content)?
         .await?;
 
     Ok(())
