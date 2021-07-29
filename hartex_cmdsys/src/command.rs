@@ -11,6 +11,13 @@ use crate::{
     parser::args::CommandArgs
 };
 
+/// # Trait `Command`
+///
+/// A command.
+///
+/// ## Trait Methods
+/// - `name`; return type `String`: the name of the command
+/// - `execute`; parameters: `CommandContext`, `CommandArgs`, `InMemoryCache`; return type: `FutureRetType<()>`: the execution procedure
 pub trait Command {
     fn name(&self) -> String;
 
