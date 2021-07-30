@@ -239,7 +239,8 @@ impl EventHandler {
                     inner: Arc::new(CommandContextInner {
                         http,
                         message: (**payload).clone(),
-                        cluster
+                        cluster,
+                        interaction: None
                     })
                 }).await?;
             }
