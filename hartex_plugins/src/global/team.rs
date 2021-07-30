@@ -28,7 +28,7 @@ use hartex_utils::FutureRetType;
 pub struct Team;
 
 impl Command for Team {
-    fn name(&self) -> String {
+    fn name() -> String {
         String::from("team")
     }
 

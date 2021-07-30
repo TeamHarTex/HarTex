@@ -27,7 +27,7 @@ use hartex_utils::{
 pub struct Ping;
 
 impl Command for Ping {
-    fn name(&self) -> String {
+    fn name() -> String {
         String::from("ping")
     }
 

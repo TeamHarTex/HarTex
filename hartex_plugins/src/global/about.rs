@@ -33,7 +33,7 @@ use hartex_utils::FutureRetType;
 pub struct About;
 
 impl Command for About {
-    fn name(&self) -> String {
+    fn name() -> String {
         String::from("about")
     }
 

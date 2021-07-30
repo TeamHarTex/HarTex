@@ -24,7 +24,7 @@ use hartex_utils::FutureRetType;
 pub struct Source;
 
 impl Command for Source {
-    fn name(&self) -> String {
+    fn name() -> String {
         String::from("source")
     }
 
