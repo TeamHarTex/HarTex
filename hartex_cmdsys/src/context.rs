@@ -28,7 +28,6 @@ pub struct CommandContext {
 ///
 /// The inner structure for `CommandContext`.
 #[derive(Clone)]
-#[non_exhaustive]
 pub struct CommandContextInner {
     pub http: Client,
     pub message: Message,
