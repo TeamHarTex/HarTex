@@ -34,10 +34,10 @@ pub trait Command {
 /// ## Trait Methods
 /// - `name`; return type `String`: the name of the command
 /// - `description`; return type `String`: the description of the command
+/// - `execute`; parameters `CommandContext`, `InMemoryCache`; return type `FutureRetType<()>`: the execution procedure
 /// - `required_cmdopts`; return type `Vec<CommandOption>`: a vector of required command options
 /// - `optional_cmdopts`; return type `Vec<CommandOption>`: a vector of optional command options
 /// - `enabled_by_default`; return type `bool`: whether the slash command is enabled by default when added to a guild
-/// - `execute`; parameters `CommandContext`, `InMemoryCache`; return type `FutureRetType<()>`: the execution procedure
 pub trait SlashCommand {
     fn name() -> String;
 
