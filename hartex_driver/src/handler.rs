@@ -238,7 +238,7 @@ impl EventHandler {
                 crate::commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
                     inner: Arc::new(CommandContextInner {
                         http,
-                        message: (**payload).clone(),
+                        message: Some((**payload).clone()),
                         cluster,
                         interaction: None
                     })

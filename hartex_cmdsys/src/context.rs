@@ -30,7 +30,7 @@ pub struct CommandContext {
 #[derive(Clone)]
 pub struct CommandContextInner {
     pub http: Client,
-    pub message: Message,
+    pub message: Option<Message>,
     pub cluster: Cluster,
     pub interaction: Option<Interaction>
 }
