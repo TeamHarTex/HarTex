@@ -44,6 +44,7 @@ impl Command for Team {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn exec_team_cmd(ctx: CommandContext) -> HarTexResult<()> {
+    let message = ctx.message.clone().unwrap();
     let embed = EmbedBuilder::new()
         .title("HarTex Project Team")
         .color(0x03BEFC)
@@ -51,10 +52,10 @@ async fn exec_team_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .build()?;
 
     ctx.http
-        .create_message(ctx.message.channel_id)
+        .create_message(message.channel_id)
         .allowed_mentions(AllowedMentions::default())
         .embeds(vec![embed])?
-        .reply(ctx.message.id)
+        .reply(message.id)
         .await?;
 
     Ok(())

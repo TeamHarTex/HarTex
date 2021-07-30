@@ -50,6 +50,7 @@ impl Command for About {
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
     let whitelists = GetWhitelistedGuilds::default().await?.len();
+    let message = ctx.message.clone().unwrap();
 
     let embed = EmbedBuilder::new()
         .author(EmbedAuthorBuilder::new()
@@ -63,10 +64,10 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .build()?;
 
     ctx.http
-        .create_message(ctx.message.channel_id)
+        .create_message(message.channel_id)
         .allowed_mentions(AllowedMentions::default())
         .embeds(vec![embed])?
-        .reply(ctx.message.id)
+        .reply(message.id)
         .await?;
 
     Ok(())
