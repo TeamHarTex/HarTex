@@ -23,3 +23,10 @@ pub trait Command {
 
     fn execute(ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
 }
+
+/// # Trait `SlashCommand`
+///
+/// A slash command.
+pub trait SlashCommand {
+
+}
