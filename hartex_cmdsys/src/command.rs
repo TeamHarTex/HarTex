@@ -19,7 +19,7 @@ use crate::{
 /// - `name`; return type `String`: the name of the command
 /// - `execute`; parameters: `CommandContext`, `CommandArgs`, `InMemoryCache`; return type: `FutureRetType<()>`: the execution procedure
 pub trait Command {
-    fn name(&self) -> String;
+    fn name() -> String;
 
     fn execute(ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
 }
@@ -27,6 +27,12 @@ pub trait Command {
 /// # Trait `SlashCommand`
 ///
 /// A slash command.
+///
+/// ## Trait Methods
+/// - `name`; return type `String`: the name of the command
+/// - `description`; return type `String`: the description of the command
 pub trait SlashCommand {
+    fn name() -> String;
 
+    fn description() -> String;
 }
