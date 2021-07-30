@@ -73,5 +73,5 @@ async fn exec_check(params: CheckParams) -> HarTexResult<<IsGlobAdmin as Check>:
         });
     }
 
-    return Ok(());
+    Ok(())
 }
