@@ -40,11 +40,13 @@ impl Command for Source {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn exec_source_cmd(ctx: CommandContext) -> HarTexResult<()> {
+    let message = ctx.message.clone().unwrap();
+
     ctx.http
-        .create_message(ctx.message.channel_id)
+        .create_message(message.channel_id)
         .allowed_mentions(AllowedMentions::default())
         .content("The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>.")?
-        .reply(ctx.message.id)
+        .reply(message.id)
         .await?;
 
     Ok(())

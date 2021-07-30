@@ -43,16 +43,17 @@ impl Command for Ping {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn exec_ping_cmd(ctx: CommandContext) -> HarTexResult<()> {
-    let channel_id = ctx.message.channel_id;
+    let ctx_message = ctx.message.clone().unwrap();
+    let channel_id = ctx_message.channel_id;
     let message = ctx.http
         .create_message(channel_id)
         .allowed_mentions(AllowedMentions::default())
         .content("Hello! Did you need anything? :eyes:")?
-        .reply(ctx.message.id)
+        .reply(ctx_message.id)
         .await?;
 
     let shards = ctx.cluster.info();
-    let shard_id = shard_id(ctx.message.guild_id.unwrap().0, shards.len() as _);
+    let shard_id = shard_id(ctx_message.guild_id.unwrap().0, shards.len() as _);
     let shard_info = shards
         .get(&shard_id)
         .unwrap();

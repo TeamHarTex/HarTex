@@ -43,7 +43,7 @@ pub trait SlashCommand {
 
     fn description() -> String;
 
-    fn execute(ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<()>;
+    fn execute<'asynchronous_trait>(ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
 
     fn required_cmdopts() -> Vec<CommandOption> {
         vec![]
