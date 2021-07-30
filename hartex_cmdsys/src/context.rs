@@ -10,7 +10,10 @@ use std::{
 use hartex_core::discord::{
     gateway::Cluster,
     http::Client,
-    model::channel::Message,
+    model::{
+        application::interaction::Interaction,
+        channel::Message
+    },
 };
 
 /// # Struct `CommandContext`
@@ -25,10 +28,12 @@ pub struct CommandContext {
 ///
 /// The inner structure for `CommandContext`.
 #[derive(Clone)]
+#[non_exhaustive]
 pub struct CommandContextInner {
     pub http: Client,
     pub message: Message,
-    pub cluster: Cluster
+    pub cluster: Cluster,
+    pub interaction: Option<Interaction>
 }
 
 impl Deref for CommandContext {
