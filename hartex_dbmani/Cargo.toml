@@ -13,7 +13,6 @@ license = "Apache-2.0"
 
 [dependencies]
 base64 = "0.13.0"
-dashmap = "4.0.2"
 hartex_conftoml = { path = "../hartex_conftoml" }
 hartex_core = { path = "../hartex_core" }
 hartex_logging = { path = "../hartex_logging" }

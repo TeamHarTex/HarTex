@@ -13,8 +13,6 @@ use std::{
     }
 };
 
-use dashmap::DashMap;
-
 use sqlx::{
     postgres::PgPool,
     Postgres
@@ -38,7 +36,7 @@ mod model;
 ///
 /// Gets the whitelisted guilds of the bot.
 pub struct GetWhitelistedGuilds {
-    pending: Option<PendingFuture<DashMap<String, u64>>>
+    pending: Option<PendingFuture<Vec<WhitelistedGuild>>>
 }
 
 impl GetWhitelistedGuilds {
@@ -69,7 +67,7 @@ impl Default for GetWhitelistedGuilds {
 }
 
 impl Future for GetWhitelistedGuilds {
-    type Output = HarTexResult<DashMap<String, u64>>;
+    type Output = HarTexResult<Vec<WhitelistedGuild>>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         loop {
@@ -89,7 +87,7 @@ unsafe impl Send for GetWhitelistedGuilds { }
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
-async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
+async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDS") {
         Ok(credentials) => credentials,
         Err(error) => {
@@ -130,13 +128,7 @@ async fn exec_future() -> HarTexResult<DashMap<String, u64>> {
 
     match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist"; --"#).fetch_all(&connection).await {
         Ok(guilds) => {
-            let map = DashMap::new();
-
-            guilds.iter().for_each(|guild| {
-                map.insert(guild.GuildName.to_string(), guild.GuildId);
-            });
-
-            Ok(map)
+            Ok(guilds)
         }
         Err(error) => {
             let message = format!("failed to execute sql query; error `{:?}`", error);
