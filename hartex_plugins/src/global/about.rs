@@ -3,7 +3,10 @@
 //! This module implements the `about` command.
 
 use hartex_cmdsys::{
-    command::Command,
+    command::{
+        Command,
+        SlashCommand
+    },
     context::CommandContext,
     parser::args::CommandArgs
 };
@@ -66,9 +69,25 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
     ctx.http
         .create_message(message.channel_id)
         .allowed_mentions(AllowedMentions::default())
-        .embeds(vec![embed])?
+        .embeds(&[embed])?
         .reply(message.id)
+        .exec()
         .await?;
 
     Ok(())
+}
+
+
+impl SlashCommand for About {
+    fn name() -> String {
+        String::from("about")
+    }
+
+    fn description() -> String {
+        String::from("Global Plugin - `about` Command")
+    }
+
+    fn execute<'asynchronous_trait>(_: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        todo!()
+    }
 }

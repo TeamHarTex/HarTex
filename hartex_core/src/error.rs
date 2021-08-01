@@ -25,12 +25,14 @@ use crate::discord::{
     http::{
         error::Error as HttpError,
         request::{
+            application::InteractionError,
             channel::message::{
                 create_message::CreateMessageError,
                 update_message::UpdateMessageError
             },
             guild::member::update_guild_member::UpdateGuildMemberError
-        }
+        },
+        response::DeserializeBodyError
     },
     model::gateway::payload::update_presence::UpdatePresenceError
 };
@@ -40,6 +42,16 @@ use crate::discord::{
 /// An enumeration representing the various error types used within HarTex.
 #[derive(Debug)]
 pub enum HarTexError {
+    /// # Enum Variant `HarTexError::Base64DecodeError`
+    ///
+    /// A wrapper around `base64::DecodeError`
+    ///
+    /// ## Fields
+    /// - `error`, type `DecodeError`: the error returned when attempting to decode base64.
+    Base64DecodeError {
+        error: DecodeError
+    },
+
     /// # Enum Variant `HarTexError::ClusterCommandError`
     ///
     /// A wrapper around `twilight_gateway::cluster::ClusterCommandError`.
@@ -72,16 +84,6 @@ pub enum HarTexError {
         error: CreateMessageError
     },
 
-    /// # Enum Variant `HarTexError::Base64DecodeError`
-    ///
-    /// A wrapper around `base64::DecodeError`
-    ///
-    /// ## Fields
-    /// - `error`, type `DecodeError`: the error returned when attempting to decode base64.
-    Base64DecodeError {
-        error: DecodeError
-    },
-
     /// # Enum Variant `HarTexError::CtrlcError`
     ///
     /// A wrapper around `ctrlc::Error`.
@@ -90,6 +92,17 @@ pub enum HarTexError {
     /// - `error`, type `Error`: the ctrlc error returned when setting the ctrl-c handler.
     CtrlcError {
         error: CtrlcError
+    },
+
+    /// # Enum Variant `HarTexError::DeserializeBodyError`
+    ///
+    /// A wrapper around `twilight_http::response::DeserializeBodyError`
+    ///
+    /// ## Fields
+    /// - `error`, type `DeserializeBodyError`: the error returned when attempting to deserialize
+    ///                                         an http response.
+    DeserializeBodyError {
+        error: DeserializeBodyError
     },
 
     /// # Enum Variant `HarTexError::EmbedError`
@@ -113,7 +126,17 @@ pub enum HarTexError {
         error: ImageSourceUrlError
     },
 
-    /// # Enum Variant `HarTexError::SessionInactiveError1
+    /// # Enum Variant `HarTexError::InteractionError`
+    ///
+    /// A wrapper around `twilight_http::request::application::InteractionError`
+    ///
+    /// - `error`, type `InteractionError`: the error returned when attempting to register
+    ///                                     an interaction.
+    InteractionError {
+        error: InteractionError
+    },
+
+    /// # Enum Variant `HarTexError::SessionInactiveError`
     ///
     /// A wrapper around `twilight_gateway::shard::SessionInactiveError`
     ///
@@ -241,6 +264,14 @@ impl From<DecodeError> for HarTexError {
     }
 }
 
+impl From<DeserializeBodyError> for HarTexError {
+    fn from(error: DeserializeBodyError) -> Self {
+        Self::DeserializeBodyError {
+            error
+        }
+    }
+}
+
 impl From<EmbedError> for HarTexError {
     fn from(error: EmbedError) -> Self {
         Self::EmbedError {
@@ -268,6 +299,14 @@ impl From<HttpError> for HarTexError {
 impl From<ImageSourceUrlError> for HarTexError {
     fn from(error: ImageSourceUrlError) -> Self {
         Self::EmbedImageSourceUrlError {
+            error
+        }
+    }
+}
+
+impl From<InteractionError> for HarTexError {
+    fn from(error: InteractionError) -> Self {
+        Self::InteractionError {
             error
         }
     }

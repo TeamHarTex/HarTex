@@ -47,6 +47,7 @@ async fn exec_source_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .allowed_mentions(AllowedMentions::default())
         .content("The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>.")?
         .reply(message.id)
+        .exec()
         .await?;
 
     Ok(())

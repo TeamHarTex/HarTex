@@ -54,8 +54,9 @@ async fn exec_team_cmd(ctx: CommandContext) -> HarTexResult<()> {
     ctx.http
         .create_message(message.channel_id)
         .allowed_mentions(AllowedMentions::default())
-        .embeds(vec![embed])?
+        .embeds(&[embed])?
         .reply(message.id)
+        .exec()
         .await?;
 
     Ok(())

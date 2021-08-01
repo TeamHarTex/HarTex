@@ -2,7 +2,7 @@ cargo-features = ["edition2021"]
 
 [package]
 name = "hartex_core"
-version = "1.19.0-21H2"
+version = "1.20.0-22H1"
 edition = "2021"
 description = """
 The `hartex_core` library provides the core minimal functionality for the bot to function.
@@ -17,16 +17,16 @@ license = "Apache-2.0"
 base64 = "0.13.0"
 chrono = "0.4.19"
 ctrlc = "3.1.9"
-serde = "1.0.126"
+serde = "1.0.127"
 toml = "0.5.8"
-twilight-cache-inmemory = { version = "0.5.3", optional = true }
-twilight-embed-builder = { version = "0.5.2", optional = true }
-twilight-gateway = { version = "0.5.5", optional = true }
-twilight-http = { version = "0.5.6", optional = true }
-twilight-mention = { version = "0.5.1", optional = true }
-twilight-model = { version = "0.5.4", optional = true }
-twilight-standby = { version = "0.5.1", optional = true }
-twilight-util = { version = "0.5.2", features = [ "snowflake" ], optional = true }
+twilight-cache-inmemory = { version = "0.6.0", optional = true }
+twilight-embed-builder = { version = "0.6.0", optional = true }
+twilight-gateway = { version = "0.6.0", optional = true }
+twilight-http = { version = "0.6.0", optional = true }
+twilight-mention = { version = "0.6.0", optional = true }
+twilight-model = { version = "0.6.0", optional = true }
+twilight-standby = { version = "0.6.0", optional = true }
+twilight-util = { version = "0.6.0", features = [ "snowflake" ], optional = true }
 
 [features]
 twilight-bundled = [ "twilight-cache-inmemory", "twilight-embed-builder", "twilight-gateway", "twilight-http", "twilight-mention", "twilight-model", "twilight-standby", "twilight-util" ]
