@@ -21,19 +21,29 @@ use hartex_core::{
         cache_inmemory::InMemoryCache,
         gateway::Cluster,
         http::Client,
-        model::gateway::{
-            event::shard::Identifying,
-            payload::{
-                update_presence::UpdatePresence,
-                GuildCreate,
-                InteractionCreate,
-                MessageCreate,
-                Ready,
+        model::{
+            application::{
+                callback::{
+                    CallbackData,
+                    InteractionResponse
+                },
+                interaction::Interaction
             },
-            presence::{
-                Activity,
-                ActivityType,
-                Status
+            channel::message::AllowedMentions,
+            gateway::{
+                event::shard::Identifying,
+                payload::{
+                    update_presence::UpdatePresence,
+                    GuildCreate,
+                    InteractionCreate,
+                    MessageCreate,
+                    Ready,
+                },
+                presence::{
+                    Activity,
+                    ActivityType,
+                    Status,
+                }
             }
         }
     },
@@ -154,7 +164,87 @@ impl EventHandler {
         Ok(())
     }
 
-    pub async fn interaction_create(payload: Box<InteractionCreate>) -> HarTexResult<()> {
+    /// # Static Asynchronous Method `EventHandler::interaction_create`
+    ///
+    /// Handles the `InteractionCreate` event.
+    ///
+    /// ## Parameters
+    /// - `payload`, type `Box<InteractionCreate>`: the `InteractionCreate` event payload
+    /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
+    pub async fn interaction_create(
+        payload: Box<InteractionCreate>,
+        http: Client
+    ) -> HarTexResult<()> {
+        let guild_id = match payload.guild_id() {
+            Some(id) => id,
+            None => {
+                Logger::error(
+                    "entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered",
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
+
+                return Err(HarTexError::Custom {
+                    message: String::from("entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered")
+                });
+            }
+        };
+
+        let (interaction_id, interaction_token) = match payload.0 {
+            Interaction::ApplicationCommand(command) => {
+                (command.id, command.token)
+            }
+            _ => return Err(HarTexError::Custom {
+                message: format!("unexpected interaction type: {:?}", &payload.0)
+            })
+        };
+
+        let config = match GetGuildConfig::new(guild_id).await {
+            Ok(conf) => conf,
+            Err(error) => {
+                Logger::error(
+                    format!("failed to deserialize toml config; error: {:?}", error),
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
+
+                return Err(error)
+            }
+        };
+
+        if !config.NightlyFeatures.interactions {
+            http.interaction_callback(
+                interaction_id,
+                &interaction_token,
+                &InteractionResponse::ChannelMessageWithSource(
+                    CallbackData {
+                        allowed_mentions: Some(AllowedMentions::default()),
+                        content: Some(
+                            String::from(
+                                r#"The `interactions` opt-in nightly feature has not been enabled for your guild in the TOML configuration.
+
+If you do intend to use interactions, please opt-in to use the nightly feature by adding the following
+section at the top of the TOML configuration for your guild:
+```toml
+[NightlyFeatures]
+interactions = true
+```"#
+                            )
+                        ),
+                        embeds: vec![],
+                        flags: None,
+                        tts: Some(false)
+                    }
+                )
+            )
+                .exec()
+                .await?;
+        }
+
         todo!()
     }
 
