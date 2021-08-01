@@ -8,6 +8,7 @@ use std::sync::Arc;
 use tokio::time;
 
 use hartex_cmdsys::{
+    command::SlashCommand,
     context::{
         CommandContext,
         CommandContextInner
@@ -33,7 +34,7 @@ use hartex_core::{
                 ActivityType,
                 Status
             }
-        },
+        }
     },
     error::{
         HarTexError,
@@ -51,6 +52,8 @@ use hartex_eventsys::emitter::EventEmitter;
 use hartex_logging::Logger;
 
 use hartex_model::payload::CommandExecuted;
+
+use hartex_plugins::global::about::About;
 
 /// # Struct `EventHandler`
 ///
@@ -94,7 +97,7 @@ impl EventHandler {
                 column!()
             );
 
-            let guild = http.guild(guild_id).await?;
+            let guild = http.guild(guild_id).exec().await?.model().await?;
 
             Logger::verbose(
                 "dming guild owner about the whitelist status",
@@ -104,44 +107,13 @@ impl EventHandler {
                 column!()
             );
 
-            if guild.is_none() {
-                Logger::error(
-                    format!("failed to retrieve guild from its id: {}", guild_id),
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
+            let guild_owner = guild.owner_id;
 
-                return Err(HarTexError::Custom {
-                    message: format!("failed to retrieve guild from its id: {}", guild_id)
-                });
-            }
+            let user = http.user(guild_owner).exec().await?.model().await?;
 
-            let guild_unwrap = guild.unwrap();
-            // it is OK to call `.unwrap()` here as thorough checking has been done before reaching
-            // this code
-            let guild_owner = guild_unwrap.owner_id;
-
-            let user = http.user(guild_owner).await?;
-
-            if user.is_none() {
-                Logger::error(
-                    format!("failed to retrieve guild owner from his/her user id: {}", guild_owner),
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
-
-                return Err(HarTexError::Custom {
-                    message: format!("failed to retrieve guild owner from his/her user id: {}", guild_owner)
-                });
-            }
-
-            let dm_channel = http.create_private_channel(user.unwrap().id).await?;
+            let dm_channel = http.create_private_channel(user.id).exec().await?.model().await?;
             let message = "Hey there! It looks like you added HarTex to your guild by the name of \"".to_string()
-                + &guild_unwrap.name + "\".\n\n"
+                + &guild.name + "\".\n\n"
                 + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
                 + "invited to your guild until you apply for a whitelist and that the application is "
                 + "accepted.\n\n"
@@ -153,7 +125,7 @@ impl EventHandler {
                 + "You may join our Support Guild at <discord.gg/s8qjxZK> for more information, including the application link in which you may use"
                 + "to apply for a whitelist application. Good luck!";
 
-            http.create_message(dm_channel.id).content(message)?.await?;
+            http.create_message(dm_channel.id).content(&message)?.exec().await?;
 
             Logger::error(
                 "leaving guild",
@@ -163,7 +135,7 @@ impl EventHandler {
                 column!()
             );
 
-            http.leave_guild(guild_id).await?;
+            http.leave_guild(guild_id).exec().await?;
 
             return Err(HarTexError::Custom {
                 message: String::from("guild is not whitelisted")
@@ -331,7 +303,7 @@ impl EventHandler {
             }
         }
 
-        for guild in http.current_user_guilds().await? {
+        for guild in http.current_user_guilds().exec().await?.models().await? {
             Logger::verbose(
                 format!("changing nickname in guild {}", guild.name),
                 Some(module_path!()),
@@ -342,7 +314,7 @@ impl EventHandler {
 
             let config = GetGuildConfig::new(guild.id).await?;
 
-            match http.update_current_user_nick(guild.id, config.GuildConfiguration.nickname).await {
+            match http.update_current_user_nick(guild.id, &config.GuildConfiguration.nickname).exec().await {
                 Err(error) => {
                     Logger::error(
                         format!("failed to change nickname: {}", error),
@@ -357,6 +329,11 @@ impl EventHandler {
 
             time::sleep(time::Duration::from_secs(1)).await;
         }
+
+        http.create_global_command(&<About as SlashCommand>::name(), &<About as SlashCommand>::description())?
+            .default_permission(<About as SlashCommand>::enabled_by_default())
+            .exec()
+            .await?;
 
         Ok(())
     }

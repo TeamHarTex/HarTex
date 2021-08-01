@@ -2,7 +2,7 @@ cargo-features = ["edition2021"]
 
 [package]
 name = "hartex_conftoml"
-version = "1.19.0-21H2"
+version = "1.20.0-22H1"
 edition = "2021"
 description = """
 The `hartex_conftoml` library provides configuration serialization and deserialization capabilities.
@@ -14,5 +14,5 @@ license = "Apache-2.0"
 [dependencies]
 hartex_core = { path = "../hartex_core" }
 hartex_logging = { path = "../hartex_logging" }
-serde = { version = "1.0.126", features = [ "derive" ] }
+serde = { version = "1.0.127", features = [ "derive" ] }
 toml = "0.5.8"

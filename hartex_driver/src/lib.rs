@@ -107,9 +107,9 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     let intents = Intents::all();
 
-    let http = Client::new(&token);
+    let http = Client::new(token.clone());
 
-    let (cluster, events) = Cluster::builder(&token, intents)
+    let (cluster, events) = Cluster::builder(token, intents)
         .event_types(EventTypeFlags::all())
         .http_client(http.clone())
         .shard_scheme(shard_scheme)
