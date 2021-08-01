@@ -58,6 +58,9 @@ pub async fn handle_event(
                 Event::GuildCreate(payload) => {
                     EventHandler::guild_create(payload, http).await?
                 }
+                Event::InteractionCreate(payload) => {
+                    EventHandler::interaction_create(payload).await?;
+                }
                 Event::MessageCreate(payload) => {
                     EventHandler::message_create(payload, emitter, parser, cache, http, cluster).await?
                 }
