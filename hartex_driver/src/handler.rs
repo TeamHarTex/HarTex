@@ -86,8 +86,8 @@ impl EventHandler {
 
         let res = GetWhitelistedGuilds::default().await?;
 
-        if !res.iter().any(|refmulti| {
-            *refmulti == guild_id.0
+        if !res.iter().any(|guild| {
+            guild_id.0 == guild.GuildId
         }) {
             Logger::error(
                 "guild is not whitelisted",
