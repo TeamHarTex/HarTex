@@ -26,6 +26,7 @@ use hartex_core::{
             payload::{
                 update_presence::UpdatePresence,
                 GuildCreate,
+                InteractionCreate,
                 MessageCreate,
                 Ready,
             },
@@ -151,6 +152,10 @@ impl EventHandler {
         );
 
         Ok(())
+    }
+
+    pub async fn interaction_create(payload: Box<InteractionCreate>) -> HarTexResult<()> {
+        todo!()
     }
 
     /// # Static Asynchronous Method `EventHandler::message_create`
