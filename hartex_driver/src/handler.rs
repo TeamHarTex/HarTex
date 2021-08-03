@@ -425,11 +425,6 @@ interactions = true
             time::sleep(time::Duration::from_secs(1)).await;
         }
 
-        http.create_global_command(&<About as SlashCommand>::name(), &<About as SlashCommand>::description())?
-            .default_permission(<About as SlashCommand>::enabled_by_default())
-            .exec()
-            .await?;
-
         Ok(())
     }
 
