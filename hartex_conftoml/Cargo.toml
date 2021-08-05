@@ -2,7 +2,7 @@ cargo-features = ["edition2021"]
 
 [package]
 name = "hartex_conftoml"
-version = "1.20.0-22H1"
+version = "1.20.0"
 edition = "2021"
 description = """
 The `hartex_conftoml` library provides configuration serialization and deserialization capabilities.

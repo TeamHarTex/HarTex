@@ -174,7 +174,9 @@ impl EventHandler {
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
     pub async fn interaction_create(
         payload: Box<InteractionCreate>,
-        http: Client
+        http: Client,
+        cluster: Cluster,
+        cache: InMemoryCache
     ) -> HarTexResult<()> {
         let guild_id = match payload.guild_id() {
             Some(id) => id,
@@ -193,7 +195,7 @@ impl EventHandler {
             }
         };
 
-        let (interaction_id, interaction_token) = match payload.0 {
+        let (interaction_id, interaction_token) = match payload.0.clone() {
             Interaction::ApplicationCommand(command) => {
                 (command.id, command.token)
             }
@@ -246,7 +248,9 @@ interactions = true
                 .await?;
         }
 
-        todo!()
+        crate::interactions::handle_interaction(payload.0, cache, http, cluster).await?;
+
+        Ok(())
     }
 
     /// # Static Asynchronous Method `EventHandler::message_create`
