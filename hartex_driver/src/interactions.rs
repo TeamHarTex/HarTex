@@ -18,7 +18,10 @@ use hartex_cmdsys::{
     }
 };
 
-use hartex_plugins::global::about::About;
+use hartex_plugins::global::{
+    about::About,
+    ping::Ping
+};
 
 pub async fn handle_interaction(
     interaction: Interaction,
@@ -30,7 +33,7 @@ pub async fn handle_interaction(
         Interaction::ApplicationCommand(command) => {
             match &*command.data.name {
                 "about" => {
-                    About::execute_slash_command(
+                    About.execute_slash_command(
                         CommandContext {
                             inner: Arc::new(CommandContextInner {
                                 http,
@@ -41,6 +44,19 @@ pub async fn handle_interaction(
                         },
                         cache
                     ).await?
+                }
+                "ping" => {
+                    Ping.execute_slash_command(
+                        CommandContext {
+                            inner: Arc::new(CommandContextInner {
+                                http,
+                                message: None,
+                                cluster,
+                                interaction: Some(interaction)
+                            })
+                        },
+                        cache
+                    ).await?;
                 }
                 _ => ()
             }

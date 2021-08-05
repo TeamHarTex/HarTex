@@ -63,7 +63,10 @@ use hartex_logging::Logger;
 
 use hartex_model::payload::CommandExecuted;
 
-use hartex_plugins::global::about::About;
+use hartex_plugins::global::{
+    about::About,
+    ping::Ping
+};
 
 use crate::commands;
 
@@ -403,7 +406,13 @@ interactions = true
             }
         }
 
-        commands::register_global_slash_commands(vec![About], http.clone()).await?;
+        commands::register_global_slash_commands(
+            vec![
+                Box::new(About),
+                Box::new(Ping)
+            ],
+            http.clone()
+        ).await?;
 
         for guild in http.current_user_guilds().exec().await?.models().await? {
             Logger::verbose(

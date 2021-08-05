@@ -50,16 +50,16 @@ pub async fn handle_command(
 
     match command {
         ParsedCommand { name: "about", args } => {
-            About::execute_command(context, args, cache).await?;
+            About.execute_command(context, args, cache).await?;
         }
         ParsedCommand { name: "ping", args} => {
-            Ping::execute_command(context, args, cache).await?;
+            Ping.execute_command(context, args, cache).await?;
         }
         ParsedCommand { name: "source", args} => {
-            Source::execute_command(context, args, cache).await?;
+            Source.execute_command(context, args, cache).await?;
         }
         ParsedCommand { name: "team", args } => {
-            Team::execute_command(context, args, cache).await?;
+            Team.execute_command(context, args, cache).await?;
         }
         _ => ()
     }
@@ -67,7 +67,7 @@ pub async fn handle_command(
     Ok(())
 }
 
-pub async fn register_global_slash_commands<T: Command + SlashCommand>(commands: Vec<T>, http: Client) -> HarTexResult<()> {
+pub async fn register_global_slash_commands(commands: Vec<Box<dyn CommandSlashCommand + Send + Sync>>, http: Client) -> HarTexResult<()> {
     let mut i = 1;
 
     for command in &commands {
@@ -79,7 +79,7 @@ pub async fn register_global_slash_commands<T: Command + SlashCommand>(commands:
             column!()
         );
 
-         match http.create_global_command(&command.name(), &command.description())?
+        match http.create_global_command(&command.name(), &command.description())?
             .default_permission(command.enabled_by_default())
             .exec()
             .await {
@@ -102,3 +102,9 @@ pub async fn register_global_slash_commands<T: Command + SlashCommand>(commands:
 
     Ok(())
 }
+
+pub trait CommandSlashCommand: Command + SlashCommand { }
+
+impl<T> CommandSlashCommand for T
+where
+    T: Command + SlashCommand { }

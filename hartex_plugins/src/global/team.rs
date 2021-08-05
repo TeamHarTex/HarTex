@@ -32,7 +32,7 @@ impl Command for Team {
         String::from("team")
     }
 
-    fn execute_command(ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
+    fn execute_command(&self, ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
         Box::pin(exec_team_cmd(ctx))
     }
 }
