@@ -24,7 +24,7 @@ use crate::{
 pub trait Command {
     fn name(&self) -> String;
 
-    fn execute_command(ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
+    fn execute_command(&self, ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
 }
 
 /// # Trait `SlashCommand`
@@ -41,7 +41,7 @@ pub trait Command {
 pub trait SlashCommand {
     fn description(&self) -> String;
 
-    fn execute_slash_command<'asynchronous_trait>(ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
+    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
 
     fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![]

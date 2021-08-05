@@ -52,7 +52,7 @@ impl Command for About {
         String::from("about")
     }
 
-    fn execute_command(ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
+    fn execute_command(&self, ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
         Box::pin(exec_about_cmd(ctx))
     }
 }
@@ -91,10 +91,10 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
 
 impl SlashCommand for About {
     fn description(&self) -> String {
-        String::from("Global Plugin - about Command")
+        String::from("GlobalPlugin.AboutCommand")
     }
 
-    fn execute_slash_command<'asynchronous_trait>(ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(exec_about_slash_cmd(ctx))
     }
 }
