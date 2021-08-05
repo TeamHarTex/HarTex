@@ -8,7 +8,6 @@ use std::sync::Arc;
 use tokio::time;
 
 use hartex_cmdsys::{
-    command::SlashCommand,
     context::{
         CommandContext,
         CommandContextInner
@@ -65,6 +64,8 @@ use hartex_logging::Logger;
 use hartex_model::payload::CommandExecuted;
 
 use hartex_plugins::global::about::About;
+
+use crate::commands;
 
 /// # Struct `EventHandler`
 ///
@@ -302,7 +303,7 @@ interactions = true
             let command = parser.parse_command(&config.GuildConfiguration.commandPrefix, &payload.content);
 
             if command.is_some() {
-                crate::commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
+                commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
                     inner: Arc::new(CommandContextInner {
                         http,
                         message: Some((**payload).clone()),
@@ -397,6 +398,8 @@ interactions = true
                 }
             }
         }
+
+        commands::register_global_slash_commands(vec![About], http.clone()).await?;
 
         for guild in http.current_user_guilds().exec().await?.models().await? {
             Logger::verbose(

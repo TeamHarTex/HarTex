@@ -2,14 +2,22 @@
 //!
 //! This module defines the command handler, which is used when a command is detected in a message.
 
+use tokio::time;
+
 use hartex_cmdsys::{
-    command::Command,
+    command::{
+        Command,
+        SlashCommand
+    },
     context::CommandContext,
     parser::ParsedCommand
 };
 
 use hartex_core::{
-    discord::cache_inmemory::InMemoryCache,
+    discord::{
+        cache_inmemory::InMemoryCache,
+        http::Client
+    },
     error::HarTexResult
 };
 
@@ -42,18 +50,54 @@ pub async fn handle_command(
 
     match command {
         ParsedCommand { name: "about", args } => {
-            About::execute(context, args, cache).await?;
+            About::execute_command(context, args, cache).await?;
         }
         ParsedCommand { name: "ping", args} => {
-            Ping::execute(context, args, cache).await?;
+            Ping::execute_command(context, args, cache).await?;
         }
         ParsedCommand { name: "source", args} => {
-            Source::execute(context, args, cache).await?;
+            Source::execute_command(context, args, cache).await?;
         }
         ParsedCommand { name: "team", args } => {
-            Team::execute(context, args, cache).await?;
+            Team::execute_command(context, args, cache).await?;
         }
         _ => ()
+    }
+
+    Ok(())
+}
+
+pub async fn register_global_slash_commands<T: Command + SlashCommand>(commands: Vec<T>, http: Client) -> HarTexResult<()> {
+    let mut i = 1;
+
+    for command in &commands {
+        Logger::verbose(
+            format!("registering global slash command {} of {}", i, commands.len()),
+            Some(module_path!()),
+            file!(),
+            line!(),
+            column!()
+        );
+
+         match http.create_global_command(&command.name(), &command.description())?
+            .default_permission(command.enabled_by_default())
+            .exec()
+            .await {
+             Ok(_) => (),
+             Err(error) => {
+                 Logger::error(
+                     format!("failed to register global slash command {} of {}: {}", i, commands.len(), error),
+                     Some(module_path!()),
+                     file!(),
+                     line!(),
+                     column!()
+                 );
+             }
+         }
+
+        i += 1;
+
+        time::sleep(time::Duration::from_secs(1)).await;
     }
 
     Ok(())

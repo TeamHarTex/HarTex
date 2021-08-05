@@ -33,6 +33,7 @@ use hartex_core::{
             Intents
         },
         http::Client,
+        model::id::ApplicationId
     },
     error::HarTexResult,
     events::EventType
@@ -80,6 +81,24 @@ pub async fn hartex_main() -> HarTexResult<()> {
         }
     };
 
+    let application_id = match env::var("APPLICATION_ID") {
+        Ok(id) => id,
+        Err(var_error) => {
+            Logger::error(
+                format!(
+                    "could not retrieve the application id from the environment due to an error: {}",
+                    var_error
+                ),
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
+
+            process::exit(-1)
+        }
+    };
+
     Logger::verbose(
         "successfully retrieved bot token",
         Some(module_path!()),
@@ -107,7 +126,10 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     let intents = Intents::all();
 
-    let http = Client::new(token.clone());
+    let http = Client::builder()
+        .application_id(ApplicationId::from(application_id.parse::<u64>().unwrap()))
+        .token(token.clone())
+        .build();
 
     let (cluster, events) = Cluster::builder(token, intents)
         .event_types(EventTypeFlags::all())

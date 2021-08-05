@@ -36,11 +36,11 @@ use hartex_utils::FutureRetType;
 pub struct About;
 
 impl Command for About {
-    fn name() -> String {
+    fn name(&self) -> String {
         String::from("about")
     }
 
-    fn execute(ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
+    fn execute_command(ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
         Box::pin(exec_about_cmd(ctx))
     }
 }
@@ -79,15 +79,11 @@ async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
 
 
 impl SlashCommand for About {
-    fn name() -> String {
-        String::from("about")
-    }
-
-    fn description() -> String {
+    fn description(&self) -> String {
         String::from("Global Plugin - `about` Command")
     }
 
-    fn execute<'asynchronous_trait>(_: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute_slash_command<'asynchronous_trait>(_: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
         todo!()
     }
 }
