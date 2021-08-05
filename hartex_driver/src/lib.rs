@@ -46,6 +46,7 @@ use hartex_logging::Logger;
 pub mod commands;
 pub mod events;
 pub mod handler;
+pub mod interactions;
 
 /// # Asynchronous Function `hartex_main`
 ///
