@@ -22,9 +22,9 @@ use crate::{
 /// - `name`; return type `String`: the name of the command
 /// - `execute`; parameters: `CommandContext`, `CommandArgs`, `InMemoryCache`; return type: `FutureRetType<()>`: the execution procedure
 pub trait Command {
-    fn name() -> String;
+    fn name(&self) -> String;
 
-    fn execute(ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
+    fn execute_command(ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
 }
 
 /// # Trait `SlashCommand`
@@ -39,21 +39,19 @@ pub trait Command {
 /// - `optional_cmdopts`; return type `Vec<CommandOption>`: a vector of optional command options
 /// - `enabled_by_default`; return type `bool`: whether the slash command is enabled by default when added to a guild
 pub trait SlashCommand {
-    fn name() -> String;
+    fn description(&self) -> String;
 
-    fn description() -> String;
+    fn execute_slash_command<'asynchronous_trait>(ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
 
-    fn execute<'asynchronous_trait>(ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
-
-    fn required_cmdopts() -> Vec<CommandOption> {
+    fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![]
     }
 
-    fn optional_cmdopts() -> Vec<CommandOption> {
+    fn optional_cmdopts(&self) -> Vec<CommandOption> {
         vec![]
     }
 
-    fn enabled_by_default() -> bool {
+    fn enabled_by_default(&self) -> bool {
         true
     }
 }

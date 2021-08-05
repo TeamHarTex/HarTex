@@ -28,11 +28,11 @@ use hartex_utils::FutureRetType;
 pub struct Team;
 
 impl Command for Team {
-    fn name() -> String {
+    fn name(&self) -> String {
         String::from("team")
     }
 
-    fn execute(ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
+    fn execute_command(ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
         Box::pin(exec_team_cmd(ctx))
     }
 }
