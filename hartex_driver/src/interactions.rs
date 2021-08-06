@@ -18,6 +18,8 @@ use hartex_cmdsys::{
     }
 };
 
+use hartex_logging::Logger;
+
 use hartex_plugins::global::{
     about::About,
     ping::Ping
@@ -29,39 +31,52 @@ pub async fn handle_interaction(
     http: Client,
     cluster: Cluster
 ) -> HarTexResult<()> {
-    match interaction.clone() {
-        Interaction::ApplicationCommand(command) => {
-            match &*command.data.name {
-                "about" => {
-                    About.execute_slash_command(
-                        CommandContext {
-                            inner: Arc::new(CommandContextInner {
-                                http,
-                                message: None,
-                                cluster,
-                                interaction: Some(interaction)
-                            })
-                        },
-                        cache
-                    ).await?
+    match {
+        match interaction.clone() {
+            Interaction::ApplicationCommand(command) => {
+                match &*command.data.name {
+                    "about" => {
+                        About.execute_slash_command(
+                            CommandContext {
+                                inner: Arc::new(CommandContextInner {
+                                    http,
+                                    message: None,
+                                    cluster,
+                                    interaction: Some(interaction)
+                                })
+                            },
+                            cache
+                        ).await
+                    }
+                    "ping" => {
+                        Ping.execute_slash_command(
+                            CommandContext {
+                                inner: Arc::new(CommandContextInner {
+                                    http,
+                                    message: None,
+                                    cluster,
+                                    interaction: Some(interaction)
+                                })
+                            },
+                            cache
+                        ).await
+                    }
+                    _ => ()
                 }
-                "ping" => {
-                    Ping.execute_slash_command(
-                        CommandContext {
-                            inner: Arc::new(CommandContextInner {
-                                http,
-                                message: None,
-                                cluster,
-                                interaction: Some(interaction)
-                            })
-                        },
-                        cache
-                    ).await?;
-                }
-                _ => ()
             }
+            _ => ()
         }
-        _ => ()
+    } {
+        Ok(_) => (),
+        Err(error) => {
+            Logger::error(
+                format!("failed to handle interaction due to an error: {:?}", error),
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
+        }
     }
 
     Ok(())

@@ -3,7 +3,10 @@
 //! This module implements the `source` command.
 
 use hartex_cmdsys::{
-    command::Command,
+    command::{
+        Command,
+        SlashCommand
+    },
     context::CommandContext,
     parser::args::CommandArgs
 };
@@ -11,9 +14,21 @@ use hartex_cmdsys::{
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
-        model::channel::message::AllowedMentions
+        model::{
+            application::{
+                callback::{
+                    CallbackData,
+                    InteractionResponse
+                },
+                interaction::Interaction
+            },
+            channel::message::AllowedMentions
+        }
     },
-    error::HarTexResult
+    error::{
+        HarTexError,
+        HarTexResult
+    }
 };
 
 use hartex_utils::FutureRetType;
@@ -47,6 +62,50 @@ async fn exec_source_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .allowed_mentions(AllowedMentions::default())
         .content("The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>.")?
         .reply(message.id)
+        .exec()
+        .await?;
+
+    Ok(())
+}
+
+impl SlashCommand for Source {
+    fn description(&self) -> String {
+        String::from("GlobalPlugin.SourceCommand")
+    }
+
+    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(exec_source_slash_cmd(ctx))
+    }
+}
+
+async fn exec_source_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
+    let interaction = match ctx.interaction.as_ref().unwrap() {
+        Interaction::ApplicationCommand(command) => command,
+        _ => return Err(
+            HarTexError::Custom {
+                message: String::from("invalid interaction type: expected ApplicationCommand")
+            }
+        )
+    };
+
+    ctx.http
+        .interaction_callback(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse::ChannelMessageWithSource(
+                CallbackData {
+                    allowed_mentions: None,
+                    content: Some(
+                        String::from(
+                            "The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>."
+                        )
+                    ),
+                    embeds: vec![],
+                    flags: None,
+                    tts: None
+                }
+            )
+        )
         .exec()
         .await?;
 
