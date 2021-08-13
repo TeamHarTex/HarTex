@@ -23,7 +23,8 @@ use hartex_logging::Logger;
 use hartex_plugins::global::{
     about::About,
     ping::Ping,
-    source::Source
+    source::Source,
+    team::Team
 };
 
 pub async fn handle_interaction(
@@ -64,6 +65,19 @@ pub async fn handle_interaction(
                     }
                     "source" => {
                         Source.execute_slash_command(
+                            CommandContext {
+                                inner: Arc::new(CommandContextInner {
+                                    http,
+                                    message: None,
+                                    cluster,
+                                    interaction: Some(interaction)
+                                })
+                            },
+                            cache
+                        ).await
+                    },
+                    "team" => {
+                        Team.execute_slash_command(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,

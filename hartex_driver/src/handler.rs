@@ -66,7 +66,8 @@ use hartex_model::payload::CommandExecuted;
 use hartex_plugins::global::{
     about::About,
     ping::Ping,
-    source::Source
+    source::Source,
+    team::Team
 };
 
 use crate::commands;
@@ -411,7 +412,8 @@ interactions = true
             vec![
                 Box::new(About),
                 Box::new(Ping),
-                Box::new(Source)
+                Box::new(Source),
+                Box::new(Team)
             ],
             http.clone()
         ).await?;
