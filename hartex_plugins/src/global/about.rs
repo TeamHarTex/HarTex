@@ -134,6 +134,7 @@ async fn exec_about_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
             &InteractionResponse::ChannelMessageWithSource(
                 CallbackData {
                     allowed_mentions: None,
+                    components: None,
                     content: None,
                     embeds: vec![embed],
                     flags: None,

@@ -95,6 +95,7 @@ async fn exec_source_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
             &InteractionResponse::ChannelMessageWithSource(
                 CallbackData {
                     allowed_mentions: None,
+                    components: None,
                     content: Some(
                         String::from(
                             "The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>."
