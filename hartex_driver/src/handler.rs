@@ -231,6 +231,7 @@ impl EventHandler {
                 &InteractionResponse::ChannelMessageWithSource(
                     CallbackData {
                         allowed_mentions: Some(AllowedMentions::default()),
+                        components: None,
                         content: Some(
                             String::from(
                                 r#"The `interactions` opt-in nightly feature has not been enabled for your guild in the TOML configuration.
