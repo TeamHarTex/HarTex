@@ -3,12 +3,8 @@
 //! This module implements the `team` command.
 
 use hartex_cmdsys::{
-    command::{
-        Command,
-        SlashCommand
-    },
+    command::SlashCommand,
     context::CommandContext,
-    parser::args::CommandArgs
 };
 
 use hartex_core::{
@@ -18,16 +14,14 @@ use hartex_core::{
             EmbedBuilder,
             EmbedFieldBuilder
         },
-        model::{
-            application::{
-                callback::{
-                    CallbackData,
-                    InteractionResponse
-                },
-                interaction::Interaction
+        model::application::{
+            callback::{
+                CallbackData,
+                InteractionResponse
             },
-            channel::message::AllowedMentions
+            interaction::Interaction
         }
+
     },
     error::{
         HarTexError,
@@ -42,42 +36,11 @@ use hartex_utils::FutureRetType;
 /// The `team` command.
 pub struct Team;
 
-impl Command for Team {
+impl SlashCommand for Team {
     fn name(&self) -> String {
         String::from("team")
     }
 
-    fn execute_command(&self, ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
-        Box::pin(exec_team_cmd(ctx))
-    }
-}
-
-/// # Asynchronous Function `exec_team_cmd`
-///
-/// Executes the `team` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
-async fn exec_team_cmd(ctx: CommandContext) -> HarTexResult<()> {
-    let message = ctx.message.clone().unwrap();
-    let embed = EmbedBuilder::new()
-        .title("HarTex Project Team")
-        .color(0x03BEFC)
-        .field(EmbedFieldBuilder::new("Global Administrator & Lead Developer", "HTGAzureX1212.#5959"))
-        .build()?;
-
-    ctx.http
-        .create_message(message.channel_id)
-        .allowed_mentions(AllowedMentions::default())
-        .embeds(&[embed])?
-        .reply(message.id)
-        .exec()
-        .await?;
-
-    Ok(())
-}
-
-impl SlashCommand for Team {
     fn description(&self) -> String {
         String::from("GlobalPlugin.TeamCommand")
     }

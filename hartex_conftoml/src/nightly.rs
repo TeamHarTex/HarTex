@@ -17,10 +17,7 @@ pub struct NightlyFeatures {
     pub threads: bool,
     // Experimental Support for Language Localization Facilities
     #[serde(default = "default_feature_enabled")]
-    pub languageLocalization: bool,
-    // Experimental Support for Interactions and Slash Commands
-    #[serde(default = "default_feature_enabled")]
-    pub interactions: bool
+    pub languageLocalization: bool
 }
 
 pub fn default_feature_enabled() -> bool {

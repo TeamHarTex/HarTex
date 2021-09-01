@@ -10,46 +10,15 @@ use hartex_eventsys::{
     listener::Listeners
 };
 
-use crate::parser::{
-    config::{
-        CommandConfig,
-        CommandParserConfig
-    },
-    CommandParser
-};
-
 /// # Struct `CommandFramework`
 ///
 /// The command framework.
 #[derive(Clone, Default)]
-pub struct CommandFramework<'a> {
-    config: CommandParserConfig<'a>,
+pub struct CommandFramework {
     listeners: Listeners<HarTexEvent>
 }
 
-impl<'a> CommandFramework<'a> {
-    /// # Instance Method `CommandFramework::command`
-    ///
-    /// Adds a command to the parser configuration.
-    ///
-    /// ## Parameters
-    /// - `config`, type `CommandConfig`: the configuration of the command to add.
-    pub fn command(self, config: CommandConfig<'a>) -> Self {
-        let new_conf = self.config.command(config);
-
-        Self {
-            config: new_conf,
-            listeners: Listeners::default()
-        }
-    }
-
-    /// # Instance Method `CommandFramework::build_parser`
-    ///
-    /// Builds a command parser from the configuration and consumes the framework.
-    pub fn build_parser(self) -> CommandParser<'a> {
-        CommandParser::new(self.config)
-    }
-
+impl CommandFramework {
     /// # Instance Method `CommandFramework::events`
     ///
     /// Returns a stream of events and consumes the framework.

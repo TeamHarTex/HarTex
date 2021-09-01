@@ -7,4 +7,3 @@ pub mod checks;
 pub mod command;
 pub mod context;
 pub mod framework;
-pub mod parser;
