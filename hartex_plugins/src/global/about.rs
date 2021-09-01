@@ -3,12 +3,8 @@
 //! This module implements the `about` command.
 
 use hartex_cmdsys::{
-    command::{
-        Command,
-        SlashCommand
-    },
-    context::CommandContext,
-    parser::args::CommandArgs
+    command::SlashCommand,
+    context::CommandContext
 };
 
 use hartex_core::{
@@ -20,16 +16,14 @@ use hartex_core::{
             EmbedFieldBuilder,
             ImageSource
         },
-        model::{
-            application::{
-                callback::{
-                    CallbackData,
-                    InteractionResponse
-                },
-                interaction::Interaction
+        model::application::{
+            callback::{
+                CallbackData,
+                InteractionResponse
             },
-            channel::message::AllowedMentions
+            interaction::Interaction
         }
+
     },
     error::{
         HarTexError,
@@ -47,49 +41,11 @@ use hartex_utils::FutureRetType;
 /// The `about` command.
 pub struct About;
 
-impl Command for About {
+impl SlashCommand for About {
     fn name(&self) -> String {
         String::from("about")
     }
 
-    fn execute_command(&self, ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
-        Box::pin(exec_about_cmd(ctx))
-    }
-}
-
-/// # Asynchronous Function `exec_about_cmd`
-///
-/// Executes the `about` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
-async fn exec_about_cmd(ctx: CommandContext) -> HarTexResult<()> {
-    let whitelists = GetWhitelistedGuilds::default().await?.len();
-    let message = ctx.message.clone().unwrap();
-
-    let embed = EmbedBuilder::new()
-        .author(EmbedAuthorBuilder::new()
-            .name("HarTex")
-            .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
-        )
-        .description("HarTex is a Discord bot that is built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
-        .color(0x03BEFC)
-        .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
-        .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
-        .build()?;
-
-    ctx.http
-        .create_message(message.channel_id)
-        .allowed_mentions(AllowedMentions::default())
-        .embeds(&[embed])?
-        .reply(message.id)
-        .exec()
-        .await?;
-
-    Ok(())
-}
-
-impl SlashCommand for About {
     fn description(&self) -> String {
         String::from("GlobalPlugin.AboutCommand")
     }

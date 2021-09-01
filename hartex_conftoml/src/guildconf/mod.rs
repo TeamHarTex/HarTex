@@ -16,8 +16,6 @@ mod tz;
 pub struct GuildConfiguration {
     #[serde(default = "default_nickname")]
     pub nickname: String,
-    #[serde(default = "default_cmd_prefix")]
-    pub commandPrefix: String,
     #[serde(default = "default_timezone", deserialize_with = "deserialize_timezone")]
     pub timezone: tz::Timezone,
     #[serde(default = "default_dm_cant_use_cmd")]
@@ -26,10 +24,6 @@ pub struct GuildConfiguration {
 
 fn default_nickname() -> String {
     String::from("HarTex")
-}
-
-fn default_cmd_prefix() -> String {
-    String::from("!")
 }
 
 fn default_timezone() -> tz::Timezone {

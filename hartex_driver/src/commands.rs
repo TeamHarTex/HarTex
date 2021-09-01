@@ -4,75 +4,49 @@
 
 use tokio::time;
 
-use hartex_cmdsys::{
-    command::{
-        Command,
-        SlashCommand
-    },
-    context::CommandContext,
-    parser::ParsedCommand
-};
+use hartex_cmdsys::command::SlashCommand;
 
 use hartex_core::{
-    discord::{
-        cache_inmemory::InMemoryCache,
-        http::Client
-    },
-    error::HarTexResult
-};
-
-use hartex_eventsys::{
-    emitter::EventEmitter
+    discord::http::Client,
+    error::{
+        HarTexError,
+        HarTexResult
+    }
 };
 
 use hartex_logging::Logger;
 
-use hartex_plugins::global::{
-    about::About,
-    ping::Ping,
-    source::Source,
-    team::Team
-};
-
-pub async fn handle_command(
-    command: ParsedCommand<'_>,
-    _: EventEmitter,
-    cache: InMemoryCache,
-    context: CommandContext
-) -> HarTexResult<()> {
-    Logger::verbose(
-        "command identified, executing command",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-
-    match command {
-        ParsedCommand { name: "about", args } => {
-            About.execute_command(context, args, cache).await?;
-        }
-        ParsedCommand { name: "ping", args} => {
-            Ping.execute_command(context, args, cache).await?;
-        }
-        ParsedCommand { name: "source", args} => {
-            Source.execute_command(context, args, cache).await?;
-        }
-        ParsedCommand { name: "team", args } => {
-            Team.execute_command(context, args, cache).await?;
-        }
-        _ => ()
-    }
-
-    Ok(())
-}
-
-pub async fn register_global_slash_commands(commands: Vec<Box<dyn CommandSlashCommand + Send + Sync>>, http: Client) -> HarTexResult<()> {
+pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand + Send + Sync>>, http: Client) -> HarTexResult<()> {
     let mut i = 1;
+    let len = commands.len();
 
+    let _ =  match http.get_global_commands()?
+        .exec()
+        .await?
+        .models()
+        .await {
+        Ok(commands) => commands,
+        Err(error) => {
+            Logger::error(
+                format!("failed to obtain a list of existing global commands: {}", error),
+                Some(module_path!()),
+                file!(),
+                line!(),
+                column!()
+            );
+
+            return Err(HarTexError::Custom {
+                message: format!("failed to obtain a list of existing global commands: {}", error)
+            });
+        }
+    };
+
+    // FIXME: do not register command on every single startup
     for command in &commands {
+        time::sleep(time::Duration::from_secs(1)).await;
+
         Logger::verbose(
-            format!("registering global slash command {} of {}", i, commands.len()),
+            format!("registering global slash command {} of {}", i, len),
             Some(module_path!()),
             file!(),
             line!(),
@@ -86,25 +60,17 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn CommandSlashCo
              Ok(_) => (),
              Err(error) => {
                  Logger::error(
-                     format!("failed to register global slash command {} of {}: {}", i, commands.len(), error),
+                     format!("failed to register global slash command {} of {}: {}", i, len, error),
                      Some(module_path!()),
                      file!(),
                      line!(),
                      column!()
                  );
              }
-         }
+        }
 
         i += 1;
-
-        time::sleep(time::Duration::from_secs(1)).await;
     }
 
     Ok(())
 }
-
-pub trait CommandSlashCommand: Command + SlashCommand { }
-
-impl<T> CommandSlashCommand for T
-where
-    T: Command + SlashCommand { }

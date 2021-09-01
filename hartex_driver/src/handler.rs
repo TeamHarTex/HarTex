@@ -3,46 +3,26 @@
 //! This module defines the `EventHandler` struct, which defines various function handlers for
 //! individual events.
 
-use std::sync::Arc;
-
 use tokio::time;
-
-use hartex_cmdsys::{
-    context::{
-        CommandContext,
-        CommandContextInner
-    },
-    parser::CommandParser
-};
 
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
         gateway::Cluster,
         http::Client,
-        model::{
-            application::{
-                callback::{
-                    CallbackData,
-                    InteractionResponse
-                },
-                interaction::Interaction
+        model::gateway::{
+            event::shard::Identifying,
+            payload::{
+                update_presence::UpdatePresence,
+                GuildCreate,
+                InteractionCreate,
+                MessageCreate,
+                Ready,
             },
-            channel::message::AllowedMentions,
-            gateway::{
-                event::shard::Identifying,
-                payload::{
-                    update_presence::UpdatePresence,
-                    GuildCreate,
-                    InteractionCreate,
-                    MessageCreate,
-                    Ready,
-                },
-                presence::{
-                    Activity,
-                    ActivityType,
-                    Status,
-                }
+            presence::{
+                Activity,
+                ActivityType,
+                Status,
             }
         }
     },
@@ -183,77 +163,6 @@ impl EventHandler {
         cluster: Cluster,
         cache: InMemoryCache
     ) -> HarTexResult<()> {
-        let guild_id = match payload.guild_id() {
-            Some(id) => id,
-            None => {
-                Logger::error(
-                    "entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered",
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
-
-                return Err(HarTexError::Custom {
-                    message: String::from("entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered")
-                });
-            }
-        };
-
-        let (interaction_id, interaction_token) = match payload.0.clone() {
-            Interaction::ApplicationCommand(command) => {
-                (command.id, command.token)
-            }
-            _ => return Err(HarTexError::Custom {
-                message: format!("unexpected interaction type: {:?}", &payload.0)
-            })
-        };
-
-        let config = match GetGuildConfig::new(guild_id).await {
-            Ok(conf) => conf,
-            Err(error) => {
-                Logger::error(
-                    format!("failed to deserialize toml config; error: {:?}", error),
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
-
-                return Err(error)
-            }
-        };
-
-        if !config.NightlyFeatures.interactions {
-            http.interaction_callback(
-                interaction_id,
-                &interaction_token,
-                &InteractionResponse::ChannelMessageWithSource(
-                    CallbackData {
-                        allowed_mentions: Some(AllowedMentions::default()),
-                        components: None,
-                        content: Some(
-                            String::from(
-                                r#"The `interactions` opt-in nightly feature has not been enabled for your guild in the TOML configuration.
-
-If you do intend to use interactions, please opt-in to use the nightly feature by adding the following
-section at the top of the TOML configuration for your guild:
-```toml
-[NightlyFeatures]
-interactions = true
-```"#
-                            )
-                        ),
-                        embeds: vec![],
-                        flags: None,
-                        tts: Some(false)
-                    }
-                )
-            )
-                .exec()
-                .await?;
-        }
-
         crate::interactions::handle_interaction(payload.0, cache, http, cluster).await?;
 
         Ok(())
@@ -266,64 +175,15 @@ interactions = true
     /// ## Parameters
     /// - `payload`, type `Box<MessageCreate>`: the `MessageCreate` event payload
     /// - `emitter`, type `EventEmitter`: the event emitter to use when the message contains an actual command to execute
-    /// - `parser`, type `CommandParser`: the command parser to use when the message starts with a command prefix
     /// - `cache`, type `InMemoryCache`: the cache to pass to the command if the message is indeed a command
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
     pub async fn message_create(
-        payload: Box<MessageCreate>,
-        emitter: EventEmitter,
-        parser: CommandParser<'_>,
-        cache: InMemoryCache,
-        http: Client,
-        cluster: Cluster
+        _: Box<MessageCreate>,
+        _: EventEmitter,
+        _: InMemoryCache,
+        _: Client,
+        _: Cluster
     ) -> HarTexResult<()> {
-        let guild_id = match payload.guild_id {
-            Some(id) => id,
-            None => {
-                Logger::error(
-                    "entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered",
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
-
-                return Err(HarTexError::Custom {
-                    message: String::from("entered presumably unreachable code branch - guild id should never be `None` when `MessageCreate` is triggered")
-                });
-            }
-        };
-
-        let config = match GetGuildConfig::new(guild_id).await {
-            Ok(conf) => conf,
-            Err(error) => {
-                Logger::error(
-                    format!("failed to deserialize toml config; error: {:?}", error),
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
-
-                return Err(error)
-            }
-        };
-
-        if payload.content.starts_with(&config.GuildConfiguration.commandPrefix) {
-            let command = parser.parse_command(&config.GuildConfiguration.commandPrefix, &payload.content);
-
-            if command.is_some() {
-                commands::handle_command(command.unwrap(), emitter, cache, CommandContext {
-                    inner: Arc::new(CommandContextInner {
-                        http,
-                        message: Some((**payload).clone()),
-                        cluster,
-                        interaction: None
-                    })
-                }).await?;
-            }
-        }
-
         Ok(())
     }
 

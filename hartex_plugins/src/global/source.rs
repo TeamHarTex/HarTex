@@ -3,27 +3,21 @@
 //! This module implements the `source` command.
 
 use hartex_cmdsys::{
-    command::{
-        Command,
-        SlashCommand
-    },
-    context::CommandContext,
-    parser::args::CommandArgs
+    command::SlashCommand,
+    context::CommandContext
 };
 
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
-        model::{
-            application::{
-                callback::{
-                    CallbackData,
-                    InteractionResponse
-                },
-                interaction::Interaction
+        model::application::{
+            callback::{
+                CallbackData,
+                InteractionResponse
             },
-            channel::message::AllowedMentions
+            interaction::Interaction
         }
+
     },
     error::{
         HarTexError,
@@ -38,37 +32,11 @@ use hartex_utils::FutureRetType;
 /// The `source` command.
 pub struct Source;
 
-impl Command for Source {
+impl SlashCommand for Source {
     fn name(&self) -> String {
         String::from("source")
     }
 
-    fn execute_command(&self, ctx: CommandContext, _: CommandArgs, _: InMemoryCache) -> FutureRetType<()> {
-        Box::pin(exec_source_cmd(ctx))
-    }
-}
-
-/// # Asynchronous Function `exec_source_cmd`
-///
-/// Executes the `source` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
-async fn exec_source_cmd(ctx: CommandContext) -> HarTexResult<()> {
-    let message = ctx.message.clone().unwrap();
-
-    ctx.http
-        .create_message(message.channel_id)
-        .allowed_mentions(AllowedMentions::default())
-        .content("The source code for the bot can be found at: <https://github.com/HT-Studios/HarTex-rust-discord-bot>.")?
-        .reply(message.id)
-        .exec()
-        .await?;
-
-    Ok(())
-}
-
-impl SlashCommand for Source {
     fn description(&self) -> String {
         String::from("GlobalPlugin.SourceCommand")
     }

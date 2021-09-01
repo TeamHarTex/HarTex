@@ -9,23 +9,7 @@ use hartex_core::discord::{
 
 use hartex_utils::FutureRetType;
 
-use crate::{
-    context::CommandContext,
-    parser::args::CommandArgs
-};
-
-/// # Trait `Command`
-///
-/// A command.
-///
-/// ## Trait Methods
-/// - `name`; return type `String`: the name of the command
-/// - `execute`; parameters: `CommandContext`, `CommandArgs`, `InMemoryCache`; return type: `FutureRetType<()>`: the execution procedure
-pub trait Command {
-    fn name(&self) -> String;
-
-    fn execute_command(&self, ctx: CommandContext, args: CommandArgs, cache: InMemoryCache) -> FutureRetType<()>;
-}
+use crate::context::CommandContext;
 
 /// # Trait `SlashCommand`
 ///
@@ -39,6 +23,8 @@ pub trait Command {
 /// - `optional_cmdopts`; return type `Vec<CommandOption>`: a vector of optional command options
 /// - `enabled_by_default`; return type `bool`: whether the slash command is enabled by default when added to a guild
 pub trait SlashCommand {
+    fn name(&self) -> String;
+
     fn description(&self) -> String;
 
     fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;

@@ -12,10 +12,7 @@ use futures_util::future::Either;
 
 use tokio_stream::StreamExt;
 
-use hartex_cmdsys::{
-    framework::CommandFramework,
-    parser::config::CommandConfig
-};
+use hartex_cmdsys::framework::CommandFramework;
 
 use hartex_core::{
     ctrlc,
@@ -162,24 +159,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
     );
     let framework = CommandFramework::default();
 
-    let parser = {
-        Logger::verbose(
-            "configuring command parser",
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
-
-        framework
-            .clone()
-            .command(CommandConfig::with_name("about"))
-            .command(CommandConfig::with_name("ping"))
-            .command(CommandConfig::with_name("source"))
-            .command(CommandConfig::with_name("team"))
-            .build_parser()
-    };
-
     let listeners = framework.clone().listeners();
     let emitter = EventEmitter::new(listeners);
 
@@ -226,7 +205,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     (EventType::Twilight, Some(twilight), None),
                     http.clone(),
                     emitter.clone(),
-                    parser.clone(),
                     cache.clone(),
                     cluster.clone()
                 ));
@@ -236,7 +214,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     (EventType::Custom, None, Some(custom)),
                     http.clone(),
                     emitter.clone(),
-                    parser.clone(),
                     cache.clone(),
                     cluster.clone()
                 ));

@@ -42,7 +42,6 @@ pub async fn handle_interaction(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
-                                    message: None,
                                     cluster,
                                     interaction: Some(interaction)
                                 })
@@ -55,7 +54,6 @@ pub async fn handle_interaction(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
-                                    message: None,
                                     cluster,
                                     interaction: Some(interaction)
                                 })
@@ -68,7 +66,6 @@ pub async fn handle_interaction(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
-                                    message: None,
                                     cluster,
                                     interaction: Some(interaction)
                                 })
@@ -81,7 +78,6 @@ pub async fn handle_interaction(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
-                                    message: None,
                                     cluster,
                                     interaction: Some(interaction)
                                 })
