@@ -72,7 +72,6 @@ async fn exec_team_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
         .field(EmbedFieldBuilder::new("Global Administrator & Lead Developer", "HTGAzureX1212.#5959"))
         .build()?;
 
-
     ctx.http
         .interaction_callback(
             interaction.id,
