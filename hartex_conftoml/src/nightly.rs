@@ -15,9 +15,9 @@ pub struct NightlyFeatures {
     // Experimental Support for the Discord Threads API
     #[serde(default = "default_feature_enabled")]
     pub threads: bool,
-    // Experimental Support for Language Localization Facilities
+    // Experimental Support for localization Facilities, i.e. timezones, languages
     #[serde(default = "default_feature_enabled")]
-    pub languageLocalization: bool
+    pub localization: bool
 }
 
 pub fn default_feature_enabled() -> bool {
