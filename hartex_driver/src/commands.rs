@@ -48,7 +48,7 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand +
         }
     };
 
-    let names = existing.iter().map(|command| command.name).collect::<Vec<_>>();
+    let names = existing.iter().map(|command| command.name.clone()).collect::<Vec<_>>();
 
     for command in &commands {
         Logger::verbose(
