@@ -68,6 +68,8 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand +
                 column!()
             );
 
+            i += 1;
+
             continue;
         }
 
