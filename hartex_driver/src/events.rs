@@ -26,7 +26,7 @@ use hartex_eventsys::{
 
 use crate::handler::EventHandler;
 
-/// # Function `handle_event`
+/// # Asynchronous Function `handle_event`
 ///
 /// Handles the incoming event asynchronously.
 ///
