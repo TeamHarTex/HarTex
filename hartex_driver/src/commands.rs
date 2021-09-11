@@ -76,6 +76,8 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand +
         time::sleep(time::Duration::from_secs(1)).await;
 
         match http.create_global_command(&command.name(), &command.description())?
+            .command_options(&command.required_cmdopts())?
+            .command_options(&command.optional_cmdopts())?
             .default_permission(command.enabled_by_default())
             .exec()
             .await {
