@@ -43,11 +43,14 @@ use hartex_logging::Logger;
 
 use hartex_model::payload::CommandExecuted;
 
-use hartex_plugins::global::{
-    about::About,
-    ping::Ping,
-    source::Source,
-    team::Team
+use hartex_plugins::{
+    global::{
+        about::About,
+        ping::Ping,
+        source::Source,
+        team::Team
+    },
+    information::userinfo::Userinfo
 };
 
 use crate::commands;
@@ -271,10 +274,14 @@ impl EventHandler {
 
         commands::register_global_slash_commands(
             vec![
+                // Global Plugin
                 Box::new(About),
                 Box::new(Ping),
                 Box::new(Source),
-                Box::new(Team)
+                Box::new(Team),
+
+                // Information Plugin
+                Box::new(Userinfo)
             ],
             http.clone()
         ).await?;

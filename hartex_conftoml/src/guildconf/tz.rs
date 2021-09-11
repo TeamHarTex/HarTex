@@ -37,7 +37,8 @@ impl<'visitor> Visitor<'visitor> for TimezoneDeserializeStringVisitor {
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-    where E: Error {
+    where
+        E: Error {
         Ok(match v {
             "Asia/Hong_Kong" => Timezone::AsiaHongKong,
             "UTC" => Timezone::UTC,
