@@ -66,7 +66,7 @@ impl Logger {
             level::LogLevel::Info.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
-            file.strip_prefix(r"D:\Projects\HarTexRewrite\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
+            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
             line,
             column,
             message.into()
@@ -100,7 +100,7 @@ impl Logger {
             level::LogLevel::Debug.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
-            file.strip_prefix(r"D:\Projects\HarTexRewrite\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
+            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
             line,
             column,
             message.into()
@@ -134,7 +134,7 @@ impl Logger {
             level::LogLevel::Warn.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
-            file.strip_prefix(r"D:\Projects\HarTexRewrite\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
+            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
             line,
             column,
             message.into()
@@ -168,7 +168,7 @@ impl Logger {
             level::LogLevel::Error.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
-            file.strip_prefix(r"D:\Projects\HarTexRewrite\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
+            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
             line,
             column,
             message.into()
@@ -202,7 +202,7 @@ impl Logger {
             level::LogLevel::Verbose.display(),
             ansi_display(SgrParam::Reset.into_i32s()),
             module_name,
-            file.strip_prefix(r"D:\Projects\HarTexRewrite\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
+            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
             line,
             column,
             message.into()

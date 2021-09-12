@@ -48,6 +48,10 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand +
         }
     };
 
+    /*http.delete_global_command(existing.iter().find(|cmd| cmd.name == String::from("userinfo")).unwrap().id.unwrap())?
+        .exec()
+        .await?;*/
+
     let names = existing.iter().map(|command| command.name.clone()).collect::<Vec<_>>();
 
     for command in &commands {
