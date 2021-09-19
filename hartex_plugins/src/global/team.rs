@@ -59,12 +59,12 @@ impl Command for Team {
 
 /// # Asynchronous Function `exec_team_slash_cmd`
 ///
-/// Executes the `team` command (the slash command variant).
+/// Executes the `team` command.
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.as_ref().unwrap() {
+    let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
             HarTexError::Custom {

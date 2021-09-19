@@ -28,7 +28,7 @@ pub struct CommandContext {
 pub struct CommandContextInner {
     pub http: Client,
     pub cluster: Cluster,
-    pub interaction: Option<Interaction>
+    pub interaction: Interaction
 }
 
 impl Deref for CommandContext {

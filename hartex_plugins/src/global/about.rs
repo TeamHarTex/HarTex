@@ -64,13 +64,13 @@ impl Command for About {
 
 /// # Asynchronous Function `execute_about_command`
 ///
-/// Executes the `about` command (slash command variant).
+/// Executes the `about` command.
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
     let whitelists = GetWhitelistedGuilds::default().await?.len();
-    let interaction = match ctx.interaction.as_ref().unwrap() {
+    let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
             HarTexError::Custom {
