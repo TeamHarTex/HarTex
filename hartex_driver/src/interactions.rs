@@ -20,11 +20,14 @@ use hartex_cmdsys::{
 
 use hartex_logging::Logger;
 
-use hartex_plugins::global::{
-    about::About,
-    ping::Ping,
-    source::Source,
-    team::Team
+use hartex_plugins::{
+    global::{
+        about::About,
+        ping::Ping,
+        source::Source,
+        team::Team,
+    },
+    information::userinfo::Userinfo
 };
 
 /// # Asynchronous Function `handle_interaction`
@@ -46,13 +49,14 @@ pub async fn handle_interaction(
         match interaction.clone() {
             Interaction::ApplicationCommand(command) => {
                 match &*command.data.name {
+                    // Global Plugin
                     "about" => {
                         About.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
                                     cluster,
-                                    interaction: Some(interaction)
+                                    interaction
                                 })
                             },
                             cache
@@ -64,7 +68,7 @@ pub async fn handle_interaction(
                                 inner: Arc::new(CommandContextInner {
                                     http,
                                     cluster,
-                                    interaction: Some(interaction)
+                                    interaction
                                 })
                             },
                             cache
@@ -76,7 +80,7 @@ pub async fn handle_interaction(
                                 inner: Arc::new(CommandContextInner {
                                     http,
                                     cluster,
-                                    interaction: Some(interaction)
+                                    interaction
                                 })
                             },
                             cache
@@ -84,6 +88,20 @@ pub async fn handle_interaction(
                     },
                     "team" => {
                         Team.execute(
+                            CommandContext {
+                                inner: Arc::new(CommandContextInner {
+                                    http,
+                                    cluster,
+                                    interaction
+                                })
+                            },
+                            cache
+                        ).await
+                    }
+
+                    // Information Plugin
+                    "userinfo" => {
+                        Userinfo.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,

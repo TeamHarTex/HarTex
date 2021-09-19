@@ -58,17 +58,36 @@ impl Command for Userinfo {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, _: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        todo!()
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(ctx)
     }
 
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
         vec![
-            CommandOption::User(BaseCommandOptionData {
+            CommandOption::Mentionable(BaseCommandOptionData {
                 description: String::from("(optional) the user to query the information"),
                 name: String::from("user"),
                 required: false
             })
         ]
     }
+}
+
+/// # Asynchronous Function `execute_userinfo_command`
+///
+/// Executes the `userinfo` command.
+///
+/// ## Parameters
+/// - `ctx`, type `CommandContext`: the command context to use.
+async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
+    let interaction = match ctx.interaction.clone() {
+        Interaction::ApplicationCommand(command) => command,
+        _ => return Err(
+            HarTexError::Custom {
+                message: String::from("invalid interaction type: expected ApplicationCommand")
+            }
+        )
+    };
+
+    Ok(())
 }

@@ -58,12 +58,12 @@ impl Command for Ping {
 
 /// # Asynchronous Function `exec_ping_slash_cmd`
 ///
-/// Executes the `ping` command (the slash command variant).
+/// Executes the `ping` command.
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.as_ref().unwrap() {
+    let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
             HarTexError::Custom {

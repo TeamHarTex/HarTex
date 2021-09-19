@@ -53,8 +53,14 @@ impl Command for Source {
     }
 }
 
+/// # Asynchronous Function `execute_source_command`
+///
+/// Executes the `source` command.
+///
+/// ## Parameters
+/// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.as_ref().unwrap() {
+    let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
             HarTexError::Custom {

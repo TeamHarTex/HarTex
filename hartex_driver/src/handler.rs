@@ -22,7 +22,7 @@ use hartex_core::{
             presence::{
                 Activity,
                 ActivityType,
-                Status,
+                Status
             }
         }
     },
@@ -49,8 +49,8 @@ use hartex_plugins::{
         ping::Ping,
         source::Source,
         team::Team
-    }
-    // information::userinfo::Userinfo
+    },
+    information::userinfo::Userinfo
 };
 
 use crate::commands;
@@ -278,10 +278,10 @@ impl EventHandler {
                 Box::new(About),
                 Box::new(Ping),
                 Box::new(Source),
-                Box::new(Team)
+                Box::new(Team),
 
                 // Information Plugin
-                // Box::new(Userinfo)
+                Box::new(Userinfo)
             ],
             http.clone()
         ).await?;
