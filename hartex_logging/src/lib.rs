@@ -2,6 +2,8 @@
 //!
 //! The `hartex_logging` library contains an implementation of a logger for the HarTex Discord bot.
 
+#![feature(format_args_capture)]
+
 use hartex_core::{
     ansi::{
         ansi_display,
@@ -30,13 +32,32 @@ impl Logger {
     /// - `module`, type `Option<&'static str>`: the module where the static method is invoked; can be `None`,
     ///                                          and defaults to the `hartex_logging` module.
     pub fn log(message: impl Into<String>, log_level: level::LogLevel, module: Option<&'static str>, file: &'static str, line: u32, column: u32) {
-        match log_level {
-            level::LogLevel::Info => Logger::info(message, module, file, line, column),
-            level::LogLevel::Debug => Logger::debug(message, module, file, line, column),
-            level::LogLevel::Warn => Logger::warn(message, module, file, line, column),
-            level::LogLevel::Error => Logger::error(message, module, file, line, column),
-            level::LogLevel::Verbose => Logger::verbose(message, module, file, line, column)
-        }
+        let module_name = module.unwrap_or(module_path!());
+        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
+
+        params.append(&mut SgrParam::SetColour {
+            colour: AnsiColour::CustomU8 {
+                n: match log_level {
+                    level::LogLevel::Info => 2,
+                    level::LogLevel::Debug => 33,
+                    level::LogLevel::Warn => 226,
+                    level::LogLevel::Error => 1,
+                    level::LogLevel::Verbose => 240
+                }
+            },
+            foreground: true
+        }.into_i32s());
+
+        println!(
+            "[HarTex v{version}: {now}+08:00] [{ansi}{level}{reset}] [{module_name}] [{file}:{line}:{column}] {message}",
+            version = env!("CARGO_PKG_VERSION"),
+            now = Local::now().format("%Y-%m-%d %H:%M:%S"),
+            ansi = ansi_display(params),
+            level = log_level.display(),
+            reset = ansi_display(SgrParam::Reset.into_i32s()),
+            file = file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
+            message = message.into()
+        );
     }
 
     /// # Static Method `Logger::info`
@@ -48,29 +69,7 @@ impl Logger {
     /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn info(message: impl Into<String>, module: Option<&'static str>, file: &'static str, line: u32, column: u32) {
-        let module_name = module.unwrap_or(module_path!());
-        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
-
-        params.append(&mut SgrParam::SetColour {
-            colour: AnsiColour::CustomU8 {
-                n: 2
-            },
-            foreground: true
-        }.into_i32s());
-
-        println!(
-            "[HarTex v{}: {}+08:00] [{}{}{}] [{}] [{}:{}:{}] {}",
-            env!("CARGO_PKG_VERSION"),
-            Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(params),
-            level::LogLevel::Info.display(),
-            ansi_display(SgrParam::Reset.into_i32s()),
-            module_name,
-            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
-            line,
-            column,
-            message.into()
-        );
+        Self::log(message, level::LogLevel::Info, module, file, line, column)
     }
 
     /// # Static Method `Logger::debug`
@@ -82,29 +81,7 @@ impl Logger {
     /// - `module`, type `Option<&'static str`: the module the where the static method is invoked; can be
     ///                                         `None`, and defaults to the `hartex_logging` module.
     pub fn debug(message: impl Into<String>, module: Option<&'static str>, file: &'static str, line: u32, column: u32) {
-        let module_name = module.unwrap_or(module_path!());
-        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
-
-        params.append(&mut SgrParam::SetColour {
-            colour: AnsiColour::CustomU8 {
-                n: 33
-            },
-            foreground: true
-        }.into_i32s());
-
-        println!(
-            "[HarTex v{}: {}+08:00] [{}{}{}] [{}] [{}:{}:{}] {}",
-            env!("CARGO_PKG_VERSION"),
-            Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(params),
-            level::LogLevel::Debug.display(),
-            ansi_display(SgrParam::Reset.into_i32s()),
-            module_name,
-            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
-            line,
-            column,
-            message.into()
-        );
+        Self::log(message, level::LogLevel::Debug, module, file, line, column)
     }
 
     /// # Static Method `Logger::warn`
@@ -116,29 +93,7 @@ impl Logger {
     /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn warn(message: impl Into<String>, module: Option<&'static str>, file: &'static str, line: u32, column: u32) {
-        let module_name = module.unwrap_or(module_path!());
-        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
-
-        params.append(&mut SgrParam::SetColour {
-            colour: AnsiColour::CustomU8 {
-                n: 226
-            },
-            foreground: true
-        }.into_i32s());
-
-        println!(
-            "[HarTex v{}: {}+08:00] [{}{}{}] [{}] [{}:{}:{}] {}",
-            env!("CARGO_PKG_VERSION"),
-            Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(params),
-            level::LogLevel::Warn.display(),
-            ansi_display(SgrParam::Reset.into_i32s()),
-            module_name,
-            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
-            line,
-            column,
-            message.into()
-        );
+        Self::log(message, level::LogLevel::Warn, module, file, line, column)
     }
 
     /// # Static Method `Logger::error`
@@ -150,29 +105,7 @@ impl Logger {
     /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn error(message: impl Into<String>, module: Option<&'static str>, file: &'static str, line: u32, column: u32) {
-        let module_name = module.unwrap_or(module_path!());
-        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
-
-        params.append(&mut SgrParam::SetColour {
-            colour: AnsiColour::CustomU8 {
-                n: 1
-            },
-            foreground: true
-        }.into_i32s());
-
-        println!(
-            "[HarTex v{}: {}+08:00] [{}{}{}] [{}] [{}:{}:{}] {}",
-            env!("CARGO_PKG_VERSION"),
-            Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(params),
-            level::LogLevel::Error.display(),
-            ansi_display(SgrParam::Reset.into_i32s()),
-            module_name,
-            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
-            line,
-            column,
-            message.into()
-        );
+        Self::log(message, level::LogLevel::Error, module, file, line, column)
     }
 
     /// # Static Method `Logger::verbose`
@@ -184,28 +117,6 @@ impl Logger {
     /// - `module`, type `Option<&'static str>`: the module the where the static method is invoked; can be
     ///                                          `None`, and defaults to the `hartex_logging` module.
     pub fn verbose(message: impl Into<String>, module: Option<&'static str>, file: &'static str, line: u32, column: u32) {
-        let module_name = module.unwrap_or(module_path!());
-        let mut params = SgrParam::BoldOrIncreasedIntensity.into_i32s();
-
-        params.append(&mut SgrParam::SetColour {
-            colour: AnsiColour::CustomU8 {
-                n: 240
-            },
-            foreground: true
-        }.into_i32s());
-
-        println!(
-            "[HarTex v{}: {}+08:00] [{}{}{}] [{}] [{}:{}:{}] {}",
-            env!("CARGO_PKG_VERSION"),
-            Local::now().format("%Y-%m-%d %H:%M:%S"),
-            ansi_display(params),
-            level::LogLevel::Verbose.display(),
-            ansi_display(SgrParam::Reset.into_i32s()),
-            module_name,
-            file.strip_prefix(r"D:\Projects\HarTexBot\HarTex-rust-discord-bot\").unwrap().replace(r"\", "/"),
-            line,
-            column,
-            message.into()
-        );
+        Self::log(message, level::LogLevel::Verbose, module, file, line, column)
     }
 }
