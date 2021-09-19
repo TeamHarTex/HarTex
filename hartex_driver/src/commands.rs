@@ -38,7 +38,7 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
         Ok(commands) => commands,
         Err(error) => {
             Logger::error(
-                format!("failed to obtain a list of existing global commands: {}", error),
+                format!("failed to obtain a list of existing global commands: {error}"),
                 Some(module_path!()),
                 file!(),
                 line!(),
@@ -46,7 +46,7 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
             );
 
             return Err(HarTexError::Custom {
-                message: format!("failed to obtain a list of existing global commands: {}", error)
+                message: format!("failed to obtain a list of existing global commands: {error}")
             });
         }
     };
@@ -56,11 +56,9 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
     for command in &commands {
         Logger::verbose(
             format!(
-                "registering global command {} of {}; [name: {}, type: {:?}]",
-                i,
-                len,
-                &command.name(),
-                &command.command_type()
+                "registering global command {i} of {len}; [name: {name}, type: {command_type:?}]",
+                name = &command.name(),
+                command_type = &command.command_type()
             ),
             Some(module_path!()),
             file!(),
@@ -104,7 +102,7 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
             Ok(_) => (),
             Err(error) => {
                 Logger::error(
-                    format!("failed to register global command {} of {}: {}", i, len, error),
+                    format!("failed to register global command {i} of {len}: {error}"),
                     Some(module_path!()),
                     file!(),
                     line!(),

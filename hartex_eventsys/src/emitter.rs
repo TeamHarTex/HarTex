@@ -21,14 +21,14 @@ impl EventEmitter {
 
     pub fn emit(&self, event: events::HarTexEvent) {
         let count = self.listeners.len();
-        let mut someevent = Some(event);
+        let mut some_event = Some(event);
 
         self.send(|index| {
             if index == count {
-                someevent.take().unwrap()
+                some_event.take().unwrap()
             }
             else {
-                someevent.clone().unwrap()
+                some_event.clone().unwrap()
             }
         })
     }
