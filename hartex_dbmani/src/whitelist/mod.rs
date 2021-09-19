@@ -91,7 +91,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDS") {
         Ok(credentials) => credentials,
         Err(error) => {
-            let message = format!("failed to get database credentials; error: {}", error);
+            let message = format!("failed to get database credentials; error: {error}");
 
             Logger::error(
                 &message,
@@ -110,7 +110,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
-            let message = format!("failed to connect to postgres database pool; error: `{:?}`", error);
+            let message = format!("failed to connect to postgres database pool; error: `{error:?}`");
 
             Logger::error(
                 &message,
@@ -131,7 +131,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
             Ok(guilds)
         }
         Err(error) => {
-            let message = format!("failed to execute sql query; error `{:?}`", error);
+            let message = format!("failed to execute sql query; error: `{error:?}`");
 
             Logger::error(
                 &message,
