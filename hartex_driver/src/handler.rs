@@ -340,6 +340,7 @@ impl EventHandler {
 }
 
 // Custom Events
+// TODO: actually make use of these events
 impl EventHandler {
     /// # Static Asynchronous Method `EventHandler::command_executed`
     ///
@@ -350,7 +351,7 @@ impl EventHandler {
     /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
     pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
         Logger::info(
-            format!("command `{command}` is executed in guild {guild}", command = payload.command, guild = payload.guild.name),
+            format!("command `{command}` is executed in guild {guild}", command = payload.command, guild = payload.guild_id),
             Some(module_path!()),
             file!(),
             line!(),

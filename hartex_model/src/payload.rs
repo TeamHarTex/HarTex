@@ -2,10 +2,7 @@
 //!
 //! This module contains various event payloads used for the custom event system.
 
-#[path = "../../hartex_cmdsys/src/context.rs"]
-pub mod context;
-
-use hartex_core::discord::model::guild::Guild;
+use hartex_core::discord::model::id::GuildId;
 
 /// # Struct `CommandExecuted`
 ///
@@ -13,6 +10,5 @@ use hartex_core::discord::model::guild::Guild;
 #[derive(Clone)]
 pub struct CommandExecuted {
     pub command: String,
-    pub guild: Guild,
-    pub context: context::CommandContext
+    pub guild_id: GuildId
 }
