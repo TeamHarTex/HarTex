@@ -272,7 +272,7 @@ impl EventHandler {
             }
         }
 
-        commands::register_global_slash_commands(
+        commands::register_global_commands(
             vec![
                 // Global Plugin
                 Box::new(About),

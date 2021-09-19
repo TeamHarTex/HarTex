@@ -16,14 +16,14 @@ use hartex_core::{
 
 use hartex_logging::Logger;
 
-/// # Asynchronous Function `register_global_slash_commands`
+/// # Asynchronous Function `register_global_commands`
 ///
 /// Registers a global slash command if it has not been previously added.
 ///
 /// ## Parameters
 /// `commands`, type `Vec<Box<dyn SlashCommand + Send + Sync>>`: the commands to register.
 /// `http`, type `Client`: the Twilight HTTP client to use for registration.
-pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand + Send + Sync>>, http: Client) -> HarTexResult<()> {
+pub async fn register_global_commands(commands: Vec<Box<dyn SlashCommand + Send + Sync>>, http: Client) -> HarTexResult<()> {
     let mut i = 1;
     let len = commands.len();
 
@@ -47,10 +47,6 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand +
             });
         }
     };
-
-    /*http.delete_global_command(existing.iter().find(|cmd| cmd.name == String::from("userinfo")).unwrap().id.unwrap())?
-        .exec()
-        .await?;*/
 
     let names = existing.iter().map(|command| command.name.clone()).collect::<Vec<_>>();
 
@@ -79,7 +75,8 @@ pub async fn register_global_slash_commands(commands: Vec<Box<dyn SlashCommand +
 
         time::sleep(time::Duration::from_secs(1)).await;
 
-        match http.create_global_command(&command.name(), &command.description())?
+        match http.new_create_global_command(&command.name())?
+            .chat_input(&command.description())?
             .command_options(&command.required_cmdopts())?
             .command_options(&command.optional_cmdopts())?
             .default_permission(command.enabled_by_default())
