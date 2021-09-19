@@ -8,6 +8,8 @@
 //!                       removes the need to include the dependencies repeatedly across the
 //!                       HarTex crates.
 
+#![feature(format_args_capture)]
+
 pub use ctrlc;
 
 pub mod ansi;
@@ -20,4 +22,4 @@ pub mod time;
 /// # Static `HARTEX_BUILD`
 ///
 /// Represents the current version and build of HarTex Discord bot.
-pub static HARTEX_BUILD: &'static str = "Version 1.21.0, 22H1 (Build 294)";
+pub static HARTEX_BUILD: &'static str = "Version 1.21.0, 22H1 (Build 297)";

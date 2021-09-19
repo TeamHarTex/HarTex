@@ -180,5 +180,5 @@ impl SgrParam {
 pub fn ansi_display(params: Vec<i32>) -> impl Display {
     let strings = params.iter().map(|i| i.to_string()).collect::<Vec<_>>();
 
-    format!("{}[{}m", ANSI_ESC_CHAR, strings.join(";"))
+    format!("{ANSI_ESC_CHAR}[{string}m", string = strings.join(";"))
 }

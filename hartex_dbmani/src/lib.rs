@@ -3,6 +3,8 @@
 //! The `hartex_dbmani` provides an interface for manipulating the PostgreSQL databases used by
 //! HarTex Discord bot.
 
+#![feature(format_args_capture)]
+
 #![allow(non_snake_case)]
 
 use std::{

@@ -99,7 +99,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDCONFIG") {
         Ok(credentials) => credentials,
         Err(error) => {
-            let message = format!("failed to get database credentials; error: {}", error);
+            let message = format!("failed to get database credentials; error: {error}");
 
             Logger::error(
                 &message,
@@ -126,7 +126,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
-            let message = format!("failed to connect to postgres database pool; error: `{:?}`", error);
+            let message = format!("failed to connect to postgres database pool; error: `{error:?}`");
 
             Logger::error(
                 &message,
@@ -150,7 +150,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         column!()
     );
 
-    match sqlx::query(&format!("SELECT * FROM \"Guild{}\"; --", guild_id)).fetch_one(&connection)
+    match sqlx::query(&format!("SELECT * FROM \"Guild{guild_id}\"; --")).fetch_one(&connection)
         .await {
         Ok(row) => {
             let config = row.get::<String, &str>("TomlConfig");
@@ -158,7 +158,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
             let decoded = match base64::decode(config) {
                 Ok(bytes) => bytes,
                 Err(error) => {
-                    let message = format!("failed to decode base64; error `{:?}`", error);
+                    let message = format!("failed to decode base64; error: `{error:?}`");
 
                     Logger::error(
                         &message,
@@ -185,7 +185,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
             hartex_conftoml::from_string(match String::from_utf8(decoded) {
                 Ok(string) => string,
                 Err(error) => {
-                    let message = format!("failed to construct utf-8 string; error `{:?}`", error);
+                    let message = format!("failed to construct utf-8 string; error: `{error:?}`");
 
                     Logger::error(
                         &message,
@@ -202,7 +202,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
             })
         },
         Err(error) => {
-            let message = format!("failed to execute sql query; error `{:?}`", error);
+            let message = format!("failed to execute sql query; error `{error:?}`");
 
             Logger::error(
                 &message,
