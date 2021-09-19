@@ -77,7 +77,7 @@ impl EventHandler {
         let guild_id = payload.id;
 
         Logger::verbose(
-            format!("joined a new guild with name `{}` with id {}; checking whether the guild is whitelisted", payload.name, guild_id.0),
+            format!("joined a new guild with name `{name}` with id {guild_id}; checking whether the guild is whitelisted", name = payload.name),
             Some(module_path!()),
             file!(),
             line!(),
@@ -219,7 +219,7 @@ impl EventHandler {
             let shard_id = shard.info()?.id();
 
             Logger::verbose(
-                format!("registering presence for shard {}", shard_id),
+                format!("registering presence for shard {shard_id}"),
                 Some(module_path!()),
                 file!(),
                 line!(),
@@ -253,7 +253,7 @@ impl EventHandler {
             ).await {
                 Ok(()) => {
                     Logger::verbose(
-                        format!("successfully set presence for shard {}", shard_id),
+                        format!("successfully set presence for shard {shard_id}"),
                         Some(module_path!()),
                         file!(),
                         line!(),
@@ -262,7 +262,7 @@ impl EventHandler {
                 },
                 Err(error) => {
                     Logger::error(
-                        format!("failed to set presence for shard {}: {}", shard_id, error),
+                        format!("failed to set presence for shard {shard_id}: {error}"),
                         Some(module_path!()),
                         file!(),
                         line!(),
@@ -288,7 +288,7 @@ impl EventHandler {
 
         for guild in http.current_user_guilds().exec().await?.models().await? {
             Logger::verbose(
-                format!("changing nickname in guild {}", guild.name),
+                format!("changing nickname in guild {name}", name = guild.name),
                 Some(module_path!()),
                 file!(),
                 line!(),
@@ -300,7 +300,7 @@ impl EventHandler {
             match http.update_current_user_nick(guild.id, &config.GuildConfiguration.nickname).exec().await {
                 Err(error) => {
                     Logger::error(
-                        format!("failed to change nickname: {}", error),
+                        format!("failed to change nickname: {error}"),
                         Some(module_path!()),
                         file!(),
                         line!(),
@@ -350,7 +350,7 @@ impl EventHandler {
     /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
     pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
         Logger::info(
-            format!("command `{}` is executed in guild {}", payload.command, payload.guild.name),
+            format!("command `{command}` is executed in guild {guild}", command = payload.command, guild = payload.guild.name),
             Some(module_path!()),
             file!(),
             line!(),

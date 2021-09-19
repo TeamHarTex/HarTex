@@ -99,7 +99,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         .unwrap();
     let latency = shard_info.latency().average()
         .unwrap();
-    let new_content = format!("{} - `{}ms`", content, latency.as_millis());
+    let new_content = format!("{content} - `{latency}ms`", latency = latency.as_millis());
 
     match ctx.http
         .update_interaction_original(&interaction.token)?
@@ -107,7 +107,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         Ok(update) => update,
         Err(error) => {
             return Err(HarTexError::Custom {
-                message: format!("failed to update original response: {}", error)
+                message: format!("failed to update original response: {error}")
             });
         }
     }

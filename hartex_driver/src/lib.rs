@@ -3,6 +3,8 @@
 //! This `hartex_driver` crate contains effectively the "main function" of the bot as well as some
 //! "moving pieces" that are required for the bot to work.
 
+#![feature(format_args_capture)]
+
 use std::{
     env,
     process
@@ -65,10 +67,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
         Ok(token) => token,
         Err(var_error) => {
             Logger::error(
-                format!(
-                    "could not retrieve the bot token from the environment due to an error: {}",
-                    var_error
-                ),
+                format!("could not retrieve the bot token from the environment due to an error: {var_error}"),
                 Some(module_path!()),
                 file!(),
                 line!(),
@@ -83,10 +82,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
         Ok(id) => id,
         Err(var_error) => {
             Logger::error(
-                format!(
-                    "could not retrieve the application id from the environment due to an error: {}",
-                    var_error
-                ),
+                format!("could not retrieve the application id from the environment due to an error: {var_error}"),
                 Some(module_path!()),
                 file!(),
                 line!(),

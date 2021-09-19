@@ -27,6 +27,15 @@ use hartex_plugins::global::{
     team::Team
 };
 
+/// # Asynchronous Function `handle_interaction`
+///
+/// Handles the incoming interaction asynchronously.
+///
+/// ## Parameters
+/// - `interaction`, type `Interaction`: the interaction
+/// - `cache`, type `InMemoryCache`: the in-memory cache
+/// - `http`, type `Client`: the Twilight HTTP client
+/// - `cluster`: the gateway cluster
 pub async fn handle_interaction(
     interaction: Interaction,
     cache: InMemoryCache,
@@ -94,7 +103,7 @@ pub async fn handle_interaction(
         Ok(_) => (),
         Err(error) => {
             Logger::error(
-                format!("failed to handle interaction due to an error: {:?}", error),
+                format!("failed to handle interaction due to an error: {error:?}"),
                 Some(module_path!()),
                 file!(),
                 line!(),
