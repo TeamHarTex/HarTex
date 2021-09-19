@@ -3,7 +3,10 @@
 //! This module implements the `userinfo` command
 
 use hartex_cmdsys::{
-    command::SlashCommand,
+    command::{
+        Command,
+        CommandType
+    },
     context::CommandContext
 };
 
@@ -42,7 +45,7 @@ use hartex_utils::FutureRetType;
 /// The `userinfo` command.
 pub struct Userinfo;
 
-impl SlashCommand for Userinfo {
+impl Command for Userinfo {
     fn name(&self) -> String {
         String::from("userinfo")
     }
@@ -51,7 +54,11 @@ impl SlashCommand for Userinfo {
         String::from("InformationPlugin.UserinfoCommand")
     }
 
-    fn execute_slash_command<'asynchronous_trait>(&self, _: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn command_type(&self) -> CommandType {
+        CommandType::ChatInput
+    }
+
+    fn execute<'asynchronous_trait>(&self, _: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
         todo!()
     }
 

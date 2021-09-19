@@ -3,7 +3,10 @@
 //! This module implements the `ping` command.
 
 use hartex_cmdsys::{
-    command::SlashCommand,
+    command::{
+        Command,
+        CommandType
+    },
     context::CommandContext
 };
 
@@ -35,7 +38,7 @@ use hartex_utils::{
 /// The `ping` command.
 pub struct Ping;
 
-impl SlashCommand for Ping {
+impl Command for Ping {
     fn name(&self) -> String {
         String::from("ping")
     }
@@ -44,8 +47,12 @@ impl SlashCommand for Ping {
         String::from("GlobalPlugin.PingCommand")
     }
 
-    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(exec_ping_slash_cmd(ctx))
+    fn command_type(&self) -> CommandType {
+        CommandType::ChatInput
+    }
+
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(execute_ping_command(ctx))
     }
 }
 
@@ -55,7 +62,7 @@ impl SlashCommand for Ping {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn exec_ping_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = match ctx.interaction.as_ref().unwrap() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(

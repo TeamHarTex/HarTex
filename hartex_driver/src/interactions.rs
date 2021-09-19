@@ -11,7 +11,7 @@ use hartex_core::{
 };
 
 use hartex_cmdsys::{
-    command::SlashCommand,
+    command::Command,
     context::{
         CommandContext,
         CommandContextInner
@@ -38,7 +38,7 @@ pub async fn handle_interaction(
             Interaction::ApplicationCommand(command) => {
                 match &*command.data.name {
                     "about" => {
-                        About.execute_slash_command(
+                        About.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
@@ -50,7 +50,7 @@ pub async fn handle_interaction(
                         ).await
                     }
                     "ping" => {
-                        Ping.execute_slash_command(
+                        Ping.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
@@ -62,7 +62,7 @@ pub async fn handle_interaction(
                         ).await
                     }
                     "source" => {
-                        Source.execute_slash_command(
+                        Source.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
@@ -74,7 +74,7 @@ pub async fn handle_interaction(
                         ).await
                     },
                     "team" => {
-                        Team.execute_slash_command(
+                        Team.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
                                     http,
