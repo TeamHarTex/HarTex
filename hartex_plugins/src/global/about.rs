@@ -3,7 +3,10 @@
 //! This module implements the `about` command.
 
 use hartex_cmdsys::{
-    command::SlashCommand,
+    command::{
+        Command,
+        CommandType
+    },
     context::CommandContext
 };
 
@@ -41,7 +44,7 @@ use hartex_utils::FutureRetType;
 /// The `about` command.
 pub struct About;
 
-impl SlashCommand for About {
+impl Command for About {
     fn name(&self) -> String {
         String::from("about")
     }
@@ -50,18 +53,22 @@ impl SlashCommand for About {
         String::from("GlobalPlugin.AboutCommand")
     }
 
-    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(exec_about_slash_cmd(ctx))
+    fn command_type(&self) -> CommandType {
+        CommandType::ChatInput
+    }
+
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(execute_about_command(ctx))
     }
 }
 
-/// # Asynchronous Function `exec_about_slash_cmd`
+/// # Asynchronous Function `execute_about_command`
 ///
 /// Executes the `about` command (slash command variant).
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn exec_about_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
     let whitelists = GetWhitelistedGuilds::default().await?.len();
     let interaction = match ctx.interaction.as_ref().unwrap() {
         Interaction::ApplicationCommand(command) => command,

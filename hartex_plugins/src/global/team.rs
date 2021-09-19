@@ -3,7 +3,10 @@
 //! This module implements the `team` command.
 
 use hartex_cmdsys::{
-    command::SlashCommand,
+    command::{
+        Command,
+        CommandType
+    },
     context::CommandContext,
 };
 
@@ -36,7 +39,7 @@ use hartex_utils::FutureRetType;
 /// The `team` command.
 pub struct Team;
 
-impl SlashCommand for Team {
+impl Command for Team {
     fn name(&self) -> String {
         String::from("team")
     }
@@ -45,8 +48,12 @@ impl SlashCommand for Team {
         String::from("GlobalPlugin.TeamCommand")
     }
 
-    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(exec_team_slash_cmd(ctx))
+    fn command_type(&self) -> CommandType {
+        CommandType::ChatInput
+    }
+
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(execute_team_command(ctx))
     }
 }
 
@@ -56,7 +63,7 @@ impl SlashCommand for Team {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn exec_team_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = match ctx.interaction.as_ref().unwrap() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(

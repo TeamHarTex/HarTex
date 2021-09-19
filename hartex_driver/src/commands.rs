@@ -4,7 +4,10 @@
 
 use tokio::time;
 
-use hartex_cmdsys::command::SlashCommand;
+use hartex_cmdsys::command::{
+    Command,
+    CommandType
+};
 
 use hartex_core::{
     discord::http::Client,
@@ -23,7 +26,7 @@ use hartex_logging::Logger;
 /// ## Parameters
 /// `commands`, type `Vec<Box<dyn SlashCommand + Send + Sync>>`: the commands to register.
 /// `http`, type `Client`: the Twilight HTTP client to use for registration.
-pub async fn register_global_commands(commands: Vec<Box<dyn SlashCommand + Send + Sync>>, http: Client) -> HarTexResult<()> {
+pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Sync>>, http: Client) -> HarTexResult<()> {
     let mut i = 1;
     let len = commands.len();
 
@@ -52,7 +55,13 @@ pub async fn register_global_commands(commands: Vec<Box<dyn SlashCommand + Send 
 
     for command in &commands {
         Logger::verbose(
-            format!("registering global slash command {} of {}; [{}]", i, len, command.description()),
+            format!(
+                "registering global command {} of {}; [name: {}, type: {:?}]",
+                i,
+                len,
+                &command.name(),
+                &command.command_type()
+            ),
             Some(module_path!()),
             file!(),
             line!(),
@@ -75,23 +84,33 @@ pub async fn register_global_commands(commands: Vec<Box<dyn SlashCommand + Send 
 
         time::sleep(time::Duration::from_secs(1)).await;
 
-        match http.new_create_global_command(&command.name())?
-            .chat_input(&command.description())?
-            .command_options(&command.required_cmdopts())?
-            .command_options(&command.optional_cmdopts())?
-            .default_permission(command.enabled_by_default())
-            .exec()
-            .await {
-             Ok(_) => (),
-             Err(error) => {
-                 Logger::error(
-                     format!("failed to register global slash command {} of {}: {}", i, len, error),
-                     Some(module_path!()),
-                     file!(),
-                     line!(),
-                     column!()
-                 );
-             }
+        let name = command.name();
+        let create_global_command = http.new_create_global_command(&name)?;
+
+        match {
+            match command.command_type() {
+                CommandType::ChatInput => {
+                    create_global_command
+                        .chat_input(&command.description())?
+                        .command_options(&command.required_cmdopts())?
+                        .command_options(&command.optional_cmdopts())?
+                        .default_permission(command.enabled_by_default())
+                        .exec()
+                },
+                CommandType::Message => todo!(),
+                CommandType::User => todo!()
+            }
+        }.await {
+            Ok(_) => (),
+            Err(error) => {
+                Logger::error(
+                    format!("failed to register global command {} of {}: {}", i, len, error),
+                    Some(module_path!()),
+                    file!(),
+                    line!(),
+                    column!()
+                );
+            }
         }
 
         i += 1;

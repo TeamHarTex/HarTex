@@ -3,7 +3,10 @@
 //! This module implements the `source` command.
 
 use hartex_cmdsys::{
-    command::SlashCommand,
+    command::{
+        Command,
+        CommandType
+    },
     context::CommandContext
 };
 
@@ -32,7 +35,7 @@ use hartex_utils::FutureRetType;
 /// The `source` command.
 pub struct Source;
 
-impl SlashCommand for Source {
+impl Command for Source {
     fn name(&self) -> String {
         String::from("source")
     }
@@ -41,12 +44,16 @@ impl SlashCommand for Source {
         String::from("GlobalPlugin.SourceCommand")
     }
 
-    fn execute_slash_command<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(exec_source_slash_cmd(ctx))
+    fn command_type(&self) -> CommandType {
+        CommandType::ChatInput
+    }
+
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(execute_source_command(ctx))
     }
 }
 
-async fn exec_source_slash_cmd(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = match ctx.interaction.as_ref().unwrap() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
