@@ -2,7 +2,57 @@
 //!
 //! This module implements a wrapper of the Discord CDN.
 
+use std::fmt::{
+    self,
+    Display,
+    Formatter
+};
+
+use hartex_core::discord::model::id::UserId;
+
+/// # Struct `Cdn`
+///
+/// The "namespace" for various CDN endpoints
 pub struct Cdn;
 
 impl Cdn {
+    pub fn user_avatar(user_id: UserId, avatar_hash: String, format: CdnResourceFormat) -> String {
+        format!("https://cdn.discordapp.com/avatars/{user_id}/{avatar_hash}{format}")
+    }
+}
+
+/// # Enumeration `CdnResourceFormat`
+///
+/// The format of a CDN resource
+pub enum CdnResourceFormat {
+    /// # Enumeration Variant `CdnResourceFormat::GIF`
+    ///
+    /// A GIF - `.gif`
+    GIF,
+
+    /// # Enumeration Variant `CdnResourceFormat::JPEG`
+    ///
+    /// A JPEG - `.jpeg`
+    JPEG,
+
+    /// # Enumeration Variant `CdnResourceFormat::PNG`
+    ///
+    /// A PNG - `.png`
+    PNG,
+
+    /// # Enumeration Variant `CdnResourceFormat::WebP`
+    ///
+    /// A WebP - `.webp`
+    WebP
+}
+
+impl Display for CdnResourceFormat {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match *self {
+            Self::GIF => f.write_str(".gif"),
+            Self::JPEG => f.write_str(".jpeg"),
+            Self::PNG => f.write_str(".png"),
+            Self::WebP => f.write_str(".webp")
+        }
+    }
 }

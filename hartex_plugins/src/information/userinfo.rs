@@ -136,7 +136,7 @@ async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
         };
 
         ctx.http
-            .user(UserId::from(value.parse().unwrap()))
+            .user(UserId::from(value.parse::<u64>().unwrap()))
             .exec()
             .await?
             .model()
