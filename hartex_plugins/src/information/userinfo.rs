@@ -69,8 +69,8 @@ impl Command for Userinfo {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(execute_userinfo_command(ctx))
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(execute_userinfo_command(ctx, cache))
     }
 
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
@@ -90,7 +90,7 @@ impl Command for Userinfo {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
@@ -148,6 +148,14 @@ async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
             .model()
             .await?
     };
+    let member = ctx.http
+        // it is ok to unwrap here because it is already checked that the interaction is sent from
+        // a guild (which its id should never be None)
+        .guild_member(interaction.guild_id.unwrap(), user.id)
+        .exec()
+        .await?
+        .model()
+        .await?;
 
     let avatar_url = if let Some(hash) = user.avatar {
         let format = if hash.starts_with("a_") {
@@ -163,7 +171,12 @@ async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
         Cdn::default_user_avatar(user.discriminator.parse().unwrap())
     };
 
-    let embed = EmbedBuilder::new();
+    let embed = EmbedBuilder::new()
+        .author(EmbedAuthorBuilder::new()
+            .name(user.name)
+            .icon_url(ImageSource::url(avatar_url)?)
+        )
+        .color(0x03BEFC);
 
     Ok(())
 }
