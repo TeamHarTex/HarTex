@@ -16,6 +16,10 @@ use hartex_core::discord::model::id::UserId;
 pub struct Cdn;
 
 impl Cdn {
+    pub fn default_user_avatar(discriminator: u16) -> String {
+        format!("https://cdn.discordapp.com/embed/avatars/{discriminator}.png", discriminator = discriminator % 5)
+    }
+
     pub fn user_avatar(user_id: UserId, avatar_hash: String, format: CdnResourceFormat) -> String {
         format!("https://cdn.discordapp.com/avatars/{user_id}/{avatar_hash}{format}")
     }

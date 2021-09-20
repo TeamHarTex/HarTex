@@ -43,7 +43,13 @@ use hartex_core::{
     }
 };
 
-use hartex_utils::FutureRetType;
+use hartex_utils::{
+    cdn::{
+        Cdn,
+        CdnResourceFormat
+    },
+    FutureRetType
+};
 
 /// # Struct `Userinfo`
 ///
@@ -141,6 +147,20 @@ async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
             .await?
             .model()
             .await?
+    };
+
+    let avatar_url = if let Some(hash) = user.avatar {
+        let format = if hash.starts_with("a_") {
+            CdnResourceFormat::GIF
+        }
+        else {
+            CdnResourceFormat::PNG
+        };
+
+        Cdn::user_avatar(user.id, hash, format)
+    }
+    else {
+        Cdn::default_user_avatar(user.discriminator.parse().unwrap())
     };
 
     let embed = EmbedBuilder::new();
