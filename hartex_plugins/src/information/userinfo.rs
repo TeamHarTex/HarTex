@@ -19,18 +19,23 @@ use hartex_core::{
             EmbedFieldBuilder,
             ImageSource
         },
-        model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
+        model::{
+            application::{
+                callback::{
+                    CallbackData,
+                    InteractionResponse,
+                },
+                command::{
+                    BaseCommandOptionData,
+                    CommandOption,
+                },
+                interaction::{
+                    application_command::CommandDataOption,
+                    Interaction,
+                },
             },
-            command::{
-                BaseCommandOptionData,
-                CommandOption
-            },
-            interaction::Interaction
+            id::UserId
         }
-
     },
     error::{
         HarTexError,
@@ -59,7 +64,7 @@ impl Command for Userinfo {
     }
 
     fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(ctx)
+        Box::pin(execute_userinfo_command(ctx))
     }
 
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
@@ -88,6 +93,57 @@ async fn execute_userinfo_command(ctx: CommandContext) -> HarTexResult<()> {
             }
         )
     };
+
+    if interaction.guild_id.is_none() || interaction.user.is_some() {
+        ctx.http
+            .interaction_callback(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse::ChannelMessageWithSource(
+                    CallbackData {
+                        allowed_mentions: None,
+                        components: None,
+                        content: Some(String::from(":x: This command can only be used in a guild.")),
+                        embeds: vec![],
+                        flags: None,
+                        tts: None
+                    }
+                )
+            )
+            .exec()
+            .await?;
+    }
+
+    let options = interaction.data.options;
+    let user = if options.is_empty() {
+        // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
+        // not in a user DM (which is the case when interaction.member is None)
+        interaction.member.unwrap().user.unwrap()
+    }
+    else {
+        // unwrapping here is fine because the command only accepts a "user" parameter and is
+        // asserted to be of type "String"; therefore, the parameter must exist if the options vec
+        // is not empty and must be with the name "user" and of type "String"
+        let user_option = options
+            .into_iter()
+            .find(|option| option.name() == "user" && option.kind() == "String")
+            .unwrap();
+        let value = if let CommandDataOption::String { value, ..} = user_option {
+            value
+        }
+        else {
+            unreachable!("unexpected parameter type")
+        };
+
+        ctx.http
+            .user(UserId::from(value.parse().unwrap()))
+            .exec()
+            .await?
+            .model()
+            .await?
+    };
+
+    let embed = EmbedBuilder::new();
 
     Ok(())
 }
