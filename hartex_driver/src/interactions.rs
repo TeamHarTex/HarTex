@@ -106,7 +106,7 @@ pub async fn handle_interaction(
                                 inner: Arc::new(CommandContextInner {
                                     http,
                                     cluster,
-                                    interaction: Some(interaction)
+                                    interaction
                                 })
                             },
                             cache
