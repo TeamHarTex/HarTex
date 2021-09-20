@@ -2,6 +2,8 @@
 //!
 //! The `hartex_utils` library provides several utilities for the HarTex Discord bot.
 
+#![feature(format_args_capture)]
+
 use std::{
     future::Future,
     pin::Pin
