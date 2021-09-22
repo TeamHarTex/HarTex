@@ -34,6 +34,7 @@ use hartex_core::{
                     Interaction,
                 },
             },
+            gateway::presence::Status,
             id::UserId
         }
     },
@@ -156,6 +157,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .await?
         .model()
         .await?;
+    let presence = cache.presence(interaction.guild_id.unwrap(), member.user.id);
 
     let avatar_url = if let Some(hash) = user.avatar {
         let format = if hash.starts_with("a_") {
@@ -181,6 +183,18 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .field(EmbedFieldBuilder::new("Discriminator", user.discriminator).inline())
         .field(EmbedFieldBuilder::new("User ID", format!("{id}", id = user.id)))
         .field(EmbedFieldBuilder::new("Guild Nickname", member.nick.unwrap_or(String::from("None"))))
+        .field(EmbedFieldBuilder::new("Status", match presence.clone() {
+            Some(presence) => {
+                match presence.status {
+                    Status::DoNotDisturb => "do not disturb",
+                    Status::Idle => "idle",
+                    Status::Invisible => "invisible",
+                    Status::Offline => "offline",
+                    Status::Online => "online"
+                }
+            },
+            None => "unknown"
+        }))
         .build()?;
 
     ctx.http
