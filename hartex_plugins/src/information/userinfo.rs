@@ -168,15 +168,19 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         Cdn::user_avatar(user.id, hash, format)
     }
     else {
-        Cdn::default_user_avatar(user.discriminator.parse().unwrap())
+        Cdn::default_user_avatar(user.discriminator.clone().parse().unwrap())
     };
 
     let embed = EmbedBuilder::new()
         .author(EmbedAuthorBuilder::new()
-            .name(format!("Information about {username}", username = user.name))
+            .name(format!("Information about {username}", username = &user.name))
             .icon_url(ImageSource::url(avatar_url)?)
         )
         .color(0x03BEFC)
+        .field(EmbedFieldBuilder::new("Username", user.name).inline())
+        .field(EmbedFieldBuilder::new("Discriminator", user.discriminator).inline())
+        .field(EmbedFieldBuilder::new("User ID", format!("{id}", id = user.id)))
+        .field(EmbedFieldBuilder::new("Guild Nickname", member.nick.unwrap_or(String::from("None"))))
         .build()?;
 
     ctx.http
