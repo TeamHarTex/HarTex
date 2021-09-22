@@ -173,10 +173,29 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
 
     let embed = EmbedBuilder::new()
         .author(EmbedAuthorBuilder::new()
-            .name(user.name)
+            .name(format!("Information about {username}", username = user.name))
             .icon_url(ImageSource::url(avatar_url)?)
         )
-        .color(0x03BEFC);
+        .color(0x03BEFC)
+        .build()?;
+
+    ctx.http
+        .interaction_callback(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse::ChannelMessageWithSource(
+                CallbackData {
+                    allowed_mentions: None,
+                    components: None,
+                    content: None,
+                    embeds: vec![embed],
+                    flags: None,
+                    tts: None
+                }
+            )
+        )
+        .exec()
+        .await?;
 
     Ok(())
 }
