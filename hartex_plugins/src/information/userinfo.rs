@@ -173,7 +173,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         Cdn::default_user_avatar(user.discriminator.clone().parse().unwrap())
     };
 
-    let embed = EmbedBuilder::new()
+    let mut embed = EmbedBuilder::new()
         .author(EmbedAuthorBuilder::new()
             .name(format!("Information about {username}", username = &user.name))
             .icon_url(ImageSource::url(avatar_url)?)
@@ -182,20 +182,24 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
         .field(EmbedFieldBuilder::new("Discriminator", user.discriminator).inline())
         .field(EmbedFieldBuilder::new("User ID", format!("{id}", id = user.id)))
-        .field(EmbedFieldBuilder::new("Guild Nickname", member.nick.unwrap_or(String::from("None"))))
-        .field(EmbedFieldBuilder::new("Status", match presence.clone() {
-            Some(presence) => {
-                match presence.status {
-                    Status::DoNotDisturb => "do not disturb",
-                    Status::Idle => "idle",
-                    Status::Invisible => "invisible",
-                    Status::Offline => "offline",
-                    Status::Online => "online"
-                }
-            },
-            None => "unknown"
-        }))
-        .build()?;
+        .field(EmbedFieldBuilder::new("Guild Nickname", member.nick.unwrap_or(String::from("None"))));
+
+
+    if let Some(presence) = presence {
+        embed = embed
+            .field(EmbedFieldBuilder::new("Status",
+            match presence.status {
+                Status::DoNotDisturb => "do not disturb",
+                Status::Idle => "idle",
+                Status::Invisible => "invisible",
+                Status::Offline => "offline",
+                Status::Online => "online"
+            }));
+    }
+    else {
+        embed = embed
+            .field(EmbedFieldBuilder::new("Status", "unknown"));
+    }
 
     ctx.http
         .interaction_callback(
@@ -206,7 +210,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                     allowed_mentions: None,
                     components: None,
                     content: None,
-                    embeds: vec![embed],
+                    embeds: vec![embed.build()?],
                     flags: None,
                     tts: None
                 }
