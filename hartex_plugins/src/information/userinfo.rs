@@ -186,6 +186,8 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
 
 
     if let Some(presence) = presence {
+        let activities = presence.activities;
+
         embed = embed
             .field(EmbedFieldBuilder::new("Status",
             match presence.status {
@@ -195,10 +197,19 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 Status::Offline => "offline",
                 Status::Online => "online"
             }));
+
+        if activities.is_empty() {
+            embed = embed
+                .field(EmbedFieldBuilder::new("Activities", "none"));
+        }
+        else {
+            todo!()
+        }
     }
     else {
         embed = embed
-            .field(EmbedFieldBuilder::new("Status", "unknown"));
+            .field(EmbedFieldBuilder::new("Status", "unknown"))
+            .field(EmbedFieldBuilder::new("Activities", "none"));
     }
 
     ctx.http
