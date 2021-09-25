@@ -34,7 +34,10 @@ use hartex_core::{
                     Interaction,
                 },
             },
-            gateway::presence::Status,
+            gateway::presence::{
+                ActivityType,
+                Status
+            },
             id::UserId
         }
     },
@@ -203,7 +206,20 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 .field(EmbedFieldBuilder::new("Activities", "none"));
         }
         else {
-            todo!()
+            for activity in activities {
+                let temp = embed.clone();
+                let activity_type = match activity.kind {
+                    ActivityType::Competing => "Competing",
+                    ActivityType::Custom => "Custom",
+                    ActivityType::Listening => "Listening",
+                    ActivityType::Playing => "Playing",
+                    ActivityType::Streaming => "Streaming",
+                    ActivityType::Watching => "Watching"
+                };
+
+                embed = temp
+                    .field(EmbedFieldBuilder::new(format!("Activity - {activity_type}"), &activity.name));
+            }
         }
     }
     else {
