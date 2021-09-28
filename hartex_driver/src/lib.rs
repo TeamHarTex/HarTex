@@ -197,6 +197,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
     while let Some(event) = events.next().await {
         match event {
             Either::Left((_, twilight)) => {
+                cache.update(&twilight);
+
                 tokio::spawn(events::handle_event(
                     (EventType::Twilight, Some(twilight), None),
                     http.clone(),
