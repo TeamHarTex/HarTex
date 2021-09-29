@@ -7,7 +7,7 @@ use serde::{
     Deserialize
 };
 
-mod tz;
+pub mod tz;
 
 /// # Struct `GuildConfiguration`
 ///

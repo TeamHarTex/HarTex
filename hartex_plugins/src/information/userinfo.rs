@@ -10,6 +10,8 @@ use hartex_cmdsys::{
     context::CommandContext
 };
 
+use hartex_conftoml::guildconf::tz::Timezone;
+
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -44,8 +46,16 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
+    },
+    time::{
+        offset::FixedOffset,
+        DateTime,
+        TimeZone
     }
 };
+use hartex_core::discord::util::snowflake::Snowflake;
+
+use hartex_dbmani::guildconf::GetGuildConfig;
 
 use hartex_utils::{
     cdn::{
@@ -124,6 +134,9 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
             .await?;
     }
 
+    let config = GetGuildConfig::new(interaction.guild_id.unwrap())
+        .await?;
+
     let options = interaction.data.options;
     let user = if options.is_empty() {
         // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
@@ -187,7 +200,6 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .field(EmbedFieldBuilder::new("User ID", format!("{id}", id = user.id)))
         .field(EmbedFieldBuilder::new("Guild Nickname", member.nick.unwrap_or(String::from("None"))));
 
-
     if let Some(presence) = presence {
         let activities = presence.activities;
 
@@ -227,6 +239,21 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
             .field(EmbedFieldBuilder::new("Status", "unknown"))
             .field(EmbedFieldBuilder::new("Activities", "none"));
     }
+
+    let timezone = if config.NightlyFeatures.localization {
+        config.GuildConfiguration.timezone
+    }
+    else {
+        Timezone::UTC
+    };
+    let joined_at = DateTime::parse_from_str(member.joined_at.unwrap().as_str(), "%Y-%m-%dT%H:%M:%S%.f%:z")?;
+    let created_at = FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
+
+    let temp = embed.clone();
+
+    embed = temp
+        .field(EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at}")).inline())
+        .field(EmbedFieldBuilder::new("Account Created At", format!("{created_at}")).inline());
 
     ctx.http
         .interaction_callback(
