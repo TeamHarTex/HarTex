@@ -2,7 +2,11 @@
 //!
 //! This module contains the `Timezone` configuration model.
 
-use std::fmt::Formatter;
+use std::fmt::{
+    Display,
+    Formatter,
+    Result as FmtResult
+};
 
 use serde::de::{
     Error,
@@ -12,6 +16,7 @@ use serde::de::{
 /// # Enum `Timezone`
 ///
 /// Represents a timezone.
+#[derive(Clone, Copy)]
 pub enum Timezone {
     /// # Enum Variant `Timezone::AsiaHongKong`
     ///
@@ -33,6 +38,15 @@ impl Timezone {
             Self::UTC => 0 * 3600,  // UTC+00:00
             Self::AsiaHongKong => 8 * 3600  // UTC+08:00
         }
+    }
+}
+
+impl Display for Timezone {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        f.write_str(match *self {
+            Self::AsiaHongKong => "Asia/Hong_Kong",
+            Self::UTC => "UTC"
+        })
     }
 }
 

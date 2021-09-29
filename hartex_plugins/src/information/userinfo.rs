@@ -252,8 +252,8 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
     let temp = embed.clone();
 
     embed = temp
-        .field(EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at}")).inline())
-        .field(EmbedFieldBuilder::new("Account Created At", format!("{created_at}")).inline());
+        .field(EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})")).inline())
+        .field(EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})")).inline());
 
     ctx.http
         .interaction_callback(
