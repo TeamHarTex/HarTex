@@ -10,31 +10,34 @@ use ctrlc::Error as CtrlcError;
 
 use toml::de::Error as TomlDeserializationError;
 
-use crate::discord::{
-    embed_builder::{
-        image_source::ImageSourceUrlError,
-        EmbedError
-    },
-    gateway::{
-        cluster::{
-            ClusterCommandError,
-            ClusterStartError,
+use crate::{
+    discord::{
+        embed_builder::{
+            image_source::ImageSourceUrlError,
+            EmbedError,
         },
-        shard::SessionInactiveError
-    },
-    http::{
-        error::Error as HttpError,
-        request::{
-            application::InteractionError,
-            channel::message::{
-                create_message::CreateMessageError,
-                update_message::UpdateMessageError
+        gateway::{
+            cluster::{
+                ClusterCommandError,
+                ClusterStartError,
             },
-            guild::member::update_guild_member::UpdateGuildMemberError
+            shard::SessionInactiveError,
         },
-        response::DeserializeBodyError
+        http::{
+            error::Error as HttpError,
+            request::{
+                application::InteractionError,
+                channel::message::{
+                    create_message::CreateMessageError,
+                    update_message::UpdateMessageError,
+                },
+                guild::member::update_guild_member::UpdateGuildMemberError,
+            },
+            response::DeserializeBodyError,
+        },
+        model::gateway::payload::update_presence::UpdatePresenceError
     },
-    model::gateway::payload::update_presence::UpdatePresenceError
+    time::ParseError
 };
 
 /// # Enum `HarTexError`
@@ -134,6 +137,15 @@ pub enum HarTexError {
     ///                                     an interaction.
     InteractionError {
         error: InteractionError
+    },
+
+    /// # Enum Variant `HarTexError::ParseError`
+    ///
+    /// A wrapper around `chrono::ParseError`
+    ///
+    /// - `error`, type `ParseError`: the datetime parsing error
+    ParseError {
+        error: ParseError
     },
 
     /// # Enum Variant `HarTexError::SessionInactiveError`
@@ -307,6 +319,14 @@ impl From<ImageSourceUrlError> for HarTexError {
 impl From<InteractionError> for HarTexError {
     fn from(error: InteractionError) -> Self {
         Self::InteractionError {
+            error
+        }
+    }
+}
+
+impl From<ParseError> for HarTexError {
+    fn from(error: ParseError) -> Self {
+        Self::ParseError {
             error
         }
     }
