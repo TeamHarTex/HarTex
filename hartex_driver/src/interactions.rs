@@ -27,7 +27,10 @@ use hartex_plugins::{
         source::Source,
         team::Team,
     },
-    information::userinfo::Userinfo
+    information::{
+        guildinfo::Guildinfo,
+        userinfo::Userinfo
+    }
 };
 
 /// # Asynchronous Function `handle_interaction`
@@ -100,6 +103,18 @@ pub async fn handle_interaction(
                     }
 
                     // Information Plugin
+                    "guildinfo" => {
+                        Guildinfo.execute(
+                            CommandContext {
+                                inner: Arc::new(CommandContextInner {
+                                    http,
+                                    cluster,
+                                    interaction
+                                })
+                            },
+                            cache
+                        ).await
+                    }
                     "userinfo" => {
                         Userinfo.execute(
                             CommandContext {
