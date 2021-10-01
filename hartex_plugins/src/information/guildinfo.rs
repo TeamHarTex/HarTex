@@ -13,6 +13,11 @@ use hartex_cmdsys::{
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
+        embed_builder::{
+            EmbedAuthorBuilder,
+            EmbedBuilder,
+            ImageSource
+        },
         model::application::{
             callback::{
                 CallbackData,
@@ -27,7 +32,13 @@ use hartex_core::{
     }
 };
 
-use hartex_utils::FutureRetType;
+use hartex_utils::{
+    cdn::{
+        Cdn,
+        CdnResourceFormat
+    },
+    FutureRetType
+};
 
 /// # Struct `Guildinfo`
 ///
@@ -87,6 +98,53 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
             .exec()
             .await?;
     }
+
+    // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
+    // not in a user DM (which is the case when interaction.guild_id is None)
+    let guild = ctx.http
+        .guild(interaction.guild_id.unwrap())
+        .exec()
+        .await?
+        .model()
+        .await?;
+
+    let icon_url = if let Some(hash) = guild.icon {
+        let format = if hash.starts_with("a_") {
+            CdnResourceFormat::GIF
+        }
+        else {
+            CdnResourceFormat::PNG
+        };
+
+        Cdn::guild_icon(guild.id, hash, format)
+    }
+    else {
+        String::new()
+    };
+
+    let mut embed = EmbedBuilder::new()
+        .author(EmbedAuthorBuilder::new()
+            .name(format!("Information about {name}", name = &guild.name))
+            .icon_url(ImageSource::url(icon_url)?)
+        );
+
+    ctx.http
+        .interaction_callback(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse::ChannelMessageWithSource(
+                CallbackData {
+                    allowed_mentions: None,
+                    components: None,
+                    content: None,
+                    embeds: vec![embed.build()?],
+                    flags: None,
+                    tts: None
+                }
+            )
+        )
+        .exec()
+        .await?;
 
     Ok(())
 }
