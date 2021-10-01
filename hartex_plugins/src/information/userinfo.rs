@@ -217,10 +217,10 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
             EmbedFieldBuilder::new(
                 "Highest Role in Guild",
                 if roles.is_empty() {
-                    "none"
+                    String::from("none")
                 }
                 else {
-                    roles.first().unwrap().mention()
+                    roles.first().unwrap().mention().to_string()
                 }
             ).inline()
         );
