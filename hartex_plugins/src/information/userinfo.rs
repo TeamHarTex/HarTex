@@ -230,7 +230,15 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 };
 
                 embed = temp
-                    .field(EmbedFieldBuilder::new(format!("Activity - {activity_type}"), &activity.name));
+                    .field(EmbedFieldBuilder::new(
+                        format!("Activity - {activity_type}"),
+                        if activity.kind == ActivityType::Custom {
+                            activity.state.unwrap()
+                        }
+                        else {
+                            activity.name
+                        }
+                    ));
             }
         }
     }
