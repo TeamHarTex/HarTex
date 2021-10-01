@@ -41,7 +41,8 @@ use hartex_core::{
                 Status
             },
             id::UserId
-        }
+        },
+        util::snowflake::Snowflake
     },
     error::{
         HarTexError,
@@ -53,7 +54,6 @@ use hartex_core::{
         TimeZone
     }
 };
-use hartex_core::discord::util::snowflake::Snowflake;
 
 use hartex_dbmani::guildconf::GetGuildConfig;
 
@@ -174,6 +174,14 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .model()
         .await?;
     let presence = cache.presence(interaction.guild_id.unwrap(), member.user.id);
+    let mut roles = member
+        .roles
+        .iter()
+        .filter_map(|role_id| cache.role(*role_id))
+        .collect::<Vec<_>>();
+    roles.sort_by(|prev_role, curr_role| {
+        curr_role.position.cmp(&prev_role.position)
+    });
 
     let avatar_url = if let Some(hash) = user.avatar {
         let format = if hash.starts_with("a_") {
