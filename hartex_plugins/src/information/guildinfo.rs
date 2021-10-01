@@ -133,7 +133,8 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
     }
 
     let embed = EmbedBuilder::new()
-        .author(author);
+        .author(author)
+        .color(0x03BEFC);
 
     ctx.http
         .interaction_callback(
