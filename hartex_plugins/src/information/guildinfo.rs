@@ -122,11 +122,18 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
         String::new()
     };
 
-    let mut embed = EmbedBuilder::new()
-        .author(EmbedAuthorBuilder::new()
-            .name(format!("Information about {name}", name = &guild.name))
-            .icon_url(ImageSource::url(icon_url)?)
-        );
+    let mut author = EmbedAuthorBuilder::new()
+        .name(format!("Information about {name}", name = &guild.name));
+
+    if !icon_url.is_empty() {
+        let temp = author.clone();
+
+        author = temp
+            .icon_url(ImageSource::url(icon_url)?);
+    }
+
+    let embed = EmbedBuilder::new()
+        .author(author);
 
     ctx.http
         .interaction_callback(
