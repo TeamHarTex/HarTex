@@ -21,6 +21,7 @@ use hartex_core::{
             EmbedFieldBuilder,
             ImageSource
         },
+        mention::Mention,
         model::{
             application::{
                 callback::{
@@ -206,7 +207,23 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
         .field(EmbedFieldBuilder::new("Discriminator", user.discriminator).inline())
         .field(EmbedFieldBuilder::new("User ID", format!("{id}", id = user.id)))
-        .field(EmbedFieldBuilder::new("Guild Nickname", member.nick.unwrap_or(String::from("None"))));
+        .field(
+            EmbedFieldBuilder::new(
+                "Guild Nickname",
+                member.nick.unwrap_or(String::from("None"))
+            ).inline()
+        )
+        .field(
+            EmbedFieldBuilder::new(
+                "Highest Role in Guild",
+                if roles.is_empty() {
+                    "none"
+                }
+                else {
+                    roles.first().unwrap().mention()
+                }
+            ).inline()
+        );
 
     if let Some(presence) = presence {
         let activities = presence.activities;
