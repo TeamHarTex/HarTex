@@ -8,7 +8,10 @@ use std::fmt::{
     Formatter
 };
 
-use hartex_core::discord::model::id::UserId;
+use hartex_core::discord::model::id::{
+    GuildId,
+    UserId
+};
 
 /// # Struct `Cdn`
 ///
@@ -18,6 +21,10 @@ pub struct Cdn;
 impl Cdn {
     pub fn default_user_avatar(discriminator: u16) -> String {
         format!("https://cdn.discordapp.com/embed/avatars/{discriminator}.png", discriminator = discriminator % 5)
+    }
+
+    pub fn guild_icon(guild_id: GuildId, icon_hash: String, format: CdnResourceFormat) -> String {
+        format!("https://cdn.discordapp.com/icons/{guild_id}/{icon_hash}{format}")
     }
 
     pub fn user_avatar(user_id: UserId, avatar_hash: String, format: CdnResourceFormat) -> String {
