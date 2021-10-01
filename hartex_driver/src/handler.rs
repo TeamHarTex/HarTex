@@ -50,7 +50,10 @@ use hartex_plugins::{
         source::Source,
         team::Team
     },
-    information::userinfo::Userinfo
+    information::{
+        guildinfo::Guildinfo,
+        userinfo::Userinfo
+    }
 };
 
 use crate::commands;
@@ -281,6 +284,7 @@ impl EventHandler {
                 Box::new(Team),
 
                 // Information Plugin
+                Box::new(Guildinfo),
                 Box::new(Userinfo)
             ],
             http.clone()

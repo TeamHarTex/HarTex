@@ -1,6 +1,6 @@
 //! # The `userinfo` Module
 //!
-//! This module implements the `userinfo` command
+//! This module implements the `userinfo` command.
 
 use hartex_cmdsys::{
     command::{
@@ -210,7 +210,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .field(
             EmbedFieldBuilder::new(
                 "Guild Nickname",
-                member.nick.unwrap_or(String::from("None"))
+                member.nick.unwrap_or(String::from("none"))
             ).inline()
         )
         .field(
