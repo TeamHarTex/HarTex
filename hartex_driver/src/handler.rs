@@ -122,7 +122,7 @@ impl EventHandler {
                 + " - be always abide by the Discord Terms of Service (<https://discord.com/terms>) and Community Guidelines (<https://discord.com/guidelines);"
                 + " - how old is the guild and/or how active is it; and"
                 + " - your experience level with TOML to configure the bot before using it.\n\n"
-                + "You may join our Support Guild at `https://discord.gg/gv8aGwNMKb` for more information, including the application link in which you may use"
+                + "You may join our Support Guild at `https://discord.gg/Xu8453VBAv` for more information, including the application link in which you may use"
                 + "to apply for a whitelist application. Good luck!";
 
             http.create_message(dm_channel.id).content(&message)?.exec().await?;
