@@ -41,15 +41,4 @@ impl Command for Guildinfo {
     fn execute<'asynchronous_trait>(&self, _: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
         todo!()
     }
-
-    fn optional_cmdopts(&self) -> Vec<CommandOption> {
-        vec![
-            CommandOption::Integer(ChoiceCommandOptionData {
-                choices: vec![],
-                description: String::from("(optional) the guild to query the information"),
-                name: String::from("guild"),
-                required: false
-            })
-        ]
-    }
 }
