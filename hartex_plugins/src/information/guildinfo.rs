@@ -259,7 +259,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 )
             )
         )
-        .field(EmbedFieldBuilder::new("Guild Features", features));
+        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features}")));
 
     ctx.http
         .interaction_callback(
