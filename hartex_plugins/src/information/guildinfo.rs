@@ -225,6 +225,19 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
 
     let created_at = FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id.timestamp());
 
+    let features_vec = guild.features;
+    let features = if features_vec.is_empty() {
+        String::from("none")
+    }
+    else {
+        let features_vec = features_vec
+            .iter()
+            .map(|feature| format!("`{feature}`"))
+            .collect::<Vec<_>>();
+
+        features_vec.join("\n - ")
+    };
+
     let temp = embed.clone();
 
     embed = temp
@@ -245,7 +258,8 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                     "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}\nNews Channels: {news}"
                 )
             )
-        );
+        )
+        .field(EmbedFieldBuilder::new("Guild Features", features));
 
     ctx.http
         .interaction_callback(
