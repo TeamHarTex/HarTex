@@ -163,7 +163,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             EmbedFieldBuilder::new(
                 "Members",
                 format!(
-                    "**Grand Total**: {guild_member_count}\nHumans: {guild_user_count}\nBots:{bots}",
+                    "**Grand Total**: {guild_member_count}\nHumans: {guild_user_count}\nBots: {bots}",
                     bots = guild_member_count as usize - guild_user_count
                 )
             )
