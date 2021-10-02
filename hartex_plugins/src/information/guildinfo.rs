@@ -113,8 +113,11 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .await?
         .model()
         .await?;
+    // it is ok to call unwrap here because we are sure that the limit never exceeds 1000
     let guild_members = ctx.http
         .guild_members(guild.id)
+        .limit(1000)
+        .unwrap()
         .exec()
         .await?
         .models()
@@ -128,7 +131,6 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
 
     let guild_member_count = guild_members.len();
 
-    // FIXME: https://github.com/HarTexBot/HarTex-rust-discord-bot/issues/32
     let guild_user_count = guild_members
         .iter()
         .filter(|member| !member.user.bot)
