@@ -50,8 +50,8 @@ use hartex_core::{
         HarTexResult
     },
     time::{
-        offset::FixedOffset,
         DateTime,
+        FixedOffset,
         TimeZone
     }
 };
