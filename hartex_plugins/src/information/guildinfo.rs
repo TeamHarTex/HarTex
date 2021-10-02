@@ -127,9 +127,11 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .await?;
 
     let guild_member_count = guild.member_count.unwrap();
+
+    // FIXME: https://github.com/HarTexBot/HarTex-rust-discord-bot/issues/32
     let guild_bot_count = guild_members
         .iter()
-        .filter(|member| member.user.bot)
+        .filter(|member| !member.user.bot)
         .count();
 
     let channels_iter = guild_channels
