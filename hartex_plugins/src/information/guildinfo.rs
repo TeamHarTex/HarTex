@@ -59,8 +59,8 @@ impl Command for Guildinfo {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(execute_guildinfo_command(ctx))
+    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+        Box::pin(execute_guildinfo_command(ctx, cache))
     }
 }
 
@@ -70,7 +70,7 @@ impl Command for Guildinfo {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
@@ -102,17 +102,26 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
 
     // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
     // not in a user DM (which is the case when interaction.guild_id is None)
-    let guild = ctx.http
+    let guild = cache
         .guild(interaction.guild_id.unwrap())
-        .exec()
-        .await?
-        .model()
-        .await?;
+        .unwrap();
     let guild_owner = ctx.http.user(guild.owner_id)
         .exec()
         .await?
         .model()
         .await?;
+    let guild_members = ctx.http
+        .guild_members(guild.id)
+        .exec()
+        .await?
+        .models()
+        .await?;
+
+    let guild_member_count = guild.member_count.unwrap();
+    let guild_user_count = guild_members
+        .iter()
+        .filter(|member| !member.user.bot)
+        .count();
 
     let icon_url = if let Some(hash) = guild.icon {
         let format = if hash.starts_with("a_") {
@@ -147,9 +156,18 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
             EmbedFieldBuilder::new(
                 "Guild Owner",
                 format!("{name}#{discriminator}", name = guild_owner.name, discriminator = guild_owner.discriminator)
-            ).inline()
+            )
         )
-        .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)));
+        .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)))
+        .field(
+            EmbedFieldBuilder::new(
+                "Members",
+                format!(
+                    "**Grand Total**: {guild_member_count}\nHumans: {guild_user_count}\nBots:{bots}",
+                    bots = guild_member_count as usize - guild_user_count
+                )
+            )
+        );
 
     ctx.http
         .interaction_callback(
