@@ -29,12 +29,21 @@ use hartex_core::{
             },
             channel::ChannelType
         },
+        util::snowflake::Snowflake
     },
     error::{
         HarTexError,
         HarTexResult
+    },
+    time::{
+        FixedOffset,
+        TimeZone
     }
 };
+
+use hartex_conftoml::guildconf::tz::Timezone;
+
+use hartex_dbmani::guildconf::GetGuildConfig;
 
 use hartex_utils::{
     cdn::{
@@ -102,6 +111,9 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             .exec()
             .await?;
     }
+
+    let config = GetGuildConfig::new(interaction.guild_id.unwrap())
+        .await?;
 
     // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
     // not in a user DM (which is the case when interaction.guild_id is None)
@@ -179,7 +191,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             .icon_url(ImageSource::url(icon_url)?);
     }
 
-    let embed = EmbedBuilder::new()
+    let mut embed = EmbedBuilder::new()
         .author(author)
         .color(0x03BEFC)
         .field(EmbedFieldBuilder::new("Guild Name", guild.name).inline())
@@ -190,7 +202,21 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 format!("{name}#{discriminator}", name = guild_owner.name, discriminator = guild_owner.discriminator)
             )
         )
-        .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)))
+        .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)));
+
+    let timezone = if config.NightlyFeatures.localization {
+        config.GuildConfiguration.timezone
+    }
+    else {
+        Timezone::UTC
+    };
+
+    let created_at = FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id.timestamp());
+
+    let temp = embed.clone();
+
+    embed = temp
+        .field(EmbedFieldBuilder::new("Guild Created At", format!("{created_at} ({timezone})")).inline())
         .field(
             EmbedFieldBuilder::new(
                 format!("Guild Members - {guild_member_count}"),
