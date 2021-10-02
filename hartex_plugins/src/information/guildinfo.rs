@@ -19,12 +19,15 @@ use hartex_core::{
             EmbedFieldBuilder,
             ImageSource
         },
-        model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
+        model::{
+            application::{
+                callback::{
+                    CallbackData,
+                    InteractionResponse,
+                },
+                interaction::Interaction,
             },
-            interaction::Interaction
+            channel::ChannelType
         },
     },
     error::{
@@ -116,11 +119,33 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .await?
         .models()
         .await?;
+    let guild_channels = ctx.http
+        .guild_channels(guild.id)
+        .exec()
+        .await?
+        .models()
+        .await?;
 
     let guild_member_count = guild.member_count.unwrap();
     let guild_user_count = guild_members
         .iter()
         .filter(|member| !member.user.bot)
+        .count();
+
+    let channels_iter = guild_channels
+        .iter();
+
+    let categories = channels_iter.clone()
+        .filter(|channel| channel.kind() == ChannelType::GuildCategory)
+        .count();
+    let texts = channels_iter.clone()
+        .filter(|channel| channel.kind() == ChannelType::GuildText)
+        .count();
+    let voices = channels_iter.clone()
+        .filter(|channel| channel.kind() == ChannelType::GuildVoice)
+        .count();
+    let stages = channels_iter
+        .filter(|channel| channel.kind() == ChannelType::GuildStageVoice)
         .count();
 
     let icon_url = if let Some(hash) = guild.icon {
@@ -161,10 +186,18 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)))
         .field(
             EmbedFieldBuilder::new(
-                "Members",
+                format!("Guild Members - {guild_member_count}"),
                 format!(
-                    "**Grand Total**: {guild_member_count}\nHumans: {guild_user_count}\nBots: {bots}",
+                    "Humans: {guild_user_count}\nBots: {bots}",
                     bots = guild_member_count as usize - guild_user_count
+                )
+            )
+        )
+        .field(
+            EmbedFieldBuilder::new(
+                format!("Guild Channels - {total}", total = guild_channels.len()),
+                format!(
+                    "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}"
                 )
             )
         );
