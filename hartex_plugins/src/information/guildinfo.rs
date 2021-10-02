@@ -126,10 +126,10 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .models()
         .await?;
 
-    let guild_member_count = guild.member_count.unwrap();
+    let guild_member_count = guild_members.len();
 
     // FIXME: https://github.com/HarTexBot/HarTex-rust-discord-bot/issues/32
-    let guild_bot_count = guild_members
+    let guild_user_count = guild_members
         .iter()
         .filter(|member| !member.user.bot)
         .count();
@@ -193,8 +193,8 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             EmbedFieldBuilder::new(
                 format!("Guild Members - {guild_member_count}"),
                 format!(
-                    "Humans: {users}\nBots: {guild_bot_count}",
-                    users = guild_member_count as usize - guild_bot_count
+                    "Humans: {guild_user_count}\nBots: {bots}",
+                    bots = guild_member_count as usize - guild_user_count
                 )
             )
         )

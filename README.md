@@ -11,6 +11,8 @@ HarTex is a Discord Bot primarily for moderation and administration. It is built
 
 ## Honourable Mention
 
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png)
+
 This project is built with the amazing JetBrains products. Check them out! 
 
 https://www.jetbrains.com/
