@@ -16,6 +16,7 @@ use hartex_core::{
         embed_builder::{
             EmbedAuthorBuilder,
             EmbedBuilder,
+            EmbedFieldBuilder,
             ImageSource
         },
         model::application::{
@@ -107,6 +108,11 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
         .await?
         .model()
         .await?;
+    let guild_owner = ctx.http.user(guild.owner_id)
+        .exec()
+        .await?
+        .model()
+        .await?;
 
     let icon_url = if let Some(hash) = guild.icon {
         let format = if hash.starts_with("a_") {
@@ -134,7 +140,16 @@ async fn execute_guildinfo_command(ctx: CommandContext) -> HarTexResult<()> {
 
     let embed = EmbedBuilder::new()
         .author(author)
-        .color(0x03BEFC);
+        .color(0x03BEFC)
+        .field(EmbedFieldBuilder::new("Guild Name", guild.name).inline())
+        .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id)).inline())
+        .field(
+            EmbedFieldBuilder::new(
+                "Guild Owner",
+                format!("{name}#{discriminator}", name = guild_owner.name, discriminator = guild_owner.discriminator)
+            ).inline()
+        )
+        .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)));
 
     ctx.http
         .interaction_callback(
