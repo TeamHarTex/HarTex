@@ -214,7 +214,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             )
         )
         .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)))
-        .field(EmbedFieldBuilder::new("Guild Voice Region(s)", voice_regions_repr_str.join(", ")));
+        /* .field(EmbedFieldBuilder::new("Guild Voice Region(s)", voice_regions_repr_str.join(", "))) */;
 
     let timezone = if config.NightlyFeatures.localization {
         config.GuildConfiguration.timezone
