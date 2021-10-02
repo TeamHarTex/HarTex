@@ -27,7 +27,8 @@ use hartex_core::{
                 },
                 interaction::Interaction,
             },
-            channel::ChannelType
+            channel::ChannelType,
+            guild::VerificationLevel
         },
         util::snowflake::Snowflake
     },
@@ -238,6 +239,14 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         features_vec.join("\n - ")
     };
 
+    let verification_level = match guild.verification_level {
+        VerificationLevel::None => "none",
+        VerificationLevel::Low => "low",
+        VerificationLevel::Medium => "medium",
+        VerificationLevel::High => "high",
+        VerificationLevel::VeryHigh => "very high"
+    };
+
     let temp = embed.clone();
 
     embed = temp
@@ -259,7 +268,8 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 )
             )
         )
-        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features}")));
+        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features}")))
+        .field(EmbedFieldBuilder::new("Guild Verification Level", verification_level));
 
     ctx.http
         .interaction_callback(
