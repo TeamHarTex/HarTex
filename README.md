@@ -9,6 +9,12 @@
 
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
+## Honourable Mention
+
+This project is built with the amazing JetBrains products. Check them out! 
+
+https://www.jetbrains.com/
+
 ## Should I run HarTex locally?
 
 Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having 
