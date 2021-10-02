@@ -144,8 +144,11 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let voices = channels_iter.clone()
         .filter(|channel| channel.kind() == ChannelType::GuildVoice)
         .count();
-    let stages = channels_iter
+    let stages = channels_iter.clone()
         .filter(|channel| channel.kind() == ChannelType::GuildStageVoice)
+        .count();
+    let news = channels_iter
+        .filter(|channel| channel.kind() == ChannelType::GuildNews)
         .count();
 
     let icon_url = if let Some(hash) = guild.icon {
@@ -197,7 +200,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             EmbedFieldBuilder::new(
                 format!("Guild Channels - {total}", total = guild_channels.len()),
                 format!(
-                    "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}"
+                    "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}\nNews Channels: {news}"
                 )
             )
         );
