@@ -12,6 +12,7 @@ use std::{
 use hartex_core::error::HarTexResult;
 
 pub mod cdn;
+pub mod result;
 pub mod stopwatch;
 
 /// # Constant Function `shard_id`
