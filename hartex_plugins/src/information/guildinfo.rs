@@ -127,9 +127,9 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .await?;
 
     let guild_member_count = guild.member_count.unwrap();
-    let guild_user_count = guild_members
+    let guild_bot_count = guild_members
         .iter()
-        .filter(|member| !member.user.bot)
+        .filter(|member| member.user.bot)
         .count();
 
     let channels_iter = guild_channels
@@ -191,8 +191,8 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             EmbedFieldBuilder::new(
                 format!("Guild Members - {guild_member_count}"),
                 format!(
-                    "Humans: {guild_user_count}\nBots: {bots}",
-                    bots = guild_member_count as usize - guild_user_count
+                    "Humans: {users}\nBots: {guild_bot_count}",
+                    users = guild_member_count as usize - guild_bot_count
                 )
             )
         )
