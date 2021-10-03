@@ -11,8 +11,14 @@ use hartex_cmdsys::{
 };
 
 use hartex_core::{
-    discord::cache_inmemory::InMemoryCache,
-    error::HarTexResult
+    discord::{
+        cache_inmemory::InMemoryCache,
+        model::application::interaction::Interaction
+    },
+    error::{
+        HarTexError,
+        HarTexResult
+    }
 };
 
 use hartex_utils::FutureRetType;
@@ -46,6 +52,15 @@ impl Command for Refroles {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn execute_refroles_command(_: CommandContext) -> HarTexResult<()> {
+async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
+    let interaction = match ctx.interaction.clone() {
+        Interaction::ApplicationCommand(command) => command,
+        _ => return Err(
+            HarTexError::Custom {
+                message: String::from("invalid interaction type: expected ApplicationCommand")
+            }
+        )
+    };
+
     Ok(())
 }
