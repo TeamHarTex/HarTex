@@ -11,11 +11,6 @@ use hartex_core::{
 };
 
 use hartex_cmdsys::{
-    checks::{
-        isglobadmin::IsGlobAdmin,
-        Check,
-        CheckParams
-    },
     command::Command,
     context::{
         CommandContext,
@@ -60,34 +55,16 @@ pub async fn handle_interaction(
                 match &*command.data.name {
                     // Global Administrator Only Plugin
                     "refroles" => {
-                        let context = CommandContext {
-                            inner: Arc::new(CommandContextInner {
-                                http,
-                                cluster,
-                                interaction
-                            })
-                        };
-
-                        if let Err(error) = Refroles.execute_checks(
-                            context.clone(),
-                            CheckParams::builder()
-                                .user_id({
-                                    if command.user.is_none() {
-                                        command.member.unwrap().user.unwrap().id
-                                    }
-                                    else {
-                                        command.user.unwrap().id
-                                    }
+                        Refroles.execute(
+                            CommandContext {
+                                inner: Arc::new(CommandContextInner {
+                                    http,
+                                    cluster,
+                                    interaction
                                 })
-                                .build(),
-                            Box::new([IsGlobAdmin::execute])
-                        ).await {
-                            return Err(error);
-                        }
-
-                        Refroles
-                            .execute(context, cache)
-                            .await
+                            },
+                            cache
+                        ).await
                     }
 
                     // Global Plugin
