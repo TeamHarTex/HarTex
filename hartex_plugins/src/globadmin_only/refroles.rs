@@ -3,7 +3,6 @@
 //! This module implements the `refroles` command.
 
 use hartex_cmdsys::{
-    checks::CheckParams,
     command::{
         Command,
         CommandType,
@@ -38,25 +37,6 @@ impl Command for Refroles {
 
     fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_refroles_command(ctx))
-    }
-
-    fn execute_checks<'asynchronous_trait>(
-        &self,
-        ctx: CommandContext,
-        params: CheckParams,
-        checks: Box<[fn(CommandContext, CheckParams) -> FutureRetType<'asynchronous_trait, ()>]>
-    ) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(async move {
-            for check in checks.iter() {
-                if let Err(error) = check(ctx.clone(), params.clone()).await {
-                    return Err(error);
-                }
-
-                continue;
-            }
-
-            Ok(())
-        })
     }
 }
 

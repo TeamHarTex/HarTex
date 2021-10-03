@@ -7,15 +7,9 @@ use hartex_core::discord::{
     model::application::command::CommandOption
 };
 
-use hartex_utils::{
-    result,
-    FutureRetType
-};
+use hartex_utils::FutureRetType;
 
-use crate::{
-    checks::CheckParams,
-    context::CommandContext
-};
+use crate::context::CommandContext;
 
 /// # Trait `Command`
 ///
@@ -37,15 +31,6 @@ pub trait Command {
     fn command_type(&self) -> CommandType;
 
     fn execute<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
-
-    fn execute_checks<'asynchronous_trait>(
-        &self,
-        _: CommandContext,
-        _: CheckParams,
-        _: Box<[fn(CommandContext, CheckParams) -> FutureRetType<'asynchronous_trait, ()>]>
-    ) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(result::async_ok())
-    }
 
     fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![]
