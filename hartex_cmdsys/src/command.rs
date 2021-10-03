@@ -7,9 +7,15 @@ use hartex_core::discord::{
     model::application::command::CommandOption
 };
 
-use hartex_utils::FutureRetType;
+use hartex_utils::{
+    result,
+    FutureRetType
+};
 
-use crate::context::CommandContext;
+use crate::{
+    checks::CheckParams,
+    context::CommandContext
+};
 
 /// # Trait `Command`
 ///
@@ -19,6 +25,7 @@ use crate::context::CommandContext;
 /// - `name`; return type `String`: the name of the command
 /// - `description`; return type `String`: the description of the command
 /// - `execute`; parameters `CommandContext`, `InMemoryCache`; return type `FutureRetType<()>`: the execution procedure
+/// - `execute_checks`; parameters `CommandContext`, `CheckParams`, `Box<[fn(CommandContext, CheckParams) -> FutureRetType<'asynchronous_trait, ()>]>`; return type `FutureRetType<()>`: execute checks before running a command
 /// - `required_cmdopts`; return type `Vec<CommandOption>`: a vector of required command options
 /// - `optional_cmdopts`; return type `Vec<CommandOption>`: a vector of optional command options
 /// - `enabled_by_default`; return type `bool`: whether the slash command is enabled by default when added to a guild
@@ -31,11 +38,14 @@ pub trait Command {
 
     fn execute<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
 
-    /* fn execute_checks<'asynchronous_trait, C: 'asynchronous_trait>(&self, _: CommandContext, _: CheckParams, _: Box<[C]>) -> FutureRetType<'asynchronous_trait, ()>
-    where
-        C: Fn(CommandContext, CheckParams) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute_checks<'asynchronous_trait>(
+        &self,
+        _: CommandContext,
+        _: CheckParams,
+        _: Box<[fn(CommandContext, CheckParams) -> FutureRetType<'asynchronous_trait, ()>]>
+    ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(result::async_ok())
-    } */
+    }
 
     fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![]

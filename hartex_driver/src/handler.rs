@@ -44,6 +44,7 @@ use hartex_logging::Logger;
 use hartex_model::payload::CommandExecuted;
 
 use hartex_plugins::{
+    globadmin_only::refroles::Refroles,
     global::{
         about::About,
         ping::Ping,
@@ -53,7 +54,7 @@ use hartex_plugins::{
     information::{
         guildinfo::Guildinfo,
         userinfo::Userinfo
-    }
+    },
 };
 
 use crate::commands;
@@ -277,6 +278,9 @@ impl EventHandler {
 
         commands::register_global_commands(
             vec![
+                // Global Administrator Only Plugin
+                Box::new(Refroles),
+
                 // Global Plugin
                 Box::new(About),
                 Box::new(Ping),
