@@ -25,6 +25,7 @@ pub trait Check {
 /// # Struct `CheckParams`
 ///
 /// The parameters to pass to a check.
+#[derive(Clone)]
 pub struct CheckParams {
     // the user id of the message author
     user_id: Option<UserId>
