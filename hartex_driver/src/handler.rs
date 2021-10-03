@@ -54,7 +54,7 @@ use hartex_plugins::{
     information::{
         guildinfo::Guildinfo,
         userinfo::Userinfo
-    },
+    }
 };
 
 use crate::commands;
