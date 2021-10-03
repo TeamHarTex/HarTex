@@ -17,6 +17,8 @@ pub mod ansi;
 pub mod discord;
 pub mod error;
 pub mod events;
+#[cfg(feature = "tracing-bundled")]
+pub mod logging;
 pub mod time;
 
 /// # Static `HARTEX_BUILD`
