@@ -26,6 +26,7 @@ use hartex_core::{
         gateway::{
             cluster::{
                 Cluster,
+                Events,
                 ShardScheme
             },
             EventTypeFlags,
@@ -35,7 +36,11 @@ use hartex_core::{
         model::id::ApplicationId
     },
     error::HarTexResult,
-    events::EventType
+    events::EventType,
+    logging::tracing::{
+        self,
+        Instrument
+    }
 };
 
 use hartex_eventsys::emitter::EventEmitter;
@@ -43,6 +48,7 @@ use hartex_eventsys::emitter::EventEmitter;
 use hartex_logging::Logger;
 
 pub mod commands;
+pub mod env_setup;
 pub mod events;
 pub mod handler;
 pub mod interactions;
@@ -51,100 +57,19 @@ pub mod interactions;
 ///
 /// This is the main entry point of HarTex Discord Bot.
 pub async fn hartex_main() -> HarTexResult<()> {
-    // loads the .env file to obtain environment variables
-    dotenv::dotenv().ok();
+    let span = tracing::trace_span!("environment setup");
+    let environment = span.in_scope(env_setup::environment_setup);
 
-    Logger::verbose(
-        "loaded environment variables",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-
-    // obtains the token from the environment variables
-    let token = match env::var("HARTEX_TOKEN") {
-        Ok(token) => token,
-        Err(var_error) => {
-            Logger::error(
-                format!("could not retrieve the bot token from the environment due to an error: {var_error}"),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
-
-            process::exit(-1)
-        }
-    };
-
-    let application_id = match env::var("APPLICATION_ID") {
-        Ok(id) => id,
-        Err(var_error) => {
-            Logger::error(
-                format!("could not retrieve the application id from the environment due to an error: {var_error}"),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
-
-            process::exit(-1)
-        }
-    };
-
-    Logger::verbose(
-        "successfully retrieved bot token",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-
-    let shard_scheme = ShardScheme::Auto;
-
-    Logger::verbose(
-        "building bot cluster",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-    Logger::verbose(
-        "registering gateway intents [all]",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-
-    let intents = Intents::all();
-
-    let http = Client::builder()
-        .application_id(ApplicationId::from(application_id.parse::<u64>().unwrap()))
-        .token(token.clone())
-        .build();
-
-    let (cluster, events) = Cluster::builder(token, intents)
-        .event_types(EventTypeFlags::all())
-        .http_client(http.clone())
-        .shard_scheme(shard_scheme)
-        .build()
-        .await?;
+    let span = tracing::trace_span!("pre-startup phase");
+    let (cluster, http, events, cache) = pre_startup(environment)
+        .instrument(span)
+        .await;
 
     let cluster_spawn = cluster.clone();
 
     tokio::spawn(async move {
         cluster_spawn.up().await;
     });
-
-    Logger::verbose(
-        "building http client",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
 
     Logger::verbose(
         "initializing command framework",
@@ -159,38 +84,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
     let emitter = EventEmitter::new(listeners);
 
     let framework_events = framework.events();
-
-    Logger::verbose(
-        "building in-memory cache",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-
-    let cache = InMemoryCache::builder()
-        .resource_types(ResourceType::all())
-        .build();
-
-    Logger::verbose(
-        "registering ctrl-c handler",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-
-    ctrlc::set_handler(|| {
-        Logger::warn(
-            "ctrl-c signal received; terminating process",
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
-
-        process::exit(0)
-    })?;
 
     let mut events = events.map(Either::Left).merge(framework_events.map(Either::Right));
 
@@ -220,4 +113,63 @@ pub async fn hartex_main() -> HarTexResult<()> {
     }
 
     Ok(())
+}
+
+/// # Asynchronous Function `pre_startup`
+///
+/// Returns the cluster, client and event stream as constructed with the environments.
+///
+/// ## Parameters
+/// - `environment`, type `Environment`: the environment to construct the return values
+async fn pre_startup(environment: env_setup::Environment) -> (Cluster, Client, Events, InMemoryCache) {
+    let shard_scheme = ShardScheme::Auto;
+    let intents = Intents::all();
+
+    tracing::trace!("building http client");
+
+    let http = Client::builder()
+        .application_id(ApplicationId::from(environment.application_id.parse::<u64>().unwrap()))
+        .token(environment.token.clone())
+        .build();
+
+    tracing::trace!("building bot cluster");
+    tracing::trace!("registering gateway intents [all]");
+
+    let result = Cluster::builder(environment.token, intents)
+        .event_types(EventTypeFlags::all())
+        .http_client(http.clone())
+        .shard_scheme(shard_scheme)
+        .build()
+        .await;
+
+    if let Err(ref error) = result {
+        tracing::error!("failed to build bot cluster: {error}");
+
+        process::exit(-1);
+    }
+
+    let result = result.unwrap();
+
+    tracing::trace!("building in-memory cache");
+
+    let cache = InMemoryCache::builder()
+        .resource_types(ResourceType::all())
+        .build();
+
+    tracing::trace!("registering ctrl-c handler");
+
+    if let Err(error) = ctrlc::set_handler(|| {
+        let span = tracing::warn_span!("ctrl-c handler");
+        span.in_scope(|| {
+            tracing::warn!("ctrl-c signal received; terminating process");
+
+            process::exit(0);
+        });
+    }) {
+        tracing::error!("failed to set ctrl-c handler: {error}");
+
+        process::exit(-1);
+    }
+
+    (result.0, http, result.1, cache)
 }
