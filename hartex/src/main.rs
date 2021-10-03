@@ -7,9 +7,24 @@ use std::time::Duration;
 
 use tokio::runtime::Builder;
 
-use hartex_core::error::HarTexResult;
+use hartex_core::{
+    error::HarTexResult,
+    logging::tracing_subscriber::{
+        self,
+        fmt::time::ChronoUtc,
+        EnvFilter
+    }
+};
 
 pub fn main() -> HarTexResult<()> {
+    // loads the .env file to obtain environment variables
+    dotenv::dotenv().ok();
+
+    tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::from_default_env())
+        .with_timer(ChronoUtc::with_format(String::from("%F %T %Z")))
+        .init();
+
     let tokio_runtime = Builder::new_multi_thread()
         .enable_io()
         .enable_time()
