@@ -17,7 +17,8 @@ use hartex_core::{
     logging::tracing::{
         self,
         Instrument
-    }
+    },
+    HARTEX_BUILD
 };
 
 use hartex_eventsys::emitter::EventEmitter;
@@ -36,6 +37,8 @@ pub mod pre_startup;
 ///
 /// This is the main entry point of HarTex Discord Bot.
 pub async fn hartex_main() -> HarTexResult<()> {
+    tracing::info!("HarTex {HARTEX_BUILD}");
+
     let span = tracing::trace_span!("environment setup");
     let environment = span.in_scope(env_setup::environment_setup);
 
