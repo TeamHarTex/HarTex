@@ -29,8 +29,10 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
-    }
+    },
+    logging::tracing
 };
+use hartex_core::logging::tracing::Instrument;
 
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
@@ -332,16 +334,13 @@ impl EventHandler {
     ///
     /// - `payload`, type `Identifying`: the `Identifying` event payload
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
-        Logger::verbose(
-            format!(
-                "shard {} is identifying with the discord gateway",
-                payload.shard_id
-            ),
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
+        let span = tracing::trace_span!("shard identifying");
+
+        async {
+            tracing::trace!("shard {} is identifying with the discord gateway", payload.shard_id);
+        }
+            .instrument(span)
+            .await;
 
         Ok(())
     }

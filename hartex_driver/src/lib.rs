@@ -9,8 +9,6 @@ use futures_util::future::Either;
 
 use tokio_stream::StreamExt;
 
-use hartex_cmdsys::framework::CommandFramework;
-
 use hartex_core::{
     error::HarTexResult,
     events::EventType,
@@ -21,14 +19,11 @@ use hartex_core::{
     HARTEX_BUILD
 };
 
-use hartex_eventsys::emitter::EventEmitter;
-
-use hartex_logging::Logger;
-
 pub mod commands;
 pub mod ctrlc;
 pub mod env_setup;
 pub mod events;
+pub mod fw_setup;
 pub mod handler;
 pub mod interactions;
 pub mod pre_startup;
@@ -37,7 +32,10 @@ pub mod pre_startup;
 ///
 /// This is the main entry point of HarTex Discord Bot.
 pub async fn hartex_main() -> HarTexResult<()> {
-    tracing::info!("HarTex {HARTEX_BUILD}");
+    let span = tracing::info_span!("version info");
+    span.in_scope(|| {
+        tracing::info!("HarTex {HARTEX_BUILD}");
+    });
 
     let span = tracing::trace_span!("environment setup");
     let environment = span.in_scope(env_setup::environment_setup);
@@ -56,19 +54,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
         cluster_spawn.up().await;
     });
 
-    Logger::verbose(
-        "initializing command framework",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
-    let framework = CommandFramework::default();
-
-    let listeners = framework.clone().listeners();
-    let emitter = EventEmitter::new(listeners);
-
-    let framework_events = framework.events();
+    let span = tracing::trace_span!("framework setup");
+    let (emitter, framework_events) = span.in_scope(fw_setup::framework_setup);
 
     let mut events = events.map(Either::Left).merge(framework_events.map(Either::Right));
 
