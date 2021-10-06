@@ -205,21 +205,18 @@ impl EventHandler {
     /// - `cluster`, type `Cluster`: the gateway cluster
     /// - `http`, type `Client`: the http client
     pub async fn ready(payload: Box<Ready>, cluster: Cluster, http: Client) -> HarTexResult<()> {
-        let user = payload.user;
+        let span = tracing::info_span!("event handler: ready");
+        span.in_scope(|| {
+            let user = payload.user;
 
-        Logger::info(
-            format!(
+            tracing::info!(
                 "{}#{} [id: {}] has successfully startup; using discord api v{}",
                 user.name,
                 user.discriminator,
                 user.id,
                 payload.version
-            ),
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
+            );
+        });
 
         for shard in cluster.shards() {
             let shard_id = shard.info()?.id();
@@ -334,13 +331,10 @@ impl EventHandler {
     ///
     /// - `payload`, type `Identifying`: the `Identifying` event payload
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
-        let span = tracing::trace_span!("shard identifying");
-
-        async {
+        let span = tracing::trace_span!("event handler: shard identifying");
+        span.in_scope(|| {
             tracing::trace!("shard {} is identifying with the discord gateway", payload.shard_id);
-        }
-            .instrument(span)
-            .await;
+        });
 
         Ok(())
     }

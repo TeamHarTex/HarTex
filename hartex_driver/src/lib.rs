@@ -45,9 +45,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
         .instrument(span)
         .await;
 
-    let span = tracing::trace_span!("ctrlc handler");
-    span.in_scope(ctrlc::ctrlc_handler);
-
     let cluster_spawn = cluster.clone();
 
     tokio::spawn(async move {
@@ -56,6 +53,9 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     let span = tracing::trace_span!("framework setup");
     let (emitter, framework_events) = span.in_scope(fw_setup::framework_setup);
+
+    let span = tracing::trace_span!("ctrlc handler");
+    span.in_scope(ctrlc::ctrlc_handler);
 
     let mut events = events.map(Either::Left).merge(framework_events.map(Either::Right));
 
