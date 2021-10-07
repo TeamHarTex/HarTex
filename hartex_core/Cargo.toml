@@ -14,7 +14,7 @@ license = "Apache-2.0"
 [dependencies]
 base64 = "0.13.0"
 chrono = "0.4.19"
-ctrlc = "3.2.0"
+ctrlc = "3.2.1"
 serde = "1.0.130"
 toml = "0.5.8"
 
