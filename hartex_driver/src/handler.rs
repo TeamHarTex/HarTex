@@ -82,13 +82,10 @@ impl EventHandler {
     pub async fn guild_create(payload: Box<GuildCreate>, http: Client) -> HarTexResult<()> {
         let guild_id = payload.id;
 
-        Logger::verbose(
-            format!("joined a new guild with name `{name}` with id {guild_id}; checking whether the guild is whitelisted", name = payload.name),
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
+        let span = tracing::trace_span!("event handler: guild create");
+        span.in_scope(|| {
+            tracing::trace!("joined a new guild with name `{name}` with id {guild_id}; checking whether the guild is whitelisted", name = payload.name);
+        });
 
         let res = GetWhitelistedGuilds::default().await?;
 
@@ -218,62 +215,57 @@ impl EventHandler {
             );
         });
 
-        for shard in cluster.shards() {
-            let shard_id = shard.info()?.id();
+        let span = tracing::trace_span!("event handler: ready: shard presences");
 
-            Logger::verbose(
-                format!("registering presence for shard {shard_id}"),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+        async {
+            for shard in cluster.shards() {
+                let shard_id = match shard.info() {
+                    Ok(info) => info,
+                    Err(error) => {
+                        tracing::error!("the shard session is inactive: {error}");
+                        break;
+                    }
+                }
+                    .id();
 
-            match shard.command(
-                &UpdatePresence::new(
-                    vec![Activity {
-                        application_id: None,
-                        assets: None,
-                        buttons: Vec::new(),
-                        created_at: None,
-                        details: None,
-                        emoji: None,
-                        flags: None,
-                        id: None,
-                        instance: None,
-                        kind: ActivityType::Watching,
-                        name: format!("codebase revamp | shard {}", shard_id),
-                        party: None,
-                        secrets: None,
-                        state: None,
-                        timestamps: None,
-                        url: None
-                    }],
-                    false,
-                    None,
-                    Status::Online
-                )?
-            ).await {
-                Ok(()) => {
-                    Logger::verbose(
-                        format!("successfully set presence for shard {shard_id}"),
-                        Some(module_path!()),
-                        file!(),
-                        line!(),
-                        column!()
-                    );
-                },
-                Err(error) => {
-                    Logger::error(
-                        format!("failed to set presence for shard {shard_id}: {error}"),
-                        Some(module_path!()),
-                        file!(),
-                        line!(),
-                        column!()
-                    );
+                tracing::trace!("attempting to register presence for shard {shard_id}");
+
+                match shard.command(
+                    &UpdatePresence::new(
+                        vec![Activity {
+                            application_id: None,
+                            assets: None,
+                            buttons: Vec::new(),
+                            created_at: None,
+                            details: None,
+                            emoji: None,
+                            flags: None,
+                            id: None,
+                            instance: None,
+                            kind: ActivityType::Watching,
+                            name: format!("codebase revamp | shard {}", shard_id),
+                            party: None,
+                            secrets: None,
+                            state: None,
+                            timestamps: None,
+                            url: None
+                        }],
+                        false,
+                        None,
+                        Status::Online
+                    ).unwrap()
+                ).await {
+                    Ok(()) => {
+                        tracing::trace!("successfully set presence for shard {shard_id}");
+                    },
+                    Err(error) => {
+                        tracing::error!("failed to set presence for shard {shard_id}: {error}");
+                    }
                 }
             }
         }
+            .instrument(span)
+            .await;
 
         commands::register_global_commands(
             vec![
