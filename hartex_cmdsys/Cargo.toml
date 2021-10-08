@@ -12,5 +12,4 @@ license = "Apache-2.0"
 [dependencies]
 hartex_core = { path = "../hartex_core" }
 hartex_eventsys = { path = "../hartex_eventsys" }
-hartex_logging = { path = "../hartex_logging" }
 hartex_utils = { path = "../hartex_utils" }

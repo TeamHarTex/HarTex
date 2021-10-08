@@ -41,8 +41,6 @@ use hartex_dbmani::{
 
 use hartex_eventsys::emitter::EventEmitter;
 
-use hartex_logging::Logger;
-
 use hartex_model::payload::CommandExecuted;
 
 use hartex_plugins::{
@@ -92,23 +90,15 @@ impl EventHandler {
         if !res.iter().any(|guild| {
             guild_id.0 == guild.GuildId
         }) {
-            Logger::error(
-                "guild is not whitelisted",
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("guild is not whitelisted");
+            });
 
             let guild = http.guild(guild_id).exec().await?.model().await?;
 
-            Logger::verbose(
-                "dming guild owner about the whitelist status",
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::trace!("dming guild owner about the whitelist status");
+            });
 
             let guild_owner = guild.owner_id;
 
@@ -130,13 +120,9 @@ impl EventHandler {
 
             http.create_message(dm_channel.id).content(&message)?.exec().await?;
 
-            Logger::error(
-                "leaving guild",
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("leaving guild");
+            });
 
             http.leave_guild(guild_id).exec().await?;
 
@@ -145,13 +131,9 @@ impl EventHandler {
             });
         }
 
-        Logger::info(
-            "guild is whitelisted",
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
+        span.in_scope(|| {
+            tracing::info!("guild is whitelisted");
+        });
 
         Ok(())
     }
@@ -267,6 +249,8 @@ impl EventHandler {
             .instrument(span)
             .await;
 
+        let span = tracing::trace_span!("event handler: ready: global command registration");
+
         commands::register_global_commands(
             vec![
                 // Global Administrator Only Plugin
@@ -283,28 +267,45 @@ impl EventHandler {
                 Box::new(Userinfo)
             ],
             http.clone()
-        ).await?;
+        )
+            .instrument(span)
+            .await?;
 
-        for guild in http.current_user_guilds().exec().await?.models().await? {
-            Logger::verbose(
-                format!("changing nickname in guild {name}", name = guild.name),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+        let span = tracing::trace_span!("event handler: ready: change guild nickname");
 
-            let config = GetGuildConfig::new(guild.id).await?;
+        for guild in http
+            .current_user_guilds()
+            .exec()
+            .await?
+            .models()
+            .await? {
+            span.in_scope(|| {
+                tracing::trace!("changing nickname in guild {name}", name = guild.name);
+            });
+
+            let config = match GetGuildConfig::new(guild.id)
+                .await {
+                Ok(config) => {
+                    span.in_scope(|| {
+                        tracing::trace!("successfully retrieved guild config");
+                    });
+
+                    config
+                }
+                Err(error) => {
+                    span.in_scope(|| {
+                        tracing::error!("failed to retrieve guild config: {error:?}");
+                    });
+
+                    return Err(error);
+                }
+            };
 
             match http.update_current_user_nick(guild.id, &config.GuildConfiguration.nickname).exec().await {
                 Err(error) => {
-                    Logger::error(
-                        format!("failed to change nickname: {error}"),
-                        Some(module_path!()),
-                        file!(),
-                        line!(),
-                        column!()
-                    );
+                    span.in_scope(|| {
+                        tracing::error!("failed to change nickname: {error}");
+                    });
                 }
                 _ => ()
             };
@@ -342,15 +343,7 @@ impl EventHandler {
     /// ## Parameters
     ///
     /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
-    pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
-        Logger::info(
-            format!("command `{command}` is executed in guild {guild}", command = payload.command, guild = payload.guild_id),
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
-
+    pub async fn command_executed(_: Box<CommandExecuted>) -> HarTexResult<()> {
         Ok(())
     }
 }
