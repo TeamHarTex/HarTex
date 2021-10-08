@@ -141,12 +141,12 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .await?
         .models()
         .await?;
-    /* let guild_voice_regions = ctx.http
+    let guild_voice_regions = ctx.http
         .guild_voice_regions(guild.id)
         .exec()
         .await?
         .models()
-        .await?; */
+        .await?;
 
     let guild_member_count = guild_members.len();
 
@@ -198,10 +198,10 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             .icon_url(ImageSource::url(icon_url)?);
     }
 
-    /* let voice_regions_repr_str = guild_voice_regions
+    let voice_regions_repr_str = guild_voice_regions
         .iter()
         .map(|region| format!("`{region}`", region = &region.name))
-        .collect::<Vec<_>>(); */
+        .collect::<Vec<_>>();
 
     let mut embed = EmbedBuilder::new()
         .author(author)
@@ -215,7 +215,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             )
         )
         .field(EmbedFieldBuilder::new("Guild Owner User ID", format!("{id}", id = guild_owner.id)))
-        /* .field(EmbedFieldBuilder::new("Guild Voice Region(s)", voice_regions_repr_str.join(", "))) */;
+        .field(EmbedFieldBuilder::new("Guild Voice Region(s)", voice_regions_repr_str.join(", ")));
 
     let timezone = if config.NightlyFeatures.localization {
         config.GuildConfiguration.timezone
