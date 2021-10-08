@@ -1,4 +1,5 @@
-# HarTex-rust-discord-bot
+HarTex-rust-discord-bot
+=======================
 
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
 ![GitHub Top Language](https://img.shields.io/github/languages/top/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
@@ -9,7 +10,8 @@
 
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
-## Honourable Mention
+Honourable Mention
+------------------
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo." width="100">
 
@@ -17,13 +19,15 @@ This project is built with the amazing JetBrains products. Check them out!
 
 https://www.jetbrains.com/
 
-## Should I run HarTex locally?
+Should I run HarTex locally?
+----------------------------
 
 Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having 
 the source code released and updated frequently, is to allow others to understand the inner workings of the bot and audit its functionality.
 You *may* run a local instance of HarTex for your server.
 
-## HarTex Development
+HarTex Development
+------------------
 
 ### Project Structure
 
