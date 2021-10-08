@@ -32,6 +32,10 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
+    logging::tracing::{
+        self,
+        Instrument
+    },
     HARTEX_BUILD
 };
 
@@ -69,14 +73,27 @@ impl Command for About {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
-    let whitelists = GetWhitelistedGuilds::default().await?.len();
+    tracing::trace!("attempting to obtain whitelisted guilds");
+
+    let whitelists = match GetWhitelistedGuilds::default().await {
+        Ok(list) => list.len(),
+        Err(error) => {
+            tracing::trace!("failed to obtain whitelisted guilds {error:?}");
+
+            return Err(error);
+        }
+    };
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
-        _ => return Err(
-            HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            }
-        )
+        _ => {
+            tracing::error!("invalid interaction type: expected ApplicationCommand");
+
+            return Err(
+                HarTexError::Custom {
+                    message: String::from("invalid interaction type: expected ApplicationCommand")
+                }
+            );
+        }
     };
 
     let embed = EmbedBuilder::new()
@@ -89,6 +106,8 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
         .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
         .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
         .build()?;
+
+    tracing::trace!("responding to interaction");
 
     ctx.http
         .interaction_callback(

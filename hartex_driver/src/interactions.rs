@@ -19,7 +19,6 @@ use hartex_cmdsys::{
     }
 };
 
-
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
     global::{
@@ -49,6 +48,8 @@ pub async fn handle_interaction(
     http: Client,
     cluster: Cluster
 ) -> HarTexResult<()> {
+    let span = tracing::trace_span!("interaction handler");
+
     match {
         match interaction.clone() {
             Interaction::ApplicationCommand(command) => {
@@ -69,6 +70,10 @@ pub async fn handle_interaction(
 
                     // Global Plugin
                     "about" => {
+                        span.in_scope(|| {
+                            tracing::trace!("interaction command identified - `about`; invoking command handler");
+                        });
+
                         About.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -78,9 +83,14 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        ).await
+                        )
+                            .await
                     }
                     "ping" => {
+                        span.in_scope(|| {
+                            tracing::trace!("interaction command identified - `ping`; invoking command handler");
+                        });
+
                         Ping.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -93,6 +103,10 @@ pub async fn handle_interaction(
                         ).await
                     }
                     "source" => {
+                        span.in_scope(|| {
+                            tracing::trace!("interaction command identified - `source`; invoking command handler");
+                        });
+
                         Source.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -103,8 +117,12 @@ pub async fn handle_interaction(
                             },
                             cache
                         ).await
-                    },
+                    }
                     "team" => {
+                        span.in_scope(|| {
+                            tracing::trace!("interaction command identified - `team`; invoking command handler");
+                        });
+
                         Team.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -119,6 +137,10 @@ pub async fn handle_interaction(
 
                     // Information Plugin
                     "guildinfo" => {
+                        span.in_scope(|| {
+                            tracing::trace!("interaction command identified - `guildinfo`; invoking command handler");
+                        });
+
                         Guildinfo.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -131,6 +153,10 @@ pub async fn handle_interaction(
                         ).await
                     }
                     "userinfo" => {
+                        span.in_scope(|| {
+                            tracing::trace!("interaction command identified - `userinfo`; invoking command handler");
+                        });
+
                         Userinfo.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
