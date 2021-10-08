@@ -18,12 +18,13 @@ use sqlx::{
     Postgres
 };
 
-use hartex_core::error::{
-    HarTexError,
-    HarTexResult
+use hartex_core::{
+    error::{
+        HarTexError,
+        HarTexResult,
+    },
+    logging::tracing
 };
-
-use hartex_logging::Logger;
 
 use crate::{
     whitelist::model::WhitelistedGuild,
@@ -44,13 +45,10 @@ impl GetWhitelistedGuilds {
     ///
     /// Starts the future.
     fn start(&mut self) -> HarTexResult<()> {
-        Logger::verbose(
-            "executing future `GetWhitelistedGuilds`",
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
+        let span = tracing::trace_span!("database manipulation: get whitelisted guilds");
+        span.in_scope(|| {
+            tracing::trace!("executing future `GetWhitelistedGuilds`");
+        });
 
         self.pending.replace(Box::pin(exec_future()));
 
@@ -88,43 +86,45 @@ unsafe impl Send for GetWhitelistedGuilds { }
 ///
 /// Executes the future.
 async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
+    let span = tracing::trace_span!("database manipulation: get whitelisted guilds");
+
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDS") {
         Ok(credentials) => credentials,
         Err(error) => {
             let message = format!("failed to get database credentials; error: {error}");
 
-            Logger::error(
-                &message,
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("{message}", message = &message)
+            });
 
             return Err(HarTexError::Custom {
                 message
             });
         }
     };
+
+    span.in_scope(|| {
+        tracing::trace!("connecting to database...");
+    });
 
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
             let message = format!("failed to connect to postgres database pool; error: `{error:?}`");
 
-            Logger::error(
-                &message,
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("{message}", message = &message)
+            });
 
             return Err(HarTexError::Custom {
                 message
             });
         }
     };
+
+    span.in_scope(|| {
+        tracing::trace!("executing sql query...");
+    });
 
     match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist"; --"#).fetch_all(&connection).await {
         Ok(guilds) => {
@@ -133,13 +133,9 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         Err(error) => {
             let message = format!("failed to execute sql query; error: `{error:?}`");
 
-            Logger::error(
-                &message,
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("{message}", message = &message)
+            });
 
             Err(HarTexError::Custom {
                 message

@@ -14,10 +14,9 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
-    }
+    },
+    logging::tracing
 };
-
-use hartex_logging::Logger;
 
 /// # Asynchronous Function `register_global_commands`
 ///
@@ -30,20 +29,15 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
     let mut i = 1;
     let len = commands.len();
 
-    let existing =  match http.get_global_commands()?
+    let existing =  match http.get_global_commands()
+        .unwrap()
         .exec()
         .await?
         .models()
         .await {
         Ok(commands) => commands,
         Err(error) => {
-            Logger::error(
-                format!("failed to obtain a list of existing global commands: {error}"),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            tracing::error!("failed to obtain a list of existing global commands: {error}");
 
             return Err(HarTexError::Custom {
                 message: format!("failed to obtain a list of existing global commands: {error}")
@@ -54,26 +48,14 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
     let names = existing.iter().map(|command| command.name.clone()).collect::<Vec<_>>();
 
     for command in &commands {
-        Logger::verbose(
-            format!(
-                "registering global command {i} of {len}; [name: {name}, type: {command_type:?}]",
-                name = &command.name(),
-                command_type = &command.command_type()
-            ),
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
+        tracing::trace!(
+            "registering global command {i} of {len}; [name: {name}, type: {command_type:?}]",
+            name = &command.name(),
+            command_type = &command.command_type()
         );
 
         if names.contains(&command.name()) {
-            Logger::verbose(
-                "command already registered, skipping",
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            tracing::warn!("command already registered, skipping");
 
             i += 1;
 
@@ -101,13 +83,7 @@ pub async fn register_global_commands(commands: Vec<Box<dyn Command + Send + Syn
         }.await {
             Ok(_) => (),
             Err(error) => {
-                Logger::error(
-                    format!("failed to register global command {i} of {len}: {error}"),
-                    Some(module_path!()),
-                    file!(),
-                    line!(),
-                    column!()
-                );
+                tracing::error!("failed to register global command {i} of {len}: {error}");
             }
         }
 

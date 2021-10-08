@@ -1,7 +1,7 @@
 //! # The `guildconf` Module
 //!
 //! This module defines a database manipulation procedure to retrieve the TOML configuration of a
-//! speciifc guild, and deserializing it into Rust structs so that it is usable in Rust code.
+//! specific guild, and deserializing it into Rust structs so that it is usable in Rust code.
 
 use std::{
     env,
@@ -25,10 +25,9 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult,
-    }
+    },
+    logging::tracing
 };
-
-use hartex_logging::Logger;
 
 use crate::PendingFuture;
 
@@ -60,13 +59,11 @@ impl GetGuildConfig {
     ///
     /// Starts the future.
     fn start(&mut self) -> HarTexResult<()> {
-        Logger::verbose(
-            "executing future `GetGuildConfig`",
-            Some(module_path!()),
-            file!(),
-            line!(),
-            column!()
-        );
+        let span = tracing::trace_span!("database manipulation: get guild config");
+        span.in_scope(|| {
+            tracing::trace!("executing future `GetGuildConfig`");
+        });
+
 
         self.pending.replace(Box::pin(exec_future(self.guild_id)));
 
@@ -96,18 +93,16 @@ unsafe impl Send for GetGuildConfig { }
 ///
 /// Executes the future.
 async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
+    let span = tracing::trace_span!("database manipulation: get guild config");
+
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDCONFIG") {
         Ok(credentials) => credentials,
         Err(error) => {
             let message = format!("failed to get database credentials; error: {error}");
 
-            Logger::error(
-                &message,
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("{message}", message = &message)
+            });
 
             return Err(HarTexError::Custom {
                 message
@@ -115,26 +110,18 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
-    Logger::verbose(
-        "connecting to database...",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
+    span.in_scope(|| {
+        tracing::trace!("connecting to database...");
+    });
 
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
             let message = format!("failed to connect to postgres database pool; error: `{error:?}`");
 
-            Logger::error(
-                &message,
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("{message}", message = &message)
+            });
 
             return Err(HarTexError::Custom {
                 message
@@ -142,13 +129,9 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
-    Logger::verbose(
-        "executing query...",
-        Some(module_path!()),
-        file!(),
-        line!(),
-        column!()
-    );
+    span.in_scope(|| {
+        tracing::trace!("executing sql query...");
+    });
 
     match sqlx::query(&format!("SELECT * FROM \"Guild{guild_id}\"; --")).fetch_one(&connection)
         .await {
@@ -160,13 +143,9 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                 Err(error) => {
                     let message = format!("failed to decode base64; error: `{error:?}`");
 
-                    Logger::error(
-                        &message,
-                        Some(module_path!()),
-                        file!(),
-                        line!(),
-                        column!()
-                    );
+                    span.in_scope(|| {
+                        tracing::error!("{message}", message = &message);
+                    });
 
                     return Err(HarTexError::Base64DecodeError {
                         error
@@ -174,26 +153,18 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                 }
             };
 
-            Logger::verbose(
-                "deserializing toml config...",
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::trace!("deserializing toml config...");
+            });
 
             hartex_conftoml::from_string(match String::from_utf8(decoded) {
                 Ok(string) => string,
                 Err(error) => {
                     let message = format!("failed to construct utf-8 string; error: `{error:?}`");
 
-                    Logger::error(
-                        &message,
-                        Some(module_path!()),
-                        file!(),
-                        line!(),
-                        column!()
-                    );
+                    span.in_scope(|| {
+                        tracing::error!("{message}", message = &message);
+                    });
 
                     return Err(HarTexError::Utf8ValidationError {
                         error
@@ -204,13 +175,9 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         Err(error) => {
             let message = format!("failed to execute sql query; error `{error:?}`");
 
-            Logger::error(
-                &message,
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
-            );
+            span.in_scope(|| {
+                tracing::error!("{message}", message = &message);
+            });
 
             Err(HarTexError::Custom {
                 message

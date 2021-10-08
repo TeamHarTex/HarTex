@@ -7,7 +7,8 @@ use hartex_core::{
         http::Client,
         model::application::interaction::Interaction
     },
-    error::HarTexResult
+    error::HarTexResult,
+    logging::tracing
 };
 
 use hartex_cmdsys::{
@@ -18,7 +19,6 @@ use hartex_cmdsys::{
     }
 };
 
-use hartex_logging::Logger;
 
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
@@ -150,12 +150,8 @@ pub async fn handle_interaction(
     } {
         Ok(_) => (),
         Err(error) => {
-            Logger::error(
-                format!("failed to handle interaction due to an error: {error:?}"),
-                Some(module_path!()),
-                file!(),
-                line!(),
-                column!()
+            tracing::error!(
+                "failed to handle interaction due to an error: {error:?}"
             );
         }
     }

@@ -10,13 +10,11 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dotenv = "0.15.0"
 futures-util = "0.3.16"
 hartex_cmdsys = { path = "../hartex_cmdsys" }
-hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
+hartex_core = { path = "../hartex_core", features = [ "tracing-bundled", "twilight-bundled" ] }
 hartex_dbmani = { path = "../hartex_dbmani" }
 hartex_eventsys = { path = "../hartex_eventsys" }
-hartex_logging = { path = "../hartex_logging" }
 hartex_model = { path = "../hartex_model" }
 hartex_plugins = { path = "../hartex_plugins" }
 tokio = { version = "1.12.0", features = [ "full" ] }
