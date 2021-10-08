@@ -151,6 +151,11 @@ impl EventHandler {
         cluster: Cluster,
         cache: InMemoryCache
     ) -> HarTexResult<()> {
+        let span = tracing::trace_span!("event handler: interaction create");
+        span.in_scope(|| {
+            tracing::trace!("received an interaction, invoking interaction handler");
+        });
+
         crate::interactions::handle_interaction(payload.0, cache, http, cluster).await?;
 
         Ok(())

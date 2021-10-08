@@ -53,7 +53,7 @@ impl Command for Refroles {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.clone() {
+    let _ = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => return Err(
             HarTexError::Custom {
