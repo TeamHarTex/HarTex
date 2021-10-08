@@ -12,6 +12,5 @@ license = "Apache-2.0"
 [dependencies]
 base64 = "0.13.0"
 hartex_conftoml = { path = "../hartex_conftoml" }
-hartex_core = { path = "../hartex_core" }
-hartex_logging = { path = "../hartex_logging" }
+hartex_core = { path = "../hartex_core", features = [ "tracing-bundled" ] }
 sqlx = { version = "0.5.9", default-features = false, features = [ "postgres", "runtime-tokio-native-tls" ] }
