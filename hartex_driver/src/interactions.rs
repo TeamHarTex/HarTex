@@ -83,8 +83,7 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        )
-                            .await
+                        ).await
                     }
                     "ping" => {
                         span.in_scope(|| {

@@ -1,4 +1,4 @@
-HarTex 1.21.0 (13 October 2021)
+HarTex 1.21.0 (8 October 2021)
 ================================
 
 Key Changes
