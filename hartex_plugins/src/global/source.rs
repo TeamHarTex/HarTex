@@ -25,7 +25,8 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
-    }
+    },
+    logging::tracing
 };
 
 use hartex_utils::FutureRetType;
@@ -69,7 +70,9 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
         )
     };
 
-    ctx.http
+    tracing::trace!("responding to interaction");
+
+    if let Err(error) = ctx.http
         .interaction_callback(
             interaction.id,
             &interaction.token,
@@ -89,7 +92,11 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
             )
         )
         .exec()
-        .await?;
+        .await {
+        tracing::error!("failed to respond to interaction: {error}");
+
+        return Err(HarTexError::from(error));
+    }
 
     Ok(())
 }
