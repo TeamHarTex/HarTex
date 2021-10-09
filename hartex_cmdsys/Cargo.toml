@@ -1,6 +1,6 @@
 [package]
 name = "hartex_cmdsys"
-version = "1.21.0"
+version = "1.22.0"
 edition = "2021"
 description = """
 This crate implements a command system for HarTex Discord bot, including a command parser as well as various utilities.

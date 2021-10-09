@@ -1,6 +1,6 @@
 [package]
 name = "hartex_dbmani"
-version = "1.21.0"
+version = "1.22.0"
 edition = "2021"
 description = """
 The `hartex_dbmani` crate provides an interface to manipulate its PostgreSQL databases.

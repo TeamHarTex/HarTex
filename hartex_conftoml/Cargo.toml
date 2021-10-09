@@ -1,6 +1,6 @@
 [package]
 name = "hartex_conftoml"
-version = "1.21.0"
+version = "1.22.0"
 edition = "2021"
 description = """
 The `hartex_conftoml` library provides configuration serialization and deserialization capabilities.

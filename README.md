@@ -40,7 +40,6 @@ HarTex Development
 | `hartex_dbmani`        | The database manipulation component of the bot.                                                  |
 | `hartex_driver`        | The "main" function of the bot. Glues everything together.                                       |
 | `hartex_eventsys`      | The event system of the bot, contains custom events and emitters.                                |
-| `hartex_logging`       | The logging infrastructure of the bot, contains a custom logger implementation.                  |
 | `hartex_model`         | The various convenience models for the bot to use.                                               |
 | `hartex_plugins`       | The plugins (command modules, functionality modules) of the bot.                                 |
 | `hartex_utils`         | The various utilities that are useful for the bot.                                               |

@@ -77,7 +77,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
 
     tracing::trace!("responding to interaction (initial response)");
 
-    ctx.http
+    if let Err(error) = ctx.http
         .interaction_callback(
             interaction.id,
             &interaction.token,
@@ -93,7 +93,13 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
             )
         )
         .exec()
-        .await?;
+        .await {
+        tracing::error!("failed to create initial interaction response: {error}");
+
+        return Err(HarTexError::from(error));
+    }
+
+    tracing::trace!("obtaining latency information");
 
     let shards = ctx.cluster.info();
     let shard_id = shard_id(interaction.guild_id.unwrap().0, shards.len() as _);
@@ -104,18 +110,26 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         .unwrap();
     let new_content = format!("{content} - `{latency}ms`", latency = latency.as_millis());
 
-    match ctx.http
-        .update_interaction_original(&interaction.token)?
-        .content(Some(&new_content)) {
-        Ok(update) => update,
-        Err(error) => {
-            return Err(HarTexError::Custom {
-                message: format!("failed to update original response: {error}")
-            });
+    tracing::trace!("updating initial interaction response to add latency information");
+
+    if let Err(error) = {
+        match ctx.http
+            .update_interaction_original(&interaction.token)?
+            .content(Some(&new_content)) {
+            Ok(update) => update,
+            Err(error) => {
+                return Err(HarTexError::Custom {
+                    message: format!("failed to update original response: {error}")
+                });
+            }
         }
+            .exec()
+            .await
+    } {
+        tracing::error!("failed to update initial interaction response: {error}");
+
+        return Err(HarTexError::from(error));
     }
-        .exec()
-        .await?;
 
     Ok(())
 }
