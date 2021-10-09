@@ -28,12 +28,6 @@ pub use twilight_gateway as gateway;
 /// HTTP (HyperText Transfer Protocol) support for the `twilight-rs` ecosystem.
 pub use twilight_http as http;
 
-/// Re-export `twilight_mention`
-///
-/// A utility crate for the `twilight-rs` ecosystem to mention its model types and parse such
-/// mentions.
-pub use twilight_mention as mention;
-
 /// Re-export `twilight_model`
 ///
 /// A crate of `serde` models defining the Discord APIs with a few convenience methods implemented
@@ -42,15 +36,17 @@ pub use twilight_model as model;
 
 /// Re-export `twilight_standby`
 ///
-/// Standby is a utility crate for the `twilight-rs` ecossytem to wait for an event to happen based
+/// Standby is a utility crate for the `twilight-rs` ecosystem to wait for an event to happen based
 /// on a predicate check. For example, you may have a command that has a reaction menu of ✅ and ❌.
 /// If you want to handle a reaction to these, using something like an application-level state or
 /// event stream may not suit your use case. It may be cleaner to wait for a reaction inline to
 /// your function.
 pub use twilight_standby as standby;
 
-/// Re-export `twilight_util`
+/// # Module `util`
 ///
-/// A set of utility types and functions for the `twilight-rs` ecosystem to augment or enhance
-/// default functionality.
-pub use twilight_util as util;
+/// Re-export of `twilight_util` and `twilight_mention`.
+pub mod util {
+    pub use twilight_mention as mention;
+    pub use twilight_util::*;
+}
