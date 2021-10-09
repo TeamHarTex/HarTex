@@ -8,7 +8,10 @@ use hartex_core::{
         model::application::interaction::Interaction
     },
     error::HarTexResult,
-    logging::tracing
+    logging::tracing::{
+        self,
+        Instrument
+    }
 };
 
 use hartex_cmdsys::{
@@ -74,6 +77,8 @@ pub async fn handle_interaction(
                             tracing::trace!("interaction command identified - `about`; invoking command handler");
                         });
 
+                        let span = tracing::trace_span!("interaction command handler: about command");
+
                         About.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -83,7 +88,9 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        ).await
+                        )
+                            .instrument(span)
+                            .await
                     }
                     "ping" => {
                         span.in_scope(|| {

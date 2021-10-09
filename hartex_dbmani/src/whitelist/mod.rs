@@ -86,7 +86,7 @@ unsafe impl Send for GetWhitelistedGuilds { }
 ///
 /// Executes the future.
 async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
-    let span = tracing::trace_span!("database manipulation: get whitelisted guilds");
+    let span = tracing::trace_span!(parent: None, "database manipulation: get whitelisted guilds");
 
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDS") {
         Ok(credentials) => credentials,

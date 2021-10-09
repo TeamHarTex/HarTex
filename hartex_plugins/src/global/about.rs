@@ -32,10 +32,7 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing::{
-        self,
-        Instrument
-    },
+    logging::tracing,
     HARTEX_BUILD
 };
 
