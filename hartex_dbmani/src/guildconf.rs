@@ -93,7 +93,7 @@ unsafe impl Send for GetGuildConfig { }
 ///
 /// Executes the future.
 async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
-    let span = tracing::trace_span!("database manipulation: get guild config");
+    let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
 
     let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDCONFIG") {
         Ok(credentials) => credentials,
