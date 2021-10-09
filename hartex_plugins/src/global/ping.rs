@@ -25,7 +25,8 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
-    }
+    },
+    logging::tracing
 };
 
 use hartex_utils::{
@@ -73,6 +74,8 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     };
 
     let content = String::from("Hello! Did you need anything? :eyes:");
+
+    tracing::trace!("responding to interaction (initial response)");
 
     ctx.http
         .interaction_callback(
