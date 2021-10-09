@@ -106,7 +106,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
 
     tracing::trace!("responding to interaction");
 
-    ctx.http
+    if let Err(error) = ctx.http
         .interaction_callback(
             interaction.id,
             &interaction.token,
@@ -122,7 +122,11 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
             )
         )
         .exec()
-        .await?;
+        .await {
+        tracing::error!("failed to respond to interaction: {error}");
+
+        return Err(HarTexError::from(error));
+    }
 
     Ok(())
 }
