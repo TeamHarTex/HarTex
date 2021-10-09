@@ -21,7 +21,6 @@ use hartex_core::{
             EmbedFieldBuilder,
             ImageSource
         },
-        mention::Mention,
         model::{
             application::{
                 callback::{
@@ -43,7 +42,10 @@ use hartex_core::{
             },
             id::UserId
         },
-        util::snowflake::Snowflake
+        util::{
+            mention::Mention,
+            snowflake::Snowflake
+        }
     },
     error::{
         HarTexError,
