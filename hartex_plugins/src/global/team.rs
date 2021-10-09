@@ -29,7 +29,8 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
-    }
+    },
+    logging::tracing
 };
 
 use hartex_utils::FutureRetType;
@@ -79,7 +80,9 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         .field(EmbedFieldBuilder::new("Global Administrator & Lead Developer", "HTGAzureX1212.#5959"))
         .build()?;
 
-    ctx.http
+    tracing::trace!("responding to interaction");
+
+    if let Err(error) = ctx.http
         .interaction_callback(
             interaction.id,
             &interaction.token,
@@ -95,7 +98,11 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
             )
         )
         .exec()
-        .await?;
+        .await {
+        tracing::error!("failed to respond to interaction: {error}");
+
+        return Err(HarTexError::from(error));
+    }
 
     Ok(())
 }

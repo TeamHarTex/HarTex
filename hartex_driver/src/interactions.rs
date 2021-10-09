@@ -97,6 +97,8 @@ pub async fn handle_interaction(
                             tracing::trace!("interaction command identified - `ping`; invoking command handler");
                         });
 
+                        let span = tracing::trace_span!("interaction command handler: ping command");
+
                         Ping.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -106,12 +108,16 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        ).await
+                        )
+                            .instrument(span)
+                            .await
                     }
                     "source" => {
                         span.in_scope(|| {
                             tracing::trace!("interaction command identified - `source`; invoking command handler");
                         });
+
+                        let span = tracing::trace_span!("interaction command handler: source command");
 
                         Source.execute(
                             CommandContext {
@@ -122,12 +128,16 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        ).await
+                        )
+                            .instrument(span)
+                            .await
                     }
                     "team" => {
                         span.in_scope(|| {
                             tracing::trace!("interaction command identified - `team`; invoking command handler");
                         });
+
+                        let span = tracing::trace_span!("interaction command handler: team command");
 
                         Team.execute(
                             CommandContext {
@@ -138,7 +148,9 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        ).await
+                        )
+                            .instrument(span)
+                            .await
                     }
 
                     // Information Plugin
