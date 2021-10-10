@@ -63,11 +63,15 @@ impl Command for Source {
 async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
-        _ => return Err(
-            HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            }
-        )
+        _ => {
+            tracing::error!("invalid interaction type: expected ApplicationCommand");
+
+            return Err(
+                HarTexError::Custom {
+                    message: String::from("invalid interaction type: expected ApplicationCommand")
+                }
+            );
+        }
     };
 
     tracing::trace!("responding to interaction");
