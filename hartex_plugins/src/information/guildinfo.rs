@@ -167,14 +167,33 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild member list");
 
     // it is ok to call unwrap here because we are sure that the limit never exceeds 1000
-    let guild_members = ctx.http
-        .guild_members(guild.id)
-        .limit(1000)
-        .unwrap()
-        .exec()
-        .await?
-        .models()
-        .await?;
+    let guild_members = match {
+        match ctx.http
+            .guild_members(guild.id)
+            .limit(1000)
+            .unwrap()
+            .exec()
+            .await {
+            Ok(response) => response,
+            Err(error) => {
+                tracing::error!("failed to receive request response: {error}");
+
+                return Err(HarTexError::from(error));
+            }
+        }
+            .models()
+            .await
+    } {
+        Ok(members) => members,
+        Err(error) => {
+            tracing::error!("failed to deserialize response body: {error}");
+
+            return Err(HarTexError::from(error));
+        }
+    };
+
+    tracing::trace!("attempting to obtain guild channel list");
+
     let guild_channels = ctx.http
         .guild_channels(guild.id)
         .exec()
