@@ -126,7 +126,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         }
     }
 
-    tracing::trace!("obtaining guild config");
+    tracing::trace!("attempting to obtain guild config");
 
     // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
     // not in a user DM (which is the case when interaction.guild_id is None)
@@ -134,14 +134,38 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let config = GetGuildConfig::new(interaction.guild_id.unwrap())
         .await?;
 
+    tracing::trace!("attempting to obtain cached guild");
+
     let guild = cache
         .guild(interaction.guild_id.unwrap())
         .unwrap();
-    let guild_owner = ctx.http.user(guild.owner_id)
-        .exec()
-        .await?
-        .model()
-        .await?;
+
+    tracing::trace!("attempting to obtain guild owner");
+
+    let guild_owner = match {
+        match ctx.http.user(guild.owner_id)
+            .exec()
+            .await {
+            Ok(response) => response,
+            Err(error) => {
+                tracing::error!("failed to receive request response: {error}");
+
+                return Err(HarTexError::from(error));
+            }
+        }
+            .model()
+            .await
+    } {
+        Ok(user) => user,
+        Err(error) => {
+            tracing::error!("failed to deserialize response body: {error}");
+
+            return Err(HarTexError::from(error));
+        }
+    };
+
+    tracing::trace!("attempting to obtain guild member list");
+
     // it is ok to call unwrap here because we are sure that the limit never exceeds 1000
     let guild_members = ctx.http
         .guild_members(guild.id)
