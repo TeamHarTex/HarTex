@@ -36,6 +36,7 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
+    logging::tracing,
     time::{
         FixedOffset,
         TimeZone
@@ -86,12 +87,18 @@ impl Command for Guildinfo {
 async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
-        _ => return Err(
-            HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            }
-        )
+        _ => {
+            tracing::error!("invalid interaction type: expected ApplicationCommand");
+
+            return Err(
+                HarTexError::Custom {
+                    message: String::from("invalid interaction type: expected ApplicationCommand")
+                }
+            );
+        }
     };
+
+    tracing::trace!("checking interaction source");
 
     if interaction.guild_id.is_none() || interaction.user.is_some() {
         ctx.http

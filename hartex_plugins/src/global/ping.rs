@@ -66,11 +66,15 @@ impl Command for Ping {
 async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
-        _ => return Err(
-            HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            }
-        )
+        _ => {
+            tracing::error!("invalid interaction type: expected ApplicationCommand");
+
+            return Err(
+                HarTexError::Custom {
+                    message: String::from("invalid interaction type: expected ApplicationCommand")
+                }
+            );
+        }
     };
 
     let content = String::from("Hello! Did you need anything? :eyes:");
