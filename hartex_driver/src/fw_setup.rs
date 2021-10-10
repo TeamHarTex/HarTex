@@ -7,6 +7,9 @@ use hartex_eventsys::{
     events::Events
 };
 
+/// # Function `framework_setup`
+///
+/// Sets up the command framework.
 pub fn framework_setup() -> (EventEmitter, Events) {
     tracing::trace!("setting up command framework");
 
