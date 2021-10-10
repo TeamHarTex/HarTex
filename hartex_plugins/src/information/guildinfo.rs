@@ -194,18 +194,53 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
 
     tracing::trace!("attempting to obtain guild channel list");
 
-    let guild_channels = ctx.http
-        .guild_channels(guild.id)
-        .exec()
-        .await?
-        .models()
-        .await?;
-    let guild_voice_regions = ctx.http
-        .guild_voice_regions(guild.id)
-        .exec()
-        .await?
-        .models()
-        .await?;
+    let guild_channels = match {
+        match ctx.http
+            .guild_channels(guild.id)
+            .exec()
+            .await {
+            Ok(response) => response,
+            Err(error) => {
+                tracing::error!("failed to receive request response: {error}");
+
+                return Err(HarTexError::from(error));
+            }
+        }
+            .models()
+            .await
+    } {
+        Ok(channels) => channels,
+        Err(error) => {
+            tracing::error!("failed to deserialize response body: {error}");
+
+            return Err(HarTexError::from(error));
+        }
+    };
+
+    tracing::trace!("attempting to obtain guild voice region list");
+
+    let guild_voice_regions = match {
+        match ctx.http
+            .guild_voice_regions(guild.id)
+            .exec()
+            .await {
+            Ok(response) => response,
+            Err(error) => {
+                tracing::error!("failed to receive request response: {error}");
+
+                return Err(HarTexError::from(error));
+            }
+        }
+            .models()
+            .await
+    } {
+        Ok(regions) => regions,
+        Err(error) => {
+            tracing::error!("failed to deserialize response body: {error}");
+
+            return Err(HarTexError::from(error));
+        }
+    };
 
     let guild_member_count = guild_members.len();
 
