@@ -45,7 +45,7 @@ impl GetWhitelistedGuilds {
     ///
     /// Starts the future.
     fn start(&mut self) -> HarTexResult<()> {
-        let span = tracing::trace_span!("database manipulation: get whitelisted guilds");
+        let span = tracing::trace_span!(parent: None, "database manipulation: get whitelisted guilds");
         span.in_scope(|| {
             tracing::trace!("executing future `GetWhitelistedGuilds`");
         });

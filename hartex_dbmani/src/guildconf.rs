@@ -59,7 +59,7 @@ impl GetGuildConfig {
     ///
     /// Starts the future.
     fn start(&mut self) -> HarTexResult<()> {
-        let span = tracing::trace_span!("database manipulation: get guild config");
+        let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
         span.in_scope(|| {
             tracing::trace!("executing future `GetGuildConfig`");
         });

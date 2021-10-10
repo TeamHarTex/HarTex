@@ -159,6 +159,8 @@ pub async fn handle_interaction(
                             tracing::trace!("interaction command identified - `guildinfo`; invoking command handler");
                         });
 
+                        let span = tracing::trace_span!("interaction command handler: guildinfo command");
+
                         Guildinfo.execute(
                             CommandContext {
                                 inner: Arc::new(CommandContextInner {
@@ -168,7 +170,9 @@ pub async fn handle_interaction(
                                 })
                             },
                             cache
-                        ).await
+                        )
+                            .instrument(span)
+                            .await
                     }
                     "userinfo" => {
                         span.in_scope(|| {

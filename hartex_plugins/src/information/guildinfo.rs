@@ -101,7 +101,9 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("checking interaction source");
 
     if interaction.guild_id.is_none() || interaction.user.is_some() {
-        ctx.http
+        tracing::error!("interaction source is not a guild, responding with such error");
+
+        if let Err(error) = ctx.http
             .interaction_callback(
                 interaction.id,
                 &interaction.token,
@@ -117,14 +119,21 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 )
             )
             .exec()
-            .await?;
+            .await {
+            tracing::error!("failed to respond to interaction: {error}");
+
+            return Err(HarTexError::from(error));
+        }
     }
+
+    tracing::trace!("obtaining guild config");
+
+    // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
+    // not in a user DM (which is the case when interaction.guild_id is None)
 
     let config = GetGuildConfig::new(interaction.guild_id.unwrap())
         .await?;
 
-    // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
-    // not in a user DM (which is the case when interaction.guild_id is None)
     let guild = cache
         .guild(interaction.guild_id.unwrap())
         .unwrap();
