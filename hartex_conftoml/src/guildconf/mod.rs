@@ -16,7 +16,10 @@ pub mod tz;
 pub struct GuildConfiguration {
     #[serde(default = "default_nickname")]
     pub nickname: String,
-    #[serde(default = "default_timezone", deserialize_with = "deserialize_timezone")]
+    #[serde(
+        default = "default_timezone",
+        deserialize_with = "deserialize_timezone"
+    )]
     pub timezone: tz::Timezone,
     #[serde(default = "default_dm_cant_use_cmd")]
     pub dmCannotUseCommand: bool
@@ -34,8 +37,10 @@ fn default_dm_cant_use_cmd() -> bool {
     true
 }
 
-fn deserialize_timezone<'deserialize, Deserializer>(deserializer: Deserializer) -> Result<tz::Timezone, Deserializer::Error>
-    where
-        Deserializer: de::Deserializer<'deserialize> {
+fn deserialize_timezone<'deserialize, Deserializer>(
+    deserializer: Deserializer
+) -> Result<tz::Timezone, Deserializer::Error>
+where
+    Deserializer: de::Deserializer<'deserialize> {
     deserializer.deserialize_str(tz::TimezoneDeserializeStringVisitor)
 }

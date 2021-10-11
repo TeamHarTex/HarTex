@@ -3,20 +3,17 @@
 //! The `hartex_conftoml` provides an interface for serializing and deserializing TOML
 //! configuration for HarTex Discord bot.
 
-#![feature(format_args_capture)]
-
 #![allow(non_snake_case)]
-
-use serde::Deserialize;
+#![feature(format_args_capture)]
 
 use hartex_core::{
     error::{
         HarTexError,
-        HarTexResult,
+        HarTexResult
     },
     logging::tracing
 };
-
+use serde::Deserialize;
 
 pub mod dashacc;
 pub mod guildconf;
@@ -39,7 +36,7 @@ pub fn from_string(input: String) -> HarTexResult<TomlConfig> {
         Err(error) => {
             tracing::error!("failed to deserialize config: {error}");
 
-            return Err(HarTexError::from(error))
+            return Err(HarTexError::from(error));
         }
     })
 }
