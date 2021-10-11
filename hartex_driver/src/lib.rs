@@ -6,9 +6,6 @@
 #![feature(format_args_capture)]
 
 use futures_util::future::Either;
-
-use tokio_stream::StreamExt;
-
 use hartex_core::{
     error::HarTexResult,
     events::EventType,
@@ -18,6 +15,7 @@ use hartex_core::{
     },
     HARTEX_BUILD
 };
+use tokio_stream::StreamExt;
 
 pub mod commands;
 pub mod ctrlc;
@@ -41,9 +39,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
     let environment = span.in_scope(env_setup::environment_setup);
 
     let span = tracing::trace_span!("pre-startup phase");
-    let (cluster, http, events, cache) = pre_startup::pre_startup(environment)
-        .instrument(span)
-        .await;
+    let (cluster, http, events, cache) =
+        pre_startup::pre_startup(environment).instrument(span).await;
 
     let cluster_spawn = cluster.clone();
 
@@ -57,7 +54,9 @@ pub async fn hartex_main() -> HarTexResult<()> {
     let span = tracing::trace_span!("ctrlc handler");
     span.in_scope(ctrlc::ctrlc_handler);
 
-    let mut events = events.map(Either::Left).merge(framework_events.map(Either::Right));
+    let mut events = events
+        .map(Either::Left)
+        .merge(framework_events.map(Either::Right));
 
     while let Some(event) = events.next().await {
         match event {

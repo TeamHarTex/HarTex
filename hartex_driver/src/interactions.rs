@@ -97,7 +97,9 @@ pub async fn handle_interaction(
                     }
                     "ping" => {
                         span.in_scope(|| {
-                            tracing::trace!("interaction command identified - `ping`; invoking command handler");
+                            tracing::trace!(
+                                "interaction command identified - `ping`; invoking command handler"
+                            );
                         });
 
                         let span =
@@ -118,7 +120,9 @@ pub async fn handle_interaction(
                     }
                     "source" => {
                         span.in_scope(|| {
-                            tracing::trace!("interaction command identified - `source`; invoking command handler");
+                            tracing::trace!(
+                                "interaction command identified - `source`; invoking command handler"
+                            );
                         });
 
                         let span =
@@ -140,7 +144,9 @@ pub async fn handle_interaction(
                     }
                     "team" => {
                         span.in_scope(|| {
-                            tracing::trace!("interaction command identified - `team`; invoking command handler");
+                            tracing::trace!(
+                                "interaction command identified - `team`; invoking command handler"
+                            );
                         });
 
                         let span =
@@ -162,7 +168,9 @@ pub async fn handle_interaction(
                     // Information Plugin
                     "guildinfo" => {
                         span.in_scope(|| {
-                            tracing::trace!("interaction command identified - `guildinfo`; invoking command handler");
+                            tracing::trace!(
+                                "interaction command identified - `guildinfo`; invoking command handler"
+                            );
                         });
 
                         let span =
@@ -184,7 +192,9 @@ pub async fn handle_interaction(
                     }
                     "userinfo" => {
                         span.in_scope(|| {
-                            tracing::trace!("interaction command identified - `userinfo`; invoking command handler");
+                            tracing::trace!(
+                                "interaction command identified - `userinfo`; invoking command handler"
+                            );
                         });
 
                         Userinfo

@@ -5,7 +5,6 @@
 use std::sync::Arc;
 
 use dashmap::DashMap;
-
 use futures_channel::mpsc::{
     self,
     UnboundedReceiver,
@@ -44,9 +43,12 @@ impl<T> Listeners<T> {
         let id = self.inner.id + 1;
         let (sender, receiver) = mpsc::unbounded();
 
-        self.inner.listeners.insert(id, Listener {
-            sender
-        });
+        self.inner.listeners.insert(
+            id,
+            Listener {
+                sender
+            }
+        );
 
         receiver
     }

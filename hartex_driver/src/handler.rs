@@ -108,7 +108,8 @@ impl EventHandler {
             let message =
                 "Hey there! It looks like you added HarTex to your guild by the name of \""
                     .to_string()
-                    + &guild.name + "\".\n\n"
+                    + &guild.name
+                    + "\".\n\n"
                     + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
                     + "invited to your guild until you apply for a whitelist and that the application is "
                     + "accepted.\n\n"
@@ -246,7 +247,8 @@ impl EventHandler {
                             false,
                             None,
                             Status::Online
-                        ).unwrap()
+                        )
+                        .unwrap()
                     )
                     .await
                 {
@@ -275,7 +277,7 @@ impl EventHandler {
                 Box::new(Team),
                 // Information Plugin
                 Box::new(Guildinfo),
-                Box::new(Userinfo)
+                Box::new(Userinfo),
             ],
             http.clone()
         )
