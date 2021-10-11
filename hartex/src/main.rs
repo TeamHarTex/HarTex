@@ -7,10 +7,13 @@ use std::time::Duration;
 
 use hartex_core::{
     error::HarTexResult,
-    logging::tracing_subscriber::{
-        self,
-        fmt::time::ChronoUtc,
-        EnvFilter
+    logging::{
+        tracing,
+        tracing_subscriber::{
+            self,
+            fmt::time::ChronoUtc,
+            EnvFilter,
+        }
     }
 };
 use tokio::runtime::Builder;
@@ -32,6 +35,8 @@ pub fn main() -> HarTexResult<()> {
         .unwrap();
 
     tokio_runtime.block_on(async move {
+        tracing::trace!("executing hartex_driver entrypoint");
+
         hartex_driver::hartex_main().await
     })?;
     tokio_runtime.shutdown_timeout(Duration::from_millis(100));
