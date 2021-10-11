@@ -6,7 +6,6 @@ use hartex_core::discord::{
     cache_inmemory::InMemoryCache,
     model::application::command::CommandOption
 };
-
 use hartex_utils::FutureRetType;
 
 use crate::context::CommandContext;
@@ -30,7 +29,11 @@ pub trait Command {
 
     fn command_type(&self) -> CommandType;
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, cache: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()>;
+    fn execute<'asynchronous_trait>(
+        &self,
+        ctx: CommandContext,
+        cache: InMemoryCache
+    ) -> FutureRetType<'asynchronous_trait, ()>;
 
     fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![]
