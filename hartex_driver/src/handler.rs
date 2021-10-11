@@ -99,21 +99,30 @@ impl EventHandler {
 
             let user = http.user(guild_owner).exec().await?.model().await?;
 
-            let dm_channel = http.create_private_channel(user.id).exec().await?.model().await?;
-            let message = "Hey there! It looks like you added HarTex to your guild by the name of \"".to_string()
-                + &guild.name + "\".\n\n"
-                + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
-                + "invited to your guild until you apply for a whitelist and that the application is "
-                + "accepted.\n\n"
-                + "You may apply for a guild whitelist if your guild meets the following criteria, they include, but not limited to:\n"
-                + " - guild member count of at least 250;"
-                + " - be always abide by the Discord Terms of Service (<https://discord.com/terms>) and Community Guidelines (<https://discord.com/guidelines);"
-                + " - how old is the guild and/or how active is it; and"
-                + " - your experience level with TOML to configure the bot before using it.\n\n"
-                + "You may join our Support Guild at `https://discord.gg/Xu8453VBAv` for more information, including the application link in which you may use"
-                + "to apply for a whitelist application. Good luck!";
+            let dm_channel = http
+                .create_private_channel(user.id)
+                .exec()
+                .await?
+                .model()
+                .await?;
+            let message =
+                "Hey there! It looks like you added HarTex to your guild by the name of \"".to_string()
+                    + &guild.name + "\".\n\n"
+                    + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
+                    + "invited to your guild until you apply for a whitelist and that the application is "
+                    + "accepted.\n\n"
+                    + "You may apply for a guild whitelist if your guild meets the following criteria, they include, but not limited to:\n"
+                    + " - guild member count of at least 250;"
+                    + " - be always abide by the Discord Terms of Service (<https://discord.com/terms>) and Community Guidelines (<https://discord.com/guidelines);"
+                    + " - how old is the guild and/or how active is it; and"
+                    + " - your experience level with TOML to configure the bot before using it.\n\n"
+                    + "You may join our Support Guild at `https://discord.gg/Xu8453VBAv` for more information, including the application link in which you may use"
+                    + "to apply for a whitelist application. Good luck!";
 
-            http.create_message(dm_channel.id).content(&message)?.exec().await?;
+            http.create_message(dm_channel.id)
+                .content(&message)?
+                .exec()
+                .await?;
 
             span.in_scope(|| {
                 tracing::error!("leaving guild");
@@ -208,12 +217,13 @@ impl EventHandler {
                         break;
                     }
                 }
-                    .id();
+                .id();
 
                 tracing::trace!("attempting to register presence for shard {shard_id}");
 
-                match shard.command(
-                    &UpdatePresence::new(
+                match shard
+                    .command(
+                        &UpdatePresence::new(
                         vec![Activity {
                             application_id: None,
                             assets: None,
@@ -236,18 +246,20 @@ impl EventHandler {
                         None,
                         Status::Online
                     ).unwrap()
-                ).await {
+                )
+                .await
+                {
                     Ok(()) => {
                         tracing::trace!("successfully set presence for shard {shard_id}");
-                    },
+                    }
                     Err(error) => {
                         tracing::error!("failed to set presence for shard {shard_id}: {error}");
                     }
                 }
             }
         }
-            .instrument(span)
-            .await;
+        .instrument(span)
+        .await;
 
         let span = tracing::trace_span!("event handler: ready: global command registration");
 
