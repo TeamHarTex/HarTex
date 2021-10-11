@@ -106,7 +106,8 @@ impl EventHandler {
                 .model()
                 .await?;
             let message =
-                "Hey there! It looks like you added HarTex to your guild by the name of \"".to_string()
+                "Hey there! It looks like you added HarTex to your guild by the name of \""
+                    .to_string()
                     + &guild.name + "\".\n\n"
                     + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
                     + "invited to your guild until you apply for a whitelist and that the application is "
@@ -224,30 +225,30 @@ impl EventHandler {
                 match shard
                     .command(
                         &UpdatePresence::new(
-                        vec![Activity {
-                            application_id: None,
-                            assets: None,
-                            buttons: Vec::new(),
-                            created_at: None,
-                            details: None,
-                            emoji: None,
-                            flags: None,
-                            id: None,
-                            instance: None,
-                            kind: ActivityType::Watching,
-                            name: format!("codebase revamp | shard {}", shard_id),
-                            party: None,
-                            secrets: None,
-                            state: None,
-                            timestamps: None,
-                            url: None
-                        }],
-                        false,
-                        None,
-                        Status::Online
-                    ).unwrap()
-                )
-                .await
+                            vec![Activity {
+                                application_id: None,
+                                assets: None,
+                                buttons: Vec::new(),
+                                created_at: None,
+                                details: None,
+                                emoji: None,
+                                flags: None,
+                                id: None,
+                                instance: None,
+                                kind: ActivityType::Watching,
+                                name: format!("codebase revamp | shard {}", shard_id),
+                                party: None,
+                                secrets: None,
+                                state: None,
+                                timestamps: None,
+                                url: None
+                            }],
+                            false,
+                            None,
+                            Status::Online
+                        ).unwrap()
+                    )
+                    .await
                 {
                     Ok(()) => {
                         tracing::trace!("successfully set presence for shard {shard_id}");
@@ -267,36 +268,28 @@ impl EventHandler {
             vec![
                 // Global Administrator Only Plugin
                 Box::new(Refroles),
-
                 // Global Plugin
                 Box::new(About),
                 Box::new(Ping),
                 Box::new(Source),
                 Box::new(Team),
-
                 // Information Plugin
                 Box::new(Guildinfo),
                 Box::new(Userinfo)
             ],
             http.clone()
         )
-            .instrument(span)
-            .await?;
+        .instrument(span)
+        .await?;
 
         let span = tracing::trace_span!("event handler: ready: change guild nickname");
 
-        for guild in http
-            .current_user_guilds()
-            .exec()
-            .await?
-            .models()
-            .await? {
+        for guild in http.current_user_guilds().exec().await?.models().await? {
             span.in_scope(|| {
                 tracing::trace!("changing nickname in guild {name}", name = guild.name);
             });
 
-            let config = match GetGuildConfig::new(guild.id)
-                .await {
+            let config = match GetGuildConfig::new(guild.id).await {
                 Ok(config) => {
                     span.in_scope(|| {
                         tracing::trace!("successfully retrieved guild config");
@@ -313,7 +306,11 @@ impl EventHandler {
                 }
             };
 
-            match http.update_current_user_nick(guild.id, &config.GuildConfiguration.nickname).exec().await {
+            match http
+                .update_current_user_nick(guild.id, &config.GuildConfiguration.nickname)
+                .exec()
+                .await
+            {
                 Err(error) => {
                     span.in_scope(|| {
                         tracing::error!("failed to change nickname: {error}");
@@ -338,7 +335,10 @@ impl EventHandler {
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
         let span = tracing::trace_span!("event handler: shard identifying");
         span.in_scope(|| {
-            tracing::trace!("shard {} is identifying with the discord gateway", payload.shard_id);
+            tracing::trace!(
+                "shard {} is identifying with the discord gateway",
+                payload.shard_id
+            );
         });
 
         Ok(())
