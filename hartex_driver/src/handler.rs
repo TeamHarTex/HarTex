@@ -3,7 +3,6 @@
 //! This module defines the `EventHandler` struct, which defines various function handlers for
 //! individual events.
 
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,

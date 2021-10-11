@@ -49,25 +49,21 @@ pub async fn handle_event(
     cluster: Cluster
 ) -> HarTexResult<()> {
     match event_type {
-        EventType::Twilight if twilight.is_some() => {
-            match twilight.unwrap() {
-                Event::GuildCreate(payload) => EventHandler::guild_create(payload, http).await?,
-                Event::InteractionCreate(payload) => {
-                    EventHandler::interaction_create(payload, http, cluster, cache).await?
-                }
-                Event::MessageCreate(payload) => {
-                    EventHandler::message_create(payload, emitter, cache, http, cluster).await?
-                }
-                Event::Ready(payload) => EventHandler::ready(payload, cluster, http).await?,
-                Event::ShardIdentifying(payload) => EventHandler::shard_identifying(payload).await?,
-                _ => ()
+        EventType::Twilight if twilight.is_some() => match twilight.unwrap() {
+            Event::GuildCreate(payload) => EventHandler::guild_create(payload, http).await?,
+            Event::InteractionCreate(payload) => {
+                EventHandler::interaction_create(payload, http, cluster, cache).await?
             }
+            Event::MessageCreate(payload) => {
+                EventHandler::message_create(payload, emitter, cache, http, cluster).await?
+            }
+            Event::Ready(payload) => EventHandler::ready(payload, cluster, http).await?,
+            Event::ShardIdentifying(payload) => EventHandler::shard_identifying(payload).await?,
+            _ => ()
         },
-        EventType::Custom if custom.is_some() => {
-            match custom.unwrap() {
-                HarTexEvent::CommandExecuted(payload) => EventHandler::command_executed(payload).await?
-            }
-        }
+        EventType::Custom if custom.is_some() => match custom.unwrap() {
+            HarTexEvent::CommandExecuted(payload) => EventHandler::command_executed(payload).await?
+        },
         _ => {
             return Err(HarTexError::Custom {
                 message: String::from("event type mismatch")
