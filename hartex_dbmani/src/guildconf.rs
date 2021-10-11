@@ -166,9 +166,9 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 
-            Err(HarTexError::Custom {
+            return Err(HarTexError::Custom {
                 message
-            })
+            });
         }
     }
 }
