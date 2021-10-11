@@ -5,8 +5,6 @@
 
 use std::time::Duration;
 
-use tokio::runtime::Builder;
-
 use hartex_core::{
     error::HarTexResult,
     logging::tracing_subscriber::{
@@ -15,6 +13,8 @@ use hartex_core::{
         EnvFilter
     }
 };
+
+use tokio::runtime::Builder;
 
 pub fn main() -> HarTexResult<()> {
     // loads the .env file to obtain environment variables
