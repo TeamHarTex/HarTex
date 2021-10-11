@@ -106,7 +106,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
-    span.in_scope(|| tracing::trace!("connecting to database...");
+    span.in_scope(|| tracing::trace!("connecting to database..."));
 
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
@@ -144,9 +144,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                 }
             };
 
-            span.in_scope(|| {
-                tracing::trace!("deserializing toml config...");
-            });
+            span.in_scope(|| tracing::trace!("deserializing toml config..."));
 
             hartex_conftoml::from_string(match String::from_utf8(decoded) {
                 Ok(string) => string,
@@ -166,9 +164,9 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 
-            return Err(HarTexError::Custom {
+            Err(HarTexError::Custom {
                 message
-            });
+            })
         }
     }
 }
