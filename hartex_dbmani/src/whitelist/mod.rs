@@ -48,9 +48,7 @@ impl GetWhitelistedGuilds {
             parent: None,
             "database manipulation: get whitelisted guilds"
         );
-        span.in_scope(|| {
-            tracing::trace!("executing future `GetWhitelistedGuilds`");
-        });
+        span.in_scope(|| tracing::trace!("executing future `GetWhitelistedGuilds`"));
 
         self.pending.replace(Box::pin(exec_future()));
 
@@ -98,9 +96,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         Err(error) => {
             let message = format!("failed to get database credentials; error: {error}");
 
-            span.in_scope(|| {
-                tracing::error!("{message}", message = &message)
-            });
+            span.in_scope(|| tracing::error!("{message}", message = &message));
 
             return Err(HarTexError::Custom {
                 message
@@ -108,9 +104,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         }
     };
 
-    span.in_scope(|| {
-        tracing::trace!("connecting to database...");
-    });
+    span.in_scope(|| tracing::trace!("connecting to database..."));
 
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
@@ -118,9 +112,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
             let message =
                 format!("failed to connect to postgres database pool; error: `{error:?}`");
 
-            span.in_scope(|| {
-                tracing::error!("{message}", message = &message)
-            });
+            span.in_scope(|| tracing::error!("{message}", message = &message));
 
             return Err(HarTexError::Custom {
                 message
@@ -128,9 +120,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         }
     };
 
-    span.in_scope(|| {
-        tracing::trace!("executing sql query...");
-    });
+    span.in_scope(|| tracing::trace!("executing sql query..."));
 
     match sqlx::query_as::<Postgres, WhitelistedGuild>(r#"SELECT * FROM public."Whitelist"; --"#)
         .fetch_all(&connection)
@@ -142,9 +132,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         Err(error) => {
             let message = format!("failed to execute sql query; error: `{error:?}`");
 
-            span.in_scope(|| {
-                tracing::error!("{message}", message = &message)
-            });
+            span.in_scope(|| tracing::error!("{message}", message = &message));
 
             Err(HarTexError::Custom {
                 message
