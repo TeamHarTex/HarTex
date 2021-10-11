@@ -13,7 +13,6 @@ use hartex_core::{
         EnvFilter
     }
 };
-
 use tokio::runtime::Builder;
 
 pub fn main() -> HarTexResult<()> {

@@ -6,6 +6,9 @@ brace_style = "PreferSameLine"
 color = "Always"
 control_brace_style = "ClosingNextLine"
 group_imports = "StdExternalCrate"
+ignore = [
+    "hartex_core/src/discord.rs"
+]
 imports_layout = "Vertical"
 imports_granularity = "Crate"
 struct_lit_single_line = false

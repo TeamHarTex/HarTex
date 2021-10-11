@@ -12,7 +12,6 @@
 
 pub use ctrlc;
 
-pub mod ansi;
 #[cfg(feature = "twilight-bundled")]
 pub mod discord;
 pub mod error;
