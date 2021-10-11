@@ -1,4 +1,4 @@
-name: Release Build (Full Optimizations)
+name: Full Build
 
 on:
   push:
