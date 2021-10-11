@@ -1,0 +1,28 @@
+name: Lints
+
+on:
+  push:
+    branches:
+      - infdev
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Rustfmt:
+    name: Rustfmt Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Run cargo fmt
+        run: cd hartex && cargo fmt --all -- --check

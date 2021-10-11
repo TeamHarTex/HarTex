@@ -12,8 +12,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  windows-latest:
-    runs-on: windows-2019
+  Linux:
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -26,16 +26,30 @@ jobs:
       - name: Build
         run: cd hartex && cargo build --release
 
-  ubuntu-latest:
-    runs-on: ubuntu-20.04
+  macOS:
+    runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install latest nightly
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: nightly
-        override: true
-        profile: default
-    - name: Build
-      run: cd hartex && cargo build --release
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Build
+        run: cd hartex && cargo build --release
+
+  Windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Build
+        run: cd hartex && cargo build --release
