@@ -13,20 +13,18 @@ use std::{
     }
 };
 
-use sqlx::{
-    postgres::PgPool,
-    Row
-};
-
 use hartex_conftoml::TomlConfig;
-
 use hartex_core::{
     discord::model::id::GuildId,
     error::{
         HarTexError,
-        HarTexResult,
+        HarTexResult
     },
     logging::tracing
+};
+use sqlx::{
+    postgres::PgPool,
+    Row
 };
 
 use crate::PendingFuture;
@@ -64,7 +62,6 @@ impl GetGuildConfig {
             tracing::trace!("executing future `GetGuildConfig`");
         });
 
-
         self.pending.replace(Box::pin(exec_future(self.guild_id)));
 
         Ok(())
@@ -81,13 +78,13 @@ impl Future for GetGuildConfig {
             }
 
             if let Err(error) = self.start() {
-                return Poll::Ready(Err(error))
+                return Poll::Ready(Err(error));
             }
         }
     }
 }
 
-unsafe impl Send for GetGuildConfig { }
+unsafe impl Send for GetGuildConfig {}
 
 /// # Asynchronous Function `exec_future`
 ///
@@ -117,7 +114,8 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
-            let message = format!("failed to connect to postgres database pool; error: `{error:?}`");
+            let message =
+                format!("failed to connect to postgres database pool; error: `{error:?}`");
 
             span.in_scope(|| {
                 tracing::error!("{message}", message = &message)
@@ -133,8 +131,10 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         tracing::trace!("executing sql query...");
     });
 
-    match sqlx::query(&format!("SELECT * FROM \"Guild{guild_id}\"; --")).fetch_one(&connection)
-        .await {
+    match sqlx::query(&format!("SELECT * FROM \"Guild{guild_id}\"; --"))
+        .fetch_one(&connection)
+        .await
+    {
         Ok(row) => {
             let config = row.get::<String, &str>("TomlConfig");
 
@@ -171,7 +171,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                     });
                 }
             })
-        },
+        }
         Err(error) => {
             let message = format!("failed to execute sql query; error `{error:?}`");
 
