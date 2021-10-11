@@ -27,7 +27,9 @@ pub fn environment_setup() -> Environment {
     let token = match env::var("HARTEX_TOKEN") {
         Ok(token) => token,
         Err(var_error) => {
-            tracing::error!("could not retrieve bot token from environment variables: {var_error}");
+            tracing::error!(
+                "could not retrieve bot token from environment variables: {var_error}"
+            );
 
             process::exit(-1)
         }
