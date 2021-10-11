@@ -35,7 +35,7 @@ impl Timezone {
     /// Converts the timezone to a offset usable with chrono timezones.
     pub fn into_offset_secs(self) -> i32 {
         match self {
-            Self::UTC => 0 * 3600,  // UTC+00:00
+            Self::UTC => 0 * 3600,          // UTC+00:00
             Self::AsiaHongKong => 8 * 3600  // UTC+08:00
         }
     }
