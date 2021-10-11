@@ -12,14 +12,14 @@ use crate::{
     discord::{
         embed_builder::{
             image_source::ImageSourceUrlError,
-            EmbedError,
+            EmbedError
         },
         gateway::{
             cluster::{
                 ClusterCommandError,
-                ClusterStartError,
+                ClusterStartError
             },
-            shard::SessionInactiveError,
+            shard::SessionInactiveError
         },
         http::{
             error::Error as HttpError,
@@ -27,15 +27,15 @@ use crate::{
                 application::InteractionError,
                 channel::message::{
                     create_message::CreateMessageError,
-                    update_message::UpdateMessageError,
+                    update_message::UpdateMessageError
                 },
-                guild::member::update_guild_member::UpdateGuildMemberError,
+                guild::member::update_guild_member::UpdateGuildMemberError
             },
-            response::DeserializeBodyError,
+            response::DeserializeBodyError
         },
-        model::gateway::payload::update_presence::UpdatePresenceError,
+        model::gateway::payload::update_presence::UpdatePresenceError
     },
-    time::ParseError,
+    time::ParseError
 };
 
 /// # Enum `HarTexError`
