@@ -51,8 +51,7 @@ pub async fn handle_event(
     match event_type {
         EventType::Twilight if twilight.is_some() => {
             match twilight.unwrap() {
-                Event::GuildCreate(payload) =>
-                    EventHandler::guild_create(payload, http).await?,
+                Event::GuildCreate(payload) => EventHandler::guild_create(payload, http).await?,
                 Event::InteractionCreate(payload) => {
                     EventHandler::interaction_create(payload, http, cluster, cache).await?
                 }

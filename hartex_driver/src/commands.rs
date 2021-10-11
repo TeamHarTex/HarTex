@@ -24,12 +24,13 @@ use tokio::time;
 /// `commands`, type `Vec<Box<dyn SlashCommand + Send + Sync>>`: the commands to register.
 /// `http`, type `Client`: the Twilight HTTP client to use for registration.
 pub async fn register_global_commands(
-    commands: Vec<Box<dyn Command + Send + Sync>>, http: Client
+    commands: Vec<Box<dyn Command + Send + Sync>>,
+    http: Client
 ) -> HarTexResult<()> {
     let mut i = 1;
     let len = commands.len();
 
-    let existing =  match http
+    let existing = match http
         .get_global_commands()
         .unwrap()
         .exec()
@@ -84,7 +85,7 @@ pub async fn register_global_commands(
                 CommandType::User => todo!()
             }
         }
-            .await
+        .await
         {
             Ok(_) => (),
             Err(error) => {
