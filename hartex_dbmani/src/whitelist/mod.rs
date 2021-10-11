@@ -126,9 +126,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         .fetch_all(&connection)
         .await
     {
-        Ok(guilds) => {
-            Ok(guilds)
-        }
+        Ok(guilds) => Ok(guilds),
         Err(error) => {
             let message = format!("failed to execute sql query; error: `{error:?}`");
 

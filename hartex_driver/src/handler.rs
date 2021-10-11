@@ -3,7 +3,6 @@
 //! This module defines the `EventHandler` struct, which defines various function handlers for
 //! individual events.
 
-use tokio::time;
 
 use hartex_core::{
     discord::{
@@ -17,7 +16,7 @@ use hartex_core::{
                 GuildCreate,
                 InteractionCreate,
                 MessageCreate,
-                Ready,
+                Ready
             },
             presence::{
                 Activity,
@@ -30,19 +29,17 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing
+    logging::tracing::{
+        self,
+        Instrument
+    }
 };
-use hartex_core::logging::tracing::Instrument;
-
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
     whitelist::GetWhitelistedGuilds
 };
-
 use hartex_eventsys::emitter::EventEmitter;
-
 use hartex_model::payload::CommandExecuted;
-
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
     global::{
@@ -56,6 +53,7 @@ use hartex_plugins::{
         userinfo::Userinfo
     }
 };
+use tokio::time;
 
 use crate::commands;
 
@@ -87,9 +85,7 @@ impl EventHandler {
 
         let res = GetWhitelistedGuilds::default().await?;
 
-        if !res.iter().any(|guild| {
-            guild_id.0 == guild.GuildId
-        }) {
+        if !res.iter().any(|guild| guild_id.0 == guild.GuildId) {
             span.in_scope(|| {
                 tracing::error!("guild is not whitelisted");
             });
