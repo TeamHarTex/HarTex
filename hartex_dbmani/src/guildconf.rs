@@ -57,10 +57,11 @@ impl GetGuildConfig {
     ///
     /// Starts the future.
     fn start(&mut self) -> HarTexResult<()> {
-        let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
-        span.in_scope(|| {
-            tracing::trace!("executing future `GetGuildConfig`");
-        });
+        let span = tracing::trace_span!(
+            parent: None,
+            "database manipulation: get guild config"
+        );
+        span.in_scope(|| tracing::trace!("executing future `GetGuildConfig`"));
 
         self.pending.replace(Box::pin(exec_future(self.guild_id)));
 
@@ -97,9 +98,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         Err(error) => {
             let message = format!("failed to get database credentials; error: {error}");
 
-            span.in_scope(|| {
-                tracing::error!("{message}", message = &message)
-            });
+            span.in_scope(|| tracing::error!("{message}", message = &message));
 
             return Err(HarTexError::Custom {
                 message
@@ -107,9 +106,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
-    span.in_scope(|| {
-        tracing::trace!("connecting to database...");
-    });
+    span.in_scope(|| tracing::trace!("connecting to database...");
 
     let connection = match PgPool::connect(&db_credentials).await {
         Ok(pool) => pool,
@@ -117,9 +114,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
             let message =
                 format!("failed to connect to postgres database pool; error: `{error:?}`");
 
-            span.in_scope(|| {
-                tracing::error!("{message}", message = &message)
-            });
+            span.in_scope(|| tracing::error!("{message}", message = &message));
 
             return Err(HarTexError::Custom {
                 message
@@ -127,9 +122,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         }
     };
 
-    span.in_scope(|| {
-        tracing::trace!("executing sql query...");
-    });
+    span.in_scope(|| tracing::trace!("executing sql query..."));
 
     match sqlx::query(&format!("SELECT * FROM \"Guild{guild_id}\"; --"))
         .fetch_one(&connection)
@@ -143,9 +136,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                 Err(error) => {
                     let message = format!("failed to decode base64; error: `{error:?}`");
 
-                    span.in_scope(|| {
-                        tracing::error!("{message}", message = &message);
-                    });
+                    span.in_scope(|| tracing::error!("{message}", message = &message));
 
                     return Err(HarTexError::Base64DecodeError {
                         error
@@ -162,9 +153,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
                 Err(error) => {
                     let message = format!("failed to construct utf-8 string; error: `{error:?}`");
 
-                    span.in_scope(|| {
-                        tracing::error!("{message}", message = &message);
-                    });
+                    span.in_scope(|| tracing::error!("{message}", message = &message));
 
                     return Err(HarTexError::Utf8ValidationError {
                         error
@@ -175,9 +164,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
         Err(error) => {
             let message = format!("failed to execute sql query; error `{error:?}`");
 
-            span.in_scope(|| {
-                tracing::error!("{message}", message = &message);
-            });
+            span.in_scope(|| tracing::error!("{message}", message = &message));
 
             Err(HarTexError::Custom {
                 message
