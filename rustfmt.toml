@@ -13,6 +13,7 @@ imports_layout = "Vertical"
 imports_granularity = "Crate"
 struct_lit_single_line = false
 struct_lit_width = 0
+struct_variant_width = 0
 trailing_comma = "Never"
 use_field_init_shorthand = true
 use_try_shorthand = true
