@@ -12,7 +12,7 @@ use hartex_core::{
         tracing_subscriber::{
             self,
             fmt::time::ChronoUtc,
-            EnvFilter,
+            EnvFilter
         }
     }
 };
