@@ -9,7 +9,6 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -28,7 +27,6 @@ use hartex_core::{
     },
     logging::tracing
 };
-
 use hartex_utils::FutureRetType;
 
 /// # Struct `Source`
@@ -49,7 +47,11 @@ impl Command for Source {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute<'asynchronous_trait>(
+        &self,
+        ctx: CommandContext,
+        _: InMemoryCache
+    ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_source_command(ctx))
     }
 }
@@ -66,37 +68,35 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
         _ => {
             tracing::error!("invalid interaction type: expected ApplicationCommand");
 
-            return Err(
-                HarTexError::Custom {
-                    message: String::from("invalid interaction type: expected ApplicationCommand")
-                }
-            );
+            return Err(HarTexError::Custom {
+                message: String::from("invalid interaction type: expected ApplicationCommand")
+            });
         }
     };
 
     tracing::trace!("responding to interaction");
 
-    if let Err(error) = ctx.http
+    if let Err(error) = ctx
+        .http
         .interaction_callback(
             interaction.id,
             &interaction.token,
-            &InteractionResponse::ChannelMessageWithSource(
-                CallbackData {
-                    allowed_mentions: None,
-                    components: None,
-                    content: Some(
-                        String::from(
-                            "The source code for the bot can be found at: <https://github.com/HarTexBot/HarTex-rust-discord-bot>."
-                        )
-                    ),
-                    embeds: vec![],
-                    flags: None,
-                    tts: None
-                }
-            )
+            &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                allowed_mentions: None,
+                components: None,
+                content: Some(
+                    String::from(
+                        "The source code for the bot can be found at: <https://github.com/HarTexBot/HarTex-rust-discord-bot>."
+                    )
+                ),
+                embeds: vec![],
+                flags: None,
+                tts: None
+            })
         )
         .exec()
-        .await {
+        .await
+    {
         tracing::error!("failed to respond to interaction: {error}");
 
         return Err(HarTexError::from(error));

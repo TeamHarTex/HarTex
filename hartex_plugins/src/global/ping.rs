@@ -9,7 +9,6 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -20,7 +19,6 @@ use hartex_core::{
             },
             interaction::Interaction
         }
-
     },
     error::{
         HarTexError,
@@ -28,10 +26,9 @@ use hartex_core::{
     },
     logging::tracing
 };
-
 use hartex_utils::{
-    FutureRetType,
-    shard_id
+    shard_id,
+    FutureRetType
 };
 
 /// # Struct `Ping`
@@ -52,7 +49,11 @@ impl Command for Ping {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute<'asynchronous_trait>(
+        &self,
+        ctx: CommandContext,
+        _: InMemoryCache
+    ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_ping_command(ctx))
     }
 }
@@ -69,11 +70,9 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         _ => {
             tracing::error!("invalid interaction type: expected ApplicationCommand");
 
-            return Err(
-                HarTexError::Custom {
-                    message: String::from("invalid interaction type: expected ApplicationCommand")
-                }
-            );
+            return Err(HarTexError::Custom {
+                message: String::from("invalid interaction type: expected ApplicationCommand")
+            });
         }
     };
 
@@ -81,23 +80,23 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
 
     tracing::trace!("responding to interaction (initial response)");
 
-    if let Err(error) = ctx.http
+    if let Err(error) = ctx
+        .http
         .interaction_callback(
             interaction.id,
             &interaction.token,
-            &InteractionResponse::ChannelMessageWithSource(
-                CallbackData {
-                    allowed_mentions: None,
-                    components: None,
-                    content: Some(content.clone()),
-                    embeds: vec![],
-                    flags: None,
-                    tts: None
-                }
-            )
+            &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                allowed_mentions: None,
+                components: None,
+                content: Some(content.clone()),
+                embeds: vec![],
+                flags: None,
+                tts: None
+            })
         )
         .exec()
-        .await {
+        .await
+    {
         tracing::error!("failed to create initial interaction response: {error}");
 
         return Err(HarTexError::from(error));
@@ -107,19 +106,18 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
 
     let shards = ctx.cluster.info();
     let shard_id = shard_id(interaction.guild_id.unwrap().0, shards.len() as _);
-    let shard_info = shards
-        .get(&shard_id)
-        .unwrap();
-    let latency = shard_info.latency().average()
-        .unwrap();
+    let shard_info = shards.get(&shard_id).unwrap();
+    let latency = shard_info.latency().average().unwrap();
     let new_content = format!("{content} - `{latency}ms`", latency = latency.as_millis());
 
     tracing::trace!("updating initial interaction response to add latency information");
 
     if let Err(error) = {
-        match ctx.http
+        match ctx
+            .http
             .update_interaction_original(&interaction.token)?
-            .content(Some(&new_content)) {
+            .content(Some(&new_content))
+        {
             Ok(update) => update,
             Err(error) => {
                 return Err(HarTexError::Custom {
@@ -127,8 +125,8 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
                 });
             }
         }
-            .exec()
-            .await
+        .exec()
+        .await
     } {
         tracing::error!("failed to update initial interaction response: {error}");
 
