@@ -292,7 +292,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
     let joined_at = DateTime::parse_from_str(
         member.joined_at.unwrap().as_str(),
         "%Y-%m-%dT%H:%M:%S%.f%:z"
-        )?;
+    )?;
     let created_at =
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
 

@@ -5,7 +5,7 @@
 use hartex_cmdsys::{
     command::{
         Command,
-        CommandType,
+        CommandType
     },
     context::CommandContext
 };
