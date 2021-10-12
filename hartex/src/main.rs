@@ -1,9 +1,8 @@
-//! # `hartex` - The HarTex Binary Crate
+//! # `hartex` - The `HarTex` Binary Crate
 //!
 //! This crate contains the main function which calls the `hartex_main` "main function" in the
 //! `hartex_driver` crate which glues everything together.
 
-#![allow(clippy::doc_markdown)]
 #![deny(clippy::pedantic)]
 
 use std::time::Duration;
