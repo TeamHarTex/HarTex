@@ -15,6 +15,7 @@ pub struct DashboardAccess {
 
 #[cfg(test)]
 mod tests {
+    use serde_test::Token;
     use super::DashboardAccess;
 
     #[test]
@@ -26,7 +27,21 @@ mod tests {
                     accessLevel: 0
                 }
             ],
-            &[]
+            &[
+                Token::Seq {
+                    len: Some(1)
+                },
+                Token::Struct {
+                    name: "DashboardAccess",
+                    len: 2
+                },
+                Token::Str("userId"),
+                Token::U64(1234567887654321),
+                Token::Str("accessLevel"),
+                Token::U8(0),
+                Token::StructEnd,
+                Token::SeqEnd
+            ]
         );
     }
 }
