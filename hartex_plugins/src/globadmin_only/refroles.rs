@@ -9,7 +9,6 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,

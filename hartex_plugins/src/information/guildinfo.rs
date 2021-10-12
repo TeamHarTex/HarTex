@@ -9,6 +9,7 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
+use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -41,7 +42,6 @@ use hartex_core::{
         TimeZone
     }
 };
-use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_utils::{
     cdn::{
@@ -109,7 +109,9 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 &InteractionResponse::ChannelMessageWithSource(CallbackData {
                     allowed_mentions: None,
                     components: None,
-                    content: Some(String::from(":x: This command can only be used in a guild.")),
+                    content: Some(String::from(
+                        ":x: This command can only be used in a guild."
+                    )),
                     embeds: vec![],
                     flags: None,
                     tts: None
