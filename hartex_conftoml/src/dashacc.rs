@@ -7,7 +7,7 @@ use serde::Deserialize;
 /// # Struct `DashboardAccess`
 ///
 /// Represents the dashboard access of a user.
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct DashboardAccess {
     pub userId: u64,
     pub accessLevel: u8
@@ -15,7 +15,6 @@ pub struct DashboardAccess {
 
 #[cfg(test)]
 mod tests {
-    use serde_test::Token;
     use super::DashboardAccess;
 
     #[test]
