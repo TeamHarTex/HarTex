@@ -2,7 +2,7 @@
 //!
 //! The `hartex_utils` library provides several utilities for the HarTex Discord bot.
 
-#![deny(clippy::pedantic)]
+#![deny(clippy::pedantic, warnings)]
 #![feature(format_args_capture)]
 
 use std::{
