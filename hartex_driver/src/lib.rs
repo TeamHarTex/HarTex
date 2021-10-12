@@ -3,6 +3,7 @@
 //! This `hartex_driver` crate contains effectively the "main function" of the bot as well as some
 //! "moving pieces" that are required for the bot to work.
 
+#![deny(clippy::pedantic)]
 #![feature(format_args_capture)]
 
 use futures_util::future::Either;
