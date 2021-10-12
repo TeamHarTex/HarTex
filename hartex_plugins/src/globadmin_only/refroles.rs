@@ -5,11 +5,10 @@
 use hartex_cmdsys::{
     command::{
         Command,
-        CommandType,
+        CommandType
     },
     context::CommandContext
 };
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -20,7 +19,6 @@ use hartex_core::{
         HarTexResult
     }
 };
-
 use hartex_utils::FutureRetType;
 
 /// # Struct `Refroles`
@@ -41,7 +39,11 @@ impl Command for Refroles {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute<'asynchronous_trait>(
+        &self,
+        ctx: CommandContext,
+        _: InMemoryCache
+    ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_refroles_command(ctx))
     }
 }
@@ -55,11 +57,11 @@ impl Command for Refroles {
 async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
     let _ = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
-        _ => return Err(
-            HarTexError::Custom {
+        _ => {
+            return Err(HarTexError::Custom {
                 message: String::from("invalid interaction type: expected ApplicationCommand")
-            }
-        )
+            });
+        }
     };
 
     Ok(())

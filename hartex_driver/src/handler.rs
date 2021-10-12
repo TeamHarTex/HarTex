@@ -3,8 +3,6 @@
 //! This module defines the `EventHandler` struct, which defines various function handlers for
 //! individual events.
 
-use tokio::time;
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -17,7 +15,7 @@ use hartex_core::{
                 GuildCreate,
                 InteractionCreate,
                 MessageCreate,
-                Ready,
+                Ready
             },
             presence::{
                 Activity,
@@ -30,19 +28,17 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing
+    logging::tracing::{
+        self,
+        Instrument
+    }
 };
-use hartex_core::logging::tracing::Instrument;
-
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
     whitelist::GetWhitelistedGuilds
 };
-
 use hartex_eventsys::emitter::EventEmitter;
-
 use hartex_model::payload::CommandExecuted;
-
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
     global::{
@@ -56,6 +52,7 @@ use hartex_plugins::{
         userinfo::Userinfo
     }
 };
+use tokio::time;
 
 use crate::commands;
 
@@ -87,9 +84,7 @@ impl EventHandler {
 
         let res = GetWhitelistedGuilds::default().await?;
 
-        if !res.iter().any(|guild| {
-            guild_id.0 == guild.GuildId
-        }) {
+        if !res.iter().any(|guild| guild_id.0 == guild.GuildId) {
             span.in_scope(|| {
                 tracing::error!("guild is not whitelisted");
             });
@@ -104,21 +99,32 @@ impl EventHandler {
 
             let user = http.user(guild_owner).exec().await?.model().await?;
 
-            let dm_channel = http.create_private_channel(user.id).exec().await?.model().await?;
-            let message = "Hey there! It looks like you added HarTex to your guild by the name of \"".to_string()
-                + &guild.name + "\".\n\n"
-                + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
-                + "invited to your guild until you apply for a whitelist and that the application is "
-                + "accepted.\n\n"
-                + "You may apply for a guild whitelist if your guild meets the following criteria, they include, but not limited to:\n"
-                + " - guild member count of at least 250;"
-                + " - be always abide by the Discord Terms of Service (<https://discord.com/terms>) and Community Guidelines (<https://discord.com/guidelines);"
-                + " - how old is the guild and/or how active is it; and"
-                + " - your experience level with TOML to configure the bot before using it.\n\n"
-                + "You may join our Support Guild at `https://discord.gg/Xu8453VBAv` for more information, including the application link in which you may use"
-                + "to apply for a whitelist application. Good luck!";
+            let dm_channel = http
+                .create_private_channel(user.id)
+                .exec()
+                .await?
+                .model()
+                .await?;
+            let message =
+                "Hey there! It looks like you added HarTex to your guild by the name of \""
+                    .to_string()
+                    + &guild.name
+                    + "\".\n\n"
+                    + "Unfortunately, your guild has not been whitelisted yet and the bot cannot be "
+                    + "invited to your guild until you apply for a whitelist and that the application is "
+                    + "accepted.\n\n"
+                    + "You may apply for a guild whitelist if your guild meets the following criteria, they include, but not limited to:\n"
+                    + " - guild member count of at least 250;"
+                    + " - be always abide by the Discord Terms of Service (<https://discord.com/terms>) and Community Guidelines (<https://discord.com/guidelines);"
+                    + " - how old is the guild and/or how active is it; and"
+                    + " - your experience level with TOML to configure the bot before using it.\n\n"
+                    + "You may join our Support Guild at `https://discord.gg/Xu8453VBAv` for more information, including the application link in which you may use"
+                    + "to apply for a whitelist application. Good luck!";
 
-            http.create_message(dm_channel.id).content(&message)?.exec().await?;
+            http.create_message(dm_channel.id)
+                .content(&message)?
+                .exec()
+                .await?;
 
             span.in_scope(|| {
                 tracing::error!("leaving guild");
@@ -213,46 +219,50 @@ impl EventHandler {
                         break;
                     }
                 }
-                    .id();
+                .id();
 
                 tracing::trace!("attempting to register presence for shard {shard_id}");
 
-                match shard.command(
-                    &UpdatePresence::new(
-                        vec![Activity {
-                            application_id: None,
-                            assets: None,
-                            buttons: Vec::new(),
-                            created_at: None,
-                            details: None,
-                            emoji: None,
-                            flags: None,
-                            id: None,
-                            instance: None,
-                            kind: ActivityType::Watching,
-                            name: format!("codebase revamp | shard {}", shard_id),
-                            party: None,
-                            secrets: None,
-                            state: None,
-                            timestamps: None,
-                            url: None
-                        }],
-                        false,
-                        None,
-                        Status::Online
-                    ).unwrap()
-                ).await {
+                match shard
+                    .command(
+                        &UpdatePresence::new(
+                            vec![Activity {
+                                application_id: None,
+                                assets: None,
+                                buttons: Vec::new(),
+                                created_at: None,
+                                details: None,
+                                emoji: None,
+                                flags: None,
+                                id: None,
+                                instance: None,
+                                kind: ActivityType::Watching,
+                                name: format!("codebase revamp | shard {}", shard_id),
+                                party: None,
+                                secrets: None,
+                                state: None,
+                                timestamps: None,
+                                url: None
+                            }],
+                            false,
+                            None,
+                            Status::Online
+                        )
+                        .unwrap()
+                    )
+                    .await
+                {
                     Ok(()) => {
                         tracing::trace!("successfully set presence for shard {shard_id}");
-                    },
+                    }
                     Err(error) => {
                         tracing::error!("failed to set presence for shard {shard_id}: {error}");
                     }
                 }
             }
         }
-            .instrument(span)
-            .await;
+        .instrument(span)
+        .await;
 
         let span = tracing::trace_span!("event handler: ready: global command registration");
 
@@ -260,36 +270,28 @@ impl EventHandler {
             vec![
                 // Global Administrator Only Plugin
                 Box::new(Refroles),
-
                 // Global Plugin
                 Box::new(About),
                 Box::new(Ping),
                 Box::new(Source),
                 Box::new(Team),
-
                 // Information Plugin
                 Box::new(Guildinfo),
-                Box::new(Userinfo)
+                Box::new(Userinfo),
             ],
             http.clone()
         )
-            .instrument(span)
-            .await?;
+        .instrument(span)
+        .await?;
 
         let span = tracing::trace_span!("event handler: ready: change guild nickname");
 
-        for guild in http
-            .current_user_guilds()
-            .exec()
-            .await?
-            .models()
-            .await? {
+        for guild in http.current_user_guilds().exec().await?.models().await? {
             span.in_scope(|| {
                 tracing::trace!("changing nickname in guild {name}", name = guild.name);
             });
 
-            let config = match GetGuildConfig::new(guild.id)
-                .await {
+            let config = match GetGuildConfig::new(guild.id).await {
                 Ok(config) => {
                     span.in_scope(|| {
                         tracing::trace!("successfully retrieved guild config");
@@ -306,7 +308,11 @@ impl EventHandler {
                 }
             };
 
-            match http.update_current_user_nick(guild.id, &config.GuildConfiguration.nickname).exec().await {
+            match http
+                .update_current_user_nick(guild.id, &config.GuildConfiguration.nickname)
+                .exec()
+                .await
+            {
                 Err(error) => {
                     span.in_scope(|| {
                         tracing::error!("failed to change nickname: {error}");
@@ -331,7 +337,10 @@ impl EventHandler {
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
         let span = tracing::trace_span!("event handler: shard identifying");
         span.in_scope(|| {
-            tracing::trace!("shard {} is identifying with the discord gateway", payload.shard_id);
+            tracing::trace!(
+                "shard {} is identifying with the discord gateway",
+                payload.shard_id
+            );
         });
 
         Ok(())

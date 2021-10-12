@@ -5,23 +5,21 @@
 use std::string::FromUtf8Error;
 
 use base64::DecodeError;
-
 use ctrlc::Error as CtrlcError;
-
 use toml::de::Error as TomlDeserializationError;
 
 use crate::{
     discord::{
         embed_builder::{
             image_source::ImageSourceUrlError,
-            EmbedError,
+            EmbedError
         },
         gateway::{
             cluster::{
                 ClusterCommandError,
-                ClusterStartError,
+                ClusterStartError
             },
-            shard::SessionInactiveError,
+            shard::SessionInactiveError
         },
         http::{
             error::Error as HttpError,
@@ -29,11 +27,11 @@ use crate::{
                 application::InteractionError,
                 channel::message::{
                     create_message::CreateMessageError,
-                    update_message::UpdateMessageError,
+                    update_message::UpdateMessageError
                 },
-                guild::member::update_guild_member::UpdateGuildMemberError,
+                guild::member::update_guild_member::UpdateGuildMemberError
             },
-            response::DeserializeBodyError,
+            response::DeserializeBodyError
         },
         model::gateway::payload::update_presence::UpdatePresenceError
     },
@@ -51,9 +49,7 @@ pub enum HarTexError {
     ///
     /// ## Fields
     /// - `error`, type `DecodeError`: the error returned when attempting to decode base64.
-    Base64DecodeError {
-        error: DecodeError
-    },
+    Base64DecodeError { error: DecodeError },
 
     /// # Enum Variant `HarTexError::ClusterCommandError`
     ///
@@ -62,9 +58,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type: `ClusterCommandError`: the cluster command error when "commanding" the
     ///                                         cluster.
-    ClusterCommandError {
-        error: ClusterCommandError
-    },
+    ClusterCommandError { error: ClusterCommandError },
 
     /// # Enum Variant HarTexError::ClusterStartError
     ///
@@ -73,9 +67,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `ClusterStartError`: the cluster start error returned when building the
     ///                                      cluster.
-    ClusterStartError {
-        error: ClusterStartError
-    },
+    ClusterStartError { error: ClusterStartError },
 
     /// # Enum Variant `HarTexError::CreateMessageError`
     ///
@@ -83,9 +75,7 @@ pub enum HarTexError {
     ///
     /// ## Fields
     /// - `error`, type `CreateMessageError`: the error returned when attempting to send a message,
-    CreateMessageError {
-        error: CreateMessageError
-    },
+    CreateMessageError { error: CreateMessageError },
 
     /// # Enum Variant `HarTexError::CtrlcError`
     ///
@@ -93,9 +83,7 @@ pub enum HarTexError {
     ///
     /// ## Fields
     /// - `error`, type `Error`: the ctrlc error returned when setting the ctrl-c handler.
-    CtrlcError {
-        error: CtrlcError
-    },
+    CtrlcError { error: CtrlcError },
 
     /// # Enum Variant `HarTexError::DeserializeBodyError`
     ///
@@ -104,9 +92,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `DeserializeBodyError`: the error returned when attempting to deserialize
     ///                                         an http response.
-    DeserializeBodyError {
-        error: DeserializeBodyError
-    },
+    DeserializeBodyError { error: DeserializeBodyError },
 
     /// # Enum Variant `HarTexError::EmbedError`
     ///
@@ -114,9 +100,7 @@ pub enum HarTexError {
     ///
     /// ## Fields
     /// - `error`, type `EmbedError`: the embed error returned when building a Discord embed.
-    EmbedError {
-        error: EmbedError
-    },
+    EmbedError { error: EmbedError },
 
     /// # Enum Variant `HarTexError::EmbedImageSourceUrlError`
     ///
@@ -125,9 +109,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `ImageSourceUrlError`: the error returned when trying to set a url for any
     ///                                        embed property.
-    EmbedImageSourceUrlError {
-        error: ImageSourceUrlError
-    },
+    EmbedImageSourceUrlError { error: ImageSourceUrlError },
 
     /// # Enum Variant `HarTexError::InteractionError`
     ///
@@ -135,18 +117,14 @@ pub enum HarTexError {
     ///
     /// - `error`, type `InteractionError`: the error returned when attempting to register
     ///                                     an interaction.
-    InteractionError {
-        error: InteractionError
-    },
+    InteractionError { error: InteractionError },
 
     /// # Enum Variant `HarTexError::ParseError`
     ///
     /// A wrapper around `chrono::ParseError`
     ///
     /// - `error`, type `ParseError`: the datetime parsing error
-    ParseError {
-        error: ParseError
-    },
+    ParseError { error: ParseError },
 
     /// # Enum Variant `HarTexError::SessionInactiveError`
     ///
@@ -154,9 +132,7 @@ pub enum HarTexError {
     ///
     /// - `error`, type `SessionInactiveError`: the error returned when attempting to get
     ///                                         information about a shard.
-    SessionInactiveError {
-        error: SessionInactiveError
-    },
+    SessionInactiveError { error: SessionInactiveError },
 
     /// # Enum Variant `TomlDeserializationError`
     ///
@@ -166,9 +142,7 @@ pub enum HarTexError {
     ///
     /// - `error`, type `Error`: the TOML deserialization error returned when attempting to
     ///                          deserializing TOML.
-    TomlDeserializationError {
-        error: TomlDeserializationError
-    },
+    TomlDeserializationError { error: TomlDeserializationError },
 
     /// # Enum Variant `HarTexError::TwilightHttpError`
     ///
@@ -176,9 +150,7 @@ pub enum HarTexError {
     ///
     /// ## Fields
     /// - `error`, type `Error`: the error returned when executing an HTTP request.
-    TwilightHttpError {
-        error: HttpError
-    },
+    TwilightHttpError { error: HttpError },
 
     /// # Enum Variant `HarTexError::UpdateGuildMemberError`
     ///
@@ -187,9 +159,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `UpdateGuildMemberError`: the error returned when attempting to update
     ///                                           a guild member.
-    UpdateGuildMemberError {
-        error: UpdateGuildMemberError
-    },
+    UpdateGuildMemberError { error: UpdateGuildMemberError },
 
     /// # Enum Variant `HarTexError::UpdatePresenceError`
     ///
@@ -198,9 +168,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `UpdateMessageError`: the message update error returned when
     ///                                       attempting to update a message.
-    UpdateMessageError {
-        error: UpdateMessageError
-    },
+    UpdateMessageError { error: UpdateMessageError },
 
     /// # Enum Variant `HarTexError::UpdatePresenceError`
     ///
@@ -209,9 +177,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `UpdatePresenceError`: the presence update error returned when
     ///                                        attempting to update the presence.
-    UpdatePresenceError {
-        error: UpdatePresenceError
-    },
+    UpdatePresenceError { error: UpdatePresenceError },
 
     /// # Enum Variant `HarTexError::Utf8ValidationError`
     ///
@@ -220,9 +186,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `FromUtf8Error`: the error returned when attempting to construct a string
     ///                                  with a `Vec<u8>` with the UTF-8 encoding.
-    Utf8ValidationError {
-        error: FromUtf8Error
-    },
+    Utf8ValidationError { error: FromUtf8Error },
 
     /// # Enum Variant `HarTexError::Custom`
     ///
@@ -231,9 +195,7 @@ pub enum HarTexError {
     ///
     /// ## Fields
     /// - `message`, type `&str`: the error message.
-    Custom {
-        message: String
-    }
+    Custom { message: String }
 }
 
 impl From<ClusterCommandError> for HarTexError {
