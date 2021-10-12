@@ -7,9 +7,8 @@ use hartex_cmdsys::{
         Command,
         CommandType
     },
-    context::CommandContext,
+    context::CommandContext
 };
-
 use hartex_core::{
     discord::{
         cache_inmemory::InMemoryCache,
@@ -32,7 +31,6 @@ use hartex_core::{
     },
     logging::tracing
 };
-
 use hartex_utils::FutureRetType;
 
 /// # Struct `Team`
@@ -53,7 +51,11 @@ impl Command for Team {
         CommandType::ChatInput
     }
 
-    fn execute<'asynchronous_trait>(&self, ctx: CommandContext, _: InMemoryCache) -> FutureRetType<'asynchronous_trait, ()> {
+    fn execute<'asynchronous_trait>(
+        &self,
+        ctx: CommandContext,
+        _: InMemoryCache
+    ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_team_command(ctx))
     }
 }
@@ -70,39 +72,40 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         _ => {
             tracing::error!("invalid interaction type: expected ApplicationCommand");
 
-            return Err(
-                HarTexError::Custom {
-                    message: String::from("invalid interaction type: expected ApplicationCommand")
-                }
-            );
+            return Err(HarTexError::Custom {
+                message: String::from("invalid interaction type: expected ApplicationCommand")
+            });
         }
     };
 
     let embed = EmbedBuilder::new()
         .title("HarTex Project Team")
         .color(0x03BEFC)
-        .field(EmbedFieldBuilder::new("Global Administrator & Lead Developer", "HTGAzureX1212.#5959"))
+        .field(EmbedFieldBuilder::new(
+            "Global Administrator & Lead Developer",
+            "HTGAzureX1212.#5959"
+        ))
         .build()?;
 
     tracing::trace!("responding to interaction");
 
-    if let Err(error) = ctx.http
+    if let Err(error) = ctx
+        .http
         .interaction_callback(
             interaction.id,
             &interaction.token,
-            &InteractionResponse::ChannelMessageWithSource(
-                CallbackData {
-                    allowed_mentions: None,
-                    components: None,
-                    content: None,
-                    embeds: vec![embed],
-                    flags: None,
-                    tts: None
-                }
-            )
+            &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                allowed_mentions: None,
+                components: None,
+                content: None,
+                embeds: vec![embed],
+                flags: None,
+                tts: None
+            })
         )
         .exec()
-        .await {
+        .await
+    {
         tracing::error!("failed to respond to interaction: {error}");
 
         return Err(HarTexError::from(error));
