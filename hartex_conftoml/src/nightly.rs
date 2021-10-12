@@ -45,7 +45,8 @@ mod tests {
                 Token::Str("threads"),
                 Token::Bool(false),
                 Token::Str("localization"),
-                Token::Bool(true)
+                Token::Bool(true),
+                Token::StructEnd
             ]
         );
     }
