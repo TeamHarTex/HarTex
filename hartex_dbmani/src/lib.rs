@@ -4,6 +4,7 @@
 //! HarTex Discord bot.
 
 #![allow(non_snake_case)]
+#![deny(clippy::pedantic)]
 #![feature(format_args_capture)]
 
 use std::{
