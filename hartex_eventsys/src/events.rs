@@ -11,12 +11,10 @@ use std::{
 };
 
 use futures_channel::mpsc::UnboundedReceiver;
-
 use futures_util::{
     Stream,
     StreamExt
 };
-
 use hartex_model::payload::CommandExecuted;
 
 /// # Struct `Events`

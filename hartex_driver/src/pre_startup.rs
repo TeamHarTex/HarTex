@@ -4,8 +4,6 @@
 
 use std::process;
 
-use crate::env_setup;
-
 use hartex_core::{
     discord::{
         cache_inmemory::{
@@ -15,11 +13,11 @@ use hartex_core::{
         gateway::{
             cluster::{
                 Events,
-                ShardScheme,
+                ShardScheme
             },
             Cluster,
             EventTypeFlags,
-            Intents,
+            Intents
         },
         http::Client,
         model::id::ApplicationId
@@ -27,20 +25,26 @@ use hartex_core::{
     logging::tracing
 };
 
+use crate::env_setup;
+
 /// # Asynchronous Function `pre_startup`
 ///
 /// Returns the cluster, client and event stream as constructed with the environments.
 ///
 /// ## Parameters
 /// - `environment`, type `Environment`: the environment to construct the return values
-pub async fn pre_startup(environment: env_setup::Environment) -> (Cluster, Client, Events, InMemoryCache) {
+pub async fn pre_startup(
+    environment: env_setup::Environment
+) -> (Cluster, Client, Events, InMemoryCache) {
     let shard_scheme = ShardScheme::Auto;
     let intents = Intents::all();
 
     tracing::trace!("building http client");
 
     let http = Client::builder()
-        .application_id(ApplicationId::from(environment.application_id.parse::<u64>().unwrap()))
+        .application_id(ApplicationId::from(
+            environment.application_id.parse::<u64>().unwrap()
+        ))
         .token(environment.token.clone())
         .build();
 
