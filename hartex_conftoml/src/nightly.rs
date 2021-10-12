@@ -23,3 +23,30 @@ pub struct NightlyFeatures {
 pub fn default_feature_enabled() -> bool {
     false
 }
+
+#[cfg(test)]
+mod tests {
+    use serde_test::Token;
+
+    use super::NightlyFeatures;
+
+    #[test]
+    fn test_nightly_der() {
+        serde_test::assert_de_tokens(
+            &NightlyFeatures {
+                threads: false,
+                localization: true
+            },
+            &[
+                Token::Struct {
+                    name: "NightlyFeatures",
+                    len: 2
+                },
+                Token::Str("threads"),
+                Token::Bool(false),
+                Token::Str("localization"),
+                Token::Bool(true)
+            ]
+        );
+    }
+}

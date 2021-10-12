@@ -16,6 +16,7 @@ pub struct DashboardAccess {
 #[cfg(test)]
 mod tests {
     use serde_test::Token;
+
     use super::DashboardAccess;
 
     #[test]
