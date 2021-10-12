@@ -227,7 +227,7 @@ impl EventHandler {
                     .command(
                         &UpdatePresence::new(
                             vec![
-                                    Activity {
+                                Activity {
                                     application_id: None,
                                     assets: None,
                                     buttons: Vec::new(),
