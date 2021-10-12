@@ -8,7 +8,7 @@
 //!                       removes the need to include the dependencies repeatedly across the
 //!                       HarTex crates.
 
-#![deny(clippy::pedantic)]
+#![deny(clippy::pedantic, warnings)]
 #![feature(format_args_capture)]
 
 pub use ctrlc;

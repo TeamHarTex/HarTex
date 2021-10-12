@@ -4,7 +4,7 @@
 //! configuration for HarTex Discord bot.
 
 #![allow(non_snake_case)]
-#![deny(clippy::pedantic)]
+#![deny(clippy::pedantic, warnings)]
 #![feature(format_args_capture)]
 
 use hartex_core::{
