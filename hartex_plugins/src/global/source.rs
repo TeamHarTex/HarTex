@@ -19,7 +19,6 @@ use hartex_core::{
             },
             interaction::Interaction
         }
-
     },
     error::{
         HarTexError,

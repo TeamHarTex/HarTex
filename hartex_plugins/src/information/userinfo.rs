@@ -32,7 +32,7 @@ use hartex_core::{
                 interaction::{
                     application_command::CommandDataOption,
                     Interaction
-                },
+                }
             },
             gateway::presence::{
                 ActivityType,
@@ -124,7 +124,9 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 &InteractionResponse::ChannelMessageWithSource(CallbackData {
                     allowed_mentions: None,
                     components: None,
-                    content: Some(String::from(":x: This command can only be used in a guild.")),
+                    content: Some(String::from(
+                        ":x: This command can only be used in a guild."
+                    )),
                     embeds: vec![],
                     flags: None,
                     tts: None
@@ -153,7 +155,8 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         let value = if let CommandDataOption::String {
             value,
             ..
-        } = user_option {
+        } = user_option
+        {
             value
         }
         else {
@@ -181,7 +184,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .iter()
         .filter_map(|role_id| cache.role(*role_id))
         .collect::<Vec<_>>();
-    roles.sort_by(|prev_role, curr_role| { curr_role.position.cmp(&prev_role.position) });
+    roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
 
     let avatar_url = if let Some(hash) = user.avatar {
         let format = if hash.starts_with("a_") {
@@ -236,14 +239,16 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
     if let Some(presence) = presence {
         let activities = presence.activities;
 
-        embed = embed.field(EmbedFieldBuilder::new("Status",
-        match presence.status {
-            Status::DoNotDisturb => "do not disturb",
-            Status::Idle => "idle",
-            Status::Invisible => "invisible",
-            Status::Offline => "offline",
-            Status::Online => "online"
-        }));
+        embed = embed.field(EmbedFieldBuilder::new(
+            "Status",
+            match presence.status {
+                Status::DoNotDisturb => "do not disturb",
+                Status::Idle => "idle",
+                Status::Invisible => "invisible",
+                Status::Offline => "offline",
+                Status::Online => "online"
+            }
+        ));
 
         if activities.is_empty() {
             embed = embed.field(EmbedFieldBuilder::new("Activities", "none"));
@@ -284,10 +289,9 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
     else {
         Timezone::UTC
     };
-    let joined_at =
-        DateTime::parse_from_str(
-            member.joined_at.unwrap().as_str(),
-            "%Y-%m-%dT%H:%M:%S%.f%:z"
+    let joined_at = DateTime::parse_from_str(
+        member.joined_at.unwrap().as_str(),
+        "%Y-%m-%dT%H:%M:%S%.f%:z"
         )?;
     let created_at =
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
@@ -299,7 +303,8 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
             EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})")).inline()
         )
         .field(
-            EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})")).inline()
+            EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})"))
+                .inline()
         );
 
     ctx.http
