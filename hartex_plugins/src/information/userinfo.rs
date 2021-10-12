@@ -91,11 +91,13 @@ impl Command for Userinfo {
     }
 
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
-        vec![CommandOption::Mentionable(BaseCommandOptionData {
-            description: String::from("(optional) the user to query the information"),
-            name: String::from("user"),
-            required: false
-        })]
+        vec![
+            CommandOption::Mentionable(BaseCommandOptionData {
+                description: String::from("(optional) the user to query the information"),
+                name: String::from("user"),
+                required: false
+            })
+        ]
     }
 }
 
