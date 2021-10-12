@@ -12,3 +12,13 @@ pub struct DashboardAccess {
     pub userId: u64,
     pub accessLevel: u8
 }
+
+#[cfg(test)]
+mod tests {
+    use serde_test::Token;
+    use super::DashboardAccess;
+
+    #[test]
+    fn test_dashacc_serde() {
+    }
+}
