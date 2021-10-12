@@ -15,4 +15,5 @@ serde = { version = "1.0.130", features = [ "derive" ] }
 toml = "0.5.8"
 
 [dev-dependencies]
+hartex_core = { path = "../hartex_core" }
 serde_test = { version = "1.0.130" }
