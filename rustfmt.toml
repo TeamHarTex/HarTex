@@ -2,6 +2,7 @@
 unstable_features = true
 version = "Two"
 
+array_width = 0
 brace_style = "PreferSameLine"
 color = "Always"
 control_brace_style = "ClosingNextLine"
