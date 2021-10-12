@@ -20,7 +20,10 @@ pub struct Cdn;
 
 impl Cdn {
     pub fn default_user_avatar(discriminator: u16) -> String {
-        format!("https://cdn.discordapp.com/embed/avatars/{discriminator}.png", discriminator = discriminator % 5)
+        format!(
+            "https://cdn.discordapp.com/embed/avatars/{discriminator}.png",
+            discriminator = discriminator % 5
+        )
     }
 
     pub fn guild_icon(guild_id: GuildId, icon_hash: String, format: CdnResourceFormat) -> String {
