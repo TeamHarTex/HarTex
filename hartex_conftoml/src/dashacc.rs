@@ -19,6 +19,15 @@ mod tests {
     use super::DashboardAccess;
 
     #[test]
-    fn test_dashacc_serde() {
+    fn test_dashacc_de() {
+        serde_test::assert_de_tokens(
+            &[
+                DashboardAccess {
+                    userId: 1234567887654321,
+                    accessLevel: 0
+                }
+            ],
+            &[]
+        );
     }
 }
