@@ -1,11 +1,13 @@
 HarTex-rust-discord-bot
 =======================
 
+![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)
+
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
 ![GitHub Top Language](https://img.shields.io/github/languages/top/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
-![GitHub repo size](https://img.shields.io/github/repo-size/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
-![GitHub Repo stars](https://img.shields.io/github/stars/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
+![GitHub Repository Size](https://img.shields.io/github/repo-size/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
+![GitHub Repository Stars](https://img.shields.io/github/stars/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.57-93450a.svg?style=for-the-badge&logo=rust)
 
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
@@ -49,8 +51,12 @@ HarTex Development
 Definitely! Feel free to file issues and pull requests, or even start discussions so discuss various issues or ideas to further
 improve the code of the bot or even its functionalities. Contributions are highly welcomed!
 
-### Support Guild
+### Community Guild
 
-The support guild invite link: [invite link](https://discord.gg/Xu8453VBAv)
+There is an official Discord community guild for this project!
+
+You may follow the latest developments as well as ask for support in the guild.
+
+[Invite Link](https://discord.gg/Xu8453VBAv)
 
 Made with :heart:, using [The Rust Programming Language](https://www.rust-lang.org/)
