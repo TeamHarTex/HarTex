@@ -32,9 +32,7 @@ use hartex_model::env::StartupEnv;
 ///
 /// ## Parameters
 /// - `environment`, type `Environment`: the environment to construct the return values
-pub async fn pre_startup(
-    environment: StartupEnv
-) -> (Cluster, Client, Events, InMemoryCache) {
+pub async fn pre_startup(environment: StartupEnv) -> (Cluster, Client, Events, InMemoryCache) {
     let shard_scheme = ShardScheme::Auto;
     let intents = Intents::all();
 
