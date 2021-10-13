@@ -5,4 +5,5 @@
 
 #![deny(clippy::pedantic, warnings)]
 
+pub mod env;
 pub mod payload;
