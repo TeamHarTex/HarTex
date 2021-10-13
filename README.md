@@ -14,9 +14,7 @@ Honourable Mention
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo." width="100">
 
-This project is built with the amazing JetBrains products. Check them out! 
-
-https://www.jetbrains.com/
+This project is built with the amazing JetBrains products. [Check them out!](https://www.jetbrains.com/)
 
 Should I run HarTex locally?
 ----------------------------
@@ -50,10 +48,8 @@ improve the code of the bot or even its functionalities. Contributions are highl
 
 ### Community Guild
 
-There is an official Discord community guild for this project!
+[There is an official Discord community guild for this project!](https://discord.gg/Xu8453VBAv)
 
 You may follow the latest developments as well as ask for support in the guild.
-
-[Invite Link](https://discord.gg/Xu8453VBAv)
 
 Made with :heart:, using [The Rust Programming Language](https://www.rust-lang.org/)
