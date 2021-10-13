@@ -1,11 +1,11 @@
 HarTex-rust-discord-bot
 =======================
 
-![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)
+[![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)](https://discord.gg/Xu8453VBAv)
 
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
+[![GitHub Badge](https://img.shields.io/badge/github-HarTex-6f42c1.svg?style=for-the-badge&logo=github)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
+[![License](https://img.shields.io/github/license/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 ![GitHub Top Language](https://img.shields.io/github/languages/top/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![GitHub Repository Size](https://img.shields.io/github/repo-size/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![GitHub Repository Stars](https://img.shields.io/github/stars/HT-Studios/HarTex-rust-discord-bot?style=for-the-badge)
 ![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.57-93450a.svg?style=for-the-badge&logo=rust)
