@@ -14,6 +14,7 @@ futures-util = "0.3.16"
 hartex_cmdsys = { path = "../hartex_cmdsys" }
 hartex_core = { path = "../hartex_core", features = [ "tracing-bundled", "twilight-bundled" ] }
 hartex_dbmani = { path = "../hartex_dbmani" }
+hartex_env = { path = "../hartex_env" }
 hartex_eventsys = { path = "../hartex_eventsys" }
 hartex_model = { path = "../hartex_model" }
 hartex_plugins = { path = "../hartex_plugins" }
