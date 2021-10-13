@@ -31,7 +31,7 @@ mod tests {
     use super::NightlyFeatures;
 
     #[test]
-    fn test_nightly_der() {
+    fn test_nightly_de() {
         serde_test::assert_de_tokens(
             &NightlyFeatures {
                 threads: false,
