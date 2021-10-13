@@ -16,11 +16,11 @@ use hartex_core::{
     },
     HARTEX_BUILD
 };
+use hartex_env::StartupEnv;
 use tokio_stream::StreamExt;
 
 pub mod commands;
 pub mod ctrlc;
-pub mod env_setup;
 pub mod events;
 pub mod fw_setup;
 pub mod handler;
@@ -36,8 +36,8 @@ pub async fn hartex_main() -> HarTexResult<()> {
         tracing::info!("HarTex {HARTEX_BUILD}");
     });
 
-    let span = tracing::trace_span!("environment setup");
-    let environment = span.in_scope(env_setup::environment_setup);
+    let span = tracing::trace_span!("startup environment");
+    let environment = span.in_scope(StartupEnv::get);
 
     let span = tracing::trace_span!("pre-startup phase");
     let (cluster, http, events, cache) =
