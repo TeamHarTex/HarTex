@@ -56,13 +56,13 @@ pub async fn pre_startup(
         .application_id(ApplicationId::from(
             environment.application_id.unwrap().parse::<u64>().unwrap()
         ))
-        .token(environment.token.unwrap().clone())
+        .token(environment.token.clone().unwrap())
         .build();
 
     tracing::trace!("building bot cluster");
     tracing::trace!("registering gateway intents [all]");
 
-    let result = Cluster::builder(environment.token, intents)
+    let result = Cluster::builder(environment.token.unwrap(), intents)
         .event_types(EventTypeFlags::all())
         .http_client(http.clone())
         .shard_scheme(shard_scheme)
