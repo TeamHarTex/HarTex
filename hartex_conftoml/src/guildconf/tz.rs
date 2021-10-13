@@ -16,7 +16,7 @@ use serde::de::{
 /// # Enum `Timezone`
 ///
 /// Represents a timezone.
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Timezone {
     /// # Enum Variant `Timezone::AsiaHongKong`
     ///

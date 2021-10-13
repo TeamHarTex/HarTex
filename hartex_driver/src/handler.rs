@@ -226,24 +226,26 @@ impl EventHandler {
                 match shard
                     .command(
                         &UpdatePresence::new(
-                            vec![Activity {
-                                application_id: None,
-                                assets: None,
-                                buttons: Vec::new(),
-                                created_at: None,
-                                details: None,
-                                emoji: None,
-                                flags: None,
-                                id: None,
-                                instance: None,
-                                kind: ActivityType::Watching,
-                                name: format!("codebase revamp | shard {}", shard_id),
-                                party: None,
-                                secrets: None,
-                                state: None,
-                                timestamps: None,
-                                url: None
-                            }],
+                            vec![
+                                Activity {
+                                    application_id: None,
+                                    assets: None,
+                                    buttons: Vec::new(),
+                                    created_at: None,
+                                    details: None,
+                                    emoji: None,
+                                    flags: None,
+                                    id: None,
+                                    instance: None,
+                                    kind: ActivityType::Watching,
+                                    name: format!("codebase revamp | shard {}", shard_id),
+                                    party: None,
+                                    secrets: None,
+                                    state: None,
+                                    timestamps: None,
+                                    url: None
+                                },
+                            ],
                             false,
                             None,
                             Status::Online
