@@ -96,7 +96,7 @@ impl Command for Userinfo {
                 description: String::from("(optional) the user to query the information"),
                 name: String::from("user"),
                 required: false
-            })
+            }),
         ]
     }
 }

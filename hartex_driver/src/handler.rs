@@ -244,7 +244,7 @@ impl EventHandler {
                                     state: None,
                                     timestamps: None,
                                     url: None
-                                }
+                                },
                             ],
                             false,
                             None,
