@@ -1,7 +1,6 @@
-//! # The `env` Module
+//! # `hartex_env` - Environment Wrapper for HarTex Discord bot
 //!
-//! This module contains various environments containing environment variables for various aspects
-//! of the bot.
+//! The `hartex_env` library various environments for different aspects of the HarTex Discord bot.
 
 use std::env;
 
@@ -30,3 +29,4 @@ impl StartupEnv {
         }
     }
 }
+

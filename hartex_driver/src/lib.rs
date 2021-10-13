@@ -16,7 +16,7 @@ use hartex_core::{
     },
     HARTEX_BUILD
 };
-use hartex_model::env::StartupEnv;
+use hartex_env::StartupEnv;
 use tokio_stream::StreamExt;
 
 pub mod commands;
