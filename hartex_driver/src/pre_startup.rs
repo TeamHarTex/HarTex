@@ -24,7 +24,7 @@ use hartex_core::{
     },
     logging::tracing
 };
-use hartex_model::env::StartupEnv;
+use hartex_env::StartupEnv;
 
 /// # Asynchronous Function `pre_startup`
 ///
