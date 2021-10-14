@@ -95,9 +95,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         Some(credentials) => credentials,
         None => {
             span.in_scope(|| {
-                tracing::error!(
-                    "the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set"
-                );
+                tracing::error!("the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set");
             });
 
             return Err(HarTexError::Custom {
