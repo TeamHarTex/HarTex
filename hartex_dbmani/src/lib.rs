@@ -31,7 +31,7 @@ static DATABASE_ENV: SyncLazy<DatabaseEnv> = SyncLazy::new(|| DatabaseEnv::get()
 ///
 /// ## Generic Parameters
 /// - `T`: represents the type that the pending future is to return.
-type PendingFuture<T> = Pin<Box<dyn Future<Output = HarTexResult<T>>>>;
+type PendingFuture<T> = Pin<Box<dyn Future<Output = HarTexResult<T>> + Send>>;
 
 /// # Function `init_env`
 ///
