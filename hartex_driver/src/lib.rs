@@ -69,8 +69,11 @@ pub async fn hartex_main() -> HarTexResult<()> {
         tracing::info!("HarTex {HARTEX_BUILD}");
     });
 
-    let span = tracing::trace_span!("startup environment");
+    let span = tracing::trace_span!("initialize startup environment");
     let environment = span.in_scope(StartupEnv::get);
+
+    let span = tracing::trace_span!("initialize database manipulation environment");
+    span.in_scope(hartex_dbmani::init_env);
 
     let span = tracing::trace_span!("pre-startup phase");
     let (cluster, http, events, cache) =
