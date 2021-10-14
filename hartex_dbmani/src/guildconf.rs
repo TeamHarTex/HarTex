@@ -27,8 +27,8 @@ use sqlx::{
 };
 
 use crate::{
-    DATABASE_ENV,
-    PendingFuture
+    PendingFuture,
+    DATABASE_ENV
 };
 
 /// # Struct `GetGuildConfig`
@@ -95,10 +95,16 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
     let db_credentials = match &DATABASE_ENV.pgsql_credentials_guildconfig {
         Some(credentials) => credentials,
         None => {
-            span.in_scope(|| tracing::error!("the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"));
+            span.in_scope(|| {
+                tracing::error!(
+                    "the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"
+                );
+            });
 
             return Err(HarTexError::Custom {
-                message: String::from("the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set")
+                message: String::from(
+                    "the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"
+                )
             });
         }
     };
