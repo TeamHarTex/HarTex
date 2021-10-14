@@ -27,7 +27,10 @@ use sqlx::{
     Row
 };
 
-use crate::PendingFuture;
+use crate::{
+    DATABASE_ENV,
+    PendingFuture
+};
 
 /// # Struct `GetGuildConfig`
 ///
@@ -90,15 +93,13 @@ unsafe impl Send for GetGuildConfig {}
 async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
     let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
 
-    let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDCONFIG") {
-        Ok(credentials) => credentials,
-        Err(error) => {
-            let message = format!("failed to get database credentials; error: {error}");
-
-            span.in_scope(|| tracing::error!("{message}", message = &message));
+    let db_credentials = match &DATABASE_ENV.pgsql_credentials_guildconfig {
+        Some(credentials) => credentials,
+        None => {
+            span.in_scope(|| tracing::error!("the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"));
 
             return Err(HarTexError::Custom {
-                message
+                message: String::from("the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set")
             });
         }
     };
