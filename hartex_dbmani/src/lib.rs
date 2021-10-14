@@ -23,8 +23,7 @@ pub mod whitelist;
 /// # Static `DATABASE_ENV`
 ///
 /// Useful environment variables for database manipulation
-static DATABASE_ENV: SyncLazy<DatabaseEnv> =
-    SyncLazy::new(|| DatabaseEnv::get());
+static DATABASE_ENV: SyncLazy<DatabaseEnv> = SyncLazy::new(|| DatabaseEnv::get());
 
 /// # Typealias `PendingFuture`
 ///

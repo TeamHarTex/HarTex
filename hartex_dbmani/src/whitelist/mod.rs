@@ -26,8 +26,8 @@ use sqlx::{
 
 use crate::{
     whitelist::model::WhitelistedGuild,
-    DATABASE_ENV,
-    PendingFuture
+    PendingFuture,
+    DATABASE_ENV
 };
 
 mod model;
@@ -94,10 +94,16 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
     let db_credentials = match &DATABASE_ENV.pgsql_credentials_guilds {
         Some(credentials) => credentials,
         None => {
-            span.in_scope(|| tracing::error!("the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set"));
+            span.in_scope(|| {
+                tracing::error!(
+                    "the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set"
+                );
+            });
 
             return Err(HarTexError::Custom {
-                message: String::from("the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set")
+                message: String::from(
+                    "the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set"
+                )
             });
         }
     };
