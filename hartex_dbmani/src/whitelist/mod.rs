@@ -4,7 +4,6 @@
 //! the bot for checking whitelists.
 
 use std::{
-    env,
     future::Future,
     pin::Pin,
     task::{
