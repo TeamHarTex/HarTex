@@ -5,6 +5,15 @@
 
 #![deny(clippy::pedantic, warnings)]
 #![feature(format_args_capture)]
+#![feature(once_cell)]
+
+use std::{
+    lazy::SyncLazy,
+    panic::{
+        self,
+        PanicInfo
+    }
+};
 
 use futures_util::future::Either;
 use hartex_core::{
@@ -26,6 +35,30 @@ pub mod fw_setup;
 pub mod handler;
 pub mod interactions;
 pub mod pre_startup;
+
+/// # Static `BUG_REPORT_URL`
+///
+/// The bug report url for the bot when an Internal Bot Error occurs.
+pub static BUG_REPORT_URL: &str = "https://github.com/HarTexBot/HarTex-rust-discord-bot/issues/new?assignees=&labels=Bot%3A+Bug%2CBot%3A+IBE&template=internal-bot-error.yml";
+
+/// # Static `RUST_DEFAULT_PANIC_HOOK`
+///
+/// The default panic hook for Rust.
+pub static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send + Sync + 'static>> =
+    SyncLazy::new(|| {
+        let hook = panic::take_hook();
+        panic::set_hook(Box::new(|info| {
+            let span = tracing::error_span!("panic handler");
+            span.in_scope(|| {
+                tracing::error!("invoking panic handler...");
+                report_ibe(BUG_REPORT_URL);
+            });
+
+            (*RUST_DEFAULT_PANIC_HOOK)(info);
+        }));
+
+        hook
+    });
 
 /// # Asynchronous Function `hartex_main`
 ///
@@ -54,6 +87,13 @@ pub async fn hartex_main() -> HarTexResult<()> {
 
     let span = tracing::trace_span!("ctrlc handler");
     span.in_scope(ctrlc::ctrlc_handler);
+
+    let span = tracing::trace_span!("panic handler");
+    span.in_scope(|| {
+        tracing::trace!("registering panic handler");
+
+        SyncLazy::force(&RUST_DEFAULT_PANIC_HOOK);
+    });
 
     let mut events = events
         .map(Either::Left)
@@ -85,4 +125,13 @@ pub async fn hartex_main() -> HarTexResult<()> {
     }
 
     Ok(())
+}
+
+/// # Function `report_ibe`
+///
+/// Reports an Internal Bot Error.
+pub fn report_ibe(bug_report_url: &str) {
+    tracing::error!("error: internal bot error: unexpected panic");
+    tracing::trace!("note: the bot unexpectedly panicked. this is a bug.");
+    tracing::trace!("note: we would appreciate a bug report: {bug_report_url}");
 }
