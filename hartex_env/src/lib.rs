@@ -11,21 +11,21 @@ use hartex_core::logging::tracing;
 /// Represents a collection of environment variables useful for the bot during startup.
 pub struct StartupEnv {
     pub application_id: Option<String>,
-    pub token: Option<String>
+    pub bot_token: Option<String>
 }
 
 impl StartupEnv {
     /// # Static Method `StartupEnv::get`
     pub fn get() -> Self {
-        tracing::trace!("retrieving `BOT_TOKEN` environment variable");
-        let token = env::var("HARTEX_TOKEN").ok();
-
         tracing::trace!("retrieving `APPLICATION_ID` environment variable");
         let application_id = env::var("APPLICATION_ID").ok();
 
+        tracing::trace!("retrieving `BOT_TOKEN` environment variable");
+        let bot_token = env::var("BOT_TOKEN").ok();
+
         StartupEnv {
             application_id,
-            token
+            bot_token
         }
     }
 }
