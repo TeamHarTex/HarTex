@@ -84,8 +84,6 @@ impl Future for GetGuildConfig {
     }
 }
 
-unsafe impl Send for GetGuildConfig {}
-
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
