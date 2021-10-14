@@ -48,9 +48,9 @@ pub static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send +
     SyncLazy::new(|| {
         let hook = panic::take_hook();
         panic::set_hook(Box::new(|info| {
-            let span = tracing::error_span!("panic handler");
+            let span = tracing::error_span!(parent: None, "panic handler");
             span.in_scope(|| {
-                tracing::error!("invoking panic handler...");
+                tracing::error!("unexpected panic occurred, invoking panic handler...");
                 report_ibe(BUG_REPORT_URL);
             });
 
@@ -132,6 +132,6 @@ pub async fn hartex_main() -> HarTexResult<()> {
 /// Reports an Internal Bot Error.
 pub fn report_ibe(bug_report_url: &str) {
     tracing::error!("error: internal bot error: unexpected panic");
-    tracing::trace!("note: the bot unexpectedly panicked. this is a bug.");
-    tracing::trace!("note: we would appreciate a bug report: {bug_report_url}");
+    tracing::error!("note: the bot unexpectedly panicked. this is a bug.");
+    tracing::error!("note: we would appreciate a bug report: {bug_report_url}");
 }
