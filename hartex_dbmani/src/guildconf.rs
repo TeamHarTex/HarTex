@@ -4,7 +4,6 @@
 //! specific guild, and deserializing it into Rust structs so that it is usable in Rust code.
 
 use std::{
-    env,
     future::Future,
     pin::Pin,
     task::{
