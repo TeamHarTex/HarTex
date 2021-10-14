@@ -25,7 +25,7 @@ impl StartupEnv {
 
         StartupEnv {
             application_id,
-            bot_token,
+            bot_token
         }
     }
 }
