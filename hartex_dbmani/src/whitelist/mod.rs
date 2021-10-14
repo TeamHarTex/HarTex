@@ -4,7 +4,6 @@
 //! the bot for checking whitelists.
 
 use std::{
-    env,
     future::Future,
     pin::Pin,
     task::{
@@ -27,7 +26,8 @@ use sqlx::{
 
 use crate::{
     whitelist::model::WhitelistedGuild,
-    PendingFuture
+    PendingFuture,
+    DATABASE_ENV
 };
 
 mod model;
@@ -80,8 +80,6 @@ impl Future for GetWhitelistedGuilds {
     }
 }
 
-unsafe impl Send for GetWhitelistedGuilds {}
-
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
@@ -91,15 +89,17 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
         "database manipulation: get whitelisted guilds"
     );
 
-    let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDS") {
-        Ok(credentials) => credentials,
-        Err(error) => {
-            let message = format!("failed to get database credentials; error: {error}");
-
-            span.in_scope(|| tracing::error!("{message}", message = &message));
+    let db_credentials = match &DATABASE_ENV.pgsql_credentials_guilds {
+        Some(credentials) => credentials,
+        None => {
+            span.in_scope(|| {
+                tracing::error!("the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set");
+            });
 
             return Err(HarTexError::Custom {
-                message
+                message: String::from(
+                    "the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set"
+                )
             });
         }
     };

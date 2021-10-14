@@ -4,7 +4,6 @@
 //! specific guild, and deserializing it into Rust structs so that it is usable in Rust code.
 
 use std::{
-    env,
     future::Future,
     pin::Pin,
     task::{
@@ -27,7 +26,10 @@ use sqlx::{
     Row
 };
 
-use crate::PendingFuture;
+use crate::{
+    PendingFuture,
+    DATABASE_ENV
+};
 
 /// # Struct `GetGuildConfig`
 ///
@@ -82,23 +84,25 @@ impl Future for GetGuildConfig {
     }
 }
 
-unsafe impl Send for GetGuildConfig {}
-
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
 async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
     let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
 
-    let db_credentials = match env::var("PGSQL_CREDENTIALS_GUILDCONFIG") {
-        Ok(credentials) => credentials,
-        Err(error) => {
-            let message = format!("failed to get database credentials; error: {error}");
-
-            span.in_scope(|| tracing::error!("{message}", message = &message));
+    let db_credentials = match &DATABASE_ENV.pgsql_credentials_guildconfig {
+        Some(credentials) => credentials,
+        None => {
+            span.in_scope(|| {
+                tracing::error!(
+                    "the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"
+                );
+            });
 
             return Err(HarTexError::Custom {
-                message
+                message: String::from(
+                    "the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"
+                )
             });
         }
     };
