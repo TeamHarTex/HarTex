@@ -1,7 +1,7 @@
 # directories
 .idea
 
-# targetd directories
+# target directories
 **/target
 
 # .lock files
