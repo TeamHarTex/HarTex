@@ -2,6 +2,8 @@
 //!
 //! This module implements the `userinfo` command.
 
+use std::num::NonZeroU64;
+
 use hartex_cmdsys::{
     command::{
         Command,
@@ -27,10 +29,14 @@ use hartex_core::{
                 },
                 command::{
                     BaseCommandOptionData,
-                    CommandOption
+                    CommandOption,
+                    CommandOptionType
                 },
                 interaction::{
-                    application_command::CommandDataOption,
+                    application_command::{
+                        CommandDataOption,
+                        CommandOptionValue
+                    },
                     Interaction
                 }
             },
@@ -152,21 +158,19 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         // is not empty and must be with the name "user" and of type "String"
         let user_option = options
             .into_iter()
-            .find(|option| option.name() == "user" && option.kind() == "String")
+            .find(|option| option.name == "user" && option.value.kind() == CommandOptionType::Mentionable)
             .unwrap();
-        let value = if let CommandDataOption::String {
-            value,
-            ..
-        } = user_option
-        {
-            value
+        let user_id = if let CommandOptionValue::Mentionable(id) = user_option.value {
+            id.0
         }
         else {
-            unreachable!("unexpected parameter type")
+            return Err(HarTexError::Custom {
+                message: String::from("invalid command option type: expected Mentionable")
+            });
         };
 
         ctx.http
-            .user(UserId::from(value.parse::<u64>().unwrap()))
+            .user(UserId::from(user_id))
             .exec()
             .await?
             .model()
@@ -188,7 +192,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .collect::<Vec<_>>();
     roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
 
-    let avatar_url = if let Some(hash) = user.avatar {
+    let avatar_url = if let Some(ref hash) = user.avatar {
         let format = if hash.starts_with("a_") {
             CdnResourceFormat::GIF
         }
@@ -199,7 +203,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         Cdn::user_avatar(user.id, hash, format)
     }
     else {
-        Cdn::default_user_avatar(user.discriminator.clone().parse().unwrap())
+        Cdn::default_user_avatar(user.discriminator)
     };
 
     let mut embed = EmbedBuilder::new()
@@ -239,11 +243,11 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         );
 
     if let Some(presence) = presence {
-        let activities = presence.activities;
+        let activities = presence.activities();
 
         embed = embed.field(EmbedFieldBuilder::new(
             "Status",
-            match presence.status {
+            match presence.status() {
                 Status::DoNotDisturb => "do not disturb",
                 Status::Idle => "idle",
                 Status::Invisible => "invisible",
@@ -270,10 +274,10 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 embed = temp.field(EmbedFieldBuilder::new(
                     format!("Activity - {activity_type}"),
                     if activity.kind == ActivityType::Custom {
-                        activity.state.unwrap()
+                        &activity.state.unwrap()
                     }
                     else {
-                        activity.name
+                        &activity.name
                     }
                 ));
             }

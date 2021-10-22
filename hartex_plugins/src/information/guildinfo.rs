@@ -140,7 +140,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild owner");
 
     let guild_owner = match {
-        match ctx.http.user(guild.owner_id).exec().await {
+        match ctx.http.user(guild.owner_id()).exec().await {
             Ok(response) => response,
             Err(error) => {
                 tracing::error!("failed to receive request response: {error}");
@@ -165,7 +165,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let guild_members = match {
         match ctx
             .http
-            .guild_members(guild.id)
+            .guild_members(guild.id())
             .limit(1000)
             .unwrap()
             .exec()
@@ -192,7 +192,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild channel list");
 
     let guild_channels = match {
-        match ctx.http.guild_channels(guild.id).exec().await {
+        match ctx.http.guild_channels(guild.id()).exec().await {
             Ok(response) => response,
             Err(error) => {
                 tracing::error!("failed to receive request response: {error}");
@@ -214,7 +214,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild voice region list");
 
     let guild_voice_regions = match {
-        match ctx.http.guild_voice_regions(guild.id).exec().await {
+        match ctx.http.guild_voice_regions(guild.id()).exec().await {
             Ok(response) => response,
             Err(error) => {
                 tracing::error!("failed to receive request response: {error}");
@@ -262,7 +262,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .filter(|channel| channel.kind() == ChannelType::GuildNews)
         .count();
 
-    let icon_url = if let Some(hash) = guild.icon {
+    let icon_url = if let Some(hash) = guild.icon() {
         let format = if hash.starts_with("a_") {
             CdnResourceFormat::GIF
         }
@@ -270,14 +270,14 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             CdnResourceFormat::PNG
         };
 
-        Cdn::guild_icon(guild.id, hash, format)
+        Cdn::guild_icon(guild.id(), hash, format)
     }
     else {
         String::new()
     };
 
     let mut author =
-        EmbedAuthorBuilder::new().name(format!("Information about {name}", name = &guild.name));
+        EmbedAuthorBuilder::new().name(format!("Information about {name}", name = &guild.name()));
 
     if !icon_url.is_empty() {
         let temp = author.clone();
@@ -293,8 +293,8 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let mut embed = EmbedBuilder::new()
         .author(author)
         .color(0x03BEFC)
-        .field(EmbedFieldBuilder::new("Guild Name", guild.name).inline())
-        .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id)).inline())
+        .field(EmbedFieldBuilder::new("Guild Name", guild.name()).inline())
+        .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id())).inline())
         .field(EmbedFieldBuilder::new(
             "Guild Owner",
             format!(
@@ -320,9 +320,9 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     };
 
     let created_at =
-        FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id.timestamp());
+        FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id().timestamp());
 
-    let features_vec = guild.features;
+    let features_vec = guild.features();
     let features = if features_vec.is_empty() {
         String::from("none")
     }
@@ -335,7 +335,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         features_vec.join("\n - ")
     };
 
-    let verification_level = match guild.verification_level {
+    let verification_level = match guild.verification_level() {
         VerificationLevel::None => "none",
         VerificationLevel::Low => "low",
         VerificationLevel::Medium => "medium",
