@@ -158,7 +158,9 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         // is not empty and must be with the name "user" and of type "String"
         let user_option = options
             .into_iter()
-            .find(|option| option.name == "user" && option.value.kind() == CommandOptionType::Mentionable)
+            .find(|option| {
+                option.name == "user" && option.value.kind() == CommandOptionType::Mentionable
+            })
             .unwrap();
         let user_id = if let CommandOptionValue::Mentionable(id) = user_option.value {
             id.0
