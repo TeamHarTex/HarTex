@@ -51,7 +51,6 @@ use hartex_core::{
         HarTexResult
     },
     time::{
-        DateTime,
         FixedOffset,
         TimeZone
     }
@@ -271,7 +270,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 embed = temp.field(EmbedFieldBuilder::new(
                     format!("Activity - {activity_type}"),
                     if activity.kind == ActivityType::Custom {
-                        &activity.state.unwrap()
+                        &activity.state.as_ref().unwrap()
                     }
                     else {
                         &activity.name

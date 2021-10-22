@@ -323,7 +323,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id().timestamp());
 
     let features = guild.features();
-    let features = if features.count() == 0 {
+    let features = if features.cloned().count() == 0 {
         String::from("none")
     }
     else {
