@@ -2,8 +2,6 @@
 //!
 //! This module implements the `userinfo` command.
 
-use std::num::NonZeroU64;
-
 use hartex_cmdsys::{
     command::{
         Command,
@@ -33,10 +31,7 @@ use hartex_core::{
                     CommandOptionType
                 },
                 interaction::{
-                    application_command::{
-                        CommandDataOption,
-                        CommandOptionValue
-                    },
+                    application_command::CommandOptionValue,
                     Interaction
                 }
             },
@@ -219,7 +214,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         )
         .color(0x03BEFC)
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
-        .field(EmbedFieldBuilder::new("Discriminator", user.discriminator).inline())
+        .field(EmbedFieldBuilder::new("Discriminator", user.discriminator.to_string()).inline())
         .field(EmbedFieldBuilder::new(
             "User ID",
             format!("{id}", id = user.id)
@@ -297,10 +292,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
     else {
         Timezone::UTC
     };
-    let joined_at = DateTime::parse_from_str(
-        member.joined_at.unwrap().as_str(),
-        "%Y-%m-%dT%H:%M:%S%.f%:z"
-    )?;
+    let joined_at = member.joined_at.unwrap().iso_8601();
     let created_at =
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
 
