@@ -322,13 +322,12 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let created_at =
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id().timestamp());
 
-    let features_vec = guild.features();
-    let features = if features_vec.is_empty() {
+    let features = guild.features();
+    let features = if features.count() == 0 {
         String::from("none")
     }
     else {
-        let features_vec = features_vec
-            .iter()
+        let features_vec = features
             .map(|feature| format!("`{feature}`"))
             .collect::<Vec<_>>();
 
