@@ -2,7 +2,7 @@
 //!
 //! The `hartex_plugins` library implements the bot plugins.
 
-#![deny(clippy::pedantic, warnings)]
+#![deny(clippy::pedantic, warnings, unsafe_code)]
 #![feature(format_args_capture)]
 
 pub mod globadmin_only;
