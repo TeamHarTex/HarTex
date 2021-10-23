@@ -12,7 +12,7 @@ use hartex_cmdsys::{
 use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         embed_builder::{
             EmbedAuthorBuilder,
             EmbedBuilder,
@@ -85,7 +85,7 @@ impl Command for Userinfo {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: InMemoryCache
+        cache: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_userinfo_command(ctx, cache))
     }
@@ -108,7 +108,7 @@ impl Command for Userinfo {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 /// - `cache`, type `InMemoryCache`: the in-memory cache to use.
-async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> HarTexResult<()> {
+async fn execute_userinfo_command(ctx: CommandContext, cache: CloneableInMemoryCache) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => {

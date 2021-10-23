@@ -5,17 +5,19 @@
 
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
-        gateway::Cluster,
-        http::Client,
+        cache_inmemory::CloneableInMemoryCache,
+        gateway::CloneableCluster,
+        http::CloneableClient,
         model::gateway::{
             event::shard::Identifying,
             payload::{
-                update_presence::UpdatePresence,
-                GuildCreate,
-                InteractionCreate,
-                MessageCreate,
-                Ready
+                incoming::{
+                    GuildCreate,
+                    InteractionCreate,
+                    MessageCreate,
+                    Ready
+                },
+                outgoing::update_presence::UpdatePresence
             },
             presence::{
                 Activity,
@@ -74,7 +76,7 @@ impl EventHandler {
     ///                          in the whitelist or that the whitelist has been removed, or that
     ///                          the guild has been previously been whitelisted but the whitelist
     ///                          is deactivated with a reason.
-    pub async fn guild_create(payload: Box<GuildCreate>, http: Client) -> HarTexResult<()> {
+    pub async fn guild_create(payload: Box<GuildCreate>, http: CloneableClient) -> HarTexResult<()> {
         let guild_id = payload.id;
 
         let span = tracing::trace_span!("event handler: guild create");
@@ -153,9 +155,9 @@ impl EventHandler {
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
     pub async fn interaction_create(
         payload: Box<InteractionCreate>,
-        http: Client,
-        cluster: Cluster,
-        cache: InMemoryCache
+        http: CloneableClient,
+        cluster: CloneableCluster,
+        cache: CloneableInMemoryCache
     ) -> HarTexResult<()> {
         let span = tracing::trace_span!("event handler: interaction create");
         span.in_scope(|| {
@@ -179,9 +181,9 @@ impl EventHandler {
     pub async fn message_create(
         _: Box<MessageCreate>,
         _: EventEmitter,
-        _: InMemoryCache,
-        _: Client,
-        _: Cluster
+        _: CloneableInMemoryCache,
+        _: CloneableClient,
+        _: CloneableCluster
     ) -> HarTexResult<()> {
         Ok(())
     }
@@ -194,7 +196,7 @@ impl EventHandler {
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
     /// - `cluster`, type `Cluster`: the gateway cluster
     /// - `http`, type `Client`: the http client
-    pub async fn ready(payload: Box<Ready>, cluster: Cluster, http: Client) -> HarTexResult<()> {
+    pub async fn ready(payload: Box<Ready>, cluster: CloneableCluster, http: CloneableClient) -> HarTexResult<()> {
         let span = tracing::info_span!("event handler: ready");
         span.in_scope(|| {
             let user = payload.user;

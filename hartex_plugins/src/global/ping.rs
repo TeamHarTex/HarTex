@@ -11,7 +11,7 @@ use hartex_cmdsys::{
 };
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         model::application::{
             callback::{
                 CallbackData,
@@ -52,7 +52,7 @@ impl Command for Ping {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: InMemoryCache
+        _: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_ping_command(ctx))
     }

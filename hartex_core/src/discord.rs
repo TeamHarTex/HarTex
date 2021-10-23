@@ -4,29 +4,11 @@
 //! need to add the `twilight_*` dependencies to the `Cargo.toml`s of the individual separated
 //! HarTex crates.
 
-/// Re-export `twilight_cache_inmemory`
-///
-/// An in-process memory cache for the `twilight-rs` ecosystem. It’s responsible for processing
-/// events and caching things like guilds, channels, users, and voice states.
-pub use twilight_cache_inmemory as cache_inmemory;
-
 /// Re-export `twilight_embed_builder`
 ///
 /// A set of builders for the `twilight-rs` ecosystem for creating message embeds and are useful
 /// when creating or updating messages.
 pub use twilight_embed_builder as embed_builder;
-
-/// Re-export `twilight_gateway`
-///
-/// An implementation of Discord’s sharding gateway sessions for the `twilight-rs` ecoststem.
-/// This is responsible for receiving stateful events in real-time from Discord and sending some
-/// stateful information.
-pub use twilight_gateway as gateway;
-
-/// Re-export `twilight_http`
-///
-/// HTTP (HyperText Transfer Protocol) support for the `twilight-rs` ecosystem.
-pub use twilight_http as http;
 
 /// Re-export `twilight_model`
 ///
@@ -42,6 +24,93 @@ pub use twilight_model as model;
 /// event stream may not suit your use case. It may be cleaner to wait for a reaction inline to
 /// your function.
 pub use twilight_standby as standby;
+
+/// # Module `cache_inmemory`
+///
+/// Re-export of `twilight_cache_inmemory` and a clone-able wrapper of `InMemoryCache`.
+pub mod cache_inmemory {
+    use std::{
+        ops::Deref,
+        sync::Arc
+    };
+
+    pub use twilight_cache_inmemory::*;
+
+    #[derive(Clone)]
+    pub struct CloneableInMemoryCache(Arc<InMemoryCache>);
+
+    impl CloneableInMemoryCache {
+        pub fn new(cache: InMemoryCache) -> Self {
+            Self(Arc::new(cache))
+        }
+    }
+
+    impl Deref for CloneableInMemoryCache {
+        type Target = InMemoryCache;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+}
+
+/// # Module `mention`
+///
+/// Re-export of `twilight_gateway` and a clone-able wrapper of `Cluster`.
+pub mod gateway {
+    use std::{
+        ops::Deref,
+        sync::Arc
+    };
+
+    pub use twilight_gateway::*;
+
+    #[derive(Clone)]
+    pub struct CloneableCluster(Arc<Cluster>);
+
+    impl CloneableCluster {
+        pub fn new(cluster: Cluster) -> Self {
+            Self(Arc::new(cluster))
+        }
+    }
+
+    impl Deref for CloneableCluster {
+        type Target = Cluster;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+}
+
+/// # Module `http`
+///
+/// Re-export of `twilight_http` and a clone-able wrapper of `Client`.
+pub mod http {
+    use std::{
+        ops::Deref,
+        sync::Arc
+    };
+
+    pub use twilight_http::*;
+
+    #[derive(Clone)]
+    pub struct CloneableClient(Arc<Client>);
+
+    impl CloneableClient {
+        pub fn new(client: Client) -> Self {
+            Self(Arc::new(client))
+        }
+    }
+
+    impl Deref for CloneableClient {
+        type Target = Client;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+}
 
 /// # Module `util`
 ///
