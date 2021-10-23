@@ -11,7 +11,7 @@ use hartex_cmdsys::{
 };
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         embed_builder::{
             EmbedAuthorBuilder,
             EmbedBuilder,
@@ -57,7 +57,7 @@ impl Command for About {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: InMemoryCache
+        _: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_about_command(ctx))
     }

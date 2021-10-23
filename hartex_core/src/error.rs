@@ -33,7 +33,7 @@ use crate::{
             },
             response::DeserializeBodyError
         },
-        model::gateway::payload::update_presence::UpdatePresenceError
+        model::gateway::payload::outgoing::update_presence::UpdatePresenceError
     },
     time::ParseError
 };

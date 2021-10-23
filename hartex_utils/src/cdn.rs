@@ -26,11 +26,11 @@ impl Cdn {
         )
     }
 
-    pub fn guild_icon(guild_id: GuildId, icon_hash: String, format: CdnResourceFormat) -> String {
+    pub fn guild_icon(guild_id: GuildId, icon_hash: &str, format: CdnResourceFormat) -> String {
         format!("https://cdn.discordapp.com/icons/{guild_id}/{icon_hash}{format}")
     }
 
-    pub fn user_avatar(user_id: UserId, avatar_hash: String, format: CdnResourceFormat) -> String {
+    pub fn user_avatar(user_id: UserId, avatar_hash: &str, format: CdnResourceFormat) -> String {
         format!("https://cdn.discordapp.com/avatars/{user_id}/{avatar_hash}{format}")
     }
 }

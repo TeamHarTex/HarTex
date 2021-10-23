@@ -11,7 +11,7 @@ use hartex_cmdsys::{
 };
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         model::application::{
             callback::{
                 CallbackData,
@@ -52,7 +52,7 @@ impl Command for Ping {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: InMemoryCache
+        _: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_ping_command(ctx))
     }
@@ -105,7 +105,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     tracing::trace!("obtaining latency information");
 
     let shards = ctx.cluster.info();
-    let shard_id = shard_id(interaction.guild_id.unwrap().0, shards.len() as _);
+    let shard_id = shard_id(interaction.guild_id.unwrap().0.get(), shards.len() as _);
     let shard_info = shards.get(&shard_id).unwrap();
     let latency = shard_info.latency().average().unwrap();
     let new_content = format!("{content} - `{latency}ms`", latency = latency.as_millis());
