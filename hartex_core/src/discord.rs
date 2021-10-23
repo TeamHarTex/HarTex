@@ -37,7 +37,7 @@ pub mod cache_inmemory {
     pub use twilight_cache_inmemory::*;
 
     #[derive(Clone)]
-    pub struct CloneableInMemoryCache(Arc<InMemoryCache>);
+    pub struct CloneableInMemoryCache(pub Arc<InMemoryCache>);
 
     impl CloneableInMemoryCache {
         pub fn new(cache: InMemoryCache) -> Self {
@@ -66,7 +66,7 @@ pub mod gateway {
     pub use twilight_gateway::*;
 
     #[derive(Clone)]
-    pub struct CloneableCluster(Arc<Cluster>);
+    pub struct CloneableCluster(pub Arc<Cluster>);
 
     impl CloneableCluster {
         pub fn new(cluster: Cluster) -> Self {
@@ -95,7 +95,7 @@ pub mod http {
     pub use twilight_http::*;
 
     #[derive(Clone)]
-    pub struct CloneableClient(Arc<Client>);
+    pub struct CloneableClient(pub Arc<Client>);
 
     impl CloneableClient {
         pub fn new(client: Client) -> Self {
