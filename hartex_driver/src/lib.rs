@@ -3,7 +3,7 @@
 //! This `hartex_driver` crate contains effectively the "main function" of the bot as well as some
 //! "moving pieces" that are required for the bot to work.
 
-#![deny(clippy::pedantic, warnings)]
+#![deny(clippy::pedantic, warnings, unsafe_code)]
 #![feature(format_args_capture)]
 #![feature(once_cell)]
 

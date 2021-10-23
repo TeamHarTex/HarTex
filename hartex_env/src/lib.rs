@@ -2,6 +2,8 @@
 //!
 //! The `hartex_env` library various environments for different aspects of the HarTex Discord bot.
 
+#![deny(clippy::pedantic, warnings, unsafe_code)]
+
 use std::env;
 
 use hartex_core::logging::tracing;
