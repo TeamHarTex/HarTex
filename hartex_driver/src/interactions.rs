@@ -9,9 +9,9 @@ use hartex_cmdsys::{
 };
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
-        gateway::Cluster,
-        http::Client,
+        cache_inmemory::CloneableInMemoryCache,
+        gateway::CloneableCluster,
+        http::CloneableClient,
         model::application::interaction::Interaction
     },
     error::HarTexResult,
@@ -45,9 +45,9 @@ use hartex_plugins::{
 /// - `cluster`: the gateway cluster
 pub async fn handle_interaction(
     interaction: Interaction,
-    cache: InMemoryCache,
-    http: Client,
-    cluster: Cluster
+    cache: CloneableInMemoryCache,
+    http: CloneableClient,
+    cluster: CloneableCluster
 ) -> HarTexResult<()> {
     let span = tracing::trace_span!("interaction handler");
 

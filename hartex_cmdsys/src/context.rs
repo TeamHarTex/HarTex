@@ -8,8 +8,8 @@ use std::{
 };
 
 use hartex_core::discord::{
-    gateway::Cluster,
-    http::Client,
+    gateway::CloneableCluster,
+    http::CloneableClient,
     model::application::interaction::Interaction
 };
 
@@ -26,8 +26,8 @@ pub struct CommandContext {
 /// The inner structure for `CommandContext`.
 #[derive(Clone)]
 pub struct CommandContextInner {
-    pub http: Arc<Client>,
-    pub cluster: Arc<Cluster>,
+    pub http: CloneableClient,
+    pub cluster: CloneableCluster,
     pub interaction: Interaction
 }
 

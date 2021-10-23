@@ -7,7 +7,7 @@ use hartex_cmdsys::command::{
     CommandType
 };
 use hartex_core::{
-    discord::http::Client,
+    discord::http::CloneableClient,
     error::{
         HarTexError,
         HarTexResult
@@ -25,7 +25,7 @@ use tokio::time;
 /// `http`, type `Client`: the Twilight HTTP client to use for registration.
 pub async fn register_global_commands(
     commands: Vec<Box<dyn Command + Send + Sync>>,
-    http: Client
+    http: CloneableClient
 ) -> HarTexResult<()> {
     let mut i = 1;
     let len = commands.len();
