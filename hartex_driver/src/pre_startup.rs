@@ -2,11 +2,15 @@
 //!
 //! This module provides pre-startup procedures for the bot.
 
-use std::process;
+use std::{
+    num::NonZeroU64,
+    process
+};
 
 use hartex_core::{
     discord::{
         cache_inmemory::{
+            CloneableInMemoryCache,
             InMemoryCache,
             ResourceType
         },
@@ -15,11 +19,15 @@ use hartex_core::{
                 Events,
                 ShardScheme
             },
+            CloneableCluster,
             Cluster,
             EventTypeFlags,
             Intents
         },
-        http::Client,
+        http::{
+            Client,
+            CloneableClient
+        },
         model::id::ApplicationId
     },
     logging::tracing
@@ -32,7 +40,14 @@ use hartex_env::StartupEnv;
 ///
 /// ## Parameters
 /// - `environment`, type `Environment`: the environment to construct the return values
-pub async fn pre_startup(environment: StartupEnv) -> (Cluster, Client, Events, InMemoryCache) {
+pub async fn pre_startup(
+    environment: StartupEnv
+) -> (
+    CloneableCluster,
+    CloneableClient,
+    Events,
+    CloneableInMemoryCache
+) {
     let shard_scheme = ShardScheme::Auto;
     let intents = Intents::all();
 
@@ -52,17 +67,18 @@ pub async fn pre_startup(environment: StartupEnv) -> (Cluster, Client, Events, I
 
     let http = Client::builder()
         .application_id(ApplicationId::from(
-            environment.application_id.unwrap().parse::<u64>().unwrap()
+            NonZeroU64::new(environment.application_id.unwrap().parse::<u64>().unwrap()).unwrap()
         ))
         .token(environment.bot_token.clone().unwrap())
         .build();
+    let client = CloneableClient::new(http);
 
     tracing::trace!("building bot cluster");
     tracing::trace!("registering gateway intents [all]");
 
     let result = Cluster::builder(environment.bot_token.unwrap(), intents)
         .event_types(EventTypeFlags::all())
-        .http_client(http.clone())
+        .http_client(client.clone().0)
         .shard_scheme(shard_scheme)
         .build()
         .await;
@@ -81,5 +97,10 @@ pub async fn pre_startup(environment: StartupEnv) -> (Cluster, Client, Events, I
         .resource_types(ResourceType::all())
         .build();
 
-    (result.0, http, result.1, cache)
+    (
+        CloneableCluster::new(result.0),
+        client,
+        result.1,
+        CloneableInMemoryCache::new(cache)
+    )
 }

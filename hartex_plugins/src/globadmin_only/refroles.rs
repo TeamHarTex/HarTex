@@ -11,7 +11,7 @@ use hartex_cmdsys::{
 };
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         model::application::interaction::Interaction
     },
     error::{
@@ -42,7 +42,7 @@ impl Command for Refroles {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: InMemoryCache
+        _: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_refroles_command(ctx))
     }

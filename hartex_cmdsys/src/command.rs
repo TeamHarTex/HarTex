@@ -3,7 +3,7 @@
 //! This module defines a trait for commands to implement.
 
 use hartex_core::discord::{
-    cache_inmemory::InMemoryCache,
+    cache_inmemory::CloneableInMemoryCache,
     model::application::command::CommandOption
 };
 use hartex_utils::FutureRetType;
@@ -32,7 +32,7 @@ pub trait Command {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: InMemoryCache
+        cache: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()>;
 
     fn required_cmdopts(&self) -> Vec<CommandOption> {

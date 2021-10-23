@@ -12,7 +12,7 @@ use hartex_cmdsys::{
 use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         embed_builder::{
             EmbedAuthorBuilder,
             EmbedBuilder,
@@ -72,7 +72,7 @@ impl Command for Guildinfo {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: InMemoryCache
+        cache: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_guildinfo_command(ctx, cache))
     }
@@ -84,7 +84,10 @@ impl Command for Guildinfo {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) -> HarTexResult<()> {
+async fn execute_guildinfo_command(
+    ctx: CommandContext,
+    cache: CloneableInMemoryCache
+) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => {
@@ -140,7 +143,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild owner");
 
     let guild_owner = match {
-        match ctx.http.user(guild.owner_id).exec().await {
+        match ctx.http.user(guild.owner_id()).exec().await {
             Ok(response) => response,
             Err(error) => {
                 tracing::error!("failed to receive request response: {error}");
@@ -165,7 +168,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let guild_members = match {
         match ctx
             .http
-            .guild_members(guild.id)
+            .guild_members(guild.id())
             .limit(1000)
             .unwrap()
             .exec()
@@ -192,7 +195,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild channel list");
 
     let guild_channels = match {
-        match ctx.http.guild_channels(guild.id).exec().await {
+        match ctx.http.guild_channels(guild.id()).exec().await {
             Ok(response) => response,
             Err(error) => {
                 tracing::error!("failed to receive request response: {error}");
@@ -214,7 +217,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     tracing::trace!("attempting to obtain guild voice region list");
 
     let guild_voice_regions = match {
-        match ctx.http.guild_voice_regions(guild.id).exec().await {
+        match ctx.http.guild_voice_regions(guild.id()).exec().await {
             Ok(response) => response,
             Err(error) => {
                 tracing::error!("failed to receive request response: {error}");
@@ -262,7 +265,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         .filter(|channel| channel.kind() == ChannelType::GuildNews)
         .count();
 
-    let icon_url = if let Some(hash) = guild.icon {
+    let icon_url = if let Some(hash) = guild.icon() {
         let format = if hash.starts_with("a_") {
             CdnResourceFormat::GIF
         }
@@ -270,14 +273,14 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
             CdnResourceFormat::PNG
         };
 
-        Cdn::guild_icon(guild.id, hash, format)
+        Cdn::guild_icon(guild.id(), hash, format)
     }
     else {
         String::new()
     };
 
     let mut author =
-        EmbedAuthorBuilder::new().name(format!("Information about {name}", name = &guild.name));
+        EmbedAuthorBuilder::new().name(format!("Information about {name}", name = &guild.name()));
 
     if !icon_url.is_empty() {
         let temp = author.clone();
@@ -293,8 +296,8 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let mut embed = EmbedBuilder::new()
         .author(author)
         .color(0x03BEFC)
-        .field(EmbedFieldBuilder::new("Guild Name", guild.name).inline())
-        .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id)).inline())
+        .field(EmbedFieldBuilder::new("Guild Name", guild.name()).inline())
+        .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id())).inline())
         .field(EmbedFieldBuilder::new(
             "Guild Owner",
             format!(
@@ -320,22 +323,20 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     };
 
     let created_at =
-        FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id.timestamp());
+        FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id().timestamp());
 
-    let features_vec = guild.features;
-    let features = if features_vec.is_empty() {
-        String::from("none")
+    let features = guild.features();
+    let features_vec = features
+        .map(|feature| format!("`{feature}`"))
+        .collect::<Vec<_>>();
+
+    let mut features_str = features_vec.join("\n - ");
+
+    if features_str.is_empty() {
+        features_str = String::from("none");
     }
-    else {
-        let features_vec = features_vec
-            .iter()
-            .map(|feature| format!("`{feature}`"))
-            .collect::<Vec<_>>();
 
-        features_vec.join("\n - ")
-    };
-
-    let verification_level = match guild.verification_level {
+    let verification_level = match guild.verification_level() {
         VerificationLevel::None => "none",
         VerificationLevel::Low => "low",
         VerificationLevel::Medium => "medium",
@@ -360,7 +361,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}\nNews Channels: {news}"
             )
         ))
-        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features}")))
+        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features_str}")))
         .field(EmbedFieldBuilder::new("Guild Verification Level", verification_level));
 
     ctx.http

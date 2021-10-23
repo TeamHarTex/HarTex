@@ -5,12 +5,12 @@
 
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         gateway::{
-            Cluster,
+            CloneableCluster,
             Event
         },
-        http::Client
+        http::CloneableClient
     },
     error::{
         HarTexError,
@@ -43,10 +43,10 @@ use crate::handler::EventHandler;
 #[allow(clippy::needless_lifetimes)]
 pub async fn handle_event(
     (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent>),
-    http: Client,
+    http: CloneableClient,
     emitter: EventEmitter,
-    cache: InMemoryCache,
-    cluster: Cluster
+    cache: CloneableInMemoryCache,
+    cluster: CloneableCluster
 ) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => match twilight.unwrap() {

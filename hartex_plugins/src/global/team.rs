@@ -11,7 +11,7 @@ use hartex_cmdsys::{
 };
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         embed_builder::{
             EmbedBuilder,
             EmbedFieldBuilder
@@ -53,7 +53,7 @@ impl Command for Team {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: InMemoryCache
+        _: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_team_command(ctx))
     }

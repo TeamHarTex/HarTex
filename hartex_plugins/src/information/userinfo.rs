@@ -12,7 +12,7 @@ use hartex_cmdsys::{
 use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         embed_builder::{
             EmbedAuthorBuilder,
             EmbedBuilder,
@@ -27,10 +27,11 @@ use hartex_core::{
                 },
                 command::{
                     BaseCommandOptionData,
-                    CommandOption
+                    CommandOption,
+                    CommandOptionType
                 },
                 interaction::{
-                    application_command::CommandDataOption,
+                    application_command::CommandOptionValue,
                     Interaction
                 }
             },
@@ -50,7 +51,6 @@ use hartex_core::{
         HarTexResult
     },
     time::{
-        DateTime,
         FixedOffset,
         TimeZone
     }
@@ -85,7 +85,7 @@ impl Command for Userinfo {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: InMemoryCache
+        cache: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_userinfo_command(ctx, cache))
     }
@@ -108,7 +108,10 @@ impl Command for Userinfo {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 /// - `cache`, type `InMemoryCache`: the in-memory cache to use.
-async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> HarTexResult<()> {
+async fn execute_userinfo_command(
+    ctx: CommandContext,
+    cache: CloneableInMemoryCache
+) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => {
@@ -152,21 +155,21 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         // is not empty and must be with the name "user" and of type "String"
         let user_option = options
             .into_iter()
-            .find(|option| option.name() == "user" && option.kind() == "String")
+            .find(|option| {
+                option.name == "user" && option.value.kind() == CommandOptionType::Mentionable
+            })
             .unwrap();
-        let value = if let CommandDataOption::String {
-            value,
-            ..
-        } = user_option
-        {
-            value
+        let user_id = if let CommandOptionValue::Mentionable(id) = user_option.value {
+            id.0
         }
         else {
-            unreachable!("unexpected parameter type")
+            return Err(HarTexError::Custom {
+                message: String::from("invalid command option type: expected Mentionable")
+            });
         };
 
         ctx.http
-            .user(UserId::from(value.parse::<u64>().unwrap()))
+            .user(UserId::from(user_id))
             .exec()
             .await?
             .model()
@@ -188,7 +191,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         .collect::<Vec<_>>();
     roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
 
-    let avatar_url = if let Some(hash) = user.avatar {
+    let avatar_url = if let Some(ref hash) = user.avatar {
         let format = if hash.starts_with("a_") {
             CdnResourceFormat::GIF
         }
@@ -199,7 +202,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         Cdn::user_avatar(user.id, hash, format)
     }
     else {
-        Cdn::default_user_avatar(user.discriminator.clone().parse().unwrap())
+        Cdn::default_user_avatar(user.discriminator)
     };
 
     let mut embed = EmbedBuilder::new()
@@ -213,7 +216,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         )
         .color(0x03BEFC)
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
-        .field(EmbedFieldBuilder::new("Discriminator", user.discriminator).inline())
+        .field(EmbedFieldBuilder::new("Discriminator", user.discriminator.to_string()).inline())
         .field(EmbedFieldBuilder::new(
             "User ID",
             format!("{id}", id = user.id)
@@ -239,11 +242,11 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
         );
 
     if let Some(presence) = presence {
-        let activities = presence.activities;
+        let activities = presence.activities();
 
         embed = embed.field(EmbedFieldBuilder::new(
             "Status",
-            match presence.status {
+            match presence.status() {
                 Status::DoNotDisturb => "do not disturb",
                 Status::Idle => "idle",
                 Status::Invisible => "invisible",
@@ -270,10 +273,10 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
                 embed = temp.field(EmbedFieldBuilder::new(
                     format!("Activity - {activity_type}"),
                     if activity.kind == ActivityType::Custom {
-                        activity.state.unwrap()
+                        &activity.state.as_ref().unwrap()
                     }
                     else {
-                        activity.name
+                        &activity.name
                     }
                 ));
             }
@@ -291,10 +294,7 @@ async fn execute_userinfo_command(ctx: CommandContext, cache: InMemoryCache) -> 
     else {
         Timezone::UTC
     };
-    let joined_at = DateTime::parse_from_str(
-        member.joined_at.unwrap().as_str(),
-        "%Y-%m-%dT%H:%M:%S%.f%:z"
-    )?;
+    let joined_at = member.joined_at.unwrap().iso_8601();
     let created_at =
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
 
