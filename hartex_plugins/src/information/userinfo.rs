@@ -108,7 +108,10 @@ impl Command for Userinfo {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 /// - `cache`, type `InMemoryCache`: the in-memory cache to use.
-async fn execute_userinfo_command(ctx: CommandContext, cache: CloneableInMemoryCache) -> HarTexResult<()> {
+async fn execute_userinfo_command(
+    ctx: CommandContext,
+    cache: CloneableInMemoryCache
+) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => {

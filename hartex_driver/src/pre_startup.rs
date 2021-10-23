@@ -40,7 +40,14 @@ use hartex_env::StartupEnv;
 ///
 /// ## Parameters
 /// - `environment`, type `Environment`: the environment to construct the return values
-pub async fn pre_startup(environment: StartupEnv) -> (CloneableCluster, CloneableClient, Events, CloneableInMemoryCache) {
+pub async fn pre_startup(
+    environment: StartupEnv
+) -> (
+    CloneableCluster,
+    CloneableClient,
+    Events,
+    CloneableInMemoryCache
+) {
     let shard_scheme = ShardScheme::Auto;
     let intents = Intents::all();
 
@@ -90,5 +97,10 @@ pub async fn pre_startup(environment: StartupEnv) -> (CloneableCluster, Cloneabl
         .resource_types(ResourceType::all())
         .build();
 
-    (CloneableCluster::new(result.0), client, result.1, CloneableInMemoryCache::new(cache))
+    (
+        CloneableCluster::new(result.0),
+        client,
+        result.1,
+        CloneableInMemoryCache::new(cache)
+    )
 }

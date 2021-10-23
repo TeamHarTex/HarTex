@@ -84,7 +84,10 @@ impl Command for Guildinfo {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-async fn execute_guildinfo_command(ctx: CommandContext, cache: CloneableInMemoryCache) -> HarTexResult<()> {
+async fn execute_guildinfo_command(
+    ctx: CommandContext,
+    cache: CloneableInMemoryCache
+) -> HarTexResult<()> {
     let interaction = match ctx.interaction.clone() {
         Interaction::ApplicationCommand(command) => command,
         _ => {
