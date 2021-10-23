@@ -323,16 +323,15 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
         FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(guild.id().timestamp());
 
     let features = guild.features();
-    let features = if features.copied().count() == 0 {
-        String::from("none")
-    }
-    else {
-        let features_vec = features
-            .map(|feature| format!("`{feature}`"))
-            .collect::<Vec<_>>();
+    let features_vec = features
+        .map(|feature| format!("`{feature}`"))
+        .collect::<Vec<_>>();
 
-        features_vec.join("\n - ")
-    };
+    let mut features_str = features_vec.join("\n - ");
+
+    if features_str.is_empty() {
+        features_str = "none"
+    }
 
     let verification_level = match guild.verification_level() {
         VerificationLevel::None => "none",
@@ -359,7 +358,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
                 "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}\nNews Channels: {news}"
             )
         ))
-        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features}")))
+        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features_str}")))
         .field(EmbedFieldBuilder::new("Guild Verification Level", verification_level));
 
     ctx.http
