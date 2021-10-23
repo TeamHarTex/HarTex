@@ -5,10 +5,9 @@
 
 use hartex_core::{
     discord::{
-        cache_inmemory::InMemoryCache,
+        cache_inmemory::CloneableInMemoryCache,
         gateway::{
             CloneableCluster,
-            Cluster,
             Event
         },
         http::CloneableClient
@@ -19,7 +18,6 @@ use hartex_core::{
     },
     events::EventType
 };
-use hartex_core::discord::cache_inmemory::CloneableInMemoryCache;
 use hartex_eventsys::{
     emitter::EventEmitter,
     events::HarTexEvent

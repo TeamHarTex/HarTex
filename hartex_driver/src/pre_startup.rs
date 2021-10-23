@@ -4,7 +4,8 @@
 
 use std::{
     num::NonZeroU64,
-    process
+    process,
+    sync::Arc
 };
 
 use hartex_core::{
@@ -60,17 +61,18 @@ pub async fn pre_startup(environment: StartupEnv) -> (CloneableCluster, Cloneabl
 
     let http = Client::builder()
         .application_id(ApplicationId::from(
-            NonZeroU64(environment.application_id.unwrap().parse::<u64>().unwrap())
+            NonZeroU64::new(environment.application_id.unwrap().parse::<u64>().unwrap()).unwrap()
         ))
         .token(environment.bot_token.clone().unwrap())
         .build();
+    let client = CloneableClient::new(http);
 
     tracing::trace!("building bot cluster");
     tracing::trace!("registering gateway intents [all]");
 
     let result = Cluster::builder(environment.bot_token.unwrap(), intents)
         .event_types(EventTypeFlags::all())
-        .http_client(http.clone())
+        .http_client(client.clone().0)
         .shard_scheme(shard_scheme)
         .build()
         .await;
@@ -89,5 +91,5 @@ pub async fn pre_startup(environment: StartupEnv) -> (CloneableCluster, Cloneabl
         .resource_types(ResourceType::all())
         .build();
 
-    (CloneableCluster::new(result.0), CloneableClient::new(http), result.1, CloneableInMemoryCache::new(cache))
+    (CloneableCluster::new(result.0), client, result.1, CloneableInMemoryCache::new(cache))
 }

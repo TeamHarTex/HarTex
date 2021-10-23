@@ -71,7 +71,7 @@ pub async fn register_global_commands(
         time::sleep(time::Duration::from_secs(1)).await;
 
         let name = command.name();
-        let create_global_command = http.new_create_global_command(&name)?;
+        let create_global_command = http.create_global_command(&name)?;
 
         match {
             match command.command_type() {
