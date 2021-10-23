@@ -76,7 +76,10 @@ impl EventHandler {
     ///                          in the whitelist or that the whitelist has been removed, or that
     ///                          the guild has been previously been whitelisted but the whitelist
     ///                          is deactivated with a reason.
-    pub async fn guild_create(payload: Box<GuildCreate>, http: CloneableClient) -> HarTexResult<()> {
+    pub async fn guild_create(
+        payload: Box<GuildCreate>,
+        http: CloneableClient
+    ) -> HarTexResult<()> {
         let guild_id = payload.id;
 
         let span = tracing::trace_span!("event handler: guild create");
@@ -196,7 +199,11 @@ impl EventHandler {
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
     /// - `cluster`, type `Cluster`: the gateway cluster
     /// - `http`, type `Client`: the http client
-    pub async fn ready(payload: Box<Ready>, cluster: CloneableCluster, http: CloneableClient) -> HarTexResult<()> {
+    pub async fn ready(
+        payload: Box<Ready>,
+        cluster: CloneableCluster,
+        http: CloneableClient
+    ) -> HarTexResult<()> {
         let span = tracing::info_span!("event handler: ready");
         span.in_scope(|| {
             let user = payload.user;
