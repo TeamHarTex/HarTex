@@ -330,7 +330,7 @@ async fn execute_guildinfo_command(ctx: CommandContext, cache: InMemoryCache) ->
     let mut features_str = features_vec.join("\n - ");
 
     if features_str.is_empty() {
-        features_str = "none"
+        features_str = String::from("none");
     }
 
     let verification_level = match guild.verification_level() {
