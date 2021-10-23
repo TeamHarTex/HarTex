@@ -4,8 +4,7 @@
 
 use std::{
     num::NonZeroU64,
-    process,
-    sync::Arc
+    process
 };
 
 use hartex_core::{
