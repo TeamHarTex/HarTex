@@ -36,6 +36,7 @@ HarTex Development
 | `hartex_core`          | The core library of the bot, designed to be as minimal as possible but provides essential types. |
 | `hartex_dbmani`        | The database manipulation component of the bot.                                                  |
 | `hartex_driver`        | The "main" function of the bot. Glues everything together.                                       |
+| `hartex_env`           | The wrappers around a collection of useful environment variables used by the bot.                |
 | `hartex_eventsys`      | The event system of the bot, contains custom events and emitters.                                |
 | `hartex_model`         | The various convenience models for the bot to use.                                               |
 | `hartex_plugins`       | The plugins (command modules, functionality modules) of the bot.                                 |
