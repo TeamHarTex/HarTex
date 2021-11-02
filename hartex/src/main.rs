@@ -13,7 +13,7 @@ use hartex_core::{
         tracing,
         tracing_subscriber::{
             self,
-            fmt::time::ChronoUtc,
+            fmt::time::UtcTime,
             EnvFilter
         }
     }
@@ -26,7 +26,7 @@ pub fn main() -> HarTexResult<()> {
 
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::from_default_env())
-        .with_timer(ChronoUtc::with_format(String::from("%F %T %Z")))
+        .with_timer(UtcTime::rfc_3339())
         .init();
 
     let tokio_runtime = Builder::new_multi_thread()
