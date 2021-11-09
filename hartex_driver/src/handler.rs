@@ -326,7 +326,7 @@ impl EventHandler {
                 }
             };
 
-            if let Err(error) =  http
+            if let Err(error) = http
                 .update_current_user_nick(guild.id, &config.GuildConfiguration.nickname)
                 .exec()
                 .await
