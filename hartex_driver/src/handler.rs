@@ -61,6 +61,7 @@ use crate::commands;
 /// # Struct `EventHandler`
 ///
 /// This structure defines various function handlers for individual events.
+#[allow(clippy::module_name_repetitions)]
 pub struct EventHandler;
 
 // Twilight Events
@@ -76,6 +77,7 @@ impl EventHandler {
     ///                          in the whitelist or that the whitelist has been removed, or that
     ///                          the guild has been previously been whitelisted but the whitelist
     ///                          is deactivated with a reason.
+    #[allow(clippy::missing_errors_doc)]
     pub async fn guild_create(
         payload: Box<GuildCreate>,
         http: CloneableClient
@@ -156,6 +158,7 @@ impl EventHandler {
     /// ## Parameters
     /// - `payload`, type `Box<InteractionCreate>`: the `InteractionCreate` event payload
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
+    #[allow(clippy::missing_errors_doc)]
     pub async fn interaction_create(
         payload: Box<InteractionCreate>,
         http: CloneableClient,
@@ -181,6 +184,7 @@ impl EventHandler {
     /// - `emitter`, type `EventEmitter`: the event emitter to use when the message contains an actual command to execute
     /// - `cache`, type `InMemoryCache`: the cache to pass to the command if the message is indeed a command
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
+    #[allow(clippy::missing_errors_doc)]
     pub async fn message_create(
         _: Box<MessageCreate>,
         _: EventEmitter,
@@ -199,6 +203,9 @@ impl EventHandler {
     /// - `payload`, type `Box<Ready>`: the `Ready` event payload
     /// - `cluster`, type `Cluster`: the gateway cluster
     /// - `http`, type `Client`: the http client
+    #[allow(clippy::missing_errors_doc)]
+    #[allow(clippy::missing_panics_doc)]
+    #[allow(clippy::too_many_lines)]
     pub async fn ready(
         payload: Box<Ready>,
         cluster: CloneableCluster,
@@ -319,18 +326,15 @@ impl EventHandler {
                 }
             };
 
-            match http
+            if let Err(error) =  http
                 .update_current_user_nick(guild.id, &config.GuildConfiguration.nickname)
                 .exec()
                 .await
             {
-                Err(error) => {
-                    span.in_scope(|| {
-                        tracing::error!("failed to change nickname: {error}");
-                    });
-                }
-                _ => ()
-            };
+                span.in_scope(|| {
+                    tracing::error!("failed to change nickname: {error}");
+                });
+            }
 
             time::sleep(time::Duration::from_secs(1)).await;
         }
@@ -345,6 +349,7 @@ impl EventHandler {
     /// ## Parameters
     ///
     /// - `payload`, type `Identifying`: the `Identifying` event payload
+    #[allow(clippy::missing_errors_doc)]
     pub async fn shard_identifying(payload: Identifying) -> HarTexResult<()> {
         let span = tracing::trace_span!("event handler: shard identifying");
         span.in_scope(|| {
@@ -368,6 +373,7 @@ impl EventHandler {
     /// ## Parameters
     ///
     /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
+    #[allow(clippy::missing_errors_doc)]
     pub async fn command_executed(_: Box<CommandExecuted>) -> HarTexResult<()> {
         Ok(())
     }

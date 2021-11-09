@@ -12,6 +12,7 @@ use hartex_core::{
 /// # Function `ctrlc_handler`
 ///
 /// Sets the ctrl+c handler.
+#[allow(clippy::module_name_repetitions)]
 pub fn ctrlc_handler() {
     tracing::trace!("registering ctrl-c handler");
 

@@ -1,4 +1,4 @@
-//! # `hartex_driver` - The "Main Function" of HarTex Discord bot
+//! # `hartex_driver` - The "Main Function" of `HarTex` Discord bot
 //!
 //! This `hartex_driver` crate contains effectively the "main function" of the bot as well as some
 //! "moving pieces" that are required for the bot to work.
@@ -62,7 +62,11 @@ pub static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send +
 
 /// # Asynchronous Function `hartex_main`
 ///
-/// This is the main entry point of HarTex Discord Bot.
+/// This is the main entry point of `HarTex` Discord Bot.
+///
+/// ## Errors
+///
+/// Returns bot-related errors.
 pub async fn hartex_main() -> HarTexResult<()> {
     let span = tracing::info_span!("version info");
     span.in_scope(|| {

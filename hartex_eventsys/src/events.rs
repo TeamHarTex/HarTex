@@ -1,6 +1,6 @@
 //! # The `events` Module
 //!
-//! This module defines some custom events that can be sent and received within HarTex Discord bot.
+//! This module defines some custom events that can be sent and received within `HarTex` Discord bot.
 
 use std::{
     pin::Pin,
@@ -21,6 +21,7 @@ use hartex_model::payload::CommandExecuted;
 ///
 /// This is basically a wrapper around `UnboundedReceiver<HarTexEvent>`; it receives event from
 /// the stream.
+#[allow(clippy::module_name_repetitions)]
 pub struct Events {
     receiver: UnboundedReceiver<HarTexEvent>
 }
@@ -32,6 +33,7 @@ impl Events {
     ///
     /// ## Parameters
     /// - `receiver`, type `UnboundedReceiver`: the unbounded receiver to create this instance with
+    #[must_use]
     pub fn new(receiver: UnboundedReceiver<HarTexEvent>) -> Self {
         Self {
             receiver
@@ -49,7 +51,8 @@ impl Stream for Events {
 
 /// # Enum `HarTexEvent`
 ///
-/// An enumeration represents the various custom-defined events that is used within HarTex.
+/// An enumeration represents the various custom-defined events that is used within `HarTex`.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub enum HarTexEvent {
     /// # Enum Variant `HarTexEvent::CommandExecuted`

@@ -22,6 +22,7 @@ use crate::context::CommandContext;
 /// - `required_cmdopts`; return type `Vec<CommandOption>`: a vector of required command options
 /// - `optional_cmdopts`; return type `Vec<CommandOption>`: a vector of optional command options
 /// - `enabled_by_default`; return type `bool`: whether the slash command is enabled by default when added to a guild
+#[allow(clippy::module_name_repetitions)]
 pub trait Command {
     fn name(&self) -> String;
 
@@ -51,6 +52,7 @@ pub trait Command {
 /// # Enumeration `CommandType`
 ///
 /// Represents the type of a command belongs to.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub enum CommandType {
     /// # Enumeration Variant `CommandType::ChatInput`

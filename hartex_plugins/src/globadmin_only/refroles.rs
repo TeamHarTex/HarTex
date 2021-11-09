@@ -17,7 +17,8 @@ use hartex_core::{
     error::{
         HarTexError,
         HarTexResult
-    }
+    },
+    logging::tracing
 };
 use hartex_utils::FutureRetType;
 
@@ -54,14 +55,18 @@ impl Command for Refroles {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
+#[allow(clippy::let_underscore_drop)]
+#[allow(clippy::unused_async)]
 async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
-    let _ = match ctx.interaction.clone() {
-        Interaction::ApplicationCommand(command) => command,
-        _ => {
-            return Err(HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            });
-        }
+    let _ = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
+        command
+    }
+    else {
+        tracing::error!("invalid interaction type: expected ApplicationCommand");
+
+        return Err(HarTexError::Custom {
+            message: String::from("invalid interaction type: expected ApplicationCommand")
+        });
     };
 
     Ok(())

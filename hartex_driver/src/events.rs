@@ -40,7 +40,12 @@ use crate::handler::EventHandler;
 ///                                         `EventType::Custom`
 /// - `http`, type `Client`: the Twilight HTTP Client to use for some specific events that need it
 /// - `cluster`, type `Cluster`: the gateway cluster to use for some specific events that need it
-#[allow(clippy::needless_lifetimes)]
+///
+/// ## Errors
+///
+/// Returns handler-related errors.
+#[allow(clippy::missing_panics_doc)] // this function never panics
+#[allow(clippy::semicolon_if_nothing_returned)]
 pub async fn handle_event(
     (event_type, twilight, custom): (EventType, Option<Event>, Option<HarTexEvent>),
     http: CloneableClient,

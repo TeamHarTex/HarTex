@@ -1,7 +1,7 @@
-//! # `hartex_dbmani` - The HarTex PostgreSQL Database Manipulation Library
+//! # `hartex_dbmani` - The `HarTex` `PostgreSQL` Database Manipulation Library
 //!
-//! The `hartex_dbmani` provides an interface for manipulating the PostgreSQL databases used by
-//! HarTex Discord bot.
+//! The `hartex_dbmani` crate provides an interface for manipulating the `PostgreSQL` databases used
+//! by `HarTex` Discord bot.
 
 #![allow(non_snake_case)]
 #![deny(clippy::pedantic, warnings, unsafe_code)]
@@ -23,7 +23,7 @@ pub mod whitelist;
 /// # Static `DATABASE_ENV`
 ///
 /// Useful environment variables for database manipulation
-static DATABASE_ENV: SyncLazy<DatabaseEnv> = SyncLazy::new(|| DatabaseEnv::get());
+static DATABASE_ENV: SyncLazy<DatabaseEnv> = SyncLazy::new(DatabaseEnv::get);
 
 /// # Typealias `PendingFuture`
 ///

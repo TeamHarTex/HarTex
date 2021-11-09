@@ -37,6 +37,7 @@ use hartex_env::StartupEnv;
 ///
 /// ## Parameters
 /// - `environment`, type `Environment`: the environment to construct the return values
+#[allow(clippy::missing_panics_doc)]
 pub async fn pre_startup(
     environment: StartupEnv
 ) -> (

@@ -35,6 +35,7 @@ mod model;
 /// # Struct `GetWhitelistedGuilds`
 ///
 /// Gets the whitelisted guilds of the bot.
+#[derive(Default)]
 pub struct GetWhitelistedGuilds {
     pending: Option<PendingFuture<Vec<WhitelistedGuild>>>
 }
@@ -43,6 +44,7 @@ impl GetWhitelistedGuilds {
     /// # Private Function `GetWhitelistedGuilds::start`
     ///
     /// Starts the future.
+    #[allow(clippy::unnecessary_wraps)]
     fn start(&mut self) -> HarTexResult<()> {
         let span = tracing::trace_span!(
             parent: None,
@@ -53,14 +55,6 @@ impl GetWhitelistedGuilds {
         self.pending.replace(Box::pin(exec_future()));
 
         Ok(())
-    }
-}
-
-impl Default for GetWhitelistedGuilds {
-    fn default() -> Self {
-        Self {
-            pending: None
-        }
     }
 }
 
@@ -106,7 +100,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
 
     span.in_scope(|| tracing::trace!("connecting to database..."));
 
-    let connection = match PgPool::connect(&db_credentials).await {
+    let connection = match PgPool::connect(db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
             let message =

@@ -33,6 +33,8 @@ impl Timezone {
     /// # Instance Method `into_offset_secs`
     ///
     /// Converts the timezone to a offset usable with chrono timezones.
+    #[allow(clippy::erasing_op)]
+    #[must_use]
     pub fn into_offset_secs(self) -> i32 {
         match self {
             Self::UTC => 0 * 3600,

@@ -50,6 +50,7 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
+    logging::tracing,
     time::{
         FixedOffset,
         TimeZone
@@ -108,17 +109,20 @@ impl Command for Userinfo {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 /// - `cache`, type `InMemoryCache`: the in-memory cache to use.
+#[allow(clippy::too_many_lines)]
 async fn execute_userinfo_command(
     ctx: CommandContext,
     cache: CloneableInMemoryCache
 ) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.clone() {
-        Interaction::ApplicationCommand(command) => command,
-        _ => {
-            return Err(HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            });
-        }
+    let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
+        command
+    }
+    else {
+        tracing::error!("invalid interaction type: expected ApplicationCommand");
+
+        return Err(HarTexError::Custom {
+            message: String::from("invalid interaction type: expected ApplicationCommand")
+        });
     };
 
     if interaction.guild_id.is_none() || interaction.user.is_some() {
@@ -199,7 +203,7 @@ async fn execute_userinfo_command(
             CdnResourceFormat::PNG
         };
 
-        Cdn::user_avatar(user.id, hash, format)
+        Cdn::user_avatar(user.id, hash, &format)
     }
     else {
         Cdn::default_user_avatar(user.discriminator)
@@ -214,7 +218,7 @@ async fn execute_userinfo_command(
                 ))
                 .icon_url(ImageSource::url(avatar_url)?)
         )
-        .color(0x03BEFC)
+        .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
         .field(EmbedFieldBuilder::new("Discriminator", user.discriminator.to_string()).inline())
         .field(EmbedFieldBuilder::new(
@@ -224,7 +228,7 @@ async fn execute_userinfo_command(
         .field(
             EmbedFieldBuilder::new(
                 "Guild Nickname",
-                member.nick.unwrap_or(String::from("none"))
+                member.nick.unwrap_or_else(|| String::from("none"))
             )
             .inline()
         )

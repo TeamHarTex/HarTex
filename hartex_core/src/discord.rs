@@ -2,7 +2,7 @@
 //!
 //! This module contains re-exports of *most* of the `twilight` ecosystem of crates to reduce the
 //! need to add the `twilight_*` dependencies to the `Cargo.toml`s of the individual separated
-//! HarTex crates.
+//! `HarTex` crates.
 
 /// Re-export `twilight_embed_builder`
 ///
@@ -40,6 +40,7 @@ pub mod cache_inmemory {
     pub struct CloneableInMemoryCache(pub Arc<InMemoryCache>);
 
     impl CloneableInMemoryCache {
+        #[must_use]
         pub fn new(cache: InMemoryCache) -> Self {
             Self(Arc::new(cache))
         }
@@ -69,6 +70,7 @@ pub mod gateway {
     pub struct CloneableCluster(pub Arc<Cluster>);
 
     impl CloneableCluster {
+        #[must_use]
         pub fn new(cluster: Cluster) -> Self {
             Self(Arc::new(cluster))
         }
@@ -98,6 +100,7 @@ pub mod http {
     pub struct CloneableClient(pub Arc<Client>);
 
     impl CloneableClient {
+        #[must_use]
         pub fn new(client: Client) -> Self {
             Self(Arc::new(client))
         }

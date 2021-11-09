@@ -16,6 +16,7 @@ use hartex_core::discord::{
 /// # Struct `CommandContext`
 ///
 /// The command context used for command invocation.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct CommandContext {
     pub inner: Arc<CommandContextInner>

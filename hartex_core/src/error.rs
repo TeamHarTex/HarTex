@@ -1,8 +1,8 @@
 //! # The `error` Module
 //!
-//! This module defines several types for error handling in the HarTex Discord bot.
+//! This module defines several types for error handling in the `HarTex` Discord bot.
 
-use std::string::FromUtf8Error;
+use std::str::Utf8Error;
 
 use base64::DecodeError;
 use ctrlc::Error as CtrlcError;
@@ -40,7 +40,8 @@ use crate::{
 
 /// # Enum `HarTexError`
 ///
-/// An enumeration representing the various error types used within HarTex.
+/// An enumeration representing the various error types used within `HarTex`.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum HarTexError {
     /// # Enum Variant `HarTexError::Base64DecodeError`
@@ -186,7 +187,7 @@ pub enum HarTexError {
     /// ## Fields
     /// - `error`, type `FromUtf8Error`: the error returned when attempting to construct a string
     ///                                  with a `Vec<u8>` with the UTF-8 encoding.
-    Utf8ValidationError { error: FromUtf8Error },
+    Utf8ValidationError { error: Utf8Error },
 
     /// # Enum Variant `HarTexError::Custom`
     ///
@@ -254,8 +255,8 @@ impl From<EmbedError> for HarTexError {
     }
 }
 
-impl From<FromUtf8Error> for HarTexError {
-    fn from(error: FromUtf8Error) -> Self {
+impl From<Utf8Error> for HarTexError {
+    fn from(error: Utf8Error) -> Self {
         Self::Utf8ValidationError {
             error
         }

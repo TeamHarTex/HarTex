@@ -1,7 +1,7 @@
-//! # `hartex_conftoml` - The HarTex Configuration TOML Library.
+//! # `hartex_conftoml` - The `HarTex` Configuration TOML Library.
 //!
 //! The `hartex_conftoml` provides an interface for serializing and deserializing TOML
-//! configuration for HarTex Discord bot.
+//! configuration for `HarTex` Discord bot.
 
 #![allow(non_snake_case)]
 #![deny(clippy::pedantic, warnings, unsafe_code)]
@@ -31,8 +31,15 @@ pub struct TomlConfig {
     pub NightlyFeatures: nightly::NightlyFeatures
 }
 
-pub fn from_string(input: String) -> HarTexResult<TomlConfig> {
-    Ok(match toml::from_str(input.as_str()) {
+/// # Function `from_str`
+///
+/// Deserializes the TOML string.
+///
+/// ## Errors
+///
+/// Returns deserialization-related errors.
+pub fn from_str(input: &str) -> HarTexResult<TomlConfig> {
+    Ok(match toml::from_str(input) {
         Ok(config) => config,
         Err(error) => {
             tracing::error!("failed to deserialize config: {error}");

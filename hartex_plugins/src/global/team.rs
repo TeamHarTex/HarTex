@@ -66,20 +66,20 @@ impl Command for Team {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.clone() {
-        Interaction::ApplicationCommand(command) => command,
-        _ => {
-            tracing::error!("invalid interaction type: expected ApplicationCommand");
+    let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
+        command
+    }
+    else {
+        tracing::error!("invalid interaction type: expected ApplicationCommand");
 
-            return Err(HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            });
-        }
+        return Err(HarTexError::Custom {
+            message: String::from("invalid interaction type: expected ApplicationCommand")
+        });
     };
 
     let embed = EmbedBuilder::new()
         .title("HarTex Project Team")
-        .color(0x03BEFC)
+        .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new(
             "Global Administrator & Lead Developer",
             "HTGAzureX1212.#5959"

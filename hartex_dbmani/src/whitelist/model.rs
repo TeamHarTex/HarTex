@@ -14,6 +14,7 @@ pub struct WhitelistedGuild {
 }
 
 impl<'r> sqlx::FromRow<'r, PgRow> for WhitelistedGuild {
+    #[allow(clippy::cast_sign_loss)]
     fn from_row(row: &'r PgRow) -> SqlxResult<Self> {
         let name = row.try_get::<String, &str>("GuildName")?;
         let id = row.try_get::<i64, &str>("GuildId")?;

@@ -10,6 +10,7 @@ use serde::Deserialize;
 /// # Struct `NightlyFeatures`
 ///
 /// The opt-in nightly features that the bot provides.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Default, Deserialize, PartialEq)]
 pub struct NightlyFeatures {
     // Experimental Support for the Discord Threads API
@@ -20,6 +21,7 @@ pub struct NightlyFeatures {
     pub localization: bool
 }
 
+#[must_use]
 pub fn default_feature_enabled() -> bool {
     false
 }
