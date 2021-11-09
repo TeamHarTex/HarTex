@@ -39,6 +39,7 @@ impl<T> Listeners<T> {
     /// # Instance Method `Listeners:add`
     ///
     /// Creates a new listener.
+    #[must_use]
     pub fn add(&self) -> UnboundedReceiver<T> {
         let id = self.inner.id + 1;
         let (sender, receiver) = mpsc::unbounded();
@@ -56,6 +57,8 @@ impl<T> Listeners<T> {
     /// # Instance Method `Listeners::len`
     ///
     /// Returns the total number of listeners present.
+    #[allow(clippy::len_without_is_empty)]
+    #[must_use]
     pub fn len(&self) -> usize {
         self.inner.listeners.len()
     }
@@ -63,6 +66,7 @@ impl<T> Listeners<T> {
     /// # Instance Method `Listeners::listeners`
     ///
     /// Returns all the listeners.
+    #[must_use]
     pub fn listeners(&self) -> &DashMap<u64, Listener<T>> {
         &self.inner.listeners
     }

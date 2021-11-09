@@ -84,19 +84,20 @@ impl Command for Guildinfo {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
+#[allow(clippy::too_many_lines)]
 async fn execute_guildinfo_command(
     ctx: CommandContext,
     cache: CloneableInMemoryCache
 ) -> HarTexResult<()> {
-    let interaction = match ctx.interaction.clone() {
-        Interaction::ApplicationCommand(command) => command,
-        _ => {
-            tracing::error!("invalid interaction type: expected ApplicationCommand");
+    let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
+        command
+    }
+    else {
+        tracing::error!("invalid interaction type: expected ApplicationCommand");
 
-            return Err(HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            });
-        }
+        return Err(HarTexError::Custom {
+            message: String::from("invalid interaction type: expected ApplicationCommand")
+        });
     };
 
     tracing::trace!("checking interaction source");
@@ -273,7 +274,7 @@ async fn execute_guildinfo_command(
             CdnResourceFormat::PNG
         };
 
-        Cdn::guild_icon(guild.id(), hash, format)
+        Cdn::guild_icon(guild.id(), hash, &format)
     }
     else {
         String::new()
@@ -295,7 +296,7 @@ async fn execute_guildinfo_command(
 
     let mut embed = EmbedBuilder::new()
         .author(author)
-        .color(0x03BEFC)
+        .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new("Guild Name", guild.name()).inline())
         .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id())).inline())
         .field(EmbedFieldBuilder::new(

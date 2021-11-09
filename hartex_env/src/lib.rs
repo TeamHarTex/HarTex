@@ -1,6 +1,6 @@
-//! # `hartex_env` - Environment Wrapper for HarTex Discord bot
+//! # `hartex_env` - Environment Wrapper for `HarTex` Discord bot
 //!
-//! The `hartex_env` library various environments for different aspects of the HarTex Discord bot.
+//! The `hartex_env` library various environments for different aspects of the `HarTex` Discord bot.
 
 #![deny(clippy::pedantic, warnings, unsafe_code)]
 
@@ -21,6 +21,7 @@ impl DatabaseEnv {
     /// # Static Method `DatabaseEnv::get`
     ///
     /// Retrieves the environment variables.
+    #[must_use]
     pub fn get() -> Self {
         tracing::trace!("retrieving `PGSQL_CREDENTIALS_GUILDS` environment variable");
         let pgsql_credentials_guilds = env::var("PGSQL_CREDENTIALS_GUILDS").ok();
@@ -47,6 +48,7 @@ impl StartupEnv {
     /// # Static Method `StartupEnv::get`
     ///
     /// Retrieves the environment variables.
+    #[must_use]
     pub fn get() -> Self {
         tracing::trace!("retrieving `APPLICATION_ID` environment variable");
         let application_id = env::var("APPLICATION_ID").ok();

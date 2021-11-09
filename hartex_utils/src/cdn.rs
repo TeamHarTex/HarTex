@@ -19,6 +19,7 @@ use hartex_core::discord::model::id::{
 pub struct Cdn;
 
 impl Cdn {
+    #[must_use]
     pub fn default_user_avatar(discriminator: u16) -> String {
         format!(
             "https://cdn.discordapp.com/embed/avatars/{discriminator}.png",
@@ -26,11 +27,13 @@ impl Cdn {
         )
     }
 
-    pub fn guild_icon(guild_id: GuildId, icon_hash: &str, format: CdnResourceFormat) -> String {
+    #[must_use]
+    pub fn guild_icon(guild_id: GuildId, icon_hash: &str, format: &CdnResourceFormat) -> String {
         format!("https://cdn.discordapp.com/icons/{guild_id}/{icon_hash}{format}")
     }
 
-    pub fn user_avatar(user_id: UserId, avatar_hash: &str, format: CdnResourceFormat) -> String {
+    #[must_use]
+    pub fn user_avatar(user_id: UserId, avatar_hash: &str, format: &CdnResourceFormat) -> String {
         format!("https://cdn.discordapp.com/avatars/{user_id}/{avatar_hash}{format}")
     }
 }
@@ -38,6 +41,7 @@ impl Cdn {
 /// # Enumeration `CdnResourceFormat`
 ///
 /// The format of a CDN resource
+#[allow(clippy::module_name_repetitions)]
 pub enum CdnResourceFormat {
     /// # Enumeration Variant `CdnResourceFormat::GIF`
     ///

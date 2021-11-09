@@ -80,15 +80,15 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
             return Err(error);
         }
     };
-    let interaction = match ctx.interaction.clone() {
-        Interaction::ApplicationCommand(command) => command,
-        _ => {
-            tracing::error!("invalid interaction type: expected ApplicationCommand");
+    let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
+        command
+    }
+    else {
+        tracing::error!("invalid interaction type: expected ApplicationCommand");
 
-            return Err(HarTexError::Custom {
-                message: String::from("invalid interaction type: expected ApplicationCommand")
-            });
-        }
+        return Err(HarTexError::Custom {
+            message: String::from("invalid interaction type: expected ApplicationCommand")
+        });
     };
 
     let embed = EmbedBuilder::new()
@@ -97,7 +97,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
             .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
         )
         .description("HarTex is a Discord bot that is built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
-        .color(0x03BEFC)
+        .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
         .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
         .build()?;

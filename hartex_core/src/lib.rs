@@ -1,12 +1,12 @@
-//! # `hartex_core` - The HarTex Core Library
+//! # `hartex_core` - The `HarTex` Core Library
 //!
-//! The `hartex_core` library contains the core functionality for the HarTex Discord bot.
+//! The `hartex_core` library contains the core functionality for the `HarTex` Discord bot.
 //!
 //! ## Features
 //!
 //! - `twilight-bundled`: bundles most of the `twilight` ecosystem of crates with the library,
 //!                       removes the need to include the dependencies repeatedly across the
-//!                       HarTex crates.
+//!                       `HarTex` crates.
 
 #![deny(clippy::pedantic, warnings, unsafe_code)]
 #![feature(format_args_capture)]
@@ -23,5 +23,5 @@ pub mod time;
 
 /// # Static `HARTEX_BUILD`
 ///
-/// Represents the current version and build of HarTex Discord bot.
+/// Represents the current version and build of `HarTex` Discord bot.
 pub static HARTEX_BUILD: &str = "Version 1.22.0, 22H1 (Build 514)";

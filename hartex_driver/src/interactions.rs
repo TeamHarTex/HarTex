@@ -43,6 +43,11 @@ use hartex_plugins::{
 /// - `cache`, type `InMemoryCache`: the in-memory cache
 /// - `http`, type `Client`: the Twilight HTTP client
 /// - `cluster`: the gateway cluster
+///
+/// ## Errors
+///
+/// Interaction-related errors.
+#[allow(clippy::too_many_lines)]
 pub async fn handle_interaction(
     interaction: Interaction,
     cache: CloneableInMemoryCache,

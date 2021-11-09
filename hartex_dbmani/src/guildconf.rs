@@ -47,6 +47,7 @@ impl GetGuildConfig {
     ///
     /// ## Parameters
     /// - `guild_id`, type `GuildId`: the guild id to get the configuration for.
+    #[must_use]
     pub fn new(guild_id: GuildId) -> Self {
         Self {
             pending: None,
@@ -58,6 +59,7 @@ impl GetGuildConfig {
     /// # Private Function `GetGuildConfig::start`
     ///
     /// Starts the future.
+    #[allow(clippy::unnecessary_wraps)]
     fn start(&mut self) -> HarTexResult<()> {
         let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
         span.in_scope(|| tracing::trace!("executing future `GetGuildConfig`"));
@@ -109,7 +111,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
     span.in_scope(|| tracing::trace!("connecting to database..."));
 
-    let connection = match PgPool::connect(&db_credentials).await {
+    let connection = match PgPool::connect(db_credentials).await {
         Ok(pool) => pool,
         Err(error) => {
             let message =
@@ -147,7 +149,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
             span.in_scope(|| tracing::trace!("deserializing toml config..."));
 
-            hartex_conftoml::from_string(match String::from_utf8(decoded) {
+            hartex_conftoml::from_str(match std::str::from_utf8(&*decoded) {
                 Ok(string) => string,
                 Err(error) => {
                     let message = format!("failed to construct utf-8 string; error: `{error:?}`");

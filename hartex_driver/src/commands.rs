@@ -23,6 +23,13 @@ use tokio::time;
 /// ## Parameters
 /// `commands`, type `Vec<Box<dyn SlashCommand + Send + Sync>>`: the commands to register.
 /// `http`, type `Client`: the Twilight HTTP client to use for registration.
+///
+/// ## Errors
+///
+/// Returns various errors when the procedure fails.
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::needless_collect)]
 pub async fn register_global_commands(
     commands: Vec<Box<dyn Command + Send + Sync>>,
     http: CloneableClient
@@ -81,8 +88,7 @@ pub async fn register_global_commands(
                     .command_options(&command.optional_cmdopts())?
                     .default_permission(command.enabled_by_default())
                     .exec(),
-                CommandType::Message => todo!(),
-                CommandType::User => todo!()
+                _ => todo!()
             }
         }
         .await
