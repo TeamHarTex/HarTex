@@ -25,7 +25,7 @@ jobs:
           override: true
           profile: default
       - name: Build
-        run: cd hartex && cargo build --release
+        run: cargo build --release
 
   macOS:
     name: macOS (Full Build)
@@ -40,7 +40,7 @@ jobs:
           override: true
           profile: default
       - name: Build
-        run: cd hartex && cargo build --release
+        run: cargo build --release
 
   Windows:
     name: Windows (Full Build)
@@ -55,7 +55,7 @@ jobs:
           override: true
           profile: default
       - name: Build
-        run: cd hartex && cargo build --release
+        run: cargo build --release
 
   LinuxConftomlTest:
     name: Linux (Test - hartex_conftoml)
@@ -72,7 +72,7 @@ jobs:
           override: true
           profile: default
       - name: Test
-        run: cd hartex_conftoml && cargo test
+        run: cargo test
 
   macOSConftomlTest:
     name: macOS (Test - hartex_conftoml)
@@ -89,7 +89,7 @@ jobs:
           override: true
           profile: default
       - name: Test
-        run: cd hartex_conftoml && cargo test
+        run: cargo test
 
   WindowsConftomlTest:
     name: Windows (Test - hartex_conftoml)
@@ -106,4 +106,4 @@ jobs:
           override: true
           profile: default
       - name: Test
-        run: cd hartex_conftoml && cargo test
+        run: cargo test

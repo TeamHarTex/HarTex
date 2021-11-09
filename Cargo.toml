@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "hartex",
+    "hartex_cmdsys",
+    "hartex_conftoml",
+    "hartex_core",
+    "hartex_dbmani",
+    "hartex_driver",
+    "hartex_env",
+    "hartex_eventsys",
+    "hartex_plugins",
+    "hartex_utils"
+]
+
+[profile.release]
+opt-level = "s"

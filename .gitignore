@@ -3,6 +3,7 @@
 
 # target directories
 **/target
+target
 
 # .lock files
 **/Cargo.lock

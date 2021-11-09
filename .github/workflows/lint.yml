@@ -25,7 +25,7 @@ jobs:
           override: true
           profile: default
       - name: Run cargo clippy
-        run: cd hartex && cargo clippy
+        run: cargo clippy --workspace
   Rustfmt:
     name: Rustfmt
     runs-on: ubuntu-latest

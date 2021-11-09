@@ -14,6 +14,3 @@ dotenv = "0.15.0"
 hartex_core = { path = "../hartex_core", features = [ "tracing-bundled" ] }
 hartex_driver = { path = "../hartex_driver" }
 tokio = { version = "1.12.0", features = [ "full" ] }
-
-[profile.release]
-opt-level = "s"
