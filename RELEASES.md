@@ -1,3 +1,12 @@
+HarTex 1.22.0 (10 November 2021)
+================================
+
+Key Changes
+-----------
+- code improvements (rustfmt & clippy)
+- create `hartex_env` crate
+- panic handler added
+
 HarTex 1.21.0 (8 October 2021)
 ================================
 
