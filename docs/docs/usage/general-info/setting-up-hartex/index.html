@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Getting Started - HarTex Usage Documentation</title>
+        <title>Setting Up HarTex - HarTex Usage Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -13,30 +13,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="extra_css/notices.css">
+        <link rel="stylesheet" href="../../extra_css/notices.css">
 
     </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../../general-info/setting-up-hartex/index.html" class="active"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -114,7 +114,7 @@
                     <h1 class="menu-title">HarTex Usage Documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
 
@@ -143,43 +143,16 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
-<div class="warning">
-    <h5>
-        <span class="span">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        </span>
-        <span class="span2">
-            WARNING
-        </span>
-    </h5>
-    <p>This documentation is very incomplete, please use this at your own discretion.</p>
-</div>
-<p>Hello! Thank you for checking out HarTex.</p>
-<p>This series of documentation will go through the things you need to get started with HarTex. This page will act as a
-central check-in point to direct you to various parts of this documentation depending on your existing skill set among
-other things.</p>
-<h2 id="i-dont-have-the-bot-yet"><a class="header" href="#i-dont-have-the-bot-yet">I don't have the bot yet!</a></h2>
-<p>No problem! You may check out the <a href="/HarTex-rust-discord-bot/docs/usage/general-info/what-is-hartex">What is HarTex?</a> chapter for some basic information
-about what the bot can do.</p>
-<p>In order to gain access and begin to use the bot, you will need to submit a Whitelist Application, for your Discord
-guild, first. The current minimum whitelist requirements and criteria can be found in the <em>TBA</em> channel of our support
-guild.</p>
-<p>If you attempt to invite the bot to a guild and that the guild has not been whitelisted yet, the bot will automatically
-leave the guild and send a message to the guild owner about the fact and how to get his or her guild whitelisted. It is
-not recommended to keep inviting the bot after it leaves your guild.</p>
-<h2 id="i-have-been-whitelisted-what-do-i-do-now"><a class="header" href="#i-have-been-whitelisted-what-do-i-do-now">I have been whitelisted! What do I do now?</a></h2>
-<p>Now you can invite the bot by using this <em>TBA</em>. More information on how you can set up the bot can be found at
-<a href="/HarTex-rust-discord-bot/docs/usage/general-info/setting-up-hartex">Setting Up HarTex</a>.</p>
+                        <h1 id="setting-up-hartex"><a class="header" href="#setting-up-hartex">Setting Up HarTex</a></h1>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-
-                            <a rel="next" href="general-info/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                            <a rel="prev" href="../../general-info/what-is-hartex/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
                             </a>
+
 
                         <div style="clear: both"></div>
                     </nav>
@@ -187,10 +160,10 @@ not recommended to keep inviting the bot after it leaves your guild.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-
-                    <a rel="next" href="general-info/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                    <a rel="prev" href="../../general-info/what-is-hartex/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
                     </a>
+
             </nav>
 
         </div>
@@ -203,13 +176,13 @@ not recommended to keep inviting the bot after it leaves your guild.</p>
         </script>
 
 
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
 
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
 
