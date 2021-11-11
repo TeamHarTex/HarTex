@@ -144,6 +144,27 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="setting-up-hartex"><a class="header" href="#setting-up-hartex">Setting Up HarTex</a></h1>
+<h2 id="how-to-set-up-hartex"><a class="header" href="#how-to-set-up-hartex">How to set up HarTex</a></h2>
+<p>Before inviting HarTex to a guild, it has to be on the whitelist first. See <a href="/HarTex-rust-discord-bot/docs/usage/getting-started">Getting Started</a>
+for more details on that. If the bot is invited to a guild that is not whitelisted, it would immediately leave. However,
+if your guild <strong>IS</strong> whitelisted but the bot still leaves your guild when invited, please notify us in the support guild.</p>
+<p>Please also make sure to let the owner know, that the bot will message them with some instructions and a welcome message.</p>
+<p>Provided below are some example configurations, more detailed documentation about the configuration API can be found in
+the <em>TBA</em> chapter.</p>
+<h2 id="example-hartex-configurations"><a class="header" href="#example-hartex-configurations">Example HarTex Configurations</a></h2>
+<p>The following examples are barebones examples. It is advised that you go through the documentation to understand each
+item and audit the functionality based on your guild's needs.</p>
+<h3 id="basic-configuration"><a class="header" href="#basic-configuration">Basic Configuration</a></h3>
+<pre><code class="language-toml">[[DashboardAccess]]
+userId = 000000000000000000  # your Discord user ID
+accessLevel = 3              # the permission level (see the documentation of the DashboardAccess object for the
+                             # meanings of individual values)
+
+[GuildConfiguration]
+nickname = &quot;(h!) HarTex&quot;     # the display nickname of the bot in the guild
+timezone = &quot;UTC&quot;             # the timezone to use for timestamps
+dmCannotUseCommand = true    # determines whether commands are not invocable from DMs
+</code></pre>
 
                     </main>
 
