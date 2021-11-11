@@ -21,8 +21,8 @@ item and audit the functionality based on your guild's needs.
 ```toml
 [[DashboardAccess]]
 userId = 000000000000000000  # your Discord user ID
-accessLevel = 3              # the permission level (see the documentation of the DashboardAccess object for the
-                             # meanings of individual values)
+accessLevel = 3              # the permission level (see the documentation of the DashboardAccess
+                             # object for the meanings of individual values)
 
 [GuildConfiguration]
 nickname = "(h!) HarTex"     # the display nickname of the bot in the guild
