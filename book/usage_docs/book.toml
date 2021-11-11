@@ -1,0 +1,16 @@
+[book]
+authors = ["HTGAzureX1212"]
+language = "en"
+multilingual = false
+src = "src"
+title = "HarTex Usage Documentation"
+
+[build]
+build-dir = "../../docs/usage"
+
+[output.html]
+additional-css = ["extra_css/notices.css"]
+theme = "navy"
+
+[output.html.playground]
+line-numbers = true

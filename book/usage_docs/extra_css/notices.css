@@ -1,0 +1,25 @@
+main .warning {
+    padding: 10px 10px;
+    margin: 20px 0;
+
+    border: 2px solid darkorange;
+    border-radius: 5px;
+    background: orange;
+
+    color: black;
+}
+
+main .warning h5 {
+    margin-top: 2px;
+    margin-bottom: 10px;
+}
+
+main .warning h5 .span2 {
+    line-height: 16px;
+    position: relative;
+    top: -8px;
+}
+
+main .warning p {
+    margin: 0;
+}
