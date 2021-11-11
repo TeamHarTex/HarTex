@@ -22,3 +22,11 @@ other things.
 
 No problem! You may check out the [What is HarTex?](/HarTex-rust-discord-bot/docs/usage/general-info/what-is-hartex) chapter for some basic information
 about what the bot can do.
+
+In order to gain access and begin to use the bot, you will need to submit a Whitelist Application, for your Discord
+guild, first. The current minimum whitelist requirements and criteria can be found in the *TBD* channel of our support
+guild.
+
+If you attempt to invite the bot to a guild and that the guild has not been whitelisted yet, the bot will automatically
+leave the guild and send a message to the guild owner about the fact and how to get his or her guild whitelisted. It is
+not recommended to keep inviting the bot after it leaves your guild.
