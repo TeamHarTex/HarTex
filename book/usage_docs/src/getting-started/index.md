@@ -20,5 +20,5 @@ other things.
 
 ## I don't have the bot yet!
 
-No problem! You may check out the [What is HarTex?](/docs/docs/usage/general-info/what-is-hartex) chapter for some basic information
+No problem! You may check out the [What is HarTex?](/HarTex-rust-discord-bot/docs/usage/general-info/what-is-hartex) chapter for some basic information
 about what the bot can do.
