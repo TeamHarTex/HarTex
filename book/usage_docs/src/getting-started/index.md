@@ -17,3 +17,8 @@ Hello! Thank you for checking out HarTex.
 This series of documentation will go through the things you need to get started with HarTex. This page will act as a
 central check-in point to direct you to various parts of this documentation depending on your existing skill set among
 other things.
+
+## I don't have the bot yet!
+
+No problem! You may check out the [What is HarTex?](/docs/docs/usage/general-info/what-is-hartex) chapter for some basic information
+about what the bot can do.

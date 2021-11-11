@@ -6,7 +6,7 @@ src = "src"
 title = "HarTex Usage Documentation"
 
 [build]
-build-dir = "../../docs/usage"
+build-dir = "../../docs/docs/usage"
 
 [output.html]
 additional-css = ["extra_css/notices.css"]
