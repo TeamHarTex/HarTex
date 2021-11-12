@@ -50,6 +50,6 @@ main .info p {
     margin: 0;
 }
 
-table {
+table, pre {
     border-radius: 5px;
 }
