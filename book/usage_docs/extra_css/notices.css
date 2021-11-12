@@ -49,3 +49,7 @@ main .info h5 .span2 {
 main .info p {
     margin: 0;
 }
+
+table {
+    border-radius: 5px;
+}
