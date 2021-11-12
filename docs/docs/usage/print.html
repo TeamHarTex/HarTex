@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -203,10 +203,44 @@ accessLevel = 3              # the permission level (see the documentation of th
 [GuildConfiguration]
 nickname = &quot;(h!) HarTex&quot;     # the display nickname of the bot in the guild
 timezone = &quot;UTC&quot;             # the timezone to use for timestamps
-dmCannotUseCommand = true    # determines whether commands are not invocable from DMs
+dmCannotUseCommand = true    # determines whether a DM is sent if a user cannot use a specific command
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-api-documentation"><a class="header" href="#configuration-api-documentation">Configuration API Documentation</a></h1>
 <p>This section contains detailed documentation for the TOML configuration API.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-toml"><a class="header" href="#introduction-to-toml">Introduction to TOML</a></h1>
+<p>HarTex uses a markup language called &quot;TOML&quot; for its configuration.</p>
+<p>TOML aims to be a minimal configuration file format that's easy to read due to obvious semantics. TOML is designed to 
+map unambiguously to a hash table. TOML should be easy to parse into data structures in a wide variety of languages.</p>
+<p>This documentation assumes that you have previous experience with TOML. You may look at some more examples of TOML
+syntax to familiarize yourself with TOML, if you do not have much experience with it yet.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dashboard-access"><a class="header" href="#dashboard-access">Dashboard Access</a></h1>
+<p>This model configures the access level of the dashboard for a various number of users.</p>
+<p>Two square brackets are required to wrap the name, because this is an array of tables.</p>
+<h3 id="dashboard-access-object"><a class="header" href="#dashboard-access-object">Dashboard Access object</a></h3>
+<h4 id="dashboard-access-structure"><a class="header" href="#dashboard-access-structure">Dashboard Access Structure</a></h4>
+<table><thead><tr><th>FIELD</th><th>TYPE</th><th>DESCRIPTION</th></tr></thead><tbody>
+<tr><td>userId</td><td>integer</td><td>the user ID of the user</td></tr>
+<tr><td>accessLevel</td><td>integer</td><td>the access level of the user in the dashboard</td></tr>
+</tbody></table>
+<h4 id="dashboard-access-level"><a class="header" href="#dashboard-access-level">Dashboard Access Level</a></h4>
+<table><thead><tr><th>ACCESS LEVEL</th><th>INTEGER REPRESENTATION</th><th>MEANING</th></tr></thead><tbody>
+<tr><td>ADMIN</td><td>3</td><td>full access; can add other users to the dashboard</td></tr>
+<tr><td>EDITOR</td><td>2</td><td>configuration editor; can edit the configuration but cannot add users</td></tr>
+<tr><td>VIEWER</td><td>1</td><td>viewer; cannot edit configuration whatsoever</td></tr>
+</tbody></table>
+<h4 id="example-dashboard-access-objects"><a class="header" href="#example-dashboard-access-objects">Example Dashboard Access Object(s)</a></h4>
+<pre><code class="language-toml">[[DashboardAccess]]
+userId = 1234567887654321
+accessLevel = 3
+
+[[DashboardAccess]]
+userId = 2345678998765432
+accessLevel = 2
+
+[[DashboardAccess]]
+userId = 3456789009876543
+accessLevel = 1
+</code></pre>
 
                     </main>
 
