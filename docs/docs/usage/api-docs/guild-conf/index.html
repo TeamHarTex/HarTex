@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../../general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="../../api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="../../api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="../../api-docs/guild-conf/index.html" class="active"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../../general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="../../api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="../../api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="../../api-docs/guild-conf/index.html" class="active"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="../../api-docs/nightly-feat/index.html"><strong aria-hidden="true">3.4.</strong> Nightly Features</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -148,9 +148,9 @@
 <h3 id="guild-configuration-object"><a class="header" href="#guild-configuration-object">Guild Configuration Object</a></h3>
 <h4 id="guild-configuration-structure"><a class="header" href="#guild-configuration-structure">Guild Configuration Structure</a></h4>
 <table><thead><tr><th>FIELD</th><th>TYPE</th><th>DESCRIPTION</th></tr></thead><tbody>
-<tr><td>nickname</td><td>string?</td><td>the nickname of the bot in the guild</td></tr>
-<tr><td>timezone</td><td>string?</td><td>the timezone of the guild, used when representing time</td></tr>
-<tr><td>dmCannotUseCommand</td><td>boolean?</td><td>whether to send a DM to a user when they cannot execute some command</td></tr>
+<tr><td>nickname</td><td>string?</td><td>the nickname of the bot in the guild; &quot;HarTex&quot; by default</td></tr>
+<tr><td>timezone</td><td>string?</td><td>the timezone of the guild, used when representing time; &quot;UTC&quot; by default</td></tr>
+<tr><td>dmCannotUseCommand</td><td>boolean?</td><td>whether to send a DM to a user when they cannot execute some command; <code>false</code> by default</td></tr>
 </tbody></table>
 <h4 id="example-guild-configuration-object"><a class="header" href="#example-guild-configuration-object">Example Guild Configuration Object</a></h4>
 <pre><code class="language-toml">[GuildConfiguration]
@@ -172,6 +172,9 @@ dmCannotUseCommand = true
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next" href="../../api-docs/nightly-feat/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -183,6 +186,9 @@ dmCannotUseCommand = true
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next" href="../../api-docs/nightly-feat/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
