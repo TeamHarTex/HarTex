@@ -20,7 +20,7 @@ other things.
 
 ## I don't have the bot yet!
 
-No problem! You may check out the [What is HarTex?](/HarTex-rust-discord-bot/docs/usage/general-info/what-is-hartex) chapter for some basic information
+No problem! You may check out the [What is HarTex?](/HarTex-rust-discord-bot/docs/usage/general-info/what-is-hartex) section for some basic information
 about what the bot can do.
 
 In order to gain access and begin to use the bot, you will need to submit a Whitelist Application, for your Discord
@@ -35,3 +35,8 @@ not recommended to keep inviting the bot after it leaves your guild.
 
 Now you can invite the bot by using this *TBA*. More information on how you can set up the bot can be found at
 [Setting Up HarTex](/HarTex-rust-discord-bot/docs/usage/general-info/setting-up-hartex).
+
+## I have the bot now. How do I set it up?
+
+Thank you for choosing HarTex! Now you may head to [Setting Up HarTex](/HarTex-rust-discord-bot/docs/usage/general-info/setting-up-hartex)
+and start from there.

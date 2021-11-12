@@ -9,7 +9,7 @@ if your guild **IS** whitelisted but the bot still leaves your guild when invite
 Please also make sure to let the owner know, that the bot will message them with some instructions and a welcome message.
 
 Provided below are some example configurations, more detailed documentation about the configuration API can be found in
-the *TBA* chapter.
+the [Configuration API Documentation](/HarTex-rust-discord-bot/docs/usage/api-docs) section.
 
 ## Example HarTex Configurations
 
