@@ -27,5 +27,5 @@ accessLevel = 3              # the permission level (see the documentation of th
 [GuildConfiguration]
 nickname = "(h!) HarTex"     # the display nickname of the bot in the guild
 timezone = "UTC"             # the timezone to use for timestamps
-dmCannotUseCommand = true    # determines whether commands are not invocable from DMs
+dmCannotUseCommand = true    # determines whether a DM is sent if a user cannot use a specific command
 ```
