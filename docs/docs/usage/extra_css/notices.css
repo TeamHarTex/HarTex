@@ -23,3 +23,29 @@ main .warning h5 .span2 {
 main .warning p {
     margin: 0;
 }
+
+main .info {
+    padding: 10px 10px;
+    margin: 20px 0;
+
+    border: 2px solid darkorange;
+    border-radius: 5px;
+    background: lightgray;
+
+    color: black;
+}
+
+main .info h5 {
+    margin-top: 2px;
+    margin-bottom: 10px;
+}
+
+main .info h5 .span2 {
+    line-height: 16px;
+    position: relative;
+    top: -8px;
+}
+
+main .info p {
+    margin: 0;
+}
