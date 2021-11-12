@@ -7,3 +7,4 @@
 - [Configuration API Documentation](api-docs/index.md)
     - [Introduction to TOML](api-docs/toml-intro/index.md)
     - [Dashboard Access](api-docs/dash-acc/index.md)
+    - [Guild Configuration](api-docs/guild-conf/index.md)

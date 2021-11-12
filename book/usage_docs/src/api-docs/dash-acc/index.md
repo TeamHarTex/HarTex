@@ -1,10 +1,10 @@
 # Dashboard Access
 
-This model configures the access level of the dashboard for a various number of users.
+This object configures the access level of the dashboard for a various number of users.
 
 Two square brackets are required to wrap the name, because this is an array of tables.
 
-### Dashboard Access object
+### Dashboard Access Object
 
 #### Dashboard Access Structure
 
