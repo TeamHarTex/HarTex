@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Introduction to TOML - HarTex Usage Documentation</title>
+        <title>Nightly Features - HarTex Usage Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../../general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="../../api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../api-docs/toml-intro/index.html" class="active"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="../../api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="../../api-docs/guild-conf/index.html"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="../../api-docs/nightly-feat/index.html"><strong aria-hidden="true">3.4.</strong> Nightly Features</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../../general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="../../api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="../../api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="../../api-docs/guild-conf/index.html"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="../../api-docs/nightly-feat/index.html" class="active"><strong aria-hidden="true">3.4.</strong> Nightly Features</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -143,24 +143,49 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introduction-to-toml"><a class="header" href="#introduction-to-toml">Introduction to TOML</a></h1>
-<p>HarTex uses a markup language called &quot;TOML&quot; for its configuration.</p>
-<p>TOML aims to be a minimal configuration file format that's easy to read due to obvious semantics. TOML is designed to 
-map unambiguously to a hash table. TOML should be easy to parse into data structures in a wide variety of languages.</p>
-<p>This documentation assumes that you have previous experience with TOML. You may look at some more examples of TOML
-syntax to familiarize yourself with TOML, if you do not have much experience with it yet.</p>
+                        <h1 id="nightly-features"><a class="header" href="#nightly-features">Nightly Features</a></h1>
+<p>This object configures the nightly (unstable) features of the bot. This object switches them on or off for a guild.</p>
+<div class="warning">
+    <h5>
+        <span class="span">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        </span>
+        <span class="span2">
+            WARNING
+        </span>
+    </h5>
+    <p>Please be reminded that the features in this list can be very experimental and things are subject to change; alongside with the fact that these features are unstable and may break at any time. It is not recommended to enable these features.</p>
+</div>
+<h3 id="nightly-features-object"><a class="header" href="#nightly-features-object">Nightly Features Object</a></h3>
+<h4 id="nightly-features-structure"><a class="header" href="#nightly-features-structure">Nightly Features Structure</a></h4>
+<table><thead><tr><th>FIELD</th><th>TYPE</th><th>DESCRIPTION</th></tr></thead><tbody>
+<tr><td>threads</td><td>boolean?</td><td>experimental support for Discord threads; <code>false</code> by default</td></tr>
+<tr><td>localization</td><td>boolean?</td><td>experimental support for localization facilities, for example timezones and languages; <code>false</code> by default</td></tr>
+</tbody></table>
+<h4 id="example-nightly-features-object"><a class="header" href="#example-nightly-features-object">Example Nightly Features Object</a></h4>
+<pre><code class="language-toml">[NightlyFeatures]
+threads = false
+localization = false
+</code></pre>
+<h4 id="feature-list"><a class="header" href="#feature-list">Feature List</a></h4>
+<h5 id="threads"><a class="header" href="#threads">Threads</a></h5>
+<p>This feature adds experimental support for Discord threads, so that features of the bot can be used in threads.</p>
+<p>This feature has not been implemented yet, but is here because it is of course, <em>unstable</em> and is subject to massive
+changes for when it is implemented.</p>
+<h5 id="localization"><a class="header" href="#localization">Localization</a></h5>
+<p>This feature adds experimental localization facilities, such as timezones for time representation and languages for
+the messages and other things.</p>
+<p>This feature has not been implemented yet, but is unstable and is subject to change for when it is eventually
+implemented into the bot.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../api-docs/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../api-docs/guild-conf/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="../../api-docs/dash-acc/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -168,13 +193,10 @@ syntax to familiarize yourself with TOML, if you do not have much experience wit
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../api-docs/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../api-docs/guild-conf/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../../api-docs/dash-acc/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
             </nav>
 
         </div>

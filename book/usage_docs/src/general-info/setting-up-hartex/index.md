@@ -25,7 +25,8 @@ accessLevel = 3              # the permission level (see the documentation of th
                              # object for the meanings of individual values)
 
 [GuildConfiguration]
-nickname = "HarTex"     # the display nickname of the bot in the guild
+nickname = "HarTex"          # the display nickname of the bot in the guild
 timezone = "UTC"             # the timezone to use for timestamps
-dmCannotUseCommand = true    # determines whether a DM is sent if a user cannot use a specific command
+dmCannotUseCommand = true    # determines whether a DM is sent if a user cannot use a specific
+                             # command
 ```
