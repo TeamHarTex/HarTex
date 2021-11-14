@@ -2,6 +2,8 @@
 //!
 //! This module implements the `refroles` command.
 
+use crate::PLUGIN_ENV;
+
 use hartex_cmdsys::{
     command::{
         Command,
@@ -85,6 +87,26 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
                     components: None,
                     content: Some(String::from(
                         ":x: This command can only be used in a guild."
+                    )),
+                    embeds: vec![],
+                    flags: None,
+                    tts: None
+                })
+            )
+            .exec()
+            .await?;
+    }
+
+    if interaction.member.unwrap().user.unwrap().id.0 != PLUGIN_ENV.global_administrator_uid.unwrap() {
+        ctx.http
+            .interaction_callback(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                    allowed_mentions: None,
+                    components: None,
+                    content: Some(String::from(
+                        ":x: You are not the global administrator."
                     )),
                     embeds: vec![],
                     flags: None,
