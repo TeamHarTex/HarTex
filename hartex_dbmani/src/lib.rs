@@ -18,6 +18,7 @@ use hartex_core::error::HarTexResult;
 use hartex_env::DatabaseEnv;
 
 pub mod guildconf;
+pub mod guildconfs;
 pub mod whitelist;
 
 /// # Static `DATABASE_ENV`
