@@ -64,10 +64,7 @@ pub async fn pre_startup(
     tracing::trace!("building http client");
 
     let http = Client::builder()
-        .application_id(
-            ApplicationId::new(environment.application_id.unwrap().parse::<u64>().unwrap())
-                .unwrap()
-        )
+        .application_id(ApplicationId(environment.application_id.unwrap()))
         .token(environment.bot_token.clone().unwrap())
         .build();
     let client = CloneableClient::new(http);
