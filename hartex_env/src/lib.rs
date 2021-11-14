@@ -53,7 +53,8 @@ impl PluginEnv {
         let global_administrator_uid = env::var("GLOBAL_ADMINISTRATOR_UID").ok();
 
         Self {
-            global_administrator_uid: global_administrator_uid.map(|uid| NonZeroU64::new(uid.parse().unwrap()).unwrap())
+            global_administrator_uid: global_administrator_uid
+                .map(|uid| NonZeroU64::new(uid.parse().unwrap()).unwrap())
         }
     }
 }
