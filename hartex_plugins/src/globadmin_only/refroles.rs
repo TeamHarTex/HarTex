@@ -2,8 +2,6 @@
 //!
 //! This module implements the `refroles` command.
 
-use crate::PLUGIN_ENV;
-
 use hartex_cmdsys::{
     command::{
         Command,
@@ -29,6 +27,8 @@ use hartex_core::{
     logging::tracing
 };
 use hartex_utils::FutureRetType;
+
+use crate::PLUGIN_ENV;
 
 /// # Struct `Refroles`
 ///
