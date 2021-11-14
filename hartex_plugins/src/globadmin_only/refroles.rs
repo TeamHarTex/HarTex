@@ -94,6 +94,6 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
             .exec()
             .await?;
     }
-    
+
     Ok(())
 }
