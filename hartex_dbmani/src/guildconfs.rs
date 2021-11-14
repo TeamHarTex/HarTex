@@ -20,11 +20,14 @@ use hartex_core::{
     },
     logging::tracing
 };
-use sqlx::{PgPool, Row};
+use sqlx::{
+    PgPool,
+    Row
+};
 
 use crate::{
-    DATABASE_ENV,
-    PendingFuture
+    PendingFuture,
+    DATABASE_ENV
 };
 
 /// # Struct `GetGuildConfig`
@@ -106,7 +109,8 @@ async fn exec_future() -> HarTexResult<Vec<TomlConfig>> {
 
     span.in_scope(|| tracing::trace!("executing sql query..."));
 
-    match sqlx::query(r"
+    match sqlx::query(
+        r"
 CREATE OR REPLACE FUNCTION PUBLIC.IterTables()
     RETURNS SETOF RECORD
     LANGUAGE 'plpgsql'
@@ -121,9 +125,11 @@ BEGIN
     END LOOP;
 END $FN$;
 
-SELECT * FROM IterTables() f(TomlConfig TEXT)")
-        .fetch_all(&connection)
-        .await {
+SELECT * FROM IterTables() f(TomlConfig TEXT)"
+    )
+    .fetch_all(&connection)
+    .await
+    {
         Ok(rows) => {
             let mut configs = vec![];
 
@@ -145,18 +151,20 @@ SELECT * FROM IterTables() f(TomlConfig TEXT)")
 
                 span.in_scope(|| tracing::trace!("deserializing toml config..."));
 
-                configs.push(hartex_conftoml::from_str(match std::str::from_utf8(&*decoded) {
-                    Ok(string) => string,
-                    Err(error) => {
-                        let message = format!("failed to construct utf-8 string; error: `{error:?}`");
+                configs.push(hartex_conftoml::from_str(
+                    match std::str::from_utf8(&*decoded) {
+                        Ok(string) => string,
+                        Err(error) => {
+                            let message = format!("failed to construct utf-8 string; error: `{error:?}`");
 
-                        span.in_scope(|| tracing::error!("{message}", message = &message));
+                            span.in_scope(|| tracing::error!("{message}", message = &message));
 
-                        return Err(HarTexError::Utf8ValidationError {
-                            error
-                        });
+                            return Err(HarTexError::Utf8ValidationError {
+                                error
+                            });
+                        }
                     }
-                })?);
+                )?);
             }
 
             Ok(configs)
