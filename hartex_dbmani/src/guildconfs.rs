@@ -155,7 +155,8 @@ SELECT * FROM IterTables() f(TomlConfig TEXT)"
                     match std::str::from_utf8(&*decoded) {
                         Ok(string) => string,
                         Err(error) => {
-                            let message = format!("failed to construct utf-8 string; error: `{error:?}`");
+                            let message =
+                                format!("failed to construct utf-8 string; error: `{error:?}`");
 
                             span.in_scope(|| tracing::error!("{message}", message = &message));
 
