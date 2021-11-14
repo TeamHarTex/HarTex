@@ -97,7 +97,9 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
             .await?;
     }
 
-    if interaction.member.unwrap().user.unwrap().id.0 != PLUGIN_ENV.global_administrator_uid.unwrap() {
+    if interaction.member.unwrap().user.unwrap().id.0
+        != PLUGIN_ENV.global_administrator_uid.unwrap()
+    {
         ctx.http
             .interaction_callback(
                 interaction.id,
@@ -105,9 +107,7 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
                 &InteractionResponse::ChannelMessageWithSource(CallbackData {
                     allowed_mentions: None,
                     components: None,
-                    content: Some(String::from(
-                        ":x: You are not the global administrator."
-                    )),
+                    content: Some(String::from(":x: You are not the global administrator.")),
                     embeds: vec![],
                     flags: None,
                     tts: None
