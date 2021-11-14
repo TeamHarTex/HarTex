@@ -79,6 +79,9 @@ pub async fn hartex_main() -> HarTexResult<()> {
     let span = tracing::trace_span!("initialize database manipulation environment");
     span.in_scope(hartex_dbmani::init_env);
 
+    let span = tracing::trace_span!("initialize plugin environment");
+    span.in_scope(hartex_plugins::init_env);
+
     let span = tracing::trace_span!("pre-startup phase");
     let (cluster, http, events, cache) =
         pre_startup::pre_startup(environment).instrument(span).await;

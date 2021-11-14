@@ -12,7 +12,13 @@ use hartex_cmdsys::{
 use hartex_core::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        model::application::interaction::Interaction
+        model::application::{
+            callback::{
+                CallbackData,
+                InteractionResponse
+            },
+            interaction::Interaction
+        }
     },
     error::{
         HarTexError,
@@ -58,7 +64,7 @@ impl Command for Refroles {
 #[allow(clippy::let_underscore_drop)]
 #[allow(clippy::unused_async)]
 async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
-    let _ = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
+    let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
     }
     else {
@@ -69,5 +75,25 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
+    if interaction.guild_id.is_none() || interaction.user.is_some() {
+        ctx.http
+            .interaction_callback(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                    allowed_mentions: None,
+                    components: None,
+                    content: Some(String::from(
+                        ":x: This command can only be used in a guild."
+                    )),
+                    embeds: vec![],
+                    flags: None,
+                    tts: None
+                })
+            )
+            .exec()
+            .await?;
+    }
+    
     Ok(())
 }
