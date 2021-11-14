@@ -47,6 +47,10 @@ pub struct PluginEnv {
 }
 
 impl PluginEnv {
+    /// # Static Method `PluginEnv::get`
+    ///
+    /// Retrieves the environment variables.
+    #[allow(clippy::missing_panics_doc)] // this function should never panic
     #[must_use]
     pub fn get() -> Self {
         tracing::trace!("retrieving `GLOBAL_ADMINISTRATOR_UID` environment variable");
@@ -71,6 +75,7 @@ impl StartupEnv {
     /// # Static Method `StartupEnv::get`
     ///
     /// Retrieves the environment variables.
+    #[allow(clippy::missing_panics_doc)] // this function should never panic
     #[must_use]
     pub fn get() -> Self {
         tracing::trace!("retrieving `APPLICATION_ID` environment variable");
