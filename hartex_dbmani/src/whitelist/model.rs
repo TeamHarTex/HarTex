@@ -2,6 +2,9 @@
 //!
 //! This module contains some models for use in the `GetWhitelistedGuilds` future.
 
+use std::num::NonZeroU64;
+
+use hartex_core::discord::model::id::GuildId;
 use sqlx::{
     postgres::PgRow,
     Result as SqlxResult,
@@ -10,7 +13,7 @@ use sqlx::{
 
 pub struct WhitelistedGuild {
     pub GuildName: String,
-    pub GuildId: u64
+    pub GuildId: GuildId
 }
 
 impl<'r> sqlx::FromRow<'r, PgRow> for WhitelistedGuild {
@@ -21,7 +24,7 @@ impl<'r> sqlx::FromRow<'r, PgRow> for WhitelistedGuild {
 
         Ok(Self {
             GuildName: name,
-            GuildId: id as u64
+            GuildId: GuildId(NonZeroU64::new(id as u64).unwrap())
         })
     }
 }

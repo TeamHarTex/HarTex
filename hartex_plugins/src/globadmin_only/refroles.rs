@@ -26,6 +26,10 @@ use hartex_core::{
     },
     logging::tracing
 };
+use hartex_dbmani::{
+    guildconf::GetGuildConfig,
+    whitelist::GetWhitelistedGuilds
+};
 use hartex_utils::FutureRetType;
 
 use crate::PLUGIN_ENV;
@@ -51,9 +55,9 @@ impl Command for Refroles {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: CloneableInMemoryCache
+        cache: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()> {
-        Box::pin(execute_refroles_command(ctx))
+        Box::pin(execute_refroles_command(ctx, cache))
     }
 }
 
@@ -65,7 +69,7 @@ impl Command for Refroles {
 /// - `ctx`, type `CommandContext`: the command context to use.
 #[allow(clippy::let_underscore_drop)]
 #[allow(clippy::unused_async)]
-async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
+async fn execute_refroles_command(ctx: CommandContext, _: CloneableInMemoryCache) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
     }
@@ -97,7 +101,7 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
             .await?;
     }
 
-    if interaction.member.unwrap().user.unwrap().id.0
+    if interaction.member.unwrap().user.unwrap().id
         != PLUGIN_ENV.global_administrator_uid.unwrap()
     {
         ctx.http
@@ -117,13 +121,31 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
             .await?;
     }
 
-    let _ = ctx
-        .http
-        .current_user_guilds()
+    ctx.http
+        .interaction_callback(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                allowed_mentions: None,
+                components: None,
+                content: Some(String::from("Stage `1` of 1: obtaining whitelisted guilds...")),
+                embeds: vec![],
+                flags: None,
+                tts: None
+            })
+        )
         .exec()
-        .await?
-        .models()
         .await?;
+
+    let guilds = GetWhitelistedGuilds::default().await?;
+
+    for guild in guilds {
+        let config = GetGuildConfig::new(guild.GuildId).await?;
+
+        for _ in config.DashboardAccess {
+            todo!()
+        }
+    }
 
     Ok(())
 }

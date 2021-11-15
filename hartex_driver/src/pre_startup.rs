@@ -49,7 +49,7 @@ pub async fn pre_startup(
     let shard_scheme = ShardScheme::Auto;
     let intents = Intents::all();
 
-    if environment.application_id.is_none() {
+    if environment.application_aid.is_none() {
         tracing::warn!("`APPLICATION_ID` is not specified, exiting");
 
         process::exit(-1);
@@ -64,7 +64,7 @@ pub async fn pre_startup(
     tracing::trace!("building http client");
 
     let http = Client::builder()
-        .application_id(ApplicationId(environment.application_id.unwrap()))
+        .application_id(ApplicationId(environment.application_aid.unwrap()))
         .token(environment.bot_token.clone().unwrap())
         .build();
     let client = CloneableClient::new(http);
