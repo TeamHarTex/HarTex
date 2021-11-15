@@ -42,7 +42,7 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
     fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
     where
         E: Error {
-        UserId::new(v).ok_or(Error::custom("the user id cannot be zero"))
+        UserId::new(v).ok_or_else(|| Error::custom("the user id cannot be zero"))
     }
 }
 
