@@ -69,7 +69,10 @@ impl Command for Refroles {
 /// - `ctx`, type `CommandContext`: the command context to use.
 #[allow(clippy::let_underscore_drop)]
 #[allow(clippy::unused_async)]
-async fn execute_refroles_command(ctx: CommandContext, _: CloneableInMemoryCache) -> HarTexResult<()> {
+async fn execute_refroles_command(
+    ctx: CommandContext,
+    _: CloneableInMemoryCache
+) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
     }

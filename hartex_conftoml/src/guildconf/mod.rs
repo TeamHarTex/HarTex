@@ -37,12 +37,12 @@ fn default_dm_cant_use_cmd() -> bool {
     true
 }
 
-fn deserialize_timezone<'deserialize, Deserializer>(
-    deserializer: Deserializer
-) -> Result<tz::Timezone, Deserializer::Error>
+fn deserialize_timezone<'deserialize, D>(
+    deserializer: D
+) -> Result<tz::Timezone, D::Error>
 where
-    Deserializer: de::Deserializer<'deserialize> {
-    deserializer.deserialize_str(tz::TimezoneDeserializeStringVisitor)
+    D: de::Deserializer<'deserialize> {
+    deserializer.deserialize_str(tz::GuildConfigTimezoneDeserializerRefStrVisitor)
 }
 
 #[cfg(test)]
