@@ -46,9 +46,7 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
     }
 }
 
-fn deserialize_userId<'deserialize, D>(
-    deserializer: D
-) -> Result<UserId, D::Error>
+fn deserialize_userId<'deserialize, D>(deserializer: D) -> Result<UserId, D::Error>
     where
         D: de::Deserializer<'deserialize> {
     deserializer.deserialize_u64(DashboardAccessUserIdDeserializerU64Visitor)
