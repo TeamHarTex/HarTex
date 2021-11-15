@@ -60,6 +60,6 @@ pub enum HarTexEvent {
     /// A command is executed.
     ///
     /// ## Tuple Struct Parameters
-    /// - `0`, type `Box<CommandExecuted<'a>>`: the payload of the event.
+    /// - `0`, type `Box<CommandExecuted>`: the payload of the event.
     CommandExecuted(Box<CommandExecuted>)
 }

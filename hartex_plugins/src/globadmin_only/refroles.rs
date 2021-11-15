@@ -117,5 +117,13 @@ async fn execute_refroles_command(ctx: CommandContext) -> HarTexResult<()> {
             .await?;
     }
 
+    let _ = ctx
+        .http
+        .current_user_guilds()
+        .exec()
+        .await?
+        .models()
+        .await?;
+
     Ok(())
 }
