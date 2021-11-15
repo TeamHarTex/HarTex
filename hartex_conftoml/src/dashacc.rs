@@ -47,18 +47,19 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
 }
 
 fn deserialize_userId<'deserialize, D>(deserializer: D) -> Result<UserId, D::Error>
-    where
-        D: de::Deserializer<'deserialize> {
+where
+    D: de::Deserializer<'deserialize> {
     deserializer.deserialize_u64(DashboardAccessUserIdDeserializerU64Visitor)
 }
 
 #[cfg(test)]
 mod tests {
+    use std::num::NonZeroU64;
+
     use serde_test::Token;
 
     use super::{
         DashboardAccess,
-        NonZeroU64,
         UserId
     };
 
