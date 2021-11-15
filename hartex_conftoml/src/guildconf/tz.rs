@@ -32,7 +32,7 @@ pub enum Timezone {
 impl Timezone {
     /// # Instance Method `into_offset_secs`
     ///
-    /// Converts the timezone to a offset usable with chrono timezones.
+    /// Converts the timezone to a offset usable with `chrono` timezones.
     #[allow(clippy::erasing_op)]
     #[must_use]
     pub fn into_offset_secs(self) -> i32 {
@@ -52,16 +52,16 @@ impl Display for Timezone {
     }
 }
 
-/// # Struct `TimezoneDeserializeStringVisitor`
+/// # Struct `GuildConfigTimezoneDeserializerRefStrVisitor`
 ///
-/// A `String` visitor for deserializing a `Timezone`.
-pub struct TimezoneDeserializeStringVisitor;
+/// A `&str` visitor for deserializing a `Timezone` for `GuildConfig`.
+pub struct GuildConfigTimezoneDeserializerRefStrVisitor;
 
-impl<'visitor> Visitor<'visitor> for TimezoneDeserializeStringVisitor {
+impl<'visitor> Visitor<'visitor> for GuildConfigTimezoneDeserializerRefStrVisitor {
     type Value = Timezone;
 
-    fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-        write!(formatter, "a string representing a timezone")
+    fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "a string representing a timezone")
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>

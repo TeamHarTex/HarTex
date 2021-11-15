@@ -97,7 +97,8 @@ impl StartupEnv {
         let bot_token = env::var("BOT_TOKEN").ok();
 
         Self {
-            application_aid: application_aid.map(|id| NonZeroU64::new(id.parse().unwrap()).unwrap()),
+            application_aid: application_aid
+                .map(|id| NonZeroU64::new(id.parse().unwrap()).unwrap()),
             bot_token
         }
     }
