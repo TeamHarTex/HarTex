@@ -101,8 +101,7 @@ async fn execute_refroles_command(ctx: CommandContext, _: CloneableInMemoryCache
             .await?;
     }
 
-    if interaction.member.unwrap().user.unwrap().id
-        != PLUGIN_ENV.global_administrator_uid.unwrap()
+    if interaction.member.unwrap().user.unwrap().id != PLUGIN_ENV.global_administrator_uid.unwrap()
     {
         ctx.http
             .interaction_callback(
@@ -128,7 +127,9 @@ async fn execute_refroles_command(ctx: CommandContext, _: CloneableInMemoryCache
             &InteractionResponse::ChannelMessageWithSource(CallbackData {
                 allowed_mentions: None,
                 components: None,
-                content: Some(String::from("Stage `1` of 1: obtaining whitelisted guilds...")),
+                content: Some(String::from(
+                    "Stage `1` of 1: obtaining whitelisted guilds..."
+                )),
                 embeds: vec![],
                 flags: None,
                 tts: None
