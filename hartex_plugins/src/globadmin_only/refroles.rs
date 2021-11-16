@@ -71,7 +71,7 @@ impl Command for Refroles {
 #[allow(clippy::missing_panics_doc)]
 async fn execute_refroles_command(
     ctx: CommandContext,
-    _: CloneableInMemoryCache
+    cache: CloneableInMemoryCache
 ) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
@@ -123,25 +123,17 @@ async fn execute_refroles_command(
             .await?;
     }
 
-    ctx.http
-        .interaction_callback(
-            interaction.id,
-            &interaction.token,
-            &InteractionResponse::ChannelMessageWithSource(CallbackData {
-                allowed_mentions: None,
-                components: None,
-                content: Some(String::from(
-                    "Stage `1` of 1: obtaining whitelisted guilds..."
-                )),
-                embeds: vec![],
-                flags: None,
-                tts: None
-            })
-        )
-        .exec()
-        .await?;
-
     let guilds = GetWhitelistedGuilds::default().await?;
+    let owners = guilds
+        .iter()
+        .map(|guild| cache.guild(guild.GuildId).unwrap().owner_id())
+        .collect::<Vec<_>>();
+    let owner_role_members = cache.guild_members(PLUGIN_ENV.support_guild_gid.unwrap()).unwrap();
+    let to_remove = owner_role_members
+        .clone()
+        .into_iter()
+        .filter(|uid| !owners.contains(uid))
+        .collect::<Vec<_>>();
 
     for guild in guilds {
         let config = GetGuildConfig::new(guild.GuildId).await?;
@@ -159,6 +151,48 @@ async fn execute_refroles_command(
             time::sleep(time::Duration::from_secs(1)).await;
         }
     }
+
+    for uid in to_remove {
+        ctx.http
+            .remove_guild_member_role(
+                PLUGIN_ENV.support_guild_gid.unwrap(),
+                uid,
+                PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
+            )
+            .exec()
+            .await?;
+
+        time::sleep(time::Duration::from_secs(1)).await;
+    }
+
+    for owner in owners {
+        ctx.http
+            .add_guild_member_role(
+                PLUGIN_ENV.support_guild_gid.unwrap(),
+                owner,
+                PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
+            )
+            .exec()
+            .await?;
+
+        time::sleep(time::Duration::from_secs(1)).await;
+    }
+
+    ctx.http
+        .interaction_callback(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                allowed_mentions: None,
+                components: None,
+                content: Some(String::from("Done")),
+                embeds: vec![],
+                flags: None,
+                tts: None
+            })
+        )
+        .exec()
+        .await?;
 
     Ok(())
 }
