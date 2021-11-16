@@ -9,7 +9,6 @@
 //!                       `HarTex` crates.
 
 #![deny(clippy::pedantic, warnings, unsafe_code)]
-#![feature(format_args_capture)]
 
 pub use ctrlc;
 

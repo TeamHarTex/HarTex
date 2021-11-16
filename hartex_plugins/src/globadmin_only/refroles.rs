@@ -31,6 +31,7 @@ use hartex_dbmani::{
     whitelist::GetWhitelistedGuilds
 };
 use hartex_utils::FutureRetType;
+use tokio::time;
 
 use crate::PLUGIN_ENV;
 
@@ -67,8 +68,7 @@ impl Command for Refroles {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
-#[allow(clippy::let_underscore_drop)]
-#[allow(clippy::unused_async)]
+#[allow(clippy::missing_panics_doc)]
 async fn execute_refroles_command(
     ctx: CommandContext,
     _: CloneableInMemoryCache
@@ -146,8 +146,17 @@ async fn execute_refroles_command(
     for guild in guilds {
         let config = GetGuildConfig::new(guild.GuildId).await?;
 
-        for _ in config.DashboardAccess {
-            todo!()
+        for access in config.DashboardAccess {
+            ctx.http
+                .add_guild_member_role(
+                    PLUGIN_ENV.support_guild_gid.unwrap(),
+                    access.userId,
+                    PLUGIN_ENV.hartex_user_rid.unwrap()
+                )
+                .exec()
+                .await?;
+
+            time::sleep(time::Duration::from_secs(1)).await;
         }
     }
 

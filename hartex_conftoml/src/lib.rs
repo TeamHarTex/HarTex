@@ -5,7 +5,6 @@
 
 #![allow(non_snake_case)]
 #![deny(clippy::pedantic, warnings, unsafe_code)]
-#![feature(format_args_capture)]
 
 use hartex_core::{
     error::{
