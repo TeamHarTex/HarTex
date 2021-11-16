@@ -69,6 +69,7 @@ impl Command for Refroles {
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
 #[allow(clippy::missing_panics_doc)]
+#[allow(clippy::too_many_lines)]
 async fn execute_refroles_command(
     ctx: CommandContext,
     cache: CloneableInMemoryCache
@@ -128,7 +129,9 @@ async fn execute_refroles_command(
         .iter()
         .map(|guild| cache.guild(guild.GuildId).unwrap().owner_id())
         .collect::<Vec<_>>();
-    let owner_role_members = cache.guild_members(PLUGIN_ENV.support_guild_gid.unwrap()).unwrap();
+    let owner_role_members = cache
+        .guild_members(PLUGIN_ENV.support_guild_gid.unwrap())
+        .unwrap();
     let to_remove = owner_role_members
         .clone()
         .into_iter()
