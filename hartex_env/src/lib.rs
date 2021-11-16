@@ -12,6 +12,7 @@ use std::{
 use hartex_core::{
     discord::model::id::{
         GuildId,
+        RoleId,
         UserId
     },
     logging::tracing
@@ -50,7 +51,9 @@ impl DatabaseEnv {
 /// Represents a collection of environment variables useful for the bot in plugins.
 pub struct PluginEnv {
     pub global_administrator_uid: Option<UserId>,
-    pub support_guild_gid: Option<GuildId>
+    pub support_guild_gid: Option<GuildId>,
+    pub hartex_guild_owner_rid: Option<RoleId>,
+    pub hartex_user_rid: Option<RoleId>
 }
 
 impl PluginEnv {
@@ -66,11 +69,21 @@ impl PluginEnv {
         tracing::trace!("retrieving `SUPPORT_GUILD_GID` environment variable");
         let support_guild_gid = env::var("SUPPORT_GUILD_GID").ok();
 
+        tracing::trace!("retrieving `HARTEX_GUILD_OWNER_RID` environment variable");
+        let hartex_guild_owner_rid = env::var("HARTEX_GUILD_OWNER_RID").ok();
+
+        tracing::trace!("retrieving `HARTEX_USER_RID` environment variable");
+        let hartex_user_rid = env::var("HARTEX_USER_RID").ok();
+
         Self {
             global_administrator_uid: global_administrator_uid
                 .map(|uid| UserId(NonZeroU64::new(uid.parse().unwrap()).unwrap())),
             support_guild_gid: support_guild_gid
-                .map(|gid| GuildId(NonZeroU64::new(gid.parse().unwrap()).unwrap()))
+                .map(|gid| GuildId(NonZeroU64::new(gid.parse().unwrap()).unwrap())),
+            hartex_guild_owner_rid: hartex_guild_owner_rid
+                .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap())),
+            hartex_user_rid: hartex_user_rid
+                .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap()))
         }
     }
 }

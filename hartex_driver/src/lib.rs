@@ -4,7 +4,6 @@
 //! "moving pieces" that are required for the bot to work.
 
 #![deny(clippy::pedantic, warnings, unsafe_code)]
-#![feature(format_args_capture)]
 #![feature(once_cell)]
 
 use std::{
