@@ -18,5 +18,5 @@ hartex_env = { path = "../hartex_env" }
 hartex_eventsys = { path = "../hartex_eventsys" }
 hartex_model = { path = "../hartex_model" }
 hartex_plugins = { path = "../hartex_plugins" }
-tokio = { version = "1.13.1", features = [ "full" ] }
+tokio = { version = "1.14.0", features = [ "full" ] }
 tokio-stream = "0.1.7"
