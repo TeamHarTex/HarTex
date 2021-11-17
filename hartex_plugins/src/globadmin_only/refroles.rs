@@ -152,7 +152,8 @@ async fn execute_refroles_command(
                     PLUGIN_ENV.hartex_user_rid.unwrap()
                 )
                 .exec()
-                .await {
+                .await
+            {
                 tracing::trace!("failed to add hartex user role to member: {error:?}");
             }
 
@@ -169,7 +170,8 @@ async fn execute_refroles_command(
                 PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
             )
             .exec()
-            .await {
+            .await
+        {
             tracing::error!("failed to remove hartex guild owner role from member: {error:?}");
         }
 
@@ -185,7 +187,8 @@ async fn execute_refroles_command(
                 PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
             )
             .exec()
-            .await {
+            .await
+        {
             tracing::error!("failed to add hartex guild owner role to member: {error:?}");
         }
 
