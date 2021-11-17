@@ -39,10 +39,11 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
         write!(f, "a non-zero integer representing a user id")
     }
 
-    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
+    #[allow(clippy::cast_sign_loss)]
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
         E: Error {
-        UserId::new(v).ok_or_else(|| Error::custom("the user id cannot be zero"))
+        UserId::new(v as u64).ok_or_else(|| Error::custom("the user id cannot be zero"))
     }
 }
 
