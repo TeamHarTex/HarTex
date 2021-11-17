@@ -13,4 +13,4 @@ license = "Apache-2.0"
 dotenv = "0.15.0"
 hartex_core = { path = "../hartex_core", features = [ "tracing-bundled" ] }
 hartex_driver = { path = "../hartex_driver" }
-tokio = { version = "1.13.1", features = [ "full" ] }
+tokio = { version = "1.14.0", features = [ "full" ] }

@@ -16,4 +16,4 @@ hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
 hartex_dbmani = { path = "../hartex_dbmani" }
 hartex_env = { path = "../hartex_env" }
 hartex_utils = { path = "../hartex_utils" }
-tokio = { version = "1.13.1", features = [ "full" ] }
+tokio = { version = "1.14.0", features = [ "full" ] }
