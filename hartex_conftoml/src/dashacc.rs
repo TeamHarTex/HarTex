@@ -82,7 +82,7 @@ mod tests {
                     len: 2
                 },
                 Token::Str("userId"),
-                Token::U64(1234567887654321),
+                Token::I64(1234567887654321),
                 Token::Str("accessLevel"),
                 Token::U8(0),
                 Token::StructEnd,

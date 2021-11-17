@@ -138,45 +138,53 @@ async fn execute_refroles_command(
         .filter(|uid| !owners.contains(uid))
         .collect::<Vec<_>>();
 
+    // FIXME: add access role removal
     for guild in guilds {
+        tracing::trace!("current guild: {id}", id = guild.GuildId);
         let config = GetGuildConfig::new(guild.GuildId).await?;
 
         for access in config.DashboardAccess {
-            ctx.http
+            if let Err(error) = ctx.http
                 .add_guild_member_role(
                     PLUGIN_ENV.support_guild_gid.unwrap(),
                     access.userId,
                     PLUGIN_ENV.hartex_user_rid.unwrap()
                 )
                 .exec()
-                .await?;
+                .await {
+                tracing::trace!("failed to add hartex user role to member: {error:?}");
+            }
 
             time::sleep(time::Duration::from_secs(1)).await;
         }
     }
 
     for uid in to_remove {
-        ctx.http
+        if let Err(error) = ctx.http
             .remove_guild_member_role(
                 PLUGIN_ENV.support_guild_gid.unwrap(),
                 uid,
                 PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
             )
             .exec()
-            .await?;
+            .await {
+            tracing::error!("failed to remove hartex guild owner role from member: {error:?}");
+        }
 
         time::sleep(time::Duration::from_secs(1)).await;
     }
 
     for owner in owners {
-        ctx.http
+        if let Err(error) = ctx.http
             .add_guild_member_role(
                 PLUGIN_ENV.support_guild_gid.unwrap(),
                 owner,
                 PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
             )
             .exec()
-            .await?;
+            .await {
+            tracing::error!("failed to add hartex guild owner role to member: {error:?}");
+        }
 
         time::sleep(time::Duration::from_secs(1)).await;
     }
