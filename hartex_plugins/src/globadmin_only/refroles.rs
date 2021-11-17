@@ -144,7 +144,8 @@ async fn execute_refroles_command(
         let config = GetGuildConfig::new(guild.GuildId).await?;
 
         for access in config.DashboardAccess {
-            if let Err(error) = ctx.http
+            if let Err(error) = ctx
+                .http
                 .add_guild_member_role(
                     PLUGIN_ENV.support_guild_gid.unwrap(),
                     access.userId,
@@ -160,7 +161,8 @@ async fn execute_refroles_command(
     }
 
     for uid in to_remove {
-        if let Err(error) = ctx.http
+        if let Err(error) = ctx
+            .http
             .remove_guild_member_role(
                 PLUGIN_ENV.support_guild_gid.unwrap(),
                 uid,
@@ -175,7 +177,8 @@ async fn execute_refroles_command(
     }
 
     for owner in owners {
-        if let Err(error) = ctx.http
+        if let Err(error) = ctx
+            .http
             .add_guild_member_role(
                 PLUGIN_ENV.support_guild_gid.unwrap(),
                 owner,
