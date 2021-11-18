@@ -212,8 +212,10 @@ async fn execute_refroles_command(
     }
 
     ctx.http
-        .update_interaction_original(&interaction.token)?
-        .content(Some("Done."))?
+        .update_interaction_original(&interaction.token)
+        .unwrap()
+        .content(Some("Done."))
+        .unwrap()
         .exec()
         .await?;
 
