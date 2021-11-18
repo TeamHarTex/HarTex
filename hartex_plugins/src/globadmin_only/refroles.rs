@@ -124,6 +124,22 @@ async fn execute_refroles_command(
             .await?;
     }
 
+    ctx.http
+        .interaction_callback(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse::ChannelMessageWithSource(CallbackData {
+                allowed_mentions: None,
+                components: None,
+                content: Some(String::from("Refreshing roles...")),
+                embeds: vec![],
+                flags: None,
+                tts: None
+            })
+        )
+        .exec()
+        .await?;
+
     let guilds = GetWhitelistedGuilds::default().await?;
     let owners = guilds
         .iter()
