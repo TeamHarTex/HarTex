@@ -170,7 +170,7 @@ async fn execute_refroles_command(
                 .exec()
                 .await
             {
-                tracing::trace!("failed to add hartex user role to member: {error:?}");
+                tracing::error!("failed to add hartex user role to member: {error:?}");
             }
 
             time::sleep(time::Duration::from_secs(1)).await;

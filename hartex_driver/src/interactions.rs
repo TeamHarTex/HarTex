@@ -62,6 +62,15 @@ pub async fn handle_interaction(
                 match &*command.data.name {
                     // Global Administrator Only Plugin
                     "refroles" => {
+                        span.in_scope(|| {
+                            tracing::trace!(
+                                "interaction command identified - `about`; invoking command handler"
+                            );
+                        });
+
+                        let span =
+                            tracing::trace_span!("interaction command handler: refroles command");
+
                         Refroles
                             .execute(
                                 CommandContext {
@@ -73,6 +82,7 @@ pub async fn handle_interaction(
                                 },
                                 cache
                             )
+                            .instrument(span)
                             .await
                     }
                     // Global Plugin
