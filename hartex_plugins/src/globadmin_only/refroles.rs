@@ -212,18 +212,8 @@ async fn execute_refroles_command(
     }
 
     ctx.http
-        .interaction_callback(
-            interaction.id,
-            &interaction.token,
-            &InteractionResponse::ChannelMessageWithSource(CallbackData {
-                allowed_mentions: None,
-                components: None,
-                content: Some(String::from("Done")),
-                embeds: vec![],
-                flags: None,
-                tts: None
-            })
-        )
+        .update_interaction_original(&interaction.token)?
+        .content(Some("Done."))?
         .exec()
         .await?;
 
