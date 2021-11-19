@@ -62,6 +62,7 @@ impl Command for Avatar {
 ///
 /// ## Parameters
 /// - `ctx`, type `CommandContext`: the command context to use.
+#[allow(clippy::unused_async)]
 async fn execute_avatar_command(_: CommandContext) -> HarTexResult<()> {
     Ok(())
 }

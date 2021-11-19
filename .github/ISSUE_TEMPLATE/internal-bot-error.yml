@@ -16,7 +16,7 @@ body:
     attributes:
       label: Bot Version
       description: Which version of the bot is affected by this IBE? (can be obtained using the "about" command)
-      placeholder: e.g. Version 21H1 (Build 105)
+      placeholder: e.g. Version 1.23.0-nightly-19-11-2021 (Build 550)
     validations:
       required: true
 
