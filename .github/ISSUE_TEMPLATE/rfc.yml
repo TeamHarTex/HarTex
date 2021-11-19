@@ -1,0 +1,80 @@
+name: RFC
+description: An RFC for a new feature to be added.
+labels: ["Bot: RFC", "RFC: Fresh RFC"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## RFC Guildelines
+
+        - Go through existing RFCs to see whether the feature you're proposing here has already been proposed by someone else;
+        - Provide a detailed description of the feature; and
+        - Provide any considered alternatives when drafting the feature.
+
+  - type: input
+    attributes:
+      label: Feature Name (A Unique Identifier)
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Starting Date
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Feature Implementation Pull Request
+      description: Only to be filled in when the RFC is accepted and an implementation PR is created.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Summary
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Motivation
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Guide-level Explanation
+      description: An explanation of the feature as if it is included in the bot already.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Reference-level Explanation
+      description: A technical explanation of the feature.
+
+  - type: textarea
+    attributes:
+      label: Drawbacks
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Rationale & Alternatives
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Unresolved Questions
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Future Possibilities
+    validations:
+      required: true
