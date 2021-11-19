@@ -12,6 +12,7 @@ use hartex_env::PluginEnv;
 pub mod globadmin_only;
 pub mod global;
 pub mod information;
+pub mod utilities;
 
 /// # Static `PLUGIN_ENV`
 ///
