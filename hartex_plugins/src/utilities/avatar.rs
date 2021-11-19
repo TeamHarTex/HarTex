@@ -51,7 +51,7 @@ impl Command for Avatar {
                 description: String::from("the id of the user to obtain the avatar for"),
                 name: String::from("user"),
                 required: true
-            })
+            }),
         ]
     }
 }
