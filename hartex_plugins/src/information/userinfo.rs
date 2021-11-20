@@ -232,25 +232,26 @@ async fn execute_userinfo_command(
         roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
 
         let temp = embed.clone();
-        embed = temp.field(
-            EmbedFieldBuilder::new(
-                "Guild Nickname",
-                member.nick.unwrap_or_else(|| String::from("none"))
+        embed = temp
+            .field(
+                EmbedFieldBuilder::new(
+                    "Guild Nickname",
+                    member.nick.unwrap_or_else(|| String::from("none"))
+                )
+                .inline()
             )
-            .inline()
-        )
-        .field(
-            EmbedFieldBuilder::new(
-                "Highest Role in Guild",
-                if roles.is_empty() {
-                    String::from("none")
-                }
-                else {
-                    roles.first().unwrap().mention().to_string()
-                }
-            )
-            .inline()
-        );
+            .field(
+                EmbedFieldBuilder::new(
+                    "Highest Role in Guild",
+                    if roles.is_empty() {
+                        String::from("none")
+                    }
+                    else {
+                        roles.first().unwrap().mention().to_string()
+                    }
+                )
+                .inline()
+            );
 
         if let Some(presence) = presence {
             let activities = presence.activities();
