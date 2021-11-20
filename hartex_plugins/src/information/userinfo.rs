@@ -42,7 +42,10 @@ use hartex_core::{
             id::UserId
         },
         util::{
-            mention::Mention,
+            mention::{
+                Mention,
+                ParseMention
+            },
             snowflake::Snowflake
         }
     },
@@ -161,11 +164,11 @@ async fn execute_userinfo_command(
         let user_option = options
             .into_iter()
             .find(|option| {
-                option.name == "user" && option.value.kind() == CommandOptionType::Mentionable
+                option.name == "user" && option.value.kind() == CommandOptionType::String
             })
             .unwrap();
-        let user_id = if let CommandOptionValue::Mentionable(id) = user_option.value {
-            id.0
+        let user_id = if let CommandOptionValue::String(string) = user_option.value {
+            UserId::parse(&string).ok().unwrap_or_else(|| UserId::new(string.parse().unwrap()).unwrap())
         }
         else {
             return Err(HarTexError::Custom {
@@ -174,7 +177,7 @@ async fn execute_userinfo_command(
         };
 
         ctx.http
-            .user(UserId::from(user_id))
+            .user(user_id)
             .exec()
             .await?
             .model()
