@@ -168,7 +168,9 @@ async fn execute_userinfo_command(
             })
             .unwrap();
         let user_id = if let CommandOptionValue::String(string) = user_option.value {
-            UserId::parse(&string).ok().unwrap_or_else(|| UserId::new(string.parse().unwrap()).unwrap())
+            UserId::parse(&string)
+                .ok()
+                .unwrap_or_else(|| UserId::new(string.parse().unwrap()).unwrap())
         }
         else {
             return Err(HarTexError::Custom {
@@ -176,12 +178,7 @@ async fn execute_userinfo_command(
             });
         };
 
-        ctx.http
-            .user(user_id)
-            .exec()
-            .await?
-            .model()
-            .await?
+        ctx.http.user(user_id).exec().await?.model().await?
     };
     let member = ctx.http
         // it is ok to unwrap here because it is already checked that the interaction is sent from
