@@ -180,21 +180,12 @@ async fn execute_userinfo_command(
 
         ctx.http.user(user_id).exec().await?.model().await?
     };
-    let member = ctx.http
+    let future = ctx.http
         // it is ok to unwrap here because it is already checked that the interaction is sent from
         // a guild (which its id should never be None)
         .guild_member(interaction.guild_id.unwrap(), user.id)
         .exec()
-        .await?
-        .model()
-        .await?;
-    let presence = cache.presence(interaction.guild_id.unwrap(), member.user.id);
-    let mut roles = member
-        .roles
-        .iter()
-        .filter_map(|role_id| cache.role(*role_id))
-        .collect::<Vec<_>>();
-    roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
+        .await;
 
     let avatar_url = if let Some(ref hash) = user.avatar {
         let format = if hash.starts_with("a_") {
@@ -225,72 +216,103 @@ async fn execute_userinfo_command(
         .field(EmbedFieldBuilder::new(
             "User ID",
             format!("{id}", id = user.id)
-        ))
-        .field(
+        ));
+
+    if future.is_err() {
+    }
+    else {
+        let member = future.unwrap().model().await?;
+
+        let presence = cache.presence(interaction.guild_id.unwrap(), member.user.id);
+        let mut roles = member
+            .roles
+            .iter()
+            .filter_map(|role_id| cache.role(*role_id))
+            .collect::<Vec<_>>();
+        roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
+
+        let temp = embed.clone();
+        temp.field(
             EmbedFieldBuilder::new(
                 "Guild Nickname",
                 member.nick.unwrap_or_else(|| String::from("none"))
             )
-            .inline()
+                .inline()
         )
-        .field(
-            EmbedFieldBuilder::new(
-                "Highest Role in Guild",
-                if roles.is_empty() {
-                    String::from("none")
-                }
-                else {
-                    roles.first().unwrap().mention().to_string()
-                }
-            )
-            .inline()
-        );
-
-    if let Some(presence) = presence {
-        let activities = presence.activities();
-
-        embed = embed.field(EmbedFieldBuilder::new(
-            "Status",
-            match presence.status() {
-                Status::DoNotDisturb => "do not disturb",
-                Status::Idle => "idle",
-                Status::Invisible => "invisible",
-                Status::Offline => "offline",
-                Status::Online => "online"
-            }
-        ));
-
-        if activities.is_empty() {
-            embed = embed.field(EmbedFieldBuilder::new("Activities", "none"));
-        }
-        else {
-            for activity in activities {
-                let temp = embed.clone();
-                let activity_type = match activity.kind {
-                    ActivityType::Competing => "Competing",
-                    ActivityType::Custom => "Custom",
-                    ActivityType::Listening => "Listening",
-                    ActivityType::Playing => "Playing",
-                    ActivityType::Streaming => "Streaming",
-                    ActivityType::Watching => "Watching"
-                };
-
-                embed = temp.field(EmbedFieldBuilder::new(
-                    format!("Activity - {activity_type}"),
-                    if activity.kind == ActivityType::Custom {
-                        &activity.state.as_ref().unwrap()
+            .field(
+                EmbedFieldBuilder::new(
+                    "Highest Role in Guild",
+                    if roles.is_empty() {
+                        String::from("none")
                     }
                     else {
-                        &activity.name
+                        roles.first().unwrap().mention().to_string()
                     }
-                ));
+                )
+                    .inline()
+            );
+
+        if let Some(presence) = presence {
+            let activities = presence.activities();
+
+            embed = embed.field(EmbedFieldBuilder::new(
+                "Status",
+                match presence.status() {
+                    Status::DoNotDisturb => "do not disturb",
+                    Status::Idle => "idle",
+                    Status::Invisible => "invisible",
+                    Status::Offline => "offline",
+                    Status::Online => "online"
+                }
+            ));
+
+            if activities.is_empty() {
+                embed = embed.field(EmbedFieldBuilder::new("Activities", "none"));
+            }
+            else {
+                for activity in activities {
+                    let temp = embed.clone();
+                    let activity_type = match activity.kind {
+                        ActivityType::Competing => "Competing",
+                        ActivityType::Custom => "Custom",
+                        ActivityType::Listening => "Listening",
+                        ActivityType::Playing => "Playing",
+                        ActivityType::Streaming => "Streaming",
+                        ActivityType::Watching => "Watching"
+                    };
+
+                    embed = temp.field(EmbedFieldBuilder::new(
+                        format!("Activity - {activity_type}"),
+                        if activity.kind == ActivityType::Custom {
+                            &activity.state.as_ref().unwrap()
+                        }
+                        else {
+                            &activity.name
+                        }
+                    ));
+                }
             }
         }
-    }
-    else {
-        embed = embed
-            .field(EmbedFieldBuilder::new("Status", "unknown"))
-            .field(EmbedFieldBuilder::new("Activities", "none"));
+        else {
+            embed = embed
+                .field(EmbedFieldBuilder::new("Status", "unknown"))
+                .field(EmbedFieldBuilder::new("Activities", "none"));
+        }
+
+        let joined_at = member.joined_at.unwrap().iso_8601();
+        let created_at =
+            FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
+
+        let temp = embed.clone();
+
+        embed = temp
+            .field(
+                EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})")).inline()
+            )
+            .field(
+                EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})"))
+                    .inline()
+            );
     }
 
     let timezone = if config.NightlyFeatures.localization {
@@ -299,20 +321,6 @@ async fn execute_userinfo_command(
     else {
         Timezone::UTC
     };
-    let joined_at = member.joined_at.unwrap().iso_8601();
-    let created_at =
-        FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
-
-    let temp = embed.clone();
-
-    embed = temp
-        .field(
-            EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})")).inline()
-        )
-        .field(
-            EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})"))
-                .inline()
-        );
 
     ctx.http
         .interaction_callback(
