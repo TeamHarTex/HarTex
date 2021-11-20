@@ -26,7 +26,7 @@ use hartex_core::{
                     InteractionResponse
                 },
                 command::{
-                    BaseCommandOptionData,
+                    ChoiceCommandOptionData,
                     CommandOption,
                     CommandOptionType
                 },
@@ -93,7 +93,8 @@ impl Command for Userinfo {
 
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
         vec![
-            CommandOption::Mentionable(BaseCommandOptionData {
+            CommandOption::String(ChoiceCommandOptionData {
+                choices: vec![],
                 description: String::from("(optional) the user to query the information"),
                 name: String::from("user"),
                 required: false
