@@ -232,7 +232,7 @@ async fn execute_userinfo_command(
         roles.sort_by(|prev_role, curr_role| curr_role.position.cmp(&prev_role.position));
 
         let temp = embed.clone();
-        temp.field(
+        embed = temp.field(
             EmbedFieldBuilder::new(
                 "Guild Nickname",
                 member.nick.unwrap_or_else(|| String::from("none"))
