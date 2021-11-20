@@ -237,20 +237,20 @@ async fn execute_userinfo_command(
                 "Guild Nickname",
                 member.nick.unwrap_or_else(|| String::from("none"))
             )
-                .inline()
+            .inline()
         )
-            .field(
-                EmbedFieldBuilder::new(
-                    "Highest Role in Guild",
-                    if roles.is_empty() {
-                        String::from("none")
-                    }
-                    else {
-                        roles.first().unwrap().mention().to_string()
-                    }
-                )
-                    .inline()
-            );
+        .field(
+            EmbedFieldBuilder::new(
+                "Highest Role in Guild",
+                if roles.is_empty() {
+                    String::from("none")
+                }
+                else {
+                    roles.first().unwrap().mention().to_string()
+                }
+            )
+            .inline()
+        );
 
         if let Some(presence) = presence {
             let activities = presence.activities();
@@ -307,7 +307,8 @@ async fn execute_userinfo_command(
 
         embed = temp
             .field(
-                EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})")).inline()
+                EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})"))
+                    .inline()
             )
             .field(
                 EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})"))
