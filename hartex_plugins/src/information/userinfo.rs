@@ -299,15 +299,15 @@ async fn execute_userinfo_command(
                 .field(EmbedFieldBuilder::new("Activities", "none"));
         }
 
-        let joined_at = member.joined_at.unwrap().iso_8601();
-        let created_at =
-            FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
         let timezone = if config.NightlyFeatures.localization {
             config.GuildConfiguration.timezone
         }
         else {
             Timezone::UTC
         };
+        let joined_at = member.joined_at.unwrap().iso_8601();
+        let created_at =
+            FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
 
         let temp = embed.clone();
 
