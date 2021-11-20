@@ -302,6 +302,12 @@ async fn execute_userinfo_command(
         let joined_at = member.joined_at.unwrap().iso_8601();
         let created_at =
             FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
+        let timezone = if config.NightlyFeatures.localization {
+            config.GuildConfiguration.timezone
+        }
+        else {
+            Timezone::UTC
+        };
 
         let temp = embed.clone();
 
@@ -315,13 +321,6 @@ async fn execute_userinfo_command(
                     .inline()
             );
     }
-
-    let timezone = if config.NightlyFeatures.localization {
-        config.GuildConfiguration.timezone
-    }
-    else {
-        Timezone::UTC
-    };
 
     ctx.http
         .interaction_callback(
