@@ -97,6 +97,7 @@ impl Command for Userinfo {
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
         vec![
             CommandOption::String(ChoiceCommandOptionData {
+                autocomplete: false,
                 choices: vec![],
                 description: String::from("(optional) the user to query the information"),
                 name: String::from("user"),
@@ -306,7 +307,7 @@ async fn execute_userinfo_command(
         else {
             Timezone::UTC
         };
-        let joined_at = member.joined_at.unwrap().iso_8601();
+        let joined_at = member.joined_at.iso_8601();
         let created_at =
             FixedOffset::east(timezone.into_offset_secs()).timestamp_millis(user.id.timestamp());
 
