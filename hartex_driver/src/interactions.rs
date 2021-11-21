@@ -20,6 +20,11 @@ use hartex_core::{
         Instrument
     }
 };
+use hartex_eventsys::{
+    emitter::EventEmitter,
+    events::HarTexEvent
+};
+use hartex_model::payload::CommandExecuted;
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
     global::{
@@ -42,7 +47,8 @@ use hartex_plugins::{
 /// - `interaction`, type `Interaction`: the interaction
 /// - `cache`, type `InMemoryCache`: the in-memory cache
 /// - `http`, type `Client`: the Twilight HTTP client
-/// - `cluster`: the gateway cluster
+/// - `cluster`, type `Cluster: the gateway cluster
+/// - `emitter`, type `EventEmitter`: the event emitter
 ///
 /// ## Errors
 ///
@@ -52,21 +58,20 @@ pub async fn handle_interaction(
     interaction: Interaction,
     cache: CloneableInMemoryCache,
     http: CloneableClient,
-    cluster: CloneableCluster
+    cluster: CloneableCluster,
+    emitter: EventEmitter
 ) -> HarTexResult<()> {
-    let span = tracing::trace_span!("interaction handler");
-
     match {
         match interaction.clone() {
             Interaction::ApplicationCommand(command) => {
                 match &*command.data.name {
                     // Global Administrator Only Plugin
                     "refroles" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `about`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "refroles"
+                            }
+                        )));
 
                         let span =
                             tracing::trace_span!("interaction command handler: refroles command");
@@ -87,11 +92,11 @@ pub async fn handle_interaction(
                     }
                     // Global Plugin
                     "about" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `about`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "about"
+                            }
+                        )));
 
                         let span =
                             tracing::trace_span!("interaction command handler: about command");
@@ -111,11 +116,11 @@ pub async fn handle_interaction(
                             .await
                     }
                     "ping" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `ping`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "ping"
+                            }
+                        )));
 
                         let span =
                             tracing::trace_span!("interaction command handler: ping command");
@@ -134,11 +139,11 @@ pub async fn handle_interaction(
                         .await
                     }
                     "source" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `source`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "source"
+                            }
+                        )));
 
                         let span =
                             tracing::trace_span!("interaction command handler: source command");
@@ -158,11 +163,11 @@ pub async fn handle_interaction(
                             .await
                     }
                     "team" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `team`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "team"
+                            }
+                        )));
 
                         let span =
                             tracing::trace_span!("interaction command handler: team command");
@@ -182,11 +187,11 @@ pub async fn handle_interaction(
                     }
                     // Information Plugin
                     "guildinfo" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `guildinfo`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "guildinfo"
+                            }
+                        )));
 
                         let span =
                             tracing::trace_span!("interaction command handler: guildinfo command");
@@ -206,11 +211,11 @@ pub async fn handle_interaction(
                             .await
                     }
                     "userinfo" => {
-                        span.in_scope(|| {
-                            tracing::trace!(
-                                "interaction command identified - `userinfo`; invoking command handler"
-                            );
-                        });
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
+                            CommandExecuted {
+                                command: "userinfo"
+                            }
+                        )));
 
                         Userinfo
                             .execute(
