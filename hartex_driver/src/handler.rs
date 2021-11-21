@@ -174,13 +174,7 @@ impl EventHandler {
             tracing::trace!("received an interaction, invoking interaction handler");
         });
 
-        crate::interactions::handle_interaction(
-            payload.0,
-            cache,
-            http,
-            cluster,
-            emitter
-        ).await?;
+        crate::interactions::handle_interaction(payload.0, cache, http, cluster, emitter).await?;
 
         Ok(())
     }
