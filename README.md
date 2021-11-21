@@ -19,7 +19,7 @@ This project is built with the amazing JetBrains products. [Check them out!](htt
 Should I run HarTex locally?
 ----------------------------
 
-Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having 
+Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having
 the source code released and updated frequently, is to allow others to understand the inner workings of the bot and audit its functionality.
 You *may* run a local instance of HarTex for your server.
 
