@@ -67,11 +67,9 @@ pub async fn handle_interaction(
                 match &*command.data.name {
                     // Global Administrator Only Plugin
                     "refroles" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "refroles"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "refroles"
+                        })));
 
                         let span =
                             tracing::trace_span!("interaction command handler: refroles command");
@@ -92,11 +90,9 @@ pub async fn handle_interaction(
                     }
                     // Global Plugin
                     "about" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "about"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "about"
+                        })));
 
                         let span =
                             tracing::trace_span!("interaction command handler: about command");
@@ -116,11 +112,9 @@ pub async fn handle_interaction(
                             .await
                     }
                     "ping" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "ping"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "ping"
+                        })));
 
                         let span =
                             tracing::trace_span!("interaction command handler: ping command");
@@ -139,11 +133,9 @@ pub async fn handle_interaction(
                         .await
                     }
                     "source" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "source"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "source"
+                        })));
 
                         let span =
                             tracing::trace_span!("interaction command handler: source command");
@@ -163,11 +155,9 @@ pub async fn handle_interaction(
                             .await
                     }
                     "team" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "team"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "team"
+                        })));
 
                         let span =
                             tracing::trace_span!("interaction command handler: team command");
@@ -187,11 +177,9 @@ pub async fn handle_interaction(
                     }
                     // Information Plugin
                     "guildinfo" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "guildinfo"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "guildinfo"
+                        })));
 
                         let span =
                             tracing::trace_span!("interaction command handler: guildinfo command");
@@ -211,11 +199,9 @@ pub async fn handle_interaction(
                             .await
                     }
                     "userinfo" => {
-                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(
-                            CommandExecuted {
-                                command: "userinfo"
-                            }
-                        )));
+                        emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
+                            command: "userinfo"
+                        })));
 
                         Userinfo
                             .execute(
