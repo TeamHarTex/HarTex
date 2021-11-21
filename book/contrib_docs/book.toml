@@ -3,10 +3,10 @@ authors = ["HTGAzureX1212"]
 language = "en"
 multilingual = false
 src = "src"
-title = "HarTex Usage Documentation"
+title = "HarTex Contributors' Documentation"
 
 [build]
-build-dir = "../../docs/docs/usage"
+build-dir = "../../docs/docs/contrib"
 
 [output.html]
 additional-css = ["../extra_css/notices.css"]
