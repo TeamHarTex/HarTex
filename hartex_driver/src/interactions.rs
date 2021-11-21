@@ -47,7 +47,7 @@ use hartex_plugins::{
 /// - `interaction`, type `Interaction`: the interaction
 /// - `cache`, type `InMemoryCache`: the in-memory cache
 /// - `http`, type `Client`: the Twilight HTTP client
-/// - `cluster`, type `Cluster: the gateway cluster
+/// - `cluster`, type `Cluster`: the gateway cluster
 /// - `emitter`, type `EventEmitter`: the event emitter
 ///
 /// ## Errors

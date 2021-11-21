@@ -387,7 +387,7 @@ impl EventHandler {
             tracing::trace!(
                 "interaction command received (name: `{}`); invoking its handler",
                 payload.command
-            )
+            );
         });
 
         Ok(())
