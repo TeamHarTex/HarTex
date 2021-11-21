@@ -47,6 +47,7 @@ impl Command for Avatar {
     fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![
             CommandOption::String(ChoiceCommandOptionData {
+                autocomplete: false,
                 choices: vec![],
                 description: String::from("the id of the user to obtain the avatar for"),
                 name: String::from("user"),
