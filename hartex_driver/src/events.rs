@@ -65,10 +65,10 @@ pub async fn handle_event(
             Event::Ready(payload) => EventHandler::ready(payload, cluster, http).await?,
             Event::ShardIdentifying(payload) => EventHandler::shard_identifying(payload).await?,
             _ => ()
-        }
+        },
         EventType::Custom if custom.is_some() => match custom.unwrap() {
             HarTexEvent::CommandExecuted(payload) => EventHandler::command_executed(payload).await?
-        }
+        },
         _ => {
             return Err(HarTexError::Custom {
                 message: String::from("event type mismatch")
