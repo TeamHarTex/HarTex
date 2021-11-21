@@ -158,19 +158,29 @@ impl EventHandler {
     /// ## Parameters
     /// - `payload`, type `Box<InteractionCreate>`: the `InteractionCreate` event payload
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
+    /// - `cluster`, type `Cluster`: the Twilight gateway cluster
+    /// - `cache`, type `InMemoryCache`: the Twilight in-memory cache
+    /// - `emitter`, type `EventEmitter`: the event emitter
     #[allow(clippy::missing_errors_doc)]
     pub async fn interaction_create(
         payload: Box<InteractionCreate>,
         http: CloneableClient,
         cluster: CloneableCluster,
-        cache: CloneableInMemoryCache
+        cache: CloneableInMemoryCache,
+        emitter: EventEmitter
     ) -> HarTexResult<()> {
         let span = tracing::trace_span!("event handler: interaction create");
         span.in_scope(|| {
             tracing::trace!("received an interaction, invoking interaction handler");
         });
 
-        crate::interactions::handle_interaction(payload.0, cache, http, cluster).await?;
+        crate::interactions::handle_interaction(
+            payload.0,
+            cache,
+            http,
+            cluster,
+            emitter
+        ).await?;
 
         Ok(())
     }
@@ -184,6 +194,7 @@ impl EventHandler {
     /// - `emitter`, type `EventEmitter`: the event emitter to use when the message contains an actual command to execute
     /// - `cache`, type `InMemoryCache`: the cache to pass to the command if the message is indeed a command
     /// - `http`, type `Client`: the Twilight HTTP client to pass to the command if the message is indeed a command
+    /// - `cluster`, type `Cluster`: the Twilight gateway cluster
     #[allow(clippy::missing_errors_doc)]
     pub async fn message_create(
         _: Box<MessageCreate>,
@@ -376,7 +387,15 @@ impl EventHandler {
     ///
     /// - `payload`, type `Box<CommandExecuted>`: the `CommandExecuted` event payload
     #[allow(clippy::missing_errors_doc)]
-    pub async fn command_executed(_: Box<CommandExecuted>) -> HarTexResult<()> {
+    pub async fn command_executed(payload: Box<CommandExecuted>) -> HarTexResult<()> {
+        let span = tracing::trace_span!("event handler: command executed");
+        span.in_scope(|| {
+            tracing::trace!(
+                "interaction command received (name: `{}`); invoking its handler",
+                payload.command
+            )
+        });
+
         Ok(())
     }
 }
