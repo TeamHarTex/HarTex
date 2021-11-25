@@ -219,9 +219,7 @@ async fn execute_userinfo_command(
             format!("{id}", id = user.id)
         ));
 
-    if future.is_err() {
-    }
-    else {
+    if future.is_ok() {
         let member = future.unwrap().model().await?;
 
         let presence = cache.presence(interaction.guild_id.unwrap(), member.user.id);
