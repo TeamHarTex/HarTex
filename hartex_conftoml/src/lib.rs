@@ -18,6 +18,7 @@ use serde::Deserialize;
 pub mod dashacc;
 pub mod guildconf;
 pub mod nightly;
+pub mod permlvl;
 
 /// # Struct `TomlConfig`
 ///
