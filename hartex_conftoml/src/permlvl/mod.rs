@@ -11,9 +11,9 @@ pub mod roles;
 // [PermissionLevels.Users]
 // UserId1 = <perm id>
 
-//! # Struct `PermissionLevels`
-//!
-//! Represents the permission levels configured.
+/// # Struct `PermissionLevels`
+///
+/// Represents the permission levels configured.
 pub struct PermissionLevels {
     pub Roles: roles::PermissionLevelsRoles
 }
