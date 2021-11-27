@@ -23,27 +23,35 @@ use serde::{
 /// # Struct `PermissionLevelMap`
 ///
 /// Represents a permission level map over an `Id` generic parameter.
+#[allow(clippy::module_name_repetitions)]
 pub struct PermissionLevelMap<'visitor, Id: 'visitor + Clone + Deserialize<'visitor> + Eq + Hash> {
     #[allow(dead_code)]
     map: DashMap<Id, u8>,
     phantom: PhantomData<&'visitor Id>
 }
 
-impl<'visitor, Id: Clone + Deserialize<'visitor> + Eq + Hash> Deserialize<'visitor> for PermissionLevelMap<'visitor, Id> {
+impl<'visitor, Id: Clone + Deserialize<'visitor> + Eq + Hash> Deserialize<'visitor>
+    for PermissionLevelMap<'visitor, Id>
+{
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: de::Deserializer<'visitor> {
+    where
+        D: de::Deserializer<'visitor> {
         deserializer.deserialize_map(PermissionLevelsPermissionLevelMapDeserializerMapVisitor {
             phantom: PhantomData
         })
     }
 }
 
-pub struct PermissionLevelsPermissionLevelMapDeserializerMapVisitor<'visitor, Id: 'visitor + Clone + Deserialize<'visitor> + Eq + Hash> {
+pub struct PermissionLevelsPermissionLevelMapDeserializerMapVisitor<
+    'visitor,
+    Id: 'visitor + Clone + Deserialize<'visitor> + Eq + Hash
+> {
     phantom: PhantomData<&'visitor Id>
 }
 
-impl<'visitor, Id: 'visitor + Clone + Deserialize<'visitor> + Eq + Hash> de::Visitor<'visitor> for PermissionLevelsPermissionLevelMapDeserializerMapVisitor<'visitor, Id> {
+impl<'visitor, Id: 'visitor + Clone + Deserialize<'visitor> + Eq + Hash> de::Visitor<'visitor>
+    for PermissionLevelsPermissionLevelMapDeserializerMapVisitor<'visitor, Id>
+{
     type Value = PermissionLevelMap<'visitor, Id>;
 
     fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
