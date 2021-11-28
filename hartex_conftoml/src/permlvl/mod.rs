@@ -12,10 +12,12 @@
 pub mod map;
 
 use hartex_core::discord::model::id::RoleId;
+use serde::Deserialize;
 
 /// # Struct `PermissionLevels`
 ///
 /// Represents the permission levels configured.
-pub struct PermissionLevels<'visitor> {
-    pub Roles: map::PermissionLevelMap<'visitor, RoleId>
+#[derive(Deserialize)]
+pub struct PermissionLevels {
+    pub Roles: map::PermissionLevelMap<RoleId>
 }
