@@ -39,7 +39,7 @@ pub struct TomlConfig {
 /// ## Errors
 ///
 /// Returns deserialization-related errors.
-pub fn from_str<'visitor>(input: &str) -> HarTexResult<TomlConfig> {
+pub fn from_str(input: &str) -> HarTexResult<TomlConfig> {
     Ok(match toml::from_str(input) {
         Ok(config) => config,
         Err(error) => {
