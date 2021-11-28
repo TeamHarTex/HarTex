@@ -27,7 +27,7 @@ use serde::{
 #[derive(Default)]
 pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {
     #[allow(dead_code)]
-    map: DashMap<Id, u8>,
+    map: DashMap<Id, u8>
 }
 
 impl<'visitor, Id: Clone + Deserialize<'visitor> + Eq + Hash> Deserialize<'visitor>
@@ -45,7 +45,7 @@ impl<'visitor, Id: Clone + Deserialize<'visitor> + Eq + Hash> Deserialize<'visit
 
 pub struct PermissionLevelsPermissionLevelMapDeserializerMapVisitor<
     'visitor,
-    Id: Clone + Eq + Hash
+    Id: Clone + Deserialize<'visitor> + Eq + Hash
 > {
     phantom: PhantomData<&'visitor ()>,
     phantom2: PhantomData<Id>
