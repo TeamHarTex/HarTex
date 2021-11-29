@@ -7,6 +7,8 @@
 //! - `twilight-bundled`: bundles most of the `twilight` ecosystem of crates with the library,
 //!                       removes the need to include the dependencies repeatedly across the
 //!                       `HarTex` crates.
+//!
+//! - `tracing-bundled`: bundles tracing, a logging library for use within the `HarTex` crates.
 
 #![deny(clippy::pedantic, warnings, unsafe_code)]
 
@@ -23,4 +25,4 @@ pub mod time;
 /// # Static `HARTEX_BUILD`
 ///
 /// Represents the current version and build of `HarTex` Discord bot.
-pub static HARTEX_BUILD: &str = "Version 1.23.0-nightly-28-11-2021 (Build 584)";
+pub static HARTEX_BUILD: &str = "Version 1.23.0-nightly-29-11-2021 (Build 586)";

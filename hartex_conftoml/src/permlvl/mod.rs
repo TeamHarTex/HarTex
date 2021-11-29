@@ -21,3 +21,7 @@ use serde::Deserialize;
 pub struct PermissionLevels {
     pub Roles: map::PermissionLevelMap<RoleId>
 }
+
+#[cfg(test)]
+mod tests {
+}

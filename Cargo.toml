@@ -8,6 +8,7 @@ members = [
     "hartex_driver",
     "hartex_env",
     "hartex_eventsys",
+    "hartex_macros",
     "hartex_plugins",
     "hartex_utils"
 ]
