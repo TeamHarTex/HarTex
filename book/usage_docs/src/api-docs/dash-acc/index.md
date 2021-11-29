@@ -15,7 +15,7 @@ Two square brackets are required to wrap the name, because this is an array of t
 
 #### Dashboard Access Level
 
-| ACCESS LEVEL | INTEGER REPRESENTATION | MEANING                                                               |
+| ACCESS LEVEL | INTEGER REPRESENTATION | DESCRIPTION                                                           |
 | ------------ | ---------------------- | --------------------------------------------------------------------- |
 | ADMIN        | 3                      | full access; can add other users to the dashboard                     |
 | EDITOR       | 2                      | configuration editor; can edit the configuration but cannot add users |

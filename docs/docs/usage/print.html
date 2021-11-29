@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="extra_css/notices.css">
+        <link rel="stylesheet" href="../extra_css/notices.css">
 
     </head>
     <body>
@@ -197,8 +197,8 @@ item and audit the functionality based on your guild's needs.</p>
 <h3 id="basic-configuration"><a class="header" href="#basic-configuration">Basic Configuration</a></h3>
 <pre><code class="language-toml">[[DashboardAccess]]
 userId = 000000000000000000  # your Discord user ID
-accessLevel = 3              # the permission level (see the documentation of the DashboardAccess
-                             # object for the meanings of individual values)
+accessLevel = 3              # the permission level (see the documentation of the Dashboard Access
+                             # object for the descriptions of individual values)
 
 [GuildConfiguration]
 nickname = &quot;HarTex&quot;          # the display nickname of the bot in the guild
@@ -217,7 +217,7 @@ dmCannotUseCommand = true    # determines whether a DM is sent if a user cannot 
             NOTE
         </span>
     </h5>
-    <p>Fields with a question mark <code>?</code> after the type name is optional, that it can be omitted and the default value will be used if that is the case.</p>
+    <p>Fields with a question mark <code>?</code> after the type name are optional, that it can be omitted and the default value will be used if that is the case.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-toml"><a class="header" href="#introduction-to-toml">Introduction to TOML</a></h1>
 <p>HarTex uses a markup language called &quot;TOML&quot; for its configuration.</p>
@@ -235,7 +235,7 @@ syntax to familiarize yourself with TOML, if you do not have much experience wit
 <tr><td>accessLevel</td><td>integer</td><td>the access level of the user in the dashboard</td></tr>
 </tbody></table>
 <h4 id="dashboard-access-level"><a class="header" href="#dashboard-access-level">Dashboard Access Level</a></h4>
-<table><thead><tr><th>ACCESS LEVEL</th><th>INTEGER REPRESENTATION</th><th>MEANING</th></tr></thead><tbody>
+<table><thead><tr><th>ACCESS LEVEL</th><th>INTEGER REPRESENTATION</th><th>DESCRIPTION</th></tr></thead><tbody>
 <tr><td>ADMIN</td><td>3</td><td>full access; can add other users to the dashboard</td></tr>
 <tr><td>EDITOR</td><td>2</td><td>configuration editor; can edit the configuration but cannot add users</td></tr>
 <tr><td>VIEWER</td><td>1</td><td>viewer; cannot edit configuration whatsoever</td></tr>

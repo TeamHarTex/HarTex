@@ -11,5 +11,5 @@ This section contains detailed documentation for the TOML configuration API.
             NOTE
         </span>
     </h5>
-    <p>Fields with a question mark <code>?</code> after the type name is optional, that it can be omitted and the default value will be used if that is the case.</p>
+    <p>Fields with a question mark <code>?</code> after the type name are optional, that it can be omitted and the default value will be used if that is the case.</p>
 </div>
