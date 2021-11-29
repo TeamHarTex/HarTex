@@ -55,7 +55,10 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::num::NonZeroU64;
+    use std::{
+        fmt::Debug,
+        num::NonZeroU64
+    };
 
     use serde_test::Token;
 
