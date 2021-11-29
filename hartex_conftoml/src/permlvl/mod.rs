@@ -23,5 +23,4 @@ pub struct PermissionLevels {
 }
 
 #[cfg(test)]
-mod tests {
-}
+mod tests {}
