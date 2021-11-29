@@ -61,8 +61,11 @@ mod tests {
 
     use super::{
         DashboardAccess,
+        Deserialize,
         UserId
     };
+
+    hartex_macros::static_assert::static_assert_impl_all!(type DashboardAccess: traits Debug, Deserialize, PartialEq);
 
     #[test]
     fn test_dashacc_de() {
