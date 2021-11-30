@@ -24,10 +24,10 @@ use serde::{
 ///
 /// Represents a permission level map over an `Id` generic parameter.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Default)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {
     #[allow(dead_code)]
-    map: DashMap<Id, u8>
+    pub map: DashMap<Id, u8>
 }
 
 impl<'visitor, Id: Clone + Deserialize<'visitor> + Eq + Hash> Deserialize<'visitor>

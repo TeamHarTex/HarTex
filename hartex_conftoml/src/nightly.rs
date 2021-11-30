@@ -11,7 +11,7 @@ use serde::Deserialize;
 ///
 /// The opt-in nightly features that the bot provides.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Debug, Default, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq)]
 pub struct NightlyFeatures {
     // Experimental Support for the Discord Threads API
     #[serde(default = "default_feature_enabled")]
@@ -28,9 +28,27 @@ pub fn default_feature_enabled() -> bool {
 
 #[cfg(test)]
 mod tests {
+    use std::{
+        fmt::Debug,
+        num::NonZeroU64
+    };
+
     use serde_test::Token;
 
-    use super::NightlyFeatures;
+    use super::{
+        Deserialize,
+        NightlyFeatures
+    };
+
+    const _: fn() = || {
+        fn static_assert_impl_all<
+            'deserialize,
+            T: ?Sized + Clone + Debug + Default + Deserialize<'deserialize> + PartialEq
+        >() {
+        }
+
+        static_assert_impl_all::<NightlyFeatures>();
+    };
 
     #[test]
     fn test_nightly_de() {
