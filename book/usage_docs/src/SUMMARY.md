@@ -8,4 +8,5 @@
     - [Introduction to TOML](api-docs/toml-intro/index.md)
     - [Dashboard Access](api-docs/dash-acc/index.md)
     - [Guild Configuration](api-docs/guild-conf/index.md)
+    - [Permission Levels](api-docs/perm-lvls/index.md)
     - [Nightly Features](api-docs/nightly-feat/index.md)

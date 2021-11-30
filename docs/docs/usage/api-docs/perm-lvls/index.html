@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Configuration API Documentation - HarTex Usage Documentation</title>
+        <title>Permission Levels - HarTex Usage Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -13,30 +13,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="icon" href="../favicon.svg">
-        <link rel="shortcut icon" href="../favicon.png">
-        <link rel="stylesheet" href="../css/variables.css">
-        <link rel="stylesheet" href="../css/general.css">
-        <link rel="stylesheet" href="../css/chrome.css">
-        <link rel="stylesheet" href="../css/print.css" media="print">
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="../highlight.css">
-        <link rel="stylesheet" href="../tomorrow-night.css">
-        <link rel="stylesheet" href="../ayu-highlight.css">
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../extra_css/notices.css">
+        <link rel="stylesheet" href="../../../extra_css/notices.css">
 
     </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "../";
+            var path_to_root = "../../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="../api-docs/index.html" class="active"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="../api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="../api-docs/guild-conf/index.html"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="../api-docs/perm-lvls/index.html"><strong aria-hidden="true">3.4.</strong> Permission Levels</a></li><li class="chapter-item expanded "><a href="../api-docs/nightly-feat/index.html"><strong aria-hidden="true">3.5.</strong> Nightly Features</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="../../general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="../../api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="../../api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="../../api-docs/guild-conf/index.html"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="../../api-docs/perm-lvls/index.html" class="active"><strong aria-hidden="true">3.4.</strong> Permission Levels</a></li><li class="chapter-item expanded "><a href="../../api-docs/nightly-feat/index.html"><strong aria-hidden="true">3.5.</strong> Nightly Features</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -114,7 +114,7 @@
                     <h1 class="menu-title">HarTex Usage Documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
 
@@ -143,29 +143,29 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="configuration-api-documentation"><a class="header" href="#configuration-api-documentation">Configuration API Documentation</a></h1>
-<p>This section contains detailed documentation for the TOML configuration API.</p>
-<div class="info">
-    <h5>
-        <span class="span">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        </span>
-        <span class="span2">
-            NOTE
-        </span>
-    </h5>
-    <p>Fields with a question mark <code>?</code> after the type name are optional, that it can be omitted and the default value will be used if that is the case.</p>
-</div>
+                        <h1 id="permission-levels"><a class="header" href="#permission-levels">Permission Levels</a></h1>
+<p>This object is for guild-specific configuration, for example timezone, guild nickname, and some other things.</p>
+<h3 id="permission-levels-object"><a class="header" href="#permission-levels-object">Permission Levels Object</a></h3>
+<p>This object is a collection of key-value pairs of permission levels, from <code>0</code> to <code>100</code>, where <code>100</code> is the
+highest permission level, and <code>0</code> is the lowest.</p>
+<h4 id="example-permission-levels-object"><a class="header" href="#example-permission-levels-object">Example Permission Levels Object</a></h4>
+<pre><code class="language-toml">[PermissionLevels]
+1234567887654321 = 100
+2345678998765432 = 90
+3456789009876543 = 80
+9876543223456789 = 50
+8765432112345678 = 10
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../general-info/setting-up-hartex/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../api-docs/guild-conf/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="../api-docs/toml-intro/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../../api-docs/nightly-feat/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -175,11 +175,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../general-info/setting-up-hartex/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../api-docs/guild-conf/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../api-docs/toml-intro/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../../api-docs/nightly-feat/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -194,13 +194,13 @@
         </script>
 
 
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
 
-        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
 

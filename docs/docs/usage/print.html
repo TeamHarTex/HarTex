@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="api-docs/guild-conf/index.html"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="api-docs/nightly-feat/index.html"><strong aria-hidden="true">3.4.</strong> Nightly Features</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="general-info/index.html"><strong aria-hidden="true">2.</strong> General Information</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="general-info/what-is-hartex/index.html"><strong aria-hidden="true">2.1.</strong> What is HarTex?</a></li><li class="chapter-item expanded "><a href="general-info/setting-up-hartex/index.html"><strong aria-hidden="true">2.2.</strong> Setting Up HarTex</a></li></ol></li><li class="chapter-item expanded "><a href="api-docs/index.html"><strong aria-hidden="true">3.</strong> Configuration API Documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="api-docs/toml-intro/index.html"><strong aria-hidden="true">3.1.</strong> Introduction to TOML</a></li><li class="chapter-item expanded "><a href="api-docs/dash-acc/index.html"><strong aria-hidden="true">3.2.</strong> Dashboard Access</a></li><li class="chapter-item expanded "><a href="api-docs/guild-conf/index.html"><strong aria-hidden="true">3.3.</strong> Guild Configuration</a></li><li class="chapter-item expanded "><a href="api-docs/perm-lvls/index.html"><strong aria-hidden="true">3.4.</strong> Permission Levels</a></li><li class="chapter-item expanded "><a href="api-docs/nightly-feat/index.html"><strong aria-hidden="true">3.5.</strong> Nightly Features</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -284,6 +284,19 @@ dmCannotUseCommand = true
 <tr><td>Asia/Hong_Kong</td><td>UTC+08:00</td></tr>
 <tr><td>UTC</td><td>0</td></tr>
 </tbody></table>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="permission-levels"><a class="header" href="#permission-levels">Permission Levels</a></h1>
+<p>This object is for guild-specific configuration, for example timezone, guild nickname, and some other things.</p>
+<h3 id="permission-levels-object"><a class="header" href="#permission-levels-object">Permission Levels Object</a></h3>
+<p>This object is a collection of key-value pairs of permission levels, from <code>0</code> to <code>100</code>, where <code>100</code> is the
+highest permission level, and <code>0</code> is the lowest.</p>
+<h4 id="example-permission-levels-object"><a class="header" href="#example-permission-levels-object">Example Permission Levels Object</a></h4>
+<pre><code class="language-toml">[PermissionLevels]
+1234567887654321 = 100
+2345678998765432 = 90
+3456789009876543 = 80
+9876543223456789 = 50
+8765432112345678 = 10
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nightly-features"><a class="header" href="#nightly-features">Nightly Features</a></h1>
 <p>This object configures the nightly (unstable) features of the bot. This object switches them on or off for a guild.</p>
 <div class="warning">
