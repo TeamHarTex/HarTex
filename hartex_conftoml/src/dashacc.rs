@@ -75,7 +75,7 @@ mod tests {
             T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq
         >() {
         }
-        
+
         static_assert_impl_all::<DashboardAccess>();
     };
 
