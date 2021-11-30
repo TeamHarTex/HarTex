@@ -30,6 +30,14 @@ pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {
     pub map: DashMap<Id, u8>
 }
 
+impl<Id: Clone + Eq + Hash> PartialEq for PermissionLevelMap<Id> {
+    fn eq(&self, other: &Self) -> bool {
+        self.map
+            .iter()
+            .all(|entry| other.map.get(&entry.key()).unwrap().value() == entry.value())
+    }
+}
+
 impl<'visitor, Id: Clone + Deserialize<'visitor> + Eq + Hash> Deserialize<'visitor>
     for PermissionLevelMap<Id>
 {

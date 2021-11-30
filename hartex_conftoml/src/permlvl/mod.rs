@@ -17,17 +17,14 @@ use serde::Deserialize;
 /// # Struct `PermissionLevels`
 ///
 /// Represents the permission levels configured.
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct PermissionLevels {
     pub Roles: map::PermissionLevelMap<RoleId>
 }
 
 #[cfg(test)]
 mod tests {
-    use std::{
-        fmt::Debug,
-        num::NonZeroU64
-    };
+    use std::fmt::Debug;
 
     use dashmap::DashMap;
     use hartex_core::discord::model::id::RoleId;
