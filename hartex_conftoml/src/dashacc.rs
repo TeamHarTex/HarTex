@@ -68,7 +68,14 @@ mod tests {
         UserId
     };
 
-    hartex_macros::static_assert::static_assert_impl_all!(type DashboardAccess: traits Debug, Deserialize, PartialEq);
+    // FIXME: use macros maybe?
+    const _: fn() = || {
+        fn static_assert_impl_all<
+            'deserialize,
+            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq
+        >() {}
+        static_assert_impl_all::<DashboardAccess>();
+    };
 
     #[test]
     fn test_dashacc_de() {
