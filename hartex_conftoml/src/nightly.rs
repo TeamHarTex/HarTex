@@ -28,10 +28,7 @@ pub fn default_feature_enabled() -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::{
-        fmt::Debug,
-        num::NonZeroU64
-    };
+    use std::fmt::Debug;
 
     use serde_test::Token;
 
