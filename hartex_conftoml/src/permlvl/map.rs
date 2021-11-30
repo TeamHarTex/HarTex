@@ -24,7 +24,7 @@ use serde::{
 ///
 /// Represents a permission level map over an `Id` generic parameter.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {
     #[allow(dead_code)]
     pub map: DashMap<Id, u8>
