@@ -17,7 +17,7 @@ use serde::Deserialize;
 /// # Struct `PermissionLevels`
 ///
 /// Represents the permission levels configured.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct PermissionLevels {
     pub Roles: map::PermissionLevelMap<RoleId>
 }
@@ -42,7 +42,7 @@ mod tests {
     const _: fn() = || {
         fn static_assert_impl_all<
             'deserialize,
-            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq
+            T: ?Sized + Clone + Debug + Deserialize<'deserialize>
         >() {
         }
 
