@@ -12,7 +12,7 @@ pub mod tz;
 /// # Struct `GuildConfiguration`
 ///
 /// Represents guild-specific configuration.
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct GuildConfiguration {
     #[serde(default = "default_nickname")]
     pub nickname: String,
@@ -45,11 +45,24 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::fmt::Debug;
+
     use serde_test::Token;
 
     use super::{
         tz,
+        Deserialize,
         GuildConfiguration
+    };
+
+    const _: fn() = || {
+        fn static_assert_impl_all<
+            'deserialize,
+            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq
+        >() {
+        }
+
+        static_assert_impl_all::<GuildConfiguration>();
     };
 
     #[test]
