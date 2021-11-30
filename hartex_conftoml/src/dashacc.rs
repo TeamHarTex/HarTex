@@ -20,7 +20,7 @@ use serde::{
 /// # Struct `DashboardAccess`
 ///
 /// Represents the dashboard access of a user.
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct DashboardAccess {
     #[serde(deserialize_with = "deserialize_userId")]
     pub userId: UserId,
