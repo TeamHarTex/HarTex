@@ -48,7 +48,7 @@ mod tests {
 
     #[test]
     fn test_dashacc_de() {
-        let mut dashmap = DashMap::new();
+        let dashmap = DashMap::new();
         dashmap.insert(RoleId::new(1234567887654321).unwrap(), 100);
         dashmap.insert(RoleId::new(2345678998765432).unwrap(), 90);
         dashmap.insert(RoleId::new(3456789009876543).unwrap(), 80);
