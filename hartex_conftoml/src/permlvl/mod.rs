@@ -66,15 +66,15 @@ mod tests {
                     name: "PermissionLevels",
                     len: 5
                 },
-                Token::I64(1234567887654321),
+                Token::Str("1234567887654321"),
                 Token::I64(100),
-                Token::I64(2345678998765432),
+                Token::Str("2345678998765432"),
                 Token::I64(90),
-                Token::I64(3456789009876543),
+                Token::Str("3456789009876543"),
                 Token::I64(80),
-                Token::I64(9876543223456789),
+                Token::Str("9876543223456789"),
                 Token::I64(50),
-                Token::I64(8765432112345678),
+                Token::Str("8765432112345678"),
                 Token::I64(10),
                 Token::StructEnd
             ]
