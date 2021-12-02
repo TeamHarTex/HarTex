@@ -29,6 +29,7 @@ pub struct TomlConfig {
     pub GuildConfiguration: guildconf::GuildConfiguration,
     #[serde(default)]
     pub NightlyFeatures: nightly::NightlyFeatures,
+    #[serde(default)]
     pub PermissionLevels: permlvl::PermissionLevels
 }
 
