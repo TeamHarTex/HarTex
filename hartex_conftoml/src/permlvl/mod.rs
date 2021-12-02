@@ -82,24 +82,28 @@ mod tests {
                     len: 1
                 },
                 Token::Str("2345678998765432"),
+                Token::TupleStructEnd,
                 Token::I64(90),
                 Token::TupleStruct {
                     name: "RoleId",
                     len: 1
                 },
                 Token::Str("3456789009876543"),
+                Token::TupleStructEnd,
                 Token::I64(80),
                 Token::TupleStruct {
                     name: "RoleId",
                     len: 1
                 },
                 Token::Str("9876543223456789"),
+                Token::TupleStructEnd,
                 Token::I64(50),
                 Token::TupleStruct {
                     name: "RoleId",
                     len: 1
                 },
                 Token::Str("8765432112345678"),
+                Token::TupleStructEnd,
                 Token::I64(10),
                 Token::MapEnd,
                 Token::StructEnd
