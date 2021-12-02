@@ -29,4 +29,8 @@ nickname = "HarTex"          # the display nickname of the bot in the guild
 timezone = "UTC"             # the timezone to use for timestamps
 dmCannotUseCommand = true    # determines whether a DM is sent if a user cannot use a specific
                              # command
+
+[PermissionLevels.Roles]     # permission levels for roles
+0000000000000001 = 100       # 100 - highest permission level
+0000000000000002 = 0         # 0   - lowest permission level
 ```
