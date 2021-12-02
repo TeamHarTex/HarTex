@@ -67,7 +67,9 @@ mod tests {
                     len: 5
                 },
                 Token::Str("Roles"),
-                Token::Map { len: Some(5) },
+                Token::Map {
+                    len: Some(5)
+                },
                 Token::Str("1234567887654321"),
                 Token::I64(100),
                 Token::Str("2345678998765432"),
