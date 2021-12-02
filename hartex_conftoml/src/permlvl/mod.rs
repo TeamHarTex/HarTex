@@ -68,7 +68,7 @@ impl <'visitor> Visitor<'visitor> for PermissionLevelsRolesMapRoleIdDeserializer
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-        where E: Error {
+    where E: Error {
         let res = v.parse::<u64>();
         if res.is_err() {
             return Err(Error::custom("invalid integer"));
@@ -113,11 +113,11 @@ mod tests {
     #[test]
     fn test_dashacc_de() {
         let dashmap = DashMap::new();
-        dashmap.insert(RoleId(NonZeroU64(1234567887654321)), 100);
-        dashmap.insert(RoleId(NonZeroU64(2345678998765432)), 90);
-        dashmap.insert(RoleId(NonZeroU64(3456789009876543)), 80);
-        dashmap.insert(RoleId(NonZeroU64(9876543223456789)), 50);
-        dashmap.insert(RoleId(NonZeroU64(8765432112345678)), 10);
+        dashmap.insert(RoleId(NonZeroU64::new(1234567887654321).unwrap()), 100);
+        dashmap.insert(RoleId(NonZeroU64::new(2345678998765432).unwrap()), 90);
+        dashmap.insert(RoleId(NonZeroU64::new(3456789009876543).unwrap()), 80);
+        dashmap.insert(RoleId(NonZeroU64::new(9876543223456789).unwrap()), 50);
+        dashmap.insert(RoleId(NonZeroU64::new(8765432112345678).unwrap()), 10);
 
         serde_test::assert_de_tokens(
             &PermissionLevels {
