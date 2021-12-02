@@ -66,6 +66,8 @@ mod tests {
                     name: "PermissionLevels",
                     len: 5
                 },
+                Token::Str("Roles"),
+                Token::Map { len: Some(5) },
                 Token::Str("1234567887654321"),
                 Token::I64(100),
                 Token::Str("2345678998765432"),
@@ -76,6 +78,7 @@ mod tests {
                 Token::I64(50),
                 Token::Str("8765432112345678"),
                 Token::I64(10),
+                Token::MapEnd,
                 Token::StructEnd
             ]
         );
