@@ -74,7 +74,7 @@ mod tests {
                     name: "RoleId",
                     len: 1
                 },
-                Token::I64(1234567887654321),
+                Token::Str("1234567887654321"),
                 Token::TupleStructEnd,
                 Token::I64(100),
                 Token::Str("2345678998765432"),
