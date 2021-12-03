@@ -30,6 +30,14 @@ pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {
     pub map: DashMap<Id, u8>
 }
 
+impl<Id> Default for PermissionLevelMap<Id> {
+    fn default() -> Self {
+        Self {
+            map: Default::default()
+        }
+    }
+}
+
 impl<Id: Clone + Eq + Hash> PartialEq for PermissionLevelMap<Id> {
     fn eq(&self, other: &Self) -> bool {
         self.map
