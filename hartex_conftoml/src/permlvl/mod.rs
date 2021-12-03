@@ -60,7 +60,7 @@ impl<'deserialize> Deserialize<'deserialize> for RoleId {
 
 pub struct PermissionLevelsRolesMapRoleIdDeserializerRefstrVisitor;
 
-impl <'visitor> Visitor<'visitor> for PermissionLevelsRolesMapRoleIdDeserializerRefstrVisitor {
+impl<'visitor> Visitor<'visitor> for PermissionLevelsRolesMapRoleIdDeserializerRefstrVisitor {
     type Value = RoleId;
 
     fn expecting(&self, f: &mut Formatter) -> FmtResult {
