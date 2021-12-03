@@ -32,19 +32,10 @@ pub mod map;
 /// # Struct `PermissionLevels`
 ///
 /// Represents the permission levels configured.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq)]
 pub struct PermissionLevels {
+    #[serde(default)]
     pub Roles: map::PermissionLevelMap<RoleId>
-}
-
-impl Default for PermissionLevels {
-    fn default() -> Self {
-        Self {
-            Roles: map::PermissionLevelMap {
-                map: DashMap::new()
-            }
-        }
-    }
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
