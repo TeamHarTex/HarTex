@@ -68,7 +68,8 @@ impl <'visitor> Visitor<'visitor> for PermissionLevelsRolesMapRoleIdDeserializer
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-    where E: Error {
+    where
+        E: Error {
         let res = v.parse::<u64>();
         if res.is_err() {
             return Err(Error::custom("invalid integer"));
