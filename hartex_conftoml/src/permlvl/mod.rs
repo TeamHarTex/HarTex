@@ -17,7 +17,6 @@ use std::{
     num::NonZeroU64
 };
 
-use dashmap::DashMap;
 use serde::{
     de::{
         Error,
@@ -38,6 +37,9 @@ pub struct PermissionLevels {
     pub Roles: map::PermissionLevelMap<RoleId>
 }
 
+/// # Struct `RoleId`
+///
+/// Represents the role ID
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct RoleId(NonZeroU64);
 
