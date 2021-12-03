@@ -125,7 +125,7 @@ mod tests {
                     map: dashmap_roles
                 },
                 Users: PermissionLevelMap {
-                    map:
+                    map: dashmap_users
                 }
             },
             &[
