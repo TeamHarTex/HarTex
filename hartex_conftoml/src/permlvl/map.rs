@@ -30,7 +30,7 @@ pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {
     pub map: DashMap<Id, u8>
 }
 
-impl<Id> Default for PermissionLevelMap<Id> {
+impl<Id: Clone + Eq + Hash> Default for PermissionLevelMap<Id> {
     fn default() -> Self {
         Self {
             map: Default::default()
