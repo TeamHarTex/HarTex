@@ -131,6 +131,9 @@ mod tests {
                     len: 5
                 },
                 Token::Str("Roles"),
+                Token::Map {
+                    len: Some(5)
+                },
                 Token::TupleStruct {
                     name: "RoleId",
                     len: 1
@@ -166,6 +169,7 @@ mod tests {
                 Token::Str("8765432112345678"),
                 Token::TupleStructEnd,
                 Token::I64(10),
+                Token::MapEnd,
                 Token::StructEnd
             ]
         );
