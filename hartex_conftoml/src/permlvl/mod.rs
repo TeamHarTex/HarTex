@@ -92,8 +92,8 @@ mod tests {
     use super::{
         map::PermissionLevelMap,
         Deserialize,
-        PermissionLevels,
-        GenericId
+        GenericId,
+        PermissionLevels
     };
 
     const _: fn() = || {
