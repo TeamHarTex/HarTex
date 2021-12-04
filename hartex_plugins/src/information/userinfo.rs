@@ -205,8 +205,8 @@ async fn execute_userinfo_command(
     let mut embed = EmbedBuilder::new()
         .author(
             EmbedAuthorBuilder::new(format!(
-                "Information about {username}"
-                , username = &user.name
+                "Information about {username}",
+                username = &user.name
             ))
             .icon_url(ImageSource::url(avatar_url)?)
         )

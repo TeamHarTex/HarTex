@@ -116,8 +116,8 @@ mod tests {
         dashmap_roles.insert(GenericId(NonZeroU64::new(8765432112345678).unwrap()), 10);
 
         let dashmap_users = DashMap::new();
-        dashmap_roles.insert(GenericId(NonZeroU64::new(1000000000000001).unwrap()), 100);
-        dashmap_roles.insert(GenericId(NonZeroU64::new(2000000000000002).unwrap()), 90);
+        dashmap_users.insert(GenericId(NonZeroU64::new(1000000000000001).unwrap()), 100);
+        dashmap_users.insert(GenericId(NonZeroU64::new(2000000000000002).unwrap()), 90);
 
         serde_test::assert_de_tokens(
             &PermissionLevels {
