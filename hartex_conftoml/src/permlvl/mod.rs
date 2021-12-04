@@ -34,9 +34,9 @@ pub mod map;
 #[derive(Clone, Debug, Default, Deserialize, PartialEq)]
 pub struct PermissionLevels {
     #[serde(default)]
-    pub Roles: map::PermissionLevelMap<GenericId>,
+    pub roles: map::PermissionLevelMap<GenericId>,
     #[serde(default)]
-    pub Users: map::PermissionLevelMap<GenericId>
+    pub users: map::PermissionLevelMap<GenericId>
 }
 
 /// # Struct `RoleId`
@@ -121,10 +121,10 @@ mod tests {
 
         serde_test::assert_de_tokens(
             &PermissionLevels {
-                Roles: PermissionLevelMap {
+                roles: PermissionLevelMap {
                     map: dashmap_roles
                 },
-                Users: PermissionLevelMap {
+                users: PermissionLevelMap {
                     map: dashmap_users
                 }
             },
@@ -133,7 +133,7 @@ mod tests {
                     name: "PermissionLevels",
                     len: 5
                 },
-                Token::Str("Roles"),
+                Token::Str("roles"),
                 Token::Map {
                     len: Some(5)
                 },
@@ -148,7 +148,7 @@ mod tests {
                 Token::Str("8765432112345678"),
                 Token::I64(10),
                 Token::MapEnd,
-                Token::Str("Users"),
+                Token::Str("users"),
                 Token::Map {
                     len: Some(2)
                 },

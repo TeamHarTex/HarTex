@@ -289,17 +289,26 @@ dmCannotUseCommand = true
 <tr><td>UTC</td><td>0</td></tr>
 </tbody></table>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="permission-levels"><a class="header" href="#permission-levels">Permission Levels</a></h1>
-<p>This object is for guild-specific configuration, for example timezone, guild nickname, and some other things.</p>
+<p>This object is for configuring permission levels for roles and users.</p>
 <h3 id="permission-levels-object"><a class="header" href="#permission-levels-object">Permission Levels Object</a></h3>
-<p>This object is a collection of key-value pairs of permission levels, from <code>0</code> to <code>100</code>, where <code>100</code> is the
-highest permission level, and <code>0</code> is the lowest.</p>
+<p>This object is a collection of two key-value pairs, <code>Roles</code> and <code>Users</code> respectively, of permission levels, 
+from <code>0</code> to <code>100</code>, where <code>100</code> is the highest permission level, and <code>0</code> is the lowest.</p>
+<h4 id="permission-levels-structure"><a class="header" href="#permission-levels-structure">Permission Levels Structure</a></h4>
+<table><thead><tr><th>FIELD</th><th>TYPE</th><th>DESCRIPTION</th></tr></thead><tbody>
+<tr><td>roles</td><td>map?</td><td>a key-value pair representing permission levels for roles</td></tr>
+<tr><td>users</td><td>map?</td><td>a key-value pair representing permission levels for users</td></tr>
+</tbody></table>
 <h4 id="example-permission-levels-object"><a class="header" href="#example-permission-levels-object">Example Permission Levels Object</a></h4>
-<pre><code class="language-toml">[PermissionLevels]
+<pre><code class="language-toml">[PermissionLevels.roles]
 1234567887654321 = 100
 2345678998765432 = 90
 3456789009876543 = 80
 9876543223456789 = 50
 8765432112345678 = 10
+
+[PermissionLevels.users]
+1000000000000001 = 100
+2000000000000002 = 90
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nightly-features"><a class="header" href="#nightly-features">Nightly Features</a></h1>
 <p>This object configures the nightly (unstable) features of the bot. This object switches them on or off for a guild.</p>
