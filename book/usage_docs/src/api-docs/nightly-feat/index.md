@@ -19,7 +19,7 @@ This object configures the nightly (unstable) features of the bot. This object s
 #### Nightly Features Structure
 
 | FIELD        | TYPE     | DESCRIPTION                                                                                               |
-| ------------ | -------- | --------------------------------------------------------------------------------------------------------- |
+|--------------|----------|-----------------------------------------------------------------------------------------------------------|
 | threads      | boolean? | experimental support for Discord threads; `false` by default                                              |
 | localization | boolean? | experimental support for localization facilities, for example timezones and languages; `false` by default |
 
