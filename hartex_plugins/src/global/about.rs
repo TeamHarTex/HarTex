@@ -92,8 +92,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
     };
 
     let embed = EmbedBuilder::new()
-        .author(EmbedAuthorBuilder::new()
-            .name("HarTex")
+        .author(EmbedAuthorBuilder::new(String::from("HarTex"))
             .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
         )
         .description("HarTex is a Discord bot that is built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")

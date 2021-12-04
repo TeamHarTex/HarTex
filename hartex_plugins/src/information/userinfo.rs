@@ -204,12 +204,11 @@ async fn execute_userinfo_command(
 
     let mut embed = EmbedBuilder::new()
         .author(
-            EmbedAuthorBuilder::new()
-                .name(format!(
-                    "Information about {username}",
-                    username = &user.name
-                ))
-                .icon_url(ImageSource::url(avatar_url)?)
+            EmbedAuthorBuilder::new(format!(
+                "Information about {username}"
+                , username = &user.name
+            ))
+            .icon_url(ImageSource::url(avatar_url)?)
         )
         .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
