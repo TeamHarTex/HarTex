@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - nightly
+      - stable
   pull_request:
     branches:
       - "**"
