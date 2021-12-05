@@ -3,7 +3,7 @@ name: Lints
 on:
   push:
     branches:
-      - infdev
+      - nightly
   pull_request:
     branches:
       - "**"
