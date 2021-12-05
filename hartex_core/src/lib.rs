@@ -30,4 +30,4 @@ pub static HARTEX_BUILD: &str = "Version 1.24.0-nightly-05-12-2021 (Build 606)";
 /// # Static `IS_STABLE`
 ///
 /// Determines whether this version of the bot is stable.
-pub static STABLE: bool = true;
+pub static STABLE: bool = false;
