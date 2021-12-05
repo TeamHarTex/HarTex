@@ -1,6 +1,8 @@
 # directories
 .idea
 
+binaries
+
 # target directories
 **/target
 target
