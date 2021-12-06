@@ -1,3 +1,10 @@
+HarTex 1.23.1 (6 December 2021)
+================================
+
+Key Changes
+-----------
+- use bulk overwrite for interaction commands
+
 HarTex 1.23.0 (5 December 2021)
 ================================
 

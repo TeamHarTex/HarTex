@@ -8,7 +8,10 @@ use hartex_core::{
         http::CloneableClient,
         util::builder::command::CommandBuilder
     },
-    error::HarTexResult,
+    error::{
+        HarTexError,
+        HarTexResult
+    },
     logging::tracing
 };
 
@@ -58,9 +61,15 @@ pub async fn register_global_commands(
         })
         .collect::<Vec<_>>();
 
-    http.set_global_commands(global_commands.as_slice())?
+    if let Err(error) = http.set_global_commands(global_commands.as_slice())?
         .exec()
-        .await?;
+        .await {
+        tracing::error!("failed to register global commands: {error}");
+
+        return Err(HarTexError::Custom {
+            message: String::from("failed to register global commands")
+        });
+    }
 
     tracing::info!("global commands registered");
 
