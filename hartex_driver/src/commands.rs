@@ -43,15 +43,13 @@ pub async fn register_global_commands(
             .default_permission(command.enabled_by_default());
 
             command.required_cmdopts().iter().for_each(|option| {
-                let temp = builder.clone()
-                    .option(option.clone());
+                let temp = builder.clone().option(option.clone());
 
                 builder = temp;
             });
 
             command.optional_cmdopts().iter().for_each(|option| {
-                let temp = builder.clone()
-                    .option(option.clone());
+                let temp = builder.clone().option(option.clone());
 
                 builder = temp;
             });
