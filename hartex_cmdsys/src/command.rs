@@ -4,7 +4,10 @@
 
 use hartex_core::discord::{
     cache_inmemory::CloneableInMemoryCache,
-    model::application::command::CommandOption
+    model::application::command::{
+        CommandOption,
+        CommandType as TwilightCommandType
+    }
 };
 use hartex_utils::FutureRetType;
 
@@ -69,4 +72,14 @@ pub enum CommandType {
     ///
     /// An interface-based command that shows up when you right click or tap on a user
     User
+}
+
+impl Into<TwilightCommandType> for CommandType {
+    fn into(self) -> TwilightCommandType {
+        match self {
+            Self::ChatInput => TwilightCommandType::ChatInput,
+            Self::Message => TwilightCommandType::Message,
+            Self::User => TwilightCommandType::User
+        }
+    }
 }

@@ -2,19 +2,15 @@
 //!
 //! This module defines the command handler, which is used when a command is detected in a message.
 
-use hartex_cmdsys::command::{
-    Command,
-    CommandType
-};
+use hartex_cmdsys::command::Command;
 use hartex_core::{
-    discord::http::CloneableClient,
-    error::{
-        HarTexError,
-        HarTexResult
+    discord::{
+        http::CloneableClient,
+        util::builder::command::CommandBuilder
     },
+    error::HarTexResult,
     logging::tracing
 };
-use tokio::time;
 
 /// # Asynchronous Function `register_global_commands`
 ///
@@ -34,73 +30,47 @@ pub async fn register_global_commands(
     commands: Vec<Box<dyn Command + Send + Sync>>,
     http: CloneableClient
 ) -> HarTexResult<()> {
-    let mut i = 1;
-    let len = commands.len();
+    tracing::trace!("registering global commands");
 
-    let existing = match http
-        .get_global_commands()
-        .unwrap()
-        .exec()
-        .await?
-        .models()
-        .await
-    {
-        Ok(commands) => commands,
-        Err(error) => {
-            tracing::error!("failed to obtain a list of existing global commands: {error}");
+    let global_commands = commands
+        .into_iter()
+        .map(|command| {
+            let mut builder = CommandBuilder::new(
+                command.name(),
+                command.description(),
+                command.command_type().into()
+            )
+                .default_permission(command.enabled_by_default());
 
-            return Err(HarTexError::Custom {
-                message: format!("failed to obtain a list of existing global commands: {error}")
-            });
-        }
-    };
+            command
+                .required_cmdopts()
+                .iter()
+                .for_each(|option| {
+                    let temp = builder.clone()
+                        .option(option.clone());
 
-    let names = existing
-        .iter()
-        .map(|command| command.name.clone())
+                    builder = temp;
+                });
+
+            command
+                .optional_cmdopts()
+                .iter()
+                .for_each(|option| {
+                    let temp = builder.clone()
+                        .option(option.clone());
+
+                    builder = temp;
+                });
+
+            builder.build()
+        })
         .collect::<Vec<_>>();
 
-    for command in &commands {
-        tracing::trace!(
-            "registering global command {i} of {len}; [name: {name}, type: {command_type:?}]",
-            name = &command.name(),
-            command_type = &command.command_type()
-        );
+    http.set_global_commands(global_commands.as_slice())?
+        .exec()
+        .await?;
 
-        if names.contains(&command.name()) {
-            tracing::warn!("command already registered, skipping");
-
-            i += 1;
-
-            continue;
-        }
-
-        time::sleep(time::Duration::from_secs(1)).await;
-
-        let name = command.name();
-        let create_global_command = http.create_global_command(&name)?;
-
-        match {
-            match command.command_type() {
-                CommandType::ChatInput => create_global_command
-                    .chat_input(&command.description())?
-                    .command_options(&command.required_cmdopts())?
-                    .command_options(&command.optional_cmdopts())?
-                    .default_permission(command.enabled_by_default())
-                    .exec(),
-                _ => todo!()
-            }
-        }
-        .await
-        {
-            Ok(_) => (),
-            Err(error) => {
-                tracing::error!("failed to register global command {i} of {len}: {error}");
-            }
-        }
-
-        i += 1;
-    }
+    tracing::info!("global commands registered");
 
     Ok(())
 }
