@@ -74,6 +74,7 @@ pub enum CommandType {
     User
 }
 
+#[allow(clippy::from_over_into)]
 impl Into<TwilightCommandType> for CommandType {
     fn into(self) -> TwilightCommandType {
         match self {
