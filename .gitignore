@@ -1,6 +1,7 @@
 # directories
 .idea
 
+# built binaries (local host), optional
 binaries
 
 # target directories
