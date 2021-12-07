@@ -61,7 +61,8 @@ pub async fn register_global_commands(
         })
         .collect::<Vec<_>>();
 
-    if let Err(error) = http.set_global_commands(global_commands.as_slice())?
+    if let Err(error) = http
+        .set_global_commands(global_commands.as_slice())?
         .exec()
         .await
     {
