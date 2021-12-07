@@ -63,7 +63,8 @@ pub async fn register_global_commands(
 
     if let Err(error) = http.set_global_commands(global_commands.as_slice())?
         .exec()
-        .await {
+        .await
+    {
         tracing::error!("failed to register global commands: {error}");
 
         return Err(HarTexError::Custom {
