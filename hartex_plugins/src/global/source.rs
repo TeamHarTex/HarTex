@@ -106,7 +106,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
                 components: None,
                 content: Some(
                     String::from(
-                        "The source code for the bot can be found at: <https://github.com/HarTexBot/HarTex-rust-discord-bot>."
+                        "The source code for the bot can be found at: <https://github.com/HarTexTeam/HarTex-rust-discord-bot>."
                     )
                 ),
                 embeds: vec![],
