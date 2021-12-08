@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -35,10 +35,16 @@ use serde::Deserialize;
 #[derive(Clone, Debug, Default, Deserialize, PartialEq)]
 pub struct NightlyFeatures {
     // Experimental Support for the Discord Threads API
-    #[serde(default = "default_feature_enabled")]
+    #[serde(
+        default = "default_feature_enabled",
+        deserialize_with = "deserialize_nightly_feature"
+    )]
     pub threads: bool,
     // Experimental Support for Localization Facilities, i.e. timezones, languages
-    #[serde(default = "default_feature_enabled")]
+    #[serde(
+        default = "default_feature_enabled",
+        deserialize_with = "deserialize_nightly_feature"
+    )]
     pub localization: bool
 }
 
