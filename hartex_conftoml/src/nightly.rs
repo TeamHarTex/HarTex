@@ -35,16 +35,10 @@ use serde::Deserialize;
 #[derive(Clone, Debug, Default, Deserialize, PartialEq)]
 pub struct NightlyFeatures {
     // Experimental Support for the Discord Threads API
-    #[serde(
-        default = "default_feature_enabled",
-        deserialize_with = "deserialize_nightly_feature"
-    )]
+    #[serde(default = "default_feature_enabled")]
     pub threads: bool,
     // Experimental Support for Localization Facilities, i.e. timezones, languages
-    #[serde(
-        default = "default_feature_enabled",
-        deserialize_with = "deserialize_nightly_feature"
-    )]
+    #[serde(default = "default_feature_enabled")]
     pub localization: bool
 }
 
