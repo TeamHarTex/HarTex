@@ -48,10 +48,7 @@ pub mod permlvl;
 pub struct TomlConfig {
     pub DashboardAccess: Vec<dashacc::DashboardAccess>,
     pub GuildConfiguration: guildconf::GuildConfiguration,
-    #[serde(
-        default,
-        deserialize_with = "deserialize_nightly_features"
-    )]
+    #[serde(default)]
     pub NightlyFeatures: nightly::NightlyFeatures,
     #[serde(default)]
     pub PermissionLevels: permlvl::PermissionLevels
