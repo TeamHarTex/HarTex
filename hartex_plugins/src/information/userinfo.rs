@@ -305,7 +305,7 @@ async fn execute_userinfo_command(
                     embed = temp.field(EmbedFieldBuilder::new(
                         format!("Activity - {activity_type}"),
                         if activity.kind == ActivityType::Custom {
-                            &activity.state.as_ref().unwrap()
+                            activity.state.as_ref().unwrap()
                         }
                         else {
                             &activity.name
