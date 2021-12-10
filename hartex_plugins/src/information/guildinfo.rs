@@ -62,7 +62,8 @@ use hartex_core::{
     time::{
         FixedOffset,
         TimeZone
-    }
+    },
+    STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_utils::{
@@ -338,7 +339,7 @@ async fn execute_guildinfo_command(
             voice_regions_repr_str.join(", ")
         ));
 
-    let timezone = if config.NightlyFeatures.localization {
+    let timezone = if config.NightlyFeatures.localization && !STABLE {
         config.GuildConfiguration.timezone
     }
     else {
