@@ -7,6 +7,8 @@ HarTex-rust-discord-bot
 [![License](https://img.shields.io/github/license/HarTexTeam/HarTex-rust-discord-bot?style=for-the-badge&logo=pastebin)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 ![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.59-93450a.svg?style=for-the-badge&logo=rust)
 
+![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
+
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
 Honourable Mention
@@ -28,20 +30,20 @@ HarTex Development
 
 ### Project Structure
 
-| Crate                  | Description                                                                                      |
-| ---------------------- | ------------------------------------------------------------------------------------------------ |
-| `hartex`               | The binary of the bot.                                                                           |
-| `hartex_cmdsys`        | The command system of the bot.                                                                   |
-| `hartex_conftoml`      | The TOML configuration API, deserialization and serialization of TOML configuration of the bot.  |
-| `hartex_core`          | The core library of the bot, designed to be as minimal as possible but provides essential types. |
-| `hartex_dbmani`        | The database manipulation component of the bot.                                                  |
-| `hartex_driver`        | The "main" function of the bot. Glues everything together.                                       |
-| `hartex_env`           | The wrappers around a collection of useful environment variables used by the bot.                |
-| `hartex_eventsys`      | The event system of the bot, contains custom events and emitters.                                |
-| `hartex_macros`        | The collection of useful macros for the bot.                                                     |
-| `hartex_model`         | The various convenience models for the bot to use.                                               |
-| `hartex_plugins`       | The plugins (command modules, functionality modules) of the bot.                                 |
-| `hartex_utils`         | The various utilities that are useful for the bot.                                               |
+| Crate             | Description                                                                                      |
+|-------------------|--------------------------------------------------------------------------------------------------|
+| `hartex`          | The binary of the bot.                                                                           |
+| `hartex_cmdsys`   | The command system of the bot.                                                                   |
+| `hartex_conftoml` | The TOML configuration API, deserialization and serialization of TOML configuration of the bot.  |
+| `hartex_core`     | The core library of the bot, designed to be as minimal as possible but provides essential types. |
+| `hartex_dbmani`   | The database manipulation component of the bot.                                                  |
+| `hartex_driver`   | The "main" function of the bot. Glues everything together.                                       |
+| `hartex_env`      | The wrappers around a collection of useful environment variables used by the bot.                |
+| `hartex_eventsys` | The event system of the bot, contains custom events and emitters.                                |
+| `hartex_macros`   | The collection of useful macros for the bot.                                                     |
+| `hartex_model`    | The various convenience models for the bot to use.                                               |
+| `hartex_plugins`  | The plugins (command modules, functionality modules) of the bot.                                 |
+| `hartex_utils`    | The various utilities that are useful for the bot.                                               |
 
 ### Can I Contribute?
 
