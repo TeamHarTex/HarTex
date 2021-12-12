@@ -33,7 +33,6 @@ use std::{
     }
 };
 
-use hartex_conftoml::TomlConfig;
 use hartex_core::{
     discord::model::id::GuildId,
     error::{
@@ -42,21 +41,24 @@ use hartex_core::{
     },
     logging::tracing
 };
-use sqlx::{
-    postgres::PgPool,
-    Row
+use sqlx::postgres::{
+    PgPool,
+    Postgres
 };
 
 use crate::{
+    guildconf::model::GuildConfig,
     PendingFuture,
     DATABASE_ENV
 };
+
+mod model;
 
 /// # Struct `GetGuildConfig`
 ///
 /// Gets the guild configuration from the database.
 pub struct GetGuildConfig {
-    pending: Option<PendingFuture<TomlConfig>>,
+    pending: Option<PendingFuture<GuildConfig>>,
 
     guild_id: GuildId
 }
@@ -92,7 +94,7 @@ impl GetGuildConfig {
 }
 
 impl Future for GetGuildConfig {
-    type Output = HarTexResult<TomlConfig>;
+    type Output = HarTexResult<GuildConfig>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         loop {
@@ -110,7 +112,7 @@ impl Future for GetGuildConfig {
 /// # Asynchronous Function `exec_future`
 ///
 /// Executes the future.
-async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
+async fn exec_future(guild_id: GuildId) -> HarTexResult<GuildConfig> {
     let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
 
     let db_credentials = match &DATABASE_ENV.pgsql_credentials_guildconfig {
@@ -148,43 +150,13 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<TomlConfig> {
 
     span.in_scope(|| tracing::trace!("executing sql query..."));
 
-    match sqlx::query(&format!("SELECT * FROM \"Guild{guild_id}\"; --"))
+    match sqlx::query_as::<Postgres, GuildConfig>(&format!("SELECT * FROM \"Guild{guild_id}\"; --"))
         .fetch_one(&connection)
         .await
     {
-        Ok(row) => {
-            let config = row.get::<String, &str>("TomlConfig");
-
-            let decoded = match base64::decode(config) {
-                Ok(bytes) => bytes,
-                Err(error) => {
-                    let message = format!("failed to decode base64; error: `{error:?}`");
-
-                    span.in_scope(|| tracing::error!("{message}", message = &message));
-
-                    return Err(HarTexError::Base64DecodeError {
-                        error
-                    });
-                }
-            };
-
-            span.in_scope(|| tracing::trace!("deserializing toml config..."));
-
-            hartex_conftoml::from_str(match std::str::from_utf8(&*decoded) {
-                Ok(string) => string,
-                Err(error) => {
-                    let message = format!("failed to construct utf-8 string; error: `{error:?}`");
-
-                    span.in_scope(|| tracing::error!("{message}", message = &message));
-
-                    return Err(HarTexError::Utf8ValidationError {
-                        error
-                    });
-                }
-            })
-        }
+        Ok(guilds) => Ok(guilds),
         Err(error) => {
-            let message = format!("failed to execute sql query; error `{error:?}`");
+            let message = format!("failed to execute sql query; error: `{error:?}`");
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 

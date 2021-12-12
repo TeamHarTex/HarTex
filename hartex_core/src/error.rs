@@ -23,7 +23,16 @@
 //!
 //! This module defines several types for error handling in the `HarTex` Discord bot.
 
-use std::str::Utf8Error;
+use std::{
+    error::Error,
+    fmt::{
+        Debug,
+        Display,
+        Formatter,
+        Result as FmtResult
+    },
+    str::Utf8Error
+};
 
 use base64::DecodeError;
 use ctrlc::Error as CtrlcError;
@@ -219,6 +228,14 @@ pub enum HarTexError {
     /// - `message`, type `&str`: the error message.
     Custom { message: String }
 }
+
+impl Display for HarTexError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        Debug::fmt(self, f)
+    }
+}
+
+impl Error for HarTexError {}
 
 impl From<ClusterCommandError> for HarTexError {
     fn from(error: ClusterCommandError) -> Self {
