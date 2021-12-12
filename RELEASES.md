@@ -1,3 +1,12 @@
+HarTex 1.24.0 (12 December 2021)
+================================
+
+Key Changes
+-----------
+- re-licensed with AGPL-3.0
+- make use of `query_as<T>` for the `guildconf` dbmani future
+- implement branch checks to guard against nightly feature usage on stable
+
 HarTex 1.23.1 (6 December 2021)
 ================================
 
