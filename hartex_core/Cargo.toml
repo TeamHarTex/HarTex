@@ -1,6 +1,6 @@
 [package]
 name = "hartex_core"
-version = "1.22.0"
+version = "1.24.0"
 edition = "2021"
 description = """
 The `hartex_core` library provides the core minimal functionality for the bot to function.
