@@ -180,7 +180,7 @@ async fn execute_refroles_command(
         tracing::trace!("current guild: {id}", id = guild.GuildId);
         let config = GetGuildConfig::new(guild.GuildId).await?;
 
-        for access in config.DashboardAccess {
+        for access in &config.DashboardAccess {
             if let Err(error) = ctx
                 .http
                 .add_guild_member_role(
