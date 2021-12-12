@@ -1,6 +1,6 @@
 [package]
 name = "hartex"
-version = "1.22.0"
+version = "1.24.0"
 edition = "2021"
 description = """
 This crate holds the entry point for HarTex Discord bot; it invokes the "main function" from the `hartex_driver` crate.
