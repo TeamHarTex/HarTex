@@ -29,14 +29,16 @@ use std::{
 };
 
 use hartex_conftoml::TomlConfig;
-use hartex_core::logging::tracing;
+use hartex_core::{
+    error::HarTexError,
+    logging::tracing
+};
 use sqlx::{
     postgres::PgRow,
     Error,
     Result as SqlxResult,
     Row
 };
-use hartex_core::error::HarTexError;
 
 pub struct GuildConfig {
     pub inner: Arc<TomlConfig>
