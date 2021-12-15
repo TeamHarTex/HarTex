@@ -28,7 +28,7 @@ use serde::{
     Deserialize
 };
 
-pub mod lang;
+pub mod locale;
 pub mod tz;
 
 /// # Struct `GuildConfiguration`
@@ -44,7 +44,16 @@ pub struct GuildConfiguration {
     )]
     pub timezone: tz::Timezone,
     #[serde(default = "default_dm_cant_use_cmd")]
-    pub dmCannotUseCommand: bool
+    pub dmCannotUseCommand: bool,
+    #[serde(
+        default = "default_locale",
+        deserialize_with = "deserialize_locale"
+    )]
+    pub locale: locale::Locale
+}
+
+fn default_locale() -> locale::Locale {
+    locale::Locale::EnGb
 }
 
 fn default_nickname() -> String {
@@ -57,6 +66,12 @@ fn default_timezone() -> tz::Timezone {
 
 fn default_dm_cant_use_cmd() -> bool {
     true
+}
+
+fn deserialize_locale<'deserialize, D>(deserializer: D) -> Result<locale::Locale, D::Error>
+where
+    D: de::Deserializer<'deserialize> {
+    deserializer.deserialize_str(locale::GuildConfigLocaleDeserializerRefStrVisitor)
 }
 
 fn deserialize_timezone<'deserialize, D>(deserializer: D) -> Result<tz::Timezone, D::Error>
