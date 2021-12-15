@@ -23,4 +23,13 @@
 //!
 //! This module contains configuration for the bot interface language.
 
-
+/// # Enum `Language`
+///
+/// Represents a language.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Language {
+    /// # Enum Variant `Language::EnGb`
+    ///
+    /// The "en_GB" language.
+    EnGb
+}
