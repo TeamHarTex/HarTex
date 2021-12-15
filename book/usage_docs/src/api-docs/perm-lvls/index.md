@@ -4,7 +4,7 @@ This object is for configuring permission levels for roles and users.
 
 ### Permission Levels Object
 
-This object is a collection of two key-value pairs, `Roles` and `Users` respectively, of permission levels, 
+This object is a collection of two key-value pairs, `roles` and `users` respectively, of permission levels, 
 from `0` to `100`, where `100` is the highest permission level, and `0` is the lowest.
 
 #### Permission Levels Structure
