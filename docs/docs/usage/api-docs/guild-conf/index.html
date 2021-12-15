@@ -149,9 +149,10 @@
 <h4 id="guild-configuration-structure"><a class="header" href="#guild-configuration-structure">Guild Configuration Structure</a></h4>
 <table><thead><tr><th>FIELD</th><th>TYPE</th><th>DESCRIPTION</th></tr></thead><tbody>
 <tr><td>nickname</td><td>string?</td><td>the nickname of the bot in the guild; &quot;HarTex&quot; by default</td></tr>
-<tr><td>timezone</td><td>string?</td><td>the timezone of the guild, used when representing time; &quot;UTC&quot; by default</td></tr>
+<tr><td>timezone¹</td><td>string?</td><td>the timezone of the guild, used when representing time; &quot;UTC&quot; by default</td></tr>
 <tr><td>dmCannotUseCommand</td><td>boolean?</td><td>whether to send a DM to a user when they cannot execute some command; <code>false</code> by default</td></tr>
 </tbody></table>
+<p>¹ this field is only taken into consideration when the <a href="https://hartexteam.github.io/HarTex-rust-discord-bot/docs/usage/api-docs/nightly-feat/index.html#threads"><code>localization</code></a> nightly feature is enabled.</p>
 <h4 id="example-guild-configuration-object"><a class="header" href="#example-guild-configuration-object">Example Guild Configuration Object</a></h4>
 <pre><code class="language-toml">[GuildConfiguration]
 nickname = &quot;HarTex&quot;
