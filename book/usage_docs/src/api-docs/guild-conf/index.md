@@ -14,6 +14,7 @@ This object is for guild-specific configuration, for example timezone, guild nic
 | locale¹ ²          | string?  | the locale of a guild, used for language and other localization purposes; `en_GB` by default |
 
 ¹ this field is only taken into consideration when the [`localization`](https://hartexteam.github.io/HarTex-rust-discord-bot/docs/usage/api-docs/nightly-feat/index.html#localization) nightly feature.
+
 ² this field is only taken into consideration when the *nightly* version of the bot is used.
 
 #### Example Guild Configuration Object
