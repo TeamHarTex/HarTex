@@ -9,14 +9,14 @@ Two square brackets are required to wrap the name, because this is an array of t
 #### Dashboard Access Structure
 
 | FIELD       | TYPE    | DESCRIPTION                                   |
-| ----------- | ------- | --------------------------------------------- |
+|-------------|---------|-----------------------------------------------|
 | userId      | integer | the user ID of the user                       |
 | accessLevel | integer | the access level of the user in the dashboard |
 
 #### Dashboard Access Level
 
 | ACCESS LEVEL | INTEGER REPRESENTATION | DESCRIPTION                                                           |
-| ------------ | ---------------------- | --------------------------------------------------------------------- |
+|--------------|------------------------|-----------------------------------------------------------------------|
 | ADMIN        | 3                      | full access; can add other users to the dashboard                     |
 | EDITOR       | 2                      | configuration editor; can edit the configuration but cannot add users |
 | VIEWER       | 1                      | viewer; cannot edit configuration whatsoever                          |

@@ -119,9 +119,9 @@ mod tests {
                 Token::Str("timezone"),
                 Token::Str("UTC"),
                 Token::Str("dmCannotUseCommand"),
+                Token::Bool(true),
                 Token::Str("locale"),
                 Token::Str("en_GB"),
-                Token::Bool(true),
                 Token::StructEnd
             ]
         );
