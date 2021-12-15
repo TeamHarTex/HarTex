@@ -87,6 +87,7 @@ mod tests {
     use serde_test::Token;
 
     use super::{
+        locale,
         tz,
         Deserialize,
         GuildConfiguration
@@ -108,7 +109,8 @@ mod tests {
             &GuildConfiguration {
                 nickname: String::from("HarTex"),
                 timezone: tz::Timezone::UTC,
-                dmCannotUseCommand: true
+                dmCannotUseCommand: true,
+                locale: locale::Locale::EnGb
             },
             &[
                 Token::Struct {
@@ -120,6 +122,8 @@ mod tests {
                 Token::Str("timezone"),
                 Token::Str("UTC"),
                 Token::Str("dmCannotUseCommand"),
+                Token::Str("locale"),
+                Token::Str("en_GB"),
                 Token::Bool(true),
                 Token::StructEnd
             ]
