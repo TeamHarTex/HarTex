@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License along
- * with HarTex; if not, If not, see <https://www.gnu.org/licenses/>.
+ * with HarTex; if not, see <https://www.gnu.org/licenses/>.
  */
 
 //! # The `guildconf` Module
@@ -28,6 +28,7 @@ use serde::{
     Deserialize
 };
 
+pub mod lang;
 pub mod tz;
 
 /// # Struct `GuildConfiguration`
