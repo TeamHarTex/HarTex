@@ -59,7 +59,7 @@ pub mod pre_startup;
 /// # Static `BUG_REPORT_URL`
 ///
 /// The bug report url for the bot when an Internal Bot Error occurs.
-pub static BUG_REPORT_URL: &str = "https://github.com/HarTexBot/HarTex-rust-discord-bot/issues/new?assignees=&labels=Bot%3A+Bug%2CBot%3A+IBE&template=internal-bot-error.yml";
+pub static BUG_REPORT_URL: &str = "https://github.com/HarTexTeam/HarTex-rust-discord-bot/issues/new?assignees=&labels=Bot%3A+Bug%2CBot%3A+IBE&template=internal-bot-error.yml";
 
 /// # Static `RUST_DEFAULT_PANIC_HOOK`
 ///
