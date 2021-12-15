@@ -45,10 +45,7 @@ pub struct GuildConfiguration {
     pub timezone: tz::Timezone,
     #[serde(default = "default_dm_cant_use_cmd")]
     pub dmCannotUseCommand: bool,
-    #[serde(
-        default = "default_locale",
-        deserialize_with = "deserialize_locale"
-    )]
+    #[serde(default = "default_locale", deserialize_with = "deserialize_locale")]
     pub locale: locale::Locale
 }
 

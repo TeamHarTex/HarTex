@@ -54,8 +54,8 @@ impl<'visitor> Visitor<'visitor> for GuildConfigLocaleDeserializerRefStrVisitor 
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-        where
-            E: Error {
+    where
+        E: Error {
         Ok(match v {
             "en_GB" => Locale::EnGb,
             _ => return Err(Error::custom("invalid locale"))
