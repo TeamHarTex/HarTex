@@ -17,5 +17,4 @@ toml = "0.5.8"
 
 [dev-dependencies]
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
-hartex_macros = { path = "../hartex_macros" }
 serde_test = { version = "1.0.131" }
