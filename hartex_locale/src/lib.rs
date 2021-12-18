@@ -30,7 +30,7 @@
 use std::{
     collections::HashMap,
     fs,
-    path::PathBuf
+    path::Path
 };
 
 use hartex_core::error::{
@@ -58,7 +58,7 @@ impl Locale {
     ///
     /// Returns `HarTexError::Custom` if the file language configuration file is invalid.
     #[allow(clippy::missing_panics_doc)]
-    pub fn load(path: &PathBuf) -> HarTexResult<Self> {
+    pub fn load(path: &Path) -> HarTexResult<Self> {
         let file = fs::read_to_string(&path)?;
         let mut before_validation = file
             .lines()
