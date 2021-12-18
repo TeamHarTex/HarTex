@@ -108,3 +108,18 @@ impl Locale {
         self.file_map.get("LanguageIdentifier").unwrap().clone()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::path::Path;
+
+    use super::Locale;
+
+    #[test]
+    fn test_en_us_lang_id() {
+        let locale = Locale::load(&Path::new("hartex_locale/langcfgs/en_GB.langcfg"))
+            .unwrap();
+
+        assert_eq!(locale.lang_id() == String::from("en_US"));
+    }
+}
