@@ -31,7 +31,8 @@
 //!
 //! - `tracing-bundled`: bundles tracing, a logging library for use within the `HarTex` crates.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
 pub use ctrlc;
 

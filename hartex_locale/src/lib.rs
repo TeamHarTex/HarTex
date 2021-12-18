@@ -24,6 +24,9 @@
 //! The `hartex_locale` crate contains translations of HarTex messages into various locales or
 //! languages.
 
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
+
 use std::{
     collections::HashMap,
     fs,

@@ -23,7 +23,8 @@
 //!
 //! The `hartex_env` library various environments for different aspects of the `HarTex` Discord bot.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
 use std::{
     env,
