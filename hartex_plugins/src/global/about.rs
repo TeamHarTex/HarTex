@@ -131,8 +131,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
             .build()?
     }
     else {
-        let config = GetGuildConfig::new(interaction.guild_id.unwrap())
-            .await?;
+        let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
@@ -140,17 +139,27 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
 
             builder
                 .description(
-                    locale_file.lookup("GlobalPlugin.AboutCommand.EmbedDescription").unwrap()
+                    locale_file
+                        .lookup("GlobalPlugin.AboutCommand.EmbedDescription")
+                        .unwrap()
                 )
                 .color(0x0003_BEFC)
                 .field(EmbedFieldBuilder::new(
-                    locale_file.lookup("GlobalPlugin.AboutCommand.EmbedBotVersionFieldName").unwrap(),
+                    locale_file
+                        .lookup("GlobalPlugin.AboutCommand.EmbedBotVersionFieldName")
+                        .unwrap(),
                     HARTEX_BUILD
                 ))
-                .field(EmbedFieldBuilder::new(
-                    locale_file.lookup("GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName").unwrap(),
-                    whitelists.to_string()
-                ).inline().build())
+                .field(
+                    EmbedFieldBuilder::new(
+                        locale_file
+                            .lookup("GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName")
+                            .unwrap(),
+                        whitelists.to_string()
+                    )
+                    .inline()
+                    .build()
+                )
                 .build()?
         }
         else {

@@ -118,6 +118,7 @@ impl Locale {
     ///
     /// ## Parameters
     /// - `lk_name`, type `&str`: the key of the message to look up
+    #[must_use]
     pub fn lookup(&self, lk_name: &str) -> Option<String> {
         self.file_map.get(lk_name).cloned()
     }
