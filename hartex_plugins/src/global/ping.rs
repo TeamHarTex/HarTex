@@ -45,8 +45,11 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing
+    logging::tracing,
+    STABLE
 };
+use hartex_dbmani::guildconf::GetGuildConfig;
+use hartex_locale::Locale;
 use hartex_utils::{
     shard_id,
     FutureRetType
@@ -97,7 +100,21 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let content = String::from("Hello! Did you need anything? :eyes:");
+    let content = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        String::from("Hello! Did you need anything? :eyes:")
+    }
+    else {
+        let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
+
+        if !STABLE && config.NightlyFeatures.localization {
+            let locale = config.GuildConfiguration.locale;
+            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+
+            locale_file
+                .lookup("GlobalPlugin.HelpCommand.InitialResponse")
+                .unwrap()
+        }
+    };
 
     tracing::trace!("responding to interaction (initial response)");
 
