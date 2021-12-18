@@ -23,7 +23,11 @@
 //!
 //! This module contains configuration for the bot interface locale (and language).
 
-use std::fmt::Formatter;
+use std::fmt::{
+    Display,
+    Formatter,
+    Result as FmtResult
+};
 
 use serde::de::{
     Error,
@@ -39,6 +43,14 @@ pub enum Locale {
     ///
     /// The "en_GB" language.
     EnGb
+}
+
+impl Display for Locale {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match self {
+            Self::EnGb => write!(f, "en_GB")
+        }
+    }
 }
 
 /// # Struct `GuildConfigLocaleDeserializerRefStrVisitor`

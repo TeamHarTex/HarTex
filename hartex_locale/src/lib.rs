@@ -111,6 +111,16 @@ impl Locale {
     pub fn lang_id(&self) -> String {
         self.file_map.get("LanguageIdentifier").unwrap().clone()
     }
+
+    /// # Instance Method `Locale::lookup`
+    ///
+    /// Looks up a message with the provided key.
+    ///
+    /// ## Parameters
+    /// - `lk_name`, type `&str`: the key of the message to look up
+    pub fn lookup(&self, lk_name: &str) -> Option<String> {
+        self.file_map.get(lk_name).cloned()
+    }
 }
 
 #[cfg(test)]
