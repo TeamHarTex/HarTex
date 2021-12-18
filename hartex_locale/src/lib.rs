@@ -30,7 +30,7 @@
 use std::{
     collections::HashMap,
     fs,
-    path::Path
+    path::PathBuf
 };
 
 use hartex_core::error::{
@@ -50,7 +50,7 @@ impl Locale {
     /// # Static Method `Locale::load`
     ///
     /// Loads and constructs a locale structure from a language configuration file.
-    pub fn load(path: &Path) -> HarTexResult<Self> {
+    pub fn load(path: PathBuf) -> HarTexResult<Self> {
         let mut file = fs::read_to_string(path)?;
         let mut before_validation = file
             .lines()
@@ -62,7 +62,9 @@ impl Locale {
 
         if !before_validation.any(|entry| entry.0 == String::from("LanguageIdentifier")) {
             return Err(HarTexError::Custom {
-                message: format!("`LanguageIdentifier` field must be specified in language configuration file: {path}")
+                message: format!(
+                    "`LanguageIdentifier` field must be specified in language configuration file: {path:?}"
+                )
             });
         }
 
@@ -71,7 +73,7 @@ impl Locale {
             if map.insert(key.to_string(), value.to_string()).is_some() {
                 return Err(HarTexError::Custom {
                     message: format!(
-                        "duplicate key found in language configuration file {path}: {key}"
+                        "duplicate key found in language configuration file {path:?}: {key}"
                     )
                 });
             }
