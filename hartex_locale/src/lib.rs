@@ -64,14 +64,9 @@ impl Locale {
             .lines()
             .filter(|line| !line.starts_with(';') && !line.is_empty())
             .map(|line| {
-                let split = line.split(": ").collect::<Vec<_>>();
+                let split = line.split_once(": ").unwrap();
 
-                if split.clone().len() < 2 {
-                    (split[0], "")
-                }
-                else {
-                    (split[0], split[1])
-                }
+                (split.0, split.1)
             })
             .collect::<Vec<_>>();
 
