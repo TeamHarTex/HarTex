@@ -119,6 +119,6 @@ mod tests {
     fn test_en_us_lang_id() {
         let locale = Locale::load(&Path::new("hartex_locale/langcfgs/en_GB.langcfg")).unwrap();
 
-        assert_eq!(locale.lang_id() == String::from("en_US"));
+        assert_eq!(locale.lang_id(), String::from("en_US"));
     }
 }
