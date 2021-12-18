@@ -75,7 +75,10 @@ impl Locale {
             })
             .collect::<Vec<_>>();
 
-        if !before_validation.iter().any(|entry| entry.0 == "LanguageIdentifier") {
+        if !before_validation
+            .iter()
+            .any(|entry| entry.0 == "LanguageIdentifier")
+        {
             return Err(HarTexError::Custom {
                 message: format!(
                     "`LanguageIdentifier` field must be specified in language configuration file: {path}"
