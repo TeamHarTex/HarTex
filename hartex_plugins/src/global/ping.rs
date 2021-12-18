@@ -114,6 +114,9 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
                 .lookup("GlobalPlugin.HelpCommand.InitialResponse")
                 .unwrap()
         }
+        else {
+            String::from("Hello! Did you need anything? :eyes:")
+        }
     };
 
     tracing::trace!("responding to interaction (initial response)");
