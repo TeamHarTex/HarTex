@@ -52,9 +52,14 @@ use hartex_core::{
         HarTexResult
     },
     logging::tracing,
-    HARTEX_BUILD
+    HARTEX_BUILD,
+    STABLE
 };
-use hartex_dbmani::whitelist::GetWhitelistedGuilds;
+use hartex_dbmani::{
+    guildconf::GetGuildConfig,
+    whitelist::GetWhitelistedGuilds
+};
+use hartex_locale::Locale;
 use hartex_utils::FutureRetType;
 
 /// # Struct `About`
@@ -112,15 +117,51 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let embed = EmbedBuilder::new()
+    let builder = EmbedBuilder::new()
         .author(EmbedAuthorBuilder::new(String::from("HarTex"))
             .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
-        )
-        .description("HarTex is a Discord bot that is built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
-        .color(0x0003_BEFC)
-        .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
-        .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
-        .build()?;
+        );
+
+    let embed = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        builder
+            .description("HarTex is a Discord bot built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
+            .color(0x0003_BEFC)
+            .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
+            .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
+            .build()?
+    }
+    else {
+        let config = GetGuildConfig::new(interaction.guild_id.unwrap())
+            .await?;
+
+        if !STABLE && config.NightlyFeatures.localization {
+            let locale = config.GuildConfiguration.locale;
+            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+
+            builder
+                .description(
+                    locale_file.lookup("GlobalPlugin.AboutCommand.EmbedDescription").unwrap()
+                )
+                .color(0x0003_BEFC)
+                .field(EmbedFieldBuilder::new(
+                    locale_file.lookup("GlobalPlugin.AboutCommand.EmbedBotVersionFieldName").unwrap(),
+                    HARTEX_BUILD
+                ))
+                .field(EmbedFieldBuilder::new(
+                    locale_file.lookup("GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName").unwrap(),
+                    whitelists.to_string()
+                ).inline().build())
+                .build()?
+        }
+        else {
+            builder
+                .description("HarTex is a Discord bot built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
+                .color(0x0003_BEFC)
+                .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
+                .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
+                .build()?
+        }
+    };
 
     tracing::trace!("responding to interaction");
 
