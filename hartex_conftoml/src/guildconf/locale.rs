@@ -41,14 +41,20 @@ use serde::de::{
 pub enum Locale {
     /// # Enum Variant `Locale::EnGb`
     ///
-    /// The "en_GB" language.
-    EnGb
+    /// The "en_GB" locale.
+    EnGb,
+
+    /// # Enum Variant `Locale::EnUs`
+    ///
+    /// The "en_US" locale.
+    EnUs
 }
 
 impl Display for Locale {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
-            Self::EnGb => write!(f, "en_GB")
+            Self::EnGb => write!(f, "en_GB"),
+            Self::EnUs => write!(f, "en_US")
         }
     }
 }
