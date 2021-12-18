@@ -27,7 +27,6 @@
 #![allow(non_snake_case)]
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
-
 #![feature(once_cell)]
 
 use std::{

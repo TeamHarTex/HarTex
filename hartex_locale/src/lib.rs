@@ -62,7 +62,7 @@ impl Locale {
 
         if !before_validation.any(|entry| entry.0 == String::from("LanguageIdentifier")) {
             return Err(HarTexError::Custom {
-                message: format!("`LanguageIdentifier` field must be specified in language configuration file: {path}");
+                message: format!("`LanguageIdentifier` field must be specified in language configuration file: {path}")
             });
         }
 
