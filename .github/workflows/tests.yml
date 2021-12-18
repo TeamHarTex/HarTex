@@ -58,8 +58,8 @@ jobs:
       - name: Build
         run: cargo build --release
 
-  LinuxConftomlTest:
-    name: Linux (Test - hartex_conftoml)
+  LinuxTest:
+    name: Linux (Test)
     needs:
       - Linux
     runs-on: ubuntu-latest
@@ -75,8 +75,8 @@ jobs:
       - name: Test
         run: cargo test
 
-  macOSConftomlTest:
-    name: macOS (Test - hartex_conftoml)
+  macOSTest:
+    name: macOS (Test)
     needs:
       - macOS
     runs-on: macos-latest
@@ -92,8 +92,8 @@ jobs:
       - name: Test
         run: cargo test
 
-  WindowsConftomlTest:
-    name: Windows (Test - hartex_conftoml)
+  WindowsTest:
+    name: Windows (Test)
     needs:
       - Windows
     runs-on: windows-latest
