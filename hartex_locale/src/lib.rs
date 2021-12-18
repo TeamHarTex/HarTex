@@ -21,7 +21,7 @@
 
 //! # `hartex_locale` - Localization Facilities for `HarTex` Discord bot
 //!
-//! The `hartex_locale` crate contains translations of HarTex messages into various locales or
+//! The `hartex_locale` crate contains translations of `HarTex` messages into various locales or
 //! languages.
 
 #![deny(clippy::pedantic, warnings)]
@@ -50,17 +50,31 @@ impl Locale {
     /// # Static Method `Locale::load`
     ///
     /// Loads and constructs a locale structure from a language configuration file.
-    pub fn load(path: PathBuf) -> HarTexResult<Self> {
+    ///
+    /// # Errors
+    ///
+    /// Returns `std::io::Error` if something wrong happens when reading the language configuration
+    /// file.
+    ///
+    /// Returns `HarTexError::Custom` if the file language configuration file is invalid.
+    #[allow(clippy::missing_panics_doc)]
+    pub fn load(path: &PathBuf) -> HarTexResult<Self> {
         let file = fs::read_to_string(&path)?;
         let mut before_validation = file
             .lines()
-            .filter(|line| !line.starts_with(";") && !line.is_empty())
+            .filter(|line| !line.starts_with(';') && !line.is_empty())
             .map(|line| {
                 let mut split = line.split(": ");
-                (split.next().unwrap(), split.next().unwrap())
+
+                if split.clone().count() < 2 {
+                    (split.next().unwrap(), "")
+                }
+                else {
+                    (split.next().unwrap(), split.next().unwrap())
+                }
             });
 
-        if !before_validation.any(|entry| entry.0 == String::from("LanguageIdentifier")) {
+        if !before_validation.any(|entry| entry.0 == "LanguageIdentifier") {
             return Err(HarTexError::Custom {
                 message: format!(
                     "`LanguageIdentifier` field must be specified in language configuration file: {path:?}"
@@ -69,7 +83,8 @@ impl Locale {
         }
 
         let mut map = HashMap::with_capacity(before_validation.clone().count());
-        while let Some((key, value)) = before_validation.next() {
+
+        for (key, value) in before_validation {
             if map.insert(key.to_string(), value.to_string()).is_some() {
                 return Err(HarTexError::Custom {
                     message: format!(
@@ -87,6 +102,8 @@ impl Locale {
     /// # Instance Method `Locale::lang_id`
     ///
     /// Retrieves the language identifier from the current loaded language configuration file.
+    #[allow(clippy::missing_panics_doc)]
+    #[must_use]
     pub fn lang_id(&self) -> String {
         self.file_map.get("LanguageIdentifier").unwrap().clone()
     }
