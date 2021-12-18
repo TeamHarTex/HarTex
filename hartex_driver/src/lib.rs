@@ -24,7 +24,9 @@
 //! This `hartex_driver` crate contains effectively the "main function" of the bot as well as some
 //! "moving pieces" that are required for the bot to work.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
+
 #![feature(once_cell)]
 
 use std::{

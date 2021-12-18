@@ -23,7 +23,8 @@
 //!
 //! The `hartex_utils` library provides several utilities for the `HarTex` Discord bot.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
 use std::{
     future::Future,

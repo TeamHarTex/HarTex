@@ -24,6 +24,7 @@
 //! The `hartex_model` crate contains various models for use in `HarTex` Discord bot for its various
 //! functionalities.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
 pub mod payload;

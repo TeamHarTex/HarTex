@@ -24,7 +24,8 @@
 //! The `hartex_cmdsys` library contains an implementation of a command system for `HarTex` Discord
 //! bot, containing various utilities for the implementation.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
 pub mod command;
 pub mod context;

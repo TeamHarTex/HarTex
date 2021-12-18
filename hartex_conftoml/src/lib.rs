@@ -25,7 +25,8 @@
 //! configuration for `HarTex` Discord bot.
 
 #![allow(non_snake_case)]
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
 use hartex_core::{
     error::{

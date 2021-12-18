@@ -23,7 +23,9 @@
 //!
 //! The `hartex_plugins` library implements the bot plugins.
 
-#![deny(clippy::pedantic, warnings, unsafe_code)]
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
+
 #![feature(once_cell)]
 
 use std::lazy::SyncLazy;
