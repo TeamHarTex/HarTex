@@ -52,7 +52,10 @@ impl Locale {
         let mut before_validation = file
             .lines()
             .filter(|line| !line.starts_with(";") && !line.is_empty())
-            .map(|line| line.split(": ").map(|part| part.to_string()).collect::<(String, String)>());
+            .map(|line| {
+                let mut split = line.split(": ");
+                (split.next().unwrap(), split.next().unwrap())
+            });
 
         if !before_validation.any(|entry| entry.0 == String::from("LanguageIdentifier")) {
             return Err(HarTexError::Custom {
@@ -62,9 +65,11 @@ impl Locale {
 
         let mut map = HashMap::with_capacity(before_validation.clone().count());
         while let Some((key, value)) = before_validation.next() {
-            if map.insert(key, value).is_some() {
+            if map.insert(key.to_string(), value.to_string()).is_some() {
                 return Err(HarTexError::Custom {
-                    message: format!("duplicate key found in language configuration file {path}: {key}")
+                    message: format!(
+                        "duplicate key found in language configuration file {path}: {key}"
+                    )
                 });
             }
         }
