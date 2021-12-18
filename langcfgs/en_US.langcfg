@@ -23,10 +23,11 @@
 
 LanguageIdentifier: en_US
 
-; Section - Global Plugin, About Command
+; Section: Global Plugin, About Command
 GlobalPlugin.AboutCommand.EmbedDescription: HarTex is a Discord bot built and optimized for efficient Discord moderation and administration, developed and maintained by the HarTex Team members.
 GlobalPlugin.AboutCommand.EmbedBotVersionFieldName: Bot Version
 GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName: Whitelisted Guilds
 
 ; Section: Global Plugin, Ping Command
-GlobalPlugin.HelpCommand.InitialResponse: Hello! Did you need anything? :eyes:
+GlobalPlugin.PingCommand.InitialResponse: Hello! Did you need anything? :eyes:
+GlobalPlugin.PingCommand.MillisecondUnit: ms
