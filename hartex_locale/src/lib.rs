@@ -25,17 +25,22 @@
 //! languages.
 
 use std::{
+    collections::HashMap,
     fs,
     path::Path
 };
 
-use hartex_core::error::HarTexResult;
+use hartex_core::error::{
+    HarTexError,
+    HarTexResult
+};
 
 /// # Struct `Locale`
 ///
 /// A structure representing a locale.
+#[derive(Clone)]
 pub struct Locale {
-    file_buffer: String
+    file_map: HashMap<String, String>
 }
 
 impl Locale {
@@ -44,13 +49,22 @@ impl Locale {
     /// Loads and constructs a locale structure from a language configuration file.
     pub fn load(path: &Path) -> HarTexResult<Self> {
         let mut file = fs::read_to_string(path)?;
-        file = file
+        let mut before_validation = file
             .lines()
             .filter(|line| !line.starts_with(";") && !line.is_empty())
-            .collect();
+            .map(|line| line.split(": ").map(|part| part.to_string()).collect::<(String, String)>());
+
+        let mut map = HashMap::with_capacity(before_validation.clone().count());
+        while let Some((key, value)) = before_validation.next() {
+            if map.insert(key, value).is_some() {
+                return Err(HarTexError::Custom {
+                    message: format!("duplicate key found in language configuration file {path}: {key}")
+                })
+            }
+        }
 
         Ok(Self {
-            file_buffer: file
+            file_map: map
         })
     }
 
@@ -58,13 +72,6 @@ impl Locale {
     ///
     /// Retrieves the language identifier from the current loaded language configuration file.
     pub fn lang_id(&self) -> String {
-        let line = self
-            .file_buffer
-            .lines()
-            .find(|line| line.starts_with("LanguageIdentifier: "))
-            .unwrap();
-
-        line.trim_start_matches("LanguageIdentifier: ")
-            .into_string()
+        self.file_map.get("LanguageIdentifier").unwrap().clone()
     }
 }
