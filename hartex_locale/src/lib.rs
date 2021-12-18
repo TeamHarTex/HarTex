@@ -54,12 +54,18 @@ impl Locale {
             .filter(|line| !line.starts_with(";") && !line.is_empty())
             .map(|line| line.split(": ").map(|part| part.to_string()).collect::<(String, String)>());
 
+        if !before_validation.any(|entry| entry.0 == String::from("LanguageIdentifier")) {
+            return Err(HarTexError::Custom {
+                message: format!("`LanguageIdentifier` field must be specified in language configuration file: {path}");
+            });
+        }
+
         let mut map = HashMap::with_capacity(before_validation.clone().count());
         while let Some((key, value)) = before_validation.next() {
             if map.insert(key, value).is_some() {
                 return Err(HarTexError::Custom {
                     message: format!("duplicate key found in language configuration file {path}: {key}")
-                })
+                });
             }
         }
 
