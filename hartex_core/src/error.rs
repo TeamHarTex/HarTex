@@ -31,6 +31,7 @@ use std::{
         Formatter,
         Result as FmtResult
     },
+    io::Error as IoError,
     str::Utf8Error
 };
 
@@ -149,6 +150,13 @@ pub enum HarTexError {
     /// - `error`, type `InteractionError`: the error returned when attempting to register
     ///                                     an interaction.
     InteractionError { error: InteractionError },
+
+    /// # Enum Variant `HarTexError::IoError`
+    ///
+    /// A wrapper around `std::io::Error`
+    ///
+    /// - `error`, type `IoError`: an io error.
+    IoError { error: IoError },
 
     /// # Enum Variant `HarTexError::ParseError`
     ///
@@ -293,14 +301,6 @@ impl From<EmbedError> for HarTexError {
     }
 }
 
-impl From<Utf8Error> for HarTexError {
-    fn from(error: Utf8Error) -> Self {
-        Self::Utf8ValidationError {
-            error
-        }
-    }
-}
-
 impl From<HttpError> for HarTexError {
     fn from(error: HttpError) -> Self {
         Self::TwilightHttpError {
@@ -320,6 +320,14 @@ impl From<ImageSourceUrlError> for HarTexError {
 impl From<InteractionError> for HarTexError {
     fn from(error: InteractionError) -> Self {
         Self::InteractionError {
+            error
+        }
+    }
+}
+
+impl From<IoError> for HarTexError {
+    fn from(error: IoError) -> Self {
+        Self::IoError {
             error
         }
     }
@@ -368,6 +376,14 @@ impl From<UpdateMessageError> for HarTexError {
 impl From<UpdatePresenceError> for HarTexError {
     fn from(error: UpdatePresenceError) -> Self {
         Self::UpdatePresenceError {
+            error
+        }
+    }
+}
+
+impl From<Utf8Error> for HarTexError {
+    fn from(error: Utf8Error) -> Self {
+        Self::Utf8ValidationError {
             error
         }
     }

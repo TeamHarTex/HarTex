@@ -23,3 +23,47 @@
 //!
 //! The `hartex_locale` crate contains translations of HarTex messages into various locales or
 //! languages.
+
+use std::{
+    fs,
+    path::Path
+};
+
+use hartex_core::error::HarTexResult;
+
+/// # Struct `Locale`
+///
+/// A structure representing a locale.
+pub struct Locale {
+    file_buffer: String
+}
+
+impl Locale {
+    /// # Static Method `Locale::load`
+    ///
+    /// Loads and constructs a locale structure from a language configuration file.
+    pub fn load(path: &Path) -> HarTexResult<Self> {
+        let mut file = fs::read_to_string(path)?;
+        file = file
+            .lines()
+            .filter(|line| !line.starts_with(";") && !line.is_empty())
+            .collect();
+
+        Ok(Self {
+            file_buffer: file
+        })
+    }
+
+    /// # Instance Method `Locale::lang_id`
+    ///
+    /// Retrieves the language identifier from the current loaded language configuration file.
+    pub fn lang_id(&self) -> String {
+        let line = self
+            .file_buffer
+            .lines()
+            .find(|line| line.starts_with("LanguageIdentifier: "))
+            .unwrap();
+
+        line.trim_start_matches("LanguageIdentifier: ").into_string()
+    }
+}
