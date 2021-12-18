@@ -29,8 +29,7 @@
 
 use std::{
     collections::HashMap,
-    fs,
-    path::Path
+    fs
 };
 
 use hartex_core::error::{
@@ -58,37 +57,39 @@ impl Locale {
     ///
     /// Returns `HarTexError::Custom` if the file language configuration file is invalid.
     #[allow(clippy::missing_panics_doc)]
-    pub fn load(path: &Path) -> HarTexResult<Self> {
+    pub fn load(path: &str) -> HarTexResult<Self> {
         let file = fs::read_to_string(&path)?;
-        let mut before_validation = file
+
+        let before_validation = file
             .lines()
             .filter(|line| !line.starts_with(';') && !line.is_empty())
             .map(|line| {
-                let mut split = line.split(": ");
+                let split = line.split(": ").collect::<Vec<_>>();
 
-                if split.clone().count() < 2 {
-                    (split.next().unwrap(), "")
+                if split.clone().len() < 2 {
+                    (split[0], "")
                 }
                 else {
-                    (split.next().unwrap(), split.next().unwrap())
+                    (split[0], split[1])
                 }
-            });
+            })
+            .collect::<Vec<_>>();
 
-        if !before_validation.any(|entry| entry.0 == "LanguageIdentifier") {
+        if !before_validation.iter().any(|entry| entry.0 == "LanguageIdentifier") {
             return Err(HarTexError::Custom {
                 message: format!(
-                    "`LanguageIdentifier` field must be specified in language configuration file: {path:?}"
+                    "`LanguageIdentifier` field must be specified in language configuration file: {path}"
                 )
             });
         }
 
-        let mut map = HashMap::with_capacity(before_validation.clone().count());
+        let mut map = HashMap::with_capacity(before_validation.clone().len());
 
         for (key, value) in before_validation {
             if map.insert(key.to_string(), value.to_string()).is_some() {
                 return Err(HarTexError::Custom {
                     message: format!(
-                        "duplicate key found in language configuration file {path:?}: {key}"
+                        "duplicate key found in language configuration file {path}: {key}"
                     )
                 });
             }
@@ -111,15 +112,13 @@ impl Locale {
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
-
     use super::Locale;
 
     #[test]
     fn test_en_us_lang_id() {
         let locale =
-            Locale::load(&Path::new("../../hartex_locale/langcfgs/en_GB.langcfg")).unwrap();
+            Locale::load("../langcfgs/en_GB.langcfg").unwrap();
 
-        assert_eq!(locale.lang_id(), String::from("en_US"));
+        assert_eq!(locale.lang_id(), String::from("en_GB"));
     }
 }
