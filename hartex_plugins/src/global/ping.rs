@@ -100,8 +100,8 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let content = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        String::from("Hello! Did you need anything? :eyes:")
+    let (content, ms_unit) = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        (String::from("Hello! Did you need anything? :eyes:"), String::from("ms"))
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
@@ -110,12 +110,17 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
             let locale = config.GuildConfiguration.locale;
             let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-            locale_file
-                .lookup("GlobalPlugin.HelpCommand.InitialResponse")
-                .unwrap()
+            (
+                locale_file
+                    .lookup("GlobalPlugin.PingCommand.InitialResponse")
+                    .unwrap(),
+                locale_file
+                    .lookup("GlobalPlugin.PingCommand.MillisecondUnit")
+                    .unwrap()
+            )
         }
         else {
-            String::from("Hello! Did you need anything? :eyes:")
+            (String::from("Hello! Did you need anything? :eyes:"), String::from("ms"))
         }
     };
 
@@ -149,7 +154,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let shard_id = shard_id(interaction.guild_id.unwrap().0.get(), shards.len() as _);
     let shard_info = shards.get(&shard_id).unwrap();
     let latency = shard_info.latency().average().unwrap();
-    let new_content = format!("{content} - `{latency}ms`", latency = latency.as_millis());
+    let new_content = format!("{content} - `{latency}{ms_unit}`", latency = latency.as_millis());
 
     tracing::trace!("updating initial interaction response to add latency information");
 
