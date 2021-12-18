@@ -11,7 +11,7 @@ This object configures the nightly (unstable) features of the bot. This object s
             WARNING
         </span>
     </h5>
-    <p>This features can only be enabled when using the <strong>nightly</strong> version of the bot; hence this object will be ignored on <strong>stable</strong> versions of the bot. For more information, please see (link to be added).</p>
+    <p>These features can only be enabled when using the <strong>nightly</strong> version of the bot; hence this object will be ignored on <strong>stable</strong> versions of the bot. For more information, please see (link to be added).</p>
 </div>
 
 <div class="warning">
@@ -57,5 +57,4 @@ changes for when it is implemented.
 This feature adds experimental localization facilities, such as timezones for time representation and languages for
 the messages and other things.
 
-This feature has not been implemented yet, but is unstable and is subject to change for when it is eventually
-implemented into the bot.
+This feature is a work in progress, unstable and subject to change.
