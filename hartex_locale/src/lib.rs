@@ -64,6 +64,7 @@ impl Locale {
             .find(|line| line.starts_with("LanguageIdentifier: "))
             .unwrap();
 
-        line.trim_start_matches("LanguageIdentifier: ").into_string()
+        line.trim_start_matches("LanguageIdentifier: ")
+            .into_string()
     }
 }
