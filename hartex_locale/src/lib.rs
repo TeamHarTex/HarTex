@@ -51,7 +51,7 @@ impl Locale {
     ///
     /// Loads and constructs a locale structure from a language configuration file.
     pub fn load(path: PathBuf) -> HarTexResult<Self> {
-        let mut file = fs::read_to_string(path)?;
+        let file = fs::read_to_string(&path)?;
         let mut before_validation = file
             .lines()
             .filter(|line| !line.starts_with(";") && !line.is_empty())
