@@ -138,13 +138,10 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
             let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
             builder
-                .description(
-                    locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone()
-                )
+                .description(locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone())
                 .color(0x0003_BEFC)
                 .field(EmbedFieldBuilder::new(
-                    locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"]
-                        .clone(),
+                    locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"].clone(),
                     HARTEX_BUILD
                 ))
                 .field(
