@@ -34,3 +34,7 @@ GlobalPlugin.PingCommand.MillisecondUnit: ms
 
 ; Section: Global Plugin, Source Command
 GlobalPlugin.SourceCommand.PreRepositoryUriMessage: The source code for the bot can be found at:
+
+; Section: Global Plugin, Team Command
+GlobalPlugin.TeamCommand.EmbedTitle: HarTex Project Team
+GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName: Global Administrator & Lead Developer
