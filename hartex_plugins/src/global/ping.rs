@@ -114,11 +114,9 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
             let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
             (
-                locale_file
-                    .lookup("GlobalPlugin.PingCommand.InitialResponse")
+                locale_file["GlobalPlugin.PingCommand.InitialResponse"]
                     .unwrap(),
-                locale_file
-                    .lookup("GlobalPlugin.PingCommand.MillisecondUnit")
+                locale_file["GlobalPlugin.PingCommand.MillisecondUnit"]
                     .unwrap()
             )
         }
