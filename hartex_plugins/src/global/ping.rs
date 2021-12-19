@@ -101,7 +101,10 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     };
 
     let (content, ms_unit) = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        (String::from("Hello! Did you need anything? :eyes:"), String::from("ms"))
+        (
+            String::from("Hello! Did you need anything? :eyes:"),
+            String::from("ms")
+        )
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
