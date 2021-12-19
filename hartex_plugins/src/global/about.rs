@@ -139,19 +139,18 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
 
             builder
                 .description(
-                    locale_file["GlobalPlugin.AboutCommand.EmbedDescription"]
-                        .unwrap()
+                    locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone()
                 )
                 .color(0x0003_BEFC)
                 .field(EmbedFieldBuilder::new(
                     locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"]
-                        .unwrap(),
+                        .clone(),
                     HARTEX_BUILD
                 ))
                 .field(
                     EmbedFieldBuilder::new(
                         locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"]
-                            .unwrap(),
+                            .clone(),
                         whitelists.to_string()
                     )
                     .inline()

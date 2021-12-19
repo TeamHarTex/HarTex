@@ -115,16 +115,16 @@ impl Locale {
     /// ## Parameters
     /// - `lk_name`, type `&str`: the key of the message to look up
     #[must_use]
-    pub fn get(&self, lk_name: &str) -> Option<String> {
-        self.file_map.get(lk_name).cloned()
+    pub fn get(&self, lk_name: &str) -> Option<&String> {
+        self.file_map.get(lk_name)
     }
 }
 
 impl<'a> Index<&'a str> for Locale {
-    type Output = Option<String>;
+    type Output = String;
 
     fn index(&self, index: &'a str) -> &Self::Output {
-        &self.get(index)
+        self.get(index).expect("property not found in langcfg file")
     }
 }
 

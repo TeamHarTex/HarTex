@@ -107,8 +107,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
             let locale = config.GuildConfiguration.locale;
             let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-            locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"]
-                .unwrap()
+            locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"].clone()
         }
         else {
             String::from("The source code of the bot can be found at:")
