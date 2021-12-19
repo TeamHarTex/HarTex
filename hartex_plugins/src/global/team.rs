@@ -116,8 +116,7 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
 
             (
                 locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"]
-                    .clone()
+                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone()
             )
         }
         else {
