@@ -134,7 +134,10 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
     let embed = EmbedBuilder::new()
         .title(title)
         .color(0x0003_BEFC)
-        .field(EmbedFieldBuilder::new(gb_admin_ld_dev, "HTGAzureX1212.#5959"))
+        .field(EmbedFieldBuilder::new(
+            gb_admin_ld_dev,
+            "HTGAzureX1212.#5959"
+        ))
         .build()?;
 
     tracing::trace!("responding to interaction");
