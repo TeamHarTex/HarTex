@@ -101,7 +101,9 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let (title, gb_admin_ld_dev, other_contributors) = if interaction.guild_id.is_none() || interaction.user.is_some() {
+    let (title, gb_admin_ld_dev, other_contributors) = if interaction.guild_id.is_none()
+        || interaction.user.is_some()
+    {
         (
             String::from("HarTex Project Team"),
             String::from("Global Administrator & Lead Developer"),
