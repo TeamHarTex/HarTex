@@ -101,10 +101,11 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let (title, gb_admin_ld_dev) = if interaction.guild_id.is_none() || interaction.user.is_some() {
+    let (title, gb_admin_ld_dev, other_contributors) = if interaction.guild_id.is_none() || interaction.user.is_some() {
         (
             String::from("HarTex Project Team"),
-            String::from("Global Administrator & Lead Developer")
+            String::from("Global Administrator & Lead Developer"),
+            String::from("Other Contributors")
         )
     }
     else {
@@ -116,13 +117,15 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
 
             (
                 locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone()
+                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
+                locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
             )
         }
         else {
             (
                 String::from("HarTex Project Team"),
-                String::from("Global Administrator & Lead Developer")
+                String::from("Global Administrator & Lead Developer"),
+                String::from("Other Contributors")
             )
         }
     };
@@ -133,6 +136,10 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         .field(EmbedFieldBuilder::new(
             gb_admin_ld_dev,
             "HTGAzureX1212.#5959"
+        ))
+        .field(EmbedFieldBuilder::new(
+            other_contributors,
+            "<https://github.com/HarTexTeam/HarTex-rust-discord-bot/graphs/contributors>"
         ))
         .build()?;
 
