@@ -38,3 +38,4 @@ GlobalPlugin.SourceCommand.PreRepositoryUriMessage: The source code for the bot 
 ; Section: Global Plugin, Team Command
 GlobalPlugin.TeamCommand.EmbedTitle: HarTex Project Team
 GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName: Global Administrator & Lead Developer
+GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName: Other Contributors
