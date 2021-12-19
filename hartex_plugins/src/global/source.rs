@@ -46,7 +46,7 @@ use hartex_core::{
         HarTexResult
     },
     logging::tracing,
-    STABLE,
+    STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_locale::Locale;
