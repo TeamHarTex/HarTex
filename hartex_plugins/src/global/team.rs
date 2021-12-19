@@ -115,10 +115,9 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
             let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
             (
-                locale_file["GlobalPlugin.TeamCommand.EmbedTitle"]
-                    .unwrap(),
+                locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
                 locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"]
-                    .unwrap()
+                    .clone()
             )
         }
         else {
