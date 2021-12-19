@@ -29,7 +29,8 @@
 
 use std::{
     collections::HashMap,
-    fs
+    fs,
+    ops::Index
 };
 
 use hartex_core::error::{
@@ -107,15 +108,23 @@ impl Locale {
         self.file_map.get("LanguageIdentifier").unwrap().clone()
     }
 
-    /// # Instance Method `Locale::lookup`
+    /// # Instance Method `Locale::get`
     ///
     /// Looks up a message with the provided key.
     ///
     /// ## Parameters
     /// - `lk_name`, type `&str`: the key of the message to look up
     #[must_use]
-    pub fn lookup(&self, lk_name: &str) -> Option<String> {
+    pub fn get(&self, lk_name: &str) -> Option<String> {
         self.file_map.get(lk_name).cloned()
+    }
+}
+
+impl<'a> Index<&'a str> for Locale {
+    type Output = Option<String>;
+
+    fn index(&self, index: &'a str) -> &Self::Output {
+        &self.get(index)
     }
 }
 

@@ -107,8 +107,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
             let locale = config.GuildConfiguration.locale;
             let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-            locale_file
-                .lookup("GlobalPlugin.SourceCommand.PreRepositoryUriMessage")
+            locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"]
                 .unwrap()
         }
         else {
