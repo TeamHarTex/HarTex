@@ -126,9 +126,9 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
             &InteractionResponse::ChannelMessageWithSource(CallbackData {
                 allowed_mentions: None,
                 components: None,
-                content: Some(
-                    format!("{message} <https://github.com/HarTexTeam/HarTex-rust-discord-bot>.")
-                ),
+                content: Some(format!(
+                    "{message} <https://github.com/HarTexTeam/HarTex-rust-discord-bot>."
+                )),
                 embeds: vec![],
                 flags: None,
                 tts: None
