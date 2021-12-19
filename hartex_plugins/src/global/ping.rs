@@ -120,7 +120,10 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
             )
         }
         else {
-            (String::from("Hello! Did you need anything? :eyes:"), String::from("ms"))
+            (
+                String::from("Hello! Did you need anything? :eyes:"),
+                String::from("ms")
+            )
         }
     };
 
@@ -154,7 +157,10 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let shard_id = shard_id(interaction.guild_id.unwrap().0.get(), shards.len() as _);
     let shard_info = shards.get(&shard_id).unwrap();
     let latency = shard_info.latency().average().unwrap();
-    let new_content = format!("{content} - `{latency}{ms_unit}`", latency = latency.as_millis());
+    let new_content = format!(
+        "{content} - `{latency}{ms_unit}`",
+        latency = latency.as_millis()
+    );
 
     tracing::trace!("updating initial interaction response to add latency information");
 
