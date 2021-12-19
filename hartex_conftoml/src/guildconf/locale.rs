@@ -47,14 +47,20 @@ pub enum Locale {
     /// # Enum Variant `Locale::EnUs`
     ///
     /// The "en_US" locale.
-    EnUs
+    EnUs,
+
+    /// # Enum Variant `Locale::ZhHk`
+    ///
+    /// The `zh_HK`
+    ZhHk
 }
 
 impl Display for Locale {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             Self::EnGb => write!(f, "en_GB"),
-            Self::EnUs => write!(f, "en_US")
+            Self::EnUs => write!(f, "en_US"),
+            Self::ZhHk => write!(f, "zh_HK")
         }
     }
 }
