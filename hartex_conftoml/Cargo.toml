@@ -12,9 +12,9 @@ license = "AGPL-3.0-only"
 [dependencies]
 dashmap = "4.0.2"
 hartex_core = { path = "../hartex_core", features = [ "tracing-bundled" ] }
-serde = { version = "1.0.131", features = [ "derive" ] }
+serde = { version = "1.0.132", features = [ "derive" ] }
 toml = "0.5.8"
 
 [dev-dependencies]
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
-serde_test = { version = "1.0.131" }
+serde_test = { version = "1.0.132" }

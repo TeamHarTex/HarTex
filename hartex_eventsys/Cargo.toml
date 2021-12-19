@@ -11,6 +11,6 @@ license = "AGPL-3.0-only"
 
 [dependencies]
 dashmap = "4.0.2"
-futures-channel = "0.3.17"
-futures-util = "0.3.17"
+futures-channel = "0.3.19"
+futures-util = "0.3.19"
 hartex_model = { path = "../hartex_model" }
