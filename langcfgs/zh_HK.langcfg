@@ -22,3 +22,19 @@
 ; with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 LanguageIdentifier: zh_HK
+
+; Section: Global Plugin, About Command
+GlobalPlugin.AboutCommand.EmbedDescription: 由 HarTex 團隊維護及開發, HarTex 係一個針對 Discord 高效管理去進行咗優化嘅 Bot.
+GlobalPlugin.AboutCommand.EmbedBotVersionFieldName: Bot 嘅版本
+GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName: Whitelist 咗嘅 Server
+
+; Section: Global Plugin, Ping Command
+GlobalPlugin.PingCommand.InitialResponse: Hello! 有咩幫到你? :eyes:
+GlobalPlugin.PingCommand.MillisecondUnit: 毫秒
+
+; Section: Global Plugin, Source Command
+GlobalPlugin.SourceCommand.PreRepositoryUriMessage: 個 Bot 嘅源代碼:
+
+; Section: Global Plugin, Team Command
+GlobalPlugin.TeamCommand.EmbedTitle: HarTex 團隊
+GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName: Admin & 首席 Dev
