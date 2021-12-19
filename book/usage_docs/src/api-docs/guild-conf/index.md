@@ -35,7 +35,8 @@ locale = "en_GB"
 
 #### Valid Locales
 
-| LOCALE | DESCRIPTION  |
-|--------|--------------|
-| en_GB  | English (UK) |
-| en_US  | English (US) |
+| LOCALE | DESCRIPTION                     |
+|--------|---------------------------------|
+| en_GB  | English (UK)                    |
+| en_US  | English (US)                    |
+| zh_HK  | Chinese Traditional (Hong Kong) |
