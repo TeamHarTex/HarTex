@@ -1,6 +1,6 @@
 [package]
 name = "hartex_env"
-version = "1.24.0"
+version = "1.25.0"
 edition = "2021"
 description = """
 The `harttex-env` library various environments for different aspects of the HarTex Discord bot.

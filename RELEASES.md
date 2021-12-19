@@ -1,3 +1,13 @@
+HarTex 1.25.0 (19 December 2021)
+================================
+
+Key Changes
+-----------
+- implemented basic localisation providing three locales: `en_GB`, `en_US` and `zh_HK`
+- added `locale` field in `GuildConfiguration` TOML Configuration API object
+- introduction of `*.langcfg` language configuration files for localisation purposes
+- various updates to usage documentation
+
 HarTex 1.24.0 (12 December 2021)
 ================================
 
