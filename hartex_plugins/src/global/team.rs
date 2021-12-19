@@ -49,8 +49,11 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing
+    logging::tracing,
+    STABLE
 };
+use hartex_dbmani::guildconf::GetGuildConfig;
+use hartex_locale::Locale;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Team`
@@ -98,13 +101,40 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
+    let (title, gb_admin_ld_dev) = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        (
+            String::from("HarTex Project Team"),
+            String::from("Global Administrator & Lead Developer")
+        )
+    }
+    else {
+        let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
+
+        if !STABLE && config.NightlyFeatures.localization {
+            let locale = config.GuildConfiguration.locale;
+            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+
+            (
+                locale_file
+                    .lookup("GlobalPlugin.TeamCommand.EmbedTitle")
+                    .unwrap(),
+                locale_file
+                    .lookup("GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName")
+                    .unwrap()
+            )
+        }
+        else {
+            (
+                String::from("HarTex Project Team"),
+                String::from("Global Administrator & Lead Developer")
+            )
+        }
+    };
+
     let embed = EmbedBuilder::new()
-        .title("HarTex Project Team")
+        .title(title)
         .color(0x0003_BEFC)
-        .field(EmbedFieldBuilder::new(
-            "Global Administrator & Lead Developer",
-            "HTGAzureX1212.#5959"
-        ))
+        .field(EmbedFieldBuilder::new(gb_admin_ld_dev, "HTGAzureX1212.#5959"))
         .build()?;
 
     tracing::trace!("responding to interaction");
