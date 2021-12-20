@@ -73,3 +73,49 @@ impl PingCmdLocalize {
         }
     }
 }
+
+/// # Struct `SourceCmdLocalize`
+///
+/// Localization helper structure for `source` command of the `global`
+/// plugin.
+pub struct SourceCmdLocalize {
+    pub prerepo_uri_msg: String
+}
+
+impl SourceCmdLocalize {
+    /// # Static Method `SourceCmdLocalize::init`
+    ///
+    /// Initializes localization for the `source` command.
+    pub fn init(locale: LocaleEnum) -> Self {
+        let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+
+        Self {
+            prerepo_uri_msg: locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"].clone()
+        }
+    }
+}
+
+/// # Struct `TeamCmdLocalize`
+///
+/// Localization helper structure for `team` command of the `global`
+/// plugin.
+pub struct TeamCmdLocalize {
+    pub embed_title: String,
+    pub embed_globadmin_leaddev_field: String,
+    pub embed_contrib_field: String
+}
+
+impl TeamCmdLocalize {
+    /// # Static Method `TeamCmdLocalize::init`
+    ///
+    /// Initializes localization for the `team` command.
+    pub fn init(locale: LocaleEnum) -> Self {
+        let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+
+        Self {
+            embed_title: locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
+            embed_globadmin_leaddev_field: locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
+            embed_contrib_field: locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
+        }
+    }
+}

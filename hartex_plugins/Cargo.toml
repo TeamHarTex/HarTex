@@ -15,7 +15,6 @@ hartex_conftoml = { path = "../hartex_conftoml" }
 hartex_core = { path = "../hartex_core", features = [ "twilight-bundled" ] }
 hartex_dbmani = { path = "../hartex_dbmani" }
 hartex_env = { path = "../hartex_env" }
-hartex_locale = { path = "../hartex_locale" }
 hartex_plugin_localize = { path = "../hartex_plugin_localize" }
 hartex_utils = { path = "../hartex_utils" }
 tokio = { version = "1.14.0", features = [ "full" ] }
