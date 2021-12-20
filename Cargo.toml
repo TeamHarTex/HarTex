@@ -10,6 +10,7 @@ members = [
     "hartex_eventsys",
     "hartex_locale",
     "hartex_model",
+    "hartex_plugin_localize",
     "hartex_plugins",
     "hartex_utils"
 ]
