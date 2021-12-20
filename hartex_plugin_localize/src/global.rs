@@ -50,3 +50,26 @@ impl AboutCmdLocalize {
         }
     }
 }
+
+/// # Struct `PingCmdLocalize`
+///
+/// Localization helper structure for `ping` command of the `global`
+/// plugin.
+pub struct PingCmdLocalize {
+    pub init_resp: String,
+    pub ms_unit: String
+}
+
+impl PingCmdLocalize {
+    /// # Static Method `PingCmdLocalize::init`
+    ///
+    /// Initializes localization for the `ping` command.
+    pub fn init(locale: LocaleEnum) -> Self {
+        let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+
+        Self {
+            init_resp: locale_file["GlobalPlugin.PingCommand.InitialResponse"].clone(),
+            ms_unit: locale_file["GlobalPlugin.PingCommand.MillisecondUnit"].clone()
+        }
+    }
+}

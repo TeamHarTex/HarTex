@@ -50,6 +50,7 @@ use hartex_core::{
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_locale::Locale;
+use hartex_plugin_localize::global::PingCmdLocalize;
 use hartex_utils::{
     shard_id,
     FutureRetType
@@ -111,11 +112,11 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+            let localize = PingCmdLocalize::init(locale);
 
             (
-                locale_file["GlobalPlugin.PingCommand.InitialResponse"].clone(),
-                locale_file["GlobalPlugin.PingCommand.MillisecondUnit"].clone()
+                localize.init_resp,
+                localize.ms_unit
             )
         }
         else {
