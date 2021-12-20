@@ -49,7 +49,7 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_locale::Locale;
+use hartex_plugin_localize::global::SourceCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Source`
@@ -105,9 +105,9 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+            let localize = SourceCmdLocalize::init(locale);
 
-            locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"].clone()
+            localize.prerepo_uri_msg
         }
         else {
             String::from("The source code of the bot can be found at:")

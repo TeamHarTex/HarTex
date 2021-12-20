@@ -49,7 +49,6 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_locale::Locale;
 use hartex_plugin_localize::global::PingCmdLocalize;
 use hartex_utils::{
     shard_id,

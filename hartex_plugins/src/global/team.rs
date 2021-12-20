@@ -53,7 +53,7 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_locale::Locale;
+use hartex_plugin_localize::global::TeamCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Team`
@@ -115,12 +115,12 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+            let localize = TeamCmdLocalize::init(locale);
 
             (
-                locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
-                locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
+                localize.embed_title,
+                localize.embed_globadmin_leaddev_field,
+                localize.embed_contrib_field
             )
         }
         else {
