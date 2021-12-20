@@ -39,6 +39,11 @@ use serde::de::{
 /// Represents a locale (and language).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Locale {
+    /// # Enum Variant `Locale::EnAu`
+    ///
+    /// The "en_AU" locale.
+    EnAu,
+
     /// # Enum Variant `Locale::EnGb`
     ///
     /// The "en_GB" locale.
@@ -58,6 +63,7 @@ pub enum Locale {
 impl Display for Locale {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
+            Self::EnAu => write!(f, "en_AU"),
             Self::EnGb => write!(f, "en_GB"),
             Self::EnUs => write!(f, "en_US"),
             Self::ZhHk => write!(f, "zh_HK")
@@ -81,7 +87,10 @@ impl<'visitor> Visitor<'visitor> for GuildConfigLocaleDeserializerRefStrVisitor 
     where
         E: Error {
         Ok(match v {
+            "en_AU" => Locale::EnAu,
             "en_GB" => Locale::EnGb,
+            "en_US" => Locale::EnUs,
+            "zh_HK" => Locale::ZhHk,
             _ => return Err(Error::custom("invalid locale"))
         })
     }

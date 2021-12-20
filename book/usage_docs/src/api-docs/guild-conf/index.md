@@ -37,6 +37,7 @@ locale = "en_GB"
 
 | LOCALE | DESCRIPTION                     |
 |--------|---------------------------------|
-| en_GB  | English (UK)                    |
-| en_US  | English (US)                    |
+| en_AU  | English (Australia)             |
+| en_GB  | English (United Kingdom)        |
+| en_US  | English (United States)         |
 | zh_HK  | Chinese Traditional (Hong Kong) |
