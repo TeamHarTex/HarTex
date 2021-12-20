@@ -60,6 +60,7 @@ use hartex_dbmani::{
     whitelist::GetWhitelistedGuilds
 };
 use hartex_locale::Locale;
+use hartex_plugin_localize::global::AboutCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `About`
@@ -135,19 +136,18 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+            let localize = AboutCmdLocalize::init(locale);
 
             builder
-                .description(locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone())
+                .description(localize.embed_desc)
                 .color(0x0003_BEFC)
                 .field(EmbedFieldBuilder::new(
-                    locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"].clone(),
+                    localize.embed_botver_field,
                     HARTEX_BUILD
                 ))
                 .field(
                     EmbedFieldBuilder::new(
-                        locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"]
-                            .clone(),
+                        localize.embed_whiteguilds_field,
                         whitelists.to_string()
                     )
                     .inline()
