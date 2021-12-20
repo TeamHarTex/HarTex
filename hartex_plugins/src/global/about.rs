@@ -59,7 +59,6 @@ use hartex_dbmani::{
     guildconf::GetGuildConfig,
     whitelist::GetWhitelistedGuilds
 };
-use hartex_locale::Locale;
 use hartex_plugin_localize::global::AboutCmdLocalize;
 use hartex_utils::FutureRetType;
 
