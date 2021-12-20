@@ -38,3 +38,4 @@ GlobalPlugin.SourceCommand.PreRepositoryUriMessage: 個 Bot 嘅源代碼:
 ; Section: Global Plugin, Team Command
 GlobalPlugin.TeamCommand.EmbedTitle: HarTex 團隊
 GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName: Admin 同埋首席開發員
+GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName: 其他貢獻者
