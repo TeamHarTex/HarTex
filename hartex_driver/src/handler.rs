@@ -54,7 +54,8 @@ use hartex_core::{
     logging::tracing::{
         self,
         Instrument
-    }
+    },
+    stdext::prelude::*
 };
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
@@ -354,7 +355,7 @@ impl EventHandler {
 
             if let Err(error) = http
                 .update_current_member(guild.id)
-                .nick(Some(&config.GuildConfiguration.nickname))
+                .nick(config.GuildConfiguration.nickname.as_refstr())
                 .unwrap()
                 .exec()
                 .await
