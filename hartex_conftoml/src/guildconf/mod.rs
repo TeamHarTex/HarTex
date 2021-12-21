@@ -36,8 +36,8 @@ pub mod tz;
 /// Represents guild-specific configuration.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct GuildConfiguration {
-    #[serde(default = "default_nickname")]
-    pub nickname: String,
+    #[serde(default)]
+    pub nickname: Option<String>,
     #[serde(
         default = "default_timezone",
         deserialize_with = "deserialize_timezone"
@@ -51,10 +51,6 @@ pub struct GuildConfiguration {
 
 fn default_locale() -> locale::Locale {
     locale::Locale::EnGb
-}
-
-fn default_nickname() -> String {
-    String::from("HarTex")
 }
 
 fn default_timezone() -> tz::Timezone {
