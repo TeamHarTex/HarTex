@@ -23,6 +23,7 @@
 //!
 //! This module implements helper structures for the `Global` plugin.
 
+use hartex_core::error::HarTexResult;
 use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
 use hartex_locale::Locale;
 
@@ -40,14 +41,14 @@ impl AboutCmdLocalize {
     /// # Static Method `AboutCmdLocalize::init`
     ///
     /// Initializes localization for the `about` command.
-    pub fn init(locale: LocaleEnum) -> Self {
+    pub fn init(locale: LocaleEnum) -> HarTexResult<Self> {
         let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-        Self {
+        Ok(Self {
             embed_desc: locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone(),
             embed_botver_field: locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"].clone(),
             embed_whiteguilds_field: locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"].clone()
-        }
+        })
     }
 }
 
@@ -64,13 +65,13 @@ impl PingCmdLocalize {
     /// # Static Method `PingCmdLocalize::init`
     ///
     /// Initializes localization for the `ping` command.
-    pub fn init(locale: LocaleEnum) -> Self {
+    pub fn init(locale: LocaleEnum) -> HarTexResult<Self> {
         let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-        Self {
+        Ok(Self {
             init_resp: locale_file["GlobalPlugin.PingCommand.InitialResponse"].clone(),
             ms_unit: locale_file["GlobalPlugin.PingCommand.MillisecondUnit"].clone()
-        }
+        })
     }
 }
 
@@ -86,12 +87,12 @@ impl SourceCmdLocalize {
     /// # Static Method `SourceCmdLocalize::init`
     ///
     /// Initializes localization for the `source` command.
-    pub fn init(locale: LocaleEnum) -> Self {
+    pub fn init(locale: LocaleEnum) -> HarTexResult<Self> {
         let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-        Self {
+        Ok(Self {
             prerepo_uri_msg: locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"].clone()
-        }
+        })
     }
 }
 
@@ -109,13 +110,13 @@ impl TeamCmdLocalize {
     /// # Static Method `TeamCmdLocalize::init`
     ///
     /// Initializes localization for the `team` command.
-    pub fn init(locale: LocaleEnum) -> Self {
+    pub fn init(locale: LocaleEnum) -> HarTexResult<Self> {
         let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
-        Self {
+        Ok(Self {
             embed_title: locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
             embed_globadmin_leaddev_field: locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
             embed_contrib_field: locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
-        }
+        })
     }
 }

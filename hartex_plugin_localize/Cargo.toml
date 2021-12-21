@@ -11,5 +11,6 @@ license = "AGPL-3.0-only"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_core = { path = "../hartex_core" }
 hartex_conftoml = { path = "../hartex_conftoml" }
 hartex_locale = { path = "../hartex_locale" }
