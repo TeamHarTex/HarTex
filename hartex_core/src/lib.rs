@@ -42,12 +42,13 @@ pub mod error;
 pub mod events;
 #[cfg(feature = "tracing-bundled")]
 pub mod logging;
+pub mod stdext;
 pub mod time;
 
 /// # Static `HARTEX_BUILD`
 ///
 /// Represents the current version and build of `HarTex` Discord bot.
-pub static HARTEX_BUILD: &str = "Version 1.26.0-nightly-21-12-2021 (Build 674)";
+pub static HARTEX_BUILD: &str = "Version 1.26.0-nightly-21-12-2021 (Build 677)";
 
 /// # Static `IS_STABLE`
 ///
