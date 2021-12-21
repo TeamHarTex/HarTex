@@ -100,7 +100,7 @@ mod tests {
     fn test_guildconf_de() {
         serde_test::assert_de_tokens(
             &GuildConfiguration {
-                nickname: String::from("HarTex"),
+                nickname: Some(String::from("HarTex")),
                 timezone: tz::Timezone::UTC,
                 dmCannotUseCommand: true,
                 locale: locale::Locale::EnGb

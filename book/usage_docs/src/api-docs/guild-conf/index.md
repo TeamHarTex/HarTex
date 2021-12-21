@@ -8,7 +8,7 @@ This object is for guild-specific configuration, for example timezone, guild nic
 
 | FIELD              | TYPE     | DESCRIPTION                                                                                  |
 |--------------------|----------|----------------------------------------------------------------------------------------------|
-| nickname           | string?  | the nickname of the bot in the guild; "HarTex" by default                                    |
+| nickname           | string?  | the nickname of the bot in the guild; no nickname set by default                             |
 | timezone¹ ²        | string?  | the timezone of the guild, used when representing time; "UTC" by default                     |
 | dmCannotUseCommand | boolean? | whether to send a DM to a user when they cannot execute some command; `false` by default     |
 | locale¹ ²          | string?  | the locale of a guild, used for language and other localization purposes; `en_GB` by default |
