@@ -111,12 +111,10 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let localize = PingCmdLocalize::init(locale).expect("failed to load localization for ping command");
+            let localize = PingCmdLocalize::init(locale)
+                .expect("failed to load localization for ping command");
 
-            (
-                localize.init_resp,
-                localize.ms_unit
-            )
+            (localize.init_resp, localize.ms_unit)
         }
         else {
             (
