@@ -23,8 +23,8 @@
 //!
 //! This module implements helper structures for the `Global` plugin.
 
-use hartex_core::error::HarTexResult;
 use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
+use hartex_core::error::HarTexResult;
 use hartex_locale::Locale;
 
 /// # Struct `AboutCmdLocalize`
@@ -46,8 +46,10 @@ impl AboutCmdLocalize {
 
         Ok(Self {
             embed_desc: locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone(),
-            embed_botver_field: locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"].clone(),
-            embed_whiteguilds_field: locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"].clone()
+            embed_botver_field: locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"]
+                .clone(),
+            embed_whiteguilds_field: locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"]
+                .clone()
         })
     }
 }
@@ -91,7 +93,8 @@ impl SourceCmdLocalize {
         let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
 
         Ok(Self {
-            prerepo_uri_msg: locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"].clone()
+            prerepo_uri_msg: locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"]
+                .clone()
         })
     }
 }
@@ -115,8 +118,10 @@ impl TeamCmdLocalize {
 
         Ok(Self {
             embed_title: locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-            embed_globadmin_leaddev_field: locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
-            embed_contrib_field: locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
+            embed_globadmin_leaddev_field: locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"]
+                .clone(),
+            embed_contrib_field: locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"]
+                .clone()
         })
     }
 }
