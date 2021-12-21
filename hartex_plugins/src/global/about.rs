@@ -135,7 +135,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let localize = AboutCmdLocalize::init(locale);
+            let localize = AboutCmdLocalize::init(locale).expect("failed to load localization for about command");
 
             builder
                 .description(localize.embed_desc)

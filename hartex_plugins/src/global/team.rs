@@ -115,7 +115,7 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let localize = TeamCmdLocalize::init(locale);
+            let localize = TeamCmdLocalize::init(locale).expect("failed to load localization for team command");
 
             (
                 localize.embed_title,

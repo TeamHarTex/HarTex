@@ -105,7 +105,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
 
         if !STABLE && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
-            let localize = SourceCmdLocalize::init(locale);
+            let localize = SourceCmdLocalize::init(locale).expect("failed to load localization for source command");
 
             localize.prerepo_uri_msg
         }
