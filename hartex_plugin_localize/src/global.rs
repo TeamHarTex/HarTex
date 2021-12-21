@@ -48,8 +48,8 @@ impl AboutCmdLocalize {
             embed_desc: locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone(),
             embed_botver_field: locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"]
                 .clone(),
-            embed_whiteguilds_field: locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"]
-                .clone()
+            embed_whiteguilds_field:
+                locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"].clone()
         })
     }
 }
@@ -118,10 +118,10 @@ impl TeamCmdLocalize {
 
         Ok(Self {
             embed_title: locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-            embed_globadmin_leaddev_field: locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"]
-                .clone(),
-            embed_contrib_field: locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"]
-                .clone()
+            embed_globadmin_leaddev_field:
+                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
+            embed_contrib_field:
+                locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
         })
     }
 }
