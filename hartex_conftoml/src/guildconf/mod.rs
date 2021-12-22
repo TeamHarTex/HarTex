@@ -111,6 +111,7 @@ mod tests {
                     len: 3
                 },
                 Token::Str("nickname"),
+                Token::Some,
                 Token::Str("HarTex"),
                 Token::Str("timezone"),
                 Token::Str("UTC"),
