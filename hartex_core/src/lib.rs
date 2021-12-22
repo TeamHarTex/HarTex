@@ -48,7 +48,7 @@ pub mod time;
 /// # Static `HARTEX_BUILD`
 ///
 /// Represents the current version and build of `HarTex` Discord bot.
-pub static HARTEX_BUILD: &str = "Version 1.26.0-nightly-22-12-2021 (Build 679)";
+pub static HARTEX_BUILD: &str = "Version 1.26.0-nightly-22-12-2021 (Build 686)";
 
 /// # Static `IS_STABLE`
 ///

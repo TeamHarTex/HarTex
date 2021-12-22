@@ -30,6 +30,7 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
+use hartex_conftoml::guildconf::locale::Locale;
 use hartex_core::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -117,53 +118,35 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let builder = EmbedBuilder::new()
-        .author(EmbedAuthorBuilder::new(String::from("HarTex"))
-            .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
-        );
-
-    let embed = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        builder
-            .description("HarTex is a Discord bot built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
-            .color(0x0003_BEFC)
-            .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
-            .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
-            .build()?
-    }
-    else {
-        let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
-
-        if !STABLE && config.NightlyFeatures.localization {
-            let locale = config.GuildConfiguration.locale;
-            let localize = AboutCmdLocalize::init(locale)
-                .expect("failed to load localization for about command");
-
-            builder
-                .description(localize.embed_desc)
-                .color(0x0003_BEFC)
-                .field(EmbedFieldBuilder::new(
-                    localize.embed_botver_field,
-                    HARTEX_BUILD
-                ))
-                .field(
-                    EmbedFieldBuilder::new(
-                        localize.embed_whiteguilds_field,
-                        whitelists.to_string()
-                    )
-                    .inline()
-                    .build()
-                )
-                .build()?
+    let localize =
+        if interaction.guild_id.is_none() || interaction.user.is_some() {
+            AboutCmdLocalize::init(Locale::EnGb)
+                .expect("failed to load localization for about command")
         }
         else {
-            builder
-                .description("HarTex is a Discord bot built and optimized for efficient Discord moderation and administration, maintained by the HarTex Development Team members.")
-                .color(0x0003_BEFC)
-                .field(EmbedFieldBuilder::new("Bot Version", HARTEX_BUILD))
-                .field(EmbedFieldBuilder::new("Whitelisted Guilds", whitelists.to_string()).inline().build())
-                .build()?
-        }
-    };
+            let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
+
+            if !STABLE && config.NightlyFeatures.localization {
+                let locale = config.GuildConfiguration.locale;
+
+                AboutCmdLocalize::init(locale)
+                    .expect("failed to load localization for about command")
+            }
+            else {
+                AboutCmdLocalize::init(Locale::EnGb)
+                    .expect("failed to load localization for about command")
+            }
+        };
+
+    let embed = EmbedBuilder::new()
+        .author(EmbedAuthorBuilder::new(String::from("HarTex"))
+            .icon_url(ImageSource::url("https://cdn.discordapp.com/attachments/795539269925601341/862616114239897610/275a4a2ecfb5380a45c393c81838c14b.png")?)
+        )
+        .description(localize.embed_desc)
+        .color(0x0003_BEFC)
+        .field(EmbedFieldBuilder::new(localize.embed_botver_field, HARTEX_BUILD))
+        .field(EmbedFieldBuilder::new(localize.embed_whiteguilds_field, whitelists.to_string()).inline().build())
+        .build()?;
 
     tracing::trace!("responding to interaction");
 
