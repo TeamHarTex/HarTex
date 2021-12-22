@@ -36,6 +36,7 @@ pub struct GuildinfoCmdLocalize {
     pub embed_guild_name_field: String,
     pub embed_guild_id_field: String,
     pub embed_guild_owner_field: String,
+    pub embed_guild_owner_user_id_field: String,
     pub embed_guild_voice_regs_field: String,
     pub embed_guild_creation_date_field: String,
     pub embed_guild_members_field: String,
@@ -49,4 +50,60 @@ pub struct GuildinfoCmdLocalize {
     pub embed_guild_channels_fieldval_news_part: String,
     pub embed_guild_features_field: String,
     pub embed_guild_verify_lvl_field: String
+}
+
+impl GuildinfoCmdLocalize {
+    pub fn init(locale: LocaleEnum) -> HarTexResult<Self> {
+        let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
+        
+        Ok(Self {
+            embed_author: locale_file["InformationPlugin.GuildinfoCommand.EmbedAuthor"].clone(),
+            embed_guild_name_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildNameFieldName"].clone(),
+            embed_guild_id_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildIdFieldName"].clone(),
+            embed_guild_owner_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildOwnerFieldName"].clone(),
+            embed_guild_owner_user_id_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildOwnerUserIdFieldName"]
+                    .clone(),
+            embed_guild_voice_regs_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildVoiceRegionsFieldName"]
+                    .clone(),
+            embed_guild_creation_date_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildCreationDatetimeFieldName"]
+                    .clone(),
+            embed_guild_members_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildMembersFieldName"]
+                    .clone(),
+            embed_guild_members_fieldval_humans_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildMembersFieldValueHumansPart"]
+                    .clone(),
+            embed_guild_members_fieldval_bots_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildMembersFieldValueBotsPart"]
+                    .clone(),
+            embed_guild_channels_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildChannelsFieldName"].clone(),
+            embed_guild_channels_fieldval_categories_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildChannelsFieldValueCategoriesPart"]
+                    .clone(),
+            embed_guild_channels_fieldval_texts_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildChannelsFieldValueTextChannelsPart"]
+                    .clone(),
+            embed_guild_channels_fieldval_voices_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildChannelsFieldValueVoiceChannelsPart"]
+                    .clone(),
+            embed_guild_channels_fieldval_stages_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildChannelsFieldValueStageChannelsPart"]
+                    .clone(),
+            embed_guild_channels_fieldval_news_part:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildChannelsFieldValueNewsChannelsPart"]
+                    .clone(),
+            embed_guild_features_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildFeaturesFieldName"].clone(),
+            embed_guild_verify_lvl_field:
+                locale_file["InformationPlugin.GuildinfoCommand.EmbedGuildVerificationLevelFieldName"]
+                    .clone()
+        })
+    }
 }
