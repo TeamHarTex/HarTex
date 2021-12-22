@@ -46,7 +46,7 @@ InformationPlugin.GuildinfoCommand.EmbedGuildNameFieldName: Guild Name
 InformationPlugin.GuildinfoCommand.EmbedGuildIdFieldName: Guild ID
 InformationPlugin.GuildinfoCommand.EmbedGuildOwnerFieldName: Guild Owner
 InformationPlugin.GuildinfoCommand.EmbedGuildOwnerUserIdFieldName: Guild Owner User ID
-InformationPlugin.GuildinfoCommand.EmbedGuildVoiceRegionsFieldName: Guild Voice Regions(s)
+InformationPlugin.GuildinfoCommand.EmbedGuildVoiceRegionsFieldName: Guild Voice Region(s)
 InformationPlugin.GuildinfoCommand.EmbedGuildCreationDatetimeFieldName: Guild Creation Datetime
 InformationPlugin.GuildinfoCommand.EmbedGuildMembersFieldName: Guild Members
 InformationPlugin.GuildinfoCommand.EmbedGuildMembersFieldValueHumansPart: Humans

@@ -21,7 +21,7 @@
 
 //! # `global` Module
 //!
-//! This module implements helper structures for the `Global` plugin.
+//! This module implements helper localization structures for the `Global` plugin.
 
 use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
 use hartex_core::error::HarTexResult;
