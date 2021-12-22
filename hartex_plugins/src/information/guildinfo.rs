@@ -30,7 +30,10 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
-use hartex_conftoml::guildconf::tz::Timezone;
+use hartex_conftoml::guildconf::{
+    locale::Locale,
+    tz::Timezone
+};
 use hartex_core::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -65,6 +68,7 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
+use hartex_plugin_localize::information::GuildinfoCmdLocalize;
 use hartex_utils::{
     cdn::{
         Cdn,
@@ -158,6 +162,21 @@ async fn execute_guildinfo_command(
     // not in a user DM (which is the case when interaction.guild_id is None)
 
     let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
+
+    let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        GuildinfoCmdLocalize::init(Locale::EnGb)
+            .expect("failed to load localization for guildinfo command")
+    }
+    else {
+        if !STABLE && config.NightlyFeatures.localization {
+            GuildinfoCmdLocalize::init(config.GuildConfiguration.locale)
+                .expect("failed to load localization of guildinfo command")
+        }
+        else {
+            GuildinfoCmdLocalize::init(Locale::EnGb)
+                .expect("failed to load localization for guildinfo command")
+        }
+    };
 
     tracing::trace!("attempting to obtain cached guild");
 
@@ -303,7 +322,11 @@ async fn execute_guildinfo_command(
     };
 
     let mut author =
-        EmbedAuthorBuilder::new(format!("Information about {name}", name = &guild.name()));
+        EmbedAuthorBuilder::new(format!(
+            "{info_about} {name}",
+            info_about = localize.embed_author,
+            name = &guild.name())
+        );
 
     if !icon_url.is_empty() {
         let temp = author.clone();
@@ -319,10 +342,10 @@ async fn execute_guildinfo_command(
     let mut embed = EmbedBuilder::new()
         .author(author)
         .color(0x0003_BEFC)
-        .field(EmbedFieldBuilder::new("Guild Name", guild.name()).inline())
-        .field(EmbedFieldBuilder::new("Guild ID", format!("{id}", id = guild.id())).inline())
+        .field(EmbedFieldBuilder::new(localize.embed_guild_name_field, guild.name()).inline())
+        .field(EmbedFieldBuilder::new(localize.embed_guild_id_field, format!("{id}", id = guild.id())).inline())
         .field(EmbedFieldBuilder::new(
-            "Guild Owner",
+            localize.embed_guild_owner_field,
             format!(
                 "{name}#{discriminator}",
                 name = guild_owner.name,
@@ -330,11 +353,11 @@ async fn execute_guildinfo_command(
             )
         ))
         .field(EmbedFieldBuilder::new(
-            "Guild Owner User ID",
+            localize.embed_guild_owner_user_id_field,
             format!("{id}", id = guild_owner.id)
         ))
         .field(EmbedFieldBuilder::new(
-            "Guild Voice Region(s)",
+            localize.embed_guild_voice_regs_field,
             voice_regions_repr_str.join(", ")
         ));
 
@@ -370,22 +393,35 @@ async fn execute_guildinfo_command(
     let temp = embed.clone();
 
     embed = temp
-        .field(EmbedFieldBuilder::new("Guild Created At", format!("{created_at} ({timezone})")).inline())
+        .field(EmbedFieldBuilder::new(localize.embed_guild_creation_date_field, format!("{created_at} ({timezone})")).inline())
         .field(EmbedFieldBuilder::new(
-            format!("Guild Members - {guild_member_count}"),
             format!(
-                "Humans: {guild_user_count}\nBots: {bots}",
+                "{members} - {guild_member_count}",
+                members = localize.embed_guild_members_field,
+            ),
+            format!(
+                "{humans}: {guild_user_count}\n{bots_text}: {bots}",
+                humans = localize.embed_guild_members_fieldval_humans_part,
+                bots_text = localize.embed_guild_members_fieldval_bots_part,
                 bots = guild_member_count as usize - guild_user_count
             )
         ))
         .field(EmbedFieldBuilder::new(
-            format!("Guild Channels - {total}", total = guild_channels.len()),
+            format!("{channels} - {total}",
+                channels = localize.embed_guild_channels_field,
+                total = guild_channels.len()
+            ),
             format!(
-                "Categories: {categories}\nText Channels: {texts}\nVoice Channels: {voices}\nStage Channels: {stages}\nNews Channels: {news}"
+                "{categories_text}: {categories}\n{texts_text}: {texts}\n{voices_text}: {voices}\n{stages_text}: {stages}\n{news_text}: {news}",
+                categories_text = localize.embed_guild_channels_fieldval_categories_part,
+                texts_text = localize.embed_guild_channels_fieldval_texts_part,
+                voices_text = localize.embed_guild_channels_fieldval_voices_part,
+                stages_text = localize.embed_guild_channels_fieldval_stages_part,
+                news_text = localize.embed_guild_channels_fieldval_news_part
             )
         ))
-        .field(EmbedFieldBuilder::new("Guild Features", format!("- {features_str}")))
-        .field(EmbedFieldBuilder::new("Guild Verification Level", verification_level));
+        .field(EmbedFieldBuilder::new(localize.embed_guild_features_field, format!("- {features_str}")))
+        .field(EmbedFieldBuilder::new(localize.embed_guild_verify_lvl_field, verification_level));
 
     ctx.http
         .interaction_callback(
