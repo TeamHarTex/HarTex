@@ -103,8 +103,7 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
     };
 
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        TeamCmdLocalize::init(Locale::EnGb)
-            .expect("failed to load localization for team command")
+        TeamCmdLocalize::init(Locale::EnGb).expect("failed to load localization for team command")
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;

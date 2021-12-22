@@ -118,25 +118,22 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let localize =
-        if interaction.guild_id.is_none() || interaction.user.is_some() {
+    let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        AboutCmdLocalize::init(Locale::EnGb).expect("failed to load localization for about command")
+    }
+    else {
+        let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
+
+        if !STABLE && config.NightlyFeatures.localization {
+            let locale = config.GuildConfiguration.locale;
+
+            AboutCmdLocalize::init(locale).expect("failed to load localization for about command")
+        }
+        else {
             AboutCmdLocalize::init(Locale::EnGb)
                 .expect("failed to load localization for about command")
         }
-        else {
-            let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
-
-            if !STABLE && config.NightlyFeatures.localization {
-                let locale = config.GuildConfiguration.locale;
-
-                AboutCmdLocalize::init(locale)
-                    .expect("failed to load localization for about command")
-            }
-            else {
-                AboutCmdLocalize::init(Locale::EnGb)
-                    .expect("failed to load localization for about command")
-            }
-        };
+    };
 
     let embed = EmbedBuilder::new()
         .author(EmbedAuthorBuilder::new(String::from("HarTex"))
