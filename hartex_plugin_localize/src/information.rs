@@ -22,3 +22,31 @@
 //! # `global` Module
 //!
 //! This module implements helper localization structures for the `Information` plugin.
+
+use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
+use hartex_core::error::HarTexResult;
+use hartex_locale::Locale;
+
+/// # Struct `GuildinfoCmdLocalize`
+///
+/// Localization helper structure for `guildinfo` command of the `information`
+/// plugin.
+pub struct GuildinfoCmdLocalize {
+    pub embed_author: String,
+    pub embed_guild_name_field: String,
+    pub embed_guild_id_field: String,
+    pub embed_guild_owner_field: String,
+    pub embed_guild_voice_regs_field: String,
+    pub embed_guild_creation_date_field: String,
+    pub embed_guild_members_field: String,
+    pub embed_guild_members_fieldval_humans_part: String,
+    pub embed_guild_members_fieldval_bots_part: String,
+    pub embed_guild_channels_field: String,
+    pub embed_guild_channels_fieldval_categories_part: String,
+    pub embed_guild_channels_fieldval_texts_part: String,
+    pub embed_guild_channels_fieldval_voices_part: String,
+    pub embed_guild_channels_fieldval_stages_part: String,
+    pub embed_guild_channels_fieldval_news_part: String,
+    pub embed_guild_features_field: String,
+    pub embed_guild_verify_lvl_field: String
+}
