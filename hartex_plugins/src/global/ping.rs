@@ -102,8 +102,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     };
 
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        PingCmdLocalize::init(Locale::EnGb)
-            .expect("failed to load localization for ping command")
+        PingCmdLocalize::init(Locale::EnGb).expect("failed to load localization for ping command")
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
