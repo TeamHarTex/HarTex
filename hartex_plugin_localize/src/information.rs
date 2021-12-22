@@ -55,7 +55,7 @@ pub struct GuildinfoCmdLocalize {
 impl GuildinfoCmdLocalize {
     pub fn init(locale: LocaleEnum) -> HarTexResult<Self> {
         let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
-        
+
         Ok(Self {
             embed_author: locale_file["InformationPlugin.GuildinfoCommand.EmbedAuthor"].clone(),
             embed_guild_name_field:
