@@ -25,3 +25,4 @@
 //! code messiness for localization in `hartex_plugins`.
 
 pub mod global;
+pub mod information;
