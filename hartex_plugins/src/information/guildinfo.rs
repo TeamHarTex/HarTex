@@ -322,8 +322,8 @@ async fn execute_guildinfo_command(
     let mut author = EmbedAuthorBuilder::new(format!(
         "{info_about} {name}",
         info_about = localize.embed_author,
-        name = &guild.name())
-    );
+        name = &guild.name()
+    ));
 
     if !icon_url.is_empty() {
         let temp = author.clone();
