@@ -30,6 +30,7 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
+use hartex_conftoml::guildconf::locale::Locale;
 use hartex_core::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -49,7 +50,7 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_locale::Locale;
+use hartex_plugin_localize::global::PingCmdLocalize;
 use hartex_utils::{
     shard_id,
     FutureRetType
@@ -100,29 +101,19 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let (content, ms_unit) = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        (
-            String::from("Hello! Did you need anything? :eyes:"),
-            String::from("ms")
-        )
+    let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        PingCmdLocalize::init(Locale::EnGb).expect("failed to load localization for ping command")
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !STABLE && config.NightlyFeatures.localization {
-            let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
-
-            (
-                locale_file["GlobalPlugin.PingCommand.InitialResponse"].clone(),
-                locale_file["GlobalPlugin.PingCommand.MillisecondUnit"].clone()
-            )
+            PingCmdLocalize::init(config.GuildConfiguration.locale)
+                .expect("failed to load localization for ping command")
         }
         else {
-            (
-                String::from("Hello! Did you need anything? :eyes:"),
-                String::from("ms")
-            )
+            PingCmdLocalize::init(Locale::EnGb)
+                .expect("failed to load localization for ping command")
         }
     };
 
@@ -136,7 +127,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
             &InteractionResponse::ChannelMessageWithSource(CallbackData {
                 allowed_mentions: None,
                 components: None,
-                content: Some(content.clone()),
+                content: Some(localize.init_resp.clone()),
                 embeds: vec![],
                 flags: None,
                 tts: None
@@ -158,7 +149,9 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let latency = shard_info.latency().average().unwrap();
     let new_content = format!(
         "{content} - `{latency}{ms_unit}`",
-        latency = latency.as_millis()
+        content = localize.init_resp,
+        latency = latency.as_millis(),
+        ms_unit = localize.ms_unit
     );
 
     tracing::trace!("updating initial interaction response to add latency information");

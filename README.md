@@ -30,20 +30,21 @@ HarTex Development
 
 ### Project Structure
 
-| Crate             | Description                                                                                      |
-|-------------------|--------------------------------------------------------------------------------------------------|
-| `hartex`          | The binary of the bot.                                                                           |
-| `hartex_cmdsys`   | The command system of the bot.                                                                   |
-| `hartex_conftoml` | The TOML configuration API, deserialization and serialization of TOML configuration of the bot.  |
-| `hartex_core`     | The core library of the bot, designed to be as minimal as possible but provides essential types. |
-| `hartex_dbmani`   | The database manipulation component of the bot.                                                  |
-| `hartex_driver`   | The "main" function of the bot. Glues everything together.                                       |
-| `hartex_env`      | The wrappers around a collection of useful environment variables used by the bot.                |
-| `hartex_eventsys` | The event system of the bot, contains custom events and emitters.                                |
-| `hartex_locale`   | The localization facilities for the bot.                                                         |
-| `hartex_model`    | The various convenience models for the bot to use.                                               |
-| `hartex_plugins`  | The plugins (command modules, functionality modules) of the bot.                                 |
-| `hartex_utils`    | The various utilities that are useful for the bot.                                               |
+| Crate                        | Description                                                                                      |
+|------------------------------|--------------------------------------------------------------------------------------------------|
+| `hartex`                     | The binary of the bot.                                                                           |
+| `hartex_cmdsys`              | The command system of the bot.                                                                   |
+| `hartex_conftoml`            | The TOML configuration API, deserialization and serialization of TOML configuration of the bot.  |
+| `hartex_core`                | The core library of the bot, designed to be as minimal as possible but provides essential types. |
+| `hartex_dbmani`              | The database manipulation component of the bot.                                                  |
+| `hartex_driver`              | The "main" function of the bot. Glues everything together.                                       |
+| `hartex_env`                 | The wrappers around a collection of useful environment variables used by the bot.                |
+| `hartex_eventsys`            | The event system of the bot, contains custom events and emitters.                                |
+| `hartex_locale`              | The localization facilities for the bot.                                                         |
+| `hartex_plugin_localization` | The helper structures for localization to reduce code messiness.                                 |
+| `hartex_model`               | The various convenience models for the bot to use.                                               |
+| `hartex_plugins`             | The plugins (command modules, functionality modules) of the bot.                                 |
+| `hartex_utils`               | The various utilities that are useful for the bot.                                               |
 
 ### Can I Contribute?
 

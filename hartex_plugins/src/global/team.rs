@@ -30,6 +30,7 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
+use hartex_conftoml::guildconf::locale::Locale;
 use hartex_core::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -53,7 +54,7 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_locale::Locale;
+use hartex_plugin_localize::global::TeamCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Team`
@@ -101,46 +102,31 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let (title, gb_admin_ld_dev, other_contributors) = if interaction.guild_id.is_none()
-        || interaction.user.is_some()
-    {
-        (
-            String::from("HarTex Project Team"),
-            String::from("Global Administrator & Lead Developer"),
-            String::from("Other Contributors")
-        )
+    let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        TeamCmdLocalize::init(Locale::EnGb).expect("failed to load localization for team command")
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !STABLE && config.NightlyFeatures.localization {
-            let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
-
-            (
-                locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
-                locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
-            )
+            TeamCmdLocalize::init(config.GuildConfiguration.locale)
+                .expect("failed to load localization for team command")
         }
         else {
-            (
-                String::from("HarTex Project Team"),
-                String::from("Global Administrator & Lead Developer"),
-                String::from("Other Contributors")
-            )
+            TeamCmdLocalize::init(Locale::EnGb)
+                .expect("failed to load localization for team command")
         }
     };
 
     let embed = EmbedBuilder::new()
-        .title(title)
+        .title(localize.embed_title)
         .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new(
-            gb_admin_ld_dev,
+            localize.embed_globadmin_leaddev_field,
             "HTGAzureX1212.#5959"
         ))
         .field(EmbedFieldBuilder::new(
-            other_contributors,
+            localize.embed_contrib_field,
             "<https://github.com/HarTexTeam/HarTex-rust-discord-bot/graphs/contributors>"
         ))
         .build()?;
