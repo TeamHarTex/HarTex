@@ -167,15 +167,13 @@ async fn execute_guildinfo_command(
         GuildinfoCmdLocalize::init(Locale::EnGb)
             .expect("failed to load localization for guildinfo command")
     }
+    else if !STABLE && config.NightlyFeatures.localization {
+        GuildinfoCmdLocalize::init(config.GuildConfiguration.locale)
+            .expect("failed to load localization of guildinfo command")
+    }
     else {
-        if !STABLE && config.NightlyFeatures.localization {
-            GuildinfoCmdLocalize::init(config.GuildConfiguration.locale)
-                .expect("failed to load localization of guildinfo command")
-        }
-        else {
-            GuildinfoCmdLocalize::init(Locale::EnGb)
-                .expect("failed to load localization for guildinfo command")
-        }
+        GuildinfoCmdLocalize::init(Locale::EnGb)
+            .expect("failed to load localization for guildinfo command")
     };
 
     tracing::trace!("attempting to obtain cached guild");
@@ -321,12 +319,11 @@ async fn execute_guildinfo_command(
         String::new()
     };
 
-    let mut author =
-        EmbedAuthorBuilder::new(format!(
-            "{info_about} {name}",
-            info_about = localize.embed_author,
-            name = &guild.name())
-        );
+    let mut author = EmbedAuthorBuilder::new(format!(
+        "{info_about} {name}",
+        info_about = localize.embed_author,
+        name = &guild.name())
+    );
 
     if !icon_url.is_empty() {
         let temp = author.clone();
@@ -343,7 +340,13 @@ async fn execute_guildinfo_command(
         .author(author)
         .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new(localize.embed_guild_name_field, guild.name()).inline())
-        .field(EmbedFieldBuilder::new(localize.embed_guild_id_field, format!("{id}", id = guild.id())).inline())
+        .field(
+            EmbedFieldBuilder::new(
+                localize.embed_guild_id_field,
+                format!("{id}", id = guild.id())
+            )
+            .inline()
+        )
         .field(EmbedFieldBuilder::new(
             localize.embed_guild_owner_field,
             format!(
