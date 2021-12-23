@@ -30,6 +30,7 @@ use hartex_cmdsys::{
     },
     context::CommandContext
 };
+use hartex_conftoml::guildconf::locale::Locale;
 use hartex_core::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -49,7 +50,7 @@ use hartex_core::{
     STABLE
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_locale::Locale;
+use hartex_plugin_localize::global::SourceCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Source`
@@ -97,20 +98,20 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
         });
     };
 
-    let message = if interaction.guild_id.is_none() || interaction.user.is_some() {
-        String::from("The source code of the bot can be found at:")
+    let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
+        SourceCmdLocalize::init(Locale::EnGb)
+            .expect("failed to load localization for source command")
     }
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !STABLE && config.NightlyFeatures.localization {
-            let locale = config.GuildConfiguration.locale;
-            let locale_file = Locale::load(&format!("../../langcfgs/{locale}.langcfg"))?;
-
-            locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"].clone()
+            SourceCmdLocalize::init(config.GuildConfiguration.locale)
+                .expect("failed to load localization for source command")
         }
         else {
-            String::from("The source code of the bot can be found at:")
+            SourceCmdLocalize::init(Locale::EnGb)
+                .expect("failed to load localization for source command")
         }
     };
 
@@ -125,7 +126,8 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
                 allowed_mentions: None,
                 components: None,
                 content: Some(format!(
-                    "{message} <https://github.com/HarTexTeam/HarTex-rust-discord-bot>."
+                    "{message} <https://github.com/HarTexTeam/HarTex-rust-discord-bot>.",
+                    message = localize.prerepo_uri_msg
                 )),
                 embeds: vec![],
                 flags: None,

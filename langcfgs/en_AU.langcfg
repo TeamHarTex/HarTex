@@ -21,15 +21,15 @@
 ; You should have received a copy of the GNU Affero General Public License along
 ; with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
-LanguageIdentifier: en_US
+LanguageIdentifier: en_AU
 
 ; Section: Global Plugin, About Command
-GlobalPlugin.AboutCommand.EmbedDescription: HarTex is a Discord bot built and optimized for efficient Discord moderation and administration, developed and maintained by the HarTex Team members.
+GlobalPlugin.AboutCommand.EmbedDescription: HarTex is a Discord bot built and optimised for efficient Discord moderation and administration, developed and maintained by the HarTex Team members.
 GlobalPlugin.AboutCommand.EmbedBotVersionFieldName: Bot Version
 GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName: Whitelisted Guilds
 
 ; Section: Global Plugin, Ping Command
-GlobalPlugin.PingCommand.InitialResponse: Hello! Did you need anything? :eyes:
+GlobalPlugin.PingCommand.InitialResponse: G'day! Did you need anything? :eyes:
 GlobalPlugin.PingCommand.MillisecondUnit: ms
 
 ; Section: Global Plugin, Source Command
