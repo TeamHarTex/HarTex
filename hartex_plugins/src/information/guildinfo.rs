@@ -65,7 +65,7 @@ use hartex_core::{
         FixedOffset,
         TimeZone
     },
-    STABLE
+    is_stable
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_plugin_localize::information::GuildinfoCmdLocalize;
@@ -167,7 +167,7 @@ async fn execute_guildinfo_command(
         GuildinfoCmdLocalize::init(Locale::EnGb)
             .expect("failed to load localization for guildinfo command")
     }
-    else if !STABLE && config.NightlyFeatures.localization {
+    else if !is_stable() && config.NightlyFeatures.localization {
         GuildinfoCmdLocalize::init(config.GuildConfiguration.locale)
             .expect("failed to load localization of guildinfo command")
     }
@@ -364,7 +364,7 @@ async fn execute_guildinfo_command(
             voice_regions_repr_str.join(", ")
         ));
 
-    let timezone = if config.NightlyFeatures.localization && !STABLE {
+    let timezone = if config.NightlyFeatures.localization && !is_stable() {
         config.GuildConfiguration.timezone
     }
     else {

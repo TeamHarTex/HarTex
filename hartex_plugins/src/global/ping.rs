@@ -47,7 +47,7 @@ use hartex_core::{
         HarTexResult
     },
     logging::tracing,
-    STABLE
+    is_stable
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_plugin_localize::global::PingCmdLocalize;
@@ -107,7 +107,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
-        if !STABLE && config.NightlyFeatures.localization {
+        if !is_stable() && config.NightlyFeatures.localization {
             PingCmdLocalize::init(config.GuildConfiguration.locale)
                 .expect("failed to load localization for ping command")
         }
