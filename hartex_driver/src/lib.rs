@@ -40,11 +40,11 @@ use futures_util::future::Either;
 use hartex_core::{
     error::HarTexResult,
     events::EventType,
+    hartex_version,
     logging::tracing::{
         self,
         Instrument
-    },
-    HARTEX_BUILD
+    }
 };
 use hartex_env::StartupEnv;
 use tokio_stream::StreamExt;
@@ -91,7 +91,7 @@ pub static RUST_DEFAULT_PANIC_HOOK: SyncLazy<Box<dyn Fn(&PanicInfo<'_>) + Send +
 pub async fn hartex_main() -> HarTexResult<()> {
     let span = tracing::info_span!("version info");
     span.in_scope(|| {
-        tracing::info!("HarTex {HARTEX_BUILD}");
+        tracing::info!("HarTex {version}", version = hartex_version());
     });
 
     let span = tracing::trace_span!("initialize startup environment");

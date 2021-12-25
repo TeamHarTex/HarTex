@@ -74,12 +74,12 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
+    is_stable,
     logging::tracing,
     time::{
         FixedOffset,
         TimeZone
-    },
-    STABLE
+    }
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_utils::{
@@ -320,7 +320,7 @@ async fn execute_userinfo_command(
                 .field(EmbedFieldBuilder::new("Activities", "none"));
         }
 
-        let timezone = if config.NightlyFeatures.localization && !STABLE {
+        let timezone = if config.NightlyFeatures.localization && !is_stable() {
             config.GuildConfiguration.timezone
         }
         else {

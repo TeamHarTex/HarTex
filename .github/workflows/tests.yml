@@ -27,6 +27,9 @@ jobs:
           profile: default
       - name: Build
         run: cargo build --release
+        env:
+          CFG_IS_STABLE: "false"
+          CFG_VERSION_STR: "dummy version str"
 
   macOS:
     name: macOS (Full Build)
@@ -42,6 +45,9 @@ jobs:
           profile: default
       - name: Build
         run: cargo build --release
+        env:
+          CFG_IS_STABLE: "false"
+          CFG_VERSION_STR: "dummy version str"
 
   Windows:
     name: Windows (Full Build)
@@ -57,6 +63,9 @@ jobs:
           profile: default
       - name: Build
         run: cargo build --release
+        env:
+          CFG_IS_STABLE: "false"
+          CFG_VERSION_STR: "dummy version str"
 
   LinuxTest:
     name: Linux (Test)
@@ -74,6 +83,9 @@ jobs:
           profile: default
       - name: Test
         run: cargo test
+        env:
+          CFG_IS_STABLE: "false"
+          CFG_VERSION_STR: "dummy version str"
 
   macOSTest:
     name: macOS (Test)
@@ -91,6 +103,9 @@ jobs:
           profile: default
       - name: Test
         run: cargo test
+        env:
+          CFG_IS_STABLE: "false"
+          CFG_VERSION_STR: "dummy version str"
 
   WindowsTest:
     name: Windows (Test)
@@ -108,3 +123,6 @@ jobs:
           profile: default
       - name: Test
         run: cargo test
+        env:
+          CFG_IS_STABLE: "false"
+          CFG_VERSION_STR: "dummy version str"

@@ -45,12 +45,18 @@ pub mod logging;
 pub mod stdext;
 pub mod time;
 
-/// # Static `HARTEX_BUILD`
+/// # Function `hartex_version`
 ///
-/// Represents the current version and build of `HarTex` Discord bot.
-pub static HARTEX_BUILD: &str = "Version 1.26.0-nightly-25-12-2021 (Build 700)";
+/// Returns the current version of `HarTex` Discord bot.
+#[must_use]
+pub fn hartex_version() -> &'static str {
+    env!("CFG_VERSION_STR")
+}
 
-/// # Static `IS_STABLE`
+/// # Function `is_stable`
 ///
-/// Determines whether this version of the bot is stable.
-pub static STABLE: bool = false;
+/// Returns whether this version of the bot is stable.
+#[must_use]
+pub fn is_stable() -> bool {
+    matches!(env!("CFG_IS_STABLE"), "true")
+}

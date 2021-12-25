@@ -46,8 +46,8 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing,
-    STABLE
+    is_stable,
+    logging::tracing
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_plugin_localize::global::SourceCmdLocalize;
@@ -105,7 +105,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
-        if !STABLE && config.NightlyFeatures.localization {
+        if !is_stable() && config.NightlyFeatures.localization {
             SourceCmdLocalize::init(config.GuildConfiguration.locale)
                 .expect("failed to load localization for source command")
         }
