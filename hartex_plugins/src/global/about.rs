@@ -52,9 +52,9 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing,
-    HARTEX_BUILD,
-    STABLE
+    hartex_version,
+    is_stable,
+    logging::tracing
 };
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
@@ -124,7 +124,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
     else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
-        if !STABLE && config.NightlyFeatures.localization {
+        if !is_stable() && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
 
             AboutCmdLocalize::init(locale).expect("failed to load localization for about command")
@@ -141,7 +141,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
         )
         .description(localize.embed_desc)
         .color(0x0003_BEFC)
-        .field(EmbedFieldBuilder::new(localize.embed_botver_field, HARTEX_BUILD))
+        .field(EmbedFieldBuilder::new(localize.embed_botver_field, hartex_version()))
         .field(EmbedFieldBuilder::new(localize.embed_whiteguilds_field, whitelists.to_string()).inline().build())
         .build()?;
 

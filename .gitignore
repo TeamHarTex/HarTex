@@ -1,6 +1,9 @@
 # directories
 .idea
 
+# Python virtual environment
+venv
+
 # built binaries (local host), optional
 binaries
 
