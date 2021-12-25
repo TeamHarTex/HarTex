@@ -26,7 +26,7 @@ jobs:
           override: true
           profile: default
       - name: Build
-        run: cargo build --release
+        run: ./x.py build
 
   macOS:
     name: macOS (Full Build)
@@ -41,7 +41,7 @@ jobs:
           override: true
           profile: default
       - name: Build
-        run: cargo build --release
+        run: ./x.py build
 
   Windows:
     name: Windows (Full Build)
@@ -56,7 +56,7 @@ jobs:
           override: true
           profile: default
       - name: Build
-        run: cargo build --release
+        run: ./x.py build
 
   LinuxTest:
     name: Linux (Test)
@@ -73,7 +73,7 @@ jobs:
           override: true
           profile: default
       - name: Test
-        run: cargo test
+        run: ./x.py test
 
   macOSTest:
     name: macOS (Test)
@@ -90,7 +90,7 @@ jobs:
           override: true
           profile: default
       - name: Test
-        run: cargo test
+        run: ./x.py test
 
   WindowsTest:
     name: Windows (Test)
@@ -107,4 +107,4 @@ jobs:
           override: true
           profile: default
       - name: Test
-        run: cargo test
+        run: ./x.py test

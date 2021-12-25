@@ -21,8 +21,10 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 """
 
 # x.py - the HarTex build system
+
 import os
 import subprocess
+import sys
 
 
 class HarTexBranch:
@@ -32,9 +34,7 @@ class HarTexBranch:
 
 class HarTexBuild:
     def __init__(self):
-        result = subprocess.getoutput("git branch --show-current")
-
-        match result:
+        match subprocess.getoutput("git branch --show-current"):
             case "stable":
                 self.branch = HarTexBranch.STABLE
             case "nightly":
@@ -45,20 +45,45 @@ class HarTexBuild:
         self.date = subprocess.getoutput("git log -1 --date=short --pretty=format:%cd")
         self.commit_hash_short = subprocess.getoutput("git rev-parse --short=9 HEAD")
 
-    def run(self):
+    def get_environment(self):
         env = os.environ.copy()
         env["CFG_IS_STABLE"] = self.branch["stable"]
         env["CFG_VERSION_STR"] = f"{self.branch['version']}-{self.branch['string']} ({self.commit_hash_short} {self.date})"
 
-        subprocess.call(args=["cargo", "build", "--release"], env=env)
+        return env
+
+    def run_build(self):
+        subprocess.call(args=["cargo", "build", "--release"], env=self.get_environment())
+
+    def run_test(self):
+        subprocess.call(args=["cargo", "test"], env=self.get_environment())
+
+    def run_clippy(self):
+        subprocess.call(args=["cargo", "clippy", "--workspace"], env=self.get_environment())
+
+    def run_rustfmt(self):
+        subprocess.call(args=["cargo", "fmt", "--all", "--", "--check"], env=self.get_environment())
 
 
 def main():
-    print("stage 1 out of 2: initializing build...")
+    print("stage 1: initializing build...")
     builder = HarTexBuild()
 
-    print("stage 2 out of 2: compiling...")
-    builder.run()
+    match sys.argv[1]:
+        case "build":
+            print("stage 2: compiling everything...")
+            builder.run_build()
+        case "test":
+            print("stage 2: testing conftoml and locale crates...")
+            builder.run_test()
+        case "clippy":
+            print("stage 2: running clippy...")
+            builder.run_clippy()
+        case "rustfmt":
+            print("stage 2: running rustfmt...")
+            builder.run_rustfmt()
+        case _:
+            raise ValueError("invalid operation value")
 
     print("done")
 
