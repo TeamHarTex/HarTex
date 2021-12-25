@@ -46,8 +46,8 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
-    logging::tracing,
-    is_stable
+    is_stable,
+    logging::tracing
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_plugin_localize::global::SourceCmdLocalize;

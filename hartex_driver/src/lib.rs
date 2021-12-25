@@ -40,11 +40,11 @@ use futures_util::future::Either;
 use hartex_core::{
     error::HarTexResult,
     events::EventType,
+    hartex_version,
     logging::tracing::{
         self,
         Instrument
-    },
-    hartex_version
+    }
 };
 use hartex_env::StartupEnv;
 use tokio_stream::StreamExt;

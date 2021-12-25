@@ -48,6 +48,7 @@ pub mod time;
 /// # Function `hartex_version`
 ///
 /// Returns the current version of `HarTex` Discord bot.
+#[must_use]
 pub fn hartex_version() -> &'static str {
     env!("CFG_VERSION_STR")
 }
@@ -55,9 +56,7 @@ pub fn hartex_version() -> &'static str {
 /// # Function `is_stable`
 ///
 /// Returns whether this version of the bot is stable.
+#[must_use]
 pub fn is_stable() -> bool {
-    match env!("CFG_IS_STABLE") {
-        "true" => true,
-        _ => false
-    }
+    matches!(env!("CFG_IS_STABLE"), "true")
 }

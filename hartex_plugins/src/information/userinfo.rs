@@ -74,12 +74,12 @@ use hartex_core::{
         HarTexError,
         HarTexResult
     },
+    is_stable,
     logging::tracing,
     time::{
         FixedOffset,
         TimeZone
-    },
-    is_stable
+    }
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_utils::{
