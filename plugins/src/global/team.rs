@@ -31,7 +31,7 @@ use hartex_cmdsys::{
     context::CommandContext
 };
 use hartex_conftoml::guildconf::locale::Locale;
-use hartex_core::{
+use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
         embed_builder::{
