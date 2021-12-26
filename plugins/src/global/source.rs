@@ -50,7 +50,7 @@ use hartex_cmdsys::{
 };
 use hartex_conftoml::guildconf::locale::Locale;
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_plugin_localize::global::SourceCmdLocalize;
+use hartex_localization_impl::global::SourceCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Source`

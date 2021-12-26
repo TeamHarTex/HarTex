@@ -68,7 +68,7 @@ use hartex_conftoml::guildconf::{
     tz::Timezone
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_plugin_localize::information::GuildinfoCmdLocalize;
+use hartex_localization_impl::information::GuildinfoCmdLocalize;
 use hartex_utils::{
     cdn::{
         Cdn,

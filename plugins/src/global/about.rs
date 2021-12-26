@@ -60,7 +60,7 @@ use hartex_dbmani::{
     guildconf::GetGuildConfig,
     whitelist::GetWhitelistedGuilds
 };
-use hartex_plugin_localize::global::AboutCmdLocalize;
+use hartex_localization_impl::global::AboutCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `About`

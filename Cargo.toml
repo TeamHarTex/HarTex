@@ -8,9 +8,9 @@ members = [
     "driver",
     "env",
     "eventsys",
-    "locale",
+    "localization/impl",
+    "localization/locale",
     "model",
-    "plugin_localize",
     "plugins",
     "utils"
 ]

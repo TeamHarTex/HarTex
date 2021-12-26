@@ -54,7 +54,7 @@ use hartex_cmdsys::{
 };
 use hartex_conftoml::guildconf::locale::Locale;
 use hartex_dbmani::guildconf::GetGuildConfig;
-use hartex_plugin_localize::global::TeamCmdLocalize;
+use hartex_localization_impl::global::TeamCmdLocalize;
 use hartex_utils::FutureRetType;
 
 /// # Struct `Team`

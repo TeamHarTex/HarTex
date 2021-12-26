@@ -5,7 +5,7 @@
 venv
 
 # built binaries (local host), optional
-binaries
+_binaries
 
 # target directories
 **/target
@@ -13,6 +13,4 @@ target
 
 # .lock files
 **/Cargo.lock
-
-# environment variables
-.env
+Cargo.lock
