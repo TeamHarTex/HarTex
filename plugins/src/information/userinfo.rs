@@ -23,14 +23,6 @@
 //!
 //! This module implements the `userinfo` command.
 
-use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
-};
-use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -81,6 +73,14 @@ use hartex_base::{
         TimeZone
     }
 };
+use hartex_cmdsys::{
+    command::{
+        Command,
+        CommandType
+    },
+    context::CommandContext
+};
+use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_utils::{
     cdn::{

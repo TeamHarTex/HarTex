@@ -23,17 +23,6 @@
 //!
 //! This module implements the `guildinfo` command.
 
-use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
-};
-use hartex_conftoml::guildconf::{
-    locale::Locale,
-    tz::Timezone
-};
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -66,6 +55,17 @@ use hartex_base::{
         FixedOffset,
         TimeZone
     }
+};
+use hartex_cmdsys::{
+    command::{
+        Command,
+        CommandType
+    },
+    context::CommandContext
+};
+use hartex_conftoml::guildconf::{
+    locale::Locale,
+    tz::Timezone
 };
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_plugin_localize::information::GuildinfoCmdLocalize;

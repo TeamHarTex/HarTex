@@ -23,14 +23,6 @@
 //!
 //! This module implements the `about` command.
 
-use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
-};
-use hartex_conftoml::guildconf::locale::Locale;
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -56,6 +48,14 @@ use hartex_base::{
     is_stable,
     logging::tracing
 };
+use hartex_cmdsys::{
+    command::{
+        Command,
+        CommandType
+    },
+    context::CommandContext
+};
+use hartex_conftoml::guildconf::locale::Locale;
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
     whitelist::GetWhitelistedGuilds

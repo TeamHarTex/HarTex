@@ -23,13 +23,6 @@
 //!
 //! This module implements the `avatar` command.
 
-use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
-};
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -39,6 +32,13 @@ use hartex_base::{
         }
     },
     error::HarTexResult
+};
+use hartex_cmdsys::{
+    command::{
+        Command,
+        CommandType
+    },
+    context::CommandContext
 };
 use hartex_utils::FutureRetType;
 

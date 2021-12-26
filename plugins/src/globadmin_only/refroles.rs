@@ -23,13 +23,6 @@
 //!
 //! This module implements the `refroles` command.
 
-use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
-};
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -46,6 +39,13 @@ use hartex_base::{
         HarTexResult
     },
     logging::tracing
+};
+use hartex_cmdsys::{
+    command::{
+        Command,
+        CommandType
+    },
+    context::CommandContext
 };
 use hartex_dbmani::{
     guildconf::GetGuildConfig,
