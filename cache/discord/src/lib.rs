@@ -26,3 +26,6 @@
 //! ## Features
 //!
 //! - `inmemory`: This feature toggles the in-memory cache implementation.
+
+#[cfg(feature = "inmemory")]
+pub mod inmemory;
