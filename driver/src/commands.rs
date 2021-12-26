@@ -23,7 +23,6 @@
 //!
 //! This module defines the command handler, which is used when a command is detected in a message.
 
-use hartex_cmdsys::command::Command;
 use hartex_base::{
     discord::{
         http::CloneableClient,
@@ -35,6 +34,7 @@ use hartex_base::{
     },
     logging::tracing
 };
+use hartex_cmdsys::command::Command;
 
 /// # Asynchronous Function `register_global_commands`
 ///

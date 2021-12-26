@@ -23,8 +23,8 @@
 //!
 //! This module implements helper localization structures for the `Information` plugin.
 
-use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
 use hartex_base::error::HarTexResult;
+use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
 use hartex_locale::Locale;
 
 /// # Struct `GuildinfoCmdLocalize`

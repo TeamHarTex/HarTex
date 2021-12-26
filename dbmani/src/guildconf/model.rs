@@ -28,11 +28,11 @@ use std::{
     sync::Arc
 };
 
-use hartex_conftoml::TomlConfig;
 use hartex_base::{
     error::HarTexError,
     logging::tracing
 };
+use hartex_conftoml::TomlConfig;
 use sqlx::{
     postgres::PgRow,
     Error,

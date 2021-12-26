@@ -23,8 +23,8 @@
 //!
 //! Utility function for setting up the command framework.
 
-use hartex_cmdsys::framework::CommandFramework;
 use hartex_base::logging::tracing;
+use hartex_cmdsys::framework::CommandFramework;
 use hartex_eventsys::{
     emitter::EventEmitter,
     events::Events

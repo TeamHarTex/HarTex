@@ -21,13 +21,6 @@
 
 use std::sync::Arc;
 
-use hartex_cmdsys::{
-    command::Command,
-    context::{
-        CommandContext,
-        CommandContextInner
-    }
-};
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
@@ -39,6 +32,13 @@ use hartex_base::{
     logging::tracing::{
         self,
         Instrument
+    }
+};
+use hartex_cmdsys::{
+    command::Command,
+    context::{
+        CommandContext,
+        CommandContextInner
     }
 };
 use hartex_eventsys::{
