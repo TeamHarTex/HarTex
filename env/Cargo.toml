@@ -1,16 +1,13 @@
 [package]
-name = "hartex"
+name = "hartex_env"
 version = "1.25.0"
 edition = "2021"
 description = """
-This crate holds the entry point for HarTex Discord bot; it invokes the "main function" from the `hartex_driver` crate.
+The `harttex-env` library various environments for different aspects of the HarTex Discord bot.
 """
 license = "AGPL-3.0-only"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dotenv = "0.15.0"
 hartex_base = { path = "../base", features = [ "tracing-bundled" ] }
-hartex_driver = { path = "../driver" }
-tokio = { version = "1.14.0", features = [ "full" ] }

@@ -1,0 +1,15 @@
+[package]
+name = "hartex_cmdsys"
+version = "1.25.0"
+edition = "2021"
+description = """
+This crate implements a command system for HarTex Discord bot, including a command parser as well as various utilities.
+"""
+license = "AGPL-3.0-only"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+hartex_base = { path = "../base" }
+hartex_eventsys = { path = "../eventsys" }
+hartex_utils = { path = "../utils" }
