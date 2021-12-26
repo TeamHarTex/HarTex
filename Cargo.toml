@@ -1,18 +1,18 @@
 [workspace]
 members = [
     "hartex",
-    "hartex_cmdsys",
-    "hartex_conftoml",
-    "hartex_core",
-    "hartex_dbmani",
-    "hartex_driver",
-    "hartex_env",
-    "hartex_eventsys",
-    "hartex_locale",
-    "hartex_model",
-    "hartex_plugin_localize",
-    "hartex_plugins",
-    "hartex_utils"
+    "cmdsys",
+    "conftoml",
+    "base",
+    "dbmani",
+    "driver",
+    "env",
+    "eventsys",
+    "localization/impl",
+    "localization/locale",
+    "model",
+    "plugins",
+    "utils"
 ]
 
 [profile.release]
