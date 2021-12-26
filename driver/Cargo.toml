@@ -1,0 +1,22 @@
+[package]
+name = "hartex_driver"
+version = "1.25.0"
+edition = "2021"
+description = """
+This crate contains effectively the "main function" of HarTex Discord bot.
+"""
+license = "AGPL-3.0-only"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+futures-util = "0.3.16"
+hartex_cmdsys = { path = "../cmdsys" }
+hartex_base = { path = "../base", features = [ "tracing-bundled", "twilight-bundled" ] }
+hartex_dbmani = { path = "../dbmani" }
+hartex_env = { path = "../env" }
+hartex_eventsys = { path = "../eventsys" }
+hartex_model = { path = "../model" }
+hartex_plugins = { path = "../plugins" }
+tokio = { version = "1.14.0", features = [ "full" ] }
+tokio-stream = "0.1.7"

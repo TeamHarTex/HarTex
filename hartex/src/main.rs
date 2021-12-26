@@ -29,7 +29,7 @@
 
 use std::time::Duration;
 
-use hartex_core::{
+use hartex_base::{
     error::HarTexResult,
     logging::{
         tracing,
