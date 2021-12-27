@@ -30,6 +30,7 @@ use crate::backend::Backend;
 /// # Struct `DiscordCache`
 ///
 /// A Discord cache.
+#[allow(clippy::module_name_repetitions)]
 pub struct DiscordCache<B: Backend> {
     backend: Arc<B>
 }

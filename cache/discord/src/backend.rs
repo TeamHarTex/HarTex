@@ -27,5 +27,8 @@
 ///
 /// A base trait for different cache backends (in-memory, database, redis, etc).
 pub trait Backend: Send + Sync + 'static {
+    /// # Trait `Error`
+    ///
+    /// The backend error type.
     type Error: Send + 'static;
 }
