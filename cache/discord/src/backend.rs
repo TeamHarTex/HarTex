@@ -28,7 +28,7 @@ use crate::repositories::guild::role::RoleRepository;
 /// # Trait `Backend`
 ///
 /// A base trait for different cache backends (in-memory, database, redis, etc).
-pub trait Backend: Send + Sync + 'static {
+pub trait Backend: Send + Sized + Sync + 'static {
     /// # Typealias `Error`
     ///
     /// The backend error type.

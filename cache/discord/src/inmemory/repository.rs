@@ -19,26 +19,31 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `role` Module
+//! # The `repository` Module
 //!
-//! This module implements the guild role entity.
+//! This module implements a repository with an in-memory backend
 
-use hartex_base::discord::model::id::RoleId;
+use std::marker::PhantomData;
 
-use crate::entity::Entity;
+use crate::{
+    entity::Entity,
+    inmemory::InMemoryBackend,
+    repository::{
+        GetEntityFuture,
+        Repository
+    }
+};
 
-/// # Struct `GuildRoleEntity`
-///
-/// A guild role entity.
-#[derive(Clone)]
-pub struct RoleEntity {
-    pub id: RoleId
-}
+pub struct InMemoryRepository<T>(pub(crate) InMemoryBackend, pub(crate) PhantomData<T>);
 
-impl Entity for RoleEntity {
-    type Id = RoleId;
+impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
+    fn backend(&self) -> InMemoryBackend {
+        self.0.clone()
+    }
 
-    fn id(&self) -> Self::Id {
-        self.id
+    fn entity(&self, _: E::Id) -> GetEntityFuture<E, ()> {
+        todo!()
     }
 }
+
+pub trait EntityExt: Clone + Entity {}

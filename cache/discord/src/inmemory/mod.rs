@@ -23,13 +23,22 @@
 //!
 //! This module contains the in-memory backend for the cache.
 
-use crate::backend::Backend;
+use crate::{
+    backend::Backend,
+    entities::guild::role::RoleEntity,
+    inmemory::repository::InMemoryRepository
+};
+
+pub mod repository;
 
 /// # Struct `InMemoryBackend`
 ///
 /// In-memory backend for the cache.
+#[derive(Clone)]
 pub struct InMemoryBackend;
 
 impl Backend for InMemoryBackend {
     type Error = ();
+
+    type RoleRepository = InMemoryRepository<RoleEntity>;
 }
