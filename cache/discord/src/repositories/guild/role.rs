@@ -25,8 +25,8 @@
 
 use crate::{
     backend::Backend,
-    entities::guild::role::GuildRoleEntity,
+    entities::guild::role::RoleEntity,
     repository::Repository
 };
 
-pub trait GuildRoleRepository<B: Backend>: Repository<GuildRoleEntity, B> {}
+pub trait RoleRepository<B: Backend>: Repository<RoleEntity, B> {}

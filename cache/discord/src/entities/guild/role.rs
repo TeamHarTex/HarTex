@@ -30,11 +30,11 @@ use crate::entity::Entity;
 /// # Struct `GuildRoleEntity`
 ///
 /// A guild role entity.
-pub struct GuildRoleEntity {
+pub struct RoleEntity {
     pub id: RoleId
 }
 
-impl Entity for GuildRoleEntity {
+impl Entity for RoleEntity {
     type Id = RoleId;
 
     fn id(&self) -> Self::Id {

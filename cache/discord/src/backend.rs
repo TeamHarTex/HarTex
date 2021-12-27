@@ -23,12 +23,19 @@
 //!
 //! This module contains a base backend trait for different cache backends.
 
+use crate::repositories::guild::role::RoleRepository;
+
 /// # Trait `Backend`
 ///
 /// A base trait for different cache backends (in-memory, database, redis, etc).
 pub trait Backend: Send + Sync + 'static {
-    /// # Trait `Error`
+    /// # Typealias `Error`
     ///
     /// The backend error type.
     type Error: Send + 'static;
+
+    /// # Typealias `RoleRepository`
+    ///
+    /// The repository for guild roles entities.
+    type RoleRepository: RoleRepository<Self> + Send + Sync;
 }
