@@ -19,22 +19,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cache_discord` -  Discord cache
+//! # The `entity` Module
 //!
-//! This crate implements caching for Discord objects.
+//! This module contains a base entity trait for different cache entities.
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
+use std::hash::Hash;
 
-mod backend;
-mod cache;
-pub mod entities;
-mod entity;
-pub mod inmemory;
-pub mod repositories;
-mod repository;
+/// Trait `Entity`
+///
+/// A cachable entity.
+pub trait Entity: Send + Sync {
+    /// # Typealias `Id`
+    ///
+    /// The id of the entity.
+    type Id: Copy + Eq + Hash + Send + Sync;
 
-use cache::DiscordCache;
-
-#[cfg(feature = "in-memory-backend")]
-pub type Cache = DiscordCache<inmemory::InMemoryBackend>;
+    /// # Trait Method `id`
+    ///
+    /// Returns the id of the entity.
+    fn id(&self) -> Self::Id;
+}

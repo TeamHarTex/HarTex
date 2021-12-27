@@ -19,10 +19,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cache_base`
+//! # The `role` Module
 //!
-//! This crate provides a barebones framework for implementing caching within HarTex.
-//!
-//! Different caches are to use this crate to build their implementation.
+//! This module implements the guild role entity.
 
-mod backend;
+use hartex_base::discord::model::id::RoleId;
+
+use crate::entity::Entity;
+
+/// # Struct `GuildRoleEntity`
+///
+/// A guild role entity.
+pub struct GuildRoleEntity {
+    pub id: RoleId
+}
+
+impl Entity for GuildRoleEntity {
+    type Id = RoleId;
+
+    fn id(&self) -> Self::Id {
+        self.id
+    }
+}

@@ -19,13 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `backend` Module
+//! # The `role` Module
 //!
-//! This module contains a base trait for a cache backend.
+//! This module contains the guild role repository trait.
 
-/// # Trait `Backend`
-///
-/// A base trait for a cache backend. Implement this trait for your custom cache
-/// backend, an in-memory backend, a database backend, a redis backend, just to
-/// list a few examples.
-pub trait Backend: Send + Sync + Sized + 'static {}
+use crate::{
+    backend::Backend,
+    entities::guild::role::GuildRoleEntity,
+    repository::Repository
+};
+
+pub trait GuildRoleRepository<B: Backend>: Repository<GuildRoleEntity, B> {}
