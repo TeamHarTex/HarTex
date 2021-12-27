@@ -24,4 +24,3 @@
 //! This module contains entities related to Discord guilds.
 
 pub mod role;
-
