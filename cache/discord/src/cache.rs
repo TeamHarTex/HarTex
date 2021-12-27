@@ -19,22 +19,35 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cache_discord` -  Discord cache
+//! # The `cache` Module
 //!
-//! This crate implements caching for Discord objects.
+//! This module contains a base cache structure that supports various backends.
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
+use std::sync::Arc;
 
-mod backend;
-mod cache;
-pub mod entities;
-mod entity;
-pub mod inmemory;
-pub mod repositories;
-mod repository;
+use crate::backend::Backend;
 
-use cache::DiscordCache;
+/// # Struct `DiscordCache`
+///
+/// A Discord cache.
+pub struct DiscordCache<B: Backend> {
+    backend: Arc<B>
+}
 
-#[cfg(feature = "in-memory-backend")]
-pub type Cache = DiscordCache<inmemory::InMemoryBackend>;
+impl<B: Backend> DiscordCache<B> {
+    /// # Static Method `with_backend`
+    ///
+    /// Creates a new instance of a cache with the provided cache backend.
+    pub fn with_backend(backend: B) -> Self {
+        Self {
+            backend: Arc::new(backend)
+        }
+    }
+
+    /// # Instance Method `backend`
+    ///
+    /// Returns an immutable reference to
+    pub fn backend(&self) -> &Arc<B> {
+        &self.backend
+    }
+}

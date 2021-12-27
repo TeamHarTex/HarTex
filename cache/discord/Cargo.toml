@@ -10,7 +10,8 @@ license = "AGPL-3.0-only"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_cache_base = { path = "../base" }
+hartex_base = { path = "../../base", features = [ "twilight-bundled" ] }
 
 [features]
-inmemory = []
+default = [ "in-memory-backend" ]
+in-memory-backend = []

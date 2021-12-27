@@ -19,22 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cache_discord` -  Discord cache
+//! # The `repositories` Module
 //!
-//! This crate implements caching for Discord objects.
+//! This module contains various repositories in the Discord cache.
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
-
-mod backend;
-mod cache;
-pub mod entities;
-mod entity;
-pub mod inmemory;
-pub mod repositories;
-mod repository;
-
-use cache::DiscordCache;
-
-#[cfg(feature = "in-memory-backend")]
-pub type Cache = DiscordCache<inmemory::InMemoryBackend>;
+pub mod guild;
