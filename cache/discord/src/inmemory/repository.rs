@@ -26,8 +26,10 @@
 use std::marker::PhantomData;
 
 use crate::{
+    entities::guild::role::RoleEntity,
     entity::Entity,
     inmemory::InMemoryBackend,
+    repositories::guild::role::RoleRepository,
     repository::{
         GetEntityFuture,
         Repository
@@ -46,4 +48,8 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
     }
 }
 
+impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
+
 pub trait EntityExt: Clone + Entity {}
+
+impl EntityExt for RoleEntity {}
