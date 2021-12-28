@@ -29,4 +29,8 @@ use crate::{
     repository::Repository
 };
 
+/// # Trait `RoleRepository`
+///
+/// A repository containing Discord role objects.
+#[allow(clippy::module_name_repetitions)]
 pub trait RoleRepository<B: Backend>: Repository<RoleEntity, B> {}
