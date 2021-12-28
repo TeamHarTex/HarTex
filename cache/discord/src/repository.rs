@@ -76,4 +76,4 @@ pub type EntityIdStream<'a, Id, E> = Pin<Box<dyn Stream<Item = Result<Id, E>> + 
 ///
 /// Typealias for a future to stream (retrieve a series of) entities from the cache.
 pub type StreamEntityIdsFuture<'a, Id, E> =
-Pin<Box<dyn Future<Output = Result<EntityIdStream<'a, Id, E>, E>> + Send + 'a>>;
+    Pin<Box<dyn Future<Output = Result<EntityIdStream<'a, Id, E>, E>> + Send + 'a>>;

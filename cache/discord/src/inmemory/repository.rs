@@ -76,7 +76,10 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
 }
 
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
-    fn role_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, RoleId, InMemoryBackendError> {
+    fn role_ids(
+        &self,
+        guild_id: GuildId
+    ) -> StreamEntityIdsFuture<'_, RoleId, InMemoryBackendError> {
         let stream = (self.0).0.guild_roles.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
             |set| stream::iter(set.iter().map(|x| Ok(*x).collect::<Vec<_>>())).boxed()
