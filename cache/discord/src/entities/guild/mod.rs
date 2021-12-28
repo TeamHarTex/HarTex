@@ -23,4 +23,23 @@
 //!
 //! This module contains entities related to Discord guilds.
 
+use hartex_base::discord::model::id::GuildId;
+
+use crate::entity::Entity;
+
 pub mod role;
+
+/// # Struct `GuildEntity`
+///
+/// A guild entity.
+pub struct GuildEntity {
+    id: GuildId
+}
+
+impl Entity for GuildEntity {
+    type Id = GuildId;
+
+    fn id(&self) -> Self::Id {
+        self.id
+    }
+}

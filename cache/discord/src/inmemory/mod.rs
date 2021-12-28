@@ -23,9 +23,24 @@
 //!
 //! This module contains the in-memory backend for the cache.
 
+use std::{
+    marker::PhantomData,
+    sync::Arc
+};
+
+use dashmap::DashMap;
+use hartex_base::discord::model::id::{
+    GuildId,
+    RoleId
+};
+
 use crate::{
     backend::Backend,
-    entities::guild::role::RoleEntity,
+    entities::guild::{
+        role::RoleEntity,
+        GuildEntity
+    },
+    entity::Entity,
     inmemory::repository::InMemoryRepository
 };
 
@@ -35,10 +50,29 @@ pub mod repository;
 ///
 /// In-memory backend for the cache.
 #[derive(Clone)]
-pub struct InMemoryBackend;
+pub struct InMemoryBackend(Arc<InMemoryBackendRef>);
+
+impl InMemoryBackend {
+    fn repository<T: Entity>(&self) -> InMemoryRepository<T> {
+        InMemoryRepository(self.clone(), PhantomData)
+    }
+}
 
 impl Backend for InMemoryBackend {
     type Error = ();
-
+    type GuildRepository = InMemoryRepository<GuildEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
+
+    fn guilds(&self) -> Self::GuildRepository {
+        self.repository::<GuildEntity>()
+    }
+
+    fn roles(&self) -> Self::RoleRepository {
+        self.repository::<RoleEntity>()
+    }
+}
+
+struct InMemoryBackendRef {
+    guilds: DashMap<GuildId, GuildEntity>,
+    roles: DashMap<RoleId, RoleEntity>
 }
