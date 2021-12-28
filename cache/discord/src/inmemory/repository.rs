@@ -36,6 +36,10 @@ use crate::{
     }
 };
 
+/// # Struct `InMemoryRepository`
+///
+/// A cache repository with the in-memory cache backend.
+#[allow(clippy::module_name_repetitions)]
 pub struct InMemoryRepository<T>(pub(crate) InMemoryBackend, pub(crate) PhantomData<T>);
 
 impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
