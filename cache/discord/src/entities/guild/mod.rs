@@ -32,6 +32,7 @@ pub mod role;
 /// # Struct `GuildEntity`
 ///
 /// A guild entity.
+#[derive(Clone)]
 pub struct GuildEntity {
     id: GuildId
 }
