@@ -32,7 +32,10 @@ use crate::{
     },
     entity::Entity,
     inmemory::InMemoryBackend,
-    repositories::guild::role::RoleRepository,
+    repositories::guild::{
+        role::RoleRepository,
+        GuildRepository
+    },
     repository::{
         GetEntityFuture,
         Repository
@@ -54,6 +57,8 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
         todo!()
     }
 }
+
+impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {}
 
 impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
