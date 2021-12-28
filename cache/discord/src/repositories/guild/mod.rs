@@ -23,4 +23,16 @@
 //!
 //! This module contains entities related to Discord guilds.
 
+use crate::{
+    backend::Backend,
+    entities::guild::GuildEntity,
+    repository::Repository
+};
+
 pub mod role;
+
+/// # Trait `GuildRepository`
+///
+/// A repository containing Discord guild objects.
+#[allow(clippy::module_name_repetitions)]
+pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {}

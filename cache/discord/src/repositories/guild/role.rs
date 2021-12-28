@@ -23,14 +23,34 @@
 //!
 //! This module contains the guild role repository trait.
 
+use hartex_base::discord::model::id::RoleId;
+
 use crate::{
     backend::Backend,
-    entities::guild::role::RoleEntity,
-    repository::Repository
+    entities::guild::{
+        role::RoleEntity,
+        GuildEntity
+    },
+    relations,
+    repository::{
+        GetEntityFuture,
+        Repository
+    }
 };
 
 /// # Trait `RoleRepository`
 ///
 /// A repository containing Discord role objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait RoleRepository<B: Backend>: Repository<RoleEntity, B> {}
+pub trait RoleRepository<B: Backend>: Repository<RoleEntity, B> {
+    fn guild(&self, role_id: RoleId) -> GetEntityFuture<'_, GuildEntity, B::Error> {
+        let backend = self.backend();
+
+        relations::map(
+            backend.roles(),
+            backend.guilds(),
+            role_id,
+            |role| role.guild_id()
+        )
+    }
+}
