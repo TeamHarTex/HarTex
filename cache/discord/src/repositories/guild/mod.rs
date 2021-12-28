@@ -30,9 +30,13 @@ use hartex_base::discord::model::id::{
 
 use crate::{
     backend::Backend,
-    entities::guild::GuildEntity,
+    entities::guild::{
+        role::RoleEntity,
+        GuildEntity
+    },
     repository::{
         Repository,
+        StreamEntitiesFuture,
         StreamEntityIdsFuture
     }
 };
@@ -48,8 +52,6 @@ pub mod role;
 // TODO: add `members` method to stream guild members
 // TODO: add `presence_ids` method to stream guild presence ides
 // TODO: add `presences` method to stream guild presences
-// TODO: add `role_ids` method to stream guild role ids
-// TODO: add `roles` method to stream guild roles
 // TODO: add `rules_channel` method to retrieve the guild rules channel
 // TODO: add `stage_instance_ids` method to stream guild stage instance ids
 // TODO: add `stage_instances` method to stream guild stage instances
@@ -66,5 +68,13 @@ pub mod role;
 /// A repository containing Discord guild objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {
+    /// # Trait Method `role_ids`
+    ///
+    /// Returns a stream of role ids in a guild.
     fn role_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, RoleId, B::Error>;
+
+    /// # Trait Method `roles`
+    ///
+    /// Returns a stream of roles in a guild.
+    fn roles(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
 }

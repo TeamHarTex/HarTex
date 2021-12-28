@@ -58,6 +58,7 @@ use crate::{
     repository::{
         GetEntityFuture,
         Repository,
+        StreamEntitiesFuture,
         StreamEntityIdsFuture
     }
 };
@@ -87,6 +88,20 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
             || stream::empty().boxed(),
             |set| stream::iter(set.iter().map(|x| Ok(*x)).collect::<Vec<_>>()).boxed()
         );
+
+        future::ok(stream).boxed()
+    }
+
+    fn roles(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, RoleEntity, crate::backend::Error> {
+        let role_ids = match (self.0).0.guild_roles.get(&guild_id) {
+            Some(guild_roles) => guild_roles.clone(),
+            None => return future::ok(stream::empty().boxed()).boxed()
+        };
+
+        let iter = role_ids
+            .into_iter()
+            .filter_map(move |role_id| (self.0).0.roles.get(&role_id).map(|role| Ok(role.value().clone())));
+        let stream = stream::iter(iter).boxed();
 
         future::ok(stream).boxed()
     }
