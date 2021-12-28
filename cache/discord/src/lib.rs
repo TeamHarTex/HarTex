@@ -31,6 +31,7 @@ mod cache;
 pub mod entities;
 mod entity;
 pub mod inmemory;
+pub mod relations;
 pub mod repositories;
 mod repository;
 
