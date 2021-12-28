@@ -27,7 +27,10 @@ use std::marker::PhantomData;
 
 use dashmap::DashMap;
 use futures_util::{
-    future,
+    future::{
+        self,
+        FutureExt
+    },
     stream::{
         self,
         StreamExt
@@ -82,7 +85,7 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
     ) -> StreamEntityIdsFuture<'_, RoleId, InMemoryBackendError> {
         let stream = (self.0).0.guild_roles.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
-            |set| stream::iter(set.iter().map(|x| Ok(*x).collect::<Vec<_>>())).boxed()
+            |set| stream::iter(set.iter().map(|x| Ok(*x)).collect::<Vec<_>>()).boxed()
         );
 
         future::ok(stream).boxed()

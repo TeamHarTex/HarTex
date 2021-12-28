@@ -40,8 +40,7 @@ use dashmap::{
 };
 use hartex_base::discord::model::id::{
     GuildId,
-    RoleId,
-    UserId
+    RoleId
 };
 
 use crate::{
