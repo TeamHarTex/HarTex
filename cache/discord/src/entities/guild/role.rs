@@ -23,7 +23,17 @@
 //!
 //! This module implements the guild role entity.
 
-use hartex_base::discord::model::id::RoleId;
+use hartex_base::discord::model::{
+    guild::{
+        Permissions,
+        Role,
+        RoleTags
+    },
+    id::{
+        GuildId,
+        RoleId
+    }
+};
 
 use crate::entity::Entity;
 
@@ -33,7 +43,59 @@ use crate::entity::Entity;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct RoleEntity {
-    pub id: RoleId
+    color: u32,
+    guild_id: GuildId,
+    hoist: bool,
+    icon: Option<String>,
+    id: RoleId,
+    managed: bool,
+    mentionable: bool,
+    name: String,
+    permissions: Permissions,
+    tags: Option<RoleTags>,
+    unicode_emoji: Option<String>
+}
+
+impl RoleEntity {
+    pub fn color(&self) -> u32 {
+        self.color
+    }
+
+    pub fn guild_id(&self) -> GuildId {
+        self.guild_id
+    }
+
+    pub fn hoist(&self) -> bool {
+        self.hoist
+    }
+
+    pub fn icon(&self) -> Option<&String> {
+        self.icon.as_ref()
+    }
+
+    pub fn managed(&self) -> bool {
+        self.managed
+    }
+
+    pub fn mentionable(&self) -> bool {
+        self.mentionable
+    }
+
+    pub fn name(&self) -> &str {
+        self.name.as_ref()
+    }
+
+    pub fn permissions(&self) -> Permissions {
+        self.permissions
+    }
+
+    pub fn tags(&self) -> Option<&RoleTags> {
+        self.tags.as_ref()
+    }
+
+    pub fn unicode_emoji(&self) -> Option<&String> {
+        self.unicode_emoji.as_ref()
+    }
 }
 
 impl Entity for RoleEntity {
@@ -41,5 +103,23 @@ impl Entity for RoleEntity {
 
     fn id(&self) -> Self::Id {
         self.id
+    }
+}
+
+impl From<(Role, GuildId)> for RoleEntity {
+    fn from((role, guild_id): (Role, GuildId)) -> Self {
+        Self {
+            color: role.color,
+            guild_id,
+            hoist: role.hoist,
+            icon: role.icon,
+            id: role.id,
+            managed: role.managed,
+            mentionable: role.mentionable,
+            name: role.name,
+            permissions: role.permissions,
+            tags: role.tags,
+            unicode_emoji: role.unicode_emoji
+        }
     }
 }
