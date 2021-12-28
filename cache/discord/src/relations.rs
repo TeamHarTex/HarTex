@@ -47,8 +47,7 @@ pub fn map<
     f: F
 ) -> GetEntityFuture<'a, FE, B::Error>
 where
-    B::Error: Send
-{
+    B::Error: Send {
     Box::pin(async move {
         let future = local_repo.entity(local_entity_id);
 
