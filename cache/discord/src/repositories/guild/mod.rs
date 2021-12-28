@@ -23,12 +23,18 @@
 //!
 //! This module contains entities related to Discord guilds.
 
-use hartex_base::discord::model::id::GuildId;
+use hartex_base::discord::model::id::{
+    GuildId,
+    RoleId
+};
 
 use crate::{
     backend::Backend,
     entities::guild::GuildEntity,
-    repository::Repository
+    repository::{
+        Repository,
+        StreamEntityIdsFuture
+    }
 };
 
 pub mod role;
@@ -59,4 +65,6 @@ pub mod role;
 ///
 /// A repository containing Discord guild objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {}
+pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {
+    fn role_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, RoleId, B::Error>;
+}

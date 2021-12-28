@@ -24,14 +24,24 @@
 //! This module contains the in-memory backend for the cache.
 
 use std::{
+    error::Error,
+    fmt::{
+        Display,
+        Formatter,
+        Result as FmtResult
+    },
     marker::PhantomData,
     sync::Arc
 };
 
-use dashmap::DashMap;
+use dashmap::{
+    DashMap,
+    DashSet
+};
 use hartex_base::discord::model::id::{
     GuildId,
-    RoleId
+    RoleId,
+    UserId
 };
 
 use crate::{
@@ -59,7 +69,7 @@ impl InMemoryBackend {
 }
 
 impl Backend for InMemoryBackend {
-    type Error = ();
+    type Error = InMemoryBackendError;
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
 
@@ -72,7 +82,22 @@ impl Backend for InMemoryBackend {
     }
 }
 
+/// # Struct `InMemoryBackendError`
+///
+/// Error returned from backend operations.
+#[derive(Clone, Debug)]
+pub struct InMemoryBackendError;
+
+impl Display for InMemoryBackendError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "this error cannot be created")
+    }
+}
+
+impl Error for InMemoryBackendError {}
+
 struct InMemoryBackendRef {
     guilds: DashMap<GuildId, GuildEntity>,
+    guild_roles: DashMap<GuildId, DashSet<RoleId>>,
     roles: DashMap<RoleId, RoleEntity>
 }

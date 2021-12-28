@@ -26,6 +26,17 @@
 use std::marker::PhantomData;
 
 use dashmap::DashMap;
+use futures_util::{
+    future,
+    stream::{
+        self,
+        StreamExt
+    }
+};
+use hartex_base::discord::model::id::{
+    GuildId,
+    RoleId
+};
 
 use crate::{
     entities::guild::{
@@ -33,14 +44,18 @@ use crate::{
         GuildEntity
     },
     entity::Entity,
-    inmemory::InMemoryBackend,
+    inmemory::{
+        InMemoryBackend,
+        InMemoryBackendError
+    },
     repositories::guild::{
         role::RoleRepository,
         GuildRepository
     },
     repository::{
         GetEntityFuture,
-        Repository
+        Repository,
+        StreamEntityIdsFuture
     }
 };
 
@@ -55,12 +70,21 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
         self.0.clone()
     }
 
-    fn entity(&self, _: E::Id) -> GetEntityFuture<E, ()> {
+    fn entity(&self, _: E::Id) -> GetEntityFuture<E, InMemoryBackendError> {
         todo!()
     }
 }
 
-impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {}
+impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
+    fn role_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, RoleId, InMemoryBackendError> {
+        let stream = (self.0).0.guild_roles.get(&guild_id).map_or_else(
+            || stream::empty().boxed(),
+            |set| stream::iter(set.iter().map(|x| Ok(*x).collect::<Vec<_>>())).boxed()
+        );
+
+        future::ok(stream).boxed()
+    }
+}
 
 impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
