@@ -25,6 +25,8 @@
 
 use std::marker::PhantomData;
 
+use dashmap::DashMap;
+
 use crate::{
     entities::guild::{
         role::RoleEntity,
@@ -62,8 +64,21 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {}
 
 impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
-pub trait EntityExt: Clone + Entity {}
+pub trait EntityExt: Clone + Entity {
+    /// # Trait Method `repository`
+    ///
+    /// Returns the corresponding repository of the entity.
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self>;
+}
 
-impl EntityExt for GuildEntity {}
+impl EntityExt for GuildEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.guilds
+    }
+}
 
-impl EntityExt for RoleEntity {}
+impl EntityExt for RoleEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.roles
+    }
+}

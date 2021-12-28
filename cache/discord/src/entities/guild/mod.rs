@@ -32,6 +32,7 @@ pub mod role;
 /// # Struct `GuildEntity`
 ///
 /// A guild entity.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct GuildEntity {
     id: GuildId
