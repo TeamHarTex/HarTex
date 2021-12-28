@@ -46,11 +46,8 @@ pub trait RoleRepository<B: Backend>: Repository<RoleEntity, B> {
     fn guild(&self, role_id: RoleId) -> GetEntityFuture<'_, GuildEntity, B::Error> {
         let backend = self.backend();
 
-        relations::map(
-            backend.roles(),
-            backend.guilds(),
-            role_id,
-            |role| role.guild_id()
-        )
+        relations::map(backend.roles(), backend.guilds(), role_id, |role| {
+            role.guild_id()
+        })
     }
 }
