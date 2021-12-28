@@ -92,7 +92,10 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
         future::ok(stream).boxed()
     }
 
-    fn roles(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, RoleEntity, crate::backend::Error> {
+    fn roles(
+        &self,
+        guild_id: GuildId
+    ) -> StreamEntitiesFuture<'_, RoleEntity, InMemoryBackendError> {
         let role_ids = match (self.0).0.guild_roles.get(&guild_id) {
             Some(guild_roles) => guild_roles.clone(),
             None => return future::ok(stream::empty().boxed()).boxed()
@@ -100,7 +103,13 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 
         let iter = role_ids
             .into_iter()
-            .filter_map(move |role_id| (self.0).0.roles.get(&role_id).map(|role| Ok(role.value().clone())));
+            .filter_map(move |role_id| {
+                (self.0)
+                    .0
+                    .roles
+                    .get(&role_id)
+                    .map(|role| Ok(role.value().clone()))
+            });
         let stream = stream::iter(iter).boxed();
 
         future::ok(stream).boxed()
