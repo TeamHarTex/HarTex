@@ -30,6 +30,7 @@ use crate::entity::Entity;
 /// # Struct `GuildRoleEntity`
 ///
 /// A guild role entity.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct RoleEntity {
     pub id: RoleId
