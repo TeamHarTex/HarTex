@@ -23,16 +23,19 @@
 //!
 //! This module implements the guild role entity.
 
-use hartex_base::discord::model::{
-    guild::{
-        Permissions,
-        Role,
-        RoleTags
+use hartex_base::{
+    discord::model::{
+        guild::{
+            Permissions,
+            Role,
+            RoleTags
+        },
+        id::{
+            GuildId,
+            RoleId
+        }
     },
-    id::{
-        GuildId,
-        RoleId
-    }
+    stdext::prelude::*
 };
 
 use crate::entity::Entity;
@@ -76,8 +79,8 @@ impl RoleEntity {
     }
 
     #[must_use]
-    pub fn icon(&self) -> Option<&String> {
-        self.icon.as_ref()
+    pub fn icon(&self) -> Option<&str> {
+        self.icon.as_refstr()
     }
 
     #[must_use]
@@ -106,8 +109,8 @@ impl RoleEntity {
     }
 
     #[must_use]
-    pub fn unicode_emoji(&self) -> Option<&String> {
-        self.unicode_emoji.as_ref()
+    pub fn unicode_emoji(&self) -> Option<&str> {
+        self.unicode_emoji.as_refstr()
     }
 }
 

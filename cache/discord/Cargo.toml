@@ -11,6 +11,7 @@ license = "AGPL-3.0-only"
 
 [dependencies]
 dashmap = { version = "5.0.0", optional = true }
+futures-util = "0.3.19"
 hartex_base = { path = "../../base", features = [ "twilight-bundled" ] }
 
 [features]

@@ -28,6 +28,8 @@ use std::{
     pin::Pin
 };
 
+use futures_util::stream::Stream;
+
 use crate::{
     backend::Backend,
     entity::Entity
@@ -50,6 +52,17 @@ pub trait Repository<E: Entity, B: Backend> {
 
 /// # Typealias `GetEntityFuture`
 ///
-/// Type alias for a future to retrieve an entity from the cache.
+/// Typealias for a future to retrieve an entity from the cache.
 pub type GetEntityFuture<'a, T, E> =
     Pin<Box<dyn Future<Output = Result<Option<T>, E>> + Send + 'a>>;
+
+/// # Typealias `EntityStream`
+///
+/// Typealias for a stream of entities.
+pub type EntityStream<'a, T, E> = Pin<Box<dyn Stream<Item = Result<T, E>> + Send + 'a>>;
+
+/// # Typealias `StreamEntitiesFuture`
+///
+/// Typealias for a future to stream (retrieve a series of) entities from the cache.
+pub type StreamEntitiesFuture<'a, T, E> =
+    Pin<Box<dyn Future<Output = Result<EntityStream<'a, T, E>, E>> + Send + 'a>>;
