@@ -57,42 +57,55 @@ pub struct RoleEntity {
 }
 
 impl RoleEntity {
+    #[must_use]
     pub fn color(&self) -> u32 {
         self.color
     }
 
+    #[must_use]
+    /// # Instance Method `guild_id`
+    ///
+    /// Returns the ID of the guild this role is associated to.
     pub fn guild_id(&self) -> GuildId {
         self.guild_id
     }
 
+    #[must_use]
     pub fn hoist(&self) -> bool {
         self.hoist
     }
 
+    #[must_use]
     pub fn icon(&self) -> Option<&String> {
         self.icon.as_ref()
     }
 
+    #[must_use]
     pub fn managed(&self) -> bool {
         self.managed
     }
 
+    #[must_use]
     pub fn mentionable(&self) -> bool {
         self.mentionable
     }
 
+    #[must_use]
     pub fn name(&self) -> &str {
         self.name.as_ref()
     }
 
+    #[must_use]
     pub fn permissions(&self) -> Permissions {
         self.permissions
     }
 
+    #[must_use]
     pub fn tags(&self) -> Option<&RoleTags> {
         self.tags.as_ref()
     }
 
+    #[must_use]
     pub fn unicode_emoji(&self) -> Option<&String> {
         self.unicode_emoji.as_ref()
     }
