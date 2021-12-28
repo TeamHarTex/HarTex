@@ -101,15 +101,13 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
             None => return future::ok(stream::empty().boxed()).boxed()
         };
 
-        let iter = role_ids
-            .into_iter()
-            .filter_map(move |role_id| {
-                (self.0)
-                    .0
-                    .roles
-                    .get(&role_id)
-                    .map(|role| Ok(role.value().clone()))
-            });
+        let iter = role_ids.into_iter().filter_map(move |role_id| {
+            (self.0)
+                .0
+                .roles
+                .get(&role_id)
+                .map(|role| Ok(role.value().clone()))
+        });
         let stream = stream::iter(iter).boxed();
 
         future::ok(stream).boxed()
