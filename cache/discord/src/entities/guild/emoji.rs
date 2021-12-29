@@ -65,6 +65,11 @@ impl EmojiEntity {
     }
 
     #[must_use]
+    pub fn guild_id(&self) -> GuildId {
+        self.guild_id
+    }
+
+    #[must_use]
     pub fn managed(&self) -> bool {
         self.managed
     }
