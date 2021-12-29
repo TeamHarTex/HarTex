@@ -36,13 +36,11 @@ use futures_util::{
         StreamExt
     }
 };
-use hartex_base::discord::model::id::{
-    GuildId,
-    RoleId
-};
+use hartex_base::discord::model::id::{GuildId, RoleId, UserId};
 
 use crate::{
     entities::guild::{
+        member::MemberEntity,
         role::RoleEntity,
         GuildEntity
     },
@@ -80,6 +78,39 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
 }
 
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
+    fn member_user_ids(
+        &self,
+        guild_id: GuildId
+    ) -> StreamEntityIdsFuture<UserId, InMemoryBackendError> {
+        let stream = (self.0).0.guild_members.get(&guild_id).map_or_else(
+            || stream::empty().boxed(),
+            |set| stream::iter(set.iter().map(|x| Ok(*x)).collect::<Vec<_>>()).boxed()
+        );
+
+        future::ok(stream).boxed()
+    }
+
+    fn members(
+        &self,
+        guild_id: GuildId
+    ) -> StreamEntitiesFuture<MemberEntity, InMemoryBackendError> {
+        let member_user_ids = match(self.0).0.guild_members.get(&guild_id) {
+            Some(ids) => ids.clone(),
+            None => return future::ok(stream::empty().boxed()).boxed()
+        };
+
+        let iter = member_user_ids.into_iter().filter_map(move |member_user_id| {
+            (self.0)
+                .0
+                .members
+                .get(&(guild_id, member_user_id))
+                .map(|entry| Ok(entry.value().clone()))
+        });
+        let stream = stream::iter(iter).boxed();
+
+        future::ok(stream).boxed()
+    }
+
     fn role_ids(
         &self,
         guild_id: GuildId
@@ -97,7 +128,7 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
         guild_id: GuildId
     ) -> StreamEntitiesFuture<'_, RoleEntity, InMemoryBackendError> {
         let role_ids = match (self.0).0.guild_roles.get(&guild_id) {
-            Some(guild_roles) => guild_roles.clone(),
+            Some(ids) => ids.clone(),
             None => return future::ok(stream::empty().boxed()).boxed()
         };
 
@@ -106,7 +137,7 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
                 .0
                 .roles
                 .get(&role_id)
-                .map(|role| Ok(role.value().clone()))
+                .map(|entry| Ok(entry.value().clone()))
         });
         let stream = stream::iter(iter).boxed();
 
@@ -126,6 +157,12 @@ pub trait EntityExt: Clone + Entity {
 impl EntityExt for GuildEntity {
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
         &backend.0.guilds
+    }
+}
+
+impl EntityExt for MemberEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.members
     }
 }
 

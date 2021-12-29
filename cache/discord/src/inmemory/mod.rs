@@ -40,12 +40,14 @@ use dashmap::{
 };
 use hartex_base::discord::model::id::{
     GuildId,
-    RoleId
+    RoleId,
+    UserId
 };
 
 use crate::{
     backend::Backend,
     entities::guild::{
+        member::MemberEntity,
         role::RoleEntity,
         GuildEntity
     },
@@ -97,6 +99,8 @@ impl Error for InMemoryBackendError {}
 
 struct InMemoryBackendRef {
     guilds: DashMap<GuildId, GuildEntity>,
+    guild_members: DashMap<GuildId, DashSet<UserId>>,
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,
+    members: DashMap<(GuildId, UserId), MemberEntity>,
     roles: DashMap<RoleId, RoleEntity>
 }

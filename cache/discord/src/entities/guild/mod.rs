@@ -51,6 +51,7 @@ use hartex_base::{
 
 use crate::entity::Entity;
 
+pub mod member;
 pub mod role;
 
 /// # Struct `GuildEntity`
