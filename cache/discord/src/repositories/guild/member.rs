@@ -29,4 +29,5 @@ use crate::{
     repository::Repository
 };
 
+#[allow(clippy::module_name_repetitions)]
 pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {}
