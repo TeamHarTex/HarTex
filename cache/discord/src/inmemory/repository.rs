@@ -195,7 +195,29 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
     }
 }
 
-impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {}
+impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {
+    fn roles(
+        &self,
+        guild_id: GuildId,
+        user_id: UserId
+    ) -> StreamEntitiesFuture<'_, RoleEntity, InMemoryBackendError> {
+        let role_ids = match (self.0).0.members.get(&(guild_id, user_id)) {
+            Some(member) => member.role_ids().clone(),
+            None => return future::ok(stream::empty().boxed()).boxed()
+        };
+
+        let iter = role_ids.into_iter().filter_map(move |role_id| {
+            (self.0)
+                .0
+                .roles
+                .get(&role_id)
+                .map(|entry| Ok(entry.value().clone()))
+        });
+        let stream = stream::iter(iter);
+
+        future::ok(stream).boxed()
+    }
+}
 
 impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 

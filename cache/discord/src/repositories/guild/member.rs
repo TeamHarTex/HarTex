@@ -23,14 +23,34 @@
 //!
 //! This module contains the guild member repository trait.
 
+use hartex_base::discord::model::id::{
+    GuildId,
+    UserId
+};
+
 use crate::{
     backend::Backend,
-    entities::guild::member::MemberEntity,
-    repository::Repository
+    entities::guild::{
+        member::MemberEntity,
+        role::RoleEntity
+    },
+    repository::{
+        Repository,
+        StreamEntitiesFuture
+    }
 };
 
 /// # Trait `MemberRepository`
 ///
 /// A repository containing member objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {}
+pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {
+    /// # Trait Method `roles`
+    ///
+    /// Returns a stream of roles of a member.
+    fn roles(
+        &self,
+        guild_id: GuildId,
+        user_id: UserId
+    ) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
+}
