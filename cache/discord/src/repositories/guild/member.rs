@@ -30,11 +30,16 @@ use hartex_base::discord::model::id::{
 
 use crate::{
     backend::Backend,
-    entities::guild::{
-        member::MemberEntity,
-        role::RoleEntity
+    entities::{
+        guild::{
+            member::MemberEntity,
+            role::RoleEntity
+        },
+        user::UserEntity
     },
+    relations,
     repository::{
+        GetEntityFuture,
         Repository,
         StreamEntitiesFuture
     }
@@ -53,4 +58,15 @@ pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {
         guild_id: GuildId,
         user_id: UserId
     ) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
+
+    /// # Trait Method `user`
+    ///
+    /// Returns the associated user of the member.
+    fn user(&self, guild_id: GuildId, user_id: UserId) -> GetEntityFuture<'_, UserEntity, B::Error> {
+        let backend = self.backend();
+
+        relations::map_entity(backend.members(), backend.users(),(guild_id, user_id), |member| {
+            member.user_id()
+        })
+    }
 }
