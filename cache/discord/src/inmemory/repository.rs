@@ -80,7 +80,12 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
     }
 
     fn entity(&self, entity_id: E::Id) -> GetEntityFuture<E, InMemoryBackendError> {
-        future::ok(E::repository(&self.0).get(&entity_id).map(|entry| entry.value().clone())).boxed()
+        future::ok(
+            E::repository(&self.0)
+                .get(&entity_id)
+                .map(|entry| entry.value().clone())
+        )
+        .boxed()
     }
 }
 
