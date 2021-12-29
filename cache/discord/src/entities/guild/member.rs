@@ -99,6 +99,11 @@ impl MemberEntity {
     }
 
     #[must_use]
+    pub fn premium_since(&self) -> Option<Timestamp> {
+        self.premium_since
+    }
+
+    #[must_use]
     pub fn role_ids(&self) -> Vec<RoleId> {
         self.role_ids.clone()
     }
