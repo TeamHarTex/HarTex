@@ -21,7 +21,7 @@
 
 //! # The `guild` Module
 //!
-//! This module contains entities related to Discord guilds.
+//! This module contains repositories related to Discord guilds.
 
 use hartex_base::discord::model::id::{
     GuildId,
@@ -43,6 +43,7 @@ use crate::{
     }
 };
 
+pub mod member;
 pub mod role;
 
 // TODO: add `afk_channel` method to retrieve the guild AFK channel
@@ -63,6 +64,7 @@ pub mod role;
 // TODO: add `voice_state_user_ids` method to stream the user ids of voice states
 // TODO: add `voice_states` method to stream voice states
 // TODO: add `widget_channel` method to retrieve the widget channel
+
 /// # Trait `GuildRepository`
 ///
 /// A repository containing Discord guild objects.
@@ -74,7 +76,7 @@ pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {
     fn member_user_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<UserId, B::Error>;
 
     /// # Trait Method `members`
-    /// 
+    ///
     /// Returns a stream of members in a guilf.
     fn members(&self, guild_id: GuildId) -> StreamEntitiesFuture<MemberEntity, B::Error>;
 

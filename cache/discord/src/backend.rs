@@ -24,6 +24,7 @@
 //! This module contains a base backend trait for different cache backends.
 
 use crate::repositories::guild::{
+    member::MemberRepository,
     role::RoleRepository,
     GuildRepository
 };
@@ -42,6 +43,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// The repository for guild entities.
     type GuildRepository: GuildRepository<Self> + Send + Sync;
 
+    /// # Typealias `MemberRepository`
+    ///
+    /// The repository for member entities.
+    type MemberRepository: MemberRepository<Self> + Send + Sync;
+
     /// # Typealias `RoleRepository`
     ///
     /// The repository for guild roles entities.
@@ -51,6 +57,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the guild repository of the cache.
     fn guilds(&self) -> Self::GuildRepository;
+
+    /// # Trait Method `members`
+    ///
+    /// Returns the member repository of the cache.
+    fn members(&self) -> Self::MemberRepository;
 
     /// # Trait Method `roles`
     ///

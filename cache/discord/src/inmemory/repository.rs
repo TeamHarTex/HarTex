@@ -50,6 +50,7 @@ use crate::{
         InMemoryBackendError
     },
     repositories::guild::{
+        member::MemberRepository,
         role::RoleRepository,
         GuildRepository
     },
@@ -144,6 +145,8 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
         future::ok(stream).boxed()
     }
 }
+
+impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {}
 
 impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 

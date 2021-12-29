@@ -72,10 +72,15 @@ impl InMemoryBackend {
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
     type GuildRepository = InMemoryRepository<GuildEntity>;
+    type MemberRepository = InMemoryRepository<MemberEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
 
     fn guilds(&self) -> Self::GuildRepository {
         self.repository::<GuildEntity>()
+    }
+
+    fn members(&self) -> Self::MemberRepository {
+        self.repository::<MemberEntity>()
     }
 
     fn roles(&self) -> Self::RoleRepository {
