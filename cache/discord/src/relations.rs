@@ -32,7 +32,7 @@ use crate::{
     }
 };
 
-pub fn map<
+pub fn map_entity<
     'a,
     B: Backend,
     F: FnOnce(LE) -> FE::Id + Send + 'a,

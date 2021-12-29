@@ -29,5 +29,8 @@ use crate::{
     repository::Repository
 };
 
+/// # Trait `MemberRepository`
+/// 
+/// A repository containing member objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {}
