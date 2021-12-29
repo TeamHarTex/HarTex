@@ -39,6 +39,7 @@ use crate::entity::Entity;
 ///
 /// An emoji entity.
 #[allow(clippy::module_name_repetitions)]
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Clone)]
 pub struct EmojiEntity {
     animated: bool,
@@ -49,7 +50,7 @@ pub struct EmojiEntity {
     name: String,
     require_colons: bool,
     role_ids: Vec<RoleId>,
-    user_id: UserId
+    user_id: Option<UserId>
 }
 
 impl EmojiEntity {

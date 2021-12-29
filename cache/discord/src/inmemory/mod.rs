@@ -107,6 +107,7 @@ impl Error for InMemoryBackendError {}
 struct InMemoryBackendRef {
     emojis: DashMap<EmojiId, EmojiEntity>,
     guilds: DashMap<GuildId, GuildEntity>,
+    guild_emojis: DashMap<GuildId, DashSet<EmojiId>>,
     guild_members: DashMap<GuildId, DashSet<UserId>>,
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,
     members: DashMap<(GuildId, UserId), MemberEntity>,
