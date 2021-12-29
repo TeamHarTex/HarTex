@@ -64,6 +64,9 @@ impl EmojiEntity {
         self.available
     }
 
+    /// # Instance Method `guild_id`
+    ///
+    /// Returns the guild id associated with this emoji.
     #[must_use]
     pub fn guild_id(&self) -> GuildId {
         self.guild_id
