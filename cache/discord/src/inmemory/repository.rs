@@ -93,7 +93,10 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
 impl EmojiRepository<InMemoryBackend> for InMemoryRepository<EmojiEntity> {}
 
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
-    fn emoji_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, EmojiId, InMemoryBackendError> {
+    fn emoji_ids(
+        &self,
+        guild_id: GuildId
+    ) -> StreamEntityIdsFuture<'_, EmojiId, InMemoryBackendError> {
         let stream = (self.0).0.guild_emojis.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
             |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed()
@@ -102,7 +105,10 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
         future::ok(stream).boxed()
     }
 
-    fn emojis(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, EmojiEntity, InMemoryBackendError> {
+    fn emojis(
+        &self,
+        guild_id: GuildId
+    ) -> StreamEntitiesFuture<'_, EmojiEntity, InMemoryBackendError> {
         let emoji_ids = match (self.0).0.guild_emojis.get(&guild_id) {
             Some(ids) => ids.clone(),
             None => return future::ok(stream::empty().boxed()).boxed()
