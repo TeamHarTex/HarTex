@@ -62,11 +62,18 @@ pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {
     /// # Trait Method `user`
     ///
     /// Returns the associated user of the member.
-    fn user(&self, guild_id: GuildId, user_id: UserId) -> GetEntityFuture<'_, UserEntity, B::Error> {
+    fn user(
+        &self,
+        guild_id: GuildId,
+        user_id: UserId
+    ) -> GetEntityFuture<'_, UserEntity, B::Error> {
         let backend = self.backend();
 
-        relations::map_entity(backend.members(), backend.users(),(guild_id, user_id), |member| {
-            member.user_id()
-        })
+        relations::map_entity(
+            backend.members(),
+            backend.users(),
+            (guild_id, user_id),
+            |member| member.user_id()
+        )
     }
 }
