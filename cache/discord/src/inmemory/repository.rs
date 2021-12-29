@@ -95,18 +95,20 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
         &self,
         guild_id: GuildId
     ) -> StreamEntitiesFuture<MemberEntity, InMemoryBackendError> {
-        let member_user_ids = match(self.0).0.guild_members.get(&guild_id) {
+        let member_user_ids = match (self.0).0.guild_members.get(&guild_id) {
             Some(ids) => ids.clone(),
             None => return future::ok(stream::empty().boxed()).boxed()
         };
 
-        let iter = member_user_ids.into_iter().filter_map(move |member_user_id| {
-            (self.0)
-                .0
-                .members
-                .get(&(guild_id, member_user_id))
-                .map(|entry| Ok(entry.value().clone()))
-        });
+        let iter = member_user_ids
+            .into_iter()
+            .filter_map(move |member_user_id| {
+                (self.0)
+                    .0
+                    .members
+                    .get(&(guild_id, member_user_id))
+                    .map(|entry| Ok(entry.value().clone()))
+            });
         let stream = stream::iter(iter).boxed();
 
         future::ok(stream).boxed()
