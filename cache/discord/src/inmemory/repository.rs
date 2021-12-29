@@ -44,22 +44,28 @@ use hartex_base::discord::model::id::{
 };
 
 use crate::{
-    entities::guild::{
-        emoji::EmojiEntity,
-        member::MemberEntity,
-        role::RoleEntity,
-        GuildEntity
+    entities::{
+        guild::{
+            emoji::EmojiEntity,
+            member::MemberEntity,
+            role::RoleEntity,
+            GuildEntity
+        },
+        user::UserEntity
     },
     entity::Entity,
     inmemory::{
         InMemoryBackend,
         InMemoryBackendError
     },
-    repositories::guild::{
-        emoji::EmojiRepository,
-        member::MemberRepository,
-        role::RoleRepository,
-        GuildRepository
+    repositories::{
+        guild::{
+            emoji::EmojiRepository,
+            member::MemberRepository,
+            role::RoleRepository,
+            GuildRepository
+        },
+        user::UserRepository
     },
     repository::{
         GetEntityFuture,
@@ -202,7 +208,7 @@ impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {
         user_id: UserId
     ) -> StreamEntitiesFuture<'_, RoleEntity, InMemoryBackendError> {
         let role_ids = match (self.0).0.members.get(&(guild_id, user_id)) {
-            Some(member) => member.role_ids().clone(),
+            Some(member) => member.role_ids(),
             None => return future::ok(stream::empty().boxed()).boxed()
         };
 
@@ -220,6 +226,8 @@ impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {
 }
 
 impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
+
+impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
 pub trait EntityExt: Clone + Entity {
     /// # Trait Method `repository`
@@ -249,5 +257,11 @@ impl EntityExt for MemberEntity {
 impl EntityExt for RoleEntity {
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
         &backend.0.roles
+    }
+}
+
+impl EntityExt for UserEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.users
     }
 }

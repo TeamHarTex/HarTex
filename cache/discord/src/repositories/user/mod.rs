@@ -19,9 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `repositories` Module
+//! # The `user` Module
 //!
-//! This module contains various repositories in the Discord cache.
+//! This module contains repositories related to Discord users.
 
-pub mod guild;
-pub mod user;
+use crate::{
+    backend::Backend,
+    entities::user::UserEntity,
+    repository::Repository
+};
+
+pub trait UserRepository<B: Backend>: Repository<UserEntity, B> {}

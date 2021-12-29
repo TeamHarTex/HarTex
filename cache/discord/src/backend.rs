@@ -23,10 +23,14 @@
 //!
 //! This module contains a base backend trait for different cache backends.
 
-use crate::repositories::guild::{
-    member::MemberRepository,
-    role::RoleRepository,
-    GuildRepository
+use crate::repositories::{
+    guild::{
+        emoji::EmojiRepository,
+        member::MemberRepository,
+        role::RoleRepository,
+        GuildRepository
+    },
+    user::UserRepository
 };
 
 /// # Trait `Backend`
@@ -37,6 +41,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// The backend error type.
     type Error: Send + 'static;
+
+    /// # Typealias `EmojiRepository`
+    ///
+    /// The repository for emoji entities.
+    type EmojiRepository: EmojiRepository<Self> + Send + Sync;
 
     /// # Typealias `GuildRepository`
     ///
@@ -53,6 +62,16 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// The repository for guild roles entities.
     type RoleRepository: RoleRepository<Self> + Send + Sync;
 
+    /// # Typealias `UserRepository`
+    ///
+    /// The repository for user entities.
+    type UserRepository: UserRepository<Self> + Send + Sync;
+
+    /// # Trait Method `emojis`
+    ///
+    /// Returns the emoji repository of the cache.
+    fn emojis(&self) -> Self::EmojiRepository;
+
     /// # Trait Method `guilds`
     ///
     /// Returns the guild repository of the cache.
@@ -67,4 +86,9 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the role repository of the cache.
     fn roles(&self) -> Self::RoleRepository;
+
+    /// # Trait Method `users`
+    ///
+    /// Returns the user repository of the cache.
+    fn users(&self) -> Self::UserRepository;
 }

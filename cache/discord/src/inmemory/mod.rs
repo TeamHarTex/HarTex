@@ -47,11 +47,14 @@ use hartex_base::discord::model::id::{
 
 use crate::{
     backend::Backend,
-    entities::guild::{
-        emoji::EmojiEntity,
-        member::MemberEntity,
-        role::RoleEntity,
-        GuildEntity
+    entities::{
+        guild::{
+            emoji::EmojiEntity,
+            member::MemberEntity,
+            role::RoleEntity,
+            GuildEntity
+        },
+        user::UserEntity
     },
     entity::Entity,
     inmemory::repository::InMemoryRepository
@@ -73,9 +76,15 @@ impl InMemoryBackend {
 
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
+    type EmojiRepository =InMemoryRepository<EmojiEntity>;
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type MemberRepository = InMemoryRepository<MemberEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
+    type UserRepository = InMemoryRepository<UserEntity>;
+
+    fn emojis(&self) -> Self::EmojiRepository {
+        self.repository::<EmojiEntity>()
+    }
 
     fn guilds(&self) -> Self::GuildRepository {
         self.repository::<GuildEntity>()
@@ -87,6 +96,10 @@ impl Backend for InMemoryBackend {
 
     fn roles(&self) -> Self::RoleRepository {
         self.repository::<RoleEntity>()
+    }
+
+    fn users(&self) -> Self::UserRepository {
+        self.repository::<UserEntity>()
     }
 }
 
@@ -111,5 +124,6 @@ struct InMemoryBackendRef {
     guild_members: DashMap<GuildId, DashSet<UserId>>,
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,
     members: DashMap<(GuildId, UserId), MemberEntity>,
-    roles: DashMap<RoleId, RoleEntity>
+    roles: DashMap<RoleId, RoleEntity>,
+    users: DashMap<UserId, UserEntity>
 }
