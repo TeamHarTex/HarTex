@@ -39,6 +39,7 @@ use dashmap::{
     DashSet
 };
 use hartex_base::discord::model::id::{
+    EmojiId,
     GuildId,
     RoleId,
     UserId
@@ -47,6 +48,7 @@ use hartex_base::discord::model::id::{
 use crate::{
     backend::Backend,
     entities::guild::{
+        emoji::EmojiEntity,
         member::MemberEntity,
         role::RoleEntity,
         GuildEntity
@@ -103,6 +105,7 @@ impl Display for InMemoryBackendError {
 impl Error for InMemoryBackendError {}
 
 struct InMemoryBackendRef {
+    emojis: DashMap<EmojiId, EmojiEntity>,
     guilds: DashMap<GuildId, GuildEntity>,
     guild_members: DashMap<GuildId, DashSet<UserId>>,
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,

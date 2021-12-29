@@ -43,6 +43,7 @@ use crate::{
     }
 };
 
+pub mod emoji;
 pub mod member;
 pub mod role;
 

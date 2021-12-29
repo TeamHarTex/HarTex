@@ -44,6 +44,7 @@ use hartex_base::discord::model::id::{
 
 use crate::{
     entities::guild::{
+        emoji::EmojiEntity,
         member::MemberEntity,
         role::RoleEntity,
         GuildEntity
@@ -54,6 +55,7 @@ use crate::{
         InMemoryBackendError
     },
     repositories::guild::{
+        emoji::EmojiRepository,
         member::MemberRepository,
         role::RoleRepository,
         GuildRepository
@@ -77,10 +79,12 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
         self.0.clone()
     }
 
-    fn entity(&self, _: E::Id) -> GetEntityFuture<E, InMemoryBackendError> {
-        todo!()
+    fn entity(&self, entity_id: E::Id) -> GetEntityFuture<E, InMemoryBackendError> {
+        future::ok(E::repository(&self.0).get(&entity_id).map(|entry| entry.value().clone())).boxed()
     }
 }
+
+impl EmojiRepository<InMemoryBackend> for InMemoryRepository<EmojiEntity> {}
 
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
     fn member_user_ids(
@@ -161,6 +165,12 @@ pub trait EntityExt: Clone + Entity {
     ///
     /// Returns the corresponding repository of the entity.
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self>;
+}
+
+impl EntityExt for EmojiEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.emojis
+    }
 }
 
 impl EntityExt for GuildEntity {
