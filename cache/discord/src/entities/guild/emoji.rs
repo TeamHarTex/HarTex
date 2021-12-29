@@ -85,7 +85,7 @@ impl EmojiEntity {
     }
 
     #[must_use]
-    pub fn user_id(&self) -> UserId {
+    pub fn user_id(&self) -> Option<UserId> {
         self.user_id
     }
 }

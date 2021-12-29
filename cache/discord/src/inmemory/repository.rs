@@ -113,7 +113,7 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
                 .0
                 .emojis
                 .get(&emoji_id)
-                .map(|entry| entry.value().clone())
+                .map(|entry| Ok(entry.value().clone()))
         });
         let stream = stream::iter(iter).boxed();
 
