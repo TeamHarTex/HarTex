@@ -29,4 +29,8 @@ use crate::{
     repository::Repository
 };
 
+/// # Trait `UserRepository`
+///
+/// A repository containing Discord user objects.
+#[allow(clippy::module_name_repetitions)]
 pub trait UserRepository<B: Backend>: Repository<UserEntity, B> {}
