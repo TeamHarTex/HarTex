@@ -76,7 +76,7 @@ impl InMemoryBackend {
 
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
-    type EmojiRepository =InMemoryRepository<EmojiEntity>;
+    type EmojiRepository = InMemoryRepository<EmojiEntity>;
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type MemberRepository = InMemoryRepository<MemberEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
