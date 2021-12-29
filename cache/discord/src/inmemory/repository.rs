@@ -36,7 +36,11 @@ use futures_util::{
         StreamExt
     }
 };
-use hartex_base::discord::model::id::{GuildId, RoleId, UserId};
+use hartex_base::discord::model::id::{
+    GuildId,
+    RoleId,
+    UserId
+};
 
 use crate::{
     entities::guild::{
