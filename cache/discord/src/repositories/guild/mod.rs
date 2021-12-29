@@ -52,7 +52,6 @@ pub mod role;
 // TODO: add `afk_channel` method to retrieve the guild AFK channel
 // TODO: add `channel_ids` method to stream guild channel ids
 // TODO: add `channels` method to stream guild channels
-// TODO: add `emojis` method to stream guild emojis
 // TODO: add `presence_ids` method to stream guild presence ides
 // TODO: add `presences` method to stream guild presences
 // TODO: add `rules_channel` method to retrieve the guild rules channel
@@ -73,24 +72,24 @@ pub mod role;
 #[allow(clippy::module_name_repetitions)]
 pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {
     /// # Trait Method `emoji_ids`
-    /// 
+    ///
     /// Returns a stream of emoji ids in a guild.
-    fn emoji_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<EmojiId, B::Error>;
+    fn emoji_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, EmojiId, B::Error>;
 
     /// # Trait Method `emojis`
-    /// 
+    ///
     /// Returns a stream of emojis in a guild.
-    fn emojis(&self, guild_id: GuildId) -> StreamEntitiesFuture<EmojiEntity, B::Error>;
+    fn emojis(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, EmojiEntity, B::Error>;
 
     /// # Trait Method `member_user_ids`
     ///
     /// Returns a stream of member (user) ids in a guild.
-    fn member_user_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<UserId, B::Error>;
+    fn member_user_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, UserId, B::Error>;
 
     /// # Trait Method `members`
     ///
     /// Returns a stream of members in a guild.
-    fn members(&self, guild_id: GuildId) -> StreamEntitiesFuture<MemberEntity, B::Error>;
+    fn members(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, MemberEntity, B::Error>;
 
     /// # Trait Method `role_ids`
     ///

@@ -93,10 +93,7 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
 impl EmojiRepository<InMemoryBackend> for InMemoryRepository<EmojiEntity> {}
 
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
-    fn emoji_ids(
-        &self, 
-        guild_id: GuildId
-    ) -> StreamEntityIdsFuture<EmojiId, InMemoryBackendError> {
+    fn emoji_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, EmojiId, InMemoryBackendError> {
         let stream = (self.0).0.guild_emojis.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
             |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed()
@@ -105,24 +102,19 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
         future::ok(stream).boxed()
     }
 
-    fn emojis(
-        &self, 
-        guild_id: GuildId
-    ) -> StreamEntitiesFuture<EmojiEntity, InMemoryBackendError> {
+    fn emojis(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, EmojiEntity, InMemoryBackendError> {
         let emoji_ids = match (self.0).0.guild_emojis.get(&guild_id) {
             Some(ids) => ids.clone(),
             None => return future::ok(stream::empty().boxed()).boxed()
         };
 
-        let iter = emoji_ids
-            .into_iter()
-            .filter_map(move |emoji_id| {
-                (self.0)
-                    .0
-                    .emojis
-                    .get(&emoji_id)
-                    .map(|entry| entry.value().clone())
-            });
+        let iter = emoji_ids.into_iter().filter_map(move |emoji_id| {
+            (self.0)
+                .0
+                .emojis
+                .get(&emoji_id)
+                .map(|entry| entry.value().clone())
+        });
         let stream = stream::iter(iter).boxed();
 
         future::ok(stream).boxed()
@@ -131,7 +123,7 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
     fn member_user_ids(
         &self,
         guild_id: GuildId
-    ) -> StreamEntityIdsFuture<UserId, InMemoryBackendError> {
+    ) -> StreamEntityIdsFuture<'_, UserId, InMemoryBackendError> {
         let stream = (self.0).0.guild_members.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
             |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed()
@@ -143,7 +135,7 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
     fn members(
         &self,
         guild_id: GuildId
-    ) -> StreamEntitiesFuture<MemberEntity, InMemoryBackendError> {
+    ) -> StreamEntitiesFuture<'_, MemberEntity, InMemoryBackendError> {
         let member_user_ids = match (self.0).0.guild_members.get(&guild_id) {
             Some(ids) => ids.clone(),
             None => return future::ok(stream::empty().boxed()).boxed()
