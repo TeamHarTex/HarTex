@@ -30,7 +30,7 @@ use crate::{
 };
 
 /// # Trait `MemberRepository`
-/// 
+///
 /// A repository containing member objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {}
