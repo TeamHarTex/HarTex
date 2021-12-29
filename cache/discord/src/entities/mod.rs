@@ -24,3 +24,4 @@
 //! This module contains various entities in the Discord cache.
 
 pub mod guild;
+pub mod user;

@@ -215,7 +215,7 @@ impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {
         });
         let stream = stream::iter(iter);
 
-        future::ok(stream).boxed()
+        future::ok(stream.boxed()).boxed()
     }
 }
 
