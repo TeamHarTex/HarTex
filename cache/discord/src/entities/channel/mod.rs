@@ -19,10 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `entities` Module
+//! # The `channel` Module
 //!
-//! This module contains various entities in the Discord cache.
+//! This module contains entities related to Discord channels.
 
-pub mod channel;
-pub mod guild;
-pub mod user;
+pub mod attachment;
