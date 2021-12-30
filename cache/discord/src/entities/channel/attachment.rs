@@ -24,9 +24,12 @@
 //! This module implements the channel attachment entity.
 
 use hartex_base::{
-    discord::model::id::{
-        AttachmentId,
-        MessageId
+    discord::model::{
+        channel::Attachment,
+        id::{
+            AttachmentId,
+            MessageId
+        }
     },
     stdext::prelude::*
 };
@@ -104,5 +107,23 @@ impl Entity for AttachmentEntity {
 
     fn id(&self) -> Self::Id {
         (self.message_id, self.id)
+    }
+}
+
+impl From<(MessageId, Attachment)> for AttachmentEntity {
+    fn from((message_id, attachment): (MessageId, Attachment)) -> Self {
+        Self {
+            content_type: attachment.content_type,
+            description: attachment.description,
+            ephemeral: attachment.ephemeral,
+            filename: attachment.filename,
+            height: attachment.height,
+            id: attachment.id,
+            message_id,
+            proxy_url: attachment.proxy_url,
+            size: attachment.size,
+            url: attachment.url,
+            width: attachment.width
+        }
     }
 }

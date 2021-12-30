@@ -19,15 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The `attachment` Module
+//!
+//! This module contains the channel attachment repository trait.
+
 use crate::{
     backend::Backend,
     entities::channel::attachment::AttachmentEntity,
     repository::Repository
 };
 
-//! # The `attachment` Module
-//!
-//! This module contains the channel attachment repository trait.
-
+/// # Trait `AttachmentRepository`
+///
+/// A repository containing attachment objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait AttachmentRepository<B: Backend>: Repository<AttachmentEntity, B> {}
