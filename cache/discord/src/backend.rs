@@ -24,6 +24,7 @@
 //! This module contains a base backend trait for different cache backends.
 
 use crate::repositories::{
+    channel::attachment::AttachmentRepository,
     guild::{
         emoji::EmojiRepository,
         member::MemberRepository,
@@ -45,9 +46,14 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// The backend error type.
     type Error: Send + 'static;
 
+    /// # Typealias `AttachmentRepository`
+    ///
+    /// The repository for attachment entities.
+    type AttachmentRepository: AttachmentRepository<Self> + Send + Sync;
+
     /// # Typealias `CurrentUserRepository`
     ///
-    /// The repository for current user entities.
+    /// The repository for the current user entity.
     type CurrentUserRepository: CurrentUserRepository<Self> + Send + Sync;
 
     /// # Typealias `EmojiRepository`
@@ -74,6 +80,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// The repository for user entities.
     type UserRepository: UserRepository<Self> + Send + Sync;
+
+    /// # Trait Method `attachments`
+    ///
+    /// Returns the attachment repository of the cache.
+    fn attachments(&self) -> Self::AttachmentRepository;
 
     /// # Trait Method `current_user`
     ///

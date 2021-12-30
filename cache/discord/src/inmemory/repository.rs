@@ -48,6 +48,7 @@ use hartex_base::discord::model::id::{
 
 use crate::{
     entities::{
+        channel::attachment::AttachmentEntity,
         guild::{
             emoji::EmojiEntity,
             member::MemberEntity,
@@ -65,6 +66,7 @@ use crate::{
         InMemoryBackendError
     },
     repositories::{
+        channel::attachment::AttachmentRepository,
         guild::{
             emoji::EmojiRepository,
             member::MemberRepository,
@@ -105,6 +107,8 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
         .boxed()
     }
 }
+
+impl AttachmentRepository<InMemoryBackend> for InMemoryRepository<AttachmentEntity> {}
 
 impl CurrentUserRepository<InMemoryBackend> for InMemoryRepository<CurrentUserEntity> {}
 
@@ -264,6 +268,12 @@ pub trait EntityExt: Clone + Entity {
     ///
     /// Returns the corresponding repository of the entity.
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self>;
+}
+
+impl EntityExt for AttachmentEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.attachments
+    }
 }
 
 impl EntityExt for EmojiEntity {

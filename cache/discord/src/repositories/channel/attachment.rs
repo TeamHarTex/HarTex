@@ -19,10 +19,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `repositories` Module
-//!
-//! This module contains various repositories in the Discord cache.
+use crate::{
+    backend::Backend,
+    entities::channel::attachment::AttachmentEntity,
+    repository::Repository
+};
 
-pub mod channel;
-pub mod guild;
-pub mod user;
+//! # The `attachment` Module
+//!
+//! This module contains the channel attachment repository trait.
+
+#[allow(clippy::module_name_repetitions)]
+pub trait AttachmentRepository<B: Backend>: Repository<AttachmentEntity, B> {}

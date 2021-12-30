@@ -36,6 +36,8 @@ use crate::entity::Entity;
 /// # Struct `AttachmentEntity`
 ///
 /// An attachment entity.
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone)]
 pub struct AttachmentEntity {
     content_type: Option<String>,
     description: Option<String>,
@@ -51,38 +53,47 @@ pub struct AttachmentEntity {
 }
 
 impl AttachmentEntity {
+    #[must_use]
     pub fn content_type(&self) -> Option<&str> {
         self.content_type.as_refstr()
     }
 
+    #[must_use]
     pub fn description(&self) -> Option<&str> {
         self.description.as_refstr()
     }
 
+    #[must_use]
     pub fn ephemeral(&self) -> bool {
         self.ephemeral
     }
 
+    #[must_use]
     pub fn filename(&self) -> &str {
         self.filename.as_ref()
     }
 
+    #[must_use]
     pub fn height(&self) -> Option<u64> {
         self.height
     }
 
+    #[must_use]
     pub fn proxy_url(&self) -> &str {
         self.proxy_url.as_str()
     }
 
+    #[must_use]
     pub fn size(&self) -> u64 {
         self.size
     }
 
+    #[must_use]
     pub fn url(&self) -> &str {
         self.url.as_str()
     }
 
+    #[must_use]
     pub fn width(&self) -> Option<u64> {
         self.width
     }

@@ -42,8 +42,10 @@ use dashmap::{
     DashSet
 };
 use hartex_base::discord::model::id::{
+    AttachmentId,
     EmojiId,
     GuildId,
+    MessageId,
     RoleId,
     UserId
 };
@@ -51,6 +53,7 @@ use hartex_base::discord::model::id::{
 use crate::{
     backend::Backend,
     entities::{
+        channel::attachment::AttachmentEntity,
         guild::{
             emoji::EmojiEntity,
             member::MemberEntity,
@@ -82,12 +85,17 @@ impl InMemoryBackend {
 
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
+    type AttachmentRepository = InMemoryRepository<AttachmentEntity>;
     type CurrentUserRepository = InMemoryRepository<CurrentUserEntity>;
     type EmojiRepository = InMemoryRepository<EmojiEntity>;
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type MemberRepository = InMemoryRepository<MemberEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
     type UserRepository = InMemoryRepository<UserEntity>;
+
+    fn attachments(&self) -> Self::AttachmentRepository {
+        self.repository::<AttachmentEntity>()
+    }
 
     fn current_user(&self) -> Self::CurrentUserRepository {
         self.repository::<CurrentUserEntity>()
@@ -129,6 +137,7 @@ impl Display for InMemoryBackendError {
 impl Error for InMemoryBackendError {}
 
 struct InMemoryBackendRef {
+    attachments: DashMap<(MessageId, AttachmentId), AttachmentEntity>,
     current_user: Mutex<Option<CurrentUserEntity>>,
     emojis: DashMap<EmojiId, EmojiEntity>,
     guilds: DashMap<GuildId, GuildEntity>,
