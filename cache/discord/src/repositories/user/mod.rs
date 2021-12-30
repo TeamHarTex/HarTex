@@ -29,6 +29,7 @@ use crate::{
     repository::Repository
 };
 
+#[allow(clippy::module_name_repetitions)]
 pub mod current_user;
 
 /// # Trait `UserRepository`

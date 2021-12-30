@@ -37,6 +37,7 @@ use hartex_base::{
 
 use crate::entity::Entity;
 
+#[allow(clippy::module_name_repetitions)]
 pub mod current_user;
 
 /// # Struct `UserEntity`

@@ -53,6 +53,7 @@ pub trait Repository<E: Entity, B: Backend> {
 /// # Trait `SingleEntityRepository`
 ///
 /// A repository for a specific entity in a specific backend.
+#[allow(clippy::module_name_repetitions)]
 pub trait SingleEntityRepository<E: Entity, B: Backend> {
     /// # Trait Method `backend`
     ///
