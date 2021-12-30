@@ -239,7 +239,8 @@ impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
 impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
-impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend> for InMemoryRepository<CurrentUserEntity>
+impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
+    for InMemoryRepository<CurrentUserEntity>
 {
     fn backend(&self) -> InMemoryBackend {
         self.0.clone()
