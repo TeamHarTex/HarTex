@@ -19,20 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `user` Module
+//! # The `current_user` Module
 //!
-//! This module contains repositories related to Discord users.
+//! This module contains the current user repository trait.
 
 use crate::{
     backend::Backend,
-    entities::user::UserEntity,
-    repository::Repository
+    entities::user::current_user::CurrentUserEntity,
+    repository::SingleEntityRepository
 };
 
-pub mod current_user;
-
-/// # Trait `UserRepository`
+/// # Trait `CurrentUserRepository`
 ///
-/// A repository containing Discord user objects.
+/// A repository containing Discord current user objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait UserRepository<B: Backend>: Repository<UserEntity, B> {}
+pub trait CurrentUserRepository<B: Backend>: SingleEntityRepository<CurrentUserEntity, B> {}

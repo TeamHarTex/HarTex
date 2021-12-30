@@ -31,7 +31,10 @@ use std::{
         Result as FmtResult
     },
     marker::PhantomData,
-    sync::Arc
+    sync::{
+        Arc,
+        Mutex
+    }
 };
 
 use dashmap::{
@@ -54,7 +57,10 @@ use crate::{
             role::RoleEntity,
             GuildEntity
         },
-        user::UserEntity
+        user::{
+            current_user::CurrentUserEntity,
+            UserEntity
+        }
     },
     entity::Entity,
     inmemory::repository::InMemoryRepository
@@ -76,11 +82,16 @@ impl InMemoryBackend {
 
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
+    type CurrentUserRepository = InMemoryRepository<CurrentUserEntity>;
     type EmojiRepository = InMemoryRepository<EmojiEntity>;
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type MemberRepository = InMemoryRepository<MemberEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
     type UserRepository = InMemoryRepository<UserEntity>;
+
+    fn current_user(&self) -> Self::CurrentUserRepository {
+        self.repository::<CurrentUserEntity>()
+    }
 
     fn emojis(&self) -> Self::EmojiRepository {
         self.repository::<EmojiEntity>()
@@ -118,6 +129,7 @@ impl Display for InMemoryBackendError {
 impl Error for InMemoryBackendError {}
 
 struct InMemoryBackendRef {
+    current_user: Mutex<Option<CurrentUserEntity>>,
     emojis: DashMap<EmojiId, EmojiEntity>,
     guilds: DashMap<GuildId, GuildEntity>,
     guild_emojis: DashMap<GuildId, DashSet<EmojiId>>,

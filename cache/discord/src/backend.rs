@@ -30,7 +30,10 @@ use crate::repositories::{
         role::RoleRepository,
         GuildRepository
     },
-    user::UserRepository
+    user::{
+        current_user::CurrentUserRepository,
+        UserRepository
+    }
 };
 
 /// # Trait `Backend`
@@ -41,6 +44,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// The backend error type.
     type Error: Send + 'static;
+
+    /// # Typealias `CurrentUserRepository`
+    ///
+    /// The repository for current user entities.
+    type CurrentUserRepository: CurrentUserRepository<Self> + Send + Sync;
 
     /// # Typealias `EmojiRepository`
     ///
@@ -66,6 +74,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// The repository for user entities.
     type UserRepository: UserRepository<Self> + Send + Sync;
+
+    /// # Trait Method `current_user`
+    ///
+    /// Returns the current user repository of the cache.
+    fn current_user(&self) -> Self::CurrentUserRepository;
 
     /// # Trait Method `emojis`
     ///

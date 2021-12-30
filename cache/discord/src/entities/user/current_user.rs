@@ -19,16 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `user` Module
+//! # The `current_user` Module
 //!
-//! This module contains entities related to Discord users.
+//! This module implements the current user entity.
 
 use hartex_base::{
     discord::model::{
         id::UserId,
         user::{
+            CurrentUser,
             PremiumType,
-            User,
             UserFlags
         }
     },
@@ -37,14 +37,12 @@ use hartex_base::{
 
 use crate::entity::Entity;
 
-pub mod current_user;
-
-/// # Struct `UserEntity`
+/// # Struct `CurrentUserEntity`
 ///
-/// A user entity.
+/// A current user entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
-pub struct UserEntity {
+pub struct CurrentUserEntity {
     accent_color: Option<u64>,
     avatar: Option<String>,
     banner: Option<String>,
@@ -54,15 +52,14 @@ pub struct UserEntity {
     flags: Option<UserFlags>,
     id: UserId,
     locale: Option<String>,
-    mfa_enabled: Option<bool>,
+    mfa_enabled: bool,
     name: String,
     premium_type: Option<PremiumType>,
     public_flags: Option<UserFlags>,
-    system: Option<bool>,
     verified: Option<bool>
 }
 
-impl UserEntity {
+impl CurrentUserEntity {
     #[must_use]
     pub fn accent_color(&self) -> Option<u64> {
         self.accent_color
@@ -104,7 +101,7 @@ impl UserEntity {
     }
 
     #[must_use]
-    pub fn mfa_enabled(&self) -> Option<bool> {
+    pub fn mfa_enabled(&self) -> bool {
         self.mfa_enabled
     }
 
@@ -124,17 +121,12 @@ impl UserEntity {
     }
 
     #[must_use]
-    pub fn system(&self) -> Option<bool> {
-        self.system
-    }
-
-    #[must_use]
     pub fn verified(&self) -> Option<bool> {
         self.verified
     }
 }
 
-impl Entity for UserEntity {
+impl Entity for CurrentUserEntity {
     type Id = UserId;
 
     fn id(&self) -> Self::Id {
@@ -142,24 +134,23 @@ impl Entity for UserEntity {
     }
 }
 
-impl From<User> for UserEntity {
-    fn from(user: User) -> Self {
+impl From<CurrentUser> for CurrentUserEntity {
+    fn from(current_user: CurrentUser) -> Self {
         Self {
-            accent_color: user.accent_color,
-            avatar: user.avatar,
-            banner: user.banner,
-            bot: user.bot,
-            discriminator: user.discriminator,
-            email: user.email,
-            flags: user.flags,
-            id: user.id,
-            locale: user.locale,
-            mfa_enabled: user.mfa_enabled,
-            name: user.name,
-            premium_type: user.premium_type,
-            public_flags: user.public_flags,
-            system: user.system,
-            verified: user.verified
+            accent_color: current_user.accent_color,
+            avatar: current_user.avatar,
+            banner: current_user.banner,
+            bot: current_user.bot,
+            discriminator: current_user.discriminator,
+            email: current_user.email,
+            flags: current_user.flags,
+            id: current_user.id,
+            locale: current_user.locale,
+            mfa_enabled: current_user.mfa_enabled,
+            name: current_user.name,
+            premium_type: current_user.premium_type,
+            public_flags: current_user.public_flags,
+            verified: current_user.verified
         }
     }
 }

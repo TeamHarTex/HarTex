@@ -23,7 +23,10 @@
 //!
 //! This module implements a repository with an in-memory backend
 
-use std::marker::PhantomData;
+use std::{
+    marker::PhantomData,
+    sync::Mutex
+};
 
 use dashmap::DashMap;
 use futures_util::{
@@ -51,7 +54,10 @@ use crate::{
             role::RoleEntity,
             GuildEntity
         },
-        user::UserEntity
+        user::{
+            current_user::CurrentUserEntity,
+            UserEntity
+        }
     },
     entity::Entity,
     inmemory::{
@@ -65,11 +71,15 @@ use crate::{
             role::RoleRepository,
             GuildRepository
         },
-        user::UserRepository
+        user::{
+            current_user::CurrentUserRepository,
+            UserRepository
+        }
     },
     repository::{
         GetEntityFuture,
         Repository,
+        SingleEntityRepository,
         StreamEntitiesFuture,
         StreamEntityIdsFuture
     }
@@ -229,6 +239,23 @@ impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
 impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
+impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend> for InMemoryRepository<CurrentUserEntity>
+{
+    fn backend(&self) -> InMemoryBackend {
+        self.0.clone()
+    }
+
+    fn entity(&self) -> GetEntityFuture<CurrentUserEntity, InMemoryBackendError> {
+        future::ok(
+            CurrentUserEntity::lock(&self.0)
+                .lock()
+                .expect("current user mutex is poisoned")
+                .clone()
+        )
+        .boxed()
+    }
+}
+
 pub trait EntityExt: Clone + Entity {
     /// # Trait Method `repository`
     ///
@@ -263,5 +290,15 @@ impl EntityExt for RoleEntity {
 impl EntityExt for UserEntity {
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
         &backend.0.users
+    }
+}
+
+pub trait SingleEntityExt: Clone + Entity {
+    fn lock(backend: &InMemoryBackend) -> &Mutex<Option<Self>>;
+}
+
+impl SingleEntityExt for CurrentUserEntity {
+    fn lock(backend: &InMemoryBackend) -> &Mutex<Option<Self>> {
+        &backend.0.current_user
     }
 }

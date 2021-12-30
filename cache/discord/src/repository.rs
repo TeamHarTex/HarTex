@@ -37,7 +37,7 @@ use crate::{
 
 /// # Trait `Repository`
 ///
-/// A repository for a specific entity in a specific backend.
+/// A repository for a series of specific entities in a specific backend.
 pub trait Repository<E: Entity, B: Backend> {
     /// # Trait Method `backend`
     ///
@@ -48,6 +48,21 @@ pub trait Repository<E: Entity, B: Backend> {
     ///
     /// Retrieves an entity from the cache by its id.
     fn entity(&self, id: E::Id) -> GetEntityFuture<E, B::Error>;
+}
+
+/// # Trait `SingleEntityRepository`
+///
+/// A repository for a specific entity in a specific backend.
+pub trait SingleEntityRepository<E: Entity, B: Backend> {
+    /// # Trait Method `backend`
+    ///
+    /// Returns an immutable reference to the backend of this repository.
+    fn backend(&self) -> B;
+
+    /// # Trait Method `entity`
+    ///
+    /// Retrieves the underlying entity.
+    fn entity(&self) -> GetEntityFuture<E, B::Error>;
 }
 
 /// # Typealias `GetEntityFuture`
