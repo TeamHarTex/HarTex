@@ -41,19 +41,25 @@ use dashmap::{
     DashMap,
     DashSet
 };
-use hartex_base::discord::model::id::{
-    AttachmentId,
-    EmojiId,
-    GuildId,
-    MessageId,
-    RoleId,
-    UserId
+use hartex_base::discord::model::{
+    channel::message::sticker::StickerId,
+    id::{
+        AttachmentId,
+        EmojiId,
+        GuildId,
+        MessageId,
+        RoleId,
+        UserId
+    }
 };
 
 use crate::{
     backend::Backend,
     entities::{
-        channel::attachment::AttachmentEntity,
+        channel::{
+            attachment::AttachmentEntity,
+            message::sticker::StickerEntity
+        },
         guild::{
             emoji::EmojiEntity,
             member::MemberEntity,
@@ -92,6 +98,7 @@ impl Backend for InMemoryBackend {
     type MemberRepository = InMemoryRepository<MemberEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
     type UserRepository = InMemoryRepository<UserEntity>;
+    type StickerRepository = InMemoryRepository<StickerEntity>;
 
     fn attachments(&self) -> Self::AttachmentRepository {
         self.repository::<AttachmentEntity>()
@@ -120,6 +127,10 @@ impl Backend for InMemoryBackend {
     fn users(&self) -> Self::UserRepository {
         self.repository::<UserEntity>()
     }
+
+    fn stickers(&self) -> Self::StickerRepository {
+        self.repository::<StickerEntity>()
+    }
 }
 
 /// # Struct `InMemoryBackendError`
@@ -146,5 +157,6 @@ struct InMemoryBackendRef {
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,
     members: DashMap<(GuildId, UserId), MemberEntity>,
     roles: DashMap<RoleId, RoleEntity>,
-    users: DashMap<UserId, UserEntity>
+    users: DashMap<UserId, UserEntity>,
+    stickers: DashMap<StickerId, StickerEntity>
 }

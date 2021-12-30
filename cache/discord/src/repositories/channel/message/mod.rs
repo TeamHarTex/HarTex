@@ -19,9 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `channel` Module
+//! # The `message` Module
 //!
-//! This module contains repositories related to Discord channels.
+//! This module contains repositories related to Discord channel messages.
 
-pub mod attachment;
-pub mod message;
+pub mod sticker;

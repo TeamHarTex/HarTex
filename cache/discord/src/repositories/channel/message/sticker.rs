@@ -19,9 +19,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `channel` Module
+//! # The `sticker` Module
 //!
-//! This module contains repositories related to Discord channels.
+//! This module contains the channel message sticker repository trait.
 
-pub mod attachment;
-pub mod message;
+use crate::{
+    backend::Backend,
+    entities::channel::message::sticker::StickerEntity,
+    repository::Repository
+};
+
+/// # Trait `StickerRepository`
+///
+/// A repository containing sticker objects.
+pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {}

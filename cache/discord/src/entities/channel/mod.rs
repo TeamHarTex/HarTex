@@ -24,3 +24,4 @@
 //! This module contains entities related to Discord channels.
 
 pub mod attachment;
+pub mod message;
