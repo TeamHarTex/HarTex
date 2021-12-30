@@ -106,6 +106,8 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
     }
 }
 
+impl CurrentUserRepository<InMemoryBackend> for InMemoryRepository<CurrentUserEntity> {}
+
 impl EmojiRepository<InMemoryBackend> for InMemoryRepository<EmojiEntity> {}
 
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
