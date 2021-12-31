@@ -23,13 +23,18 @@
 //!
 //! This module contains the channel message sticker repository trait.
 
+use hartex_base::discord::model::channel::message::sticker::StickerId;
+
 use crate::{
     backend::Backend,
     entities::channel::message::sticker::{
         StickerEntity,
         StickerPackEntity
     },
-    repository::Repository
+    repository::{
+        GetEntityFuture,
+        Repository
+    }
 };
 
 /// # Trait `StickerPackRepository`
@@ -42,4 +47,9 @@ pub trait StickerPackRepository<B: Backend>: Repository<StickerPackEntity, B> {}
 ///
 /// A repository containing sticker objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {}
+pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {
+    /// # Trait Method `sticker_pack`
+    ///
+    /// Returns the sticker pack associated with this sticker, if any.
+    fn sticker_pack(&self, sticker_id: StickerId) -> GetEntityFuture<'_, StickerPackEntity, B::Error>;
+}

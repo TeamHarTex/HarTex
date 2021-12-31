@@ -117,10 +117,10 @@ impl StickerEntity {
 }
 
 impl Entity for StickerEntity {
-    type Id = (Option<StickerPackId>, StickerId);
+    type Id = StickerId;
 
     fn id(&self) -> Self::Id {
-        (self.pack_id, self.id)
+        self.id
     }
 }
 
@@ -192,10 +192,10 @@ impl StickerPackEntity {
 }
 
 impl Entity for StickerPackEntity {
-    type Id = (StickerPackId, StickerPackSkuId);
+    type Id = StickerPackId;
 
     fn id(&self) -> Self::Id {
-        (self.id, self.sku_id)
+        self.id
     }
 }
 

@@ -170,6 +170,6 @@ struct InMemoryBackendRef {
     members: DashMap<(GuildId, UserId), MemberEntity>,
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
-    sticker_packs: DashMap<(StickerPackId, StickerPackSkuId), StickerPackEntity>,
-    stickers: DashMap<(Option<StickerPackId>, StickerId), StickerEntity>
+    sticker_packs: DashMap<StickerPackId, StickerPackEntity>,
+    stickers: DashMap<StickerId, StickerEntity>
 }

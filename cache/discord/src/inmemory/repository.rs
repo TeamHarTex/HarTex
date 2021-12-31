@@ -39,11 +39,14 @@ use futures_util::{
         StreamExt
     }
 };
-use hartex_base::discord::model::id::{
-    EmojiId,
-    GuildId,
-    RoleId,
-    UserId
+use hartex_base::discord::model::{
+    channel::message::sticker::StickerId,
+    id::{
+        EmojiId,
+        GuildId,
+        RoleId,
+        UserId
+    }
 };
 
 use crate::{
@@ -259,7 +262,31 @@ impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
 impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {}
 
-impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {}
+impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
+    fn sticker_pack(&self, sticker_id: StickerId) -> GetEntityFuture<'_, StickerPackEntity, InMemoryBackendError> {
+        let backend = (self.0).0.clone();
+        let sticker = backend.stickers.get(&sticker_id);
+
+        match sticker {
+            Some(entry) => {
+                let sticker = entry.value().clone();
+
+                match sticker.pack_id() {
+                    Some(pack_id) => {
+                        future::ok(backend
+                            .sticker_packs
+                            .get(&pack_id)
+                            .map(|entry| entry.value().clone())
+                        )
+                        .boxed()
+                    }
+                    None => future::ok(None).boxed()
+                }
+            }
+            None => future::ok(None).boxed()
+        }
+    }
+}
 
 impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
     for InMemoryRepository<CurrentUserEntity>
