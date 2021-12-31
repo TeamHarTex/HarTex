@@ -49,6 +49,7 @@ pub trait StickerPackRepository<B: Backend>: Repository<StickerPackEntity, B> {
     /// # Trait Method `stickers`
     ///
     /// Returns the stickers in this sticker pack.
+    #[rustfmt::skip] // rustfmt suggests very shit formatting here, so we skip this
     fn stickers(&self, pack_id: StickerPackId)
         -> StreamEntitiesFuture<'_, StickerEntity, B::Error>;
 }

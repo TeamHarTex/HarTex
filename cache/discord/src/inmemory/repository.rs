@@ -40,7 +40,10 @@ use futures_util::{
     }
 };
 use hartex_base::discord::model::{
-    channel::message::sticker::StickerId,
+    channel::message::sticker::{
+        StickerId,
+        StickerPackId
+    },
     id::{
         EmojiId,
         GuildId,
@@ -48,7 +51,6 @@ use hartex_base::discord::model::{
         UserId
     }
 };
-use hartex_base::discord::model::channel::message::sticker::StickerPackId;
 
 use crate::{
     entities::{
