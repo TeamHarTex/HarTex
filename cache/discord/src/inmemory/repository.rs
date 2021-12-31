@@ -275,10 +275,11 @@ impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
                 let sticker = entry.value().clone();
 
                 match sticker.pack_id() {
-                    Some(pack_id) => future::ok(backend
-                        .sticker_packs
-                        .get(&pack_id)
-                        .map(|entry| entry.value().clone())
+                    Some(pack_id) => future::ok(
+                        backend
+                            .sticker_packs
+                            .get(&pack_id)
+                            .map(|entry| entry.value().clone())
                     )
                     .boxed(),
                     None => future::ok(None).boxed()
