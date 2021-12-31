@@ -151,7 +151,7 @@ impl MessageEntity {
 
     #[must_use]
     pub fn flags(&self) -> Option<MessageFlags> {
-        self.flags.clone()
+        self.flags
     }
 
     #[must_use]
@@ -249,6 +249,7 @@ impl Entity for MessageEntity {
 }
 
 impl From<Message> for MessageEntity {
+    #[allow(unreachable_code)] // temporarily allow unreachable code until thread_id is implemented
     fn from(message: Message) -> Self {
         let attachment_ids = message
             .attachments
