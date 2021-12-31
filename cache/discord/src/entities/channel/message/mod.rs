@@ -256,9 +256,7 @@ impl From<Message> for MessageEntity {
             .map(|attachment| attachment.id)
             .collect();
         let member_id = message.member.map_opt_user_id();
-        let referenced_message_id = message
-            .referenced_message
-            .map(|message| message.id);
+        let referenced_message_id = message.referenced_message.map(|message| message.id);
 
         Self {
             activity: message.activity,

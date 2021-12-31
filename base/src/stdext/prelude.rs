@@ -27,8 +27,7 @@
 #[cfg(feature = "twilight-bundled")]
 use crate::discord::model::{
     guild::PartialMember,
-    id::UserId,
-    user::User
+    id::UserId
 };
 
 /// # Trait `OptionExt`
@@ -45,11 +44,10 @@ pub trait OptionExt<'a> {
     /// # Trait Method `OptionExt::as_refstr`
     ///
     /// Maps the inner value (and unwraps the wrapping `Option<T>`)
-    fn map_opt_user_id<F>(&'a self) -> Option<UserId> {
+    fn map_opt_user_id(&'a self) -> Option<UserId> {
         unimplemented!()
     }
 }
-
 
 #[cfg(feature = "twilight-bundled")]
 impl<'a> OptionExt<'a> for Option<PartialMember> {
@@ -57,7 +55,7 @@ impl<'a> OptionExt<'a> for Option<PartialMember> {
         if self.is_none() {
             return None;
         }
-        
+
         let partial_member = self.unwrap();
         partial_member.user.map(|user| user.id)
     }
@@ -68,4 +66,3 @@ impl<'a> OptionExt<'a> for Option<String> {
         self.as_ref().map(|string| &string[..])
     }
 }
-
