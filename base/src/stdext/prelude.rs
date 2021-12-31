@@ -56,7 +56,7 @@ impl<'a> OptionExt<'a> for Option<PartialMember> {
             return None;
         }
 
-        let partial_member = self.unwrap();
+        let partial_member = self.clone().unwrap();
         partial_member.user.map(|user| user.id)
     }
 }
