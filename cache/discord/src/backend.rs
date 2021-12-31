@@ -28,7 +28,7 @@ use crate::repositories::{
         attachment::AttachmentRepository,
         message::sticker::{
             StickerPackRepository,
-            StickerRepository,
+            StickerRepository
         }
     },
     guild::{
