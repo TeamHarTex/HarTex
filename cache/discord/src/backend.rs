@@ -27,8 +27,8 @@ use crate::repositories::{
     channel::{
         attachment::AttachmentRepository,
         message::sticker::{
+            StickerPackRepository,
             StickerRepository,
-            StickerPackRepository
         }
     },
     guild::{
@@ -132,13 +132,13 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// Returns the user repository of the cache.
     fn users(&self) -> Self::UserRepository;
 
-    /// # Trait Method `stickers`
-    ///
-    /// Returns the sticker repository of the cache.
-    fn stickers(&self) -> Self::StickerRepository;
-
     /// # Trait Method `sticker_packs`
     ///
     /// Returns the sticker pack repository of the cache.
     fn sticker_packs(&self) -> Self::StickerPackRepository;
+
+    /// # Trait Method `stickers`
+    ///
+    /// Returns the sticker repository of the cache.
+    fn stickers(&self) -> Self::StickerRepository;
 }

@@ -136,12 +136,12 @@ impl Backend for InMemoryBackend {
         self.repository::<UserEntity>()
     }
 
-    fn stickers(&self) -> Self::StickerRepository {
-        self.repository::<StickerEntity>()
-    }
-
     fn sticker_packs(&self) -> Self::StickerPackRepository {
         self.repository::<StickerPackEntity>()
+    }
+
+    fn stickers(&self) -> Self::StickerRepository {
+        self.repository::<StickerEntity>()
     }
 }
 
@@ -170,6 +170,6 @@ struct InMemoryBackendRef {
     members: DashMap<(GuildId, UserId), MemberEntity>,
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
-    stickers: DashMap<(Option<StickerPackId>, StickerId), StickerEntity>,
-    sticker_packs: DashMap<(StickerPackId, StickerPackSkuId), StickerPackEntity>
+    sticker_packs: DashMap<(StickerPackId, StickerPackSkuId), StickerPackEntity>,
+    stickers: DashMap<(Option<StickerPackId>, StickerId), StickerEntity>
 }

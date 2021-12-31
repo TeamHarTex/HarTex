@@ -75,8 +75,8 @@ use crate::{
         channel::{
             attachment::AttachmentRepository,
             message::sticker::{
-                StickerRepository,
-                StickerPackRepository
+                StickerPackRepository,
+                StickerRepository
             }
         },
         guild::{
@@ -257,9 +257,9 @@ impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
 impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
-impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {}
-
 impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {}
+
+impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {}
 
 impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
     for InMemoryRepository<CurrentUserEntity>
