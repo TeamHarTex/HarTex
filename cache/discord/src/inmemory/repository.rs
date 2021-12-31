@@ -263,7 +263,10 @@ impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {}
 
 impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
-    fn sticker_pack(&self, sticker_id: StickerId) -> GetEntityFuture<'_, StickerPackEntity, InMemoryBackendError> {
+    fn sticker_pack(
+        &self,
+        sticker_id: StickerId
+    ) -> GetEntityFuture<'_, StickerPackEntity, InMemoryBackendError> {
         let backend = (self.0).0.clone();
         let sticker = backend.stickers.get(&sticker_id);
 
@@ -272,14 +275,12 @@ impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
                 let sticker = entry.value().clone();
 
                 match sticker.pack_id() {
-                    Some(pack_id) => {
-                        future::ok(backend
-                            .sticker_packs
-                            .get(&pack_id)
-                            .map(|entry| entry.value().clone())
-                        )
-                        .boxed()
-                    }
+                    Some(pack_id) => future::ok(backend
+                        .sticker_packs
+                        .get(&pack_id)
+                        .map(|entry| entry.value().clone())
+                    )
+                    .boxed(),
                     None => future::ok(None).boxed()
                 }
             }

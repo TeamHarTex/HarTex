@@ -51,5 +51,8 @@ pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {
     /// # Trait Method `sticker_pack`
     ///
     /// Returns the sticker pack associated with this sticker, if any.
-    fn sticker_pack(&self, sticker_id: StickerId) -> GetEntityFuture<'_, StickerPackEntity, B::Error>;
+    fn sticker_pack(
+        &self,
+        sticker_id: StickerId
+    ) -> GetEntityFuture<'_, StickerPackEntity, B::Error>;
 }
