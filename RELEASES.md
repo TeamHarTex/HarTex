@@ -1,3 +1,16 @@
+HarTex 1.26.0 (1 January 2022)
+==============================
+
+Key Changes
+-----------
+- added localization for locale `en_AU`
+- default bot in-guild nickname is now `None` instead of `HarTex`
+- the `guildinfo` command now supports localization
+- updated various translations for current locales
+- removed the documentation from `stable` and `nightly` branches
+- custom build system with `x.py`
+- improved the general code workspace structure
+
 HarTex 1.25.0 (19 December 2021)
 ================================
 
