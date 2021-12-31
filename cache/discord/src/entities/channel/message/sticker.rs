@@ -35,7 +35,7 @@ use hartex_base::{
         id::{
             GuildId,
             UserId
-        },
+        }
     },
     stdext::prelude::*
 };
@@ -43,7 +43,7 @@ use hartex_base::{
 use crate::entity::Entity;
 
 /// # Struct `StickerEntity`
-/// 
+///
 /// A message sticker entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -98,7 +98,9 @@ impl StickerEntity {
     }
 
     #[must_use]
-    pub fn sort_value(&self) -> Option<u64> { self.sort_value }
+    pub fn sort_value(&self) -> Option<u64> {
+        self.sort_value
+    }
 
     #[must_use]
     pub fn tags(&self) -> &str {
