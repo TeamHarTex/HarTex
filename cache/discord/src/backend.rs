@@ -26,7 +26,10 @@
 use crate::repositories::{
     channel::{
         attachment::AttachmentRepository,
-        message::sticker::StickerRepository
+        message::sticker::{
+            StickerRepository,
+            StickerPackRepository
+        }
     },
     guild::{
         emoji::EmojiRepository,
@@ -89,6 +92,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// The repository for sticker entities.
     type StickerRepository: StickerRepository<Self> + Send + Sync;
 
+    /// # Typealias `StickerPackRepository`
+    ///
+    /// The repository for sticker pack entities.
+    type StickerPackRepository: StickerPackRepository<Self> + Send + Sync;
+
     /// # Trait Method `attachments`
     ///
     /// Returns the attachment repository of the cache.
@@ -128,4 +136,9 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the sticker repository of the cache.
     fn stickers(&self) -> Self::StickerRepository;
+
+    /// # Trait Method `sticker_packs`
+    ///
+    /// Returns the sticker pack repository of the cache.
+    fn sticker_packs(&self) -> Self::StickerPackRepository;
 }

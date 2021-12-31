@@ -50,7 +50,10 @@ use crate::{
     entities::{
         channel::{
             attachment::AttachmentEntity,
-            message::sticker::StickerEntity
+            message::sticker::{
+                StickerEntity,
+                StickerPackEntity
+            }
         },
         guild::{
             emoji::EmojiEntity,
@@ -71,7 +74,10 @@ use crate::{
     repositories::{
         channel::{
             attachment::AttachmentRepository,
-            message::sticker::StickerRepository
+            message::sticker::{
+                StickerRepository,
+                StickerPackRepository
+            }
         },
         guild::{
             emoji::EmojiRepository,
@@ -253,6 +259,8 @@ impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
 impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {}
 
+impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {}
+
 impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
     for InMemoryRepository<CurrentUserEntity>
 {
@@ -317,6 +325,12 @@ impl EntityExt for UserEntity {
 impl EntityExt for StickerEntity {
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
         &backend.0.stickers
+    }
+}
+
+impl EntityExt for StickerPackEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.sticker_packs
     }
 }
 

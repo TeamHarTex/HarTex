@@ -201,7 +201,11 @@ impl Entity for StickerPackEntity {
 
 impl From<StickerPack> for StickerPackEntity {
     fn from(sticker_pack: StickerPack) -> Self {
-        let sticker_ids = sticker_pack.stickers.iter().map(|sticker| sticker.id).collect();
+        let sticker_ids = sticker_pack
+            .stickers
+            .iter()
+            .map(|sticker| sticker.id)
+            .collect();
 
         Self {
             banner_asset_id: sticker_pack.banner_asset_id,

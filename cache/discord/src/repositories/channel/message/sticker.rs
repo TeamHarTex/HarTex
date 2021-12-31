@@ -25,7 +25,10 @@
 
 use crate::{
     backend::Backend,
-    entities::channel::message::sticker::StickerEntity,
+    entities::channel::message::sticker::{
+        StickerEntity,
+        StickerPackEntity
+    },
     repository::Repository
 };
 
@@ -34,3 +37,5 @@ use crate::{
 /// A repository containing sticker objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {}
+
+pub trait StickerPackRepository<B: Backend>: Repository<StickerPackEntity, B> {}

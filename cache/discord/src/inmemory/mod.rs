@@ -44,7 +44,8 @@ use dashmap::{
 use hartex_base::discord::model::{
     channel::message::sticker::{
         StickerId,
-        StickerPackId
+        StickerPackId,
+        StickerPackSkuId
     },
     id::{
         AttachmentId,
@@ -61,7 +62,10 @@ use crate::{
     entities::{
         channel::{
             attachment::AttachmentEntity,
-            message::sticker::StickerEntity
+            message::sticker::{
+                StickerEntity,
+                StickerPackEntity
+            }
         },
         guild::{
             emoji::EmojiEntity,
@@ -102,6 +106,7 @@ impl Backend for InMemoryBackend {
     type RoleRepository = InMemoryRepository<RoleEntity>;
     type UserRepository = InMemoryRepository<UserEntity>;
     type StickerRepository = InMemoryRepository<StickerEntity>;
+    type StickerPackRepository = InMemoryRepository<StickerPackEntity>;
 
     fn attachments(&self) -> Self::AttachmentRepository {
         self.repository::<AttachmentEntity>()
@@ -134,6 +139,10 @@ impl Backend for InMemoryBackend {
     fn stickers(&self) -> Self::StickerRepository {
         self.repository::<StickerEntity>()
     }
+
+    fn sticker_packs(&self) -> Self::StickerPackRepository {
+        self.repository::<StickerPackEntity>()
+    }
 }
 
 /// # Struct `InMemoryBackendError`
@@ -161,5 +170,6 @@ struct InMemoryBackendRef {
     members: DashMap<(GuildId, UserId), MemberEntity>,
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
-    stickers: DashMap<(Option<StickerPackId>, StickerId), StickerEntity>
+    stickers: DashMap<(Option<StickerPackId>, StickerId), StickerEntity>,
+    sticker_packs: DashMap<(StickerPackId, StickerPackSkuId), StickerPackEntity>
 }
