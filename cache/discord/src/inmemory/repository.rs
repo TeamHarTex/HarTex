@@ -48,6 +48,7 @@ use hartex_base::discord::model::{
         UserId
     }
 };
+use hartex_base::discord::model::channel::message::sticker::StickerPackId;
 
 use crate::{
     entities::{
@@ -260,7 +261,28 @@ impl RoleRepository<InMemoryBackend> for InMemoryRepository<RoleEntity> {}
 
 impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 
-impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {}
+impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {
+    fn stickers(
+        &self,
+        pack_id: StickerPackId
+    ) -> StreamEntitiesFuture<'_, StickerEntity, InMemoryBackendError> {
+        let sticker_ids = match (self.0).0.sticker_packs.get(&pack_id) {
+            Some(pack) => pack.sticker_ids(),
+            None => return future::ok(stream::empty().boxed()).boxed()
+        };
+
+        let iter = sticker_ids.into_iter().filter_map(move |sticker_id| {
+            (self.0)
+                .0
+                .stickers
+                .get(&sticker_id)
+                .map(|entry| Ok(entry.value().clone()))
+        });
+        let stream = stream::iter(iter);
+
+        future::ok(stream.boxed()).boxed()
+    }
+}
 
 impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
     fn sticker_pack(
@@ -271,9 +293,7 @@ impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
         let sticker = backend.stickers.get(&sticker_id);
 
         match sticker {
-            Some(entry) => {
-                let sticker = entry.value().clone();
-
+            Some(sticker) => {
                 match sticker.pack_id() {
                     Some(pack_id) => future::ok(
                         backend
