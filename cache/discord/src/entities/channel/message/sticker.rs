@@ -27,9 +27,12 @@ use hartex_base::{
     discord::model::{
         channel::message::sticker::{
             Sticker,
+            StickerBannerAssetId,
             StickerFormatType,
             StickerId,
+            StickerPack,
             StickerPackId,
+            StickerPackSkuId,
             StickerType
         },
         id::{
@@ -114,10 +117,10 @@ impl StickerEntity {
 }
 
 impl Entity for StickerEntity {
-    type Id = StickerId;
+    type Id = (Option<StickerPackId>, StickerId);
 
     fn id(&self) -> Self::Id {
-        self.id
+        (self.pack_id, self.id)
     }
 }
 
@@ -137,6 +140,77 @@ impl From<Sticker> for StickerEntity {
             sort_value: sticker.sort_value,
             tags: sticker.tags,
             user_id
+        }
+    }
+}
+
+/// # Struct `StickerEntity`
+///
+/// A sticker pack entity.
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone)]
+pub struct StickerPackEntity {
+    banner_asset_id: Option<StickerBannerAssetId>,
+    cover_sticker_id: Option<StickerId>,
+    description: String,
+    id: StickerPackId,
+    name: String,
+    sku_id: StickerPackSkuId,
+    sticker_ids: Vec<StickerId>
+}
+
+impl StickerPackEntity {
+    #[must_use]
+    pub fn banner_asset_id(&self) -> Option<StickerBannerAssetId> {
+        self.banner_asset_id
+    }
+
+    #[must_use]
+    pub fn cover_sticker_id(&self) -> Option<StickerId> {
+        self.cover_sticker_id
+    }
+
+    #[must_use]
+    pub fn description(&self) -> &str {
+        self.description.as_ref()
+    }
+
+    #[must_use]
+    pub fn name(&self) -> &str {
+        self.name.as_str()
+    }
+
+    #[must_use]
+    pub fn sku_id(&self) -> StickerPackSkuId {
+        self.sku_id
+    }
+
+    #[must_use]
+    pub fn sticker_ids(&self) -> Vec<StickerId> {
+        self.sticker_ids.clone()
+    }
+}
+
+impl Entity for StickerPackEntity {
+    type Id = (StickerPackId, StickerPackSkuId);
+
+    fn id(&self) -> Self::Id {
+        (self.id, self.sku_id)
+    }
+}
+
+impl From<StickerPack> for StickerPackEntity {
+    fn from(sticker_pack: StickerPack) -> Self {
+        let sticker_ids = sticker_pack.stickers.iter().map(|sticker| sticker.id).collect();
+
+        Self {
+            banner_asset_id: sticker_pack.banner_asset_id,
+            cover_sticker_id: sticker_pack.cover_sticker_id,
+            description: sticker_pack.description,
+            id: sticker_pack.id,
+            name: sticker_pack.name,
+            sku_id: sticker_pack.sku_id,
+            sticker_ids
         }
     }
 }

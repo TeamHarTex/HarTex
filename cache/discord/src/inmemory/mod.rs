@@ -42,7 +42,10 @@ use dashmap::{
     DashSet
 };
 use hartex_base::discord::model::{
-    channel::message::sticker::StickerId,
+    channel::message::sticker::{
+        StickerId,
+        StickerPackId
+    },
     id::{
         AttachmentId,
         EmojiId,
@@ -158,5 +161,5 @@ struct InMemoryBackendRef {
     members: DashMap<(GuildId, UserId), MemberEntity>,
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
-    stickers: DashMap<StickerId, StickerEntity>
+    stickers: DashMap<(Option<StickerPackId>, StickerId), StickerEntity>
 }
