@@ -47,9 +47,10 @@ use crate::{
 #[allow(clippy::module_name_repetitions)]
 pub trait StickerPackRepository<B: Backend>: Repository<StickerPackEntity, B> {
     /// # Trait Method `stickers`
-    /// 
+    ///
     /// Returns the stickers in this sticker pack.
-    fn stickers(&self, pack_id: StickerPackId) -> StreamEntitiesFuture<'_, StickerEntity, B::Error>;
+    fn stickers(&self, pack_id: StickerPackId)
+        -> StreamEntitiesFuture<'_, StickerEntity, B::Error>;
 }
 
 /// # Trait `StickerRepository`
