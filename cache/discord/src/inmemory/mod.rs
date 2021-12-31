@@ -44,8 +44,7 @@ use dashmap::{
 use hartex_base::discord::model::{
     channel::message::sticker::{
         StickerId,
-        StickerPackId,
-        StickerPackSkuId
+        StickerPackId
     },
     id::{
         AttachmentId,
