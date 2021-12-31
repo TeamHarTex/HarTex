@@ -32,4 +32,5 @@ use crate::{
 /// # Trait `StickerRepository`
 ///
 /// A repository containing sticker objects.
+#[allow(clippy::module_name_repetitions)]
 pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {}

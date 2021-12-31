@@ -71,37 +71,40 @@ impl StickerEntity {
     pub fn description(&self) -> Option<&str> {
         self.description.as_refstr()
     }
-    
+
     #[must_use]
     pub fn format_type(&self) -> StickerFormatType {
         self.format_type
     }
-    
+
     #[must_use]
     pub fn guild_id(&self) -> Option<GuildId> {
         self.guild_id
     }
-    
+
     #[must_use]
     pub fn kind(&self) -> StickerType {
         self.kind
     }
-    
+
     #[must_use]
     pub fn name(&self) -> &str {
         self.name.as_ref()
     }
-    
+
     #[must_use]
     pub fn pack_id(&self) -> Option<StickerPackId> {
         self.pack_id
     }
-    
+
+    #[must_use]
+    pub fn sort_value(&self) -> Option<u64> { self.sort_value }
+
     #[must_use]
     pub fn tags(&self) -> &str {
         self.tags.as_ref()
     }
-    
+
     #[must_use]
     pub fn user_id(&self) -> Option<UserId> {
         self.user_id
