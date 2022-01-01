@@ -26,6 +26,7 @@
 
 #[cfg(feature = "twilight-bundled")]
 use crate::discord::model::{
+    channel::thread::ThreadMember,
     guild::PartialMember,
     id::UserId
 };
@@ -58,6 +59,18 @@ impl<'a> OptionExt<'a> for Option<PartialMember> {
 
         let partial_member = self.clone().unwrap();
         partial_member.user.map(|user| user.id)
+    }
+}
+
+#[cfg(feature = "twilight-bundled")]
+impl<'a> OptionExt<'a> for Option<ThreadMember> {
+    fn map_opt_user_id(&'a self) -> Option<UserId> {
+        if self.is_none() {
+            return None;
+        }
+
+        let partial_member = self.clone().unwrap();
+        partial_member.user_id
     }
 }
 

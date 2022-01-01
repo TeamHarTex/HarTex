@@ -51,6 +51,7 @@ use crate::entity::Entity;
 
 pub mod attachment;
 pub mod message;
+pub mod thread;
 
 /// # Struct `ChannelEntity`
 ///
