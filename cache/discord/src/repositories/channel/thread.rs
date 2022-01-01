@@ -29,4 +29,8 @@ use crate::{
     repository::Repository
 };
 
+/// # Trait `ThreadRepository`
+///
+/// A repository containing thread objects.
+#[allow(clippy::module_name_repetitions)]
 pub trait ThreadRepository<B: Backend>: Repository<ThreadEntity, B> {}
