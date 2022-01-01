@@ -1,3 +1,10 @@
+HarTex 1.26.1 (1 January 2022)
+==============================
+
+Key Changes
+-----------
+- added minimum supported Python version for the `x.py` build system
+
 HarTex 1.26.0 (1 January 2022)
 ==============================
 
