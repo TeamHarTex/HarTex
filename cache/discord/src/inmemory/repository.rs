@@ -63,6 +63,7 @@ use crate::{
                 },
                 MessageEntity
             },
+            thread::ThreadEntity,
             ChannelEntity
         },
         guild::{
@@ -91,6 +92,7 @@ use crate::{
                 },
                 MessageRepository
             },
+            thread::ThreadRepository,
             ChannelRepository
         },
         guild::{
@@ -322,6 +324,8 @@ impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
     }
 }
 
+impl ThreadRepository<InMemoryBackend> for InMemoryRepository<ThreadEntity> {}
+
 impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
     for InMemoryRepository<CurrentUserEntity>
 {
@@ -404,6 +408,12 @@ impl EntityExt for StickerEntity {
 impl EntityExt for StickerPackEntity {
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
         &backend.0.sticker_packs
+    }
+}
+
+impl EntityExt for ThreadEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.threads
     }
 }
 

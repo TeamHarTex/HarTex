@@ -33,6 +33,7 @@ use crate::repositories::{
             },
             MessageRepository
         },
+        thread::ThreadRepository,
         ChannelRepository
     },
     guild::{
@@ -111,6 +112,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// The repository for sticker pack entities.
     type StickerPackRepository: StickerPackRepository<Self> + Send + Sync;
 
+    /// # Typealias `ThreadRepository`
+    ///
+    /// The repository for thread entities.
+    type ThreadRepository: ThreadRepository<Self> + Send + Sync;
+
     /// # Trait Method `attachments`
     ///
     /// Returns the attachment repository of the cache.
@@ -165,4 +171,9 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the sticker repository of the cache.
     fn stickers(&self) -> Self::StickerRepository;
+
+    /// # Trait Method `threads`
+    ///
+    /// Returns the thread repository of the cache.
+    fn threads(&self) -> Self::ThreadRepository;
 }

@@ -69,6 +69,7 @@ use crate::{
                 },
                 MessageEntity
             },
+            thread::ThreadEntity,
             ChannelEntity
         },
         guild::{
@@ -113,6 +114,7 @@ impl Backend for InMemoryBackend {
     type UserRepository = InMemoryRepository<UserEntity>;
     type StickerRepository = InMemoryRepository<StickerEntity>;
     type StickerPackRepository = InMemoryRepository<StickerPackEntity>;
+    type ThreadRepository = InMemoryRepository<ThreadEntity>;
 
     fn attachments(&self) -> Self::AttachmentRepository {
         self.repository::<AttachmentEntity>()
@@ -157,6 +159,10 @@ impl Backend for InMemoryBackend {
     fn stickers(&self) -> Self::StickerRepository {
         self.repository::<StickerEntity>()
     }
+
+    fn threads(&self) -> Self::ThreadRepository {
+        self.repository::<ThreadEntity>()
+    }
 }
 
 /// # Struct `InMemoryBackendError`
@@ -187,5 +193,6 @@ struct InMemoryBackendRef {
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
     sticker_packs: DashMap<StickerPackId, StickerPackEntity>,
-    stickers: DashMap<StickerId, StickerEntity>
+    stickers: DashMap<StickerId, StickerEntity>,
+    threads: DashMap<ChannelId, ThreadEntity>
 }

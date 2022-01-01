@@ -19,22 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `channel` Module
+//! # The `thread` Module
 //!
-//! This module contains repositories related to Discord channels.
+//! This module contains the thread repository trait.
 
 use crate::{
     backend::Backend,
-    entities::channel::ChannelEntity,
+    entities::channel::thread::ThreadEntity,
     repository::Repository
 };
 
-pub mod attachment;
-pub mod message;
-pub mod thread;
-
-/// # Trait `AttachmentRepository`
-///
-/// A repository containing channel objects.
-#[allow(clippy::module_name_repetitions)]
-pub trait ChannelRepository<B: Backend>: Repository<ChannelEntity, B> {}
+pub trait ThreadRepository<B: Backend>: Repository<ThreadEntity, B> {}
