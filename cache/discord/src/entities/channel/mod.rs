@@ -31,8 +31,8 @@ use hartex_base::discord::model::{
         Group,
         PrivateChannel,
         TextChannel,
-        VoiceChannel,
-        VideoQualityMode
+        VideoQualityMode,
+        VoiceChannel
     },
     datetime::Timestamp,
     id::{
