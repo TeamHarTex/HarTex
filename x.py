@@ -28,7 +28,7 @@ import sys
 
 
 class HarTexBranch:
-    STABLE = {"string": "stable", "stable": "true", "version": "1.26.0"}
+    STABLE = {"string": "stable", "stable": "true", "version": "1.26.1"}
     NIGHTLY = {"string": "nightly", "stable": "false", "version": "1.27.0"}
 
 
@@ -87,5 +87,8 @@ def main():
 
     print("done")
 
+
+if sys.version_info[0] < 3 or sys.version_info[1] < 10:
+    sys.exit("Python version 3.10.0 or above is required to run this script.")
 
 main()
