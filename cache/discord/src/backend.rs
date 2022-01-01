@@ -32,7 +32,8 @@ use crate::repositories::{
                 StickerRepository
             },
             MessageRepository
-        }
+        },
+        ChannelRepository
     },
     guild::{
         emoji::EmojiRepository,
@@ -59,6 +60,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// The repository for attachment entities.
     type AttachmentRepository: AttachmentRepository<Self> + Send + Sync;
+
+    /// # Typealias `ChannelRepository`
+    ///
+    /// The repository for channel entities.
+    type ChannelRepository: ChannelRepository<Self> + Send + Sync;
 
     /// # Typealias `CurrentUserRepository`
     ///
@@ -109,6 +115,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the attachment repository of the cache.
     fn attachments(&self) -> Self::AttachmentRepository;
+
+    /// # Trait Method `channels`
+    ///
+    /// Returns the channel repository of the cache.
+    fn channels(&self) -> Self::ChannelRepository;
 
     /// # Trait Method `current_user`
     ///

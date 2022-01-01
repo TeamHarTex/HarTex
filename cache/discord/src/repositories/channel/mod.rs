@@ -23,5 +23,17 @@
 //!
 //! This module contains repositories related to Discord channels.
 
+use crate::{
+    backend::Backend,
+    entities::channel::ChannelEntity,
+    repository::Repository
+};
+
 pub mod attachment;
 pub mod message;
+
+/// # Trait `AttachmentRepository`
+///
+/// A repository containing channel objects.
+#[allow(clippy::module_name_repetitions)]
+pub trait ChannelRepository<B: Backend>: Repository<ChannelEntity, B> {}

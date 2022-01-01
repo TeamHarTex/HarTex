@@ -48,6 +48,7 @@ use hartex_base::discord::model::{
     },
     id::{
         AttachmentId,
+        ChannelId,
         EmojiId,
         GuildId,
         MessageId,
@@ -67,7 +68,8 @@ use crate::{
                     StickerPackEntity
                 },
                 MessageEntity
-            }
+            },
+            ChannelEntity
         },
         guild::{
             emoji::EmojiEntity,
@@ -101,6 +103,7 @@ impl InMemoryBackend {
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
     type AttachmentRepository = InMemoryRepository<AttachmentEntity>;
+    type ChannelRepository = InMemoryRepository<ChannelEntity>;
     type CurrentUserRepository = InMemoryRepository<CurrentUserEntity>;
     type EmojiRepository = InMemoryRepository<EmojiEntity>;
     type GuildRepository = InMemoryRepository<GuildEntity>;
@@ -113,6 +116,10 @@ impl Backend for InMemoryBackend {
 
     fn attachments(&self) -> Self::AttachmentRepository {
         self.repository::<AttachmentEntity>()
+    }
+
+    fn channels(&self) -> Self::ChannelRepository {
+        self.repository::<ChannelEntity>()
     }
 
     fn current_user(&self) -> Self::CurrentUserRepository {
@@ -168,6 +175,7 @@ impl Error for InMemoryBackendError {}
 
 struct InMemoryBackendRef {
     attachments: DashMap<(MessageId, AttachmentId), AttachmentEntity>,
+    channels: DashMap<ChannelId, ChannelEntity>,
     current_user: Mutex<Option<CurrentUserEntity>>,
     emojis: DashMap<EmojiId, EmojiEntity>,
     guilds: DashMap<GuildId, GuildEntity>,

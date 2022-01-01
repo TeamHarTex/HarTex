@@ -62,7 +62,8 @@ use crate::{
                     StickerPackEntity
                 },
                 MessageEntity
-            }
+            },
+            ChannelEntity
         },
         guild::{
             emoji::EmojiEntity,
@@ -89,7 +90,8 @@ use crate::{
                     StickerRepository
                 },
                 MessageRepository
-            }
+            },
+            ChannelRepository
         },
         guild::{
             emoji::EmojiRepository,
@@ -133,6 +135,8 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
 }
 
 impl AttachmentRepository<InMemoryBackend> for InMemoryRepository<AttachmentEntity> {}
+
+impl ChannelRepository<InMemoryBackend> for InMemoryRepository<ChannelEntity> {}
 
 impl CurrentUserRepository<InMemoryBackend> for InMemoryRepository<CurrentUserEntity> {}
 
@@ -346,6 +350,12 @@ pub trait EntityExt: Clone + Entity {
 impl EntityExt for AttachmentEntity {
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
         &backend.0.attachments
+    }
+}
+
+impl EntityExt for ChannelEntity {
+    fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self> {
+        &backend.0.channels
     }
 }
 
