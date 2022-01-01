@@ -121,7 +121,7 @@ impl From<CategoryChannel> for ChannelEntity {
             name: Some(category_channel.name),
             permission_overwrites: Some(category_channel.permission_overwrites),
             position: Some(category_channel.position),
-            ..Default::default()
+            ..Self::default()
         }
     }
 }
@@ -140,7 +140,7 @@ impl From<Group> for ChannelEntity {
             name: group.name,
             owner_id: Some(group.owner_id),
             recipient_ids,
-            ..Default::default()
+            ..Self::default()
         }
     }
 }
@@ -161,7 +161,7 @@ impl From<PrivateChannel> for ChannelEntity {
             last_pin_timestamp: private_channel.last_pin_timestamp,
             kind: private_channel.kind,
             recipient_ids,
-            ..Default::default()
+            ..Self::default()
         }
     }
 }
@@ -181,7 +181,7 @@ impl From<TextChannel> for ChannelEntity {
             position: Some(text_channel.position),
             rate_limit_per_user: text_channel.rate_limit_per_user,
             topic: text_channel.topic,
-            ..Default::default()
+            ..Self::default()
         }
     }
 }
@@ -200,7 +200,7 @@ impl From<VoiceChannel> for ChannelEntity {
             rtc_region: voice_channel.rtc_region,
             user_limit: voice_channel.user_limit,
             video_quality_mode: voice_channel.video_quality_mode,
-            ..Default::default()
+            ..Self::default()
         }
     }
 }
