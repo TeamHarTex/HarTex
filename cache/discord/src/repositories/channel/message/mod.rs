@@ -23,4 +23,16 @@
 //!
 //! This module contains repositories related to Discord channel messages.
 
+use crate::{
+    backend::Backend,
+    entities::channel::message::MessageEntity,
+    repository::Repository
+};
+
 pub mod sticker;
+
+/// # Trait `MessageRepository`
+///
+/// A repository containing message objects.
+#[allow(clippy::module_name_repetitions)]
+pub trait MessageRepository<B: Backend>: Repository<MessageEntity, B> {}

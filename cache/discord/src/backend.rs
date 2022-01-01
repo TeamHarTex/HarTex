@@ -26,9 +26,12 @@
 use crate::repositories::{
     channel::{
         attachment::AttachmentRepository,
-        message::sticker::{
-            StickerPackRepository,
-            StickerRepository
+        message::{
+            sticker::{
+                StickerPackRepository,
+                StickerRepository
+            },
+            MessageRepository
         }
     },
     guild::{
@@ -77,6 +80,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     /// The repository for member entities.
     type MemberRepository: MemberRepository<Self> + Send + Sync;
 
+    /// # Typealias `MessageRepository`
+    ///
+    /// The repository for message entities.
+    type MessageRepository: MessageRepository<Self> + Send + Sync;
+
     /// # Typealias `RoleRepository`
     ///
     /// The repository for guild roles entities.
@@ -121,6 +129,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the member repository of the cache.
     fn members(&self) -> Self::MemberRepository;
+
+    /// # Trait Method `messages`
+    ///
+    /// Returns the message repository of the cache.
+    fn messages(&self) -> Self::MessageRepository;
 
     /// # Trait Method `roles`
     ///

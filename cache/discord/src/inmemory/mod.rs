@@ -61,9 +61,12 @@ use crate::{
     entities::{
         channel::{
             attachment::AttachmentEntity,
-            message::sticker::{
-                StickerEntity,
-                StickerPackEntity
+            message::{
+                sticker::{
+                    StickerEntity,
+                    StickerPackEntity
+                },
+                MessageEntity
             }
         },
         guild::{
@@ -102,6 +105,7 @@ impl Backend for InMemoryBackend {
     type EmojiRepository = InMemoryRepository<EmojiEntity>;
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type MemberRepository = InMemoryRepository<MemberEntity>;
+    type MessageRepository = InMemoryRepository<MessageEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
     type UserRepository = InMemoryRepository<UserEntity>;
     type StickerRepository = InMemoryRepository<StickerEntity>;
@@ -125,6 +129,10 @@ impl Backend for InMemoryBackend {
 
     fn members(&self) -> Self::MemberRepository {
         self.repository::<MemberEntity>()
+    }
+
+    fn messages(&self) -> Self::MessageRepository {
+        self.repository::<MessageEntity>()
     }
 
     fn roles(&self) -> Self::RoleRepository {
@@ -167,6 +175,7 @@ struct InMemoryBackendRef {
     guild_members: DashMap<GuildId, DashSet<UserId>>,
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,
     members: DashMap<(GuildId, UserId), MemberEntity>,
+    messages: DashMap<MessageId, MessageEntity>,
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
     sticker_packs: DashMap<StickerPackId, StickerPackEntity>,
