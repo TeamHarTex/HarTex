@@ -23,25 +23,28 @@
 //!
 //! This module contains entities related to Discord channels.
 
-use hartex_base::discord::model::{
-    channel::{
-        permission_overwrite::PermissionOverwrite,
-        CategoryChannel,
-        ChannelType,
-        Group,
-        PrivateChannel,
-        TextChannel,
-        VideoQualityMode,
-        VoiceChannel
+use hartex_base::{
+    discord::model::{
+        channel::{
+            permission_overwrite::PermissionOverwrite,
+            CategoryChannel,
+            ChannelType,
+            Group,
+            PrivateChannel,
+            TextChannel,
+            VideoQualityMode,
+            VoiceChannel
+        },
+        datetime::Timestamp,
+        id::{
+            ApplicationId,
+            ChannelId,
+            GuildId,
+            MessageId,
+            UserId
+        }
     },
-    datetime::Timestamp,
-    id::{
-        ApplicationId,
-        ChannelId,
-        GuildId,
-        MessageId,
-        UserId
-    }
+    stdext::prelude::*
 };
 
 use crate::entity::Entity;
@@ -75,6 +78,103 @@ pub struct ChannelEntity {
     topic: Option<String>,
     user_limit: Option<u64>,
     video_quality_mode: Option<VideoQualityMode>
+}
+
+impl ChannelEntity {
+    #[must_use]
+    pub fn application_id(&self) -> Option<ApplicationId> {
+        self.application_id
+    }
+
+    #[must_use]
+    pub fn bitrate(&self) -> Option<u64> {
+        self.bitrate
+    }
+
+    #[must_use]
+    pub fn guild_id(&self) -> Option<GuildId> {
+        self.guild_id
+    }
+
+    #[must_use]
+    pub fn icon(&self) -> Option<&str> {
+        self.icon.as_refstr()
+    }
+
+    #[must_use]
+    pub fn kind(&self) -> ChannelType {
+        self.kind
+    }
+
+    #[must_use]
+    pub fn last_message_id(&self) -> Option<MessageId> {
+        self.last_message_id
+    }
+
+    #[must_use]
+    pub fn last_pin_timestamp(&self) -> Option<Timestamp> {
+        self.last_pin_timestamp
+    }
+
+    #[must_use]
+    pub fn name(&self) -> Option<&str> {
+        self.name.as_refstr()
+    }
+
+    #[must_use]
+    pub fn nsfw(&self) -> Option<bool> {
+        self.nsfw
+    }
+
+    #[must_use]
+    pub fn owner_id(&self) -> Option<UserId> {
+        self.owner_id
+    }
+
+    #[must_use]
+    pub fn parent_id(&self) -> Option<ChannelId> {
+        self.parent_id
+    }
+
+    #[must_use]
+    pub fn permission_overwrites(&self) -> Option<Vec<PermissionOverwrite>> {
+        self.permission_overwrites.clone()
+    }
+
+    #[must_use]
+    pub fn position(&self) -> Option<i64> {
+        self.position
+    }
+
+    #[must_use]
+    pub fn rate_limit_per_user(&self) -> Option<u64> {
+        self.rate_limit_per_user
+    }
+
+    #[must_use]
+    pub fn recipient_ids(&self) -> Option<Vec<UserId>> {
+        self.recipient_ids.clone()
+    }
+
+    #[must_use]
+    pub fn rtc_region(&self) -> Option<&str> {
+        self.rtc_region.as_refstr()
+    }
+
+    #[must_use]
+    pub fn topic(&self) -> Option<&str> {
+        self.topic.as_refstr()
+    }
+
+    #[must_use]
+    pub fn user_limit(&self) -> Option<u64> {
+        self.user_limit
+    }
+
+    #[must_use]
+    pub fn video_quality_mode(&self) -> Option<VideoQualityMode> {
+        self.video_quality_mode
+    }
 }
 
 impl Default for ChannelEntity {
