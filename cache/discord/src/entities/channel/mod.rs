@@ -25,6 +25,7 @@
 
 use hartex_base::discord::model::{
     channel::{
+        permission_overwrite::PermissionOverwrite,
         thread::{
             AutoArchiveDuration,
             NewsThread,
@@ -32,7 +33,6 @@ use hartex_base::discord::model::{
             PublicThread,
             ThreadMetadata
         },
-        permission_overwrite::PermissionOverwrite,
         CategoryChannel,
         ChannelType,
         Group,
