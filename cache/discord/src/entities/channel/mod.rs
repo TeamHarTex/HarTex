@@ -77,6 +77,33 @@ pub struct ChannelEntity {
     video_quality_mode: Option<VideoQualityMode>
 }
 
+impl Default for ChannelEntity {
+    fn default() -> Self {
+        Self {
+            application_id: None,
+            bitrate: None,
+            guild_id: None,
+            icon: None,
+            id: ChannelId::new(1).expect("non zero"),
+            kind: ChannelType::Group,
+            last_message_id: None,
+            last_pin_timestamp: None,
+            name: None,
+            nsfw: None,
+            owner_id: None,
+            parent_id: None,
+            permission_overwrites: None,
+            position: None,
+            rate_limit_per_user: None,
+            recipient_ids: None,
+            rtc_region: None,
+            topic: None,
+            user_limit: None,
+            video_quality_mode: None
+        }
+    }
+}
+
 impl Entity for ChannelEntity {
     type Id = ChannelId;
 
