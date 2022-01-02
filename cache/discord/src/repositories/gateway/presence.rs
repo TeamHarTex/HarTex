@@ -19,11 +19,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `repositories` Module
+//! # The `presence` Module
 //!
-//! This module contains various repositories in the Discord cache.
+//! This module contains the gateway presence repository trait.
 
-pub mod channel;
-pub mod gateway;
-pub mod guild;
-pub mod user;
+use crate::{
+    backend::Backend,
+    entities::gateway::presence::PresenceEntity,
+    repository::Repository
+};
+
+/// # Trait `PresenceRepository`
+///
+/// A repository containing presence objects.
+pub trait PresenceRepository<B: Backend>: Repository<PresenceEntity, B> {}

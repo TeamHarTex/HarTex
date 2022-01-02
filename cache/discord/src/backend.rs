@@ -36,6 +36,7 @@ use crate::repositories::{
         thread::ThreadRepository,
         ChannelRepository
     },
+    gateway::presence::PresenceRepository,
     guild::{
         emoji::EmojiRepository,
         member::MemberRepository,
@@ -91,6 +92,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// The repository for message entities.
     type MessageRepository: MessageRepository<Self> + Send + Sync;
+
+    /// # Typealias `PresenceRepository`
+    ///
+    /// The repository for presence entities.
+    type PresenceRepository: PresenceRepository<Self> + Send + Sync;
 
     /// # Typealias `RoleRepository`
     ///
@@ -151,6 +157,11 @@ pub trait Backend: Send + Sized + Sync + 'static {
     ///
     /// Returns the message repository of the cache.
     fn messages(&self) -> Self::MessageRepository;
+
+    /// # Trait Method `presences`
+    ///
+    /// Returns the presence repository of the cache.
+    fn presences(&self) -> Self::PresenceRepository;
 
     /// # Trait Method `roles`
     ///

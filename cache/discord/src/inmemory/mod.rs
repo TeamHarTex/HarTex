@@ -72,6 +72,7 @@ use crate::{
             thread::ThreadEntity,
             ChannelEntity
         },
+        gateway::presence::PresenceEntity,
         guild::{
             emoji::EmojiEntity,
             member::MemberEntity,
@@ -110,6 +111,7 @@ impl Backend for InMemoryBackend {
     type GuildRepository = InMemoryRepository<GuildEntity>;
     type MemberRepository = InMemoryRepository<MemberEntity>;
     type MessageRepository = InMemoryRepository<MessageEntity>;
+    type PresenceRepository = InMemoryRepository<PresenceEntity>;
     type RoleRepository = InMemoryRepository<RoleEntity>;
     type UserRepository = InMemoryRepository<UserEntity>;
     type StickerRepository = InMemoryRepository<StickerEntity>;
@@ -144,6 +146,10 @@ impl Backend for InMemoryBackend {
         self.repository::<MessageEntity>()
     }
 
+    fn presences(&self) -> Self::PresenceRepository {
+        self.repository::<PresenceEntity>()
+    }
+    
     fn roles(&self) -> Self::RoleRepository {
         self.repository::<RoleEntity>()
     }
@@ -190,6 +196,7 @@ struct InMemoryBackendRef {
     guild_roles: DashMap<GuildId, DashSet<RoleId>>,
     members: DashMap<(GuildId, UserId), MemberEntity>,
     messages: DashMap<MessageId, MessageEntity>,
+    presences: DashMap<(GuildId, UserId), PresenceEntity>,
     roles: DashMap<RoleId, RoleEntity>,
     users: DashMap<UserId, UserEntity>,
     sticker_packs: DashMap<StickerPackId, StickerPackEntity>,
