@@ -66,9 +66,6 @@ impl RoleEntity {
     }
 
     #[must_use]
-    /// # Instance Method `guild_id`
-    ///
-    /// Returns the ID of the guild this role is associated to.
     pub fn guild_id(&self) -> GuildId {
         self.guild_id
     }

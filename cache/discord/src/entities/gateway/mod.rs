@@ -22,3 +22,5 @@
 //! # The `gateway` Module
 //!
 //! This module contains entities related to Discord gateway.
+
+pub mod presence;
