@@ -63,7 +63,7 @@ impl EmojiEntity {
     pub fn available(&self) -> bool {
         self.available
     }
-    
+
     #[must_use]
     pub fn guild_id(&self) -> GuildId {
         self.guild_id
