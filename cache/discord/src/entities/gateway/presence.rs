@@ -89,6 +89,7 @@ impl Entity for PresenceEntity {
 
 impl From<Presence> for PresenceEntity {
     fn from(presence: Presence) -> Self {
+        #[rustfmt::skip]
         let user_id = match presence.user {
             UserOrId::User(user) => user.id,
             UserOrId::UserId { id } => id
