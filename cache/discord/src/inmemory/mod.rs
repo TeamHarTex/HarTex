@@ -149,7 +149,7 @@ impl Backend for InMemoryBackend {
     fn presences(&self) -> Self::PresenceRepository {
         self.repository::<PresenceEntity>()
     }
-    
+
     fn roles(&self) -> Self::RoleRepository {
         self.repository::<RoleEntity>()
     }
