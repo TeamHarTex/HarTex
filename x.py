@@ -14,7 +14,7 @@ the Free Software Foundation; either version 3 of the License, or
 HarTex is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along
 with HarTex. If not, see <https://www.gnu.org/licenses/>.
@@ -28,7 +28,7 @@ import sys
 
 
 class HarTexBranch:
-    STABLE = {"string": "stable", "stable": "true", "version": "1.26.0"}
+    STABLE = {"string": "stable", "stable": "true", "version": "1.26.1"}
     NIGHTLY = {"string": "nightly", "stable": "false", "version": "1.27.0"}
 
 
@@ -87,5 +87,8 @@ def main():
 
     print("done")
 
+
+if sys.version_info[0] < 3 or sys.version_info[1] < 10:
+    sys.exit("Python version 3.10.0 or above is required to run this script.")
 
 main()
