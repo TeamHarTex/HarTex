@@ -32,4 +32,5 @@ use crate::{
 /// # Trait `PresenceRepository`
 ///
 /// A repository containing presence objects.
+#[allow(clippy::module_name_repetitions)]
 pub trait PresenceRepository<B: Backend>: Repository<PresenceEntity, B> {}
