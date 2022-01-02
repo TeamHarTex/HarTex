@@ -19,18 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `emoji` Module
+//! # The `gateway` Module
 //!
-//! This module contains the guild emoji repository trait.
-
-use crate::{
-    backend::Backend,
-    entities::guild::emoji::EmojiEntity,
-    repository::Repository
-};
-
-/// # Trait `EmojiRepository`
-///
-/// A repository containing emoji objects.
-#[allow(clippy::module_name_repetitions)]
-pub trait EmojiRepository<B: Backend>: Repository<EmojiEntity, B> {}
+//! This module contains entities related to Discord gateway.
