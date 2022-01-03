@@ -48,6 +48,11 @@ pub trait Repository<E: Entity, B: Backend> {
     ///
     /// Retrieves an entity from the cache by its id.
     fn entity(&self, id: E::Id) -> GetEntityFuture<E, B::Error>;
+
+    /// # Trait Method `upsert`
+    ///
+    /// Upserts an entity into the cache.
+    fn upsert(&self, entity: E) -> UpsertEntityFuture<'_, B::Error>;
 }
 
 /// # Trait `SingleEntityRepository`
@@ -88,8 +93,13 @@ pub type StreamEntitiesFuture<'a, T, E> =
 /// Typealias for a stream of entity ids.
 pub type EntityIdStream<'a, Id, E> = Pin<Box<dyn Stream<Item = Result<Id, E>> + Send + 'a>>;
 
-/// # Typealias `StreamEntitiyIdsFuture`
+/// # Typealias `StreamEntityIdsFuture`
 ///
 /// Typealias for a future to stream (retrieve a series of) entities from the cache.
 pub type StreamEntityIdsFuture<'a, Id, E> =
     Pin<Box<dyn Future<Output = Result<EntityIdStream<'a, Id, E>, E>> + Send + 'a>>;
+
+/// # Typealias `UpsertEntityFuture`
+///
+/// Typealias for a future to upsert an entity into the cache.
+pub type UpsertEntityFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;

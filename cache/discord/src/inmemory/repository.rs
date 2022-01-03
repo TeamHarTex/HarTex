@@ -113,7 +113,8 @@ use crate::{
         Repository,
         SingleEntityRepository,
         StreamEntitiesFuture,
-        StreamEntityIdsFuture
+        StreamEntityIdsFuture,
+        UpsertEntityFuture
     }
 };
 
@@ -135,6 +136,12 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
                 .map(|entry| entry.value().clone())
         )
         .boxed()
+    }
+
+    fn upsert(&self, entity: E) -> UpsertEntityFuture<'_, InMemoryBackendError> {
+        E::repository(&self.0).insert(entity.id(), entity);
+
+        future::ok(()).boxed()
     }
 }
 
