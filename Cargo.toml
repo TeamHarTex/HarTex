@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "hartex",
+    "cache/discord",
     "cmdsys",
     "conftoml",
     "base",

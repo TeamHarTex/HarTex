@@ -24,6 +24,13 @@
 //! This module contains useful preludes for various types exported in the prelude of the Rust
 //! Standard Library.
 
+#[cfg(feature = "twilight-bundled")]
+use crate::discord::model::{
+    channel::thread::ThreadMember,
+    guild::PartialMember,
+    id::UserId
+};
+
 /// # Trait `OptionExt`
 ///
 /// Extensions for `Option<T>` in the Rust Standard Library.
@@ -33,6 +40,37 @@ pub trait OptionExt<'a> {
     /// Converts the inner `String` of an `Option<T>` into a `&str`.
     fn as_refstr(&'a self) -> Option<&'a str> {
         None
+    }
+
+    /// # Trait Method `OptionExt::as_refstr`
+    ///
+    /// Maps the inner value (and unwraps the wrapping `Option<T>`)
+    fn map_opt_user_id(&'a self) -> Option<UserId> {
+        unimplemented!()
+    }
+}
+
+#[cfg(feature = "twilight-bundled")]
+impl<'a> OptionExt<'a> for Option<PartialMember> {
+    fn map_opt_user_id(&'a self) -> Option<UserId> {
+        if self.is_none() {
+            return None;
+        }
+
+        let partial_member = self.clone().unwrap();
+        partial_member.user.map(|user| user.id)
+    }
+}
+
+#[cfg(feature = "twilight-bundled")]
+impl<'a> OptionExt<'a> for Option<ThreadMember> {
+    fn map_opt_user_id(&'a self) -> Option<UserId> {
+        if self.is_none() {
+            return None;
+        }
+
+        let partial_member = self.clone().unwrap();
+        partial_member.user_id
     }
 }
 
