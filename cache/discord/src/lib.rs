@@ -29,12 +29,10 @@
 mod backend;
 mod cache;
 pub mod entities;
-mod entity;
 #[cfg(feature = "in-memory-backend")]
 pub mod inmemory;
 pub mod relations;
 pub mod repositories;
-mod repository;
 
 use cache::DiscordCache;
 
