@@ -23,6 +23,8 @@
 //!
 //! This module contains a base backend trait for different cache backends.
 
+use hartex_cache_base::backend::Backend;
+
 use crate::repositories::{
     channel::{
         attachment::AttachmentRepository,
@@ -52,12 +54,7 @@ use crate::repositories::{
 /// # Trait `Backend`
 ///
 /// A base trait for different cache backends (in-memory, database, redis, etc).
-pub trait Backend: Send + Sized + Sync + 'static {
-    /// # Typealias `Error`
-    ///
-    /// The backend error type.
-    type Error: Send + 'static;
-
+pub trait DiscordBackend: Backend + Send + Sized + Sync + 'static {
     /// # Typealias `AttachmentRepository`
     ///
     /// The repository for attachment entities.

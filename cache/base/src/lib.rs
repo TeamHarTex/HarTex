@@ -19,21 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `message` Module
+//! # `hartex_cache_base` - Base Caching Framework
 //!
-//! This module contains repositories related to Discord channel messages.
+//! This crate implements a base framework for caching.
 
-use hartex_cache_base::repository::Repository;
+#![deny(clippy::pedantic, warnings)]
+#![forbid(unsafe_code)]
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::message::MessageEntity
-};
-
-pub mod sticker;
-
-/// # Trait `MessageRepository`
-///
-/// A repository containing message objects.
-#[allow(clippy::module_name_repetitions)]
-pub trait MessageRepository<B: DiscordBackend>: Repository<MessageEntity, B> {}
+pub mod backend;
+pub mod entity;
+pub mod repository;

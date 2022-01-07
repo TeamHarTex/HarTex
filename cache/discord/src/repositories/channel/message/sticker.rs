@@ -27,17 +27,17 @@ use hartex_base::discord::model::channel::message::sticker::{
     StickerId,
     StickerPackId
 };
+use hartex_cache_base::repository::{
+    GetEntityFuture,
+    Repository,
+    StreamEntitiesFuture
+};
 
 use crate::{
-    backend::Backend,
+    backend::DiscordBackend,
     entities::channel::message::sticker::{
         StickerEntity,
         StickerPackEntity
-    },
-    repository::{
-        GetEntityFuture,
-        Repository,
-        StreamEntitiesFuture
     }
 };
 
@@ -45,7 +45,7 @@ use crate::{
 ///
 /// A repository containing sticker pack objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait StickerPackRepository<B: Backend>: Repository<StickerPackEntity, B> {
+pub trait StickerPackRepository<B: DiscordBackend>: Repository<StickerPackEntity, B> {
     /// # Trait Method `stickers`
     ///
     /// Returns the stickers in this sticker pack.

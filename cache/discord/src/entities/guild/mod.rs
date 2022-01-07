@@ -48,8 +48,7 @@ use hartex_base::{
     },
     stdext::prelude::*
 };
-
-use crate::entity::Entity;
+use hartex_cache_base::entity::Entity;
 
 pub mod emoji;
 pub mod member;

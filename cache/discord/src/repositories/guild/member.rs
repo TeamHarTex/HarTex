@@ -27,9 +27,14 @@ use hartex_base::discord::model::id::{
     GuildId,
     UserId
 };
+use hartex_cache_base::repository::{
+    GetEntityFuture,
+    Repository,
+    StreamEntitiesFuture
+};
 
 use crate::{
-    backend::Backend,
+    backend::DiscordBackend,
     entities::{
         guild::{
             member::MemberEntity,
@@ -37,19 +42,14 @@ use crate::{
         },
         user::UserEntity
     },
-    relations,
-    repository::{
-        GetEntityFuture,
-        Repository,
-        StreamEntitiesFuture
-    }
+    relations
 };
 
 /// # Trait `MemberRepository`
 ///
 /// A repository containing member objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {
+pub trait MemberRepository<B: DiscordBackend>: Repository<MemberEntity, B> {
     /// # Trait Method `roles`
     ///
     /// Returns a stream of roles of a member.

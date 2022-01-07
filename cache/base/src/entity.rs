@@ -19,21 +19,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `message` Module
+//! # The `entity` Module
 //!
-//! This module contains repositories related to Discord channel messages.
+//! This module contains a base entity trait for different cache entities.
 
-use hartex_cache_base::repository::Repository;
+use std::hash::Hash;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::message::MessageEntity
-};
-
-pub mod sticker;
-
-/// # Trait `MessageRepository`
+/// Trait `Entity`
 ///
-/// A repository containing message objects.
-#[allow(clippy::module_name_repetitions)]
-pub trait MessageRepository<B: DiscordBackend>: Repository<MessageEntity, B> {}
+/// A cachable entity.
+pub trait Entity: Send + Sync {
+    /// # Typealias `Id`
+    ///
+    /// The id of the entity.
+    type Id: Copy + Eq + Hash + Send + Sync;
+
+    /// # Trait Method `id`
+    ///
+    /// Returns the id of the entity.
+    fn id(&self) -> Self::Id;
+}
+

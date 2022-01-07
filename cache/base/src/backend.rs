@@ -19,23 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `entity` Module
+//! # The `backend` Module
 //!
-//! This module contains a base entity trait for different cache entities.
+//! This module contains a base backend trait for different cache backends.
 
-use std::hash::Hash;
-
-/// Trait `Entity`
+/// # Trait `Backend`
 ///
-/// A cachable entity.
-pub trait Entity: Send + Sync {
-    /// # Typealias `Id`
+/// A base trait for different cache backends (in-memory, database, redis, etc).
+pub trait Backend: Send + Sized + Sync + 'static {
+    /// # Typealias `Error`
     ///
-    /// The id of the entity.
-    type Id: Copy + Eq + Hash + Send + Sync;
-
-    /// # Trait Method `id`
-    ///
-    /// Returns the id of the entity.
-    fn id(&self) -> Self::Id;
+    /// The backend error type.
+    type Error: Send + 'static;
 }
