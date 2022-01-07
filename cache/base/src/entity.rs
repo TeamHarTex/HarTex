@@ -39,4 +39,3 @@ pub trait Entity: Send + Sync {
     /// Returns the id of the entity.
     fn id(&self) -> Self::Id;
 }
-

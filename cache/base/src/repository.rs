@@ -75,7 +75,7 @@ pub trait SingleEntityRepository<E: Entity, B: Backend> {
 ///
 /// Typealias for a future to retrieve an entity from the cache.
 pub type GetEntityFuture<'a, T, E> =
-Pin<Box<dyn Future<Output = Result<Option<T>, E>> + Send + 'a>>;
+    Pin<Box<dyn Future<Output = Result<Option<T>, E>> + Send + 'a>>;
 
 /// # Typealias `EntityStream`
 ///
@@ -86,7 +86,7 @@ pub type EntityStream<'a, T, E> = Pin<Box<dyn Stream<Item = Result<T, E>> + Send
 ///
 /// Typealias for a future to stream (retrieve a series of) entities from the cache.
 pub type StreamEntitiesFuture<'a, T, E> =
-Pin<Box<dyn Future<Output = Result<EntityStream<'a, T, E>, E>> + Send + 'a>>;
+    Pin<Box<dyn Future<Output = Result<EntityStream<'a, T, E>, E>> + Send + 'a>>;
 
 /// # Typealias `EntityIdStream`
 ///
@@ -97,7 +97,7 @@ pub type EntityIdStream<'a, Id, E> = Pin<Box<dyn Stream<Item = Result<Id, E>> + 
 ///
 /// Typealias for a future to stream (retrieve a series of) entities from the cache.
 pub type StreamEntityIdsFuture<'a, Id, E> =
-Pin<Box<dyn Future<Output = Result<EntityIdStream<'a, Id, E>, E>> + Send + 'a>>;
+    Pin<Box<dyn Future<Output = Result<EntityIdStream<'a, Id, E>, E>> + Send + 'a>>;
 
 /// # Typealias `UpsertEntityFuture`
 ///
