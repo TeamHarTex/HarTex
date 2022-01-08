@@ -25,17 +25,21 @@
 
 use std::sync::Arc;
 
-use crate::backend::Backend;
+use hartex_cache_base::Cache;
+
+use crate::backend::DiscordBackend;
+
+pub mod update;
 
 /// # Struct `DiscordCache`
 ///
 /// A Discord cache.
 #[allow(clippy::module_name_repetitions)]
-pub struct DiscordCache<B: Backend> {
+pub struct DiscordCache<B: DiscordBackend> {
     backend: Arc<B>
 }
 
-impl<B: Backend> DiscordCache<B> {
+impl<B: DiscordBackend> DiscordCache<B> {
     /// # Static Method `with_backend`
     ///
     /// Creates a new instance of a cache with the provided cache backend.
@@ -52,3 +56,5 @@ impl<B: Backend> DiscordCache<B> {
         &self.backend
     }
 }
+
+impl<B: DiscordBackend> Cache<B> for DiscordCache<B> {}

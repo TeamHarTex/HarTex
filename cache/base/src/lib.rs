@@ -26,6 +26,31 @@
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
 
+use std::{
+    future::Future,
+    pin::Pin
+};
+
+use crate::backend::Backend;
+
 pub mod backend;
 pub mod entity;
 pub mod repository;
+
+/// # Trait `Cache`
+///
+/// A base cache with a designated backend.
+pub trait Cache<B: Backend> {}
+
+/// # Trait `CacheUpdate`
+///
+/// A trait for callbacks / events that may update the cache.
+pub trait CacheUpdate<B: Backend> {
+    fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B>;
+}
+
+/// # Typealias `UpdateCacheFuture`
+///
+/// A typealias for a future updating the cache.
+pub type UpdateCacheFuture<'a, B> =
+    Pin<Box<dyn Future<Output = Result<(), <B as Backend>::Error>> + Send + 'a>>;
