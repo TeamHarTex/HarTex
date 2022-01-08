@@ -24,11 +24,13 @@
 //! This crate implements a base framework for caching.
 
 #![deny(clippy::pedantic, warnings)]
+#![feature(fundamental)]
 #![forbid(unsafe_code)]
 
 use std::{
     future::Future,
-    pin::Pin
+    pin::Pin,
+    sync::Arc
 };
 
 use crate::backend::Backend;
@@ -40,13 +42,11 @@ pub mod repository;
 /// # Trait `Cache`
 ///
 /// A base cache with a designated backend.
-pub trait Cache<B: Backend> {}
-
-/// # Trait `CacheUpdate`
-///
-/// A trait for callbacks / events that may update the cache.
-pub trait CacheUpdate<B: Backend> {
-    fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B>;
+pub trait Cache<B: Backend> {
+    /// # Trait Method `backend`
+    ///
+    /// Returns a reference-counted reference to the cache backend.
+    fn backend(&self) -> &Arc<B>;
 }
 
 /// # Typealias `UpdateCacheFuture`

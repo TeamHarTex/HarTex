@@ -48,13 +48,10 @@ impl<B: DiscordBackend> DiscordCache<B> {
             backend: Arc::new(backend)
         }
     }
+}
 
-    /// # Instance Method `backend`
-    ///
-    /// Returns an immutable reference to
-    pub fn backend(&self) -> &Arc<B> {
+impl<B: DiscordBackend> Cache<B> for DiscordCache<B> {
+    fn backend(&self) -> &Arc<B> {
         &self.backend
     }
 }
-
-impl<B: DiscordBackend> Cache<B> for DiscordCache<B> {}

@@ -22,3 +22,58 @@
 //! # The `update` Module
 //!
 //! This module implements the `CacheUpdate` trait for various Discord events.
+
+use futures_util::{
+    future::FutureExt,
+    stream::{
+        FuturesUnordered,
+        TryStreamExt,
+    }
+};
+use hartex_base::discord::model::{
+    channel::Channel,
+    gateway::payload::incoming::ChannelCreate
+};
+use hartex_cache_base::{
+    repository::Repository,
+    Cache,
+    UpdateCacheFuture
+};
+
+use crate::{
+    backend::DiscordBackend,
+    entities::{
+        channel::ChannelEntity,
+        user::UserEntity
+    }
+};
+
+/// # Trait `CacheUpdate`
+///
+/// A trait for callbacks / events that may update the cache.
+pub trait DiscordCacheUpdate<B: DiscordBackend> {
+    fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B>;
+}
+
+impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
+    fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B> {
+        match &self.0 {
+            Channel::Group(group) => {
+                let futures = FuturesUnordered::new();
+
+                futures.push(
+                    cache
+                        .backend()
+                        .users()
+                        .upsert_many(group.recipients.iter().cloned().map(UserEntity::from))
+                );
+
+                let entity = ChannelEntity::from(group.clone());
+                futures.push(cache.backend().channels().upsert(entity));
+
+                futures.try_collect().boxed()
+            }
+            _ => todo!()
+        }
+    }
+}
