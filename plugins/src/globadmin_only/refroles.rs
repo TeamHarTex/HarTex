@@ -153,7 +153,7 @@ async fn execute_refroles_command(
                 allowed_mentions: None,
                 components: None,
                 content: Some(String::from("Refreshing roles...")),
-                embeds: vec![],
+                embeds: None,
                 flags: None,
                 tts: None
             })

@@ -129,7 +129,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
                     "{message} <https://github.com/HarTexTeam/HarTex-rust-discord-bot>.",
                     message = localize.prerepo_uri_msg
                 )),
-                embeds: vec![],
+                embeds: None,
                 flags: None,
                 tts: None
             })

@@ -434,7 +434,7 @@ async fn execute_guildinfo_command(
                 allowed_mentions: None,
                 components: None,
                 content: None,
-                embeds: vec![embed.build()?],
+                embeds: Some(vec![embed.build()?]),
                 flags: None,
                 tts: None
             })
