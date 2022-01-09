@@ -351,7 +351,7 @@ async fn execute_userinfo_command(
                 allowed_mentions: None,
                 components: None,
                 content: None,
-                embeds: Some(vec![embed.build()?)],
+                embeds: Some(vec![embed.build()?]),
                 flags: None,
                 tts: None
             })
