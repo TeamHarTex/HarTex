@@ -37,8 +37,8 @@ use crate::backend::Backend;
 
 pub mod backend;
 pub mod entity;
-pub mod repository;
 pub mod relations;
+pub mod repository;
 
 /// # Trait `Cache`
 ///
