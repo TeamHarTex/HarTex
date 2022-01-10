@@ -128,7 +128,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
                 allowed_mentions: None,
                 components: None,
                 content: Some(localize.init_resp.clone()),
-                embeds: vec![],
+                embeds: None,
                 flags: None,
                 tts: None
             })
