@@ -24,18 +24,20 @@
 //! This module contains the guild role repository trait.
 
 use hartex_base::discord::model::id::RoleId;
-use hartex_cache_base::repository::{
-    GetEntityFuture,
-    Repository
+use hartex_cache_base::{
+    relations,
+    repository::{
+        GetEntityFuture,
+        Repository
+    }
 };
 
 use crate::{
     backend::DiscordBackend,
     entities::guild::{
-        role::RoleEntity,
-        GuildEntity
-    },
-    relations
+        GuildEntity,
+        role::RoleEntity
+    }
 };
 
 /// # Trait `RoleRepository`

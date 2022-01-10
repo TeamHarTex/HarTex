@@ -31,7 +31,6 @@ mod cache;
 pub mod entities;
 #[cfg(feature = "in-memory-backend")]
 pub mod inmemory;
-pub mod relations;
 pub mod repositories;
 
 use cache::DiscordCache;

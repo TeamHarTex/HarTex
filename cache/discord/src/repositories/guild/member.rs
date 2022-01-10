@@ -27,10 +27,13 @@ use hartex_base::discord::model::id::{
     GuildId,
     UserId
 };
-use hartex_cache_base::repository::{
-    GetEntityFuture,
-    Repository,
-    StreamEntitiesFuture
+use hartex_cache_base::{
+    relations,
+    repository::{
+        GetEntityFuture,
+        Repository,
+        StreamEntitiesFuture
+    }
 };
 
 use crate::{
@@ -41,8 +44,7 @@ use crate::{
             role::RoleEntity
         },
         user::UserEntity
-    },
-    relations
+    }
 };
 
 /// # Trait `MemberRepository`
