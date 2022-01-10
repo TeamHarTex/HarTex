@@ -57,19 +57,20 @@ pub trait DiscordCacheUpdate<B: DiscordBackend> {
 
 impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
     fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B> {
+        let backend = cache.backend();
+
         match &self.0 {
             Channel::Group(group) => {
                 let futures = FuturesUnordered::new();
 
                 futures.push(
-                    cache
-                        .backend()
+                    backend
                         .users()
                         .upsert_many(group.recipients.iter().cloned().map(UserEntity::from))
                 );
 
                 let entity = ChannelEntity::from(group.clone());
-                futures.push(cache.backend().channels().upsert(entity));
+                futures.push(backend.channels().upsert(entity));
 
                 futures.try_collect().boxed()
             }
