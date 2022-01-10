@@ -142,7 +142,7 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
                 allowed_mentions: None,
                 components: None,
                 content: None,
-                embeds: vec![embed],
+                embeds: Some(vec![embed]),
                 flags: None,
                 tts: None
             })
