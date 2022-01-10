@@ -163,7 +163,7 @@ async fn execute_userinfo_command(
                     content: Some(String::from(
                         ":x: This command can only be used in a guild."
                     )),
-                    embeds: vec![],
+                    embeds: None,
                     flags: None,
                     tts: None
                 })

@@ -117,7 +117,7 @@ async fn execute_refroles_command(
                     content: Some(String::from(
                         ":x: This command can only be used in a guild."
                     )),
-                    embeds: vec![],
+                    embeds: None,
                     flags: None,
                     tts: None
                 })
@@ -136,7 +136,7 @@ async fn execute_refroles_command(
                     allowed_mentions: None,
                     components: None,
                     content: Some(String::from(":x: You are not the global administrator.")),
-                    embeds: vec![],
+                    embeds: None,
                     flags: None,
                     tts: None
                 })
