@@ -58,7 +58,7 @@ pub trait StickerPackRepository<B: DiscordBackend>: Repository<StickerPackEntity
 ///
 /// A repository containing sticker objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait StickerRepository<B: Backend>: Repository<StickerEntity, B> {
+pub trait StickerRepository<B: DiscordBackend>: Repository<StickerEntity, B> {
     /// # Trait Method `sticker_pack`
     ///
     /// Returns the sticker pack associated with this sticker, if any.
