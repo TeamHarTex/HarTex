@@ -27,7 +27,7 @@ use futures_util::{
     future::FutureExt,
     stream::{
         FuturesUnordered,
-        TryStreamExt,
+        TryStreamExt
     }
 };
 use hartex_base::discord::model::{

@@ -35,8 +35,8 @@ use hartex_cache_base::{
 use crate::{
     backend::DiscordBackend,
     entities::guild::{
-        GuildEntity,
-        role::RoleEntity
+        role::RoleEntity,
+        GuildEntity
     }
 };
 
