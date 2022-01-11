@@ -62,7 +62,8 @@ impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
                 let futures = FuturesUnordered::new();
 
                 futures.push(
-                    cache.users
+                    cache
+                        .users
                         .upsert_many(group.recipients.iter().cloned().map(UserEntity::from))
                 );
 
