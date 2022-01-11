@@ -54,6 +54,7 @@ use crate::repositories::{
 /// # Trait `Backend`
 ///
 /// A base trait for different cache backends (in-memory, database, redis, etc).
+#[allow(clippy::module_name_repetitions)]
 pub trait DiscordBackend: Backend + Send + Sized + Sync + 'static {
     /// # Typealias `AttachmentRepository`
     ///

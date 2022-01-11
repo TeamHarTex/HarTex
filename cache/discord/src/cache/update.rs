@@ -51,6 +51,7 @@ use crate::{
 /// # Trait `CacheUpdate`
 ///
 /// A trait for callbacks / events that may update the cache.
+#[allow(clippy::module_name_repetitions)]
 pub trait DiscordCacheUpdate<B: DiscordBackend> {
     fn update<'a>(&'a self, cache: &'a DiscordCache<B>) -> UpdateCacheFuture<'a, B>;
 }
