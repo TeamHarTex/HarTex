@@ -36,12 +36,12 @@ use hartex_base::discord::model::{
 };
 use hartex_cache_base::{
     repository::Repository,
-    Cache,
     UpdateCacheFuture
 };
 
 use crate::{
     backend::DiscordBackend,
+    cache::DiscordCache,
     entities::{
         channel::ChannelEntity,
         user::UserEntity
@@ -52,27 +52,23 @@ use crate::{
 ///
 /// A trait for callbacks / events that may update the cache.
 pub trait DiscordCacheUpdate<B: DiscordBackend> {
-    fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B>;
+    fn update<'a>(&'a self, cache: &'a DiscordCache<B>) -> UpdateCacheFuture<'a, B>;
 }
 
 impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
-    fn update<'a>(&'a self, cache: &'a impl Cache<B>) -> UpdateCacheFuture<'a, B> {
-        let backend = cache.backend();
-
+    fn update<'a>(&'a self, cache: &'a DiscordCache<B>) -> UpdateCacheFuture<'a, B> {
         match &self.0 {
             Channel::Group(group) => {
                 let futures = FuturesUnordered::new();
-                let users = backend.users();
 
                 futures.push(
-                    users
+                    cache.users
                         .upsert_many(group.recipients.iter().cloned().map(UserEntity::from))
                 );
 
                 let entity = ChannelEntity::from(group.clone());
 
-                let channels = backend.channels();
-                futures.push(channels.upsert(entity));
+                futures.push(cache.channels.upsert(entity));
 
                 futures.try_collect().boxed()
             }

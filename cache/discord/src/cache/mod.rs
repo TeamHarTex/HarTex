@@ -36,16 +36,24 @@ pub mod update;
 /// A Discord cache.
 #[allow(clippy::module_name_repetitions)]
 pub struct DiscordCache<B: DiscordBackend> {
-    backend: Arc<B>
+    backend: Arc<B>,
+    pub channels: B::ChannelRepository,
+    pub users: B::UserRepository
 }
 
 impl<B: DiscordBackend> DiscordCache<B> {
     /// # Static Method `with_backend`
     ///
     /// Creates a new instance of a cache with the provided cache backend.
-    pub fn with_backend(backend: B) -> Self {
+    pub fn with_backend(backend: impl Into<Arc<B>>) -> Self {
+        let backend = backend.into();
+        let channels = backend.channels();
+        let users = backend.users();
+
         Self {
-            backend: Arc::new(backend)
+            backend,
+            channels,
+            users
         }
     }
 }
