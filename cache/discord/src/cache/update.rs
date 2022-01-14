@@ -31,7 +31,10 @@ use futures_util::{
     }
 };
 use hartex_base::discord::model::{
-    channel::Channel,
+    channel::{
+        Channel,
+        GuildChannel
+    },
     gateway::payload::incoming::ChannelCreate
 };
 use hartex_cache_base::{
@@ -43,7 +46,10 @@ use crate::{
     backend::DiscordBackend,
     cache::DiscordCache,
     entities::{
-        channel::ChannelEntity,
+        channel::{
+            thread::ThreadEntity,
+            ChannelEntity
+        },
         user::UserEntity
     }
 };
@@ -73,6 +79,46 @@ impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
                 futures.push(cache.channels.upsert(entity));
 
                 futures.try_collect().boxed()
+            }
+            Channel::Guild(GuildChannel::Category(category)) => {
+                let entity = ChannelEntity::from(category.clone());
+
+                cache.channels.upsert(entity)
+            }
+            Channel::Guild(GuildChannel::NewsThread(news)) => {
+                let entity = ThreadEntity::from(news.clone());
+
+                cache.threads.upsert(entity)
+            }
+            Channel::Guild(GuildChannel::PrivateThread(private)) => {
+                let entity = ThreadEntity::from(private.clone());
+
+                cache.threads.upsert(entity)
+            }
+            Channel::Guild(GuildChannel::PublicThread(public)) => {
+                let entity = ThreadEntity::from(public.clone());
+
+                cache.threads.upsert(entity)
+            }
+            Channel::Guild(GuildChannel::Stage(stage)) => {
+                let entity = ChannelEntity::from(stage.clone());
+
+                cache.channels.upsert(entity)
+            }
+            Channel::Guild(GuildChannel::Text(text)) => {
+                let entity = ChannelEntity::from(text.clone());
+
+                cache.channels.upsert(entity)
+            }
+            Channel::Guild(GuildChannel::Voice(voice)) => {
+                let entity = ChannelEntity::from(voice.clone());
+
+                cache.channels.upsert(entity)
+            }
+            Channel::Private(private) => {
+                let entity = ChannelEntity::from(private.clone());
+
+                cache.channels.upsert(entity)
             }
             _ => todo!()
         }

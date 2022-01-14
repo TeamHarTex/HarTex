@@ -38,6 +38,7 @@ pub mod update;
 pub struct DiscordCache<B: DiscordBackend> {
     backend: Arc<B>,
     pub channels: B::ChannelRepository,
+    pub threads: B::ThreadRepository,
     pub users: B::UserRepository
 }
 
@@ -48,11 +49,13 @@ impl<B: DiscordBackend> DiscordCache<B> {
     pub fn with_backend(backend: impl Into<Arc<B>>) -> Self {
         let backend = backend.into();
         let channels = backend.channels();
+        let threads = backend.threads();
         let users = backend.users();
 
         Self {
             backend,
             channels,
+            threads,
             users
         }
     }
