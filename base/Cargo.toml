@@ -8,6 +8,7 @@ The `hartex_base` library provides the core minimal functionality for the bot to
 This library is supposed to be used in other `hartex_*` dependencies, but not use any of them.
 """
 license = "AGPL-3.0-only"
+rust-version = "1.60.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -21,13 +22,13 @@ toml = "0.5.8"
 tracing = { version = "0.1.29", optional = true }
 tracing-subscriber = { version = "0.3.4", features = ["env-filter", "time"], optional = true }
 
-twilight-cache-inmemory = { version = "0.8.4", optional = true }
+twilight-cache-inmemory = { version = "0.8.5", optional = true }
 twilight-embed-builder = { version = "0.8.0", optional = true }
-twilight-gateway = { version = "0.8.3", optional = true }
+twilight-gateway = { version = "0.8.4", optional = true }
 twilight-http = { version = "0.8.4", optional = true }
 twilight-mention = { version = "0.8.0", optional = true }
 twilight-model = { version = "0.8.4", optional = true }
-twilight-standby = { version = "0.8.2", optional = true }
+twilight-standby = { version = "0.8.3", optional = true }
 twilight-util = { version = "0.8.2", features = [ "builder", "snowflake" ], optional = true }
 
 [features]
