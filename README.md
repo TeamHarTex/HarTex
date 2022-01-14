@@ -5,7 +5,7 @@ HarTex-rust-discord-bot
 
 [![GitHub Badge](https://img.shields.io/badge/github-HarTex-6f42c1.svg?style=for-the-badge&logo=github)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
 [![License](https://img.shields.io/github/license/HarTexTeam/HarTex-rust-discord-bot?style=for-the-badge&logo=pastebin)](https://www.apache.org/licenses/LICENSE-2.0.txt)
-![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.59-93450a.svg?style=for-the-badge&logo=rust)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.60-93450a.svg?style=for-the-badge&logo=rust)
 
 ![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
 
