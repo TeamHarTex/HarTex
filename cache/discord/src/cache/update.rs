@@ -120,7 +120,6 @@ impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
 
                 cache.channels.upsert(entity)
             }
-            _ => todo!()
         }
     }
 }
