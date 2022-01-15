@@ -23,14 +23,15 @@
 //!
 //! This module contains the guild emoji repository trait.
 
+use hartex_cache_base::repository::Repository;
+
 use crate::{
-    backend::Backend,
-    entities::guild::emoji::EmojiEntity,
-    repository::Repository
+    backend::DiscordBackend,
+    entities::guild::emoji::EmojiEntity
 };
 
 /// # Trait `EmojiRepository`
 ///
 /// A repository containing emoji objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait EmojiRepository<B: Backend>: Repository<EmojiEntity, B> {}
+pub trait EmojiRepository<B: DiscordBackend>: Repository<EmojiEntity, B> {}

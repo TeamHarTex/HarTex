@@ -19,21 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `message` Module
+//! # The `backend` Module
 //!
-//! This module contains repositories related to Discord channel messages.
+//! This module contains a base backend trait for different cache backends.
 
-use hartex_cache_base::repository::Repository;
-
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::message::MessageEntity
-};
-
-pub mod sticker;
-
-/// # Trait `MessageRepository`
+/// # Trait `Backend`
 ///
-/// A repository containing message objects.
-#[allow(clippy::module_name_repetitions)]
-pub trait MessageRepository<B: DiscordBackend>: Repository<MessageEntity, B> {}
+/// A base trait for different cache backends (in-memory, database, redis, etc).
+pub trait Backend: Send + Sized + Sync + 'static {
+    /// # Typealias `Error`
+    ///
+    /// The backend error type.
+    type Error: Send + 'static;
+}

@@ -36,8 +36,7 @@ use hartex_base::discord::model::{
         UserId
     }
 };
-
-use crate::entity::Entity;
+use hartex_cache_base::entity::Entity;
 
 /// # Struct `PresenceEntity`
 ///

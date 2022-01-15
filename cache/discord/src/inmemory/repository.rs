@@ -51,6 +51,17 @@ use hartex_base::discord::model::{
         UserId
     }
 };
+use hartex_cache_base::{
+    entity::Entity,
+    repository::{
+        GetEntityFuture,
+        Repository,
+        SingleEntityRepository,
+        StreamEntitiesFuture,
+        StreamEntityIdsFuture,
+        UpsertEntityFuture
+    }
+};
 
 use crate::{
     entities::{
@@ -78,7 +89,6 @@ use crate::{
             UserEntity
         }
     },
-    entity::Entity,
     inmemory::{
         InMemoryBackend,
         InMemoryBackendError
@@ -107,14 +117,6 @@ use crate::{
             current_user::CurrentUserRepository,
             UserRepository
         }
-    },
-    repository::{
-        GetEntityFuture,
-        Repository,
-        SingleEntityRepository,
-        StreamEntitiesFuture,
-        StreamEntityIdsFuture,
-        UpsertEntityFuture
     }
 };
 
@@ -122,6 +124,7 @@ use crate::{
 ///
 /// A cache repository with the in-memory cache backend.
 #[allow(clippy::module_name_repetitions)]
+#[derive(Clone)]
 pub struct InMemoryRepository<T>(pub(crate) InMemoryBackend, pub(crate) PhantomData<T>);
 
 impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {

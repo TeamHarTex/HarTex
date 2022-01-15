@@ -28,7 +28,11 @@ use std::{
     pin::Pin
 };
 
-use futures_util::stream::Stream;
+use futures_util::{
+    future,
+    stream::Stream,
+    TryFutureExt
+};
 
 use crate::{
     backend::Backend,
@@ -53,6 +57,16 @@ pub trait Repository<E: Entity, B: Backend> {
     ///
     /// Upserts an entity into the cache.
     fn upsert(&self, entity: E) -> UpsertEntityFuture<'_, B::Error>;
+
+    /// # Trait Method `upsert`
+    ///
+    /// Upserts an iterator of entities into the cache.
+    fn upsert_many(
+        &self,
+        entities: impl Iterator<Item = E> + Send
+    ) -> UpsertEntitiesFuture<'_, B::Error> {
+        Box::pin(future::try_join_all(entities.map(|entity| self.upsert(entity))).map_ok(|_| ()))
+    }
 }
 
 /// # Trait `SingleEntityRepository`
@@ -103,3 +117,8 @@ pub type StreamEntityIdsFuture<'a, Id, E> =
 ///
 /// Typealias for a future to upsert an entity into the cache.
 pub type UpsertEntityFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;
+
+/// # Typealias `UpsertEntitiesFuture`
+///
+/// Typealias for a future to upsert an entity into the cache.
+pub type UpsertEntitiesFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;

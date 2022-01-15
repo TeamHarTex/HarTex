@@ -23,10 +23,11 @@
 //!
 //! This module contains repositories related to Discord channels.
 
+use hartex_cache_base::repository::Repository;
+
 use crate::{
-    backend::Backend,
-    entities::channel::ChannelEntity,
-    repository::Repository
+    backend::DiscordBackend,
+    entities::channel::ChannelEntity
 };
 
 pub mod attachment;
@@ -37,4 +38,4 @@ pub mod thread;
 ///
 /// A repository containing channel objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait ChannelRepository<B: Backend>: Repository<ChannelEntity, B> {}
+pub trait ChannelRepository<B: DiscordBackend>: Repository<ChannelEntity, B> {}

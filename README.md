@@ -40,7 +40,7 @@ HarTex Development
 | `hartex_cmdsys`              | The command system of the bot.                                                                   |
 | `hartex_conftoml`            | The TOML configuration API, deserialization and serialization of TOML configuration of the bot.  |
 | `hartex_base`                | The core library of the bot, designed to be as minimal as possible but provides essential types. |
-| `hartex_cache`               | The custom caching infrastructure for the bot.                                                   |
+| `hartex_cache_discord`       | The Discord object cache for the bot.                                                            |
 | `hartex_dbmani`              | The database manipulation component of the bot.                                                  |
 | `hartex_driver`              | The "main" function of the bot. Glues everything together.                                       |
 | `hartex_env`                 | The wrappers around a collection of useful environment variables used by the bot.                |

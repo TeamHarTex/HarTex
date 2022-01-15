@@ -29,19 +29,19 @@ use hartex_base::discord::model::id::{
     RoleId,
     UserId
 };
+use hartex_cache_base::repository::{
+    Repository,
+    StreamEntitiesFuture,
+    StreamEntityIdsFuture
+};
 
 use crate::{
-    backend::Backend,
+    backend::DiscordBackend,
     entities::guild::{
         emoji::EmojiEntity,
         member::MemberEntity,
         role::RoleEntity,
         GuildEntity
-    },
-    repository::{
-        Repository,
-        StreamEntitiesFuture,
-        StreamEntityIdsFuture
     }
 };
 
@@ -70,7 +70,7 @@ pub mod role;
 ///
 /// A repository containing Discord guild objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait GuildRepository<B: Backend>: Repository<GuildEntity, B> {
+pub trait GuildRepository<B: DiscordBackend>: Repository<GuildEntity, B> {
     /// # Trait Method `emoji_ids`
     ///
     /// Returns a stream of emoji ids in a guild.

@@ -23,14 +23,15 @@
 //!
 //! This module contains the channel attachment repository trait.
 
+use hartex_cache_base::repository::Repository;
+
 use crate::{
-    backend::Backend,
-    entities::channel::attachment::AttachmentEntity,
-    repository::Repository
+    backend::DiscordBackend,
+    entities::channel::attachment::AttachmentEntity
 };
 
 /// # Trait `AttachmentRepository`
 ///
 /// A repository containing attachment objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait AttachmentRepository<B: Backend>: Repository<AttachmentEntity, B> {}
+pub trait AttachmentRepository<B: DiscordBackend>: Repository<AttachmentEntity, B> {}

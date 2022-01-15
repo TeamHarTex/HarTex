@@ -19,21 +19,39 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `message` Module
+//! # `hartex_cache_base` - Base Caching Framework
 //!
-//! This module contains repositories related to Discord channel messages.
+//! This crate implements a base framework for caching.
 
-use hartex_cache_base::repository::Repository;
+#![deny(clippy::pedantic, warnings)]
+#![feature(fundamental)]
+#![forbid(unsafe_code)]
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::message::MessageEntity
+use std::{
+    future::Future,
+    pin::Pin,
+    sync::Arc
 };
 
-pub mod sticker;
+use crate::backend::Backend;
 
-/// # Trait `MessageRepository`
+pub mod backend;
+pub mod entity;
+pub mod relations;
+pub mod repository;
+
+/// # Trait `Cache`
 ///
-/// A repository containing message objects.
-#[allow(clippy::module_name_repetitions)]
-pub trait MessageRepository<B: DiscordBackend>: Repository<MessageEntity, B> {}
+/// A base cache with a designated backend.
+pub trait Cache<B: Backend> {
+    /// # Trait Method `backend`
+    ///
+    /// Returns a reference-counted reference to the cache backend.
+    fn backend(&self) -> &Arc<B>;
+}
+
+/// # Typealias `UpdateCacheFuture`
+///
+/// A typealias for a future updating the cache.
+pub type UpdateCacheFuture<'a, B> =
+    Pin<Box<dyn Future<Output = Result<(), <B as Backend>::Error>> + Send + 'a>>;
