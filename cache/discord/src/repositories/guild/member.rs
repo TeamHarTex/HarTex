@@ -27,16 +27,7 @@ use hartex_base::discord::model::id::{
     GuildId,
     UserId
 };
-
-use crate::{
-    backend::Backend,
-    entities::{
-        guild::{
-            member::MemberEntity,
-            role::RoleEntity
-        },
-        user::UserEntity
-    },
+use hartex_cache_base::{
     relations,
     repository::{
         GetEntityFuture,
@@ -45,11 +36,22 @@ use crate::{
     }
 };
 
+use crate::{
+    backend::DiscordBackend,
+    entities::{
+        guild::{
+            member::MemberEntity,
+            role::RoleEntity
+        },
+        user::UserEntity
+    }
+};
+
 /// # Trait `MemberRepository`
 ///
 /// A repository containing member objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait MemberRepository<B: Backend>: Repository<MemberEntity, B> {
+pub trait MemberRepository<B: DiscordBackend>: Repository<MemberEntity, B> {
     /// # Trait Method `roles`
     ///
     /// Returns a stream of roles of a member.

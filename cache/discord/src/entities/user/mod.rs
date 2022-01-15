@@ -34,8 +34,7 @@ use hartex_base::{
     },
     stdext::prelude::*
 };
-
-use crate::entity::Entity;
+use hartex_cache_base::entity::Entity;
 
 #[allow(clippy::module_name_repetitions)]
 pub mod current_user;

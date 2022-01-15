@@ -56,9 +56,13 @@ use hartex_base::discord::model::{
         UserId
     }
 };
+use hartex_cache_base::{
+    backend::Backend,
+    entity::Entity
+};
 
 use crate::{
-    backend::Backend,
+    backend::DiscordBackend,
     entities::{
         channel::{
             attachment::AttachmentEntity,
@@ -84,7 +88,6 @@ use crate::{
             UserEntity
         }
     },
-    entity::Entity,
     inmemory::repository::InMemoryRepository
 };
 
@@ -104,6 +107,9 @@ impl InMemoryBackend {
 
 impl Backend for InMemoryBackend {
     type Error = InMemoryBackendError;
+}
+
+impl DiscordBackend for InMemoryBackend {
     type AttachmentRepository = InMemoryRepository<AttachmentEntity>;
     type ChannelRepository = InMemoryRepository<ChannelEntity>;
     type CurrentUserRepository = InMemoryRepository<CurrentUserEntity>;

@@ -23,14 +23,17 @@
 //!
 //! This module contains the current user repository trait.
 
+use hartex_cache_base::repository::SingleEntityRepository;
+
 use crate::{
-    backend::Backend,
-    entities::user::current_user::CurrentUserEntity,
-    repository::SingleEntityRepository
+    backend::DiscordBackend,
+    entities::user::current_user::CurrentUserEntity
 };
 
 /// # Trait `CurrentUserRepository`
 ///
 /// A repository containing Discord current user objects.
 #[allow(clippy::module_name_repetitions)]
-pub trait CurrentUserRepository<B: Backend>: SingleEntityRepository<CurrentUserEntity, B> {}
+pub trait CurrentUserRepository<B: DiscordBackend>:
+    SingleEntityRepository<CurrentUserEntity, B> {
+}
