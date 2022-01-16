@@ -11,6 +11,8 @@ HarTex-rust-discord-bot
 
 HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
 
+**THIS REPOSITORY IS DEPRECATED AND FURHTER DEVELOPMENT IS MOVED TO:** https://github.com/HarTexTeam/hartexboat
+
 Honourable Mention
 ------------------
 
