@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `error` Module
-//!
-//! This module defines several types for error handling in the `HarTex` Discord bot.
+//! An error type for error handling in the bot.
 
 use std::{
     error::Error,
@@ -69,171 +67,47 @@ use crate::{
     time::ParseError
 };
 
-/// # Enum `HarTexError`
-///
-/// An enumeration representing the various error types used within `HarTex`.
+/// Various error types used within HarTex.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum HarTexError {
-    /// # Enum Variant `HarTexError::Base64DecodeError`
-    ///
-    /// A wrapper around `base64::DecodeError`
-    ///
-    /// ## Fields
-    /// - `error`, type `DecodeError`: the error returned when attempting to decode base64.
+    /// An error occurred whilst decoding base64 data.
     Base64DecodeError { error: DecodeError },
-
-    /// # Enum Variant `HarTexError::ClusterCommandError`
-    ///
-    /// A wrapper around `twilight_gateway::cluster::ClusterCommandError`.
-    ///
-    /// ## Fields
-    /// - `error`, type: `ClusterCommandError`: the cluster command error when "commanding" the
-    ///                                         cluster.
+    /// An error occurred whilst sending a command to the gateway cluster.
     ClusterCommandError { error: ClusterCommandError },
-
-    /// # Enum Variant HarTexError::ClusterStartError
-    ///
-    /// A wrapper around `twilight_gateway::cluster::ClusterStartError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `ClusterStartError`: the cluster start error returned when building the
-    ///                                      cluster.
+    /// An error occurred whilst attempting to start up the gateway cluster.
     ClusterStartError { error: ClusterStartError },
-
-    /// # Enum Variant `HarTexError::CreateMessageError`
-    ///
-    /// A wrapper around `twilight_http::request::channel::message::create_message::CreateMessageError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `CreateMessageError`: the error returned when attempting to send a message,
+    /// An error occurred whilst attempting to send a message.
     CreateMessageError { error: CreateMessageError },
-
-    /// # Enum Variant `HarTexError::CtrlcError`
-    ///
-    /// A wrapper around `ctrlc::Error`.
-    ///
-    /// ## Fields
-    /// - `error`, type `Error`: the ctrlc error returned when setting the ctrl-c handler.
+    /// An error occurred whilst attempting to set the Ctrl-C handler.
     CtrlcError { error: CtrlcError },
-
-    /// # Enum Variant `HarTexError::DeserializeBodyError`
-    ///
-    /// A wrapper around `twilight_http::response::DeserializeBodyError`
-    ///
-    /// ## Fields
-    /// - `error`, type `DeserializeBodyError`: the error returned when attempting to deserialize
-    ///                                         an http response.
+    /// An error occurred whilst attempting to deserialize a JSON response payload.
     DeserializeBodyError { error: DeserializeBodyError },
-
-    /// # Enum Variant `HarTexError::EmbedError`
-    ///
-    /// A wrapper around `twilight_embed_builder::EmbedError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `EmbedError`: the embed error returned when building a Discord embed.
+    /// An error occurred whilst attempting to build a Discord embed.
     EmbedError { error: EmbedError },
-
-    /// # Enum Variant `HarTexError::EmbedImageSourceUrlError`
-    ///
-    /// A wrapper around `twilight_embed_builder::image_source::ImageSourceUrlError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `ImageSourceUrlError`: the error returned when trying to set a url for any
-    ///                                        embed property.
+    /// An error occurred whilst attempting to add an image source uri field to a Discord embed.
     EmbedImageSourceUrlError { error: ImageSourceUrlError },
-
-    /// # Enum Variant `HarTexError::InteractionError`
-    ///
-    /// A wrapper around `twilight_http::request::application::InteractionError`
-    ///
-    /// - `error`, type `InteractionError`: the error returned when attempting to register
-    ///                                     an interaction.
+    /// An error occurred whilst attempting to create an interaction.
     InteractionError { error: InteractionError },
-
-    /// # Enum Variant `HarTexError::IoError`
-    ///
-    /// A wrapper around `std::io::Error`
-    ///
-    /// - `error`, type `IoError`: an io error.
+    /// An I/O error.
     IoError { error: IoError },
-
-    /// # Enum Variant `HarTexError::ParseError`
-    ///
-    /// A wrapper around `chrono::ParseError`
-    ///
-    /// - `error`, type `ParseError`: the datetime parsing error
+    /// An error occurred whilst attempting to parse a timestamp.
     ParseError { error: ParseError },
-
-    /// # Enum Variant `HarTexError::SessionInactiveError`
-    ///
-    /// A wrapper around `twilight_gateway::shard::SessionInactiveError`
-    ///
-    /// - `error`, type `SessionInactiveError`: the error returned when attempting to get
-    ///                                         information about a shard.
+    /// Signifies that a shard has not yet been started.
     SessionInactiveError { error: SessionInactiveError },
-
-    /// # Enum Variant `TomlDeserializationError`
-    ///
-    /// A wrapper around `toml::de::Error`
-    ///
-    /// ## Fields
-    ///
-    /// - `error`, type `Error`: the TOML deserialization error returned when attempting to
-    ///                          deserializing TOML.
+    /// An error occurred whilst attempting to deserialize a TOML object.
     TomlDeserializationError { error: TomlDeserializationError },
-
-    /// # Enum Variant `HarTexError::TwilightHttpError`
-    ///
-    /// A wrapper around `twilight_http::error::Error`.
-    ///
-    /// ## Fields
-    /// - `error`, type `Error`: the error returned when executing an HTTP request.
+    /// An error occurred whilst making an HTTP request.
     TwilightHttpError { error: HttpError },
-
-    /// # Enum Variant `HarTexError::UpdateGuildMemberError`
-    ///
-    /// A wrapper around `twilight_http::request::guild::member::update_guild_member::UpdateGuildMemberError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `UpdateGuildMemberError`: the error returned when attempting to update
-    ///                                           a guild member.
+    /// An error occurred whilst attempting to update a guild member.
     UpdateGuildMemberError { error: UpdateGuildMemberError },
-
-    /// # Enum Variant `HarTexError::UpdatePresenceError`
-    ///
-    /// A wrapper around `twilight_http::request::channel::message::update_message::UpdateMessageError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `UpdateMessageError`: the message update error returned when
-    ///                                       attempting to update a message.
+    /// An error occurred whilst attempting to update a message.
     UpdateMessageError { error: UpdateMessageError },
-
-    /// # Enum Variant `HarTexError::UpdatePresenceError`
-    ///
-    /// A wrapper around `twilight_model::gateway::payload::update_presence::UpdatePresenceError`.
-    ///
-    /// ## Fields
-    /// - `error`, type `UpdatePresenceError`: the presence update error returned when
-    ///                                        attempting to update the presence.
+    /// An error occurred whilst attempting to update the self presence on Discord.
     UpdatePresenceError { error: UpdatePresenceError },
-
-    /// # Enum Variant `HarTexError::Utf8ValidationError`
-    ///
-    /// A wrapper around `std::string::FromUtf8Error`.
-    ///
-    /// ## Fields
-    /// - `error`, type `FromUtf8Error`: the error returned when attempting to construct a string
-    ///                                  with a `Vec<u8>` with the UTF-8 encoding.
+    /// An error occurred whilst attempting to validate a string encoded in UTF-8.
     Utf8ValidationError { error: Utf8Error },
-
-    /// # Enum Variant `HarTexError::Custom`
-    ///
-    /// Represents a custom error that cannot be represented with any other variants of this
-    /// enumeration.
-    ///
-    /// ## Fields
-    /// - `message`, type `&str`: the error message.
+    /// A custom error with a custom message.
     Custom { message: String }
 }
 
@@ -389,7 +263,7 @@ impl From<Utf8Error> for HarTexError {
     }
 }
 
-/// # Type Alias `HarTexResult<T>`
+/// A global type-alias for handling the [`Result`] type throughout the codebase.
 ///
-/// A type alias for `Result<T, HarTexError>`, used for error-handling.
+/// [`Result`]: https://doc.rust-lang.org/nightly/std/result/enum.Result.html
 pub type HarTexResult<T> = Result<T, HarTexError>;
