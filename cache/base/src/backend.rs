@@ -19,16 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `backend` Module
-//!
-//! This module contains a base backend trait for different cache backends.
+//! An externally implementable trait for custom cache backends.
 
-/// # Trait `Backend`
-///
-/// A base trait for different cache backends (in-memory, database, redis, etc).
+/// A  cache backends (i.e. in-memory, database, redis, etc).
 pub trait Backend: Send + Sized + Sync + 'static {
-    /// # Typealias `Error`
-    ///
-    /// The backend error type.
+    /// A backend error.
     type Error: Send + 'static;
 }
