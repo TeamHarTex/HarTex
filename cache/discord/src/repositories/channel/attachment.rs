@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `attachment` Module
-//!
-//! This module contains the channel attachment repository trait.
+//! The channel attachment repository trait.
 
 use hartex_cache_base::repository::Repository;
 
@@ -30,8 +28,6 @@ use crate::{
     entities::channel::attachment::AttachmentEntity
 };
 
-/// # Trait `AttachmentRepository`
-///
 /// A repository containing attachment objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait AttachmentRepository<B: DiscordBackend>: Repository<AttachmentEntity, B> {}

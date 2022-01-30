@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `user` Module
-//!
-//! This module contains entities related to Discord users.
+//! Entities related to Discord users.
 
 use hartex_base::{
     discord::model::{
@@ -39,8 +37,6 @@ use hartex_cache_base::entity::Entity;
 #[allow(clippy::module_name_repetitions)]
 pub mod current_user;
 
-/// # Struct `UserEntity`
-///
 /// A user entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

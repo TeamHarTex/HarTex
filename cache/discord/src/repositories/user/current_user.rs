@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `current_user` Module
-//!
-//! This module contains the current user repository trait.
+//! The current user repository trait.
 
 use hartex_cache_base::repository::SingleEntityRepository;
 
@@ -30,8 +28,6 @@ use crate::{
     entities::user::current_user::CurrentUserEntity
 };
 
-/// # Trait `CurrentUserRepository`
-///
 /// A repository containing Discord current user objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait CurrentUserRepository<B: DiscordBackend>:

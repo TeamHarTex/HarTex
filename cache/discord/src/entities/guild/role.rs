@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `role` Module
-//!
-//! This module implements the guild role entity.
+//! The guild role entity.
 
 use hartex_base::{
     discord::model::{
@@ -39,8 +37,6 @@ use hartex_base::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `GuildRoleEntity`
-///
 /// A guild role entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

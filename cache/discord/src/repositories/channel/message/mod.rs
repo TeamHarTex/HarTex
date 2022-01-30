@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `message` Module
-//!
-//! This module contains repositories related to Discord channel messages.
+//! Repositories related to Discord channel messages.
 
 use hartex_cache_base::repository::Repository;
 
@@ -32,8 +30,6 @@ use crate::{
 
 pub mod sticker;
 
-/// # Trait `MessageRepository`
-///
 /// A repository containing message objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait MessageRepository<B: DiscordBackend>: Repository<MessageEntity, B> {}

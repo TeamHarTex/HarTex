@@ -21,6 +21,6 @@
 
 //! # The `gateway` Module
 //!
-//! This module contains repositories related to Discord gateway.\
+//! Repositories related to Discord gateway.
 
 pub mod presence;

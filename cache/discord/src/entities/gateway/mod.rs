@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `gateway` Module
-//!
-//! This module contains entities related to Discord gateway.
+//! Entities related to Discord gateway.
 
 pub mod presence;

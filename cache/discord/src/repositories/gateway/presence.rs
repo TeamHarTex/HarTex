@@ -21,7 +21,7 @@
 
 //! # The `presence` Module
 //!
-//! This module contains the gateway presence repository trait.
+//! The gateway presence repository trait.
 
 use hartex_cache_base::repository::Repository;
 
@@ -30,8 +30,6 @@ use crate::{
     entities::gateway::presence::PresenceEntity
 };
 
-/// # Trait `PresenceRepository`
-///
 /// A repository containing presence objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait PresenceRepository<B: DiscordBackend>: Repository<PresenceEntity, B> {}
