@@ -19,22 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `events` Module
-//!
-//! The `events` module contains definitions for events emitted from the Discord API as well as
-//! our custom events.
+//! Various events used within HarTex.
 
-/// # Enum `EventType`
-///
-/// Represents the type of an event.
+/// The type of an event.
 pub enum EventType {
-    /// # Enum Variant `EventType::Twilight`
-    ///
-    /// A twilight event.
+    /// An event emitted by `twilight-*`.
     Twilight,
-
-    /// # Enum Variant `EventType::Custom`
-    ///
     /// A custom event.
     Custom
 }
