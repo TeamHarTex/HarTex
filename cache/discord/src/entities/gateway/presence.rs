@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `presence` Module
-//!
-//! This module implements the gateway presence entity.
+//! The gateway presence entity.
 
 use hartex_base::discord::model::{
     gateway::presence::{
@@ -38,8 +36,6 @@ use hartex_base::discord::model::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `PresenceEntity`
-///
 /// A presence entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

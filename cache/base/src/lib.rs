@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cache_base` - Base Caching Framework
-//!
-//! This crate implements a base framework for caching.
+//! A base library for caching within HarTex.
 
 #![deny(clippy::pedantic, warnings)]
 #![feature(fundamental)]
@@ -40,18 +38,12 @@ pub mod entity;
 pub mod relations;
 pub mod repository;
 
-/// # Trait `Cache`
-///
-/// A base cache with a designated backend.
+/// Cache with a variable backend.
 pub trait Cache<B: Backend> {
-    /// # Trait Method `backend`
-    ///
-    /// Returns a reference-counted reference to the cache backend.
+    /// A reference-counted reference to the cache backend.
     fn backend(&self) -> &Arc<B>;
 }
 
-/// # Typealias `UpdateCacheFuture`
-///
-/// A typealias for a future updating the cache.
+/// A future for updating the cache.
 pub type UpdateCacheFuture<'a, B> =
     Pin<Box<dyn Future<Output = Result<(), <B as Backend>::Error>> + Send + 'a>>;

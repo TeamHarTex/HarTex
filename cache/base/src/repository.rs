@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `repository` Module
-//!
-//! This module contains a base repository trait for different cache repositories.
+//! Common trait for cache repositories.
 
 use std::{
     future::Future,
@@ -39,27 +37,17 @@ use crate::{
     entity::Entity
 };
 
-/// # Trait `Repository`
-///
 /// A repository for a series of specific entities in a specific backend.
 pub trait Repository<E: Entity, B: Backend> {
-    /// # Trait Method `backend`
-    ///
-    /// Returns an immutable reference to the backend of this repository.
+    /// An immutable reference to the backend of this repository.
     fn backend(&self) -> B;
 
-    /// # Trait Method `entity`
-    ///
-    /// Retrieves an entity from the cache by its id.
+    /// An entity from the cache by its id.
     fn entity(&self, id: E::Id) -> GetEntityFuture<E, B::Error>;
 
-    /// # Trait Method `upsert`
-    ///
     /// Upserts an entity into the cache.
     fn upsert(&self, entity: E) -> UpsertEntityFuture<'_, B::Error>;
 
-    /// # Trait Method `upsert`
-    ///
     /// Upserts an iterator of entities into the cache.
     fn upsert_many(
         &self,
@@ -69,56 +57,36 @@ pub trait Repository<E: Entity, B: Backend> {
     }
 }
 
-/// # Trait `SingleEntityRepository`
-///
 /// A repository for a specific entity in a specific backend.
 #[allow(clippy::module_name_repetitions)]
 pub trait SingleEntityRepository<E: Entity, B: Backend> {
-    /// # Trait Method `backend`
-    ///
-    /// Returns an immutable reference to the backend of this repository.
+    /// An immutable reference to the backend of this repository.
     fn backend(&self) -> B;
 
-    /// # Trait Method `entity`
-    ///
-    /// Retrieves the underlying entity.
+    /// The underlying entity.
     fn entity(&self) -> GetEntityFuture<E, B::Error>;
 }
 
-/// # Typealias `GetEntityFuture`
-///
-/// Typealias for a future to retrieve an entity from the cache.
+/// A future to retrieve an entity from the cache.
 pub type GetEntityFuture<'a, T, E> =
     Pin<Box<dyn Future<Output = Result<Option<T>, E>> + Send + 'a>>;
 
-/// # Typealias `EntityStream`
-///
-/// Typealias for a stream of entities.
+/// A stream of entities.
 pub type EntityStream<'a, T, E> = Pin<Box<dyn Stream<Item = Result<T, E>> + Send + 'a>>;
 
-/// # Typealias `StreamEntitiesFuture`
-///
-/// Typealias for a future to stream (retrieve a series of) entities from the cache.
+/// A future to stream (retrieve a series of) entities from the cache.
 pub type StreamEntitiesFuture<'a, T, E> =
     Pin<Box<dyn Future<Output = Result<EntityStream<'a, T, E>, E>> + Send + 'a>>;
 
-/// # Typealias `EntityIdStream`
-///
-/// Typealias for a stream of entity ids.
+/// A stream of entity ids.
 pub type EntityIdStream<'a, Id, E> = Pin<Box<dyn Stream<Item = Result<Id, E>> + Send + 'a>>;
 
-/// # Typealias `StreamEntityIdsFuture`
-///
-/// Typealias for a future to stream (retrieve a series of) entities from the cache.
+/// A future to stream (retrieve a series of) entities from the cache.
 pub type StreamEntityIdsFuture<'a, Id, E> =
     Pin<Box<dyn Future<Output = Result<EntityIdStream<'a, Id, E>, E>> + Send + 'a>>;
 
-/// # Typealias `UpsertEntityFuture`
-///
-/// Typealias for a future to upsert an entity into the cache.
+/// A future to upsert an entity into the cache.
 pub type UpsertEntityFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;
 
-/// # Typealias `UpsertEntitiesFuture`
-///
-/// Typealias for a future to upsert an entity into the cache.
+/// A future to upsert an entity into the cache.
 pub type UpsertEntitiesFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;

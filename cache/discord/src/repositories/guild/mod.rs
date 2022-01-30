@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `guild` Module
-//!
-//! This module contains repositories related to Discord guilds.
+//! Repositories related to Discord guilds.
 
 use hartex_base::discord::model::id::{
     EmojiId,
@@ -66,38 +64,24 @@ pub mod role;
 // TODO: add `voice_states` method to stream voice states
 // TODO: add `widget_channel` method to retrieve the widget channel
 
-/// # Trait `GuildRepository`
-///
 /// A repository containing Discord guild objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait GuildRepository<B: DiscordBackend>: Repository<GuildEntity, B> {
-    /// # Trait Method `emoji_ids`
-    ///
-    /// Returns a stream of emoji ids in a guild.
+    /// A stream of emoji ids in a guild.
     fn emoji_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, EmojiId, B::Error>;
 
-    /// # Trait Method `emojis`
-    ///
-    /// Returns a stream of emojis in a guild.
+    /// A stream of emojis in a guild.
     fn emojis(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, EmojiEntity, B::Error>;
 
-    /// # Trait Method `member_user_ids`
-    ///
-    /// Returns a stream of member (user) ids in a guild.
+    /// A stream of member (user) ids in a guild.
     fn member_user_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, UserId, B::Error>;
 
-    /// # Trait Method `members`
-    ///
-    /// Returns a stream of members in a guild.
+    /// A stream of members in a guild.
     fn members(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, MemberEntity, B::Error>;
 
-    /// # Trait Method `role_ids`
-    ///
-    /// Returns a stream of role ids in a guild.
+    /// A stream of role ids in a guild.
     fn role_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, RoleId, B::Error>;
 
-    /// # Trait Method `roles`
-    ///
-    /// Returns a stream of roles in a guild.
+    /// A stream of roles in a guild.
     fn roles(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
 }

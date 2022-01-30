@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `member` Module
-//!
-//! This module implements the guild member entity.
+//! The guild member entity.
 
 use hartex_base::{
     discord::model::{
@@ -37,8 +35,6 @@ use hartex_base::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `MemberEntity`
-///
 /// A member entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

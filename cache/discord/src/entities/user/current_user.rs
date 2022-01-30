@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `current_user` Module
-//!
-//! This module implements the current user entity.
+//! The current user entity.
 
 use hartex_base::{
     discord::model::{
@@ -36,8 +34,6 @@ use hartex_base::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `CurrentUserEntity`
-///
 /// A current user entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

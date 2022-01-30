@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `guild` Module
-//!
-//! This module contains entities related to Discord guilds.
+//! Entities related to Discord guilds.
 
 use std::slice::Iter;
 
@@ -54,8 +52,6 @@ pub mod emoji;
 pub mod member;
 pub mod role;
 
-/// # Struct `GuildEntity`
-///
 /// A guild entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

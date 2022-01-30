@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `emoji` Module
-//!
-//! This module implements the guild emoji entity.
+//! The guild emoji entity.
 
 use hartex_base::discord::model::{
     guild::Emoji,
@@ -34,8 +32,6 @@ use hartex_base::discord::model::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `EmojiEntity`
-///
 /// An emoji entity.
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::struct_excessive_bools)]

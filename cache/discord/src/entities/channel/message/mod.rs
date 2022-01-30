@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `message` Module
-//!
-//! This module contains entities related to Discord channel messages.
+//! Entities related to Discord channel messages.
 
 use hartex_base::{
     discord::model::{
@@ -60,8 +58,6 @@ use hartex_cache_base::entity::Entity;
 
 pub mod sticker;
 
-/// # Struct `MessageEntity`
-///
 /// A message entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

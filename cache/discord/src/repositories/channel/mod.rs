@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `channel` Module
-//!
-//! This module contains repositories related to Discord channels.
+//! Repositories related to Discord channels.
 
 use hartex_cache_base::repository::Repository;
 
@@ -34,8 +32,6 @@ pub mod attachment;
 pub mod message;
 pub mod thread;
 
-/// # Trait `AttachmentRepository`
-///
 /// A repository containing channel objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait ChannelRepository<B: DiscordBackend>: Repository<ChannelEntity, B> {}

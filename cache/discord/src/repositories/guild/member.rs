@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `member` Module
-//!
-//! This module contains the guild member repository trait.
+//! The guild member repository trait.
 
 use hartex_base::discord::model::id::{
     GuildId,
@@ -47,23 +45,17 @@ use crate::{
     }
 };
 
-/// # Trait `MemberRepository`
-///
 /// A repository containing member objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait MemberRepository<B: DiscordBackend>: Repository<MemberEntity, B> {
-    /// # Trait Method `roles`
-    ///
-    /// Returns a stream of roles of a member.
+    /// A stream of roles of a member.
     fn roles(
         &self,
         guild_id: GuildId,
         user_id: UserId
     ) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
 
-    /// # Trait Method `user`
-    ///
-    /// Returns the associated user of the member.
+    /// The associated user of the member.
     fn user(
         &self,
         guild_id: GuildId,

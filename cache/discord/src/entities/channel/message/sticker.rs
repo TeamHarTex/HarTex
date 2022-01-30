@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `sticker` Module
-//!
-//! This module implements the channel message sticker entity.
+//! The channel message sticker entity.
 
 use hartex_base::{
     discord::model::{
@@ -44,8 +42,6 @@ use hartex_base::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `StickerEntity`
-///
 /// A message sticker entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -143,8 +139,6 @@ impl From<Sticker> for StickerEntity {
     }
 }
 
-/// # Struct `StickerEntity`
-///
 /// A sticker pack entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

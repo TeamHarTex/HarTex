@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `channel` Module
-//!
-//! This module contains entities related to Discord channels.
+//! Entities related to Discord channels.
 
 use hartex_base::{
     discord::model::{
@@ -52,8 +50,6 @@ pub mod attachment;
 pub mod message;
 pub mod thread;
 
-/// # Struct `ChannelEntity`
-///
 /// A channel entity of any type.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]

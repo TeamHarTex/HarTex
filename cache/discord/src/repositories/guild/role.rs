@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `role` Module
-//!
-//! This module contains the guild role repository trait.
+//! The guild role repository trait.
 
 use hartex_base::discord::model::id::RoleId;
 use hartex_cache_base::{
@@ -40,14 +38,10 @@ use crate::{
     }
 };
 
-/// # Trait `RoleRepository`
-///
 /// A repository containing Discord role objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait RoleRepository<B: DiscordBackend>: Repository<RoleEntity, B> {
-    /// # Trait Method `guild`
-    ///
-    /// Returns the guild this role is associated with.
+    /// The guild this role is associated with.
     fn guild(&self, role_id: RoleId) -> GetEntityFuture<'_, GuildEntity, B::Error> {
         let backend = self.backend();
 

@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `sticker` Module
-//!
-//! This module contains the channel message sticker repository trait.
+//! The channel message sticker repository trait.
 
 use hartex_base::discord::model::channel::message::sticker::{
     StickerId,
@@ -41,27 +39,21 @@ use crate::{
     }
 };
 
-/// # Trait `StickerPackRepository`
-///
 /// A repository containing sticker pack objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait StickerPackRepository<B: DiscordBackend>: Repository<StickerPackEntity, B> {
     /// # Trait Method `stickers`
     ///
-    /// Returns the stickers in this sticker pack.
+    /// The stickers in this sticker pack.
     #[rustfmt::skip] // rustfmt suggests very shit formatting here, so we skip this
     fn stickers(&self, pack_id: StickerPackId)
         -> StreamEntitiesFuture<'_, StickerEntity, B::Error>;
 }
 
-/// # Trait `StickerRepository`
-///
 /// A repository containing sticker objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait StickerRepository<B: DiscordBackend>: Repository<StickerEntity, B> {
-    /// # Trait Method `sticker_pack`
-    ///
-    /// Returns the sticker pack associated with this sticker, if any.
+    /// The sticker pack associated with this sticker, if any.
     fn sticker_pack(
         &self,
         sticker_id: StickerId

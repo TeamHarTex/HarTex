@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `entities` Module
-//!
-//! This module contains various entities in the Discord cache.
+//! Various entities in the Discord cache.
 
 pub mod channel;
 pub mod gateway;

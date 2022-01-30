@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `relations` Module
-//!
-//! This module contains helper functions for relation manipulations.
+//! Helper functions for relation manipulations.
 
 use crate::{
     backend::Backend,
@@ -32,6 +30,7 @@ use crate::{
     }
 };
 
+/// Maps an entity from a repository to an entity of a foreign entity.
 pub fn map_entity<
     'a,
     B: Backend,
