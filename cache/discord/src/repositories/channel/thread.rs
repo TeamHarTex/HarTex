@@ -19,7 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 //! The thread repository trait.
 
 use hartex_cache_base::repository::Repository;
