@@ -1,5 +1,4 @@
-HarTex-rust-discord-bot
-=======================
+# HarTex, a Rust Discord Bot
 
 [![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)](https://discord.gg/Xu8453VBAv)
 
@@ -9,52 +8,97 @@ HarTex-rust-discord-bot
 
 ![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
 
-HarTex is a Discord Bot primarily for moderation and administration. It is built to be stable, flexible and customizable.
+A Discord bot primarily for moderation and administration; built to be stable, flexible and
+customizable.
 
-Honourable Mention
-------------------
+## Honourable Mention
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo." width="100">
 
 This project is built with the amazing JetBrains products. [Check them out!](https://www.jetbrains.com/)
 
-Should I run HarTex locally?
-----------------------------
+## Project Information
 
-Probably not. HarTex has so many moving pieces that running a local instance of it is very complicated. The sole purpose of having
-the source code released and updated frequently, is to allow others to understand the inner workings of the bot and audit its functionality.
-You *may* run a local instance of HarTex for your guild.
+### Minimum Supported Rust Version (MSRV)
 
-### Notes for `x.py`
+This project has an MSRV of `1.60.0`. What this means is that, a Rust compiler of version
+`1.60.0` or above is required to build and run the entire project.
 
-You need **Python 3.10** to run the Python script (due to the use of `match` statements).
-
-HarTex Development
-------------------
+`1.60.0` is typically the latest nightly version of the compiler - we use the nightly release
+channel because there are certain features we need are gated behind a feature flag which is
+only usable when using the nightly compiler.
 
 ### Project Structure
 
-| Crate                        | Description                                                                                      |
-|------------------------------|--------------------------------------------------------------------------------------------------|
-| `hartex`                     | The binary of the bot.                                                                           |
-| `hartex_cmdsys`              | The command system of the bot.                                                                   |
-| `hartex_conftoml`            | The TOML configuration API, deserialization and serialization of TOML configuration of the bot.  |
-| `hartex_base`                | The core library of the bot, designed to be as minimal as possible but provides essential types. |
-| `hartex_cache_discord`       | The Discord object cache for the bot.                                                            |
-| `hartex_dbmani`              | The database manipulation component of the bot.                                                  |
-| `hartex_driver`              | The "main" function of the bot. Glues everything together.                                       |
-| `hartex_env`                 | The wrappers around a collection of useful environment variables used by the bot.                |
-| `hartex_eventsys`            | The event system of the bot, contains custom events and emitters.                                |
-| `hartex_locale`              | The localization facilities for the bot.                                                         |
-| `hartex_plugin_localization` | The helper structures for localization to reduce code messiness.                                 |
-| `hartex_model`               | The various convenience models for the bot to use.                                               |
-| `hartex_plugins`             | The plugins (command modules, functionality modules) of the bot.                                 |
-| `hartex_utils`               | The various utilities that are useful for the bot.                                               |
+This project is organized with a Cargo workspace which includes all the crates in the root
+directory of the repository.
 
-### Can I Contribute?
+Individual crates have their own detailed description and README (except the `hartex` binary
+crate, which such description is included in this main README). Additionally, brief and simple
+descriptions of each crate will be provided in this root README.
 
-Definitely! Feel free to file issues and pull requests, or even start discussions so discuss various issues or ideas to further
-improve the code of the bot or even its functionalities. Contributions are highly welcomed!
+#### `hartex`
+
+This is the main binary of the bot. This crate contains the code that briefly sets up the
+runtime environment, including:
+- loading the environment variables from a `.env` file for later manipulation;
+- initializing the `tokio` runtime for asynchronous and multithreaded execution
+
+After that, the "actual" main entry point in the `hartex_driver` crate is executed, which
+handles the rest.
+
+#### `hartex_base`
+
+This is the base crate for the bot, which contains minimum and abstract functionality for the
+bot.
+
+#### `hartex_cache_base`
+
+This is the base framework for the caching implementation of the bot.
+
+#### `hartex_cache_discord`
+
+This is a Discord object cache for the bot, built upon `hartex_cache_base`.
+
+#### `hartex_cmdsys`
+
+This is an implementation of a command system for the bot.
+
+#### `hartex_conftoml`
+
+This crate implements the TOML Configuration API of the bot.
+
+#### `hartex_dbmani`
+
+This crate contains various database manipulation functions for the bot.
+
+#### `hartex_driver`
+
+This crate is the actual "main entry point" of the bot.
+
+#### `hartex_env`
+
+This crate is a wrapper over the various environment variables that the bot makes use of.
+
+#### `hartex_locale`
+
+This crate contains a base framework, and provides various definitions for locales.
+
+#### `hartex_localization_impl`
+
+This crate contains an implementation of localization for the bot, built upon `hartex_locale`.
+
+#### `hartex_model`
+
+This crate contains various models for the bot.
+
+#### `hartex_plugins`
+
+This crate implements the various modules of the bot (commands, background tasks, etc.).
+
+#### `hartex_utils`
+
+This crate provides utilities for the bot codebase.
 
 ### Community Guild
 
