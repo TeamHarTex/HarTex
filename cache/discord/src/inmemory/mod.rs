@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `inmemory` Module
-//!
-//! This module contains the in-memory backend for the cache.
+//! The in-memory backend of the cache.
 
 use std::{
     error::Error,
@@ -93,8 +91,6 @@ use crate::{
 
 pub mod repository;
 
-/// # Struct `InMemoryBackend`
-///
 /// In-memory backend for the cache.
 #[derive(Clone)]
 pub struct InMemoryBackend(Arc<InMemoryBackendRef>);
@@ -177,8 +173,6 @@ impl DiscordBackend for InMemoryBackend {
     }
 }
 
-/// # Struct `InMemoryBackendError`
-///
 /// Error returned from backend operations.
 #[derive(Clone, Debug)]
 pub struct InMemoryBackendError;

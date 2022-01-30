@@ -120,8 +120,6 @@ use crate::{
     }
 };
 
-/// # Struct `InMemoryRepository`
-///
 /// A cache repository with the in-memory cache backend.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -359,9 +357,7 @@ impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
 }
 
 pub trait EntityExt: Clone + Entity {
-    /// # Trait Method `repository`
-    ///
-    /// Returns the corresponding repository of the entity.
+    /// The corresponding repository of the entity.
     fn repository(backend: &InMemoryBackend) -> &DashMap<Self::Id, Self>;
 }
 

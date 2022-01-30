@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `thread` Module
-//!
-//! This module contains the thread repository trait.
+//! The thread repository trait.
 
 use hartex_cache_base::repository::Repository;
 
@@ -30,8 +28,6 @@ use crate::{
     entities::channel::thread::ThreadEntity
 };
 
-/// # Trait `ThreadRepository`
-///
 /// A repository containing thread objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait ThreadRepository<B: DiscordBackend>: Repository<ThreadEntity, B> {}

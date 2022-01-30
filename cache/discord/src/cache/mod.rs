@@ -31,9 +31,7 @@ use crate::backend::DiscordBackend;
 
 pub mod update;
 
-/// # Struct `DiscordCache`
-///
-/// A Discord cache.
+/// A Discord cache with varying backend.
 #[allow(clippy::module_name_repetitions)]
 pub struct DiscordCache<B: DiscordBackend> {
     backend: Arc<B>,
@@ -43,8 +41,6 @@ pub struct DiscordCache<B: DiscordBackend> {
 }
 
 impl<B: DiscordBackend> DiscordCache<B> {
-    /// # Static Method `with_backend`
-    ///
     /// Creates a new instance of a cache with the provided cache backend.
     pub fn with_backend(backend: impl Into<Arc<B>>) -> Self {
         let backend = backend.into();

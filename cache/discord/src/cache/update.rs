@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `update` Module
-//!
-//! This module implements the `CacheUpdate` trait for various Discord events.
+//! Implementations of the `CacheUpdate` trait for various Discord events.
 
 use futures_util::{
     future::FutureExt,
@@ -54,8 +52,6 @@ use crate::{
     }
 };
 
-/// # Trait `CacheUpdate`
-///
 /// A trait for callbacks / events that may update the cache.
 #[allow(clippy::module_name_repetitions)]
 pub trait DiscordCacheUpdate<B: DiscordBackend> {

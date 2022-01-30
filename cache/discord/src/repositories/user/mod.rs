@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `user` Module
-//!
-//! This module contains repositories related to Discord users.
+//! Repositories related to Discord users.
 
 use hartex_cache_base::repository::Repository;
 
@@ -33,8 +31,6 @@ use crate::{
 #[allow(clippy::module_name_repetitions)]
 pub mod current_user;
 
-/// # Trait `UserRepository`
-///
 /// A repository containing Discord user objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait UserRepository<B: DiscordBackend>: Repository<UserEntity, B> {}

@@ -36,4 +36,5 @@ pub mod repositories;
 use cache::DiscordCache;
 
 #[cfg(feature = "in-memory-backend")]
+/// A Discord cache using the in-memory cache backend.
 pub type Cache = DiscordCache<inmemory::InMemoryBackend>;

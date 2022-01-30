@@ -19,23 +19,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `entity` Module
-//!
-//! This module contains a base entity trait for different cache entities.
+//! Common trait for cache entities.
 
 use std::hash::Hash;
 
-/// Trait `Entity`
-///
 /// A cachable entity.
 pub trait Entity: Send + Sync {
-    /// # Typealias `Id`
-    ///
-    /// The id of the entity.
+    /// The id type of the entity.
     type Id: Copy + Eq + Hash + Send + Sync;
 
-    /// # Trait Method `id`
-    ///
-    /// Returns the id of the entity.
+    /// The id of the entity.
     fn id(&self) -> Self::Id;
 }

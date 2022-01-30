@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `thread` Module
-//!
-//! This module implements the thread entity.
+//! The thread entity.
 
 use hartex_base::{
     discord::model::{
@@ -48,6 +46,7 @@ use hartex_base::{
 };
 use hartex_cache_base::entity::Entity;
 
+/// A thread entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct ThreadEntity {

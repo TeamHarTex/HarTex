@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `attachment` Module
-//!
-//! This module implements the channel attachment entity.
+//! The channel attachment entity.
 
 use hartex_base::{
     discord::model::{
@@ -35,8 +33,6 @@ use hartex_base::{
 };
 use hartex_cache_base::entity::Entity;
 
-/// # Struct `AttachmentEntity`
-///
 /// An attachment entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
