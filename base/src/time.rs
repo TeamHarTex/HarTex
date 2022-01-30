@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `time` Module
-//!
-//! This module provides time functionality for `HarTex`.
+//! Re-exports of the `chrono` library.
 
 pub use chrono::*;

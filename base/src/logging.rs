@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `logging` Module
-//!
-//! This module contains the re-exports for the `tracing` library.
+//! Re-exports for `tracing` and `tracing_subscriber` libraries.
 
 pub use tracing;
 pub use tracing_subscriber;
