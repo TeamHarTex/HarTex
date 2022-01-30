@@ -161,6 +161,7 @@ impl Default for ThreadEntity {
                 archived: false,
                 auto_archive_duration: AutoArchiveDuration::Hour,
                 archive_timestamp: Timestamp::from_secs(1).expect("parsing failed"),
+                create_timestamp: None,
                 invitable: None,
                 locked: false
             }
