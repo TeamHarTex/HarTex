@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `framework` Module
-//!
-//! This module contains the command framework, which glues the entire command system together.
+//! A command framework, which glues the entire command system together.
 
 use hartex_eventsys::{
     events::{
@@ -31,8 +29,6 @@ use hartex_eventsys::{
     listener::Listeners
 };
 
-/// # Struct `CommandFramework`
-///
 /// The command framework.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Default)]
@@ -41,9 +37,7 @@ pub struct CommandFramework {
 }
 
 impl CommandFramework {
-    /// # Instance Method `CommandFramework::events`
-    ///
-    /// Returns a stream of events and consumes the framework.
+    /// A stream of events and consumes the framework.
     #[must_use]
     pub fn events(self) -> Events {
         let receiver = self.listeners.add();
@@ -51,9 +45,7 @@ impl CommandFramework {
         Events::new(receiver)
     }
 
-    /// # Instance Method `CommandFramework::listeners`
-    ///
-    /// Returns the listeners of the current framework and consumes it.
+    /// The listeners of the current framework and consumes it.
     #[must_use]
     pub fn listeners(self) -> Listeners<HarTexEvent> {
         self.listeners
