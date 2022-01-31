@@ -19,10 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cmdsys` - The `HarTex` Command System Library
-//!
-//! The `hartex_cmdsys` library contains an implementation of a command system for `HarTex` Discord
-//! bot, containing various utilities for the implementation.
+//! A command system for the bot and various utilities for the implementation.
 
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
