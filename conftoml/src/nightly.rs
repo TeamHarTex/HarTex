@@ -19,17 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `nightly` Module
-//!
-//! This module contains configuration for opt-in nightly unstable features that are in the testing
+//! Configuration for opt-in nightly unstable features that are in the testing
 //! phase.
 //!
 //! This API is very unstable and may change rapidly as features are added into the bot.
 
 use serde::Deserialize;
 
-/// # Struct `NightlyFeatures`
-///
 /// The opt-in nightly features that the bot provides.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Default, Deserialize, PartialEq)]
