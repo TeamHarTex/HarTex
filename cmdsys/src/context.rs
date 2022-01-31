@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `context` Module
-//!
-//! This module provides a command context used in commands.
+//! A command context used in commands.
 
 use std::{
     ops::Deref,
@@ -34,8 +32,6 @@ use hartex_base::discord::{
     model::application::interaction::Interaction
 };
 
-/// # Struct `CommandContext`
-///
 /// The command context used for command invocation.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -43,8 +39,6 @@ pub struct CommandContext {
     pub inner: Arc<CommandContextInner>
 }
 
-/// # Struct `CommandContextInner`
-///
 /// The inner structure for `CommandContext`.
 #[derive(Clone)]
 pub struct CommandContextInner {
