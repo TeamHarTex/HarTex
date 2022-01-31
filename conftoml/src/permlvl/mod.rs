@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `permlvl` Module
-//!
-//! This module contains configuration models for permission levels.
+//! Configuration models for permission levels.
 
 use std::{
     fmt::{
@@ -42,9 +40,7 @@ use serde::{
 
 pub mod map;
 
-/// # Struct `PermissionLevels`
-///
-/// Represents the permission levels configured.
+/// The permission levels configured.
 #[derive(Clone, Debug, Default, Deserialize, PartialEq)]
 pub struct PermissionLevels {
     #[serde(default)]
@@ -53,9 +49,7 @@ pub struct PermissionLevels {
     pub users: map::PermissionLevelMap<GenericId>
 }
 
-/// # Struct `RoleId`
-///
-/// Represents a role ID.
+/// A generic ID.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GenericId(NonZeroU64);
 
