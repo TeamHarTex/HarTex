@@ -62,8 +62,6 @@ impl Display for Timezone {
     }
 }
 
-/// # Struct `GuildConfigTimezoneDeserializerRefStrVisitor`
-///
 /// A `&str` visitor for deserializing a `Timezone` for `GuildConfig`.
 pub struct GuildConfigTimezoneDeserializerRefStrVisitor;
 
