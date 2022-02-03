@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_env` - Environment Wrapper for `HarTex` Discord bot
-//!
-//! The `hartex_env` library various environments for different aspects of the `HarTex` Discord bot.
+//! Environments for different aspects of the `HarTex` Discord bot.
 
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
@@ -40,18 +38,13 @@ use hartex_base::{
     logging::tracing
 };
 
-/// # Struct `DatabaseEnv`
-///
-/// Represents a collection of environment variables useful for the bot during database
-/// manipulations.
+/// A collection of environment variables useful for the bot during database manipulations.
 pub struct DatabaseEnv {
     pub pgsql_credentials_guilds: Option<String>,
     pub pgsql_credentials_guildconfig: Option<String>
 }
 
 impl DatabaseEnv {
-    /// # Static Method `DatabaseEnv::get`
-    ///
     /// Retrieves the environment variables.
     #[must_use]
     pub fn get() -> Self {
@@ -68,9 +61,7 @@ impl DatabaseEnv {
     }
 }
 
-/// # Struct `PluginEnv`
-///
-/// Represents a collection of environment variables useful for the bot in plugins.
+/// A collection of environment variables useful for the bot in plugins.
 pub struct PluginEnv {
     pub global_administrator_uid: Option<UserId>,
     pub support_guild_gid: Option<GuildId>,
@@ -79,8 +70,6 @@ pub struct PluginEnv {
 }
 
 impl PluginEnv {
-    /// # Static Method `PluginEnv::get`
-    ///
     /// Retrieves the environment variables.
     #[allow(clippy::missing_panics_doc)] // this function should never panic
     #[must_use]
@@ -110,17 +99,13 @@ impl PluginEnv {
     }
 }
 
-/// # Struct `StartupEnv`
-///
-/// Represents a collection of environment variables useful for the bot during startup.
+/// A collection of environment variables useful for the bot during startup.
 pub struct StartupEnv {
     pub application_aid: Option<NonZeroU64>,
     pub bot_token: Option<String>
 }
 
 impl StartupEnv {
-    /// # Static Method `StartupEnv::get`
-    ///
     /// Retrieves the environment variables.
     #[allow(clippy::missing_panics_doc)] // this function should never panic
     #[must_use]
