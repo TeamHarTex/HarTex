@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `guildconf` Module
-//!
-//! This module defines a database manipulation procedure to retrieve the TOML configuration of a
+//! A database manipulation procedure to retrieve the TOML configuration of a
 //! specific guild, and deserializing it into Rust structs so that it is usable in Rust code.
 
 use std::{
@@ -54,8 +52,6 @@ use crate::{
 
 mod model;
 
-/// # Struct `GetGuildConfig`
-///
 /// Gets the guild configuration from the database.
 pub struct GetGuildConfig {
     pending: Option<PendingFuture<GuildConfig>>,
@@ -64,12 +60,7 @@ pub struct GetGuildConfig {
 }
 
 impl GetGuildConfig {
-    /// # Constructor `GetGuildConfig::new`
-    ///
     /// Creates a new `GetGuildConfig` with the provided `guild_id`.
-    ///
-    /// ## Parameters
-    /// - `guild_id`, type `GuildId`: the guild id to get the configuration for.
     #[must_use]
     pub fn new(guild_id: GuildId) -> Self {
         Self {
@@ -79,9 +70,6 @@ impl GetGuildConfig {
         }
     }
 
-    /// # Private Function `GetGuildConfig::start`
-    ///
-    /// Starts the future.
     #[allow(clippy::unnecessary_wraps)]
     fn start(&mut self) -> HarTexResult<()> {
         let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
@@ -109,8 +97,6 @@ impl Future for GetGuildConfig {
     }
 }
 
-/// # Asynchronous Function `exec_future`
-///
 /// Executes the future.
 async fn exec_future(guild_id: GuildId) -> HarTexResult<GuildConfig> {
     let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
