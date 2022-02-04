@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_plugins` - The `HarTex` Plugins Library
-//!
-//! The `hartex_plugins` library implements the bot plugins.
+//! The bot plugins.
 
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
@@ -36,13 +34,9 @@ pub mod global;
 pub mod information;
 pub mod utilities;
 
-/// # Static `PLUGIN_ENV`
-///
 /// Useful environment variables for various bot plugins
 pub static PLUGIN_ENV: SyncLazy<PluginEnv> = SyncLazy::new(PluginEnv::get);
 
-/// # Function `init_env`
-///
 /// Initializes the environment variables for later use, must be called in the "entry point" in
 /// the `hartex_driver` crate for the environment variables to be usable.
 pub fn init_env() {

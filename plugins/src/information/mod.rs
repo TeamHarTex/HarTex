@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `information` Module
-//!
-//! This module implements the `Information` plugin, which is for informational commands
+//! The `Information` plugin, which is for informational commands.
 
 pub mod guildinfo;
 pub mod userinfo;
