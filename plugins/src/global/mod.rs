@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `global` Module
-//!
-//! This module implements the `Global` plugin, which is for the general and global commands
+//! The `Global` plugin, which is for the general and global commands.
 
 pub mod about;
 pub mod ping;

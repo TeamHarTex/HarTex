@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `userinfo` Module
-//!
-//! This module implements the `userinfo` command.
+//! The `userinfo` command.
 
 use hartex_base::{
     discord::{
@@ -90,8 +88,6 @@ use hartex_utils::{
     FutureRetType
 };
 
-/// # Struct `Userinfo`
-///
 /// The `userinfo` command.
 pub struct Userinfo;
 
@@ -129,13 +125,7 @@ impl Command for Userinfo {
     }
 }
 
-/// # Asynchronous Function `execute_userinfo_command`
-///
 /// Executes the `userinfo` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
-/// - `cache`, type `InMemoryCache`: the in-memory cache to use.
 #[allow(clippy::too_many_lines)]
 async fn execute_userinfo_command(
     ctx: CommandContext,

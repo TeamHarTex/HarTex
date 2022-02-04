@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `refroles` Module
-//!
-//! This module implements the `refroles` command.
+//! The `refroles` command.
 
 use hartex_base::{
     discord::{
@@ -56,8 +54,6 @@ use tokio::time;
 
 use crate::PLUGIN_ENV;
 
-/// # Struct `Refroles`
-///
 /// The `refroles` command.
 pub struct Refroles;
 
@@ -83,12 +79,7 @@ impl Command for Refroles {
     }
 }
 
-/// # Asynchronous Function `execute_refroles_command`
-///
 /// Executes the `refroles` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::too_many_lines)]
 async fn execute_refroles_command(
