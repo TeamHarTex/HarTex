@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `ping` Module
-//!
-//! This module implements the `ping` command.
+//! The `ping` command.
 
 use hartex_base::{
     discord::{
@@ -56,8 +54,6 @@ use hartex_utils::{
     FutureRetType
 };
 
-/// # Struct `Ping`
-///
 /// The `ping` command.
 pub struct Ping;
 
@@ -83,12 +79,7 @@ impl Command for Ping {
     }
 }
 
-/// # Asynchronous Function `exec_ping_slash_cmd`
-///
 /// Executes the `ping` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command

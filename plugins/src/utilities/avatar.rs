@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `avatar` Module
-//!
-//! This module implements the `avatar` command.
+//! The `avatar` command.
 
 use hartex_base::{
     discord::{
@@ -78,12 +76,7 @@ impl Command for Avatar {
     }
 }
 
-/// # Asynchronous Function `execute_avatar_command`
-///
 /// Executes the `avatar` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 #[allow(clippy::unused_async)]
 async fn execute_avatar_command(_: CommandContext) -> HarTexResult<()> {
     Ok(())
