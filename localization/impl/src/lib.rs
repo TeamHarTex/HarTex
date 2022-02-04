@@ -19,10 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_plugin_localize` - The `HarTex` Plugin Localization Library
-//!
-//! The `hartex_plugin_localize` implements helper structures to reduce
-//! code messiness for localization in `hartex_plugins`.
+//! Helper structures to reduce code messiness for localization in `hartex_plugins`.
 
 pub mod global;
 pub mod information;
