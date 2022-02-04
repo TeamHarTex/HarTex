@@ -19,10 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_model` - Models for `HarTex` Discord bot
-//!
-//! The `hartex_model` crate contains various models for use in `HarTex` Discord bot for its various
-//! functionalities.
+//! Models for use in `HarTex` Discord bot for its various functionalities.
 
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
