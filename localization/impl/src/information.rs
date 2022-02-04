@@ -19,18 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `global` Module
-//!
-//! This module implements helper localization structures for the `Information` plugin.
+//! Helper localization structures for the `Information` plugin.
 
 use hartex_base::error::HarTexResult;
 use hartex_conftoml::guildconf::locale::Locale as LocaleEnum;
 use hartex_locale::Locale;
 
-/// # Struct `GuildinfoCmdLocalize`
-///
-/// Localization helper structure for `guildinfo` command of the `information`
-/// plugin.
+/// Localization helper structure for `guildinfo` command of the `information` plugin.
 pub struct GuildinfoCmdLocalize {
     pub embed_author: String,
     pub embed_guild_name_field: String,
