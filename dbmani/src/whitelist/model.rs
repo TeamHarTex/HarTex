@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `model` Module
-//!
-//! This module contains some models for use in the `GetWhitelistedGuilds` future.
+//! Models for use in the `GetWhitelistedGuilds` future.
 
 use std::num::NonZeroU64;
 

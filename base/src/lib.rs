@@ -19,17 +19,36 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_base` - The `HarTex` Core Library
+//! # The HarTex Base Library
 //!
-//! The `hartex_base` library contains the core functionality for the `HarTex` Discord bot.
+//! The HarTex Base Library is the foundation of the entire HarTex bot. It is the glue between
+//! various libraries that the bot utilises often, and the functionalities of the bot itself.
 //!
-//! ## Features
+//! The base library is *minimal*. It only re-exports some commonly-used libraries used throughout
+//! the codebase (often gated behind feature flags to avoid redundant exports); while also
+//! providing various primitive types and sometimes extensions to The Rust Standard Library.
 //!
-//! - `twilight-bundled`: bundles most of the `twilight` ecosystem of crates with the library,
-//!                       removes the need to include the dependencies repeatedly across the
-//!                       `HarTex` crates.
+//! ## Feature Flags
 //!
-//! - `tracing-bundled`: bundles tracing, a logging library for use within the `HarTex` crates.
+//! ### `twilight-bundled`
+//!
+//! This feature flag enables the bundling of the `twilight-*` ecosystem libraries within the base
+//! library. This feature is off by default.
+//!
+//! To enable this feature, add the following line in your `Cargo.toml` file:
+//! ```toml
+//! hartex_base = { git = "https://github.com/HarTexTeam/HarTex-rust-discord-bot.git", features = [ "twilight-bundled" ] }
+//! ```
+//!
+//! ### `tracing-bundled`
+//!
+//! This feature flag enables the bundling of the `tracing` and `tracing_subscriber` libraries
+//! within the base library. This feature is off by default.
+//!
+//! To enable this feature, add the following line in your `Cargo.toml` file:
+//! ```toml
+//! hartex_base = { git = "https://github.com/HarTexTeam/HarTex-rust-discord-bot.git", features = [ "tracing-bundled" ] }
+//! ```
 
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
@@ -45,17 +64,15 @@ pub mod logging;
 pub mod stdext;
 pub mod time;
 
-/// # Function `hartex_version`
-///
-/// Returns the current version of `HarTex` Discord bot.
+/// The current version of the bot; corresponds to the `CFG_VERSION_STR` environment variable at
+/// compile time.
 #[must_use]
 pub fn hartex_version() -> &'static str {
     env!("CFG_VERSION_STR")
 }
 
-/// # Function `is_stable`
-///
-/// Returns whether this version of the bot is stable.
+/// Whether this particular build of the bot is stable (i.e. whether nightly features are enabled).
+/// Corresponds to the `CFG_IS_STABLE` environment variable at compile time.
 #[must_use]
 pub fn is_stable() -> bool {
     matches!(env!("CFG_IS_STABLE"), "true")

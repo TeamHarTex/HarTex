@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `guildconf` Module
-//!
-//! This module contains configuration models specifically for guild-specific configuration.
+//! Configuration models specifically for guild-specific configuration.
 
 use serde::{
     de,
@@ -31,9 +29,7 @@ use serde::{
 pub mod locale;
 pub mod tz;
 
-/// # Struct `GuildConfiguration`
-///
-/// Represents guild-specific configuration.
+/// Guild-specific configuration.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct GuildConfiguration {
     #[serde(default)]

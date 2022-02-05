@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `locale` Module
-//!
-//! This module contains configuration for the bot interface locale (and language).
+//! Configuration for the bot interface locale (and language).
 
 use std::fmt::{
     Display,
@@ -34,28 +32,15 @@ use serde::de::{
     Visitor
 };
 
-/// # Enum `Locale`
-///
-/// Represents a locale (and language).
+/// A locale (and language).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Locale {
-    /// # Enum Variant `Locale::EnAu`
-    ///
     /// The "en_AU" locale.
     EnAu,
-
-    /// # Enum Variant `Locale::EnGb`
-    ///
     /// The "en_GB" locale.
     EnGb,
-
-    /// # Enum Variant `Locale::EnUs`
-    ///
     /// The "en_US" locale.
     EnUs,
-
-    /// # Enum Variant `Locale::ZhHk`
-    ///
     /// The `zh_HK`
     ZhHk
 }
@@ -71,8 +56,6 @@ impl Display for Locale {
     }
 }
 
-/// # Struct `GuildConfigLocaleDeserializerRefStrVisitor`
-///
 /// A `&str` visitor for deserializing a `Locale` for `GuildConfig`.
 pub struct GuildConfigLocaleDeserializerRefStrVisitor;
 

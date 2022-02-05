@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `source` Module
-//!
-//! This module implements the `source` command.
+//! The `source` command.
 
 use hartex_base::{
     discord::{
@@ -53,8 +51,6 @@ use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_localization_impl::global::SourceCmdLocalize;
 use hartex_utils::FutureRetType;
 
-/// # Struct `Source`
-///
 /// The `source` command.
 pub struct Source;
 
@@ -80,12 +76,7 @@ impl Command for Source {
     }
 }
 
-/// # Asynchronous Function `execute_source_command`
-///
 /// Executes the `source` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
@@ -129,7 +120,7 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
                     "{message} <https://github.com/HarTexTeam/HarTex-rust-discord-bot>.",
                     message = localize.prerepo_uri_msg
                 )),
-                embeds: vec![],
+                embeds: None,
                 flags: None,
                 tts: None
             })

@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `tz` Module
-//!
-//! This module contains the `Timezone` configuration model.
+//! The `Timezone` configuration model.
 
 use std::fmt::{
     Display,
@@ -34,25 +32,16 @@ use serde::de::{
     Visitor
 };
 
-/// # Enum `Timezone`
-///
-/// Represents a timezone.
+/// A timezone.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Timezone {
-    /// # Enum Variant `Timezone::AsiaHongKong`
-    ///
     /// The "Asia/Hong_Kong" timezone.
     AsiaHongKong,
-
-    /// # Enum Variant `Timezone::UTC`
-    ///
     /// The "UTC" timezone.
     UTC
 }
 
 impl Timezone {
-    /// # Instance Method `into_offset_secs`
-    ///
     /// Converts the timezone to a offset usable with `chrono` timezones.
     #[allow(clippy::erasing_op)]
     #[must_use]
@@ -73,8 +62,6 @@ impl Display for Timezone {
     }
 }
 
-/// # Struct `GuildConfigTimezoneDeserializerRefStrVisitor`
-///
 /// A `&str` visitor for deserializing a `Timezone` for `GuildConfig`.
 pub struct GuildConfigTimezoneDeserializerRefStrVisitor;
 

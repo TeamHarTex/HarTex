@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `events` Module
-//!
-//! This module defines some custom events that can be sent and received within `HarTex` Discord bot.
+//! Some custom events that can be sent and received within `HarTex` Discord bot.
 
 use std::{
     pin::Pin,
@@ -38,9 +36,7 @@ use futures_util::{
 };
 use hartex_model::payload::CommandExecuted;
 
-/// # Struct `Events`
-///
-/// This is basically a wrapper around `UnboundedReceiver<HarTexEvent>`; it receives event from
+/// A wrapper around `UnboundedReceiver<HarTexEvent>`; it receives event from
 /// the stream.
 #[allow(clippy::module_name_repetitions)]
 pub struct Events {
@@ -48,12 +44,7 @@ pub struct Events {
 }
 
 impl Events {
-    /// # Constructor `Events::new`
-    ///
     /// Creates a new `Events` with the given `UnboundedReceiver`
-    ///
-    /// ## Parameters
-    /// - `receiver`, type `UnboundedReceiver`: the unbounded receiver to create this instance with
     #[must_use]
     pub fn new(receiver: UnboundedReceiver<HarTexEvent>) -> Self {
         Self {
@@ -70,17 +61,10 @@ impl Stream for Events {
     }
 }
 
-/// # Enum `HarTexEvent`
-///
-/// An enumeration represents the various custom-defined events that is used within `HarTex`.
+/// The various custom-defined events that is used within `HarTex`.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub enum HarTexEvent {
-    /// # Enum Variant `HarTexEvent::CommandExecuted`
-    ///
     /// A command is executed.
-    ///
-    /// ## Tuple Struct Parameters
-    /// - `0`, type `Box<CommandExecuted>`: the payload of the event.
     CommandExecuted(Box<CommandExecuted>)
 }

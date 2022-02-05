@@ -19,17 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! The `emitter` Module
-//!
-//! This module contains an emitter used for emitting the custom events.
+//! An emitter used for emitting the custom events.
 
 use crate::{
     events,
     listener
 };
 
-/// # Struct `EventEmitter`
-///
 /// An event emitter.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -38,12 +34,7 @@ pub struct EventEmitter {
 }
 
 impl EventEmitter {
-    /// # Constructor `EventEmitter::new`
-    ///
     /// Creates a new emitter with the corresponding listeners.
-    ///
-    /// ## Parameters
-    /// - `listeners`, type `Listeners<HarTexEvent>`; the event listeners.
     #[must_use]
     pub fn new(listeners: listener::Listeners<events::HarTexEvent>) -> Self {
         Self {
@@ -51,12 +42,7 @@ impl EventEmitter {
         }
     }
 
-    /// # Constructor `EventEmitter::emit`
-    ///
-    /// Emits a event.
-    ///
-    /// ## Parameters
-    /// - `event`, type `HarTexEvent`; the event to emit
+    /// Emits an event.
     #[allow(clippy::missing_panics_doc)] // this function never panics
     pub fn emit(&self, event: events::HarTexEvent) {
         let count = self.listeners.len();

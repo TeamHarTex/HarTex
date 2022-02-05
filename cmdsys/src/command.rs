@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `command` Module
-//!
-//! This module defines a trait for commands to implement.
+//! A base command trait for commands to implement.
 
 use hartex_base::discord::{
     cache_inmemory::CloneableInMemoryCache,
@@ -34,63 +32,49 @@ use hartex_utils::FutureRetType;
 
 use crate::context::CommandContext;
 
-/// # Trait `Command`
-///
 /// An application command.
-///
-/// ## Trait Methods
-/// - `name`; return type `String`: the name of the command
-/// - `description`; return type `String`: the description of the command
-/// - `execute`; parameters `CommandContext`, `InMemoryCache`; return type `FutureRetType<()>`: the execution procedure
-/// - `execute_checks`; parameters `CommandContext`, `CheckParams`, `Box<[fn(CommandContext, CheckParams) -> FutureRetType<'asynchronous_trait, ()>]>`; return type `FutureRetType<()>`: execute checks before running a command
-/// - `required_cmdopts`; return type `Vec<CommandOption>`: a vector of required command options
-/// - `optional_cmdopts`; return type `Vec<CommandOption>`: a vector of optional command options
-/// - `enabled_by_default`; return type `bool`: whether the slash command is enabled by default when added to a guild
 #[allow(clippy::module_name_repetitions)]
 pub trait Command {
+    /// The name of the command.
     fn name(&self) -> String;
 
+    /// The description of the command.
     fn description(&self) -> String;
 
+    /// The type of the command.
     fn command_type(&self) -> CommandType;
 
+    /// The execution function procedure.
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
         cache: CloneableInMemoryCache
     ) -> FutureRetType<'asynchronous_trait, ()>;
 
+    /// The required command options.
     fn required_cmdopts(&self) -> Vec<CommandOption> {
         vec![]
     }
 
+    /// The optional command options.
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
         vec![]
     }
 
+    /// Whether the command is enabled by default.
     fn enabled_by_default(&self) -> bool {
         true
     }
 }
 
-/// # Enumeration `CommandType`
-///
-/// Represents the type of a command belongs to.
+/// The type of a command belongs to.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub enum CommandType {
-    /// # Enumeration Variant `CommandType::ChatInput`
-    ///
     /// Slash commands; a text-based command that shows up when a user types `/`
     ChatInput,
-
-    /// # Enumeration Variant `CommandType::Message`
-    ///
     /// An interface-based command that shows up when you right click or tap on a message
     Message,
-
-    /// # Enumeration Variant `CommandType::User`
-    ///
     /// An interface-based command that shows up when you right click or tap on a user
     User
 }

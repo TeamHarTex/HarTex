@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `whitelist` Module
-//!
-//! This module defines a database manipulation procedure for obtaining the whitelisted guilds of
+//! A database manipulation procedure for obtaining the whitelisted guilds of
 //! the bot for checking whitelists.
 
 use std::{
@@ -53,8 +51,6 @@ use crate::{
 
 mod model;
 
-/// # Struct `GetWhitelistedGuilds`
-///
 /// Gets the whitelisted guilds of the bot.
 #[derive(Default)]
 pub struct GetWhitelistedGuilds {
@@ -62,8 +58,6 @@ pub struct GetWhitelistedGuilds {
 }
 
 impl GetWhitelistedGuilds {
-    /// # Private Function `GetWhitelistedGuilds::start`
-    ///
     /// Starts the future.
     #[allow(clippy::unnecessary_wraps)]
     fn start(&mut self) -> HarTexResult<()> {
@@ -95,8 +89,6 @@ impl Future for GetWhitelistedGuilds {
     }
 }
 
-/// # Asynchronous Function `exec_future`
-///
 /// Executes the future.
 async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
     let span = tracing::trace_span!(
