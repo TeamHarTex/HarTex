@@ -27,32 +27,21 @@ use hartex_base::{
         channel::{
             embed::Embed,
             message::{
-                sticker::MessageSticker,
-                Mention,
-                Message,
-                MessageActivity,
-                MessageApplication,
-                MessageFlags,
-                MessageInteraction,
-                MessageReaction,
-                MessageReference,
-                MessageType
+                sticker::MessageSticker, Mention, Message, MessageActivity, MessageApplication,
+                MessageFlags, MessageInteraction, MessageReaction, MessageReference, MessageType,
             },
-            ChannelMention
+            ChannelMention,
         },
         datetime::Timestamp,
         id::{
-            ApplicationId,
-            AttachmentId,
-            ChannelId,
-            GuildId,
-            MessageId,
-            RoleId,
-            UserId,
-            WebhookId
-        }
+            marker::{
+                ApplicationMarker, AttachmentMarker, ChannelMarker, GuildMarker, MessageMarker,
+                RoleMarker, UserMarker, WebhookMarker,
+            },
+            Id,
+        },
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -64,33 +53,33 @@ pub mod sticker;
 pub struct MessageEntity {
     activity: Option<MessageActivity>,
     application: Option<MessageApplication>,
-    application_id: Option<ApplicationId>,
-    attachment_ids: Vec<AttachmentId>,
-    author_id: UserId,
-    channel_id: ChannelId,
+    application_id: Option<Id<ApplicationMarker>>,
+    attachment_ids: Vec<Id<AttachmentMarker>>,
+    author_id: Id<UserMarker>,
+    channel_id: Id<ChannelMarker>,
     components: Vec<Component>,
     content: String,
     edited_timestamp: Option<Timestamp>,
     embeds: Vec<Embed>,
     flags: Option<MessageFlags>,
-    guild_id: Option<GuildId>,
-    id: MessageId,
+    guild_id: Option<Id<GuildMarker>>,
+    id: Id<MessageMarker>,
     interaction: Option<MessageInteraction>,
     kind: MessageType,
-    member_id: Option<UserId>,
+    member_id: Option<Id<UserMarker>>,
     mention_channels: Vec<ChannelMention>,
     mention_everyone: bool,
-    mention_roles: Vec<RoleId>,
+    mention_roles: Vec<Id<RoleMarker>>,
     mentions: Vec<Mention>,
     pinned: bool,
     reactions: Vec<MessageReaction>,
     reference: Option<MessageReference>,
-    referenced_message_id: Option<MessageId>,
+    referenced_message_id: Option<Id<MessageMarker>>,
     sticker_items: Vec<MessageSticker>,
     timestamp: Timestamp,
-    thread_id: Option<ChannelId>,
+    thread_id: Option<Id<ChannelMarker>>,
     tts: bool,
-    webhook_id: Option<WebhookId>
+    webhook_id: Option<Id<WebhookMarker>>,
 }
 
 impl MessageEntity {
@@ -105,22 +94,22 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn application_id(&self) -> Option<ApplicationId> {
+    pub fn application_id(&self) -> Option<Id<ApplicationMarker>> {
         self.application_id
     }
 
     #[must_use]
-    pub fn attachment_ids(&self) -> Vec<AttachmentId> {
+    pub fn attachment_ids(&self) -> Vec<Id<AttachmentMarker>> {
         self.attachment_ids.clone()
     }
 
     #[must_use]
-    pub fn author_id(&self) -> UserId {
+    pub fn author_id(&self) -> Id<UserMarker> {
         self.author_id
     }
 
     #[must_use]
-    pub fn channel_id(&self) -> ChannelId {
+    pub fn channel_id(&self) -> Id<ChannelMarker> {
         self.channel_id
     }
 
@@ -150,7 +139,7 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> Option<GuildId> {
+    pub fn guild_id(&self) -> Option<Id<GuildMarker>> {
         self.guild_id
     }
 
@@ -165,7 +154,7 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn member_id(&self) -> Option<UserId> {
+    pub fn member_id(&self) -> Option<Id<UserMarker>> {
         self.member_id
     }
 
@@ -180,7 +169,7 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn mention_roles(&self) -> Vec<RoleId> {
+    pub fn mention_roles(&self) -> Vec<Id<RoleMarker>> {
         self.mention_roles.clone()
     }
 
@@ -205,7 +194,7 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn referenced_message_id(&self) -> Option<MessageId> {
+    pub fn referenced_message_id(&self) -> Option<Id<MessageMarker>> {
         self.referenced_message_id
     }
 
@@ -220,7 +209,7 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn thread_id(&self) -> Option<ChannelId> {
+    pub fn thread_id(&self) -> Option<Id<ChannelMarker>> {
         self.thread_id
     }
 
@@ -230,13 +219,13 @@ impl MessageEntity {
     }
 
     #[must_use]
-    pub fn webhook_id(&self) -> Option<WebhookId> {
+    pub fn webhook_id(&self) -> Option<Id<WebhookMarker>> {
         self.webhook_id
     }
 }
 
 impl Entity for MessageEntity {
-    type Id = MessageId;
+    type Id = Id<MessageMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -283,7 +272,7 @@ impl From<Message> for MessageEntity {
             timestamp: message.timestamp,
             thread_id: todo!(),
             tts: message.tts,
-            webhook_id: message.webhook_id
+            webhook_id: message.webhook_id,
         }
     }
 }

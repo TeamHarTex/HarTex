@@ -24,68 +24,35 @@
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        embed_builder::{
-            EmbedAuthorBuilder,
-            EmbedBuilder,
-            EmbedFieldBuilder,
-            ImageSource
-        },
+        embed_builder::{EmbedAuthorBuilder, EmbedBuilder, EmbedFieldBuilder, ImageSource},
         model::{
             application::{
-                callback::{
-                    CallbackData,
-                    InteractionResponse
-                },
-                command::{
-                    ChoiceCommandOptionData,
-                    CommandOption,
-                    CommandOptionType
-                },
-                interaction::{
-                    application_command::CommandOptionValue,
-                    Interaction
-                }
+                callback::{CallbackData, InteractionResponse},
+                command::{ChoiceCommandOptionData, CommandOption, CommandOptionType},
+                interaction::{application_command::CommandOptionValue, Interaction},
             },
-            gateway::presence::{
-                ActivityType,
-                Status
-            },
-            id::UserId
+            gateway::presence::{ActivityType, Status},
+            id::UserId,
         },
         util::{
-            mention::{
-                Mention,
-                ParseMention
-            },
-            snowflake::Snowflake
-        }
+            mention::{Mention, ParseMention},
+            snowflake::Snowflake,
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
+    error::{HarTexError, HarTexResult},
     is_stable,
     logging::tracing,
-    time::{
-        FixedOffset,
-        TimeZone
-    }
+    time::{FixedOffset, TimeZone},
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
 use hartex_conftoml::guildconf::tz::Timezone;
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_utils::{
-    cdn::{
-        Cdn,
-        CdnResourceFormat
-    },
-    FutureRetType
+    cdn::{Cdn, CdnResourceFormat},
+    FutureRetType,
 };
 
 /// The `userinfo` command.
@@ -107,21 +74,19 @@ impl Command for Userinfo {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: CloneableInMemoryCache
+        cache: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_userinfo_command(ctx, cache))
     }
 
     fn optional_cmdopts(&self) -> Vec<CommandOption> {
-        vec![
-            CommandOption::String(ChoiceCommandOptionData {
-                autocomplete: false,
-                choices: vec![],
-                description: String::from("(optional) the user to query the information"),
-                name: String::from("user"),
-                required: false
-            }),
-        ]
+        vec![CommandOption::String(ChoiceCommandOptionData {
+            autocomplete: false,
+            choices: vec![],
+            description: String::from("(optional) the user to query the information"),
+            name: String::from("user"),
+            required: false,
+        })]
     }
 }
 
@@ -129,16 +94,15 @@ impl Command for Userinfo {
 #[allow(clippy::too_many_lines)]
 async fn execute_userinfo_command(
     ctx: CommandContext,
-    cache: CloneableInMemoryCache
+    cache: CloneableInMemoryCache,
 ) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
@@ -151,12 +115,12 @@ async fn execute_userinfo_command(
                     allowed_mentions: None,
                     components: None,
                     content: Some(String::from(
-                        ":x: This command can only be used in a guild."
+                        ":x: This command can only be used in a guild.",
                     )),
                     embeds: None,
                     flags: None,
-                    tts: None
-                })
+                    tts: None,
+                }),
             )
             .exec()
             .await?;
@@ -169,8 +133,7 @@ async fn execute_userinfo_command(
         // unwrapping here is fine as it is now ensured that the interaction is sent from a guild,
         // not in a user DM (which is the case when interaction.member is None)
         interaction.member.unwrap().user.unwrap()
-    }
-    else {
+    } else {
         // unwrapping here is fine because the command only accepts a "user" parameter and is
         // asserted to be of type "String"; therefore, the parameter must exist if the options vec
         // is not empty and must be with the name "user" and of type "String"
@@ -184,16 +147,16 @@ async fn execute_userinfo_command(
             UserId::parse(&string)
                 .ok()
                 .unwrap_or_else(|| UserId::new(string.parse().unwrap()).unwrap())
-        }
-        else {
+        } else {
             return Err(HarTexError::Custom {
-                message: String::from("invalid command option type: expected Mentionable")
+                message: String::from("invalid command option type: expected Mentionable"),
             });
         };
 
         ctx.http.user(user_id).exec().await?.model().await?
     };
-    let future = ctx.http
+    let future = ctx
+        .http
         // it is ok to unwrap here because it is already checked that the interaction is sent from
         // a guild (which its id should never be None)
         .guild_member(interaction.guild_id.unwrap(), user.id)
@@ -203,14 +166,12 @@ async fn execute_userinfo_command(
     let avatar_url = if let Some(ref hash) = user.avatar {
         let format = if hash.starts_with("a_") {
             CdnResourceFormat::GIF
-        }
-        else {
+        } else {
             CdnResourceFormat::PNG
         };
 
         Cdn::user_avatar(user.id, hash, &format)
-    }
-    else {
+    } else {
         Cdn::default_user_avatar(user.discriminator)
     };
 
@@ -220,14 +181,14 @@ async fn execute_userinfo_command(
                 "Information about {username}",
                 username = &user.name
             ))
-            .icon_url(ImageSource::url(avatar_url)?)
+            .icon_url(ImageSource::url(avatar_url)?),
         )
         .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new("Username", user.name).inline())
         .field(EmbedFieldBuilder::new("Discriminator", user.discriminator.to_string()).inline())
         .field(EmbedFieldBuilder::new(
             "User ID",
-            format!("{id}", id = user.id)
+            format!("{id}", id = user.id),
         ));
 
     if future.is_ok() {
@@ -246,21 +207,20 @@ async fn execute_userinfo_command(
             .field(
                 EmbedFieldBuilder::new(
                     "Guild Nickname",
-                    member.nick.unwrap_or_else(|| String::from("none"))
+                    member.nick.unwrap_or_else(|| String::from("none")),
                 )
-                .inline()
+                .inline(),
             )
             .field(
                 EmbedFieldBuilder::new(
                     "Highest Role in Guild",
                     if roles.is_empty() {
                         String::from("none")
-                    }
-                    else {
+                    } else {
                         roles.first().unwrap().mention().to_string()
-                    }
+                    },
                 )
-                .inline()
+                .inline(),
             );
 
         if let Some(presence) = presence {
@@ -273,14 +233,13 @@ async fn execute_userinfo_command(
                     Status::Idle => "idle",
                     Status::Invisible => "invisible",
                     Status::Offline => "offline",
-                    Status::Online => "online"
-                }
+                    Status::Online => "online",
+                },
             ));
 
             if activities.is_empty() {
                 embed = embed.field(EmbedFieldBuilder::new("Activities", "none"));
-            }
-            else {
+            } else {
                 for activity in activities {
                     let temp = embed.clone();
                     let activity_type = match activity.kind {
@@ -289,22 +248,20 @@ async fn execute_userinfo_command(
                         ActivityType::Listening => "Listening",
                         ActivityType::Playing => "Playing",
                         ActivityType::Streaming => "Streaming",
-                        ActivityType::Watching => "Watching"
+                        ActivityType::Watching => "Watching",
                     };
 
                     embed = temp.field(EmbedFieldBuilder::new(
                         format!("Activity - {activity_type}"),
                         if activity.kind == ActivityType::Custom {
                             activity.state.as_ref().unwrap()
-                        }
-                        else {
+                        } else {
                             &activity.name
-                        }
+                        },
                     ));
                 }
             }
-        }
-        else {
+        } else {
             embed = embed
                 .field(EmbedFieldBuilder::new("Status", "unknown"))
                 .field(EmbedFieldBuilder::new("Activities", "none"));
@@ -312,8 +269,7 @@ async fn execute_userinfo_command(
 
         let timezone = if config.NightlyFeatures.localization && !is_stable() {
             config.GuildConfiguration.timezone
-        }
-        else {
+        } else {
             Timezone::UTC
         };
         let joined_at = member.joined_at.iso_8601();
@@ -325,11 +281,11 @@ async fn execute_userinfo_command(
         embed = temp
             .field(
                 EmbedFieldBuilder::new("Joined Guild At", format!("{joined_at} ({timezone})"))
-                    .inline()
+                    .inline(),
             )
             .field(
                 EmbedFieldBuilder::new("Account Created At", format!("{created_at} ({timezone})"))
-                    .inline()
+                    .inline(),
             );
     }
 
@@ -343,8 +299,8 @@ async fn execute_userinfo_command(
                 content: None,
                 embeds: Some(vec![embed.build()?]),
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await?;

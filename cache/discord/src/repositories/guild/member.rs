@@ -21,28 +21,18 @@
 
 //! The guild member repository trait.
 
-use hartex_base::discord::model::id::{
-    GuildId,
-    UserId
-};
+use hartex_base::discord::model::id::{GuildId, UserId};
 use hartex_cache_base::{
     relations,
-    repository::{
-        GetEntityFuture,
-        Repository,
-        StreamEntitiesFuture
-    }
+    repository::{GetEntityFuture, Repository, StreamEntitiesFuture},
 };
 
 use crate::{
     backend::DiscordBackend,
     entities::{
-        guild::{
-            member::MemberEntity,
-            role::RoleEntity
-        },
-        user::UserEntity
-    }
+        guild::{member::MemberEntity, role::RoleEntity},
+        user::UserEntity,
+    },
 };
 
 /// A repository containing member objects.
@@ -52,14 +42,14 @@ pub trait MemberRepository<B: DiscordBackend>: Repository<MemberEntity, B> {
     fn roles(
         &self,
         guild_id: GuildId,
-        user_id: UserId
+        user_id: UserId,
     ) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
 
     /// The associated user of the member.
     fn user(
         &self,
         guild_id: GuildId,
-        user_id: UserId
+        user_id: UserId,
     ) -> GetEntityFuture<'_, UserEntity, B::Error> {
         let backend = self.backend();
 
@@ -67,7 +57,7 @@ pub trait MemberRepository<B: DiscordBackend>: Repository<MemberEntity, B> {
             backend.members(),
             backend.users(),
             (guild_id, user_id),
-            |member| member.user_id()
+            |member| member.user_id(),
         )
     }
 }

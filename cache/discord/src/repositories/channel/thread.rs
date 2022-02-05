@@ -23,10 +23,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::thread::ThreadEntity
-};
+use crate::{backend::DiscordBackend, entities::channel::thread::ThreadEntity};
 
 /// A repository containing thread objects.
 #[allow(clippy::module_name_repetitions)]

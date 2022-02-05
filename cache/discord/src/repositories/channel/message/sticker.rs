@@ -21,22 +21,12 @@
 
 //! The channel message sticker repository trait.
 
-use hartex_base::discord::model::channel::message::sticker::{
-    StickerId,
-    StickerPackId
-};
-use hartex_cache_base::repository::{
-    GetEntityFuture,
-    Repository,
-    StreamEntitiesFuture
-};
+use hartex_base::discord::model::channel::message::sticker::{StickerId, StickerPackId};
+use hartex_cache_base::repository::{GetEntityFuture, Repository, StreamEntitiesFuture};
 
 use crate::{
     backend::DiscordBackend,
-    entities::channel::message::sticker::{
-        StickerEntity,
-        StickerPackEntity
-    }
+    entities::channel::message::sticker::{StickerEntity, StickerPackEntity},
 };
 
 /// A repository containing sticker pack objects.
@@ -56,6 +46,6 @@ pub trait StickerRepository<B: DiscordBackend>: Repository<StickerEntity, B> {
     /// The sticker pack associated with this sticker, if any.
     fn sticker_pack(
         &self,
-        sticker_id: StickerId
+        sticker_id: StickerId,
     ) -> GetEntityFuture<'_, StickerPackEntity, B::Error>;
 }

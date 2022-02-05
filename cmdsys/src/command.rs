@@ -23,10 +23,7 @@
 
 use hartex_base::discord::{
     cache_inmemory::CloneableInMemoryCache,
-    model::application::command::{
-        CommandOption,
-        CommandType as TwilightCommandType
-    }
+    model::application::command::{CommandOption, CommandType as TwilightCommandType},
 };
 use hartex_utils::FutureRetType;
 
@@ -48,7 +45,7 @@ pub trait Command {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: CloneableInMemoryCache
+        cache: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()>;
 
     /// The required command options.
@@ -76,7 +73,7 @@ pub enum CommandType {
     /// An interface-based command that shows up when you right click or tap on a message
     Message,
     /// An interface-based command that shows up when you right click or tap on a user
-    User
+    User,
 }
 
 #[allow(clippy::from_over_into)]
@@ -85,7 +82,7 @@ impl Into<TwilightCommandType> for CommandType {
         match self {
             Self::ChatInput => TwilightCommandType::ChatInput,
             Self::Message => TwilightCommandType::Message,
-            Self::User => TwilightCommandType::User
+            Self::User => TwilightCommandType::User,
         }
     }
 }

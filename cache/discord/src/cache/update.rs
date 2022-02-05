@@ -23,33 +23,21 @@
 
 use futures_util::{
     future::FutureExt,
-    stream::{
-        FuturesUnordered,
-        TryStreamExt
-    }
+    stream::{FuturesUnordered, TryStreamExt},
 };
 use hartex_base::discord::model::{
-    channel::{
-        Channel,
-        GuildChannel
-    },
-    gateway::payload::incoming::ChannelCreate
+    channel::{Channel, GuildChannel},
+    gateway::payload::incoming::ChannelCreate,
 };
-use hartex_cache_base::{
-    repository::Repository,
-    UpdateCacheFuture
-};
+use hartex_cache_base::{repository::Repository, UpdateCacheFuture};
 
 use crate::{
     backend::DiscordBackend,
     cache::DiscordCache,
     entities::{
-        channel::{
-            thread::ThreadEntity,
-            ChannelEntity
-        },
-        user::UserEntity
-    }
+        channel::{thread::ThreadEntity, ChannelEntity},
+        user::UserEntity,
+    },
 };
 
 /// A trait for callbacks / events that may update the cache.
@@ -67,7 +55,7 @@ impl<B: DiscordBackend> DiscordCacheUpdate<B> for ChannelCreate {
                 futures.push(
                     cache
                         .users
-                        .upsert_many(group.recipients.iter().cloned().map(UserEntity::from))
+                        .upsert_many(group.recipients.iter().cloned().map(UserEntity::from)),
                 );
 
                 let entity = ChannelEntity::from(group.clone());

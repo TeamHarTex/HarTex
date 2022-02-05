@@ -24,28 +24,24 @@
 use std::sync::Arc;
 
 use dashmap::DashMap;
-use futures_channel::mpsc::{
-    self,
-    UnboundedReceiver,
-    UnboundedSender
-};
+use futures_channel::mpsc::{self, UnboundedReceiver, UnboundedSender};
 
 /// An event listener.
 #[derive(Debug, Clone)]
 pub struct Listener<T> {
-    pub sender: UnboundedSender<T>
+    pub sender: UnboundedSender<T>,
 }
 
 /// A series of `Listener`s.
 #[derive(Debug, Clone)]
 pub struct Listeners<T> {
-    inner: Arc<ListenersInner<T>>
+    inner: Arc<ListenersInner<T>>,
 }
 
 impl<T> Default for Listeners<T> {
     fn default() -> Self {
         Self {
-            inner: Arc::new(ListenersInner::default())
+            inner: Arc::new(ListenersInner::default()),
         }
     }
 }
@@ -57,12 +53,7 @@ impl<T> Listeners<T> {
         let id = self.inner.id + 1;
         let (sender, receiver) = mpsc::unbounded();
 
-        self.inner.listeners.insert(
-            id,
-            Listener {
-                sender
-            }
-        );
+        self.inner.listeners.insert(id, Listener { sender });
 
         receiver
     }
@@ -84,14 +75,14 @@ impl<T> Listeners<T> {
 #[derive(Debug)]
 struct ListenersInner<T> {
     id: u64,
-    listeners: DashMap<u64, Listener<T>>
+    listeners: DashMap<u64, Listener<T>>,
 }
 
 impl<T> Default for ListenersInner<T> {
     fn default() -> Self {
         Self {
             id: 0,
-            listeners: DashMap::default()
+            listeners: DashMap::default(),
         }
     }
 }

@@ -24,10 +24,7 @@
 use crate::{
     backend::Backend,
     entity::Entity,
-    repository::{
-        GetEntityFuture,
-        Repository
-    }
+    repository::{GetEntityFuture, Repository},
 };
 
 /// Maps an entity from a repository to an entity of a foreign entity.
@@ -38,22 +35,22 @@ pub fn map_entity<
     LE: Entity + 'a,
     FE: Entity + 'a,
     LR: Repository<LE, B> + Send + 'a,
-    FR: Repository<FE, B> + Send + Sync + 'a
+    FR: Repository<FE, B> + Send + Sync + 'a,
 >(
     local_repo: LR,
     foreign_repo: FR,
     local_entity_id: LE::Id,
-    f: F
+    f: F,
 ) -> GetEntityFuture<'a, FE, B::Error>
 where
-    B::Error: Send {
+    B::Error: Send,
+{
     Box::pin(async move {
         let future = local_repo.entity(local_entity_id);
 
         let foreign_entity_id = if let Some(entity) = future.await? {
             f(entity)
-        }
-        else {
+        } else {
             return Ok(None);
         };
 

@@ -21,16 +21,9 @@
 
 //! The `Timezone` configuration model.
 
-use std::fmt::{
-    Display,
-    Formatter,
-    Result as FmtResult
-};
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
-use serde::de::{
-    Error,
-    Visitor
-};
+use serde::de::{Error, Visitor};
 
 /// A timezone.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -38,7 +31,7 @@ pub enum Timezone {
     /// The "Asia/Hong_Kong" timezone.
     AsiaHongKong,
     /// The "UTC" timezone.
-    UTC
+    UTC,
 }
 
 impl Timezone {
@@ -48,7 +41,7 @@ impl Timezone {
     pub fn into_offset_secs(self) -> i32 {
         match self {
             Self::UTC => 0 * 3600,
-            Self::AsiaHongKong => 8 * 3600
+            Self::AsiaHongKong => 8 * 3600,
         }
     }
 }
@@ -57,7 +50,7 @@ impl Display for Timezone {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.write_str(match *self {
             Self::AsiaHongKong => "Asia/Hong_Kong",
-            Self::UTC => "UTC"
+            Self::UTC => "UTC",
         })
     }
 }
@@ -74,11 +67,12 @@ impl<'visitor> Visitor<'visitor> for GuildConfigTimezoneDeserializerRefStrVisito
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
-        E: Error {
+        E: Error,
+    {
         Ok(match v {
             "Asia/Hong_Kong" => Timezone::AsiaHongKong,
             "UTC" => Timezone::UTC,
-            _ => return Err(Error::custom("invalid timezone"))
+            _ => return Err(Error::custom("invalid timezone")),
         })
     }
 }

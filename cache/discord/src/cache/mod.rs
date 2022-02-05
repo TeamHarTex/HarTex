@@ -37,7 +37,7 @@ pub struct DiscordCache<B: DiscordBackend> {
     backend: Arc<B>,
     pub channels: B::ChannelRepository,
     pub threads: B::ThreadRepository,
-    pub users: B::UserRepository
+    pub users: B::UserRepository,
 }
 
 impl<B: DiscordBackend> DiscordCache<B> {
@@ -52,7 +52,7 @@ impl<B: DiscordBackend> DiscordCache<B> {
             backend,
             channels,
             threads,
-            users
+            users,
         }
     }
 }

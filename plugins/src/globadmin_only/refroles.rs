@@ -25,30 +25,18 @@ use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
         model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
-            },
-            interaction::Interaction
-        }
+            callback::{CallbackData, InteractionResponse},
+            interaction::Interaction,
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    logging::tracing
+    error::{HarTexError, HarTexResult},
+    logging::tracing,
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
-use hartex_dbmani::{
-    guildconf::GetGuildConfig,
-    whitelist::GetWhitelistedGuilds
-};
+use hartex_dbmani::{guildconf::GetGuildConfig, whitelist::GetWhitelistedGuilds};
 use hartex_utils::FutureRetType;
 use tokio::time;
 
@@ -73,7 +61,7 @@ impl Command for Refroles {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: CloneableInMemoryCache
+        cache: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_refroles_command(ctx, cache))
     }
@@ -84,16 +72,15 @@ impl Command for Refroles {
 #[allow(clippy::too_many_lines)]
 async fn execute_refroles_command(
     ctx: CommandContext,
-    cache: CloneableInMemoryCache
+    cache: CloneableInMemoryCache,
 ) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
@@ -106,12 +93,12 @@ async fn execute_refroles_command(
                     allowed_mentions: None,
                     components: None,
                     content: Some(String::from(
-                        ":x: This command can only be used in a guild."
+                        ":x: This command can only be used in a guild.",
                     )),
                     embeds: None,
                     flags: None,
-                    tts: None
-                })
+                    tts: None,
+                }),
             )
             .exec()
             .await?;
@@ -129,8 +116,8 @@ async fn execute_refroles_command(
                     content: Some(String::from(":x: You are not the global administrator.")),
                     embeds: None,
                     flags: None,
-                    tts: None
-                })
+                    tts: None,
+                }),
             )
             .exec()
             .await?;
@@ -146,8 +133,8 @@ async fn execute_refroles_command(
                 content: Some(String::from("Refreshing roles...")),
                 embeds: None,
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await?;
@@ -177,7 +164,7 @@ async fn execute_refroles_command(
                 .add_guild_member_role(
                     PLUGIN_ENV.support_guild_gid.unwrap(),
                     access.userId,
-                    PLUGIN_ENV.hartex_user_rid.unwrap()
+                    PLUGIN_ENV.hartex_user_rid.unwrap(),
                 )
                 .exec()
                 .await
@@ -195,7 +182,7 @@ async fn execute_refroles_command(
             .remove_guild_member_role(
                 PLUGIN_ENV.support_guild_gid.unwrap(),
                 uid,
-                PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
+                PLUGIN_ENV.hartex_guild_owner_rid.unwrap(),
             )
             .exec()
             .await
@@ -212,7 +199,7 @@ async fn execute_refroles_command(
             .add_guild_member_role(
                 PLUGIN_ENV.support_guild_gid.unwrap(),
                 owner,
-                PLUGIN_ENV.hartex_guild_owner_rid.unwrap()
+                PLUGIN_ENV.hartex_guild_owner_rid.unwrap(),
             )
             .exec()
             .await

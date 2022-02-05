@@ -21,22 +21,17 @@
 
 //! A command context used in commands.
 
-use std::{
-    ops::Deref,
-    sync::Arc
-};
+use std::{ops::Deref, sync::Arc};
 
 use hartex_base::discord::{
-    gateway::CloneableCluster,
-    http::CloneableClient,
-    model::application::interaction::Interaction
+    gateway::CloneableCluster, http::CloneableClient, model::application::interaction::Interaction,
 };
 
 /// The command context used for command invocation.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct CommandContext {
-    pub inner: Arc<CommandContextInner>
+    pub inner: Arc<CommandContextInner>,
 }
 
 /// The inner structure for `CommandContext`.
@@ -44,7 +39,7 @@ pub struct CommandContext {
 pub struct CommandContextInner {
     pub http: CloneableClient,
     pub cluster: CloneableCluster,
-    pub interaction: Interaction
+    pub interaction: Interaction,
 }
 
 impl Deref for CommandContext {

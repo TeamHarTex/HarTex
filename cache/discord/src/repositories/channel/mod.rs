@@ -23,10 +23,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::ChannelEntity
-};
+use crate::{backend::DiscordBackend, entities::channel::ChannelEntity};
 
 pub mod attachment;
 pub mod message;

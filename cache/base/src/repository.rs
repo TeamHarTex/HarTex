@@ -21,21 +21,11 @@
 
 //! Common trait for cache repositories.
 
-use std::{
-    future::Future,
-    pin::Pin
-};
+use std::{future::Future, pin::Pin};
 
-use futures_util::{
-    future,
-    stream::Stream,
-    TryFutureExt
-};
+use futures_util::{future, stream::Stream, TryFutureExt};
 
-use crate::{
-    backend::Backend,
-    entity::Entity
-};
+use crate::{backend::Backend, entity::Entity};
 
 /// A repository for a series of specific entities in a specific backend.
 pub trait Repository<E: Entity, B: Backend> {
@@ -51,7 +41,7 @@ pub trait Repository<E: Entity, B: Backend> {
     /// Upserts an iterator of entities into the cache.
     fn upsert_many(
         &self,
-        entities: impl Iterator<Item = E> + Send
+        entities: impl Iterator<Item = E> + Send,
     ) -> UpsertEntitiesFuture<'_, B::Error> {
         Box::pin(future::try_join_all(entities.map(|entity| self.upsert(entity))).map_ok(|_| ()))
     }

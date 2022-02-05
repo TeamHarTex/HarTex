@@ -23,22 +23,16 @@
 
 use hartex_base::{
     discord::model::{
-        channel::message::sticker::{
-            Sticker,
-            StickerBannerAssetId,
-            StickerFormatType,
-            StickerId,
-            StickerPack,
-            StickerPackId,
-            StickerPackSkuId,
-            StickerType
-        },
+        channel::message::sticker::{Sticker, StickerFormatType, StickerPack, StickerType},
         id::{
-            GuildId,
-            UserId
-        }
+            marker::{
+                GuildMarker, StickerBannerAssetMarker, StickerMarker, StickerPackMarker,
+                StickerPackSkuMarker, UserMarker,
+            },
+            Id,
+        },
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -49,14 +43,14 @@ pub struct StickerEntity {
     available: bool,
     description: Option<String>,
     format_type: StickerFormatType,
-    guild_id: Option<GuildId>,
-    id: StickerId,
+    guild_id: Option<Id<GuildMarker>>,
+    id: Id<StickerMarker>,
     kind: StickerType,
     name: String,
-    pack_id: Option<StickerPackId>,
+    pack_id: Option<Id<StickerPackMarker>>,
     sort_value: Option<u64>,
     tags: String,
-    user_id: Option<UserId>
+    user_id: Option<Id<UserMarker>>,
 }
 
 impl StickerEntity {
@@ -76,7 +70,7 @@ impl StickerEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> Option<GuildId> {
+    pub fn guild_id(&self) -> Option<Id<GuildMarker>> {
         self.guild_id
     }
 
@@ -91,7 +85,7 @@ impl StickerEntity {
     }
 
     #[must_use]
-    pub fn pack_id(&self) -> Option<StickerPackId> {
+    pub fn pack_id(&self) -> Option<Id<StickerPackMarker>> {
         self.pack_id
     }
 
@@ -106,13 +100,13 @@ impl StickerEntity {
     }
 
     #[must_use]
-    pub fn user_id(&self) -> Option<UserId> {
+    pub fn user_id(&self) -> Option<Id<UserMarker>> {
         self.user_id
     }
 }
 
 impl Entity for StickerEntity {
-    type Id = StickerId;
+    type Id = Id<StickerMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -134,7 +128,7 @@ impl From<Sticker> for StickerEntity {
             pack_id: sticker.pack_id,
             sort_value: sticker.sort_value,
             tags: sticker.tags,
-            user_id
+            user_id,
         }
     }
 }
@@ -143,23 +137,23 @@ impl From<Sticker> for StickerEntity {
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct StickerPackEntity {
-    banner_asset_id: Option<StickerBannerAssetId>,
-    cover_sticker_id: Option<StickerId>,
+    banner_asset_id: Option<Id<StickerBannerAssetMarker>>,
+    cover_sticker_id: Option<Id<StickerMarker>>,
     description: String,
-    id: StickerPackId,
+    id: Id<StickerPackMarker>,
     name: String,
-    sku_id: StickerPackSkuId,
-    sticker_ids: Vec<StickerId>
+    sku_id: Id<StickerPackSkuMarker>,
+    sticker_ids: Vec<Id<StickerMarker>>,
 }
 
 impl StickerPackEntity {
     #[must_use]
-    pub fn banner_asset_id(&self) -> Option<StickerBannerAssetId> {
+    pub fn banner_asset_id(&self) -> Option<Id<StickerBannerAssetMarker>> {
         self.banner_asset_id
     }
 
     #[must_use]
-    pub fn cover_sticker_id(&self) -> Option<StickerId> {
+    pub fn cover_sticker_id(&self) -> Option<Id<StickerMarker>> {
         self.cover_sticker_id
     }
 
@@ -174,18 +168,18 @@ impl StickerPackEntity {
     }
 
     #[must_use]
-    pub fn sku_id(&self) -> StickerPackSkuId {
+    pub fn sku_id(&self) -> Id<StickerPackSkuMarker> {
         self.sku_id
     }
 
     #[must_use]
-    pub fn sticker_ids(&self) -> Vec<StickerId> {
+    pub fn sticker_ids(&self) -> Vec<Id<StickerMarker>> {
         self.sticker_ids.clone()
     }
 }
 
 impl Entity for StickerPackEntity {
-    type Id = StickerPackId;
+    type Id = Id<StickerPackMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -207,7 +201,7 @@ impl From<StickerPack> for StickerPackEntity {
             id: sticker_pack.id,
             name: sticker_pack.name,
             sku_id: sticker_pack.sku_id,
-            sticker_ids
+            sticker_ids,
         }
     }
 }

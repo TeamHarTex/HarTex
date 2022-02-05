@@ -24,18 +24,12 @@
 use hartex_base::discord::model::id::RoleId;
 use hartex_cache_base::{
     relations,
-    repository::{
-        GetEntityFuture,
-        Repository
-    }
+    repository::{GetEntityFuture, Repository},
 };
 
 use crate::{
     backend::DiscordBackend,
-    entities::guild::{
-        role::RoleEntity,
-        GuildEntity
-    }
+    entities::guild::{role::RoleEntity, GuildEntity},
 };
 
 /// A repository containing Discord role objects.

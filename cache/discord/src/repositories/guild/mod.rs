@@ -21,26 +21,12 @@
 
 //! Repositories related to Discord guilds.
 
-use hartex_base::discord::model::id::{
-    EmojiId,
-    GuildId,
-    RoleId,
-    UserId
-};
-use hartex_cache_base::repository::{
-    Repository,
-    StreamEntitiesFuture,
-    StreamEntityIdsFuture
-};
+use hartex_base::discord::model::id::{EmojiId, GuildId, RoleId, UserId};
+use hartex_cache_base::repository::{Repository, StreamEntitiesFuture, StreamEntityIdsFuture};
 
 use crate::{
     backend::DiscordBackend,
-    entities::guild::{
-        emoji::EmojiEntity,
-        member::MemberEntity,
-        role::RoleEntity,
-        GuildEntity
-    }
+    entities::guild::{emoji::EmojiEntity, member::MemberEntity, role::RoleEntity, GuildEntity},
 };
 
 pub mod emoji;

@@ -22,18 +22,15 @@
 //! A command framework, which glues the entire command system together.
 
 use hartex_eventsys::{
-    events::{
-        Events,
-        HarTexEvent
-    },
-    listener::Listeners
+    events::{Events, HarTexEvent},
+    listener::Listeners,
 };
 
 /// The command framework.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Default)]
 pub struct CommandFramework {
-    listeners: Listeners<HarTexEvent>
+    listeners: Listeners<HarTexEvent>,
 }
 
 impl CommandFramework {

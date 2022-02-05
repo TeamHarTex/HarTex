@@ -30,10 +30,7 @@
 
 use std::{
     lazy::SyncLazy,
-    panic::{
-        self,
-        PanicInfo
-    }
+    panic::{self, PanicInfo},
 };
 
 use futures_util::future::Either;
@@ -41,10 +38,7 @@ use hartex_base::{
     error::HarTexResult,
     events::EventType,
     hartex_version,
-    logging::tracing::{
-        self,
-        Instrument
-    }
+    logging::tracing::{self, Instrument},
 };
 use hartex_env::StartupEnv;
 use tokio_stream::StreamExt;
@@ -140,7 +134,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     http.clone(),
                     emitter.clone(),
                     cache.clone(),
-                    cluster.clone()
+                    cluster.clone(),
                 ));
             }
             Either::Right(custom) => {
@@ -149,7 +143,7 @@ pub async fn hartex_main() -> HarTexResult<()> {
                     http.clone(),
                     emitter.clone(),
                     cache.clone(),
-                    cluster.clone()
+                    cluster.clone(),
                 ));
             }
         }

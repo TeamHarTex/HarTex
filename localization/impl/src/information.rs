@@ -44,7 +44,7 @@ pub struct GuildinfoCmdLocalize {
     pub embed_guild_channels_fieldval_stages_part: String,
     pub embed_guild_channels_fieldval_news_part: String,
     pub embed_guild_features_field: String,
-    pub embed_guild_verify_lvl_field: String
+    pub embed_guild_verify_lvl_field: String,
 }
 
 impl GuildinfoCmdLocalize {

@@ -23,14 +23,11 @@
 
 use hartex_base::{
     discord::model::{
-        id::UserId,
-        user::{
-            CurrentUser,
-            PremiumType,
-            UserFlags
-        }
+        id::{marker::UserMarker, Id},
+        user::{CurrentUser, PremiumType, UserFlags},
+        util::ImageHash,
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -39,19 +36,19 @@ use hartex_cache_base::entity::Entity;
 #[derive(Clone)]
 pub struct CurrentUserEntity {
     accent_color: Option<u64>,
-    avatar: Option<String>,
-    banner: Option<String>,
+    avatar: Option<ImageHash>,
+    banner: Option<ImageHash>,
     bot: bool,
     discriminator: u16,
     email: Option<String>,
     flags: Option<UserFlags>,
-    id: UserId,
+    id: Id<UserMarker>,
     locale: Option<String>,
     mfa_enabled: bool,
     name: String,
     premium_type: Option<PremiumType>,
     public_flags: Option<UserFlags>,
-    verified: Option<bool>
+    verified: Option<bool>,
 }
 
 impl CurrentUserEntity {
@@ -122,7 +119,7 @@ impl CurrentUserEntity {
 }
 
 impl Entity for CurrentUserEntity {
-    type Id = UserId;
+    type Id = Id<UserMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -145,7 +142,7 @@ impl From<CurrentUser> for CurrentUserEntity {
             name: current_user.name,
             premium_type: current_user.premium_type,
             public_flags: current_user.public_flags,
-            verified: current_user.verified
+            verified: current_user.verified,
         }
     }
 }

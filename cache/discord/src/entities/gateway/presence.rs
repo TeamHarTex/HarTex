@@ -22,17 +22,11 @@
 //! The gateway presence entity.
 
 use hartex_base::discord::model::{
-    gateway::presence::{
-        Activity,
-        ClientStatus,
-        Presence,
-        Status,
-        UserOrId
-    },
+    gateway::presence::{Activity, ClientStatus, Presence, Status, UserOrId},
     id::{
-        GuildId,
-        UserId
-    }
+        marker::{GuildMarker, UserMarker},
+        Id,
+    },
 };
 use hartex_cache_base::entity::Entity;
 
@@ -42,9 +36,9 @@ use hartex_cache_base::entity::Entity;
 pub struct PresenceEntity {
     activities: Vec<Activity>,
     client_status: ClientStatus,
-    guild_id: GuildId,
+    guild_id: Id<GuildMarker>,
     status: Status,
-    user_id: UserId
+    user_id: Id<UserMarker>,
 }
 
 impl PresenceEntity {
@@ -59,7 +53,7 @@ impl PresenceEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> GuildId {
+    pub fn guild_id(&self) -> Id<GuildMarker> {
         self.guild_id
     }
 
@@ -69,13 +63,13 @@ impl PresenceEntity {
     }
 
     #[must_use]
-    pub fn user_id(&self) -> UserId {
+    pub fn user_id(&self) -> Id<UserMarker> {
         self.user_id
     }
 }
 
 impl Entity for PresenceEntity {
-    type Id = (GuildId, UserId);
+    type Id = (Id<GuildMarker>, Id<UserMarker>);
 
     fn id(&self) -> Self::Id {
         (self.guild_id, self.user_id)
@@ -95,7 +89,7 @@ impl From<Presence> for PresenceEntity {
             client_status: presence.client_status,
             guild_id: presence.guild_id,
             status: presence.status,
-            user_id
+            user_id,
         }
     }
 }

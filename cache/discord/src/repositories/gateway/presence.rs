@@ -25,10 +25,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::gateway::presence::PresenceEntity
-};
+use crate::{backend::DiscordBackend, entities::gateway::presence::PresenceEntity};
 
 /// A repository containing presence objects.
 #[allow(clippy::module_name_repetitions)]

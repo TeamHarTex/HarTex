@@ -23,41 +23,22 @@ use std::sync::Arc;
 
 use hartex_base::{
     discord::{
-        cache_inmemory::CloneableInMemoryCache,
-        gateway::CloneableCluster,
-        http::CloneableClient,
-        model::application::interaction::Interaction
+        cache_inmemory::CloneableInMemoryCache, gateway::CloneableCluster, http::CloneableClient,
+        model::application::interaction::Interaction,
     },
     error::HarTexResult,
-    logging::tracing::{
-        self,
-        Instrument
-    }
+    logging::tracing::{self, Instrument},
 };
 use hartex_cmdsys::{
     command::Command,
-    context::{
-        CommandContext,
-        CommandContextInner
-    }
+    context::{CommandContext, CommandContextInner},
 };
-use hartex_eventsys::{
-    emitter::EventEmitter,
-    events::HarTexEvent
-};
+use hartex_eventsys::{emitter::EventEmitter, events::HarTexEvent};
 use hartex_model::payload::CommandExecuted;
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
-    global::{
-        about::About,
-        ping::Ping,
-        source::Source,
-        team::Team
-    },
-    information::{
-        guildinfo::Guildinfo,
-        userinfo::Userinfo
-    }
+    global::{about::About, ping::Ping, source::Source, team::Team},
+    information::{guildinfo::Guildinfo, userinfo::Userinfo},
 };
 
 /// # Asynchronous Function `handle_interaction`
@@ -80,7 +61,7 @@ pub async fn handle_interaction(
     cache: CloneableInMemoryCache,
     http: CloneableClient,
     cluster: CloneableCluster,
-    emitter: EventEmitter
+    emitter: EventEmitter,
 ) -> HarTexResult<()> {
     match {
         match interaction.clone() {
@@ -89,7 +70,7 @@ pub async fn handle_interaction(
                     // Global Administrator Only Plugin
                     "refroles" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "refroles"
+                            command: "refroles",
                         })));
 
                         let span =
@@ -101,10 +82,10 @@ pub async fn handle_interaction(
                                     inner: Arc::new(CommandContextInner {
                                         http,
                                         cluster,
-                                        interaction
-                                    })
+                                        interaction,
+                                    }),
                                 },
-                                cache
+                                cache,
                             )
                             .instrument(span)
                             .await
@@ -112,7 +93,7 @@ pub async fn handle_interaction(
                     // Global Plugin
                     "about" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "about"
+                            command: "about",
                         })));
 
                         let span =
@@ -124,17 +105,17 @@ pub async fn handle_interaction(
                                     inner: Arc::new(CommandContextInner {
                                         http,
                                         cluster,
-                                        interaction
-                                    })
+                                        interaction,
+                                    }),
                                 },
-                                cache
+                                cache,
                             )
                             .instrument(span)
                             .await
                     }
                     "ping" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "ping"
+                            command: "ping",
                         })));
 
                         let span =
@@ -145,17 +126,17 @@ pub async fn handle_interaction(
                                 inner: Arc::new(CommandContextInner {
                                     http,
                                     cluster,
-                                    interaction
-                                })
+                                    interaction,
+                                }),
                             },
-                            cache
+                            cache,
                         )
                         .instrument(span)
                         .await
                     }
                     "source" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "source"
+                            command: "source",
                         })));
 
                         let span =
@@ -167,17 +148,17 @@ pub async fn handle_interaction(
                                     inner: Arc::new(CommandContextInner {
                                         http,
                                         cluster,
-                                        interaction
-                                    })
+                                        interaction,
+                                    }),
                                 },
-                                cache
+                                cache,
                             )
                             .instrument(span)
                             .await
                     }
                     "team" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "team"
+                            command: "team",
                         })));
 
                         let span =
@@ -188,10 +169,10 @@ pub async fn handle_interaction(
                                 inner: Arc::new(CommandContextInner {
                                     http,
                                     cluster,
-                                    interaction
-                                })
+                                    interaction,
+                                }),
                             },
-                            cache
+                            cache,
                         )
                         .instrument(span)
                         .await
@@ -199,7 +180,7 @@ pub async fn handle_interaction(
                     // Information Plugin
                     "guildinfo" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "guildinfo"
+                            command: "guildinfo",
                         })));
 
                         let span =
@@ -211,17 +192,17 @@ pub async fn handle_interaction(
                                     inner: Arc::new(CommandContextInner {
                                         http,
                                         cluster,
-                                        interaction
-                                    })
+                                        interaction,
+                                    }),
                                 },
-                                cache
+                                cache,
                             )
                             .instrument(span)
                             .await
                     }
                     "userinfo" => {
                         emitter.emit(HarTexEvent::CommandExecuted(Box::new(CommandExecuted {
-                            command: "userinfo"
+                            command: "userinfo",
                         })));
 
                         Userinfo
@@ -230,17 +211,17 @@ pub async fn handle_interaction(
                                     inner: Arc::new(CommandContextInner {
                                         http,
                                         cluster,
-                                        interaction
-                                    })
+                                        interaction,
+                                    }),
                                 },
-                                cache
+                                cache,
                             )
                             .await
                     }
-                    _ => Ok(())
+                    _ => Ok(()),
                 }
             }
-            _ => Ok(())
+            _ => Ok(()),
         }
     } {
         Ok(_) => (),

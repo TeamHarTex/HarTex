@@ -29,7 +29,7 @@ use hartex_locale::Locale;
 pub struct AboutCmdLocalize {
     pub embed_desc: String,
     pub embed_botver_field: String,
-    pub embed_whiteguilds_field: String
+    pub embed_whiteguilds_field: String,
 }
 
 impl AboutCmdLocalize {
@@ -41,8 +41,9 @@ impl AboutCmdLocalize {
             embed_desc: locale_file["GlobalPlugin.AboutCommand.EmbedDescription"].clone(),
             embed_botver_field: locale_file["GlobalPlugin.AboutCommand.EmbedBotVersionFieldName"]
                 .clone(),
-            embed_whiteguilds_field:
-                locale_file["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"].clone()
+            embed_whiteguilds_field: locale_file
+                ["GlobalPlugin.AboutCommand.EmbedWhitelistedGuildsFieldName"]
+                .clone(),
         })
     }
 }
@@ -50,7 +51,7 @@ impl AboutCmdLocalize {
 /// Localization helper structure for `ping` command of the `global` plugin.
 pub struct PingCmdLocalize {
     pub init_resp: String,
-    pub ms_unit: String
+    pub ms_unit: String,
 }
 
 impl PingCmdLocalize {
@@ -60,14 +61,14 @@ impl PingCmdLocalize {
 
         Ok(Self {
             init_resp: locale_file["GlobalPlugin.PingCommand.InitialResponse"].clone(),
-            ms_unit: locale_file["GlobalPlugin.PingCommand.MillisecondUnit"].clone()
+            ms_unit: locale_file["GlobalPlugin.PingCommand.MillisecondUnit"].clone(),
         })
     }
 }
 
 /// Localization helper structure for `source` command of the `global` plugin.
 pub struct SourceCmdLocalize {
-    pub prerepo_uri_msg: String
+    pub prerepo_uri_msg: String,
 }
 
 impl SourceCmdLocalize {
@@ -77,7 +78,7 @@ impl SourceCmdLocalize {
 
         Ok(Self {
             prerepo_uri_msg: locale_file["GlobalPlugin.SourceCommand.PreRepositoryUriMessage"]
-                .clone()
+                .clone(),
         })
     }
 }
@@ -86,7 +87,7 @@ impl SourceCmdLocalize {
 pub struct TeamCmdLocalize {
     pub embed_title: String,
     pub embed_globadmin_leaddev_field: String,
-    pub embed_contrib_field: String
+    pub embed_contrib_field: String,
 }
 
 impl TeamCmdLocalize {
@@ -96,10 +97,12 @@ impl TeamCmdLocalize {
 
         Ok(Self {
             embed_title: locale_file["GlobalPlugin.TeamCommand.EmbedTitle"].clone(),
-            embed_globadmin_leaddev_field:
-                locale_file["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"].clone(),
-            embed_contrib_field:
-                locale_file["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"].clone()
+            embed_globadmin_leaddev_field: locale_file
+                ["GlobalPlugin.TeamCommand.EmbedGlobalAdminAndLeadDevFieldName"]
+                .clone(),
+            embed_contrib_field: locale_file
+                ["GlobalPlugin.TeamCommand.EmbedOtherContributorsFieldName"]
+                .clone(),
         })
     }
 }

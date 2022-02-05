@@ -23,10 +23,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::message::MessageEntity
-};
+use crate::{backend::DiscordBackend, entities::channel::message::MessageEntity};
 
 pub mod sticker;
 

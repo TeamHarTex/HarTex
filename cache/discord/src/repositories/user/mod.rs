@@ -23,10 +23,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::user::UserEntity
-};
+use crate::{backend::DiscordBackend, entities::user::UserEntity};
 
 #[allow(clippy::module_name_repetitions)]
 pub mod current_user;

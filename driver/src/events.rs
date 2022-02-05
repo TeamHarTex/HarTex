@@ -27,22 +27,13 @@
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        gateway::{
-            CloneableCluster,
-            Event
-        },
-        http::CloneableClient
+        gateway::{CloneableCluster, Event},
+        http::CloneableClient,
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    events::EventType
+    error::{HarTexError, HarTexResult},
+    events::EventType,
 };
-use hartex_eventsys::{
-    emitter::EventEmitter,
-    events::HarTexEvent
-};
+use hartex_eventsys::{emitter::EventEmitter, events::HarTexEvent};
 
 use crate::handler::EventHandler;
 
@@ -72,7 +63,7 @@ pub async fn handle_event(
     http: CloneableClient,
     emitter: EventEmitter,
     cache: CloneableInMemoryCache,
-    cluster: CloneableCluster
+    cluster: CloneableCluster,
 ) -> HarTexResult<()> {
     match event_type {
         EventType::Twilight if twilight.is_some() => match twilight.unwrap() {
@@ -85,14 +76,16 @@ pub async fn handle_event(
             }
             Event::Ready(payload) => EventHandler::ready(payload, cluster, http).await?,
             Event::ShardIdentifying(payload) => EventHandler::shard_identifying(payload).await?,
-            _ => ()
+            _ => (),
         },
         EventType::Custom if custom.is_some() => match custom.unwrap() {
-            HarTexEvent::CommandExecuted(payload) => EventHandler::command_executed(payload).await?
+            HarTexEvent::CommandExecuted(payload) => {
+                EventHandler::command_executed(payload).await?
+            }
         },
         _ => {
             return Err(HarTexError::Custom {
-                message: String::from("event type mismatch")
+                message: String::from("event type mismatch"),
             });
         }
     }

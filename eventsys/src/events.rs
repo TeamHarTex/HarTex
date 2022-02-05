@@ -23,33 +23,25 @@
 
 use std::{
     pin::Pin,
-    task::{
-        Context,
-        Poll
-    }
+    task::{Context, Poll},
 };
 
 use futures_channel::mpsc::UnboundedReceiver;
-use futures_util::{
-    Stream,
-    StreamExt
-};
+use futures_util::{Stream, StreamExt};
 use hartex_model::payload::CommandExecuted;
 
 /// A wrapper around `UnboundedReceiver<HarTexEvent>`; it receives event from
 /// the stream.
 #[allow(clippy::module_name_repetitions)]
 pub struct Events {
-    receiver: UnboundedReceiver<HarTexEvent>
+    receiver: UnboundedReceiver<HarTexEvent>,
 }
 
 impl Events {
     /// Creates a new `Events` with the given `UnboundedReceiver`
     #[must_use]
     pub fn new(receiver: UnboundedReceiver<HarTexEvent>) -> Self {
-        Self {
-            receiver
-        }
+        Self { receiver }
     }
 }
 
@@ -66,5 +58,5 @@ impl Stream for Events {
 #[derive(Clone)]
 pub enum HarTexEvent {
     /// A command is executed.
-    CommandExecuted(Box<CommandExecuted>)
+    CommandExecuted(Box<CommandExecuted>),
 }

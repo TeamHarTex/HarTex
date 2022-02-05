@@ -27,26 +27,17 @@ use crate::repositories::{
     channel::{
         attachment::AttachmentRepository,
         message::{
-            sticker::{
-                StickerPackRepository,
-                StickerRepository
-            },
-            MessageRepository
+            sticker::{StickerPackRepository, StickerRepository},
+            MessageRepository,
         },
         thread::ThreadRepository,
-        ChannelRepository
+        ChannelRepository,
     },
     gateway::presence::PresenceRepository,
     guild::{
-        emoji::EmojiRepository,
-        member::MemberRepository,
-        role::RoleRepository,
-        GuildRepository
+        emoji::EmojiRepository, member::MemberRepository, role::RoleRepository, GuildRepository,
     },
-    user::{
-        current_user::CurrentUserRepository,
-        UserRepository
-    }
+    user::{current_user::CurrentUserRepository, UserRepository},
 };
 
 /// A base trait for different cache backends (in-memory, database, redis, etc).

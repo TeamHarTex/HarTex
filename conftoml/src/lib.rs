@@ -26,11 +26,8 @@
 #![forbid(unsafe_code)]
 
 use hartex_base::{
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    logging::tracing
+    error::{HarTexError, HarTexResult},
+    logging::tracing,
 };
 use serde::Deserialize;
 
@@ -47,7 +44,7 @@ pub struct TomlConfig {
     #[serde(default)]
     pub NightlyFeatures: nightly::NightlyFeatures,
     #[serde(default)]
-    pub PermissionLevels: permlvl::PermissionLevels
+    pub PermissionLevels: permlvl::PermissionLevels,
 }
 
 /// Deserializes the TOML string.

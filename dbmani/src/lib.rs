@@ -26,11 +26,7 @@
 #![forbid(unsafe_code)]
 #![feature(once_cell)]
 
-use std::{
-    future::Future,
-    lazy::SyncLazy,
-    pin::Pin
-};
+use std::{future::Future, lazy::SyncLazy, pin::Pin};
 
 use hartex_base::error::HarTexResult;
 use hartex_env::DatabaseEnv;

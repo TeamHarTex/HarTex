@@ -23,10 +23,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::channel::attachment::AttachmentEntity
-};
+use crate::{backend::DiscordBackend, entities::channel::attachment::AttachmentEntity};
 
 /// A repository containing attachment objects.
 #[allow(clippy::module_name_repetitions)]

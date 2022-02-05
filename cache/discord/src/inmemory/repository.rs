@@ -23,44 +23,23 @@
 //!
 //! This module implements a repository with an in-memory backend
 
-use std::{
-    marker::PhantomData,
-    sync::Mutex
-};
+use std::{marker::PhantomData, sync::Mutex};
 
 use dashmap::DashMap;
 use futures_util::{
-    future::{
-        self,
-        FutureExt
-    },
-    stream::{
-        self,
-        StreamExt
-    }
+    future::{self, FutureExt},
+    stream::{self, StreamExt},
 };
-use hartex_base::discord::model::{
-    channel::message::sticker::{
-        StickerId,
-        StickerPackId
-    },
-    id::{
-        EmojiId,
-        GuildId,
-        RoleId,
-        UserId
-    }
+use hartex_base::discord::model::id::{
+    marker::{EmojiMarker, GuildMarker, RoleMarker, UserMarker, StickerMarker, StickerPackMarker},
+    Id,
 };
 use hartex_cache_base::{
     entity::Entity,
     repository::{
-        GetEntityFuture,
-        Repository,
-        SingleEntityRepository,
-        StreamEntitiesFuture,
-        StreamEntityIdsFuture,
-        UpsertEntityFuture
-    }
+        GetEntityFuture, Repository, SingleEntityRepository, StreamEntitiesFuture,
+        StreamEntityIdsFuture, UpsertEntityFuture,
+    },
 };
 
 use crate::{
@@ -68,56 +47,33 @@ use crate::{
         channel::{
             attachment::AttachmentEntity,
             message::{
-                sticker::{
-                    StickerEntity,
-                    StickerPackEntity
-                },
-                MessageEntity
+                sticker::{StickerEntity, StickerPackEntity},
+                MessageEntity,
             },
             thread::ThreadEntity,
-            ChannelEntity
+            ChannelEntity,
         },
         gateway::presence::PresenceEntity,
-        guild::{
-            emoji::EmojiEntity,
-            member::MemberEntity,
-            role::RoleEntity,
-            GuildEntity
-        },
-        user::{
-            current_user::CurrentUserEntity,
-            UserEntity
-        }
+        guild::{emoji::EmojiEntity, member::MemberEntity, role::RoleEntity, GuildEntity},
+        user::{current_user::CurrentUserEntity, UserEntity},
     },
-    inmemory::{
-        InMemoryBackend,
-        InMemoryBackendError
-    },
+    inmemory::{InMemoryBackend, InMemoryBackendError},
     repositories::{
         channel::{
             attachment::AttachmentRepository,
             message::{
-                sticker::{
-                    StickerPackRepository,
-                    StickerRepository
-                },
-                MessageRepository
+                sticker::{StickerPackRepository, StickerRepository},
+                MessageRepository,
             },
             thread::ThreadRepository,
-            ChannelRepository
+            ChannelRepository,
         },
         gateway::presence::PresenceRepository,
         guild::{
-            emoji::EmojiRepository,
-            member::MemberRepository,
-            role::RoleRepository,
-            GuildRepository
+            emoji::EmojiRepository, member::MemberRepository, role::RoleRepository, GuildRepository,
         },
-        user::{
-            current_user::CurrentUserRepository,
-            UserRepository
-        }
-    }
+        user::{current_user::CurrentUserRepository, UserRepository},
+    },
 };
 
 /// A cache repository with the in-memory cache backend.
@@ -134,7 +90,7 @@ impl<E: EntityExt> Repository<E, InMemoryBackend> for InMemoryRepository<E> {
         future::ok(
             E::repository(&self.0)
                 .get(&entity_id)
-                .map(|entry| entry.value().clone())
+                .map(|entry| entry.value().clone()),
         )
         .boxed()
     }
@@ -157,11 +113,11 @@ impl EmojiRepository<InMemoryBackend> for InMemoryRepository<EmojiEntity> {}
 impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
     fn emoji_ids(
         &self,
-        guild_id: GuildId
-    ) -> StreamEntityIdsFuture<'_, EmojiId, InMemoryBackendError> {
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntityIdsFuture<'_, Id<EmojiMarker>, InMemoryBackendError> {
         let stream = (self.0).0.guild_emojis.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
-            |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed()
+            |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed(),
         );
 
         future::ok(stream).boxed()
@@ -169,11 +125,11 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 
     fn emojis(
         &self,
-        guild_id: GuildId
+        guild_id: Id<GuildMarker>,
     ) -> StreamEntitiesFuture<'_, EmojiEntity, InMemoryBackendError> {
         let emoji_ids = match (self.0).0.guild_emojis.get(&guild_id) {
             Some(ids) => ids.clone(),
-            None => return future::ok(stream::empty().boxed()).boxed()
+            None => return future::ok(stream::empty().boxed()).boxed(),
         };
 
         let iter = emoji_ids.into_iter().filter_map(move |emoji_id| {
@@ -190,11 +146,11 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 
     fn member_user_ids(
         &self,
-        guild_id: GuildId
-    ) -> StreamEntityIdsFuture<'_, UserId, InMemoryBackendError> {
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntityIdsFuture<'_, Id<UserMarker>, InMemoryBackendError> {
         let stream = (self.0).0.guild_members.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
-            |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed()
+            |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed(),
         );
 
         future::ok(stream).boxed()
@@ -202,11 +158,11 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 
     fn members(
         &self,
-        guild_id: GuildId
+        guild_id: Id<GuildMarker>,
     ) -> StreamEntitiesFuture<'_, MemberEntity, InMemoryBackendError> {
         let member_user_ids = match (self.0).0.guild_members.get(&guild_id) {
             Some(ids) => ids.clone(),
-            None => return future::ok(stream::empty().boxed()).boxed()
+            None => return future::ok(stream::empty().boxed()).boxed(),
         };
 
         let iter = member_user_ids
@@ -225,11 +181,11 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 
     fn role_ids(
         &self,
-        guild_id: GuildId
-    ) -> StreamEntityIdsFuture<'_, RoleId, InMemoryBackendError> {
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntityIdsFuture<'_, Id<RoleMarker>, InMemoryBackendError> {
         let stream = (self.0).0.guild_roles.get(&guild_id).map_or_else(
             || stream::empty().boxed(),
-            |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed()
+            |set| stream::iter(set.iter().map(|id| Ok(*id)).collect::<Vec<_>>()).boxed(),
         );
 
         future::ok(stream).boxed()
@@ -237,11 +193,11 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 
     fn roles(
         &self,
-        guild_id: GuildId
+        guild_id: Id<GuildMarker>,
     ) -> StreamEntitiesFuture<'_, RoleEntity, InMemoryBackendError> {
         let role_ids = match (self.0).0.guild_roles.get(&guild_id) {
             Some(ids) => ids.clone(),
-            None => return future::ok(stream::empty().boxed()).boxed()
+            None => return future::ok(stream::empty().boxed()).boxed(),
         };
 
         let iter = role_ids.into_iter().filter_map(move |role_id| {
@@ -260,12 +216,12 @@ impl GuildRepository<InMemoryBackend> for InMemoryRepository<GuildEntity> {
 impl MemberRepository<InMemoryBackend> for InMemoryRepository<MemberEntity> {
     fn roles(
         &self,
-        guild_id: GuildId,
-        user_id: UserId
+        guild_id: Id<GuildMarker>,
+        user_id: Id<UserMarker>,
     ) -> StreamEntitiesFuture<'_, RoleEntity, InMemoryBackendError> {
         let role_ids = match (self.0).0.members.get(&(guild_id, user_id)) {
             Some(member) => member.role_ids(),
-            None => return future::ok(stream::empty().boxed()).boxed()
+            None => return future::ok(stream::empty().boxed()).boxed(),
         };
 
         let iter = role_ids.into_iter().filter_map(move |role_id| {
@@ -292,11 +248,11 @@ impl UserRepository<InMemoryBackend> for InMemoryRepository<UserEntity> {}
 impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEntity> {
     fn stickers(
         &self,
-        pack_id: StickerPackId
+        pack_id: Id<StickerPackMarker>,
     ) -> StreamEntitiesFuture<'_, StickerEntity, InMemoryBackendError> {
         let sticker_ids = match (self.0).0.sticker_packs.get(&pack_id) {
             Some(pack) => pack.sticker_ids(),
-            None => return future::ok(stream::empty().boxed()).boxed()
+            None => return future::ok(stream::empty().boxed()).boxed(),
         };
 
         let iter = sticker_ids.into_iter().filter_map(move |sticker_id| {
@@ -315,7 +271,7 @@ impl StickerPackRepository<InMemoryBackend> for InMemoryRepository<StickerPackEn
 impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
     fn sticker_pack(
         &self,
-        sticker_id: StickerId
+        sticker_id: Id<StickerMarker>,
     ) -> GetEntityFuture<'_, StickerPackEntity, InMemoryBackendError> {
         let backend = (self.0).0.clone();
         let sticker = backend.stickers.get(&sticker_id);
@@ -326,12 +282,12 @@ impl StickerRepository<InMemoryBackend> for InMemoryRepository<StickerEntity> {
                     backend
                         .sticker_packs
                         .get(&pack_id)
-                        .map(|entry| entry.value().clone())
+                        .map(|entry| entry.value().clone()),
                 )
                 .boxed(),
-                None => future::ok(None).boxed()
+                None => future::ok(None).boxed(),
             },
-            None => future::ok(None).boxed()
+            None => future::ok(None).boxed(),
         }
     }
 }
@@ -350,7 +306,7 @@ impl SingleEntityRepository<CurrentUserEntity, InMemoryBackend>
             CurrentUserEntity::lock(&self.0)
                 .lock()
                 .expect("current user mutex is poisoned")
-                .clone()
+                .clone(),
         )
         .boxed()
     }

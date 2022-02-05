@@ -24,25 +24,17 @@
 use hartex_base::{
     discord::model::{
         channel::{
-            permission_overwrite::PermissionOverwrite,
-            CategoryChannel,
-            ChannelType,
-            Group,
-            PrivateChannel,
-            TextChannel,
-            VideoQualityMode,
-            VoiceChannel
+            permission_overwrite::PermissionOverwrite, CategoryChannel, ChannelType, Group,
+            PrivateChannel, TextChannel, VideoQualityMode, VoiceChannel,
         },
         datetime::Timestamp,
         id::{
-            ApplicationId,
-            ChannelId,
-            GuildId,
-            MessageId,
-            UserId
-        }
+            marker::{ApplicationMarker, ChannelMarker, GuildMarker, MessageMarker, UserMarker},
+            Id,
+        },
+        util::ImageHash,
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -54,31 +46,31 @@ pub mod thread;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct ChannelEntity {
-    application_id: Option<ApplicationId>,
+    application_id: Option<Id<ApplicationMarker>>,
     bitrate: Option<u64>,
-    guild_id: Option<GuildId>,
-    icon: Option<String>,
-    id: ChannelId,
+    guild_id: Option<Id<GuildMarker>>,
+    icon: Option<ImageHash>,
+    id: Id<ChannelMarker>,
     kind: ChannelType,
-    last_message_id: Option<MessageId>,
+    last_message_id: Option<Id<MessageMarker>>,
     last_pin_timestamp: Option<Timestamp>,
     name: Option<String>,
     nsfw: Option<bool>,
-    owner_id: Option<UserId>,
-    parent_id: Option<ChannelId>,
+    owner_id: Option<Id<UserMarker>>,
+    parent_id: Option<Id<ChannelMarker>>,
     permission_overwrites: Option<Vec<PermissionOverwrite>>,
     position: Option<i64>,
     rate_limit_per_user: Option<u64>,
-    recipient_ids: Option<Vec<UserId>>,
+    recipient_ids: Option<Vec<Id<UserMarker>>>,
     rtc_region: Option<String>,
     topic: Option<String>,
     user_limit: Option<u64>,
-    video_quality_mode: Option<VideoQualityMode>
+    video_quality_mode: Option<VideoQualityMode>,
 }
 
 impl ChannelEntity {
     #[must_use]
-    pub fn application_id(&self) -> Option<ApplicationId> {
+    pub fn application_id(&self) -> Option<Id<ApplicationMarker>> {
         self.application_id
     }
 
@@ -88,7 +80,7 @@ impl ChannelEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> Option<GuildId> {
+    pub fn guild_id(&self) -> Option<Id<GuildMarker>> {
         self.guild_id
     }
 
@@ -103,7 +95,7 @@ impl ChannelEntity {
     }
 
     #[must_use]
-    pub fn last_message_id(&self) -> Option<MessageId> {
+    pub fn last_message_id(&self) -> Option<Id<MessageMarker>> {
         self.last_message_id
     }
 
@@ -123,12 +115,12 @@ impl ChannelEntity {
     }
 
     #[must_use]
-    pub fn owner_id(&self) -> Option<UserId> {
+    pub fn owner_id(&self) -> Option<Id<UserMarker>> {
         self.owner_id
     }
 
     #[must_use]
-    pub fn parent_id(&self) -> Option<ChannelId> {
+    pub fn parent_id(&self) -> Option<Id<ChannelMarker>> {
         self.parent_id
     }
 
@@ -148,7 +140,7 @@ impl ChannelEntity {
     }
 
     #[must_use]
-    pub fn recipient_ids(&self) -> Option<Vec<UserId>> {
+    pub fn recipient_ids(&self) -> Option<Vec<Id<UserMarker>>> {
         self.recipient_ids.clone()
     }
 
@@ -180,7 +172,7 @@ impl Default for ChannelEntity {
             bitrate: None,
             guild_id: None,
             icon: None,
-            id: ChannelId::new(1).expect("non zero"),
+            id: Id::new_checked(1).unwrap(),
             kind: ChannelType::Group,
             last_message_id: None,
             last_pin_timestamp: None,
@@ -195,13 +187,13 @@ impl Default for ChannelEntity {
             rtc_region: None,
             topic: None,
             user_limit: None,
-            video_quality_mode: None
+            video_quality_mode: None,
         }
     }
 }
 
 impl Entity for ChannelEntity {
-    type Id = ChannelId;
+    type Id = Id<ChannelMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -248,7 +240,7 @@ impl From<PrivateChannel> for ChannelEntity {
                 .recipients
                 .iter()
                 .map(|user| user.id)
-                .collect()
+                .collect(),
         );
 
         Self {

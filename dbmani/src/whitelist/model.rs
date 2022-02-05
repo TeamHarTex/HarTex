@@ -23,16 +23,12 @@
 
 use std::num::NonZeroU64;
 
-use hartex_base::discord::model::id::GuildId;
-use sqlx::{
-    postgres::PgRow,
-    Result as SqlxResult,
-    Row
-};
+use hartex_base::discord::model::id::{marker::GuildMarker, Id};
+use sqlx::{postgres::PgRow, Result as SqlxResult, Row};
 
 pub struct WhitelistedGuild {
     pub GuildName: String,
-    pub GuildId: GuildId
+    pub GuildId: Id<GuildMarker>,
 }
 
 impl<'r> sqlx::FromRow<'r, PgRow> for WhitelistedGuild {
@@ -43,7 +39,7 @@ impl<'r> sqlx::FromRow<'r, PgRow> for WhitelistedGuild {
 
         Ok(Self {
             GuildName: name,
-            GuildId: GuildId(NonZeroU64::new(id as u64).unwrap())
+            GuildId: Id::from(NonZeroU64::new(id as u64).unwrap()),
         })
     }
 }

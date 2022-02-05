@@ -21,25 +21,20 @@
 
 //! An emitter used for emitting the custom events.
 
-use crate::{
-    events,
-    listener
-};
+use crate::{events, listener};
 
 /// An event emitter.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct EventEmitter {
-    listeners: listener::Listeners<events::HarTexEvent>
+    listeners: listener::Listeners<events::HarTexEvent>,
 }
 
 impl EventEmitter {
     /// Creates a new emitter with the corresponding listeners.
     #[must_use]
     pub fn new(listeners: listener::Listeners<events::HarTexEvent>) -> Self {
-        Self {
-            listeners
-        }
+        Self { listeners }
     }
 
     /// Emits an event.
@@ -51,8 +46,7 @@ impl EventEmitter {
         self.send(|index| {
             if index == count {
                 some_event.take().unwrap()
-            }
-            else {
+            } else {
                 some_event.clone().unwrap()
             }
         });
@@ -60,7 +54,8 @@ impl EventEmitter {
 
     fn send<F>(&self, mut function: F)
     where
-        F: FnMut(usize) -> events::HarTexEvent {
+        F: FnMut(usize) -> events::HarTexEvent,
+    {
         let mut index = 0;
 
         self.listeners.listeners().retain(|_, listener| {

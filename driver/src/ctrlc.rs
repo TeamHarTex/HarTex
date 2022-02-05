@@ -25,10 +25,7 @@
 
 use std::process;
 
-use hartex_base::{
-    ctrlc,
-    logging::tracing
-};
+use hartex_base::{ctrlc, logging::tracing};
 
 /// # Function `ctrlc_handler`
 ///

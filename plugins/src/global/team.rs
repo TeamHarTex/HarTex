@@ -24,31 +24,19 @@
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        embed_builder::{
-            EmbedBuilder,
-            EmbedFieldBuilder
-        },
+        embed_builder::{EmbedBuilder, EmbedFieldBuilder},
         model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
-            },
-            interaction::Interaction
-        }
+            callback::{CallbackData, InteractionResponse},
+            interaction::Interaction,
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
+    error::{HarTexError, HarTexResult},
     is_stable,
-    logging::tracing
+    logging::tracing,
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
 use hartex_conftoml::guildconf::locale::Locale;
 use hartex_dbmani::guildconf::GetGuildConfig;
@@ -74,7 +62,7 @@ impl Command for Team {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: CloneableInMemoryCache
+        _: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_team_command(ctx))
     }
@@ -84,26 +72,23 @@ impl Command for Team {
 async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
         TeamCmdLocalize::init(Locale::EnGb).expect("failed to load localization for team command")
-    }
-    else {
+    } else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !is_stable() && config.NightlyFeatures.localization {
             TeamCmdLocalize::init(config.GuildConfiguration.locale)
                 .expect("failed to load localization for team command")
-        }
-        else {
+        } else {
             TeamCmdLocalize::init(Locale::EnGb)
                 .expect("failed to load localization for team command")
         }
@@ -114,11 +99,11 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
         .color(0x0003_BEFC)
         .field(EmbedFieldBuilder::new(
             localize.embed_globadmin_leaddev_field,
-            "HTGAzureX1212.#5959"
+            "HTGAzureX1212.#5959",
         ))
         .field(EmbedFieldBuilder::new(
             localize.embed_contrib_field,
-            "<https://github.com/HarTexTeam/HarTex-rust-discord-bot/graphs/contributors>"
+            "<https://github.com/HarTexTeam/HarTex-rust-discord-bot/graphs/contributors>",
         ))
         .build()?;
 
@@ -135,8 +120,8 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
                 content: None,
                 embeds: Some(vec![embed]),
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await
