@@ -1,6 +1,6 @@
 [package]
 name = "hartex_cache_base"
-version = "1.26.0"
+version = "1.27.0"
 edition = "2021"
 description = """
 This crate provides an implementation of a cache for Discord objects for HarTex.

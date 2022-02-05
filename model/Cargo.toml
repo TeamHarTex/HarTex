@@ -1,6 +1,6 @@
 [package]
 name = "hartex_model"
-version = "1.26.0"
+version = "1.27.0"
 edition = "2021"
 description = """
 The `hartex_models` library provides various models for HarTex Discord bot, used for most of its functionalities.
