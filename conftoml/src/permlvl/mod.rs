@@ -22,20 +22,13 @@
 //! Configuration models for permission levels.
 
 use std::{
-    fmt::{
-        Formatter,
-        Result as FmtResult
-    },
-    num::NonZeroU64
+    fmt::{Formatter, Result as FmtResult},
+    num::NonZeroU64,
 };
 
 use serde::{
-    de::{
-        Error,
-        Visitor
-    },
-    Deserialize,
-    Deserializer
+    de::{Error, Visitor},
+    Deserialize, Deserializer,
 };
 
 pub mod map;
@@ -46,7 +39,7 @@ pub struct PermissionLevels {
     #[serde(default)]
     pub roles: map::PermissionLevelMap<GenericId>,
     #[serde(default)]
-    pub users: map::PermissionLevelMap<GenericId>
+    pub users: map::PermissionLevelMap<GenericId>,
 }
 
 /// A generic ID.
@@ -56,7 +49,8 @@ pub struct GenericId(NonZeroU64);
 impl<'deserialize> Deserialize<'deserialize> for GenericId {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: Deserializer<'deserialize> {
+        D: Deserializer<'deserialize>,
+    {
         deserializer.deserialize_str(PermissionLevelsRolesMapGenericIdDeserializerRefstrVisitor)
     }
 }
@@ -72,7 +66,8 @@ impl<'visitor> Visitor<'visitor> for PermissionLevelsRolesMapGenericIdDeserializ
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
-        E: Error {
+        E: Error,
+    {
         let res = v.parse::<u64>();
         if res.is_err() {
             return Err(Error::custom("invalid integer"));
@@ -89,25 +84,17 @@ impl<'visitor> Visitor<'visitor> for PermissionLevelsRolesMapGenericIdDeserializ
 
 #[cfg(test)]
 mod tests {
-    use std::{
-        fmt::Debug,
-        num::NonZeroU64
-    };
+    use std::{fmt::Debug, num::NonZeroU64};
 
     use dashmap::DashMap;
     use serde_test::Token;
 
-    use super::{
-        map::PermissionLevelMap,
-        Deserialize,
-        GenericId,
-        PermissionLevels
-    };
+    use super::{map::PermissionLevelMap, Deserialize, GenericId, PermissionLevels};
 
     const _: fn() = || {
         fn static_assert_impl_all<
             'deserialize,
-            T: ?Sized + Clone + Debug + Deserialize<'deserialize>
+            T: ?Sized + Clone + Debug + Deserialize<'deserialize>,
         >() {
         }
 
@@ -129,22 +116,16 @@ mod tests {
 
         serde_test::assert_de_tokens(
             &PermissionLevels {
-                roles: PermissionLevelMap {
-                    map: dashmap_roles
-                },
-                users: PermissionLevelMap {
-                    map: dashmap_users
-                }
+                roles: PermissionLevelMap { map: dashmap_roles },
+                users: PermissionLevelMap { map: dashmap_users },
             },
             &[
                 Token::Struct {
                     name: "PermissionLevels",
-                    len: 5
+                    len: 5,
                 },
                 Token::Str("roles"),
-                Token::Map {
-                    len: Some(5)
-                },
+                Token::Map { len: Some(5) },
                 Token::Str("1234567887654321"),
                 Token::I64(100),
                 Token::Str("2345678998765432"),
@@ -157,16 +138,14 @@ mod tests {
                 Token::I64(10),
                 Token::MapEnd,
                 Token::Str("users"),
-                Token::Map {
-                    len: Some(2)
-                },
+                Token::Map { len: Some(2) },
                 Token::Str("1000000000000001"),
                 Token::I64(100),
                 Token::Str("2000000000000002"),
                 Token::I64(90),
                 Token::MapEnd,
-                Token::StructEnd
-            ]
+                Token::StructEnd,
+            ],
         );
     }
 }

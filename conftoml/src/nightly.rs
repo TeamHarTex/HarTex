@@ -35,7 +35,7 @@ pub struct NightlyFeatures {
     pub threads: bool,
     // Experimental Support for Localization Facilities, i.e. timezones, languages
     #[serde(default = "default_feature_enabled")]
-    pub localization: bool
+    pub localization: bool,
 }
 
 #[must_use]
@@ -49,15 +49,12 @@ mod tests {
 
     use serde_test::Token;
 
-    use super::{
-        Deserialize,
-        NightlyFeatures
-    };
+    use super::{Deserialize, NightlyFeatures};
 
     const _: fn() = || {
         fn static_assert_impl_all<
             'deserialize,
-            T: ?Sized + Clone + Debug + Default + Deserialize<'deserialize> + PartialEq
+            T: ?Sized + Clone + Debug + Default + Deserialize<'deserialize> + PartialEq,
         >() {
         }
 
@@ -69,19 +66,19 @@ mod tests {
         serde_test::assert_de_tokens(
             &NightlyFeatures {
                 threads: false,
-                localization: true
+                localization: true,
             },
             &[
                 Token::Struct {
                     name: "NightlyFeatures",
-                    len: 2
+                    len: 2,
                 },
                 Token::Str("threads"),
                 Token::Bool(false),
                 Token::Str("localization"),
                 Token::Bool(true),
-                Token::StructEnd
-            ]
+                Token::StructEnd,
+            ],
         );
     }
 }

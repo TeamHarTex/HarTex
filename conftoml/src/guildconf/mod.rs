@@ -21,10 +21,7 @@
 
 //! Configuration models specifically for guild-specific configuration.
 
-use serde::{
-    de,
-    Deserialize
-};
+use serde::{de, Deserialize};
 
 pub mod locale;
 pub mod tz;
@@ -42,7 +39,7 @@ pub struct GuildConfiguration {
     #[serde(default = "default_dm_cant_use_cmd")]
     pub dmCannotUseCommand: bool,
     #[serde(default = "default_locale", deserialize_with = "deserialize_locale")]
-    pub locale: locale::Locale
+    pub locale: locale::Locale,
 }
 
 fn default_locale() -> locale::Locale {
@@ -59,13 +56,15 @@ fn default_dm_cant_use_cmd() -> bool {
 
 fn deserialize_locale<'deserialize, D>(deserializer: D) -> Result<locale::Locale, D::Error>
 where
-    D: de::Deserializer<'deserialize> {
+    D: de::Deserializer<'deserialize>,
+{
     deserializer.deserialize_str(locale::GuildConfigLocaleDeserializerRefStrVisitor)
 }
 
 fn deserialize_timezone<'deserialize, D>(deserializer: D) -> Result<tz::Timezone, D::Error>
 where
-    D: de::Deserializer<'deserialize> {
+    D: de::Deserializer<'deserialize>,
+{
     deserializer.deserialize_str(tz::GuildConfigTimezoneDeserializerRefStrVisitor)
 }
 
@@ -75,17 +74,12 @@ mod tests {
 
     use serde_test::Token;
 
-    use super::{
-        locale,
-        tz,
-        Deserialize,
-        GuildConfiguration
-    };
+    use super::{locale, tz, Deserialize, GuildConfiguration};
 
     const _: fn() = || {
         fn static_assert_impl_all<
             'deserialize,
-            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq
+            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq,
         >() {
         }
 
@@ -99,12 +93,12 @@ mod tests {
                 nickname: Some(String::from("HarTex")),
                 timezone: tz::Timezone::UTC,
                 dmCannotUseCommand: true,
-                locale: locale::Locale::EnGb
+                locale: locale::Locale::EnGb,
             },
             &[
                 Token::Struct {
                     name: "GuildConfiguration",
-                    len: 3
+                    len: 3,
                 },
                 Token::Str("nickname"),
                 Token::Some,
@@ -115,8 +109,8 @@ mod tests {
                 Token::Bool(true),
                 Token::Str("locale"),
                 Token::Str("en_GB"),
-                Token::StructEnd
-            ]
+                Token::StructEnd,
+            ],
         );
     }
 }

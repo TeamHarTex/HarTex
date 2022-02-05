@@ -27,28 +27,15 @@ use std::process;
 
 use hartex_base::{
     discord::{
-        cache_inmemory::{
-            CloneableInMemoryCache,
-            InMemoryCache,
-            ResourceType
-        },
+        cache_inmemory::{CloneableInMemoryCache, InMemoryCache, ResourceType},
         gateway::{
-            cluster::{
-                Events,
-                ShardScheme
-            },
-            CloneableCluster,
-            Cluster,
-            EventTypeFlags,
-            Intents
+            cluster::{Events, ShardScheme},
+            CloneableCluster, Cluster, EventTypeFlags, Intents,
         },
-        http::{
-            Client,
-            CloneableClient
-        },
-        model::id::ApplicationId
+        http::{Client, CloneableClient},
+        model::id::ApplicationId,
     },
-    logging::tracing
+    logging::tracing,
 };
 use hartex_env::StartupEnv;
 
@@ -60,12 +47,12 @@ use hartex_env::StartupEnv;
 /// - `environment`, type `Environment`: the environment to construct the return values
 #[allow(clippy::missing_panics_doc)]
 pub async fn pre_startup(
-    environment: StartupEnv
+    environment: StartupEnv,
 ) -> (
     CloneableCluster,
     CloneableClient,
     Events,
-    CloneableInMemoryCache
+    CloneableInMemoryCache,
 ) {
     let shard_scheme = ShardScheme::Auto;
     let intents = Intents::all();
@@ -118,6 +105,6 @@ pub async fn pre_startup(
         CloneableCluster::new(result.0),
         client,
         result.1,
-        CloneableInMemoryCache::new(cache)
+        CloneableInMemoryCache::new(cache),
     )
 }

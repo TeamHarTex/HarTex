@@ -25,30 +25,17 @@
 use std::{
     future::Future,
     pin::Pin,
-    task::{
-        Context,
-        Poll
-    }
+    task::{Context, Poll},
 };
 
 use hartex_base::{
-    discord::model::id::GuildId,
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    logging::tracing
+    discord::model::id::{marker::GuildMarker, Id},
+    error::{HarTexError, HarTexResult},
+    logging::tracing,
 };
-use sqlx::postgres::{
-    PgPool,
-    Postgres
-};
+use sqlx::postgres::{PgPool, Postgres};
 
-use crate::{
-    guildconf::model::GuildConfig,
-    PendingFuture,
-    DATABASE_ENV
-};
+use crate::{guildconf::model::GuildConfig, PendingFuture, DATABASE_ENV};
 
 mod model;
 
@@ -56,17 +43,17 @@ mod model;
 pub struct GetGuildConfig {
     pending: Option<PendingFuture<GuildConfig>>,
 
-    guild_id: GuildId
+    guild_id: Id<GuildMarker>,
 }
 
 impl GetGuildConfig {
     /// Creates a new `GetGuildConfig` with the provided `guild_id`.
     #[must_use]
-    pub fn new(guild_id: GuildId) -> Self {
+    pub fn new(guild_id: Id<GuildMarker>) -> Self {
         Self {
             pending: None,
 
-            guild_id
+            guild_id,
         }
     }
 
@@ -98,7 +85,7 @@ impl Future for GetGuildConfig {
 }
 
 /// Executes the future.
-async fn exec_future(guild_id: GuildId) -> HarTexResult<GuildConfig> {
+async fn exec_future(guild_id: Id<GuildMarker>) -> HarTexResult<GuildConfig> {
     let span = tracing::trace_span!(parent: None, "database manipulation: get guild config");
 
     let db_credentials = match &DATABASE_ENV.pgsql_credentials_guildconfig {
@@ -112,8 +99,8 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<GuildConfig> {
 
             return Err(HarTexError::Custom {
                 message: String::from(
-                    "the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set"
-                )
+                    "the environment variable `PGSQL_CREDENTIALS_GUILDCONFIG` is not set",
+                ),
             });
         }
     };
@@ -128,9 +115,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<GuildConfig> {
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 
-            return Err(HarTexError::Custom {
-                message
-            });
+            return Err(HarTexError::Custom { message });
         }
     };
 
@@ -146,9 +131,7 @@ async fn exec_future(guild_id: GuildId) -> HarTexResult<GuildConfig> {
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 
-            Err(HarTexError::Custom {
-                message
-            })
+            Err(HarTexError::Custom { message })
         }
     }
 }

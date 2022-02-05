@@ -25,7 +25,7 @@
 use crate::discord::model::{
     channel::thread::ThreadMember,
     guild::PartialMember,
-    id::UserId
+    id::{marker::UserMarker, Id},
 };
 
 /// Extensions for [`Option<T>`] in The Rust Standard Library.
@@ -44,14 +44,14 @@ pub trait OptionExt<'a> {
     /// Maps the inner value (and unwraps the wrapping [`Option<T>`]).
     ///
     /// [`Option<T>`]: https://doc.rust-lang.org/nightly/std/option/enum.Option.html
-    fn map_opt_user_id(&'a self) -> Option<UserId> {
+    fn map_opt_user_id(&'a self) -> Option<Id<UserMarker>> {
         unimplemented!()
     }
 }
 
 #[cfg(feature = "twilight-bundled")]
 impl<'a> OptionExt<'a> for Option<PartialMember> {
-    fn map_opt_user_id(&'a self) -> Option<UserId> {
+    fn map_opt_user_id(&'a self) -> Option<Id<UserMarker>> {
         if self.is_none() {
             return None;
         }
@@ -63,7 +63,7 @@ impl<'a> OptionExt<'a> for Option<PartialMember> {
 
 #[cfg(feature = "twilight-bundled")]
 impl<'a> OptionExt<'a> for Option<ThreadMember> {
-    fn map_opt_user_id(&'a self) -> Option<UserId> {
+    fn map_opt_user_id(&'a self) -> Option<Id<UserMarker>> {
         if self.is_none() {
             return None;
         }

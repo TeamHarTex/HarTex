@@ -27,24 +27,16 @@ use hartex_base::{
     discord::model::{
         datetime::Timestamp,
         guild::{
-            DefaultMessageNotificationLevel,
-            ExplicitContentFilter,
-            Guild,
-            MfaLevel,
-            NSFWLevel,
-            Permissions,
-            PremiumTier,
-            SystemChannelFlags,
-            VerificationLevel
+            DefaultMessageNotificationLevel, ExplicitContentFilter, Guild, MfaLevel, NSFWLevel,
+            Permissions, PremiumTier, SystemChannelFlags, VerificationLevel,
         },
         id::{
-            ApplicationId,
-            ChannelId,
-            GuildId,
-            UserId
-        }
+            marker::{ApplicationMarker, ChannelMarker, GuildMarker, UserMarker},
+            Id,
+        },
+        util::ImageHash,
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -56,19 +48,19 @@ pub mod role;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct GuildEntity {
-    afk_channel_id: Option<ChannelId>,
+    afk_channel_id: Option<Id<ChannelMarker>>,
     afk_timeout: u64,
-    application_id: Option<ApplicationId>,
+    application_id: Option<Id<ApplicationMarker>>,
     approximate_member_count: Option<u64>,
     approximate_presence_count: Option<u64>,
-    banner: Option<String>,
+    banner: Option<ImageHash>,
     default_message_notifications: DefaultMessageNotificationLevel,
     description: Option<String>,
-    discovery_splash: Option<String>,
+    discovery_splash: Option<ImageHash>,
     explicit_content_filter: ExplicitContentFilter,
     features: Vec<String>,
-    icon: Option<String>,
-    id: GuildId,
+    icon: Option<ImageHash>,
+    id: Id<GuildMarker>,
     joined_at: Option<Timestamp>,
     large: bool,
     max_members: Option<u64>,
@@ -78,26 +70,26 @@ pub struct GuildEntity {
     mfa_level: MfaLevel,
     name: String,
     nsfw_level: NSFWLevel,
-    owner_id: UserId,
+    owner_id: Id<UserMarker>,
     owner: Option<bool>,
     permissions: Option<Permissions>,
     preferred_locale: String,
     premium_subscription_count: Option<u64>,
     premium_tier: PremiumTier,
-    rules_channel_id: Option<ChannelId>,
-    splash: Option<String>,
+    rules_channel_id: Option<Id<ChannelMarker>>,
+    splash: Option<ImageHash>,
     system_channel_flags: SystemChannelFlags,
-    system_channel_id: Option<ChannelId>,
+    system_channel_id: Option<Id<ChannelMarker>>,
     unavailable: bool,
     vanity_url_code: Option<String>,
     verification_level: VerificationLevel,
-    widget_channel_id: Option<ChannelId>,
-    widget_enabled: Option<bool>
+    widget_channel_id: Option<Id<ChannelMarker>>,
+    widget_enabled: Option<bool>,
 }
 
 impl GuildEntity {
     #[must_use]
-    pub fn afk_channel_id(&self) -> Option<ChannelId> {
+    pub fn afk_channel_id(&self) -> Option<Id<ChannelMarker>> {
         self.afk_channel_id
     }
 
@@ -107,7 +99,7 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn application_id(&self) -> Option<ApplicationId> {
+    pub fn application_id(&self) -> Option<Id<ApplicationMarker>> {
         self.application_id
     }
 
@@ -202,7 +194,7 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn owner_id(&self) -> UserId {
+    pub fn owner_id(&self) -> Id<UserMarker> {
         self.owner_id
     }
 
@@ -232,7 +224,7 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn rules_channel_id(&self) -> Option<ChannelId> {
+    pub fn rules_channel_id(&self) -> Option<Id<ChannelMarker>> {
         self.rules_channel_id
     }
 
@@ -247,7 +239,7 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn system_channel_id(&self) -> Option<ChannelId> {
+    pub fn system_channel_id(&self) -> Option<Id<ChannelMarker>> {
         self.system_channel_id
     }
 
@@ -267,7 +259,7 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn widget_channel_id(&self) -> Option<ChannelId> {
+    pub fn widget_channel_id(&self) -> Option<Id<ChannelMarker>> {
         self.widget_channel_id
     }
 
@@ -278,7 +270,7 @@ impl GuildEntity {
 }
 
 impl Entity for GuildEntity {
-    type Id = GuildId;
+    type Id = Id<GuildMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -324,7 +316,7 @@ impl From<Guild> for GuildEntity {
             vanity_url_code: guild.vanity_url_code,
             verification_level: guild.verification_level,
             widget_channel_id: guild.widget_channel_id,
-            widget_enabled: guild.widget_enabled
+            widget_enabled: guild.widget_enabled,
         }
     }
 }

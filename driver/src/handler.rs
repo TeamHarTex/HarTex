@@ -32,49 +32,23 @@ use hartex_base::{
         model::gateway::{
             event::shard::Identifying,
             payload::{
-                incoming::{
-                    GuildCreate,
-                    InteractionCreate,
-                    MessageCreate,
-                    Ready
-                },
-                outgoing::update_presence::UpdatePresence
+                incoming::{GuildCreate, InteractionCreate, MessageCreate, Ready},
+                outgoing::update_presence::UpdatePresence,
             },
-            presence::{
-                Activity,
-                ActivityType,
-                Status
-            }
-        }
+            presence::{Activity, ActivityType, Status},
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    logging::tracing::{
-        self,
-        Instrument
-    },
-    stdext::prelude::*
+    error::{HarTexError, HarTexResult},
+    logging::tracing::{self, Instrument},
+    stdext::prelude::*,
 };
-use hartex_dbmani::{
-    guildconf::GetGuildConfig,
-    whitelist::GetWhitelistedGuilds
-};
+use hartex_dbmani::{guildconf::GetGuildConfig, whitelist::GetWhitelistedGuilds};
 use hartex_eventsys::emitter::EventEmitter;
 use hartex_model::payload::CommandExecuted;
 use hartex_plugins::{
     globadmin_only::refroles::Refroles,
-    global::{
-        about::About,
-        ping::Ping,
-        source::Source,
-        team::Team
-    },
-    information::{
-        guildinfo::Guildinfo,
-        userinfo::Userinfo
-    }
+    global::{about::About, ping::Ping, source::Source, team::Team},
+    information::{guildinfo::Guildinfo, userinfo::Userinfo},
 };
 use tokio::time;
 
@@ -102,7 +76,7 @@ impl EventHandler {
     #[allow(clippy::missing_errors_doc)]
     pub async fn guild_create(
         payload: Box<GuildCreate>,
-        http: CloneableClient
+        http: CloneableClient,
     ) -> HarTexResult<()> {
         let guild_id = payload.id;
 
@@ -162,7 +136,7 @@ impl EventHandler {
             http.leave_guild(guild_id).exec().await?;
 
             return Err(HarTexError::Custom {
-                message: String::from("guild is not whitelisted")
+                message: String::from("guild is not whitelisted"),
             });
         }
 
@@ -189,7 +163,7 @@ impl EventHandler {
         http: CloneableClient,
         cluster: CloneableCluster,
         cache: CloneableInMemoryCache,
-        emitter: EventEmitter
+        emitter: EventEmitter,
     ) -> HarTexResult<()> {
         let span = tracing::trace_span!("event handler: interaction create");
         span.in_scope(|| {
@@ -217,7 +191,7 @@ impl EventHandler {
         _: EventEmitter,
         _: CloneableInMemoryCache,
         _: CloneableClient,
-        _: CloneableCluster
+        _: CloneableCluster,
     ) -> HarTexResult<()> {
         Ok(())
     }
@@ -236,7 +210,7 @@ impl EventHandler {
     pub async fn ready(
         payload: Box<Ready>,
         cluster: CloneableCluster,
-        http: CloneableClient
+        http: CloneableClient,
     ) -> HarTexResult<()> {
         let span = tracing::info_span!("event handler: ready");
         span.in_scope(|| {
@@ -269,31 +243,29 @@ impl EventHandler {
                 match shard
                     .command(
                         &UpdatePresence::new(
-                            vec![
-                                Activity {
-                                    application_id: None,
-                                    assets: None,
-                                    buttons: Vec::new(),
-                                    created_at: None,
-                                    details: None,
-                                    emoji: None,
-                                    flags: None,
-                                    id: None,
-                                    instance: None,
-                                    kind: ActivityType::Watching,
-                                    name: format!("codebase revamp | shard {}", shard_id),
-                                    party: None,
-                                    secrets: None,
-                                    state: None,
-                                    timestamps: None,
-                                    url: None
-                                },
-                            ],
+                            vec![Activity {
+                                application_id: None,
+                                assets: None,
+                                buttons: Vec::new(),
+                                created_at: None,
+                                details: None,
+                                emoji: None,
+                                flags: None,
+                                id: None,
+                                instance: None,
+                                kind: ActivityType::Watching,
+                                name: format!("codebase revamp | shard {}", shard_id),
+                                party: None,
+                                secrets: None,
+                                state: None,
+                                timestamps: None,
+                                url: None,
+                            }],
                             false,
                             None,
-                            Status::Online
+                            Status::Online,
                         )
-                        .unwrap()
+                        .unwrap(),
                     )
                     .await
                 {
@@ -324,7 +296,7 @@ impl EventHandler {
                 Box::new(Guildinfo),
                 Box::new(Userinfo),
             ],
-            http.clone()
+            http.clone(),
         )
         .instrument(span)
         .await?;

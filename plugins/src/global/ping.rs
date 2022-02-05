@@ -25,34 +25,22 @@ use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
         model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
-            },
-            interaction::Interaction
-        }
+            callback::{CallbackData, InteractionResponse},
+            interaction::Interaction,
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
+    error::{HarTexError, HarTexResult},
     is_stable,
-    logging::tracing
+    logging::tracing,
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
 use hartex_conftoml::guildconf::locale::Locale;
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_localization_impl::global::PingCmdLocalize;
-use hartex_utils::{
-    shard_id,
-    FutureRetType
-};
+use hartex_utils::{shard_id, FutureRetType};
 
 /// The `ping` command.
 pub struct Ping;
@@ -73,7 +61,7 @@ impl Command for Ping {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: CloneableInMemoryCache
+        _: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_ping_command(ctx))
     }
@@ -83,26 +71,23 @@ impl Command for Ping {
 async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
         PingCmdLocalize::init(Locale::EnGb).expect("failed to load localization for ping command")
-    }
-    else {
+    } else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !is_stable() && config.NightlyFeatures.localization {
             PingCmdLocalize::init(config.GuildConfiguration.locale)
                 .expect("failed to load localization for ping command")
-        }
-        else {
+        } else {
             PingCmdLocalize::init(Locale::EnGb)
                 .expect("failed to load localization for ping command")
         }
@@ -121,8 +106,8 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
                 content: Some(localize.init_resp.clone()),
                 embeds: None,
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await
@@ -156,7 +141,7 @@ async fn execute_ping_command(ctx: CommandContext) -> HarTexResult<()> {
             Ok(update) => update,
             Err(error) => {
                 return Err(HarTexError::Custom {
-                    message: format!("failed to update original response: {error}")
+                    message: format!("failed to update original response: {error}"),
                 });
             }
         }

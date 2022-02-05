@@ -25,10 +25,7 @@
 
 use hartex_base::logging::tracing;
 use hartex_cmdsys::framework::CommandFramework;
-use hartex_eventsys::{
-    emitter::EventEmitter,
-    events::Events
-};
+use hartex_eventsys::{emitter::EventEmitter, events::Events};
 
 /// # Function `framework_setup`
 ///

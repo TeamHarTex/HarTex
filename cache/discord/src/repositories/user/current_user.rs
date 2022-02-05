@@ -23,13 +23,11 @@
 
 use hartex_cache_base::repository::SingleEntityRepository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::user::current_user::CurrentUserEntity
-};
+use crate::{backend::DiscordBackend, entities::user::current_user::CurrentUserEntity};
 
 /// A repository containing Discord current user objects.
 #[allow(clippy::module_name_repetitions)]
 pub trait CurrentUserRepository<B: DiscordBackend>:
-    SingleEntityRepository<CurrentUserEntity, B> {
+    SingleEntityRepository<CurrentUserEntity, B>
+{
 }

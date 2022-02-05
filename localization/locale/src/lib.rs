@@ -24,21 +24,14 @@
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
 
-use std::{
-    collections::HashMap,
-    fs,
-    ops::Index
-};
+use std::{collections::HashMap, fs, ops::Index};
 
-use hartex_base::error::{
-    HarTexError,
-    HarTexResult
-};
+use hartex_base::error::{HarTexError, HarTexResult};
 
 /// A locale.
 #[derive(Clone)]
 pub struct Locale {
-    file_map: HashMap<String, String>
+    file_map: HashMap<String, String>,
 }
 
 impl Locale {
@@ -82,14 +75,12 @@ impl Locale {
                 return Err(HarTexError::Custom {
                     message: format!(
                         "duplicate key found in language configuration file {path}: {key}"
-                    )
+                    ),
                 });
             }
         }
 
-        Ok(Self {
-            file_map: map
-        })
+        Ok(Self { file_map: map })
     }
 
     /// Retrieves the language identifier from the current loaded language configuration file.

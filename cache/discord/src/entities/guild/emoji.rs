@@ -24,11 +24,9 @@
 use hartex_base::discord::model::{
     guild::Emoji,
     id::{
-        EmojiId,
-        GuildId,
-        RoleId,
-        UserId
-    }
+        marker::{EmojiMarker, GuildMarker, RoleMarker, UserMarker},
+        Id,
+    },
 };
 use hartex_cache_base::entity::Entity;
 
@@ -39,13 +37,13 @@ use hartex_cache_base::entity::Entity;
 pub struct EmojiEntity {
     animated: bool,
     available: bool,
-    guild_id: GuildId,
-    id: EmojiId,
+    guild_id: Id<GuildMarker>,
+    id: Id<EmojiMarker>,
     managed: bool,
     name: String,
     require_colons: bool,
-    role_ids: Vec<RoleId>,
-    user_id: Option<UserId>
+    role_ids: Vec<Id<RoleMarker>>,
+    user_id: Option<Id<UserMarker>>,
 }
 
 impl EmojiEntity {
@@ -60,7 +58,7 @@ impl EmojiEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> GuildId {
+    pub fn guild_id(&self) -> Id<GuildMarker> {
         self.guild_id
     }
 
@@ -80,26 +78,26 @@ impl EmojiEntity {
     }
 
     #[must_use]
-    pub fn role_ids(&self) -> Vec<RoleId> {
+    pub fn role_ids(&self) -> Vec<Id<RoleMarker>> {
         self.role_ids.clone()
     }
 
     #[must_use]
-    pub fn user_id(&self) -> Option<UserId> {
+    pub fn user_id(&self) -> Option<Id<UserMarker>> {
         self.user_id
     }
 }
 
 impl Entity for EmojiEntity {
-    type Id = EmojiId;
+    type Id = Id<EmojiMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
     }
 }
 
-impl From<(GuildId, Emoji)> for EmojiEntity {
-    fn from((guild_id, emoji): (GuildId, Emoji)) -> Self {
+impl From<(Id<GuildMarker>, Emoji)> for EmojiEntity {
+    fn from((guild_id, emoji): (Id<GuildMarker>, Emoji)) -> Self {
         let user_id = emoji.user.map(|user| user.id);
 
         Self {
@@ -111,7 +109,7 @@ impl From<(GuildId, Emoji)> for EmojiEntity {
             name: emoji.name,
             require_colons: emoji.require_colons,
             role_ids: emoji.roles,
-            user_id
+            user_id,
         }
     }
 }

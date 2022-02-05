@@ -23,25 +23,14 @@
 //!
 //! This module contains some models for use in the `GetGuildConfig` future.
 
-use std::{
-    ops::Deref,
-    sync::Arc
-};
+use std::{ops::Deref, sync::Arc};
 
-use hartex_base::{
-    error::HarTexError,
-    logging::tracing
-};
+use hartex_base::{error::HarTexError, logging::tracing};
 use hartex_conftoml::TomlConfig;
-use sqlx::{
-    postgres::PgRow,
-    Error,
-    Result as SqlxResult,
-    Row
-};
+use sqlx::{postgres::PgRow, Error, Result as SqlxResult, Row};
 
 pub struct GuildConfig {
-    pub inner: Arc<TomlConfig>
+    pub inner: Arc<TomlConfig>,
 }
 
 impl Deref for GuildConfig {
@@ -66,7 +55,7 @@ impl<'r> sqlx::FromRow<'r, PgRow> for GuildConfig {
                 span.in_scope(|| tracing::error!("{message}", message = &message));
 
                 return Err(Error::Decode(Box::new(HarTexError::Base64DecodeError {
-                    error
+                    error,
                 })));
             }
         };
@@ -81,7 +70,7 @@ impl<'r> sqlx::FromRow<'r, PgRow> for GuildConfig {
                 span.in_scope(|| tracing::error!("{message}", message = &message));
 
                 return Err(Error::Decode(Box::new(HarTexError::Utf8ValidationError {
-                    error
+                    error,
                 })));
             }
         });
@@ -91,7 +80,7 @@ impl<'r> sqlx::FromRow<'r, PgRow> for GuildConfig {
         }
 
         Ok(Self {
-            inner: Arc::new(result.unwrap())
+            inner: Arc::new(result.unwrap()),
         })
     }
 }

@@ -24,55 +24,32 @@
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        embed_builder::{
-            EmbedAuthorBuilder,
-            EmbedBuilder,
-            EmbedFieldBuilder,
-            ImageSource
-        },
+        embed_builder::{EmbedAuthorBuilder, EmbedBuilder, EmbedFieldBuilder, ImageSource},
         model::{
             application::{
-                callback::{
-                    CallbackData,
-                    InteractionResponse
-                },
-                interaction::Interaction
+                callback::{CallbackData, InteractionResponse},
+                interaction::Interaction,
             },
             channel::ChannelType,
-            guild::VerificationLevel
+            guild::VerificationLevel,
         },
-        util::snowflake::Snowflake
+        util::snowflake::Snowflake,
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
+    error::{HarTexError, HarTexResult},
     is_stable,
     logging::tracing,
-    time::{
-        FixedOffset,
-        TimeZone
-    }
+    time::{FixedOffset, TimeZone},
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
-use hartex_conftoml::guildconf::{
-    locale::Locale,
-    tz::Timezone
-};
+use hartex_conftoml::guildconf::{locale::Locale, tz::Timezone};
 use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_localization_impl::information::GuildinfoCmdLocalize;
 use hartex_utils::{
-    cdn::{
-        Cdn,
-        CdnResourceFormat
-    },
-    FutureRetType
+    cdn::{Cdn, CdnResourceFormat},
+    FutureRetType,
 };
 
 /// The `guildinfo` command.
@@ -94,7 +71,7 @@ impl Command for Guildinfo {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        cache: CloneableInMemoryCache
+        cache: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_guildinfo_command(ctx, cache))
     }
@@ -104,16 +81,15 @@ impl Command for Guildinfo {
 #[allow(clippy::too_many_lines)]
 async fn execute_guildinfo_command(
     ctx: CommandContext,
-    cache: CloneableInMemoryCache
+    cache: CloneableInMemoryCache,
 ) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
@@ -131,12 +107,12 @@ async fn execute_guildinfo_command(
                     allowed_mentions: None,
                     components: None,
                     content: Some(String::from(
-                        ":x: This command can only be used in a guild."
+                        ":x: This command can only be used in a guild.",
                     )),
                     embeds: None,
                     flags: None,
-                    tts: None
-                })
+                    tts: None,
+                }),
             )
             .exec()
             .await
@@ -157,12 +133,10 @@ async fn execute_guildinfo_command(
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
         GuildinfoCmdLocalize::init(Locale::EnGb)
             .expect("failed to load localization for guildinfo command")
-    }
-    else if !is_stable() && config.NightlyFeatures.localization {
+    } else if !is_stable() && config.NightlyFeatures.localization {
         GuildinfoCmdLocalize::init(config.GuildConfiguration.locale)
             .expect("failed to load localization of guildinfo command")
-    }
-    else {
+    } else {
         GuildinfoCmdLocalize::init(Locale::EnGb)
             .expect("failed to load localization for guildinfo command")
     };
@@ -299,14 +273,12 @@ async fn execute_guildinfo_command(
     let icon_url = if let Some(hash) = guild.icon() {
         let format = if hash.starts_with("a_") {
             CdnResourceFormat::GIF
-        }
-        else {
+        } else {
             CdnResourceFormat::PNG
         };
 
         Cdn::guild_icon(guild.id(), hash, &format)
-    }
-    else {
+    } else {
         String::new()
     };
 
@@ -334,9 +306,9 @@ async fn execute_guildinfo_command(
         .field(
             EmbedFieldBuilder::new(
                 localize.embed_guild_id_field,
-                format!("{id}", id = guild.id())
+                format!("{id}", id = guild.id()),
             )
-            .inline()
+            .inline(),
         )
         .field(EmbedFieldBuilder::new(
             localize.embed_guild_owner_field,
@@ -344,21 +316,20 @@ async fn execute_guildinfo_command(
                 "{name}#{discriminator}",
                 name = guild_owner.name,
                 discriminator = guild_owner.discriminator
-            )
+            ),
         ))
         .field(EmbedFieldBuilder::new(
             localize.embed_guild_owner_user_id_field,
-            format!("{id}", id = guild_owner.id)
+            format!("{id}", id = guild_owner.id),
         ))
         .field(EmbedFieldBuilder::new(
             localize.embed_guild_voice_regs_field,
-            voice_regions_repr_str.join(", ")
+            voice_regions_repr_str.join(", "),
         ));
 
     let timezone = if config.NightlyFeatures.localization && !is_stable() {
         config.GuildConfiguration.timezone
-    }
-    else {
+    } else {
         Timezone::UTC
     };
 
@@ -381,7 +352,7 @@ async fn execute_guildinfo_command(
         VerificationLevel::Low => "low",
         VerificationLevel::Medium => "medium",
         VerificationLevel::High => "high",
-        VerificationLevel::VeryHigh => "very high"
+        VerificationLevel::VeryHigh => "very high",
     };
 
     let temp = embed.clone();
@@ -427,8 +398,8 @@ async fn execute_guildinfo_command(
                 content: None,
                 embeds: Some(vec![embed.build()?]),
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await?;

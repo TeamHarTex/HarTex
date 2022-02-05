@@ -21,16 +21,9 @@
 
 //! A wrapper of the Discord CDN.
 
-use std::fmt::{
-    self,
-    Display,
-    Formatter
-};
+use std::fmt::{self, Display, Formatter};
 
-use hartex_base::discord::model::id::{
-    GuildId,
-    UserId
-};
+use hartex_base::discord::model::id::{GuildId, UserId};
 
 /// The "namespace" for various CDN endpoints
 pub struct Cdn;
@@ -68,7 +61,7 @@ pub enum CdnResourceFormat {
     PNG,
 
     /// A WebP - `.webp`
-    WebP
+    WebP,
 }
 
 impl Display for CdnResourceFormat {
@@ -77,7 +70,7 @@ impl Display for CdnResourceFormat {
             Self::GIF => f.write_str(".gif"),
             Self::JPEG => f.write_str(".jpeg"),
             Self::PNG => f.write_str(".png"),
-            Self::WebP => f.write_str(".webp")
+            Self::WebP => f.write_str(".webp"),
         }
     }
 }

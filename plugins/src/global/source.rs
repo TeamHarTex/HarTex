@@ -25,26 +25,17 @@ use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
         model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
-            },
-            interaction::Interaction
-        }
+            callback::{CallbackData, InteractionResponse},
+            interaction::Interaction,
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
+    error::{HarTexError, HarTexResult},
     is_stable,
-    logging::tracing
+    logging::tracing,
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
 use hartex_conftoml::guildconf::locale::Locale;
 use hartex_dbmani::guildconf::GetGuildConfig;
@@ -70,7 +61,7 @@ impl Command for Source {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: CloneableInMemoryCache
+        _: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_source_command(ctx))
     }
@@ -80,27 +71,24 @@ impl Command for Source {
 async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
         SourceCmdLocalize::init(Locale::EnGb)
             .expect("failed to load localization for source command")
-    }
-    else {
+    } else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !is_stable() && config.NightlyFeatures.localization {
             SourceCmdLocalize::init(config.GuildConfiguration.locale)
                 .expect("failed to load localization for source command")
-        }
-        else {
+        } else {
             SourceCmdLocalize::init(Locale::EnGb)
                 .expect("failed to load localization for source command")
         }
@@ -122,8 +110,8 @@ async fn execute_source_command(ctx: CommandContext) -> HarTexResult<()> {
                 )),
                 embeds: None,
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await

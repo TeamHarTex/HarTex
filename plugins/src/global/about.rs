@@ -24,40 +24,22 @@
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        embed_builder::{
-            EmbedAuthorBuilder,
-            EmbedBuilder,
-            EmbedFieldBuilder,
-            ImageSource
-        },
+        embed_builder::{EmbedAuthorBuilder, EmbedBuilder, EmbedFieldBuilder, ImageSource},
         model::application::{
-            callback::{
-                CallbackData,
-                InteractionResponse
-            },
-            interaction::Interaction
-        }
+            callback::{CallbackData, InteractionResponse},
+            interaction::Interaction,
+        },
     },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    hartex_version,
-    is_stable,
-    logging::tracing
+    error::{HarTexError, HarTexResult},
+    hartex_version, is_stable,
+    logging::tracing,
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
 use hartex_conftoml::guildconf::locale::Locale;
-use hartex_dbmani::{
-    guildconf::GetGuildConfig,
-    whitelist::GetWhitelistedGuilds
-};
+use hartex_dbmani::{guildconf::GetGuildConfig, whitelist::GetWhitelistedGuilds};
 use hartex_localization_impl::global::AboutCmdLocalize;
 use hartex_utils::FutureRetType;
 
@@ -80,7 +62,7 @@ impl Command for About {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: CloneableInMemoryCache
+        _: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_about_command(ctx))
     }
@@ -100,27 +82,24 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
     };
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
-    }
-    else {
+    } else {
         tracing::error!("invalid interaction type: expected ApplicationCommand");
 
         return Err(HarTexError::Custom {
-            message: String::from("invalid interaction type: expected ApplicationCommand")
+            message: String::from("invalid interaction type: expected ApplicationCommand"),
         });
     };
 
     let localize = if interaction.guild_id.is_none() || interaction.user.is_some() {
         AboutCmdLocalize::init(Locale::EnGb).expect("failed to load localization for about command")
-    }
-    else {
+    } else {
         let config = GetGuildConfig::new(interaction.guild_id.unwrap()).await?;
 
         if !is_stable() && config.NightlyFeatures.localization {
             let locale = config.GuildConfiguration.locale;
 
             AboutCmdLocalize::init(locale).expect("failed to load localization for about command")
-        }
-        else {
+        } else {
             AboutCmdLocalize::init(Locale::EnGb)
                 .expect("failed to load localization for about command")
         }
@@ -149,8 +128,8 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
                 content: None,
                 embeds: Some(vec![embed]),
                 flags: None,
-                tts: None
-            })
+                tts: None,
+            }),
         )
         .exec()
         .await

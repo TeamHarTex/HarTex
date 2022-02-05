@@ -25,36 +25,23 @@
 use std::{
     future::Future,
     pin::Pin,
-    task::{
-        Context,
-        Poll
-    }
+    task::{Context, Poll},
 };
 
 use hartex_base::{
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    logging::tracing
+    error::{HarTexError, HarTexResult},
+    logging::tracing,
 };
-use sqlx::{
-    postgres::PgPool,
-    Postgres
-};
+use sqlx::{postgres::PgPool, Postgres};
 
-use crate::{
-    whitelist::model::WhitelistedGuild,
-    PendingFuture,
-    DATABASE_ENV
-};
+use crate::{whitelist::model::WhitelistedGuild, PendingFuture, DATABASE_ENV};
 
 mod model;
 
 /// Gets the whitelisted guilds of the bot.
 #[derive(Default)]
 pub struct GetWhitelistedGuilds {
-    pending: Option<PendingFuture<Vec<WhitelistedGuild>>>
+    pending: Option<PendingFuture<Vec<WhitelistedGuild>>>,
 }
 
 impl GetWhitelistedGuilds {
@@ -105,8 +92,8 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
 
             return Err(HarTexError::Custom {
                 message: String::from(
-                    "the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set"
-                )
+                    "the `PGSQL_CREDENTIALS_GUILDS` environment variable is not set",
+                ),
             });
         }
     };
@@ -121,9 +108,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 
-            return Err(HarTexError::Custom {
-                message
-            });
+            return Err(HarTexError::Custom { message });
         }
     };
 
@@ -139,9 +124,7 @@ async fn exec_future() -> HarTexResult<Vec<WhitelistedGuild>> {
 
             span.in_scope(|| tracing::error!("{message}", message = &message));
 
-            Err(HarTexError::Custom {
-                message
-            })
+            Err(HarTexError::Custom { message })
         }
     }
 }

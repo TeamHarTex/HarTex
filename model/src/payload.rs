@@ -24,5 +24,5 @@
 /// The payload for which when a command is executed and is received by the bot.
 #[derive(Clone)]
 pub struct CommandExecuted {
-    pub command: &'static str
+    pub command: &'static str,
 }

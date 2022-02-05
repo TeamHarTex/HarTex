@@ -24,19 +24,13 @@
 use hartex_base::{
     discord::{
         cache_inmemory::CloneableInMemoryCache,
-        model::application::command::{
-            ChoiceCommandOptionData,
-            CommandOption
-        }
+        model::application::command::{ChoiceCommandOptionData, CommandOption},
     },
-    error::HarTexResult
+    error::HarTexResult,
 };
 use hartex_cmdsys::{
-    command::{
-        Command,
-        CommandType
-    },
-    context::CommandContext
+    command::{Command, CommandType},
+    context::CommandContext,
 };
 use hartex_utils::FutureRetType;
 
@@ -58,21 +52,19 @@ impl Command for Avatar {
     fn execute<'asynchronous_trait>(
         &self,
         ctx: CommandContext,
-        _: CloneableInMemoryCache
+        _: CloneableInMemoryCache,
     ) -> FutureRetType<'asynchronous_trait, ()> {
         Box::pin(execute_avatar_command(ctx))
     }
 
     fn required_cmdopts(&self) -> Vec<CommandOption> {
-        vec![
-            CommandOption::String(ChoiceCommandOptionData {
-                autocomplete: false,
-                choices: vec![],
-                description: String::from("the id of the user to obtain the avatar for"),
-                name: String::from("user"),
-                required: true
-            }),
-        ]
+        vec![CommandOption::String(ChoiceCommandOptionData {
+            autocomplete: false,
+            choices: vec![],
+            description: String::from("the id of the user to obtain the avatar for"),
+            name: String::from("user"),
+            required: true,
+        })]
     }
 }
 

@@ -25,11 +25,7 @@
 #![feature(fundamental)]
 #![forbid(unsafe_code)]
 
-use std::{
-    future::Future,
-    pin::Pin,
-    sync::Arc
-};
+use std::{future::Future, pin::Pin, sync::Arc};
 
 use crate::backend::Backend;
 

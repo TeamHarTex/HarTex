@@ -25,11 +25,11 @@ use hartex_base::{
     discord::model::{
         channel::Attachment,
         id::{
-            AttachmentId,
-            MessageId
-        }
+            marker::{AttachmentMarker, MessageMarker},
+            Id,
+        },
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -42,12 +42,12 @@ pub struct AttachmentEntity {
     ephemeral: bool,
     filename: String,
     height: Option<u64>,
-    id: AttachmentId,
-    message_id: MessageId,
+    id: Id<AttachmentMarker>,
+    message_id: Id<MessageMarker>,
     proxy_url: String,
     size: u64,
     url: String,
-    width: Option<u64>
+    width: Option<u64>,
 }
 
 impl AttachmentEntity {
@@ -98,15 +98,15 @@ impl AttachmentEntity {
 }
 
 impl Entity for AttachmentEntity {
-    type Id = (MessageId, AttachmentId);
+    type Id = (Id<MessageMarker>, Id<AttachmentMarker>);
 
     fn id(&self) -> Self::Id {
         (self.message_id, self.id)
     }
 }
 
-impl From<(MessageId, Attachment)> for AttachmentEntity {
-    fn from((message_id, attachment): (MessageId, Attachment)) -> Self {
+impl From<(Id<MessageMarker>, Attachment)> for AttachmentEntity {
+    fn from((message_id, attachment): (Id<MessageMarker>, Attachment)) -> Self {
         Self {
             content_type: attachment.content_type,
             description: attachment.description,
@@ -118,7 +118,7 @@ impl From<(MessageId, Attachment)> for AttachmentEntity {
             proxy_url: attachment.proxy_url,
             size: attachment.size,
             url: attachment.url,
-            width: attachment.width
+            width: attachment.width,
         }
     }
 }

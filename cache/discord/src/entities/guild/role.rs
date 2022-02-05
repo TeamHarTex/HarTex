@@ -23,17 +23,14 @@
 
 use hartex_base::{
     discord::model::{
-        guild::{
-            Permissions,
-            Role,
-            RoleTags
-        },
+        guild::{Permissions, Role, RoleTags},
         id::{
-            GuildId,
-            RoleId
-        }
+            marker::{GuildMarker, RoleMarker},
+            Id,
+        },
+        util::ImageHash,
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -42,16 +39,16 @@ use hartex_cache_base::entity::Entity;
 #[derive(Clone)]
 pub struct RoleEntity {
     color: u32,
-    guild_id: GuildId,
+    guild_id: Id<GuildMarker>,
     hoist: bool,
-    icon: Option<String>,
-    id: RoleId,
+    icon: Option<ImageHash>,
+    id: Id<RoleMarker>,
     managed: bool,
     mentionable: bool,
     name: String,
     permissions: Permissions,
     tags: Option<RoleTags>,
-    unicode_emoji: Option<String>
+    unicode_emoji: Option<String>,
 }
 
 impl RoleEntity {
@@ -61,7 +58,7 @@ impl RoleEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> GuildId {
+    pub fn guild_id(&self) -> Id<GuildMarker> {
         self.guild_id
     }
 
@@ -107,15 +104,15 @@ impl RoleEntity {
 }
 
 impl Entity for RoleEntity {
-    type Id = RoleId;
+    type Id = Id<RoleMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
     }
 }
 
-impl From<(Role, GuildId)> for RoleEntity {
-    fn from((role, guild_id): (Role, GuildId)) -> Self {
+impl From<(Role, Id<GuildMarker>)> for RoleEntity {
+    fn from((role, guild_id): (Role, Id<GuildMarker>)) -> Self {
         Self {
             color: role.color,
             guild_id,
@@ -127,7 +124,7 @@ impl From<(Role, GuildId)> for RoleEntity {
             name: role.name,
             permissions: role.permissions,
             tags: role.tags,
-            unicode_emoji: role.unicode_emoji
+            unicode_emoji: role.unicode_emoji,
         }
     }
 }

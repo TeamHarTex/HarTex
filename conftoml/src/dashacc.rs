@@ -21,19 +21,12 @@
 
 //! configuration models specifically for dashboard access configuration.
 
-use std::fmt::{
-    Formatter,
-    Result as FmtResult
-};
+use std::fmt::{Formatter, Result as FmtResult};
 
 use hartex_base::discord::model::id::UserId;
 use serde::{
-    de::{
-        self,
-        Error,
-        Visitor
-    },
-    Deserialize
+    de::{self, Error, Visitor},
+    Deserialize,
 };
 
 /// The dashboard access of a user.
@@ -41,7 +34,7 @@ use serde::{
 pub struct DashboardAccess {
     #[serde(deserialize_with = "deserialize_userId")]
     pub userId: UserId,
-    pub accessLevel: u8
+    pub accessLevel: u8,
 }
 
 /// A `u64` visitor for deserializing a `UserId` for `DashboardAccess`.
@@ -57,37 +50,32 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
     #[allow(clippy::cast_sign_loss)]
     fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
-        E: Error {
+        E: Error,
+    {
         UserId::new(v as u64).ok_or_else(|| Error::custom("the user id cannot be zero"))
     }
 }
 
 fn deserialize_userId<'deserialize, D>(deserializer: D) -> Result<UserId, D::Error>
 where
-    D: de::Deserializer<'deserialize> {
+    D: de::Deserializer<'deserialize>,
+{
     deserializer.deserialize_u64(DashboardAccessUserIdDeserializerU64Visitor)
 }
 
 #[cfg(test)]
 mod tests {
-    use std::{
-        fmt::Debug,
-        num::NonZeroU64
-    };
+    use std::{fmt::Debug, num::NonZeroU64};
 
     use serde_test::Token;
 
-    use super::{
-        DashboardAccess,
-        Deserialize,
-        UserId
-    };
+    use super::{DashboardAccess, Deserialize, UserId};
 
     // FIXME: use macros maybe?
     const _: fn() = || {
         fn static_assert_impl_all<
             'deserialize,
-            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq
+            T: ?Sized + Clone + Debug + Deserialize<'deserialize> + PartialEq,
         >() {
         }
 
@@ -97,27 +85,23 @@ mod tests {
     #[test]
     fn test_dashacc_de() {
         serde_test::assert_de_tokens(
+            &[DashboardAccess {
+                userId: UserId(NonZeroU64::new(1234567887654321).unwrap()),
+                accessLevel: 0,
+            }],
             &[
-                DashboardAccess {
-                    userId: UserId(NonZeroU64::new(1234567887654321).unwrap()),
-                    accessLevel: 0
-                }
-            ],
-            &[
-                Token::Seq {
-                    len: Some(1)
-                },
+                Token::Seq { len: Some(1) },
                 Token::Struct {
                     name: "DashboardAccess",
-                    len: 2
+                    len: 2,
                 },
                 Token::Str("userId"),
                 Token::I64(1234567887654321),
                 Token::Str("accessLevel"),
                 Token::U8(0),
                 Token::StructEnd,
-                Token::SeqEnd
-            ]
+                Token::SeqEnd,
+            ],
         );
     }
 }

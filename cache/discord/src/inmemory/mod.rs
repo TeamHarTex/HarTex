@@ -23,41 +23,20 @@
 
 use std::{
     error::Error,
-    fmt::{
-        Display,
-        Formatter,
-        Result as FmtResult
-    },
+    fmt::{Display, Formatter, Result as FmtResult},
     marker::PhantomData,
-    sync::{
-        Arc,
-        Mutex
-    }
+    sync::{Arc, Mutex},
 };
 
-use dashmap::{
-    DashMap,
-    DashSet
-};
-use hartex_base::discord::model::{
-    channel::message::sticker::{
-        StickerId,
-        StickerPackId
+use dashmap::{DashMap, DashSet};
+use hartex_base::discord::model::id::{
+    marker::{
+        AttachmentMarker, ChannelMarker, EmojiMarker, GuildMarker, MessageMarker, RoleMarker,
+        StickerMarker, StickerPackMarker, UserMarker,
     },
-    id::{
-        AttachmentId,
-        ChannelId,
-        EmojiId,
-        GuildId,
-        MessageId,
-        RoleId,
-        UserId
-    }
+    Id,
 };
-use hartex_cache_base::{
-    backend::Backend,
-    entity::Entity
-};
+use hartex_cache_base::{backend::Backend, entity::Entity};
 
 use crate::{
     backend::DiscordBackend,
@@ -65,28 +44,17 @@ use crate::{
         channel::{
             attachment::AttachmentEntity,
             message::{
-                sticker::{
-                    StickerEntity,
-                    StickerPackEntity
-                },
-                MessageEntity
+                sticker::{StickerEntity, StickerPackEntity},
+                MessageEntity,
             },
             thread::ThreadEntity,
-            ChannelEntity
+            ChannelEntity,
         },
         gateway::presence::PresenceEntity,
-        guild::{
-            emoji::EmojiEntity,
-            member::MemberEntity,
-            role::RoleEntity,
-            GuildEntity
-        },
-        user::{
-            current_user::CurrentUserEntity,
-            UserEntity
-        }
+        guild::{emoji::EmojiEntity, member::MemberEntity, role::RoleEntity, GuildEntity},
+        user::{current_user::CurrentUserEntity, UserEntity},
     },
-    inmemory::repository::InMemoryRepository
+    inmemory::repository::InMemoryRepository,
 };
 
 pub mod repository;
@@ -186,20 +154,20 @@ impl Display for InMemoryBackendError {
 impl Error for InMemoryBackendError {}
 
 struct InMemoryBackendRef {
-    attachments: DashMap<(MessageId, AttachmentId), AttachmentEntity>,
-    channels: DashMap<ChannelId, ChannelEntity>,
+    attachments: DashMap<(Id<MessageMarker>, Id<AttachmentMarker>), AttachmentEntity>,
+    channels: DashMap<Id<ChannelMarker>, ChannelEntity>,
     current_user: Mutex<Option<CurrentUserEntity>>,
-    emojis: DashMap<EmojiId, EmojiEntity>,
-    guilds: DashMap<GuildId, GuildEntity>,
-    guild_emojis: DashMap<GuildId, DashSet<EmojiId>>,
-    guild_members: DashMap<GuildId, DashSet<UserId>>,
-    guild_roles: DashMap<GuildId, DashSet<RoleId>>,
-    members: DashMap<(GuildId, UserId), MemberEntity>,
-    messages: DashMap<MessageId, MessageEntity>,
-    presences: DashMap<(GuildId, UserId), PresenceEntity>,
-    roles: DashMap<RoleId, RoleEntity>,
-    users: DashMap<UserId, UserEntity>,
-    sticker_packs: DashMap<StickerPackId, StickerPackEntity>,
-    stickers: DashMap<StickerId, StickerEntity>,
-    threads: DashMap<ChannelId, ThreadEntity>
+    emojis: DashMap<Id<EmojiMarker>, EmojiEntity>,
+    guilds: DashMap<Id<GuildMarker>, GuildEntity>,
+    guild_emojis: DashMap<Id<GuildMarker>, DashSet<Id<EmojiMarker>>>,
+    guild_members: DashMap<Id<GuildMarker>, DashSet<Id<UserMarker>>>,
+    guild_roles: DashMap<Id<GuildMarker>, DashSet<Id<RoleMarker>>>,
+    members: DashMap<(Id<GuildMarker>, Id<UserMarker>), MemberEntity>,
+    messages: DashMap<Id<MessageMarker>, MessageEntity>,
+    presences: DashMap<(Id<GuildMarker>, Id<UserMarker>), PresenceEntity>,
+    roles: DashMap<Id<RoleMarker>, RoleEntity>,
+    users: DashMap<Id<UserMarker>, UserEntity>,
+    sticker_packs: DashMap<Id<StickerPackMarker>, StickerPackEntity>,
+    stickers: DashMap<Id<StickerMarker>, StickerEntity>,
+    threads: DashMap<Id<ChannelMarker>, ThreadEntity>,
 }

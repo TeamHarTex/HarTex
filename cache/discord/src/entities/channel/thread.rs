@@ -26,23 +26,17 @@ use hartex_base::{
         channel::{
             permission_overwrite::PermissionOverwrite,
             thread::{
-                AutoArchiveDuration,
-                NewsThread,
-                PrivateThread,
-                PublicThread,
-                ThreadMetadata
+                AutoArchiveDuration, NewsThread, PrivateThread, PublicThread, ThreadMetadata,
             },
-            ChannelType
+            ChannelType,
         },
         datetime::Timestamp,
         id::{
-            ChannelId,
-            GuildId,
-            MessageId,
-            UserId
-        }
+            marker::{ChannelMarker, GuildMarker, MessageMarker, UserMarker},
+            Id,
+        },
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -51,20 +45,20 @@ use hartex_cache_base::entity::Entity;
 #[derive(Clone)]
 pub struct ThreadEntity {
     default_auto_archive_duration: Option<AutoArchiveDuration>,
-    guild_id: Option<GuildId>,
-    id: ChannelId,
+    guild_id: Option<Id<GuildMarker>>,
+    id: Id<ChannelMarker>,
     invitable: Option<bool>,
     kind: ChannelType,
-    last_message_id: Option<MessageId>,
-    member_id: Option<UserId>,
+    last_message_id: Option<Id<MessageMarker>>,
+    member_id: Option<Id<UserMarker>>,
     member_count: u8,
     message_count: u8,
     name: String,
-    owner_id: Option<UserId>,
-    parent_id: Option<ChannelId>,
+    owner_id: Option<Id<UserMarker>>,
+    parent_id: Option<Id<ChannelMarker>>,
     permission_overwrites: Option<Vec<PermissionOverwrite>>,
     rate_limit_per_user: Option<u64>,
-    thread_metadata: ThreadMetadata
+    thread_metadata: ThreadMetadata,
 }
 
 impl ThreadEntity {
@@ -74,7 +68,7 @@ impl ThreadEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> Option<GuildId> {
+    pub fn guild_id(&self) -> Option<Id<GuildMarker>> {
         self.guild_id
     }
 
@@ -89,12 +83,12 @@ impl ThreadEntity {
     }
 
     #[must_use]
-    pub fn last_message_id(&self) -> Option<MessageId> {
+    pub fn last_message_id(&self) -> Option<Id<MessageMarker>> {
         self.last_message_id
     }
 
     #[must_use]
-    pub fn member_id(&self) -> Option<UserId> {
+    pub fn member_id(&self) -> Option<Id<UserMarker>> {
         self.member_id
     }
 
@@ -114,12 +108,12 @@ impl ThreadEntity {
     }
 
     #[must_use]
-    pub fn owner_id(&self) -> Option<UserId> {
+    pub fn owner_id(&self) -> Option<Id<UserMarker>> {
         self.owner_id
     }
 
     #[must_use]
-    pub fn parent_id(&self) -> Option<ChannelId> {
+    pub fn parent_id(&self) -> Option<Id<ChannelMarker>> {
         self.parent_id
     }
 
@@ -144,7 +138,7 @@ impl Default for ThreadEntity {
         Self {
             default_auto_archive_duration: None,
             guild_id: None,
-            id: ChannelId::new(1).expect("non zero"),
+            id: Id::new_checked(1).unwrap(),
             invitable: None,
             kind: ChannelType::GuildText,
             last_message_id: None,
@@ -162,14 +156,14 @@ impl Default for ThreadEntity {
                 archive_timestamp: Timestamp::from_secs(1).expect("parsing failed"),
                 create_timestamp: None,
                 invitable: None,
-                locked: false
-            }
+                locked: false,
+            },
         }
     }
 }
 
 impl Entity for ThreadEntity {
-    type Id = ChannelId;
+    type Id = Id<ChannelMarker>;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -218,7 +212,7 @@ impl From<PrivateThread> for ThreadEntity {
             parent_id: private_thread.parent_id,
             permission_overwrites: Some(private_thread.permission_overwrites),
             rate_limit_per_user: private_thread.rate_limit_per_user,
-            thread_metadata: private_thread.thread_metadata
+            thread_metadata: private_thread.thread_metadata,
         }
     }
 }

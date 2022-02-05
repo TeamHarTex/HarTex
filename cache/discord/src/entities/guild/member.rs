@@ -26,12 +26,12 @@ use hartex_base::{
         datetime::Timestamp,
         guild::Member,
         id::{
-            GuildId,
-            RoleId,
-            UserId
-        }
+            marker::{GuildMarker, RoleMarker, UserMarker},
+            Id,
+        },
+        util::ImageHash,
     },
-    stdext::prelude::*
+    stdext::prelude::*,
 };
 use hartex_cache_base::entity::Entity;
 
@@ -39,17 +39,17 @@ use hartex_cache_base::entity::Entity;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct MemberEntity {
-    avatar: Option<String>,
+    avatar: Option<ImageHash>,
     communication_disabled_until: Option<Timestamp>,
     deaf: bool,
-    guild_id: GuildId,
+    guild_id: Id<GuildMarker>,
     joined_at: Timestamp,
     mute: bool,
     nick: Option<String>,
     pending: bool,
     premium_since: Option<Timestamp>,
-    role_ids: Vec<RoleId>,
-    user_id: UserId
+    role_ids: Vec<Id<RoleMarker>>,
+    user_id: Id<UserMarker>,
 }
 
 impl MemberEntity {
@@ -69,7 +69,7 @@ impl MemberEntity {
     }
 
     #[must_use]
-    pub fn guild_id(&self) -> GuildId {
+    pub fn guild_id(&self) -> Id<GuildMarker> {
         self.guild_id
     }
 
@@ -99,18 +99,18 @@ impl MemberEntity {
     }
 
     #[must_use]
-    pub fn role_ids(&self) -> Vec<RoleId> {
+    pub fn role_ids(&self) -> Vec<Id<RoleMarker>> {
         self.role_ids.clone()
     }
 
     #[must_use]
-    pub fn user_id(&self) -> UserId {
+    pub fn user_id(&self) -> Id<UserMarker> {
         self.user_id
     }
 }
 
 impl Entity for MemberEntity {
-    type Id = (GuildId, UserId);
+    type Id = (Id<GuildMarker>, Id<UserMarker>);
 
     fn id(&self) -> Self::Id {
         (self.guild_id, self.user_id)
@@ -130,7 +130,7 @@ impl From<Member> for MemberEntity {
             pending: member.pending,
             premium_since: member.premium_since,
             role_ids: member.roles,
-            user_id: member.user.id
+            user_id: member.user.id,
         }
     }
 }

@@ -26,5 +26,5 @@ pub enum EventType {
     /// An event emitted by `twilight-*`.
     Twilight,
     /// A custom event.
-    Custom
+    Custom,
 }

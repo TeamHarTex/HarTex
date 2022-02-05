@@ -24,10 +24,7 @@
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
 
-use std::{
-    future::Future,
-    pin::Pin
-};
+use std::{future::Future, pin::Pin};
 
 use hartex_base::error::HarTexResult;
 

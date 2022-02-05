@@ -24,24 +24,17 @@
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
 
-use std::{
-    env,
-    num::NonZeroU64
-};
+use std::{env, num::NonZeroU64};
 
 use hartex_base::{
-    discord::model::id::{
-        GuildId,
-        RoleId,
-        UserId
-    },
-    logging::tracing
+    discord::model::id::{GuildId, RoleId, UserId},
+    logging::tracing,
 };
 
 /// A collection of environment variables useful for the bot during database manipulations.
 pub struct DatabaseEnv {
     pub pgsql_credentials_guilds: Option<String>,
-    pub pgsql_credentials_guildconfig: Option<String>
+    pub pgsql_credentials_guildconfig: Option<String>,
 }
 
 impl DatabaseEnv {
@@ -56,7 +49,7 @@ impl DatabaseEnv {
 
         Self {
             pgsql_credentials_guilds,
-            pgsql_credentials_guildconfig
+            pgsql_credentials_guildconfig,
         }
     }
 }
@@ -66,7 +59,7 @@ pub struct PluginEnv {
     pub global_administrator_uid: Option<UserId>,
     pub support_guild_gid: Option<GuildId>,
     pub hartex_guild_owner_rid: Option<RoleId>,
-    pub hartex_user_rid: Option<RoleId>
+    pub hartex_user_rid: Option<RoleId>,
 }
 
 impl PluginEnv {
@@ -94,7 +87,7 @@ impl PluginEnv {
             hartex_guild_owner_rid: hartex_guild_owner_rid
                 .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap())),
             hartex_user_rid: hartex_user_rid
-                .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap()))
+                .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap())),
         }
     }
 }
@@ -102,7 +95,7 @@ impl PluginEnv {
 /// A collection of environment variables useful for the bot during startup.
 pub struct StartupEnv {
     pub application_aid: Option<NonZeroU64>,
-    pub bot_token: Option<String>
+    pub bot_token: Option<String>,
 }
 
 impl StartupEnv {
@@ -119,7 +112,7 @@ impl StartupEnv {
         Self {
             application_aid: application_aid
                 .map(|id| NonZeroU64::new(id.parse().unwrap()).unwrap()),
-            bot_token
+            bot_token,
         }
     }
 }

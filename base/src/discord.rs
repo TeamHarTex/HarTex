@@ -26,10 +26,7 @@ pub use twilight_model as model;
 pub use twilight_standby as standby;
 
 pub mod cache_inmemory {
-    use std::{
-        ops::Deref,
-        sync::Arc
-    };
+    use std::{ops::Deref, sync::Arc};
 
     pub use twilight_cache_inmemory::*;
 
@@ -67,10 +64,7 @@ pub mod cache_inmemory {
 ///
 /// Re-export of `twilight_gateway` and a clone-able wrapper of `Cluster`.
 pub mod gateway {
-    use std::{
-        ops::Deref,
-        sync::Arc
-    };
+    use std::{ops::Deref, sync::Arc};
 
     pub use twilight_gateway::*;
 
@@ -105,10 +99,7 @@ pub mod gateway {
 }
 
 pub mod http {
-    use std::{
-        ops::Deref,
-        sync::Arc
-    };
+    use std::{ops::Deref, sync::Arc};
 
     pub use twilight_http::*;
 

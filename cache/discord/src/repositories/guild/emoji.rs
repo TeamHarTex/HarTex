@@ -23,10 +23,7 @@
 
 use hartex_cache_base::repository::Repository;
 
-use crate::{
-    backend::DiscordBackend,
-    entities::guild::emoji::EmojiEntity
-};
+use crate::{backend::DiscordBackend, entities::guild::emoji::EmojiEntity};
 
 /// A repository containing emoji objects.
 #[allow(clippy::module_name_repetitions)]

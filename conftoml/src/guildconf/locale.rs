@@ -21,16 +21,9 @@
 
 //! Configuration for the bot interface locale (and language).
 
-use std::fmt::{
-    Display,
-    Formatter,
-    Result as FmtResult
-};
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
-use serde::de::{
-    Error,
-    Visitor
-};
+use serde::de::{Error, Visitor};
 
 /// A locale (and language).
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -42,7 +35,7 @@ pub enum Locale {
     /// The "en_US" locale.
     EnUs,
     /// The `zh_HK`
-    ZhHk
+    ZhHk,
 }
 
 impl Display for Locale {
@@ -51,7 +44,7 @@ impl Display for Locale {
             Self::EnAu => write!(f, "en_AU"),
             Self::EnGb => write!(f, "en_GB"),
             Self::EnUs => write!(f, "en_US"),
-            Self::ZhHk => write!(f, "zh_HK")
+            Self::ZhHk => write!(f, "zh_HK"),
         }
     }
 }
@@ -68,13 +61,14 @@ impl<'visitor> Visitor<'visitor> for GuildConfigLocaleDeserializerRefStrVisitor 
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
-        E: Error {
+        E: Error,
+    {
         Ok(match v {
             "en_AU" => Locale::EnAu,
             "en_GB" => Locale::EnGb,
             "en_US" => Locale::EnUs,
             "zh_HK" => Locale::ZhHk,
-            _ => return Err(Error::custom("invalid locale"))
+            _ => return Err(Error::custom("invalid locale")),
         })
     }
 }

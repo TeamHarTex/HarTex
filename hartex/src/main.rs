@@ -138,12 +138,8 @@ use hartex_base::{
     error::HarTexResult,
     logging::{
         tracing,
-        tracing_subscriber::{
-            self,
-            fmt::time::UtcTime,
-            EnvFilter
-        }
-    }
+        tracing_subscriber::{self, fmt::time::UtcTime, EnvFilter},
+    },
 };
 use tokio::runtime::Builder;
 

@@ -24,15 +24,9 @@
 //! This module defines the command handler, which is used when a command is detected in a message.
 
 use hartex_base::{
-    discord::{
-        http::CloneableClient,
-        util::builder::command::CommandBuilder
-    },
-    error::{
-        HarTexError,
-        HarTexResult
-    },
-    logging::tracing
+    discord::{http::CloneableClient, util::builder::command::CommandBuilder},
+    error::{HarTexError, HarTexResult},
+    logging::tracing,
 };
 use hartex_cmdsys::command::Command;
 
@@ -52,7 +46,7 @@ use hartex_cmdsys::command::Command;
 #[allow(clippy::needless_collect)]
 pub async fn register_global_commands(
     commands: Vec<Box<dyn Command + Send + Sync>>,
-    http: CloneableClient
+    http: CloneableClient,
 ) -> HarTexResult<()> {
     tracing::trace!("registering global commands");
 
@@ -62,7 +56,7 @@ pub async fn register_global_commands(
             let mut builder = CommandBuilder::new(
                 command.name(),
                 command.description(),
-                command.command_type().into()
+                command.command_type().into(),
             )
             .default_permission(command.enabled_by_default());
 
@@ -90,7 +84,7 @@ pub async fn register_global_commands(
         tracing::error!("failed to register global commands: {error}");
 
         return Err(HarTexError::Custom {
-            message: String::from("failed to register global commands")
+            message: String::from("failed to register global commands"),
         });
     }
 
