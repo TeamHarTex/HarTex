@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `dashacc` Module
-//!
-//! This module contains configuration models specifically for dashboard access configuration.
+//! configuration models specifically for dashboard access configuration.
 
 use std::fmt::{
     Formatter,
@@ -38,9 +36,7 @@ use serde::{
     Deserialize
 };
 
-/// # Struct `DashboardAccess`
-///
-/// Represents the dashboard access of a user.
+/// The dashboard access of a user.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct DashboardAccess {
     #[serde(deserialize_with = "deserialize_userId")]
@@ -48,8 +44,6 @@ pub struct DashboardAccess {
     pub accessLevel: u8
 }
 
-/// # Struct `DashboardAccessUserIdDeserializerU64Visitor`
-///
 /// A `u64` visitor for deserializing a `UserId` for `DashboardAccess`.
 pub struct DashboardAccessUserIdDeserializerU64Visitor;
 

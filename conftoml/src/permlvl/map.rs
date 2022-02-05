@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `map` Module
-//!
-//! This module contains configuration models for permission levels.
+//! Configuration models for permission levels.
 
 use std::{
     fmt::{
@@ -41,9 +39,7 @@ use serde::{
     Deserialize
 };
 
-/// # Struct `PermissionLevelMap`
-///
-/// Represents a permission level map over an `Id` generic parameter.
+/// A permission level map over an `Id` generic parameter.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub struct PermissionLevelMap<Id: Clone + Eq + Hash> {

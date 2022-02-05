@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `about` Module
-//!
-//! This module implements the `about` command.
+//! The `about` command.
 
 use hartex_base::{
     discord::{
@@ -63,8 +61,6 @@ use hartex_dbmani::{
 use hartex_localization_impl::global::AboutCmdLocalize;
 use hartex_utils::FutureRetType;
 
-/// # Struct `About`
-///
 /// The `about` command.
 pub struct About;
 
@@ -90,12 +86,7 @@ impl Command for About {
     }
 }
 
-/// # Asynchronous Function `execute_about_command`
-///
 /// Executes the `about` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
     tracing::trace!("attempting to obtain whitelisted guilds");
 
@@ -156,7 +147,7 @@ async fn execute_about_command(ctx: CommandContext) -> HarTexResult<()> {
                 allowed_mentions: None,
                 components: None,
                 content: None,
-                embeds: vec![embed],
+                embeds: Some(vec![embed]),
                 flags: None,
                 tts: None
             })

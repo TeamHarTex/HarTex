@@ -19,10 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_locale` - Localization Facilities for `HarTex` Discord bot
-//!
-//! The `hartex_locale` crate contains translations of `HarTex` messages into various locales or
-//! languages.
+//! Translations of `HarTex` messages into various locales or languages.
 
 #![deny(clippy::pedantic, warnings)]
 #![forbid(unsafe_code)]
@@ -38,17 +35,13 @@ use hartex_base::error::{
     HarTexResult
 };
 
-/// # Struct `Locale`
-///
-/// A structure representing a locale.
+/// A locale.
 #[derive(Clone)]
 pub struct Locale {
     file_map: HashMap<String, String>
 }
 
 impl Locale {
-    /// # Static Method `Locale::load`
-    ///
     /// Loads and constructs a locale structure from a language configuration file.
     ///
     /// # Errors
@@ -99,8 +92,6 @@ impl Locale {
         })
     }
 
-    /// # Instance Method `Locale::lang_id`
-    ///
     /// Retrieves the language identifier from the current loaded language configuration file.
     #[allow(clippy::missing_panics_doc)]
     #[must_use]
@@ -108,12 +99,7 @@ impl Locale {
         self.file_map.get("LanguageIdentifier").unwrap().clone()
     }
 
-    /// # Instance Method `Locale::get`
-    ///
     /// Looks up a message with the provided key.
-    ///
-    /// ## Parameters
-    /// - `lk_name`, type `&str`: the key of the message to look up
     #[must_use]
     pub fn get(&self, lk_name: &str) -> Option<&String> {
         self.file_map.get(lk_name)

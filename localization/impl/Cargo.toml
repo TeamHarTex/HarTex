@@ -1,12 +1,13 @@
 [package]
 name = "hartex_localization_impl"
-version = "1.26.0"
+version = "1.27.0"
 edition = "2021"
 description = """
 The `hartex_plugin_localize` library implements helper structures to reduce code
 messiness in `hartex_plugins`.
 """
 license = "AGPL-3.0-only"
+rust-version = "1.60.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

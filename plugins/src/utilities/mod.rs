@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `utilities` Module
-//!
-//! This module implements the `Utilities` plugin, which is for utilitarian commands
+//! The `Utilities` plugin, which is for utilitarian commands
 
 pub mod avatar;

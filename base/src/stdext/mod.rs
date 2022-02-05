@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `stdext` Module
-//!
-//! This module contains extensions to the Rust Standard Library.
+//! Extensions to The Rust Standard Library.
 
 pub mod prelude;

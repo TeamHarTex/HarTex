@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `listener` Module
-//!
-//! This module implements listeners for sending events.
+//! Listeners for sending events.
 
 use std::sync::Arc;
 
@@ -32,17 +30,13 @@ use futures_channel::mpsc::{
     UnboundedSender
 };
 
-/// # Struct `Listener`
-///
-/// Represents an event listener.
+/// An event listener.
 #[derive(Debug, Clone)]
 pub struct Listener<T> {
     pub sender: UnboundedSender<T>
 }
 
-/// # Struct `Listeners`
-///
-/// Represents a series of `Listener`s.
+/// A series of `Listener`s.
 #[derive(Debug, Clone)]
 pub struct Listeners<T> {
     inner: Arc<ListenersInner<T>>
@@ -57,8 +51,6 @@ impl<T> Default for Listeners<T> {
 }
 
 impl<T> Listeners<T> {
-    /// # Instance Method `Listeners:add`
-    ///
     /// Creates a new listener.
     #[must_use]
     pub fn add(&self) -> UnboundedReceiver<T> {
@@ -75,8 +67,6 @@ impl<T> Listeners<T> {
         receiver
     }
 
-    /// # Instance Method `Listeners::len`
-    ///
     /// Returns the total number of listeners present.
     #[allow(clippy::len_without_is_empty)]
     #[must_use]
@@ -84,8 +74,6 @@ impl<T> Listeners<T> {
         self.inner.listeners.len()
     }
 
-    /// # Instance Method `Listeners::listeners`
-    ///
     /// Returns all the listeners.
     #[must_use]
     pub fn listeners(&self) -> &DashMap<u64, Listener<T>> {

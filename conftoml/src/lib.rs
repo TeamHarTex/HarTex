@@ -19,10 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_conftoml` - The `HarTex` Configuration TOML Library.
-//!
-//! The `hartex_conftoml` provides an interface for serializing and deserializing TOML
-//! configuration for `HarTex` Discord bot.
+//! An interface for serializing and deserializing TOML configuration for the bot.
 
 #![allow(non_snake_case)]
 #![deny(clippy::pedantic, warnings)]
@@ -42,9 +39,7 @@ pub mod guildconf;
 pub mod nightly;
 pub mod permlvl;
 
-/// # Struct `TomlConfig`
-///
-/// Represents the top-level configuration, all other configuration branches from here.
+/// The top-level configuration, all other configuration branches from here.
 #[derive(Deserialize)]
 pub struct TomlConfig {
     pub DashboardAccess: Vec<dashacc::DashboardAccess>,
@@ -55,13 +50,11 @@ pub struct TomlConfig {
     pub PermissionLevels: permlvl::PermissionLevels
 }
 
-/// # Function `from_str`
-///
 /// Deserializes the TOML string.
 ///
 /// ## Errors
 ///
-/// Returns deserialization-related errors.
+/// deserialization-related errors.
 pub fn from_str(input: &str) -> HarTexResult<TomlConfig> {
     Ok(match toml::from_str(input) {
         Ok(config) => config,

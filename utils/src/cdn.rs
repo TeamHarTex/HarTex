@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `cdn` Module
-//!
-//! This module implements a wrapper of the Discord CDN.
+//! A wrapper of the Discord CDN.
 
 use std::fmt::{
     self,
@@ -34,8 +32,6 @@ use hartex_base::discord::model::id::{
     UserId
 };
 
-/// # Struct `Cdn`
-///
 /// The "namespace" for various CDN endpoints
 pub struct Cdn;
 
@@ -59,28 +55,18 @@ impl Cdn {
     }
 }
 
-/// # Enumeration `CdnResourceFormat`
-///
 /// The format of a CDN resource
 #[allow(clippy::module_name_repetitions)]
 pub enum CdnResourceFormat {
-    /// # Enumeration Variant `CdnResourceFormat::GIF`
-    ///
     /// A GIF - `.gif`
     GIF,
 
-    /// # Enumeration Variant `CdnResourceFormat::JPEG`
-    ///
     /// A JPEG - `.jpeg`
     JPEG,
 
-    /// # Enumeration Variant `CdnResourceFormat::PNG`
-    ///
     /// A PNG - `.png`
     PNG,
 
-    /// # Enumeration Variant `CdnResourceFormat::WebP`
-    ///
     /// A WebP - `.webp`
     WebP
 }

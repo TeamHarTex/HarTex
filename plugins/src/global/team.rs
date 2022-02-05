@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `team` Module
-//!
-//! This module implements the `team` command.
+//! The `team` command.
 
 use hartex_base::{
     discord::{
@@ -57,8 +55,6 @@ use hartex_dbmani::guildconf::GetGuildConfig;
 use hartex_localization_impl::global::TeamCmdLocalize;
 use hartex_utils::FutureRetType;
 
-/// # Struct `Team`
-///
 /// The `team` command.
 pub struct Team;
 
@@ -84,12 +80,7 @@ impl Command for Team {
     }
 }
 
-/// # Asynchronous Function `exec_team_slash_cmd`
-///
 /// Executes the `team` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
     let interaction = if let Interaction::ApplicationCommand(command) = ctx.interaction.clone() {
         command
@@ -142,7 +133,7 @@ async fn execute_team_command(ctx: CommandContext) -> HarTexResult<()> {
                 allowed_mentions: None,
                 components: None,
                 content: None,
-                embeds: vec![embed],
+                embeds: Some(vec![embed]),
                 flags: None,
                 tts: None
             })

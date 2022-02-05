@@ -19,9 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The `guildinfo` Module
-//!
-//! This module implements the `guildinfo` command.
+//! The `guildinfo` command.
 
 use hartex_base::{
     discord::{
@@ -77,8 +75,6 @@ use hartex_utils::{
     FutureRetType
 };
 
-/// # Struct `Guildinfo`
-///
 /// The `guildinfo` command.
 pub struct Guildinfo;
 
@@ -104,12 +100,7 @@ impl Command for Guildinfo {
     }
 }
 
-/// # Asynchronous Function `execute_guildinfo_command`
-///
 /// Executes the `guildinfo` command.
-///
-/// ## Parameters
-/// - `ctx`, type `CommandContext`: the command context to use.
 #[allow(clippy::too_many_lines)]
 async fn execute_guildinfo_command(
     ctx: CommandContext,
@@ -142,7 +133,7 @@ async fn execute_guildinfo_command(
                     content: Some(String::from(
                         ":x: This command can only be used in a guild."
                     )),
-                    embeds: vec![],
+                    embeds: None,
                     flags: None,
                     tts: None
                 })
@@ -434,7 +425,7 @@ async fn execute_guildinfo_command(
                 allowed_mentions: None,
                 components: None,
                 content: None,
-                embeds: vec![embed.build()?],
+                embeds: Some(vec![embed.build()?]),
                 flags: None,
                 tts: None
             })
