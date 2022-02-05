@@ -23,7 +23,7 @@
 
 use std::fmt::{Formatter, Result as FmtResult};
 
-use hartex_base::discord::model::id::UserId;
+use hartex_base::discord::model::id::{marker::UserMarker, Id};
 use serde::{
     de::{self, Error, Visitor},
     Deserialize,
@@ -33,7 +33,7 @@ use serde::{
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct DashboardAccess {
     #[serde(deserialize_with = "deserialize_userId")]
-    pub userId: UserId,
+    pub userId: Id<UserMarker>,
     pub accessLevel: u8,
 }
 
@@ -41,7 +41,7 @@ pub struct DashboardAccess {
 pub struct DashboardAccessUserIdDeserializerU64Visitor;
 
 impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor {
-    type Value = UserId;
+    type Value = Id<UserMarker>;
 
     fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "a non-zero integer representing a user id")
@@ -52,7 +52,7 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
     where
         E: Error,
     {
-        UserId::new(v as u64).ok_or_else(|| Error::custom("the user id cannot be zero"))
+        Id::new_checked(v as u64).ok_or_else(|| Error::custom("the user id cannot be zero"))
     }
 }
 
@@ -69,7 +69,7 @@ mod tests {
 
     use serde_test::Token;
 
-    use super::{DashboardAccess, Deserialize, UserId};
+    use super::{DashboardAccess, Deserialize, Id, UserMarker};
 
     // FIXME: use macros maybe?
     const _: fn() = || {
@@ -86,7 +86,7 @@ mod tests {
     fn test_dashacc_de() {
         serde_test::assert_de_tokens(
             &[DashboardAccess {
-                userId: UserId(NonZeroU64::new(1234567887654321).unwrap()),
+                userId: Id::from(NonZeroU64::new(1234567887654321).unwrap()),
                 accessLevel: 0,
             }],
             &[
