@@ -1,3 +1,10 @@
+HarTex 1.26.7 (5 February 2022)
+==============================
+
+Key Changes
+-----------
+- documentation rewrite
+
 HarTex 1.26.1 (1 January 2022)
 ==============================
 
