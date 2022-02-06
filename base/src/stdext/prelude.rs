@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Useful preludes for various types exported in the prelude of The Rust Standard Library.
+//! Useful extensions to the prelude of The Rust Standard Library.
 
 #[cfg(feature = "twilight-bundled")]
 use crate::discord::model::{

@@ -56,9 +56,10 @@ pub fn from_str(input: &str) -> HarTexResult<TomlConfig> {
     Ok(match toml::from_str(input) {
         Ok(config) => config,
         Err(error) => {
-            tracing::error!("failed to deserialize config: {error}");
+            let error = HarTexError::from(error);
 
-            return Err(HarTexError::from(error));
+            tracing::error!("failed to deserialize config: {error}");
+            return Err(error);
         }
     })
 }

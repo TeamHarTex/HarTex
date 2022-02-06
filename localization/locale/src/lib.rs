@@ -26,7 +26,7 @@
 
 use std::{collections::HashMap, fs, ops::Index};
 
-use hartex_base::error::{HarTexError, HarTexResult};
+use hartex_base::{error::{HarTexError, HarTexResult}, logging::tracing};
 
 /// A locale.
 #[derive(Clone)]
@@ -45,7 +45,16 @@ impl Locale {
     /// Returns `HarTexError::Custom` if the file language configuration file is invalid.
     #[allow(clippy::missing_panics_doc)]
     pub fn load(path: &str) -> HarTexResult<Self> {
-        let file = fs::read_to_string(&path)?;
+        let result = fs::read_to_string(&path);
+        let file = if result.is_ok() {
+            result.unwrap()
+        }
+        else {
+            let error = HarTexError::from(result.unwrap_err());
+            tracing::error!("{error}");
+
+            return Err(error);
+        };
 
         let before_validation = file
             .lines()
@@ -61,22 +70,28 @@ impl Locale {
             .iter()
             .any(|entry| entry.0 == "LanguageIdentifier")
         {
-            return Err(HarTexError::Custom {
+            let error = HarTexError::Custom {
                 message: format!(
                     "`LanguageIdentifier` field must be specified in language configuration file: {path}"
                 )
-            });
+            };
+
+            tracing::error!("{error}");
+            return Err(error);
         }
 
         let mut map = HashMap::with_capacity(before_validation.clone().len());
 
         for (key, value) in before_validation {
             if map.insert(key.to_string(), value.to_string()).is_some() {
-                return Err(HarTexError::Custom {
+                let error = HarTexError::Custom {
                     message: format!(
                         "duplicate key found in language configuration file {path}: {key}"
                     ),
-                });
+                };
+
+                tracing::error!("{error}");
+                return Err(error);
             }
         }
 

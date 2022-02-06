@@ -19,7 +19,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Extensions to The Rust Standard Library.
+//! Useful extensions to the `std::io` module.
 
-pub mod io;
-pub mod prelude;
+use std::io::ErrorKind;
+
+//! Extensions to the [`ErrorKind`] enum.
+//!
+//! [`ErrorKind`]: https://doc.rust-lang.org/nightly/std/io/enum.ErrorKind.html
+pub trait ErrorKindExt {
+    /// Returns a string representation of the error kind.
+    fn display(&self) -> &'static str;
+}
+
+impl ErrorKindExt for ErrorKind {
+    fn display(&self) -> &'static str {
+        match self {
+            Self::NotFound => "no such entity, file or directory",
+            _ => "unknown io error",
+        }
+    }
+}
