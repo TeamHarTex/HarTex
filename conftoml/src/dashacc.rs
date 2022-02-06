@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! configuration models specifically for dashboard access configuration.
+//! Configuration models specifically for dashboard access configuration.
 
 use std::fmt::{Formatter, Result as FmtResult};
 
@@ -32,7 +32,7 @@ use serde::{
 /// The dashboard access of a user.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct DashboardAccess {
-    #[serde(deserialize_with = "deserialize_userId")]
+    #[serde(deserialize_with = "deserialize_user_id")]
     pub userId: Id<UserMarker>,
     pub accessLevel: u8,
 }
@@ -56,7 +56,7 @@ impl<'visitor> Visitor<'visitor> for DashboardAccessUserIdDeserializerU64Visitor
     }
 }
 
-fn deserialize_userId<'deserialize, D>(deserializer: D) -> Result<UserId, D::Error>
+fn deserialize_user_id<'deserialize, D>(deserializer: D) -> Result<Id<UserMarker>, D::Error>
 where
     D: de::Deserializer<'deserialize>,
 {
