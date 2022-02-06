@@ -21,7 +21,10 @@
 
 //! The guild member repository trait.
 
-use hartex_base::discord::model::id::{GuildId, UserId};
+use hartex_base::discord::model::id::{
+    marker::{GuildMarker, UserMarker},
+    Id,
+};
 use hartex_cache_base::{
     relations,
     repository::{GetEntityFuture, Repository, StreamEntitiesFuture},
@@ -41,15 +44,15 @@ pub trait MemberRepository<B: DiscordBackend>: Repository<MemberEntity, B> {
     /// A stream of roles of a member.
     fn roles(
         &self,
-        guild_id: GuildId,
-        user_id: UserId,
+        guild_id: Id<GuildMarker>,
+        user_id: Id<UserMarker>,
     ) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
 
     /// The associated user of the member.
     fn user(
         &self,
-        guild_id: GuildId,
-        user_id: UserId,
+        guild_id: Id<GuildMarker>,
+        user_id: Id<UserMarker>,
     ) -> GetEntityFuture<'_, UserEntity, B::Error> {
         let backend = self.backend();
 

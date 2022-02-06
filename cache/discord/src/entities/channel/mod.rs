@@ -85,8 +85,8 @@ impl ChannelEntity {
     }
 
     #[must_use]
-    pub fn icon(&self) -> Option<&str> {
-        self.icon.as_refstr()
+    pub fn icon(&self) -> Option<ImageHash> {
+        self.icon
     }
 
     #[must_use]
