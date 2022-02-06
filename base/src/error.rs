@@ -43,7 +43,7 @@ pub enum HarTexError {
 
 impl Display for HarTexError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.write_str("hartex error: ");
+        f.write_str("hartex error: ")?;
 
         match self {
             Self::Custom { message } => {
