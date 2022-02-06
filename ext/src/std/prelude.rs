@@ -21,8 +21,7 @@
 
 //! Useful extensions to the prelude of The Rust Standard Library.
 
-#[cfg(feature = "twilight-bundled")]
-use crate::discord::model::{
+use hartex_base::discord::model::{
     channel::thread::ThreadMember,
     guild::PartialMember,
     id::{marker::UserMarker, Id},
@@ -49,7 +48,6 @@ pub trait OptionExt<'a> {
     }
 }
 
-#[cfg(feature = "twilight-bundled")]
 impl<'a> OptionExt<'a> for Option<PartialMember> {
     fn map_opt_user_id(&'a self) -> Option<Id<UserMarker>> {
         if self.is_none() {

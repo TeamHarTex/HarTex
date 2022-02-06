@@ -61,7 +61,6 @@ pub mod error;
 pub mod events;
 #[cfg(feature = "tracing-bundled")]
 pub mod logging;
-pub mod stdext;
 pub mod time;
 
 /// The current version of the bot; corresponds to the `CFG_VERSION_STR` environment variable at
