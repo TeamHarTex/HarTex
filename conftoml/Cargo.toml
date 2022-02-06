@@ -12,9 +12,10 @@ rust-version = "1.60.0"
 
 [dependencies]
 dashmap = "4.0.2"
-hartex_base = { path = "../base", features = [ "tracing-bundled" ] }
 serde = { version = "1.0.132", features = [ "derive" ] }
 toml = "0.5.8"
+
+hartex_base = { path = "../base", features = [ "tracing-bundled" ] }
 
 [dev-dependencies]
 hartex_base = { path = "../base", features = [ "twilight-bundled" ] }

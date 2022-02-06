@@ -29,7 +29,10 @@ use std::{
 
 use toml::de::Error as TomlError;
 
-use crate::stdext::io::ErrorKindExt;
+#[path = "../../ext/src/std/io.rs"]
+pub(self) mod stdext_io;
+
+use stdext_io::ErrorKindExt;
 
 /// Various error types used within HarTex.
 #[allow(clippy::module_name_repetitions)]
