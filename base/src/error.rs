@@ -26,18 +26,41 @@ use std::{
     fmt::{Debug, Display, Formatter, Result as FmtResult},
 };
 
+use toml::de::Error as TomlError;
+
 /// Various error types used within HarTex.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
-pub enum HarTexError {}
+#[non_exhaustive]
+pub enum HarTexError {
+    TomlError { error: TomlError }
+}
 
 impl Display for HarTexError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        Debug::fmt(self, f)
+        match self {
+            Self::TomlError { error } => {
+                f.write_str("toml deserialization error: ")
+                write!(f, "{error}; ");
+
+                if let Some((line, column)) = error.line_col() {
+                    write!(f, "at line {line} column {column}");
+                }
+
+                Ok(())
+            },
+            _ => Ok(())
+        }
     }
 }
 
 impl Error for HarTexError {}
+
+impl From<TomlError> for HarTexError {
+    fn from(error: TomlError) -> Self {
+        Self::TomlError { error }
+    }
+}
 
 /// A global type-alias for handling the [`Result`] type throughout the codebase.
 ///
