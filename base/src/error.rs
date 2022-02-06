@@ -40,7 +40,7 @@ impl Display for HarTexError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             Self::TomlError { error } => {
-                f.write_str("toml deserialization error: ")
+                f.write_str("toml deserialization error: ");
                 write!(f, "{error}; ");
 
                 if let Some((line, column)) = error.line_col() {
