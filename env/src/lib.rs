@@ -85,12 +85,9 @@ impl PluginEnv {
         Self {
             global_administrator_uid: global_administrator_uid
                 .map(|uid| Id::new(uid.parse().unwrap())),
-            support_guild_gid: support_guild_gid
-                .map(|gid| Id::new(gid.parse().unwrap())),
-            hartex_guild_owner_rid: hartex_guild_owner_rid
-                .map(|rid| Id::new(rid.parse().unwrap())),
-            hartex_user_rid: hartex_user_rid
-                .map(|rid| Id::new(rid.parse().unwrap())),
+            support_guild_gid: support_guild_gid.map(|gid| Id::new(gid.parse().unwrap())),
+            hartex_guild_owner_rid: hartex_guild_owner_rid.map(|rid| Id::new(rid.parse().unwrap())),
+            hartex_user_rid: hartex_user_rid.map(|rid| Id::new(rid.parse().unwrap())),
         }
     }
 }
