@@ -46,7 +46,7 @@ impl Display for HarTexError {
         f.write_str("hartex error: ");
 
         match self {
-            Self::Custom { message} => {
+            Self::Custom { message } => {
                 write!(f, "custom error: {message}")?;
             }
             Self::IoError { error } => {
@@ -60,7 +60,7 @@ impl Display for HarTexError {
                 if let Some((line, column)) = error.line_col() {
                     write!(f, "; at line {line} column {column}")?;
                 }
-            },
+            }
         };
 
         Ok(())

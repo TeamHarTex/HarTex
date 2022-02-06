@@ -23,9 +23,9 @@
 
 use std::io::ErrorKind;
 
-//! Extensions to the [`ErrorKind`] enum.
-//!
-//! [`ErrorKind`]: https://doc.rust-lang.org/nightly/std/io/enum.ErrorKind.html
+/// Extensions to the [`ErrorKind`] enum.
+///
+/// [`ErrorKind`]: https://doc.rust-lang.org/nightly/std/io/enum.ErrorKind.html
 pub trait ErrorKindExt {
     /// Returns a string representation of the error kind.
     fn display(&self) -> &'static str;
