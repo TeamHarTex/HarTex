@@ -24,21 +24,35 @@
 use std::{
     error::Error,
     fmt::{Debug, Display, Formatter, Result as FmtResult},
+    io::Error as IoError,
 };
 
 use toml::de::Error as TomlError;
+
+use crate::stdext::io::ErrorKindExt;
 
 /// Various error types used within HarTex.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum HarTexError {
-    TomlError { error: TomlError }
+    Custom { message: String },
+    IoError { error: IoError },
+    TomlError { error: TomlError },
 }
 
 impl Display for HarTexError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        f.write_str("hartex error: ");
+
         match self {
+            Self::Custom { message} => {
+                write!(f, "custom error: {message}")?;
+            }
+            Self::IoError { error } => {
+                f.write_str("io error: ")?;
+                write!(f, "{}", error.kind().display())?;
+            }
             Self::TomlError { error } => {
                 f.write_str("toml deserialization error: ")?;
                 write!(f, "{error}")?;
@@ -46,14 +60,20 @@ impl Display for HarTexError {
                 if let Some((line, column)) = error.line_col() {
                     write!(f, "; at line {line} column {column}")?;
                 }
-
-                Ok(())
             },
-        }
+        };
+
+        Ok(())
     }
 }
 
 impl Error for HarTexError {}
+
+impl From<IoError> for HarTexError {
+    fn from(error: IoError) -> Self {
+        Self::IoError { error }
+    }
+}
 
 impl From<TomlError> for HarTexError {
     fn from(error: TomlError) -> Self {
