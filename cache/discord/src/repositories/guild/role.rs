@@ -21,7 +21,7 @@
 
 //! The guild role repository trait.
 
-use hartex_base::discord::model::id::RoleId;
+use hartex_base::discord::model::id::{marker::RoleMarker, Id};
 use hartex_cache_base::{
     relations,
     repository::{GetEntityFuture, Repository},
@@ -36,7 +36,7 @@ use crate::{
 #[allow(clippy::module_name_repetitions)]
 pub trait RoleRepository<B: DiscordBackend>: Repository<RoleEntity, B> {
     /// The guild this role is associated with.
-    fn guild(&self, role_id: RoleId) -> GetEntityFuture<'_, GuildEntity, B::Error> {
+    fn guild(&self, role_id: Id<RoleMarker>) -> GetEntityFuture<'_, GuildEntity, B::Error> {
         let backend = self.backend();
 
         relations::map_entity(backend.roles(), backend.guilds(), role_id, |role| {

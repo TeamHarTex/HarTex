@@ -21,7 +21,10 @@
 
 //! The channel message sticker repository trait.
 
-use hartex_base::discord::model::channel::message::sticker::{StickerId, StickerPackId};
+use hartex_base::discord::model::id::{
+    marker::{StickerMarker, StickerPackMarker},
+    Id,
+};
 use hartex_cache_base::repository::{GetEntityFuture, Repository, StreamEntitiesFuture};
 
 use crate::{
@@ -36,7 +39,7 @@ pub trait StickerPackRepository<B: DiscordBackend>: Repository<StickerPackEntity
     ///
     /// The stickers in this sticker pack.
     #[rustfmt::skip] // rustfmt suggests very shit formatting here, so we skip this
-    fn stickers(&self, pack_id: StickerPackId)
+    fn stickers(&self, pack_id: Id<StickerPackMarker>)
         -> StreamEntitiesFuture<'_, StickerEntity, B::Error>;
 }
 
@@ -46,6 +49,6 @@ pub trait StickerRepository<B: DiscordBackend>: Repository<StickerEntity, B> {
     /// The sticker pack associated with this sticker, if any.
     fn sticker_pack(
         &self,
-        sticker_id: StickerId,
+        sticker_id: Id<StickerMarker>,
     ) -> GetEntityFuture<'_, StickerPackEntity, B::Error>;
 }

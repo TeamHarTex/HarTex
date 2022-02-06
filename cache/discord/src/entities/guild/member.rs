@@ -54,8 +54,8 @@ pub struct MemberEntity {
 
 impl MemberEntity {
     #[must_use]
-    pub fn avatar(&self) -> Option<&str> {
-        self.avatar.as_refstr()
+    pub fn avatar(&self) -> Option<ImageHash> {
+        self.avatar
     }
 
     #[must_use]

@@ -21,7 +21,10 @@
 
 //! Repositories related to Discord guilds.
 
-use hartex_base::discord::model::id::{EmojiId, GuildId, RoleId, UserId};
+use hartex_base::discord::model::id::{
+    marker::{EmojiMarker, GuildMarker, RoleMarker, UserMarker},
+    Id,
+};
 use hartex_cache_base::repository::{Repository, StreamEntitiesFuture, StreamEntityIdsFuture};
 
 use crate::{
@@ -54,20 +57,32 @@ pub mod role;
 #[allow(clippy::module_name_repetitions)]
 pub trait GuildRepository<B: DiscordBackend>: Repository<GuildEntity, B> {
     /// A stream of emoji ids in a guild.
-    fn emoji_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, EmojiId, B::Error>;
+    fn emoji_ids(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntityIdsFuture<'_, Id<EmojiMarker>, B::Error>;
 
     /// A stream of emojis in a guild.
-    fn emojis(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, EmojiEntity, B::Error>;
+    fn emojis(&self, guild_id: Id<GuildMarker>) -> StreamEntitiesFuture<'_, EmojiEntity, B::Error>;
 
     /// A stream of member (user) ids in a guild.
-    fn member_user_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, UserId, B::Error>;
+    fn member_user_ids(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntityIdsFuture<'_, Id<UserMarker>, B::Error>;
 
     /// A stream of members in a guild.
-    fn members(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, MemberEntity, B::Error>;
+    fn members(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntitiesFuture<'_, MemberEntity, B::Error>;
 
     /// A stream of role ids in a guild.
-    fn role_ids(&self, guild_id: GuildId) -> StreamEntityIdsFuture<'_, RoleId, B::Error>;
+    fn role_ids(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> StreamEntityIdsFuture<'_, Id<RoleMarker>, B::Error>;
 
     /// A stream of roles in a guild.
-    fn roles(&self, guild_id: GuildId) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
+    fn roles(&self, guild_id: Id<GuildMarker>) -> StreamEntitiesFuture<'_, RoleEntity, B::Error>;
 }
