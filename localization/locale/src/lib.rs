@@ -26,7 +26,10 @@
 
 use std::{collections::HashMap, fs, ops::Index};
 
-use hartex_base::{error::{HarTexError, HarTexResult}, logging::tracing};
+use hartex_base::{
+    error::{HarTexError, HarTexResult},
+    logging::tracing,
+};
 
 /// A locale.
 #[derive(Clone)]
@@ -48,8 +51,7 @@ impl Locale {
         let result = fs::read_to_string(&path);
         let file = if result.is_ok() {
             result.unwrap()
-        }
-        else {
+        } else {
             let error = HarTexError::from(result.unwrap_err());
             tracing::error!("{error}");
 

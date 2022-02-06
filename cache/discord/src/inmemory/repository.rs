@@ -31,7 +31,7 @@ use futures_util::{
     stream::{self, StreamExt},
 };
 use hartex_base::discord::model::id::{
-    marker::{EmojiMarker, GuildMarker, RoleMarker, UserMarker, StickerMarker, StickerPackMarker},
+    marker::{EmojiMarker, GuildMarker, RoleMarker, StickerMarker, StickerPackMarker, UserMarker},
     Id,
 };
 use hartex_cache_base::{
