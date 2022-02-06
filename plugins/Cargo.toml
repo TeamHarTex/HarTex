@@ -11,6 +11,8 @@ rust-version = "1.60.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tokio = { version = "1.14.0", features = [ "full" ] }
+
 hartex_cmdsys = { path = "../cmdsys" }
 hartex_conftoml = { path = "../conftoml" }
 hartex_base = { path = "../base", features = [ "twilight-bundled" ] }
@@ -18,4 +20,3 @@ hartex_dbmani = { path = "../dbmani" }
 hartex_env = { path = "../env" }
 hartex_localization_impl = { path = "../localization/impl" }
 hartex_utils = { path = "../utils" }
-tokio = { version = "1.14.0", features = [ "full" ] }

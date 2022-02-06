@@ -12,7 +12,8 @@ rust-version = "1.60.0"
 
 [dependencies]
 base64 = "0.13.0"
+sqlx = { version = "0.5.9", default-features = false, features = [ "postgres", "runtime-tokio-native-tls" ] }
+
 hartex_conftoml = { path = "../conftoml" }
 hartex_base = { path = "../base", features = [ "tracing-bundled" ] }
 hartex_env = { path = "../env" }
-sqlx = { version = "0.5.9", default-features = false, features = [ "postgres", "runtime-tokio-native-tls" ] }

@@ -12,4 +12,5 @@ rust-version = "1.60.0"
 
 [dependencies]
 base64 = "0.13.0"
+
 hartex_base = { path = "../base", features = [ "twilight-bundled" ] }

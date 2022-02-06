@@ -12,6 +12,7 @@ rust-version = "1.60.0"
 
 [dependencies]
 dotenv = "0.15.0"
+tokio = { version = "1.14.0", features = [ "full" ] }
+
 hartex_base = { path = "../base", features = [ "tracing-bundled" ] }
 hartex_driver = { path = "../driver" }
-tokio = { version = "1.14.0", features = [ "full" ] }

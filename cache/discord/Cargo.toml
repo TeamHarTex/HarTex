@@ -13,6 +13,7 @@ rust-version = "1.60.0"
 [dependencies]
 dashmap = { version = "4.0.2", optional = true }
 futures-util = "0.3.19"
+
 hartex_base = { path = "../../base", features = [ "twilight-bundled" ] }
 hartex_cache_base = { path = "../base" }
 
