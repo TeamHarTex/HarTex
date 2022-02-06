@@ -41,12 +41,20 @@ impl Cdn {
     }
 
     #[must_use]
-    pub fn guild_icon(guild_id: Id<GuildMarker>, icon_hash: &str, format: &CdnResourceFormat) -> String {
+    pub fn guild_icon(
+        guild_id: Id<GuildMarker>,
+        icon_hash: &str,
+        format: &CdnResourceFormat,
+    ) -> String {
         format!("https://cdn.discordapp.com/icons/{guild_id}/{icon_hash}{format}")
     }
 
     #[must_use]
-    pub fn user_avatar(user_id: Id<UserMarker>, avatar_hash: &str, format: &CdnResourceFormat) -> String {
+    pub fn user_avatar(
+        user_id: Id<UserMarker>,
+        avatar_hash: &str,
+        format: &CdnResourceFormat,
+    ) -> String {
         format!("https://cdn.discordapp.com/avatars/{user_id}/{avatar_hash}{format}")
     }
 }
