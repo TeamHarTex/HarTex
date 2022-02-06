@@ -114,8 +114,8 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn banner(&self) -> Option<&str> {
-        self.banner.as_refstr()
+    pub fn banner(&self) -> Option<ImageHash> {
+        self.banner
     }
 
     #[must_use]
@@ -129,8 +129,8 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn discovery_splash(&self) -> Option<&str> {
-        self.discovery_splash.as_refstr()
+    pub fn discovery_splash(&self) -> Option<ImageHash> {
+        self.discovery_splash
     }
 
     #[must_use]
@@ -144,8 +144,8 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn icon(&self) -> Option<&str> {
-        self.icon.as_refstr()
+    pub fn icon(&self) -> Option<ImageHash> {
+        self.icon
     }
 
     #[must_use]
@@ -229,8 +229,8 @@ impl GuildEntity {
     }
 
     #[must_use]
-    pub fn splash(&self) -> Option<&str> {
-        self.splash.as_refstr()
+    pub fn splash(&self) -> Option<ImageHash> {
+        self.splash
     }
 
     #[must_use]
