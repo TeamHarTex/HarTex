@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,72 +19,59 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! An error type for error handling in the bot.
+use std::env::VarError;
+use std::error::Error as StdError;
+use std::fmt::{Display, Formatter, Result as FmtResult};
+use std::io::Error as IoError;
+use std::result::Result as StdResult;
 
-use std::{
-    error::Error,
-    fmt::{Debug, Display, Formatter, Result as FmtResult},
-    io::Error as IoError,
-};
-
-use toml::de::Error as TomlError;
-
-#[path = "../../ext/src/std/io.rs"]
-pub(self) mod stdext_io;
-
-use stdext_io::ErrorKindExt;
-
-/// Various error types used within HarTex.
-#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
-#[non_exhaustive]
-pub enum HarTexError {
-    Custom { message: String },
-    IoError { error: IoError },
-    TomlError { error: TomlError },
+pub struct Error {
+    pub kind: ErrorKind,
 }
 
-impl Display for HarTexError {
+impl Display for Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.write_str("hartex error: ")?;
 
-        match self {
-            Self::Custom { message } => {
-                write!(f, "custom error: {message}")?;
+        match &self.kind {
+            ErrorKind::EnvVarError { src } => write!(f, "env error: {src}")?,
+            ErrorKind::PortNotNumber { name } => {
+                write!(f, "port error: specified port not a number for port {name}")?
             }
-            Self::IoError { error } => {
-                f.write_str("io error: ")?;
-                write!(f, "{}", error.kind().display())?;
-            }
-            Self::TomlError { error } => {
-                f.write_str("toml deserialization error: ")?;
-                write!(f, "{error}")?;
-
-                if let Some((line, column)) = error.line_col() {
-                    write!(f, "; at line {line} column {column}")?;
-                }
-            }
-        };
+            ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
+        }
 
         Ok(())
     }
 }
 
-impl Error for HarTexError {}
-
-impl From<IoError> for HarTexError {
-    fn from(error: IoError) -> Self {
-        Self::IoError { error }
+impl From<ErrorKind> for Error {
+    fn from(kind: ErrorKind) -> Self {
+        Self { kind }
     }
 }
 
-impl From<TomlError> for HarTexError {
-    fn from(error: TomlError) -> Self {
-        Self::TomlError { error }
+impl From<IoError> for Error {
+    fn from(src: IoError) -> Self {
+        Self::from(ErrorKind::IoError { src })
     }
 }
 
-/// A global type-alias for handling the [`Result`] type throughout the codebase.
-///
-/// [`Result`]: https://doc.rust-lang.org/nightly/std/result/enum.Result.html
-pub type HarTexResult<T> = Result<T, HarTexError>;
+impl From<VarError> for Error {
+    fn from(src: VarError) -> Self {
+        Self::from(ErrorKind::EnvVarError { src })
+    }
+}
+
+impl StdError for Error {}
+
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum ErrorKind {
+    EnvVarError { src: VarError },
+    IoError { src: IoError },
+    PortNotNumber { name: String },
+}
+
+pub type Result<T> = StdResult<T, Error>;

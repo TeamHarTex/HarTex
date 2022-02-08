@@ -1,11 +1,9 @@
 [package]
-name = "hartex_base"
-version = "1.27.0"
+name = "base"
+version = "1.28.0"
 edition = "2021"
 description = """
-The `hartex_base` library provides the core minimal functionality for the bot to function.
-
-This library is supposed to be used in other `hartex_*` dependencies, but not use any of them.
+The base library of the bot.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.60.0"
@@ -13,24 +11,12 @@ rust-version = "1.60.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base64 = "0.13.0"
-chrono = "0.4.19"
-ctrlc = "3.2.1"
-serde = "1.0.131"
-toml = "0.5.8"
-
-tracing = { version = "0.1.29", optional = true }
-tracing-subscriber = { version = "0.3.4", features = ["env-filter", "time"], optional = true }
-
-twilight-cache-inmemory = { version = "0.9.0", optional = true }
-twilight-embed-builder = { version = "0.9.0", optional = true }
+log = { version = "0.4.14", optional = true }
+log4rs = { version = "1.0.0", default-features = false, features = ["console_appender"], optional = true }
 twilight-gateway = { version = "0.9.0", optional = true }
-twilight-http = { version = "0.9.0", optional = true }
-twilight-mention = { version = "0.9.0", optional = true }
 twilight-model = { version = "0.9.0", optional = true }
-twilight-standby = { version = "0.9.0", optional = true }
-twilight-util = { version = "0.9.0", features = [ "builder", "snowflake" ], optional = true }
 
 [features]
-tracing-bundled = [ "tracing", "tracing-subscriber" ]
-twilight-bundled = [ "twilight-cache-inmemory", "twilight-embed-builder", "twilight-gateway", "twilight-http", "twilight-mention", "twilight-model", "twilight-standby", "twilight-util" ]
+discord-gateway = ["twilight-gateway"]
+discord-model = ["twilight-model"]
+logging = ["log", "log4rs"]
