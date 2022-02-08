@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Extensions to various things used throughout the codebase.
-
-pub mod std;
+pub mod discord;

@@ -19,7 +19,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod discord;
-pub mod error;
-#[cfg(feature = "logging")]
-pub mod logging;
+#[cfg(feature = "discord-model")]
+pub mod model;

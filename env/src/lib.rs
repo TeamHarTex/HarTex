@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,100 +19,77 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Environments for different aspects of the `HarTex` Discord bot.
+use std::collections::HashMap;
+use std::env;
+use std::fs;
+use std::ops::Index;
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
+use base::error::{Error, ErrorKind, Result};
 
-use std::{env, num::NonZeroU64};
-
-use hartex_base::{
-    discord::model::id::{
-        marker::{GuildMarker, RoleMarker, UserMarker},
-        Id,
-    },
-    logging::tracing,
-};
-
-/// A collection of environment variables useful for the bot during database manipulations.
-pub struct DatabaseEnv {
-    pub pgsql_credentials_guilds: Option<String>,
-    pub pgsql_credentials_guildconfig: Option<String>,
+pub enum EnvVarKind {
+    Common,
 }
 
-impl DatabaseEnv {
-    /// Retrieves the environment variables.
-    #[must_use]
-    pub fn get() -> Self {
-        tracing::trace!("retrieving `PGSQL_CREDENTIALS_GUILDS` environment variable");
-        let pgsql_credentials_guilds = env::var("PGSQL_CREDENTIALS_GUILDS").ok();
+#[derive(Clone, Debug)]
+pub struct EnvVars<'a> {
+    vars: HashMap<&'a str, EnvVarValue>,
+}
 
-        tracing::trace!("retrieving `PGSQL_CREDENTIALS_GUILDCONFIG` environment variable");
-        let pgsql_credentials_guildconfig = env::var("PGSQL_CREDENTIALS_GUILDCONFIG").ok();
+impl<'a> EnvVars<'a> {
+    pub fn get(kind: EnvVarKind) -> Result<Self> {
+        Self::__load(kind)
+    }
 
-        Self {
-            pgsql_credentials_guilds,
-            pgsql_credentials_guildconfig,
+    pub(in crate) fn __load(kind: EnvVarKind) -> Result<Self> {
+        match kind {
+            EnvVarKind::Common => {
+                let file = fs::read_to_string("CommonEnv.vars")?;
+                let file = file.trim_end().to_string();
+
+                let lines = file
+                    .lines()
+                    .filter(|line| !line.starts_with(";") && !line.is_empty());
+
+                for line in lines {
+                    let split = line.split(" ").collect::<Vec<_>>();
+                    env::set_var(split[1], split[2]);
+                }
+
+                Self::__common_vars()
+            }
         }
+    }
+
+    pub(in crate) fn __common_vars() -> Result<Self> {
+        let mut vars = HashMap::new();
+
+        let token = env::var("BOT_TOKEN")?;
+        vars.insert("BOT_TOKEN", EnvVarValue::String(token));
+
+        let event_server_port_string = env::var("EVENT_SERVER_PORT")?;
+        let event_server_port = if let Ok(port) = event_server_port_string.parse::<u16>() {
+            port
+        } else {
+            return Err(Error::from(ErrorKind::PortNotNumber {
+                name: String::from("EVENT_SERVER_PORT"),
+            }));
+        };
+        vars.insert("EVENT_SERVER_PORT", EnvVarValue::U16(event_server_port));
+
+        Ok(Self { vars })
     }
 }
 
-/// A collection of environment variables useful for the bot in plugins.
-pub struct PluginEnv {
-    pub global_administrator_uid: Option<Id<UserMarker>>,
-    pub support_guild_gid: Option<Id<GuildMarker>>,
-    pub hartex_guild_owner_rid: Option<Id<RoleMarker>>,
-    pub hartex_user_rid: Option<Id<RoleMarker>>,
-}
+impl<'a> Index<&str> for EnvVars<'a> {
+    type Output = EnvVarValue;
 
-impl PluginEnv {
-    /// Retrieves the environment variables.
-    #[allow(clippy::missing_panics_doc)] // this function should never panic
-    #[must_use]
-    pub fn get() -> Self {
-        tracing::trace!("retrieving `GLOBAL_ADMINISTRATOR_UID` environment variable");
-        let global_administrator_uid = env::var("GLOBAL_ADMINISTRATOR_UID").ok();
-
-        tracing::trace!("retrieving `SUPPORT_GUILD_GID` environment variable");
-        let support_guild_gid = env::var("SUPPORT_GUILD_GID").ok();
-
-        tracing::trace!("retrieving `HARTEX_GUILD_OWNER_RID` environment variable");
-        let hartex_guild_owner_rid = env::var("HARTEX_GUILD_OWNER_RID").ok();
-
-        tracing::trace!("retrieving `HARTEX_USER_RID` environment variable");
-        let hartex_user_rid = env::var("HARTEX_USER_RID").ok();
-
-        Self {
-            global_administrator_uid: global_administrator_uid
-                .map(|uid| Id::new(uid.parse().unwrap())),
-            support_guild_gid: support_guild_gid.map(|gid| Id::new(gid.parse().unwrap())),
-            hartex_guild_owner_rid: hartex_guild_owner_rid.map(|rid| Id::new(rid.parse().unwrap())),
-            hartex_user_rid: hartex_user_rid.map(|rid| Id::new(rid.parse().unwrap())),
-        }
+    fn index(&self, index: &str) -> &Self::Output {
+        self.vars.get(index).unwrap()
     }
 }
 
-/// A collection of environment variables useful for the bot during startup.
-pub struct StartupEnv {
-    pub application_aid: Option<NonZeroU64>,
-    pub bot_token: Option<String>,
-}
-
-impl StartupEnv {
-    /// Retrieves the environment variables.
-    #[allow(clippy::missing_panics_doc)] // this function should never panic
-    #[must_use]
-    pub fn get() -> Self {
-        tracing::trace!("retrieving `APPLICATION_AID` environment variable");
-        let application_aid = env::var("APPLICATION_AID").ok();
-
-        tracing::trace!("retrieving `BOT_TOKEN` environment variable");
-        let bot_token = env::var("BOT_TOKEN").ok();
-
-        Self {
-            application_aid: application_aid
-                .map(|id| NonZeroU64::new(id.parse().unwrap()).unwrap()),
-            bot_token,
-        }
-    }
+#[derive(Clone, Debug)]
+pub enum EnvVarValue {
+    String(String),
+    U16(u16),
 }
