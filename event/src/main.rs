@@ -24,10 +24,11 @@
 use std::lazy::SyncLazy;
 use std::net::{SocketAddr};
 
-use base::error::{Result};
+use base::error::{Error, Result};
 use base::logging;
 use env::{EnvVarKind, EnvVarValue, EnvVars};
 use hyper::server::Server;
+use hyper::service::{make_service_fn, service_fn};
 
 static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
     log::trace!("retrieving environment variables");
@@ -60,7 +61,13 @@ pub async fn main() -> Result<()> {
     let addr: SocketAddr = ([127, 0, 0, 1], *port).into();
     let server = Server::bind(&addr).http2_only(true);
 
-
+    let service = make_service_fn(move |_| {
+        async {
+            Ok::<_, Error>(service_fn(move |request| {
+                todo!()
+            }))
+        }
+    });
 
     Ok(())
 }
