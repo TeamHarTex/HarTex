@@ -25,6 +25,10 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::io::Error as IoError;
 use std::result::Result as StdResult;
 
+use http::Error as HttpError;
+use hyper::Error as HyperError;
+use serde_json::Error as JsonError;
+
 #[derive(Debug)]
 pub struct Error {
     pub kind: ErrorKind,
@@ -36,10 +40,13 @@ impl Display for Error {
 
         match &self.kind {
             ErrorKind::EnvVarError { src } => write!(f, "env error: {src}")?,
+            ErrorKind::HttpError { src } => write!(f, "http error: {src}")?,
+            ErrorKind::HyperError { src } => write!(f, "hyper error: {src}")?,
+            ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
+            ErrorKind::JsonError { src } => write!(f, "json error: {src}")?,
             ErrorKind::PortNotNumber { name } => {
                 write!(f, "port error: specified port not a number for port {name}")?
             }
-            ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
         }
 
         Ok(())
@@ -70,7 +77,10 @@ impl StdError for Error {}
 #[non_exhaustive]
 pub enum ErrorKind {
     EnvVarError { src: VarError },
+    HttpError { src: HttpError },
+    HyperError { src: HyperError },
     IoError { src: IoError },
+    JsonError { src: JsonError },
     PortNotNumber { name: String },
 }
 

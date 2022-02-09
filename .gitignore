@@ -16,7 +16,5 @@ target
 **/Cargo.lock
 old/Cargo.lock
 
-# Environment variables
-.vars
-*.vars
-**/*.vars
+# environment variables
+CommonEnv.vars
