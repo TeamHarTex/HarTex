@@ -39,6 +39,7 @@ pub fn init() {
             ),
         )
         .logger(Logger::builder().build("gateway", LevelFilter::Trace))
+        .logger(Logger::builder().build("hyper", LevelFilter::Off))
         .logger(Logger::builder().build("mio", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))

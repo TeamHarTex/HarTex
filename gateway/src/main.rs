@@ -33,11 +33,13 @@ use env::{EnvVarKind, EnvVarValue, EnvVars};
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
 
+mod request;
+
 const EVENT_TYPE_FLAGS: EventTypeFlags = EventTypeFlags::all();
 
 const INTENTS: Intents = Intents::all();
 
-static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
+pub(in crate) static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
     log::trace!("retrieving environment variables");
 
     let result = EnvVars::get(EnvVarKind::Common);
