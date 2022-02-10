@@ -44,7 +44,7 @@ jobs:
           override: true
           profile: default
       - name: Run cargo fmt
-        run: cd hartex && cargo fmt --all -- --check
+        run: cargo fmt --all -- --check
         env:
           CFG_IS_STABLE: "false"
           CFG_VERSION_STR: "dummy version str"
