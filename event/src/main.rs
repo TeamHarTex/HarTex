@@ -23,13 +23,11 @@
 
 use std::lazy::SyncLazy;
 
-use axum::routing::post;
-use axum::{Router, Server};
 use base::error::Result;
 use base::logging;
 use env::{EnvVarKind, EnvVarValue, EnvVars};
 
-mod identify;
+mod ready;
 
 static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
     log::trace!("retrieving environment variables");
@@ -44,8 +42,6 @@ static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
-    logging::init();
-
     SyncLazy::force(&ENV);
     if ENV.is_none() {
         log::warn!("environment variables cannot be retrieved; exiting");
@@ -55,6 +51,8 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
+    logging::init();
+
     log::trace!("retrieving port to listen on");
     let port = match &ENV.as_ref().unwrap()["EVENT_SERVER_PORT"] {
         EnvVarValue::U16(port) => port,
@@ -62,21 +60,12 @@ pub async fn main() -> Result<()> {
     };
 
     log::trace!("creating http server");
-    let router = Router::new().route("/identify", post(identify::identify));
-    let addr = format!("127.0.0.1:{port}");
+    let mut server = tide::new();
+    server.at("/ready").post(ready::ready);
 
-    let result = Server::try_bind(&addr.parse().unwrap());
-    if let Err(error) = result {
-        log::error!(
-            "server launch error: bind to localhost:{port} failed due to an error: {error}"
-        );
-        return Ok(());
-    }
-
-    log::trace!("launching http server, listening on port {port}");
-    let server = result.unwrap().serve(router.into_make_service());
-    if let Err(error) = server.await {
-        log::error!("server error: {error}");
+    log::trace!("listening on port {port}");
+    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
+        log::error!("server error: could not listen on port {port}: {error}");
     }
 
     Ok(())

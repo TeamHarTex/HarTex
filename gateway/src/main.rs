@@ -52,8 +52,6 @@ pub(in crate) static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
-    logging::init();
-
     SyncLazy::force(&ENV);
     if ENV.is_none() {
         log::warn!("environment variables cannot be retrieved; exiting");
@@ -62,6 +60,8 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     }
+
+    logging::init();
 
     let token = match &ENV.as_ref().unwrap()["BOT_TOKEN"] {
         EnvVarValue::String(token) => token,
@@ -128,6 +128,8 @@ pub async fn main() -> Result<()> {
             "shard {shard_id} received an event of type {} from the discord gateway",
             event.as_str()
         );
+
+        tokio::spawn(request::request_event(event));
     }
 
     Ok(())
