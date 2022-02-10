@@ -66,6 +66,9 @@ impl<'a> EnvVars<'a> {
         let token = env::var("BOT_TOKEN")?;
         vars.insert("BOT_TOKEN", EnvVarValue::String(token));
 
+        let event_server_auth = env::var("EVENT_SERVER_AUTH")?;
+        vars.insert("EVENT_SERVER_AUTH", EnvVarValue::String(event_server_auth));
+
         let event_server_port_string = env::var("EVENT_SERVER_PORT")?;
         let event_server_port = if let Ok(port) = event_server_port_string.parse::<u16>() {
             port

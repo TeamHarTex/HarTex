@@ -29,7 +29,7 @@ use env::{EnvVarKind, EnvVarValue, EnvVars};
 
 mod ready;
 
-static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
+pub(in crate) static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
     log::trace!("retrieving environment variables");
 
     let result = EnvVars::get(EnvVarKind::Common);

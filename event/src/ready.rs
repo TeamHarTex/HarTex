@@ -19,13 +19,76 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tide::{Response, Request, Result};
+use base::discord::model::gateway::payload::incoming::Ready;
+use env::EnvVarValue;
+use serde_json::json;
+use tide::http::headers::HeaderValue;
+use tide::{Request, Response, Result, StatusCode};
+
+use crate::ENV;
 
 pub async fn ready(mut request: Request<()>) -> Result<Response> {
+    let option = request.header("Authorization");
+    if option.is_none() {
+        return Ok(Response::builder(StatusCode::Unauthorized)
+            .body_json(&json!({
+                "code": 401,
+                "message": "Unauthorized",
+            }))
+            .unwrap()
+            .build());
+    }
+
+    let auth_header = option.unwrap();
+    let auth = match &ENV.as_ref().unwrap()["EVENT_SERVER_AUTH"] {
+        EnvVarValue::String(auth) => auth,
+        _ => unreachable!(),
+    };
+
+    if !auth_header.contains(&HeaderValue::from_bytes(auth.as_bytes().to_vec()).unwrap()) {
+        return Ok(Response::builder(StatusCode::Unauthorized)
+            .body_json(&json!({
+                "code": 401,
+                "message": "Unauthorized",
+            }))
+            .unwrap()
+            .build());
+    }
+
+    log::trace!("deserializing ready payload");
+    let result = request.body_json::<Ready>().await;
+    if let Err(error) = result {
+        log::error!("failed to deserialize ready payload; see http error below");
+        log::error!("http error: {error}");
+        return Ok(Response::builder(error.status())
+            .body_json(&json!({
+                "code": error.status(),
+                "message": error.status().canonical_reason(),
+            }))
+            .unwrap()
+            .build());
+    }
+
+    let ready = result.unwrap();
+    let shard_info = ready.shard.unwrap();
     log::trace!(
-        "received ready payload {}",
-        request.body_string().await.unwrap()
+        "shard {} received ready event from the gateway",
+        shard_info[0],
+    );
+    log::info!(
+        "{}#{} [uid {}] is connected to the discord gateway and is ready; the shard uses gateway version {} (shard {})",
+        ready.user.name,
+        ready.user.discriminator,
+        ready.user.id,
+        ready.version,
+        shard_info[0],
     );
 
-    Ok(Response::new(200))
+    Ok(Response::builder(StatusCode::Ok)
+        .body_json(&json!({
+            "code": 200,
+            "message": "OK",
+        }))
+        .unwrap()
+        .build())
 }

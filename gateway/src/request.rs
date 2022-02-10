@@ -2,6 +2,7 @@ use base::discord::model::gateway::event::Event;
 use base::error::{Error, ErrorKind, Result};
 use env::EnvVarValue;
 use hyper::client::Client;
+use hyper::header::AUTHORIZATION;
 use hyper::{Body, Method, Request};
 
 use crate::ENV;
@@ -24,8 +25,14 @@ pub async fn request_event(event: Event) -> Result<()> {
                 return Err(Error::from(ErrorKind::JsonError { src }));
             }
 
+            let auth = match &ENV.as_ref().unwrap()["EVENT_SERVER_AUTH"] {
+                EnvVarValue::String(auth) => auth,
+                _ => unreachable!(),
+            };
+
             log::trace!("building request");
             let result = Request::builder()
+                .header(AUTHORIZATION, auth)
                 .method(Method::POST)
                 .uri(format!("http://127.0.0.1:{port}/ready"))
                 .body(Body::from(result.unwrap()));
