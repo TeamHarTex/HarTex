@@ -2,13 +2,13 @@ use base::discord::model::gateway::event::Event;
 use base::error::{Error, ErrorKind, Result};
 use env::EnvVarValue;
 use hyper::client::Client;
-use hyper::{Body, Error as HyperError, Method, Request};
+use hyper::{Body, Method, Request};
 
 use crate::ENV;
 
 pub async fn request_event(event: Event) -> Result<()> {
     match event {
-        Event::ShardIdentifying(identifying) => {
+        Event::Ready(ready) => {
             let client = Client::new();
 
             log::trace!("retrieving the port of the event server");
@@ -17,28 +17,30 @@ pub async fn request_event(event: Event) -> Result<()> {
                 _ => unreachable!(),
             };
 
-            let result = serde_json::to_string(&event);
+            log::trace!("serializing ready payload");
+            let result = serde_json::to_string(&ready);
             if let Err(src) = result {
-                log::trace!("request error: could not serialize body: {src}");
+                log::error!("request error: could not serialize body: {src}");
                 return Err(Error::from(ErrorKind::JsonError { src }));
             }
 
+            log::trace!("building request");
             let result = Request::builder()
                 .method(Method::POST)
-                .uri(format!("http://localhost:{port}/identify"))
+                .uri(format!("http://127.0.0.1:{port}/ready"))
                 .body(Body::from(result.unwrap()));
-
             if let Err(src) = result {
-                log::trace!("request error: could not build request: {src}");
+                log::error!("request error: could not build request: {src}");
                 return Err(Error::from(ErrorKind::HttpError { src }));
             }
 
+            log::trace!("sending request to http://127.0.0.1:{port}/ready");
             if let Err(src) = client.request(result.unwrap()).await {
-                log::trace!("request error: could not send request: {error}");
+                log::error!("request error: could not send request: {src}");
                 return Err(Error::from(ErrorKind::HyperError { src }));
             }
         }
-        _ => unimplemented!(),
+        _ => (),
     }
 
     Ok(())

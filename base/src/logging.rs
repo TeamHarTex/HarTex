@@ -38,10 +38,14 @@ pub fn init() {
                 ),
             ),
         )
+        .logger(Logger::builder().build("async_h1", LevelFilter::Off))
+        .logger(Logger::builder().build("async_io", LevelFilter::Off))
+        .logger(Logger::builder().build("async_std", LevelFilter::Off))
         .logger(Logger::builder().build("gateway", LevelFilter::Trace))
-        .logger(Logger::builder().build("hyper", LevelFilter::Off))
         .logger(Logger::builder().build("mio", LevelFilter::Off))
+        .logger(Logger::builder().build("polling", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
+        .logger(Logger::builder().build("tide", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_util", LevelFilter::Off))
         .logger(Logger::builder().build("tungstenite", LevelFilter::Off))

@@ -19,12 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use axum::extract::Json;
-use serde_json::Value;
+use tide::{Response, Request, Result};
 
-pub async fn identify(Json(payload): Json<Value>) {
+pub async fn ready(mut request: Request<()>) -> Result<Response> {
     log::trace!(
-        "received identify payload {}",
-        serde_json::to_string(&payload).unwrap()
+        "received ready payload {}",
+        request.body_string().await.unwrap()
     );
+
+    Ok(Response::new(200))
 }
