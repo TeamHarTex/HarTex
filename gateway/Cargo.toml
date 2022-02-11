@@ -1,6 +1,6 @@
 [package]
 name = "gateway"
-version = "1.28.0"
+version = "0.1.0"
 edition = "2021"
 description = """
 The gateway process for the bot.

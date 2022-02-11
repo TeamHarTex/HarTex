@@ -1,6 +1,6 @@
 [package]
 name = "event"
-version = "1.28.0"
+version = "0.1.0"
 edition = "2021"
 description = """
 The event handler process for the bot.
