@@ -1,0 +1,3 @@
+[submodule "deta-rust"]
+	path = deta-rust
+	url = https://github.com/HarTexTeam/deta-rust
