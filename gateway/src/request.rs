@@ -1,11 +1,10 @@
+use std::env as stdenv;
+
 use base::discord::model::gateway::event::Event;
 use base::error::{Error, ErrorKind, Result};
-use env::EnvVarValue;
 use hyper::client::Client;
 use hyper::header::AUTHORIZATION;
 use hyper::{Body, Method, Request};
-
-use crate::ENV;
 
 pub async fn request_event(event: Event) -> Result<()> {
     match event {
@@ -13,9 +12,19 @@ pub async fn request_event(event: Event) -> Result<()> {
             let client = Client::new();
 
             log::trace!("retrieving the port of the event server");
-            let port = match &ENV.as_ref().unwrap()["EVENT_SERVER_PORT"] {
-                EnvVarValue::U16(port) => port,
-                _ => unreachable!(),
+            let result = stdenv::var("EVENT_SERVER_PORT");
+            let port = if let Ok(port) = result {
+                let result = port.parse::<u16>();
+                if let Ok(port) = result {
+                    port
+                } else {
+                    log::error!("processing error: port is not an integer: {}", result.unwrap_err());
+                    return Ok(());
+                }
+            } else {
+                let error = result.unwrap_err();
+                log::error!("env error: {error}");
+                return Err(Error::from(error));
             };
 
             log::trace!("serializing ready payload");
@@ -25,9 +34,13 @@ pub async fn request_event(event: Event) -> Result<()> {
                 return Err(Error::from(ErrorKind::JsonError { src }));
             }
 
-            let auth = match &ENV.as_ref().unwrap()["EVENT_SERVER_AUTH"] {
-                EnvVarValue::String(auth) => auth,
-                _ => unreachable!(),
+            let result = stdenv::var("EVENT_SERVER_AUTH");
+            let auth = if let Ok(auth) = result {
+                auth
+            } else {
+                let error = result.unwrap_err();
+                log::error!("env error: {error}");
+                return Err(Error::from(error));
             };
 
             log::trace!("building request");

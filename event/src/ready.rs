@@ -19,13 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env as stdenv;
+
 use base::discord::model::gateway::payload::incoming::Ready;
-use env::EnvVarValue;
 use serde_json::json;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result, StatusCode};
-
-use crate::ENV;
 
 pub async fn ready(mut request: Request<()>) -> Result<Response> {
     let option = request.header("Authorization");
@@ -40,9 +39,19 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
     }
 
     let auth_header = option.unwrap();
-    let auth = match &ENV.as_ref().unwrap()["EVENT_SERVER_AUTH"] {
-        EnvVarValue::String(auth) => auth,
-        _ => unreachable!(),
+    let result = stdenv::var("EVENT_SERVER_AUTH");
+    let auth = if let Ok(auth) = result {
+        auth
+    } else {
+        let error = result.unwrap_err();
+        log::error!("env error: {error}");
+        return Ok(Response::builder(StatusCode::Unauthorized)
+            .body_json(&json!({
+                "code": 401,
+                "message": "Unauthorized",
+            }))
+            .unwrap()
+            .build());
     };
 
     if !auth_header.contains(&HeaderValue::from_bytes(auth.as_bytes().to_vec()).unwrap()) {

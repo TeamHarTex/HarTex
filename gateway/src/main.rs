@@ -21,7 +21,7 @@
 
 #![feature(once_cell)]
 
-use std::lazy::SyncLazy;
+use std::env as stdenv;
 
 use base::discord::gateway::cluster::{ClusterStartErrorType, ShardScheme};
 use base::discord::gateway::{Cluster, EventTypeFlags, GatewayCluster, Intents};
@@ -29,7 +29,6 @@ use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePre
 use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use base::error::Result;
 use base::logging;
-use env::{EnvVarKind, EnvVarValue, EnvVars};
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
 
@@ -39,20 +38,8 @@ const EVENT_TYPE_FLAGS: EventTypeFlags = EventTypeFlags::all();
 
 const INTENTS: Intents = Intents::all();
 
-pub(in crate) static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
-    log::trace!("retrieving environment variables");
-
-    let result = EnvVars::get(EnvVarKind::Common);
-    if let Err(error) = &result {
-        log::error!("retrieval failed: `{error}`");
-    }
-
-    result.ok()
-});
-
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
-    SyncLazy::force(&ENV);
     if ENV.is_none() {
         log::warn!("environment variables cannot be retrieved; exiting");
         log::info!("help: please make sure that the required environment variables are present");
@@ -63,9 +50,12 @@ pub async fn main() -> Result<()> {
 
     logging::init();
 
-    let token = match &ENV.as_ref().unwrap()["BOT_TOKEN"] {
-        EnvVarValue::String(token) => token,
-        _ => unreachable!(),
+    let result = stdenv::var("token");
+    let token = if let Ok(token) = result {
+        token
+    } else {
+        log::error!("env error: {}", result.unwrap_err());
+        return Ok(());
     };
 
     let result = Cluster::builder(token.clone(), INTENTS)

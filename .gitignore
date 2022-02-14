@@ -17,4 +17,4 @@ target
 old/Cargo.lock
 
 # environment variables
-CommonEnv.vars
+Env.vars
