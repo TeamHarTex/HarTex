@@ -28,8 +28,7 @@ jobs:
       - name: Build
         run: cargo build --release
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false
 
   macOS:
     name: macOS (Full Build)
@@ -46,8 +45,7 @@ jobs:
       - name: Build
         run: cargo build --release
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false
 
   Windows:
     name: Windows (Full Build)
@@ -64,8 +62,7 @@ jobs:
       - name: Build
         run: cargo build --release
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false
 
   LinuxTest:
     name: Linux (Test)
@@ -84,8 +81,7 @@ jobs:
       - name: Test
         run: cargo test
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false
 
   macOSTest:
     name: macOS (Test)
@@ -104,8 +100,7 @@ jobs:
       - name: Test
         run: cargo test
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false
 
   WindowsTest:
     name: Windows (Test)
@@ -124,5 +119,4 @@ jobs:
       - name: Test
         run: cargo test
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false

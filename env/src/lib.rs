@@ -22,7 +22,12 @@
 use std::env;
 use std::fs;
 
-use base::error::Result;
+use base::error::{Error, ErrorKind, Result};
+
+enum FileScope<'a> {
+    IfConstruct { name: &'a str },
+    Root,
+}
 
 pub fn load() -> Result<()> {
     let file = fs::read_to_string("Env.vars")?;
@@ -32,9 +37,41 @@ pub fn load() -> Result<()> {
         .lines()
         .filter(|line| !line.starts_with(";") && !line.is_empty());
 
+    let mut state = FileScope::Root;
+    let enable_pgsql = matches!(env!("ENABLE_PGSQL_BACKEND"), "true");
     for line in lines {
-        let split = line.split(" ").collect::<Vec<_>>();
-        env::set_var(split[1], split[2]);
+        match state {
+            FileScope::Root => {
+                if line.starts_with("if defined") {
+                    let split = line.split(" ").collect::<Vec<_>>();
+                    let name = split.get(3);
+                    if name.is_none() {
+                        return Err(Error::from(ErrorKind::EnvFileError {
+                            description: "missing identifier to check for definition",
+                        }));
+                    }
+
+                    state = FileScope::IfConstruct { name: name.unwrap().clone() };
+                    continue;
+                }
+
+                if line.starts_with("define") {
+                    let split = line.split(" ").collect::<Vec<_>>();
+                    env::set_var(split[1], split[2]);
+                }
+            }
+            FileScope::IfConstruct { name: "ENABLE_PGSQL_BACKEND" } => {
+                if enable_pgsql && line.starts_with("define ") {
+                    let split = line.split(" ").collect::<Vec<_>>();
+                    env::set_var(split[1], split[2]);
+                }
+
+                if line.starts_with("endif") {
+                    state = FileScope::Root
+                }
+            },
+            _ => ()
+        }
     }
 
     Ok(())

@@ -40,6 +40,7 @@ impl Display for Error {
 
         match &self.kind {
             ErrorKind::EnvVarError { src } => write!(f, "env error: {src}")?,
+            ErrorKind::EnvFileError { description } => write!(f, "envfile error: {description}")?,
             ErrorKind::HttpError { src } => write!(f, "http error: {src}")?,
             ErrorKind::HyperError { src } => write!(f, "hyper error: {src}")?,
             ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
@@ -77,6 +78,7 @@ impl StdError for Error {}
 #[non_exhaustive]
 pub enum ErrorKind {
     EnvVarError { src: VarError },
+    EnvFileError { description: &'static str },
     HttpError { src: HttpError },
     HyperError { src: HyperError },
     IoError { src: IoError },
