@@ -19,6 +19,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The HarTex Environment Manipulation Library
+//!
+//! The HarTex Environment Manipulation Library is a utility library for interacting with the
+//! system environment (for instance, loading and retrieving environment variables).
+//!
+//! This library provides a helper function to load environment variables from an `Env.vars` file,
+//! which is a custom file format specifically designed for HarTex. Its syntax to some extent
+//! mimics a C header file, and it seemed quite fitting for the implementation and usage for
+//! HarTex.
+//!
+//! After loading the environment variables, the helper function then continues to set the
+//! configured variables for the environment of the current running process, where they only last
+//! for the lifetime of the process. Once the process is terminated, the environment variables for
+//! that running process  are discarded.
+
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
@@ -32,6 +47,17 @@ enum FileScope<'a> {
     Root,
 }
 
+/// Loads the environment variables from an `Env.vars` file and sets the configured variables for
+/// the environment of the current running process.
+///
+/// ## Errors
+///
+/// This function returns [`ErrorKind::IoError`] if the contents of the `Env.vars` file could not
+/// be read due to some I/O errors, for example the file does not exist, or permission is denied
+/// for the file.
+///
+/// This function returns [`ErrorKind::EnvFileError`] if the contents of the `Env.vars` file are
+/// invalid or has invalid syntax and cannot be further processed.
 #[allow(clippy::missing_panics_doc)] // this function never panics
 pub fn load() -> Result<()> {
     let file = fs::read_to_string("Env.vars")?;
