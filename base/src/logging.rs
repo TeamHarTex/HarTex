@@ -19,11 +19,27 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! Logging facilities for the HarTex codebase.
+//!
+//! This module contains a helper function for initializing the logging implementation from
+//! [`log4rs`].
+//!
+//! [`log4rs`]: https://github.com/estk/log4rs
+
 use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::{Appender, Config as LoggerConfig, Logger, Root};
 use log4rs::encode::pattern::PatternEncoder;
 
+/// Initializes the logging implementation to enable logging using the [`log`] crate in binaries
+/// that require logging.
+///
+/// This function by default uses a configuration that only adds entries to the standard output
+/// stream. The configuration can be further customized to fit other needs. See documentation
+/// of [`log4rs`] for more details on customizing the logger configuration.
+///
+/// [`log`]: https://docs.rs/log/latest/log/index.html
+/// [`log4rs`]: https://docs.rs/log4rs/latest/log4rs/#configuration
 pub fn init() {
     let conf = LoggerConfig::builder()
         .appender(

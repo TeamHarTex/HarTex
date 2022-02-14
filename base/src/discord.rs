@@ -19,6 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! Re-exports to the commonly referenced libraries from the Twilight Ecosystem.
+//!
+//! Each of the re-exported crates from the Twilight Ecosystem are gated behind a feature flag.
+//!
+//! Examples:
+//!
+//!  - `twilight-gateway` is gated behind the `discord-gateway` feature flag; and
+//!  - `twilight-model` is gated behind the `discord-model` feature flag.
+//!
+//! All other re-exported crates follow a similar pattern, by replacing the `twilight` identifier
+//! with `discord`.
+
 #[cfg(feature = "discord-gateway")]
 pub use twilight_gateway as gateway;
 
