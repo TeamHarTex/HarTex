@@ -46,7 +46,10 @@ pub async fn main() -> Result<()> {
         if let Ok(port) = result {
             port
         } else {
-            log::error!("processing error: port is not an integer: {}", result.unwrap_err());
+            log::error!(
+                "processing error: port is not an integer: {}",
+                result.unwrap_err()
+            );
             return Ok(());
         }
     } else {
