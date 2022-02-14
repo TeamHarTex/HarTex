@@ -26,7 +26,7 @@
 use std::env as stdenv;
 
 use base::discord::gateway::cluster::{ClusterStartErrorType, ShardScheme};
-use base::discord::gateway::{Cluster, EventTypeFlags, GatewayCluster, Intents};
+use base::discord::gateway::{Cluster, EventTypeFlags, Intents};
 use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
 use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use base::error::Result;
