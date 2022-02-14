@@ -20,31 +20,7 @@
  */
 
 #[cfg(feature = "discord-gateway")]
-pub mod gateway {
-    pub(self) use std::ops::Deref;
-    pub(self) use std::sync::Arc;
-
-    pub use twilight_gateway::*;
-
-    #[allow(clippy::module_name_repetitions)]
-    #[derive(Clone)]
-    pub struct GatewayCluster(Arc<Cluster>);
-
-    impl GatewayCluster {
-        #[must_use]
-        pub fn new(cluster: Cluster) -> Self {
-            Self(Arc::new(cluster))
-        }
-    }
-
-    impl Deref for GatewayCluster {
-        type Target = Cluster;
-
-        fn deref(&self) -> &Self::Target {
-            &self.0
-        }
-    }
-}
+pub use twilight_gateway as gateway;
 
 #[cfg(feature = "discord-model")]
 pub use twilight_model as model;
