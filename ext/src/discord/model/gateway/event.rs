@@ -21,6 +21,7 @@
 
 use base::discord::model::gateway::event::Event;
 
+#[allow(clippy::module_name_repetitions)]
 pub trait EventExt {
     fn as_str(&self) -> &str;
 }

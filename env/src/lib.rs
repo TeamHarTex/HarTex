@@ -38,7 +38,7 @@ pub fn load() -> Result<()> {
 
     let lines = file
         .lines()
-        .filter(|line| !line.starts_with(";") && !line.is_empty());
+        .filter(|line| !line.starts_with(';') && !line.is_empty());
 
     let mut state = FileScope::Root;
     let enable_pgsql = matches!(env!("ENABLE_PGSQL_BACKEND"), "true");
@@ -46,7 +46,7 @@ pub fn load() -> Result<()> {
         match state {
             FileScope::Root => {
                 if line.starts_with("if defined") {
-                    let split = line.split(" ").collect::<Vec<_>>();
+                    let split = line.split(' ').collect::<Vec<_>>();
                     let name = split.get(3);
                     if name.is_none() {
                         return Err(Error::from(ErrorKind::EnvFileError {
@@ -61,7 +61,7 @@ pub fn load() -> Result<()> {
                 }
 
                 if line.starts_with("define") {
-                    let split = line.split(" ").collect::<Vec<_>>();
+                    let split = line.split(' ').collect::<Vec<_>>();
                     env::set_var(split[1], split[2]);
                 }
             }
@@ -69,7 +69,7 @@ pub fn load() -> Result<()> {
                 name: "ENABLE_PGSQL_BACKEND",
             } => {
                 if enable_pgsql && line.starts_with("define ") {
-                    let split = line.split(" ").collect::<Vec<_>>();
+                    let split = line.split(' ').collect::<Vec<_>>();
                     env::set_var(split[1], split[2]);
                 }
 
