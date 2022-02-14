@@ -29,7 +29,6 @@ use http::Error as HttpError;
 use hyper::Error as HyperError;
 use serde_json::Error as JsonError;
 
-#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub struct Error {
     pub kind: ErrorKind,
@@ -75,6 +74,7 @@ impl From<VarError> for Error {
 
 impl StdError for Error {}
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum ErrorKind {
