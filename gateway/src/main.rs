@@ -40,8 +40,9 @@ const INTENTS: Intents = Intents::all();
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
-    if ENV.is_none() {
-        log::warn!("environment variables cannot be retrieved; exiting");
+    if let Err(error) = env::load() {
+        log::error!("env error: {error}");
+        log::warn!("environment variables cannot be loaded; exiting");
         log::info!("help: please make sure that the required environment variables are present");
         log::info!(r#"help: see the above errors (those that start with "retrieval failed")"#);
 

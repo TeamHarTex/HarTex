@@ -35,7 +35,7 @@ pub async fn request_event(event: Event) -> Result<()> {
             }
 
             let result = stdenv::var("EVENT_SERVER_AUTH");
-            let auth = if let Ok(auth) = result {
+            let auth = if let Ok(ref auth) = result {
                 auth
             } else {
                 let error = result.unwrap_err();
