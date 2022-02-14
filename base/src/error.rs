@@ -19,6 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! Error handling facilities for the HarTex codebase.
+//!
+//! This module contains types [`Error`] and [`Result<T>`], convenience types for error handling
+//! throughout the HarTex codebase.
+
 use std::env::VarError;
 use std::error::Error as StdError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
@@ -29,8 +34,12 @@ use http::Error as HttpError;
 use hyper::Error as HyperError;
 use serde_json::Error as JsonError;
 
+/// An error returned during some computation or operation in HarTex.
 #[derive(Debug)]
 pub struct Error {
+    /// The kind of the error that occurred, represented with the [`ErrorKind`] enum.
+    ///
+    /// See the documentation of [`ErrorKind`], as well as its variants, for more information.
     pub kind: ErrorKind,
 }
 
@@ -45,9 +54,6 @@ impl Display for Error {
             ErrorKind::HyperError { src } => write!(f, "hyper error: {src}")?,
             ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
             ErrorKind::JsonError { src } => write!(f, "json error: {src}")?,
-            ErrorKind::PortNotNumber { name } => {
-                write!(f, "port error: specified port not a number for port {name}")?;
-            }
         }
 
         Ok(())
@@ -74,17 +80,43 @@ impl From<VarError> for Error {
 
 impl StdError for Error {}
 
+/// The type of the error that occurred during a computation or operation in HarTex.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum ErrorKind {
-    EnvVarError { src: VarError },
-    EnvFileError { description: &'static str },
-    HttpError { src: HttpError },
-    HyperError { src: HyperError },
-    IoError { src: IoError },
-    JsonError { src: JsonError },
-    PortNotNumber { name: String },
+    /// An error occurred while trying to interact with environment variables of the host system.
+    EnvVarError {
+        /// The source of the error.
+        src: VarError,
+    },
+    /// An error occurred while trying to manipulate an environment variable configuration file.
+    EnvFileError {
+        /// The description of the error.
+        description: &'static str,
+    },
+    /// A generic error occurred relating to an HTTP connection.
+    HttpError {
+        /// The source of the error.
+        src: HttpError,
+    },
+    /// An error occurred when handling HTTP streams, returned from [`hyper`].
+    ///
+    /// [`hyper`]: https://docs.rs/hyper/latest/hyper/index.html
+    HyperError {
+        /// The source of the error.
+        src: HyperError,
+    },
+    /// An error occurred during I/O operations.
+    IoError {
+        /// The source of the error.
+        src: IoError,
+    },
+    /// An error occurred when handling JSON data, for example deserialization or serialization.
+    JsonError {
+        /// The source of the error.
+        src: JsonError,
+    },
 }
 
 pub type Result<T> = StdResult<T, Error>;

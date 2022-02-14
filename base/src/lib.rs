@@ -112,7 +112,6 @@
 //! [`log4rs`]: https://github.com/estk/log4rs
 //! [`Result<T>`]: crate::error::Result
 //! [`Result<T, E>` from The Rust Standard Library]: https://doc.rust-lang.org/std/result/enum.Result.html
-//!
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
