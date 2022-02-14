@@ -55,7 +55,7 @@ pub fn load() -> Result<()> {
                     }
 
                     state = FileScope::IfConstruct {
-                        name: name.unwrap().clone(),
+                        name: <&str>::clone(name.unwrap()),
                     };
                     continue;
                 }
@@ -74,10 +74,10 @@ pub fn load() -> Result<()> {
                 }
 
                 if line.starts_with("endif") {
-                    state = FileScope::Root
+                    state = FileScope::Root;
                 }
             }
-            _ => (),
+            FileScope::IfConstruct { .. } => (),
         }
     }
 
