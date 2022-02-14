@@ -32,6 +32,7 @@ enum FileScope<'a> {
     Root,
 }
 
+#[allow(clippy::missing_panics_doc)] // this function never panics
 pub fn load() -> Result<()> {
     let file = fs::read_to_string("Env.vars")?;
     let file = file.trim_end().to_string();
