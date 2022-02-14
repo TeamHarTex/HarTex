@@ -33,9 +33,9 @@
 //! HarTex is built upon a Rust Discord API wrapper library called "Twilight". For more information,
 //! you may visit:
 //!
-//!  - Twilight's Official Website: https://twilight.rs/
-//!  - Twilight's Official GitHub Repository: https://github.com/twilight-rs/twilight
-//!  - Twilight's API Documentation: https://api.twilight.rs/twilight/index.html
+//!  - Twilight's Official Website: <https://twilight.rs/>
+//!  - Twilight's Official GitHub Repository: <https://github.com/twilight-rs/twilight>
+//!  - Twilight's API Documentation: <https://api.twilight.rs/twilight/index.html>
 //!
 //! Due to the design nature of Twilight (split into an ecosystem of crates, where the individual
 //! crates serve different functionality), it is deemed useful, or mandatory, to provide global
