@@ -108,12 +108,9 @@ pub async fn main() -> Result<()> {
     }
 
     let (cluster, mut events) = result.unwrap();
-    let cluster = GatewayCluster::new(cluster);
-
-    let spawn = cluster.clone();
 
     tokio::spawn(async move {
-        spawn.up().await;
+        cluster.up().await;
     });
 
     while let Some((shard_id, event)) = events.next().await {
