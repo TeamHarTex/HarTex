@@ -28,8 +28,7 @@ jobs:
       - name: Run cargo clippy
         run: cargo clippy --workspace
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_BACKEND: false
 
   Rustfmt:
     name: Rustfmt
