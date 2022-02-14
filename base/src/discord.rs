@@ -26,6 +26,7 @@ pub mod gateway {
 
     pub use twilight_gateway::*;
 
+    #[allow(clippy::module_name_repetitions)]
     #[derive(Clone)]
     pub struct GatewayCluster(Arc<Cluster>);
 

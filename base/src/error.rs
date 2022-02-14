@@ -29,6 +29,7 @@ use http::Error as HttpError;
 use hyper::Error as HyperError;
 use serde_json::Error as JsonError;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub struct Error {
     pub kind: ErrorKind,
@@ -46,7 +47,7 @@ impl Display for Error {
             ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
             ErrorKind::JsonError { src } => write!(f, "json error: {src}")?,
             ErrorKind::PortNotNumber { name } => {
-                write!(f, "port error: specified port not a number for port {name}")?
+                write!(f, "port error: specified port not a number for port {name}")?;
             }
         }
 

@@ -54,7 +54,9 @@ pub fn load() -> Result<()> {
                         }));
                     }
 
-                    state = FileScope::IfConstruct { name: name.unwrap().clone() };
+                    state = FileScope::IfConstruct {
+                        name: name.unwrap().clone(),
+                    };
                     continue;
                 }
 
@@ -63,7 +65,9 @@ pub fn load() -> Result<()> {
                     env::set_var(split[1], split[2]);
                 }
             }
-            FileScope::IfConstruct { name: "ENABLE_PGSQL_BACKEND" } => {
+            FileScope::IfConstruct {
+                name: "ENABLE_PGSQL_BACKEND",
+            } => {
                 if enable_pgsql && line.starts_with("define ") {
                     let split = line.split(" ").collect::<Vec<_>>();
                     env::set_var(split[1], split[2]);
@@ -72,8 +76,8 @@ pub fn load() -> Result<()> {
                 if line.starts_with("endif") {
                     state = FileScope::Root
                 }
-            },
-            _ => ()
+            }
+            _ => (),
         }
     }
 
