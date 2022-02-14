@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 #![feature(once_cell)]
 
 use std::env as stdenv;
