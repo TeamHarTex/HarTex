@@ -19,31 +19,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(once_cell)]
-
-use std::lazy::SyncLazy;
+use std::env as stdenv;
 
 use base::error::Result;
 use base::logging;
-use env::{EnvVarKind, EnvVarValue, EnvVars};
 
 mod ready;
 
-pub(in crate) static ENV: SyncLazy<Option<EnvVars>> = SyncLazy::new(|| {
-    log::trace!("retrieving environment variables");
-
-    let result = EnvVars::get(EnvVarKind::Common);
-    if let Err(error) = &result {
-        log::error!("retrieval failed: `{error}`");
-    }
-
-    result.ok()
-});
-
 #[tokio::main]
 pub async fn main() -> Result<()> {
-    SyncLazy::force(&ENV);
-    if ENV.is_none() {
+    if let Err(error) = env::load() {
+        log::error!("env error: {error}");
         log::warn!("environment variables cannot be retrieved; exiting");
         log::info!("help: please make sure that the required environment variables are present");
         log::info!(r#"help: see the above errors (those that start with "retrieval failed")"#);
@@ -54,9 +40,18 @@ pub async fn main() -> Result<()> {
     logging::init();
 
     log::trace!("retrieving port to listen on");
-    let port = match &ENV.as_ref().unwrap()["EVENT_SERVER_PORT"] {
-        EnvVarValue::U16(port) => port,
-        _ => unreachable!(),
+    let result = stdenv::var("EVENT_SERVER_PORT");
+    let port = if let Ok(port) = result {
+        let result = port.parse::<u16>();
+        if let Ok(port) = result {
+            port
+        } else {
+            log::error!("processing error: port is not an integer: {}", result.unwrap_err());
+            return Ok(());
+        }
+    } else {
+        log::error!("env error: {}", result.unwrap_err());
+        return Ok(());
     };
 
     log::trace!("creating http server");
