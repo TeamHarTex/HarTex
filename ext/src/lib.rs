@@ -19,6 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The HarTex Extensions Library
+//!
+//! The HarTex Extensions Library contains extensions to various libraries used in the HarTex
+//! codebase.
+//!
+//! The extensions may include, but not limited to: extension functions using traits, additional
+//! helper functions, additional constants (with or without traits), etc.
+
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
