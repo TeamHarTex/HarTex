@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! Handle a `READY` event from the gateway.
+
 use std::env as stdenv;
 
 use base::discord::model::gateway::payload::incoming::Ready;
@@ -26,6 +28,9 @@ use serde_json::json;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result, StatusCode};
 
+/// Request handler for a `READY` event.
+///
+/// The `READY` event is received through the `/ready` endpoint.
 pub async fn ready(mut request: Request<()>) -> Result<Response> {
     let option = request.header("Authorization");
     if option.is_none() {
