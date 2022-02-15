@@ -24,7 +24,20 @@
 //! The HarTex Event Process Binary sets up an HTTP server, and receives HTTP requests as the
 //! standalone gateway process receives events emitted by the Discord gateway.
 //!
+//! There are various environment variables that needs to be configured for the event HTTP server
+//! to operate correctly. The list of environment variables are listed below.
 //!
+//! ## Environment Variables Required
+//!
+//! ### `EVENT_SERVER_AUTH`
+//!
+//! A secret key expected as the `Authorization` header with incoming HTTP requests to validate the
+//! requests.
+//!
+//! ### `EVENT_SERVER_PORT`
+//!
+//! The port for the event HTTP server to listen on. This must be configured for the server to
+//! start, and must be an integer.
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
