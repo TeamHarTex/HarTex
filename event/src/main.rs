@@ -19,6 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The HarTex Event Process Binary
+//!
+//! The HarTex Event Process Binary sets up an HTTP server, and receives HTTP requests as the
+//! standalone gateway process receives events emitted by the Discord gateway.
+//!
+//!
+
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 

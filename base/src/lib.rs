@@ -82,14 +82,14 @@
 //!
 //! If you are pulling the Base Library from Git, you may use the following line in your
 //! `Cargo.toml` file:
-//! ```toml,norun
+//! ```toml,no_run
 //! base = { git = "https://github.com/HarTexTeam/HarTex-rust-discord-bot.git", branch = "stable", features = [<features to enable>] }
 //! ```
 //!
 //! That will pull the code of the Base Library from the `stable` branch of the Git repository. If
 //! you want to use latest (possible breaking) changes, you may modify the branch to pull from:
 //!  `Cargo.toml` file:
-//! ```toml,norun
+//! ```toml,no_run
 //! base = { git = "https://github.com/HarTexTeam/HarTex-rust-discord-bot.git", branch = "nightly", features = [<features to enable>] }
 //! ```
 //!
@@ -101,7 +101,7 @@
 //! If you are using a local copy/checkout of the Base Library, you can just specify the path to
 //! the Base Library on your local system (you may use absolute or relative file paths) and specify
 //! the needed features:
-//! ```toml,norun
+//! ```toml,no_run
 //! base = { path = "<path to the base library>", features = [<features to enable>] }
 //! ```
 //!
