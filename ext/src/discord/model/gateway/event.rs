@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! Extensions to the [`Event`] type in `twilight-model`.
+
 use base::discord::model::gateway::event::Event;
 
 #[allow(clippy::module_name_repetitions)]

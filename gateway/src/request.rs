@@ -1,3 +1,6 @@
+//! Helper functions to send an HTTP request to the event HTTP server when an event is received
+//! from the Discord gateway.
+
 use std::env as stdenv;
 
 use base::discord::model::gateway::event::Event;
@@ -6,7 +9,9 @@ use hyper::client::Client;
 use hyper::header::AUTHORIZATION;
 use hyper::{Body, Method, Request};
 
-pub async fn request_event(event: Event) -> Result<()> {
+/// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
+/// server for further processing.
+pub async fn emit_event(event: Event) -> Result<()> {
     match event {
         Event::Ready(ready) => {
             let client = Client::new();
