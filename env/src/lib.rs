@@ -68,7 +68,7 @@ pub fn load() -> Result<()> {
         .filter(|line| !line.starts_with(';') && !line.is_empty());
 
     let mut state = FileScope::Root;
-    let enable_pgsql = matches!(env!("ENABLE_PGSQL_BACKEND"), "true");
+    let enable_pgsql = matches!(env!("ENABLE_PGSQL_CACHE_BACKEND"), "true");
     for line in lines {
         match state {
             FileScope::Root => {
@@ -93,7 +93,7 @@ pub fn load() -> Result<()> {
                 }
             }
             FileScope::IfConstruct {
-                name: "ENABLE_PGSQL_BACKEND",
+                name: "ENABLE_PGSQL_CACHE_BACKEND",
             } => {
                 if enable_pgsql && line.starts_with("define ") {
                     let split = line.split(' ').collect::<Vec<_>>();
