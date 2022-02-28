@@ -28,7 +28,7 @@ jobs:
       - name: Run cargo clippy
         run: cargo clippy --workspace
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   Rustfmt:
     name: Rustfmt

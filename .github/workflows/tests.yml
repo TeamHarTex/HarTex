@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: cargo build --release
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   macOS:
     name: macOS (Full Build)
@@ -45,7 +45,7 @@ jobs:
       - name: Build
         run: cargo build --release
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   Windows:
     name: Windows (Full Build)
@@ -62,7 +62,7 @@ jobs:
       - name: Build
         run: cargo build --release
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   LinuxTest:
     name: Linux (Test)
@@ -81,7 +81,7 @@ jobs:
       - name: Test
         run: cargo test
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   macOSTest:
     name: macOS (Test)
@@ -100,7 +100,7 @@ jobs:
       - name: Test
         run: cargo test
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   WindowsTest:
     name: Windows (Test)
@@ -119,4 +119,4 @@ jobs:
       - name: Test
         run: cargo test
         env:
-          ENABLE_PGSQL_BACKEND: false
+          ENABLE_PGSQL_CACHE_BACKEND: false
