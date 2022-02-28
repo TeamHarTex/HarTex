@@ -33,6 +33,9 @@ use std::hash::Hash;
 
 pub mod future;
 
+/// A cache.
+pub struct Cache<B: Backend>;
+
 /// A cache backend.
 pub trait Backend: Send + Sized + Sync + 'static {
     /// Error returned by backend operations.
@@ -43,10 +46,12 @@ pub trait Backend: Send + Sized + Sync + 'static {
 pub trait Entity: Send + Sync {
     /// An ID that uniquely identifies the entity.
     type Id: Copy + Eq + Hash + Send + Sync;
+
+    fn id(&self) -> Self::Id;
 }
 
 /// A repository of a specific entity in the cache.
 pub trait Repository<B: Backend, T: Entity> {
-    /// Retrieve an entity by its unique ID.
-    fn get(&self, id: T::Id) -> future::GetEntityFuture<'_, T, B::Error>;
+    /// Upsert an entity into the repository.
+    fn upsert(&self, entity: T) -> future::UpsertEntityFuture<'_, B::Error>;
 }

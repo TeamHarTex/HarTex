@@ -19,8 +19,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::future::Future;
-use std::pin::Pin;
+//! # The HarTex Discord Cache
+//!
+//! The implementation of a cache for storing Discord entities.
 
-/// Future for upserting an entity into a repository.
-pub type UpsertEntityFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;
+use cache_base::Cache;
+
+pub mod entities;
+#[cfg(feature = "postgres-backend")]
+pub mod postgres;
+#[cfg_attr(feature = "postgres-backend", path = "postgres/repositories.rs")]
+pub mod repositories;
+
+#[cfg(feature = "postgres-backend")]
+pub type PostgresCache = Cache<postgres::PostgresBackend>;
