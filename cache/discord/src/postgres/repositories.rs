@@ -4,6 +4,7 @@ use cache_base::future::UpsertEntityFuture;
 use cache_base::{Backend, Repository};
 
 use crate::entities::users::CachedCurrentUser;
+use crate::postgres::error::PostgresBackendError;
 use crate::postgres::PostgresBackend;
 
 pub struct CurrentUserRepository;
@@ -11,8 +12,10 @@ pub struct CurrentUserRepository;
 impl Repository<PostgresBackend, CachedCurrentUser> for CurrentUserRepository {
     fn upsert(
         &self,
-        _: CachedCurrentUser,
-    ) -> UpsertEntityFuture<'_, <PostgresBackend as Backend>::Error> {
-        todo!()
+        current_user: CachedCurrentUser,
+    ) -> UpsertEntityFuture<'_, PostgresBackendError> {
+        Box::pin(async {
+            Ok(())
+        })
     }
 }
