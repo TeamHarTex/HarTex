@@ -1,0 +1,1 @@
+INSERT INTO "CurrentUser" (id, username, discriminator, avatar, bot, system, mfa_enabled, banner, accent_colour, locale, verified, email, flags, premium_type, public_flags) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15); --
