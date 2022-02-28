@@ -2,6 +2,7 @@
 members = [
     "base",
     "cache/base",
+    "cache/discord",
     "env",
     "event",
     "ext",
