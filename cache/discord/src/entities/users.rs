@@ -30,21 +30,21 @@ use cache_base::Entity;
 ///
 /// This structure is here only for a separate cache for the current user (aka the bot itself).
 pub struct CachedCurrentUser {
-    pub(crate) accent_colour: Option<u64>,
-    pub(crate) avatar: Option<ImageHash>,
-    pub(crate) banner: Option<ImageHash>,
-    pub(crate) bot: bool,
-    pub(crate) discriminator: String,
-    pub(crate) email: Option<String>,
-    pub(crate) flags: Option<UserFlags>,
-    pub(crate) id: Id<UserMarker>,
-    pub(crate) locale: Option<String>,
-    pub(crate) mfa_enabled: bool,
-    pub(crate) username: String,
-    pub(crate) premium_type: Option<PremiumType>,
-    pub(crate) public_flags: Option<UserFlags>,
-    pub(crate) system: Option<bool>,
-    pub(crate) verified: Option<bool>,
+    pub(in crate) accent_colour: Option<u64>,
+    pub(in crate) avatar: Option<ImageHash>,
+    pub(in crate) banner: Option<ImageHash>,
+    pub(in crate) bot: bool,
+    pub(in crate) discriminator: String,
+    pub(in crate) email: Option<String>,
+    pub(in crate) flags: Option<UserFlags>,
+    pub(in crate) id: Id<UserMarker>,
+    pub(in crate) locale: Option<String>,
+    pub(in crate) mfa_enabled: bool,
+    pub(in crate) username: String,
+    pub(in crate) premium_type: Option<PremiumType>,
+    pub(in crate) public_flags: Option<UserFlags>,
+    pub(in crate) system: Option<bool>,
+    pub(in crate) verified: Option<bool>,
 }
 
 impl CachedCurrentUser {
