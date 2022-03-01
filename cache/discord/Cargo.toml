@@ -14,7 +14,6 @@ rust-version = "1.61.0"
 base = { path = "../../base", features = ["discord-model"] }
 cache_base = { path = "../base" }
 
-sqlx = { version = "0.5.11", default-features = false, features = ["postgres", "runtime-tokio-native-tls"], optional = true }
+sqlx = { version = "0.5.11", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
 
 [features]
-postgres-backend = ["sqlx"]
