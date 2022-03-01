@@ -61,6 +61,8 @@ const INTENTS: Intents = Intents::all();
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
+    logging::init();
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -70,9 +72,7 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    logging::init();
-
-    let result = stdenv::var("token");
+    let result = stdenv::var("BOT_TOKEN");
     let token = if let Ok(token) = result {
         token
     } else {

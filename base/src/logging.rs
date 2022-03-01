@@ -61,6 +61,7 @@ pub fn init() {
         .logger(Logger::builder().build("mio", LevelFilter::Off))
         .logger(Logger::builder().build("polling", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
+        .logger(Logger::builder().build("sqlx", LevelFilter::Off))
         .logger(Logger::builder().build("tide", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_util", LevelFilter::Off))

@@ -2,7 +2,7 @@ INSERT INTO "CachedCurrentUsers" ("id", username, discriminator, avatar, bot, "s
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
 ON CONFLICT ("id") DO UPDATE
     SET username = EXCLUDED.username,
-        discriminator = EXCLUDED.discriminator
+        discriminator = EXCLUDED.discriminator,
         avatar = EXCLUDED.avatar,
         bot = EXCLUDED.bot,
         "system" = EXCLUDED."system",
@@ -11,7 +11,7 @@ ON CONFLICT ("id") DO UPDATE
         accent_colour = EXCLUDED.accent_colour,
         locale = EXCLUDED.locale,
         verified = EXCLUDED.verified,
-        email = EXLUCDED.email,
+        email = EXCLUDED.email,
         flags = EXCLUDED.flags,
         premium_type = EXCLUDED.premium_type,
         public_flags = EXCLUDED.public_flags;

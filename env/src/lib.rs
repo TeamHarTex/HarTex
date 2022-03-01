@@ -74,7 +74,7 @@ pub fn load() -> Result<()> {
             FileScope::Root => {
                 if line.starts_with("if defined") {
                     let split = line.split(' ').collect::<Vec<_>>();
-                    let name = split.get(3);
+                    let name = split.get(2);
                     if name.is_none() {
                         return Err(Error::from(ErrorKind::EnvFileError {
                             description: "missing identifier to check for definition",

@@ -51,6 +51,8 @@ mod ready;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
+    logging::init();
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -59,8 +61,6 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     }
-
-    logging::init();
 
     log::trace!("retrieving port to listen on");
     let result = stdenv::var("EVENT_SERVER_PORT");
