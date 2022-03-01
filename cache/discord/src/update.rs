@@ -19,6 +19,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Entities in the Discord entity cache.
+//! Base trait for event payloads that can update the cache to implement.
 
-pub mod users;
+use std::future::Future;
+use std::pin::Pin;
+
+use cache_base::Backend;
+
+use crate::DiscordCache;
+
+pub trait CacheUpdatable<B: Backend> {
+    fn update(&self, cache: &DiscordCache) -> UpdateCacheFuture<'_, B>;
+}
+
+pub type UpdateCacheFuture<'a, B> =
+    Pin<Box<dyn Future<Output = Result<(), <B as Backend>::Error>> + Send + 'a>>;
+
+#[cfg(postgres)]
+include!("update/postgres.rs");

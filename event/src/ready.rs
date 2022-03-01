@@ -24,6 +24,7 @@
 use std::env as stdenv;
 
 use base::discord::model::gateway::payload::incoming::Ready;
+use cache_discord::DiscordCache;
 use serde_json::json;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result, StatusCode};
@@ -36,7 +37,7 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
     if option.is_none() {
         return Ok(Response::builder(StatusCode::Unauthorized)
             .body_json(&json!({
-                "code": 401,
+                "code": 401i16,
                 "message": "Unauthorized",
             }))
             .unwrap()
@@ -52,7 +53,7 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
         log::error!("env error: {error}");
         return Ok(Response::builder(StatusCode::Unauthorized)
             .body_json(&json!({
-                "code": 401,
+                "code": 401i16,
                 "message": "Unauthorized",
             }))
             .unwrap()
@@ -62,7 +63,7 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
     if !auth_header.contains(&HeaderValue::from_bytes(auth.as_bytes().to_vec()).unwrap()) {
         return Ok(Response::builder(StatusCode::Unauthorized)
             .body_json(&json!({
-                "code": 401,
+                "code": 401i16,
                 "message": "Unauthorized",
             }))
             .unwrap()
@@ -98,9 +99,21 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
         shard_info[0],
     );
 
+    log::trace!("caching current user");
+    if let Err(error) = DiscordCache.update(&ready).await {
+        log::trace!("failed to cache current user: {error:?}");
+        return Ok(Response::builder(500)
+            .body_json(&json!({
+                "code": 500i16,
+                "message": "Internal Server Error",
+            }))
+            .unwrap()
+            .build());
+    }
+
     Ok(Response::builder(StatusCode::Ok)
         .body_json(&json!({
-            "code": 200,
+            "code": 200i16,
             "message": "OK",
         }))
         .unwrap()
