@@ -7,7 +7,7 @@ pub const BACKENDS: [&str; 1] = ["postgres"];
 pub fn main() {
     let result = fs::read_to_string("../../buildconf.toml");
     if let Err(error) = &result {
-        println!("cargo:warning=cannot open build configuration file: `{error}`; the crate will not compile");
+        println!("cargo:warning=cannot open build configuration file: `{error}`; the `cache_discord` crate will not compile");
         return;
     }
 
@@ -17,7 +17,7 @@ pub fn main() {
     let result = toml::from_str::<Value>(&config);
     if let Err(error) = &result {
         println!(
-            "cargo:warning=invalid build configuration file: `{error}`; the crate will not compile"
+            "cargo:warning=invalid build configuration file: `{error}`; the `cache_discord` crate will not compile"
         );
         return;
     }
@@ -27,7 +27,7 @@ pub fn main() {
     if let Value::String(backend) = backend_value {
         if !BACKENDS.contains(&backend.as_str()) {
             println!(
-                "cargo:warning=invalid backend; must be one of: {}",
+                "cargo:warning=invalid backend; must be one of: {}l the `cache_discord` will not compile",
                 BACKENDS.join(", ")
             );
             return;
@@ -35,6 +35,6 @@ pub fn main() {
 
         println!("cargo:rustc-cfg={backend}");
     } else {
-        println!("cargo:warning=invalid value for `backend` value in build configuration");
+        println!("cargo:warning=invalid value for `backend` value in build configuration; the `cache_discord` crate wil not compile");
     }
 }

@@ -30,14 +30,8 @@
 //! implementation.
 
 use std::hash::Hash;
-use std::marker::PhantomData;
 
 pub mod future;
-
-/// A cache.
-pub struct Cache<B: Backend> {
-    phantom: PhantomData<B>,
-}
 
 /// A cache backend.
 pub trait Backend: Send + Sized + Sync + 'static {

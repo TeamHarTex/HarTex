@@ -1,7 +1,28 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+ *
+ * This file is part of HarTex.
+ *
+ * HarTex
+ * Copyright (c) 2021-2022 HarTex Project Developers
+ *
+ * HarTex is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HarTex is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along
+ * with HarTex. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 //! Users in the Discord entity cache.
 
 use base::discord::model::id::{marker::UserMarker, Id};
-use base::discord::model::user::{PremiumType, UserFlags};
+use base::discord::model::user::{CurrentUser, PremiumType, UserFlags};
 use base::discord::model::util::ImageHash;
 use cache_base::Entity;
 
@@ -18,7 +39,7 @@ pub struct CachedCurrentUser {
     pub(crate) flags: Option<UserFlags>,
     pub(crate) id: Id<UserMarker>,
     pub(crate) locale: Option<String>,
-    pub(crate) mfa_enabled: Option<bool>,
+    pub(crate) mfa_enabled: bool,
     pub(crate) username: String,
     pub(crate) premium_type: Option<PremiumType>,
     pub(crate) public_flags: Option<UserFlags>,
@@ -59,7 +80,7 @@ impl CachedCurrentUser {
         self.locale.as_deref()
     }
 
-    pub fn mfa_enabled(&self) -> Option<bool> {
+    pub fn mfa_enabled(&self) -> bool {
         self.mfa_enabled
     }
 
@@ -89,5 +110,27 @@ impl Entity for CachedCurrentUser {
 
     fn id(&self) -> Self::Id {
         self.id
+    }
+}
+
+impl From<CurrentUser> for CachedCurrentUser {
+    fn from(other: CurrentUser) -> Self {
+        Self {
+            accent_colour: other.accent_color,
+            avatar: other.avatar,
+            banner: other.banner,
+            bot: other.bot,
+            discriminator: other.discriminator.to_string(),
+            email: other.email,
+            flags: other.flags,
+            id: other.id,
+            locale: other.locale,
+            mfa_enabled: other.mfa_enabled,
+            username: other.name,
+            premium_type: other.premium_type,
+            public_flags: other.public_flags,
+            system: Some(false),
+            verified: other.verified,
+        }
     }
 }

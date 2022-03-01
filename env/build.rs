@@ -11,7 +11,7 @@ pub fn main() {
             "cargo:warning={}",
             std::env::current_dir().unwrap().display()
         );
-        println!("cargo:warning=cannot open build configuration file: `{error}`; the crate will not compile");
+        println!("cargo:warning=cannot open build configuration file: `{error}`; the `env` crate will not compile");
         return;
     }
 
@@ -21,7 +21,7 @@ pub fn main() {
     let result = toml::from_str::<Value>(&config);
     if let Err(error) = &result {
         println!(
-            "cargo:warning=invalid build configuration file: `{error}`; the crate will not compile"
+            "cargo:warning=invalid build configuration file: `{error}`; the `env` crate will not compile"
         );
         return;
     }
@@ -31,7 +31,7 @@ pub fn main() {
     if let Value::String(backend) = backend_value {
         if !BACKENDS.contains(&backend.as_str()) {
             println!(
-                "cargo:warning=invalid backend; must be one of: {}",
+                "cargo:warning=invalid backend; must be one of: {}; the `env` crate will not compile",
                 BACKENDS.join(", ")
             );
             return;
@@ -42,6 +42,6 @@ pub fn main() {
             backend == "postgres"
         );
     } else {
-        println!("cargo:warning=invalid value for `backend` value in build configuration");
+        println!("cargo:warning=invalid value for `backend` value in build configuration; the `env` crate will not compile");
     }
 }

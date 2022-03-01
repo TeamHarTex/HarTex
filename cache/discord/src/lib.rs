@@ -23,16 +23,24 @@
 //!
 //! The implementation of a cache for storing Discord entities.
 
-use cache_base::Cache;
-
 pub mod entities;
 #[cfg(postgres)]
 pub mod postgres;
 #[cfg_attr(postgres, path = "postgres/repositories.rs")]
 pub mod repositories;
+pub mod update;
 
-#[cfg(postgres)]
-pub type PostgresCache = Cache<postgres::PostgresBackend>;
+pub struct DiscordCache;
+
+impl DiscordCache {
+    #[cfg(postgres)]
+    pub fn update<'a>(
+        &'a self,
+        updatable: &'a impl update::CacheUpdatable<postgres::PostgresBackend>,
+    ) -> update::UpdateCacheFuture<'a, postgres::PostgresBackend> {
+        updatable.update(&DiscordCache)
+    }
+}
 
 #[cfg(not(any(postgres)))]
 compile_error!("cache backend not specified; it is mandatory to specify the backend to use in the build configuration file: `buildconf.toml`");
