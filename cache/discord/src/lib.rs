@@ -34,11 +34,12 @@ pub struct DiscordCache;
 
 impl DiscordCache {
     #[cfg(postgres)]
-    pub fn update<'a>(
+    #[tokio::main]
+    pub async fn update<'a>(
         &'a self,
         updatable: &'a impl update::CacheUpdatable<postgres::PostgresBackend>,
-    ) -> update::UpdateCacheFuture<'a, postgres::PostgresBackend> {
-        updatable.update(&DiscordCache)
+    ) -> Result<(), postgres::error::PostgresBackendError> {
+        updatable.update(&DiscordCache).await
     }
 }
 

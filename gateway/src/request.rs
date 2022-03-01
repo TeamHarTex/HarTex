@@ -36,8 +36,8 @@ pub async fn emit_event(event: Event) -> Result<()> {
             };
 
             log::trace!("serializing ready payload");
-            let result = serde_json::to_string(&ready);
-            if let Err(src) = result {
+            let serde_result = serde_json::to_string(&ready);
+            if let Err(src) = serde_result {
                 log::error!("request error: could not serialize body: {src}");
                 return Err(Error::from(ErrorKind::JsonError { src }));
             }
@@ -56,7 +56,7 @@ pub async fn emit_event(event: Event) -> Result<()> {
                 .header(AUTHORIZATION, auth)
                 .method(Method::POST)
                 .uri(format!("http://127.0.0.1:{port}/ready"))
-                .body(Body::from(result.unwrap()));
+                .body(Body::from(serde_result.unwrap()));
             if let Err(src) = result {
                 log::error!("request error: could not build request: {src}");
                 return Err(Error::from(ErrorKind::HttpError { src }));
