@@ -26,10 +26,10 @@
 use cache_base::Cache;
 
 pub mod entities;
-#[cfg(feature = "postgres-backend")]
+#[cfg(postgres_backend)]
 pub mod postgres;
-#[cfg_attr(feature = "postgres-backend", path = "postgres/repositories.rs")]
+#[cfg_attr(postgres_backend, path = "postgres/repositories.rs")]
 pub mod repositories;
 
-#[cfg(feature = "postgres-backend")]
+#[cfg(postgres_backend)]
 pub type PostgresCache = Cache<postgres::PostgresBackend>;
