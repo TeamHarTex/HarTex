@@ -52,6 +52,7 @@ mod ready;
 #[tokio::main]
 pub async fn main() -> Result<()> {
     logging::init();
+    cache_discord::init_tokio_rt();
 
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
