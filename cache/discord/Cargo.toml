@@ -16,4 +16,7 @@ cache_base = { path = "../base" }
 
 sqlx = { version = "0.5.11", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
 
+[build-dependencies]
+toml = "0.5.8"
+
 [features]

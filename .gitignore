@@ -16,5 +16,8 @@ target
 **/Cargo.lock
 old/Cargo.lock
 
+# local build configuration
+buildconf.toml
+
 # environment variables
-Env.vars
+env.vars

@@ -12,6 +12,7 @@ rust-version = "1.61.0"
 
 [dependencies]
 base = { path = "../base", features = ["discord-model", "logging"] }
+cache_discord = { path = "../cache/discord" }
 env = { path = "../env" }
 
 log = "0.4.14"
