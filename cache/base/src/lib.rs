@@ -49,6 +49,9 @@ pub trait Entity: Send + Sync {
 
 /// A repository of a specific entity in the cache.
 pub trait Repository<B: Backend, T: Entity> {
+    /// Retrieve an entity from the repository, by its ID.
+    fn get(&self, entity_id: T::Id) -> future::GetEntityFuture<'_, T, B::Error>;
+
     /// Upsert an entity into the repository.
     fn upsert(&self, entity: T) -> future::UpsertEntityFuture<'_, B::Error>;
 }

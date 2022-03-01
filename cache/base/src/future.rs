@@ -22,5 +22,8 @@
 use std::future::Future;
 use std::pin::Pin;
 
+/// Future for retrieving an entity from a repository.
+pub type GetEntityFuture<'a, T, E> = Pin<Box<dyn Future<Output = Result<T, E>> + Send + 'a>>;
+
 /// Future for upserting an entity into a repository.
 pub type UpsertEntityFuture<'a, E> = Pin<Box<dyn Future<Output = Result<(), E>> + Send + 'a>>;

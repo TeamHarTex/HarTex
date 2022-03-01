@@ -36,9 +36,7 @@ pub mod postgres;
 pub mod repositories;
 pub mod update;
 
-pub(in crate) static TOKIO_RT: SyncLazy<Runtime> = SyncLazy::new(|| {
-    Runtime::new().unwrap()
-});
+pub(in crate) static TOKIO_RT: SyncLazy<Runtime> = SyncLazy::new(|| Runtime::new().unwrap());
 
 pub struct DiscordCache;
 
@@ -48,9 +46,7 @@ impl DiscordCache {
         &'a self,
         updatable: &'a impl update::CacheUpdatable<postgres::PostgresBackend>,
     ) -> Result<(), postgres::error::PostgresBackendError> {
-        TOKIO_RT.block_on(async {
-            updatable.update(&DiscordCache).await
-        })
+        TOKIO_RT.block_on(async { updatable.update(&DiscordCache).await })
     }
 }
 

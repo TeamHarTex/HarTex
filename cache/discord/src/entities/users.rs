@@ -134,3 +134,6 @@ impl From<CurrentUser> for CachedCurrentUser {
         }
     }
 }
+
+#[cfg(postgres)]
+include!("postgres_backend_include/users.rs");
