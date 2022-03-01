@@ -5,8 +5,12 @@ use toml::Value;
 pub const BACKENDS: [&str; 1] = ["postgres"];
 
 pub fn main() {
-    let result = fs::read_to_string("../../buildconf.toml");
+    let result = fs::read_to_string("../buildconf.toml");
     if let Err(error) = &result {
+        println!(
+            "cargo:warning={}",
+            std::env::current_dir().unwrap().display()
+        );
         println!("cargo:warning=cannot open build configuration file: `{error}`; the crate will not compile");
         return;
     }
@@ -33,7 +37,10 @@ pub fn main() {
             return;
         }
 
-        println!("cargo:rustc-cfg={backend}");
+        println!(
+            "cargo:rustc-env=ENABLE_PGSQL_CACHE_BACKEND={}",
+            backend == "postgres"
+        );
     } else {
         println!("cargo:warning=invalid value for `backend` value in build configuration");
     }

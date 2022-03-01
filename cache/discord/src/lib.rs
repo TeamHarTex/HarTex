@@ -26,10 +26,13 @@
 use cache_base::Cache;
 
 pub mod entities;
-#[cfg(postgres_backend)]
+#[cfg(postgres)]
 pub mod postgres;
-#[cfg_attr(postgres_backend, path = "postgres/repositories.rs")]
+#[cfg_attr(postgres, path = "postgres/repositories.rs")]
 pub mod repositories;
 
-#[cfg(postgres_backend)]
+#[cfg(postgres)]
 pub type PostgresCache = Cache<postgres::PostgresBackend>;
+
+#[cfg(not(any(postgres)))]
+compile_error!("cache backend not specified; it is mandatory to specify the backend to use in the build configuration file: `buildconf.toml`");
