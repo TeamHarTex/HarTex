@@ -19,21 +19,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Handle a `READY` event from the gateway.
+//! Handle a `GUILD_CREATE` event from the gateway.
 
 use std::env as stdenv;
 
-use base::discord::model::gateway::payload::incoming::Ready;
-use cache_discord::DiscordCache;
+use base::discord::model::gateway::payload::incoming::GuildCreate;
 use serde_json::json;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result, StatusCode};
 
 /// Request handler for a `READY` event.
 ///
-/// The `READY` event is received through the `/ready` endpoint.
-pub async fn ready(mut request: Request<()>) -> Result<Response> {
-    log::trace!("received ready event payload from gateway, validating request...");
+/// The `GUILD_CREATE` event is received through the `/guild-create` endpoint.
+pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
+    log::trace!("received guild create event payload from gateway, validating request...");
     let option = request.header("Authorization");
     if option.is_none() {
         log::error!("`Authorization` header was not found, responding with HTTP 401");
@@ -75,10 +74,10 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
             .build());
     }
 
-    log::trace!("deserializing ready payload");
-    let result = request.body_json::<Ready>().await;
+    log::trace!("deserializing guild create payload");
+    let result = request.body_json::<GuildCreate>().await;
     if let Err(error) = result {
-        log::error!("failed to deserialize ready payload; see http error below");
+        log::error!("failed to deserialize guild create payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
         return Ok(Response::builder(error.status())
             .body_json(&json!({
@@ -89,32 +88,7 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
             .build());
     }
 
-    let ready = result.unwrap();
-    let shard_info = ready.shard.unwrap();
-    log::trace!(
-        "shard {} received ready event from the gateway",
-        shard_info[0],
-    );
-    log::info!(
-        "{}#{} [uid {}] is connected to the discord gateway and is ready; the shard uses gateway version {} (shard {})",
-        ready.user.name,
-        ready.user.discriminator,
-        ready.user.id,
-        ready.version,
-        shard_info[0],
-    );
-
-    log::trace!("caching current user");
-    if let Err(error) = DiscordCache.update(&ready) {
-        log::trace!("failed to cache current user: {error:?}; responding with HTTP 500");
-        return Ok(Response::builder(500)
-            .body_json(&json!({
-                "code": 500i16,
-                "message": "Internal Server Error",
-            }))
-            .unwrap()
-            .build());
-    }
+    let _ = result.unwrap();
 
     log::trace!("processing completed, responding with HTTP 200");
 
