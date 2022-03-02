@@ -7,4 +7,5 @@ members = [
     "event",
     "ext",
     "gateway",
+    "model",
 ]
