@@ -88,7 +88,12 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
             .build());
     }
 
-    let _ = result.unwrap();
+    let guild_create = result.unwrap();
+    log::info!(
+        "joined a new guild `{}` with id {}; checking its whitelist status",
+        &guild_create.name,
+        guild_create.id
+    );
 
     log::trace!("processing completed, responding with HTTP 200");
 
