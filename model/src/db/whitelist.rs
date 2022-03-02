@@ -22,9 +22,9 @@
 //! Guild whitelist models.
 
 use base::discord::model::id::{marker::UserMarker, Id};
+use sqlx::types::time::OffsetDateTime;
 use sqlx::postgres::PgRow;
 use sqlx::{Error, FromRow, Row};
-use time::OffsetDateTime;
 
 /// A whitelisted guild in the database.
 pub struct WhitelistedGuild {
