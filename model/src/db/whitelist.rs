@@ -65,7 +65,7 @@ impl<'r> FromRow<'r, PgRow> for WhitelistedGuild {
             id,
             name,
             owner_id,
-            whitelisted_since
+            whitelisted_since,
         })
     }
 }
