@@ -14,7 +14,7 @@ env:
 
 jobs:
   Build:
-    name: Linux (Full Build)
+    name: Full Build
     runs-on: ubuntu-latest
 
     steps:
@@ -33,9 +33,9 @@ jobs:
           ENABLE_PGSQL_CACHE_BACKEND: false
 
   Test:
-    name: Linux (Test)
+    name: Test
     needs:
-      - Linux
+      - Build
     runs-on: ubuntu-latest
 
     steps:
