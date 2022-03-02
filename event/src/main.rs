@@ -47,6 +47,7 @@ use std::env as stdenv;
 use base::error::Result;
 use base::logging;
 
+mod guild_create;
 mod ready;
 
 #[tokio::main]
@@ -84,6 +85,7 @@ pub async fn main() -> Result<()> {
     log::trace!("creating http server");
     let mut server = tide::new();
     server.at("/ready").post(ready::ready);
+    server.at("/guild-create").post(guild_create::guild_create);
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
