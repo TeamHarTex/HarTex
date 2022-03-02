@@ -50,7 +50,7 @@ impl Repository<PostgresBackend, CachedCurrentUser> for CurrentUserRepository {
                 .bind(entity_id.to_string())
                 .fetch_one(&pool)
                 .await
-                .map_err(|src| PostgresBackendError::from(src))
+                .map_err(PostgresBackendError::from)
         })
     }
 
