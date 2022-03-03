@@ -128,7 +128,7 @@ pub enum ErrorKind {
     /// An error occurred during database operations.
     SqlxError {
         /// The source of the error.
-        src: SqlxError
+        src: SqlxError,
     },
 }
 

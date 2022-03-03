@@ -39,6 +39,7 @@ pub struct GetGuildWhitelistStatus {
 }
 
 impl GetGuildWhitelistStatus {
+    #[must_use]
     pub fn new(guild_id: Id<GuildMarker>) -> Self {
         Self {
             future: None,
