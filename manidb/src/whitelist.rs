@@ -29,6 +29,7 @@ use std::task::{Context, Poll};
 use base::discord::model::id::{marker::GuildMarker, Id};
 use base::error::{Error, Result};
 use model::db::whitelist::WhitelistedGuild;
+use sqlx::{Error as SqlxError, PgPool, Postgres};
 
 use crate::Pending;
 
@@ -67,14 +68,26 @@ impl Future for GetGuildWhitelistStatus {
 }
 
 async fn exec(guild_id: Id<GuildMarker>) -> Result<Option<WhitelistedGuild>> {
-    let db_credentials = env::var("PGSQL_WHITELIST_DB_CREDENTIALS").map_err(|src| {
+    let pgsql_creds = env::var("PGSQL_WHITELIST_DB_CREDENTIALS").map_err(|src| {
         log::error!(
             "could not retrieve `PGSQL_WHITELIST_DB_CREDENTIALS` environment variable: {src}"
         );
-        return Error::from(src);
+        Error::from(src)
     })?;
+    let pool = PgPool::connect(&pgsql_creds).await.map_err(|src| {
+        log::error!("could not connect to whitelist database: {src}");
+        Error::from(src)
+    })?;
+    let query = include_str!("../include/get_guild_whitelist_status.sql");
 
-    log::trace!("connecting to database");
+    let result = sqlx::query_as::<Postgres, WhitelistedGuild>(query)
+        .bind(guild_id.to_string())
+        .fetch_one(&pool)
+        .await;
+
+    if let Err(error) = &result && matches!(error, SqlxError::RowNotFound) {
+        return Ok(None);
+    }
 
     todo!()
 }

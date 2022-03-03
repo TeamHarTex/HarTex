@@ -33,6 +33,7 @@ use std::result::Result as StdResult;
 use http::Error as HttpError;
 use hyper::Error as HyperError;
 use serde_json::Error as JsonError;
+use sqlx::Error as SqlxError;
 
 /// An error returned during some computation or operation in HarTex.
 #[derive(Debug)]
@@ -54,6 +55,7 @@ impl Display for Error {
             ErrorKind::HyperError { src } => write!(f, "hyper error: {src}")?,
             ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
             ErrorKind::JsonError { src } => write!(f, "json error: {src}")?,
+            ErrorKind::SqlxError { src } => write!(f, "sqlx error: {src}")?,
         }
 
         Ok(())
@@ -69,6 +71,12 @@ impl From<ErrorKind> for Error {
 impl From<IoError> for Error {
     fn from(src: IoError) -> Self {
         Self::from(ErrorKind::IoError { src })
+    }
+}
+
+impl From<SqlxError> for Error {
+    fn from(src: SqlxError) -> Self {
+        Self::from(ErrorKind::SqlxError { src })
     }
 }
 
@@ -116,6 +124,11 @@ pub enum ErrorKind {
     JsonError {
         /// The source of the error.
         src: JsonError,
+    },
+    /// An error occurred during database operations.
+    SqlxError {
+        /// The source of the error.
+        src: SqlxError
     },
 }
 
