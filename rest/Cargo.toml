@@ -12,3 +12,5 @@ rust-version = "1.61.0"
 
 [dependencies]
 base = { path = "../base" }
+
+tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread"] }

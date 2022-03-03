@@ -23,4 +23,5 @@
 //!
 //! The REST process binary acts as a proxy over the Discord API.
 
-pub fn main() {}
+#[tokio::main]
+pub async fn main() {}
