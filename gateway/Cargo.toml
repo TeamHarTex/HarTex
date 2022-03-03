@@ -15,6 +15,7 @@ base = { path = "../base", features = ["discord-gateway", "discord-model", "logg
 env = { path = "../env" }
 ext = { path = "../ext", features = ["discord-model"] }
 
+ctrlc = "3.2.1"
 futures-util = "0.3.21"
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
 log = "0.4.14"
