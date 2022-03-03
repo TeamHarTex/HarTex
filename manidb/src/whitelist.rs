@@ -90,5 +90,8 @@ async fn exec(guild_id: Id<GuildMarker>) -> Result<Option<WhitelistedGuild>> {
         return Ok(None);
     }
 
-    todo!()
+    Ok(Some(result.map_err(|src| {
+        log::error!("could not execute query: {src}");
+        Error::from(src)
+    })?))
 }

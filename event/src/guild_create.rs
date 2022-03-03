@@ -24,6 +24,7 @@
 use std::env as stdenv;
 
 use base::discord::model::gateway::payload::incoming::GuildCreate;
+use manidb::whitelist::GetGuildWhitelistStatus;
 use serde_json::json;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result, StatusCode};
@@ -94,6 +95,28 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
         &guild_create.name,
         guild_create.id
     );
+
+    let result = GetGuildWhitelistStatus::new(guild_create.id).await;
+    if result.is_err() {
+        log::trace!("internal error occurred, responding with HTTP 500");
+        return Ok(Response::builder(StatusCode::InternalServerError)
+            .body_json(&json!({
+                "code": 500i16,
+                "message": "Internal Server Error",
+            }))
+            .unwrap()
+            .build());
+    }
+
+    if let Some(whitelist_status) = result.unwrap() {
+        log::info!(
+            "guild of id {} is whitelisted; and has been whitelisted since {}",
+            whitelist_status.id(),
+            whitelist_status.whitelisted_since()
+        );
+    } else {
+        log::error!("guild of id is not whitelisted {}", guild_create.id);
+    }
 
     log::trace!("processing completed, responding with HTTP 200");
 
