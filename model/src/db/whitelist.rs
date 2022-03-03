@@ -21,14 +21,17 @@
 
 //! Guild whitelist models.
 
-use base::discord::model::id::{marker::UserMarker, Id};
+use base::discord::model::id::{
+    marker::{GuildMarker, UserMarker},
+    Id,
+};
 use sqlx::postgres::PgRow;
 use sqlx::types::time::OffsetDateTime;
 use sqlx::{Error, FromRow, Row};
 
 /// A whitelisted guild in the database.
 pub struct WhitelistedGuild {
-    pub(in crate) id: Id<UserMarker>,
+    pub(in crate) id: Id<GuildMarker>,
     pub(in crate) name: String,
     pub(in crate) owner_id: Id<UserMarker>,
     pub(in crate) whitelisted_since: OffsetDateTime,
@@ -36,7 +39,7 @@ pub struct WhitelistedGuild {
 
 impl WhitelistedGuild {
     #[must_use]
-    pub fn id(&self) -> Id<UserMarker> {
+    pub fn id(&self) -> Id<GuildMarker> {
         self.id
     }
 
