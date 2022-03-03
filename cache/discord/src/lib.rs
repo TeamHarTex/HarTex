@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,22 +19,38 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # `hartex_cache_discord` -  Discord cache
+//! # The HarTex Discord Cache
 //!
-//! This crate implements caching for Discord objects.
+//! The implementation of a cache for storing Discord entities.
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 
-mod backend;
-mod cache;
 pub mod entities;
-#[cfg(feature = "in-memory-backend")]
-pub mod inmemory;
+#[cfg(postgres)]
+pub mod postgres;
+#[cfg_attr(postgres, path = "postgres/repositories.rs")]
 pub mod repositories;
+pub mod update;
 
-use cache::DiscordCache;
+pub struct DiscordCache;
 
-#[cfg(feature = "in-memory-backend")]
-/// A Discord cache using the in-memory cache backend.
-pub type Cache = DiscordCache<inmemory::InMemoryBackend>;
+impl DiscordCache {
+    #[cfg(postgres)]
+    /// Updates the cache with the event.
+    ///
+    /// ## Errors
+    ///
+    /// Returns errors generated from PostgreSQL backend operations.
+    ///
+    /// See documentation for [`PostgresBackendError`] for more details.
+    pub async fn update<'a>(
+        &'a self,
+        updatable: &'a impl update::CacheUpdatable<postgres::PostgresBackend>,
+    ) -> Result<(), postgres::error::PostgresBackendError> {
+        updatable.update(&DiscordCache).await
+    }
+}
+
+#[cfg(not(any(postgres)))]
+compile_error!("cache backend not specified; it is mandatory to specify the backend to use in the build configuration file: `buildconf.toml`");

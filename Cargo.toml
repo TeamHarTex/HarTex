@@ -1,21 +1,12 @@
 [workspace]
 members = [
-    "hartex",
+    "base",
     "cache/base",
     "cache/discord",
-    "cmdsys",
-    "conftoml",
-    "base",
-    "dbmani",
-    "driver",
     "env",
-    "eventsys",
-    "localization/impl",
-    "localization/locale",
+    "event",
+    "ext",
+    "gateway",
+    "manidb",
     "model",
-    "plugins",
-    "utils"
 ]
-
-[profile.release]
-opt-level = "s"

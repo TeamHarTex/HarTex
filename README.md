@@ -19,12 +19,18 @@ This project is built with the amazing JetBrains products. [Check them out!](htt
 
 ## Project Information
 
+### Community Guild
+
+[There is an official Discord community guild for this project!](https://discord.gg/Xu8453VBAv)
+
+You may follow the latest developments as well as ask for support in the guild.
+
 ### Minimum Supported Rust Version (MSRV)
 
-This project has an MSRV of `1.60.0`. What this means is that, a Rust compiler of version
-`1.60.0` or above is required to build and run the entire project.
+This project has an MSRV of `1.61.0`. What this means is that, a Rust compiler of version
+`1.61.0` or above is required to build and run the entire project.
 
-`1.60.0` is typically the latest nightly version of the compiler - we use the nightly release
+`1.61.0` is typically the latest nightly version of the compiler - we use the nightly release
 channel because there are certain features we need are gated behind a feature flag which is
 only usable when using the nightly compiler.
 
@@ -33,77 +39,43 @@ only usable when using the nightly compiler.
 This project is organized with a Cargo workspace which includes all the crates in the root
 directory of the repository.
 
-Individual crates have their own detailed description and README (except the `hartex` binary
-crate, which such description is included in this main README). Additionally, brief and simple
-descriptions of each crate will be provided in this root README.
+#### `base`
 
-#### `hartex`
+The base library for the bot. Contains the most minimal features for the codebase to make use of
 
-This is the main binary of the bot. This crate contains the code that briefly sets up the
-runtime environment, including:
-- loading the environment variables from a `.env` file for later manipulation;
-- initializing the `tokio` runtime for asynchronous and multithreaded execution
+#### `cache_base`
 
-After that, the "actual" main entry point in the `hartex_driver` crate is executed, which
-handles the rest.
+Base framework for caching. Custom backends are supported by implementing the `Backend` trait in
+the library.
 
-#### `hartex_base`
+#### `cache_discord`
 
-This is the base crate for the bot, which contains minimum and abstract functionality for the
-bot.
+The cache for Discord objects.
 
-#### `hartex_cache_base`
+#### `env`
 
-This is the base framework for the caching implementation of the bot.
+Convenience wrappers for interacting with the process environment. Environment variables, for example.
 
-#### `hartex_cache_discord`
+#### `event`
 
-This is a Discord object cache for the bot, built upon `hartex_cache_base`.
+The standalone event handler and processor.
 
-#### `hartex_cmdsys`
+#### `ext`
 
-This is an implementation of a command system for the bot.
+Useful extensions to various libraries used by the bot.
 
-#### `hartex_conftoml`
+#### `gateway`
 
-This crate implements the TOML Configuration API of the bot.
+The standalone process that connects to the Discord gateway; sends requests to the event handler processor
+when events are received from the Discord gateway.
 
-#### `hartex_dbmani`
+#### `manidb`
 
-This crate contains various database manipulation functions for the bot.
+Database manipulation procedures for the codebase. These are used to interact with the databases used by
+the bot.
 
-#### `hartex_driver`
+#### `model`
 
-This crate is the actual "main entry point" of the bot.
-
-#### `hartex_env`
-
-This crate is a wrapper over the various environment variables that the bot makes use of.
-
-#### `hartex_locale`
-
-This crate contains a base framework, and provides various definitions for locales.
-
-#### `hartex_localization_impl`
-
-This crate contains an implementation of localization for the bot, built upon `hartex_locale`.
-
-#### `hartex_model`
-
-This crate contains various models for the bot.
-
-#### `hartex_plugins`
-
-This crate implements the various modules of the bot (commands, background tasks, etc.).
-
-#### `hartex_utils`
-
-This crate provides utilities for the bot codebase.
-
-### Community Guild
-
-[There is an official Discord community guild for this project!](https://discord.gg/Xu8453VBAv)
-
-You may follow the latest developments as well as ask for support in the guild.
+Common and useful models used throughout the codebase.
 
 Made with :heart:, using [The Rust Programming Language](https://www.rust-lang.org/)

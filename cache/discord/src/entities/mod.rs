@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,9 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Various entities in the Discord cache.
+//! Entities in the Discord entity cache.
 
-pub mod channel;
-pub mod gateway;
-pub mod guild;
-pub mod user;
+pub mod users;

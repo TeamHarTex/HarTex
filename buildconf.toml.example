@@ -1,0 +1,11 @@
+# Sample TOML configuration for building HarTex.
+
+# ===============================================
+# CACHE CONFIGURATION
+# ===============================================
+[cache]
+
+# Configures the backend to use for the cache.
+#
+# Only "postgres" is supported at the moment.
+#backend = "postgres"

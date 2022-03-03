@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,9 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Models for use in `HarTex` Discord bot for its various functionalities.
+//! # Convenience Models for HarTex
+//!
+//! The `model` crate provides various convenience models used throughout the codebase.
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 
-pub mod payload;
+pub mod db;
