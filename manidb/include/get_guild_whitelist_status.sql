@@ -1,1 +1,1 @@
-SELECT * FROM "WhitelistedGuilds" WHERE "id" = $1
+SELECT * FROM "WhitelistedGuilds" WHERE "id" = $1; --

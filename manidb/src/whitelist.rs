@@ -59,11 +59,11 @@ impl Future for GetGuildWhitelistStatus {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         loop {
-            self.launch();
-
             if let Some(future) = self.future.as_mut() {
                 return future.as_mut().poll(cx);
             }
+
+            self.launch();
         }
     }
 }
