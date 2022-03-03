@@ -7,5 +7,6 @@ members = [
     "event",
     "ext",
     "gateway",
+    "manidb",
     "model",
 ]

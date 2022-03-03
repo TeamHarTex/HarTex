@@ -1,0 +1,17 @@
+[package]
+name = "manidb"
+version = "0.1.0"
+edition = "2021"
+description = """
+Database manipulation procedures for the bot.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.61.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base = { path = "../base", default-features = false, features = ["discord-model"] }
+model = { path = "../model" }
+
+log = "0.4.14"
