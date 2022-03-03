@@ -23,12 +23,6 @@
 //!
 //! The implementation of a cache for storing Discord entities.
 
-#![feature(once_cell)]
-
-use std::lazy::SyncLazy;
-
-use tokio::runtime::Runtime;
-
 pub mod entities;
 #[cfg(postgres)]
 pub mod postgres;
@@ -36,22 +30,16 @@ pub mod postgres;
 pub mod repositories;
 pub mod update;
 
-pub(in crate) static TOKIO_RT: SyncLazy<Runtime> = SyncLazy::new(|| Runtime::new().unwrap());
-
 pub struct DiscordCache;
 
 impl DiscordCache {
     #[cfg(postgres)]
-    pub fn update<'a>(
+    pub async fn update<'a>(
         &'a self,
         updatable: &'a impl update::CacheUpdatable<postgres::PostgresBackend>,
     ) -> Result<(), postgres::error::PostgresBackendError> {
-        TOKIO_RT.block_on(async { updatable.update(&DiscordCache).await })
+        updatable.update(&DiscordCache).await
     }
-}
-
-pub fn init_tokio_rt() {
-    SyncLazy::force(&TOKIO_RT);
 }
 
 #[cfg(not(any(postgres)))]

@@ -105,7 +105,7 @@ pub async fn ready(mut request: Request<()>) -> Result<Response> {
     );
 
     log::trace!("caching current user");
-    if let Err(error) = DiscordCache.update(&ready) {
+    if let Err(error) = DiscordCache.update(&ready).await {
         log::trace!("failed to cache current user: {error:?}; responding with HTTP 500");
         return Ok(Response::builder(500)
             .body_json(&json!({

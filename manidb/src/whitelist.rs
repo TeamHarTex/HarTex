@@ -21,12 +21,13 @@
 
 //! Guild whitelist manipulation procedures.
 
+use std::env;
 use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use base::discord::model::id::{marker::GuildMarker, Id};
-use base::error::Result;
+use base::error::{Error, Result};
 use model::db::whitelist::WhitelistedGuild;
 
 use crate::Pending;
@@ -66,5 +67,14 @@ impl Future for GetGuildWhitelistStatus {
 }
 
 async fn exec(guild_id: Id<GuildMarker>) -> Result<Option<WhitelistedGuild>> {
+    let db_credentials = env::var("PGSQL_WHITELIST_DB_CREDENTIALS").map_err(|src| {
+        log::error!(
+            "could not retrieve `PGSQL_WHITELIST_DB_CREDENTIALS` environment variable: {src}"
+        );
+        return Error::from(src);
+    })?;
+
+    log::trace!("connecting to database");
+
     todo!()
 }
