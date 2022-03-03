@@ -21,7 +21,7 @@
 
 //! # The HarTex Gateway Process Binary
 //!
-//! The HarTex Gateway Process Binary connects to the Discord gateway,
+//! The HarTex Gateway Process Binary connects to the Discord gateway.
 //!
 //! There are various environment variables that needs to be set to send requests to the event HTTP
 //! server correctly. The list of environment variables are listed below.
