@@ -15,7 +15,6 @@ base = { path = "../../base", features = ["discord-model"] }
 cache_base = { path = "../base" }
 
 sqlx = { version = "0.5.11", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
-tokio = { version = "1.17.0", features = ["rt", "rt-multi-thread"] }
 
 [build-dependencies]
 toml = "0.5.8"
