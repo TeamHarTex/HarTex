@@ -1,14 +1,17 @@
 [package]
-name = "hartex_env"
-version = "1.27.0"
+name = "env"
+version = "0.1.0"
 edition = "2021"
 description = """
-The `harttex-env` library various environments for different aspects of the HarTex Discord bot.
+The environment variables for the bot.
 """
 license = "AGPL-3.0-only"
-rust-version = "1.60.0"
+rust-version = "1.61.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_base = { path = "../base", features = [ "tracing-bundled" ] }
+base = { path = "../base" }
+
+[build-dependencies]
+toml = "0.5.8"

@@ -13,8 +13,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  Linux:
-    name: Linux (Full Build)
+  Build:
+    name: Full Build
     runs-on: ubuntu-latest
 
     steps:
@@ -25,52 +25,17 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
+      - name: Obtain Default Build Configuration
+        run: curl https://gist.githubusercontent.com/HTG-YT/9f0786e09b7fb7be1e8ea6b50dbeaee2/raw/a3b5c67d3fddc8a3e3be6861995b3ad098d04d83/buildconf.toml > buildconf.toml
       - name: Build
         run: cargo build --release
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
-  macOS:
-    name: macOS (Full Build)
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install latest nightly Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-          profile: default
-      - name: Build
-        run: cargo build --release
-        env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
-
-  Windows:
-    name: Windows (Full Build)
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install latest nightly Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-          profile: default
-      - name: Build
-        run: cargo build --release
-        env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
-
-  LinuxTest:
-    name: Linux (Test)
+  Test:
+    name: Test
     needs:
-      - Linux
+      - Build
     runs-on: ubuntu-latest
 
     steps:
@@ -81,48 +46,9 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
+      - name: Obtain Default Build Configuration
+        run: curl https://gist.githubusercontent.com/HTG-YT/9f0786e09b7fb7be1e8ea6b50dbeaee2/raw/a3b5c67d3fddc8a3e3be6861995b3ad098d04d83/buildconf.toml > buildconf.toml
       - name: Test
         run: cargo test
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
-
-  macOSTest:
-    name: macOS (Test)
-    needs:
-      - macOS
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install latest nightly Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-          profile: default
-      - name: Test
-        run: cargo test
-        env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
-
-  WindowsTest:
-    name: Windows (Test)
-    needs:
-      - Windows
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install latest nightly Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-          profile: default
-      - name: Test
-        run: cargo test
-        env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_CACHE_BACKEND: false

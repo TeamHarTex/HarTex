@@ -1,0 +1,1 @@
+SELECT * FROM "WhitelistedGuilds" WHERE "id" = $1; --

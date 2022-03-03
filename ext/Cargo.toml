@@ -1,0 +1,17 @@
+[package]
+name = "ext"
+version = "0.1.0"
+edition = "2021"
+description = """
+Extensions to various libraries for the bot.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.61.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base = { path = "../base" }
+
+[features]
+discord-model = ["base/discord-model"]

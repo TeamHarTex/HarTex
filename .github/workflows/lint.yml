@@ -25,11 +25,12 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
+      - name: Obtain Default Build Configuration
+        run: curl https://gist.githubusercontent.com/HTG-YT/9f0786e09b7fb7be1e8ea6b50dbeaee2/raw/a3b5c67d3fddc8a3e3be6861995b3ad098d04d83/buildconf.toml > buildconf.toml
       - name: Run cargo clippy
         run: cargo clippy --workspace
         env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   Rustfmt:
     name: Rustfmt
@@ -44,7 +45,7 @@ jobs:
           override: true
           profile: default
       - name: Run cargo fmt
-        run: cd hartex && cargo fmt --all -- --check
+        run: cargo fmt --all -- --check
         env:
           CFG_IS_STABLE: "false"
           CFG_VERSION_STR: "dummy version str"
