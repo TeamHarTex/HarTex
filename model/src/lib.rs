@@ -23,4 +23,7 @@
 //!
 //! The `model` crate provides various convenience models used throughout the codebase.
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 pub mod db;

@@ -16,6 +16,7 @@ hyper = { version = "0.14.17", default-features = false }
 log = { version = "0.4.14", optional = true }
 log4rs = { version = "1.0.0", default-features = false, features = ["console_appender"], optional = true }
 serde_json = "1.0.78"
+sqlx = "0.5.11"
 twilight-gateway = { version = "0.9.1", optional = true }
 twilight-model = { version = "0.9.1", optional = true }
 
