@@ -35,18 +35,22 @@ pub struct WhitelistedGuild {
 }
 
 impl WhitelistedGuild {
+    #[must_use]
     pub fn id(&self) -> Id<UserMarker> {
         self.id
     }
 
+    #[must_use]
     pub fn name(&self) -> &str {
         self.name.as_ref()
     }
 
+    #[must_use]
     pub fn owner_id(&self) -> Id<UserMarker> {
         self.owner_id
     }
 
+    #[must_use]
     pub fn whitelisted_since(&self) -> OffsetDateTime {
         self.whitelisted_since
     }

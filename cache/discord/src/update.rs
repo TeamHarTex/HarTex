@@ -32,6 +32,7 @@ pub trait CacheUpdatable<B: Backend> {
     fn update(&self, cache: &DiscordCache) -> UpdateCacheFuture<'_, B>;
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub type UpdateCacheFuture<'a, B> =
     Pin<Box<dyn Future<Output = Result<(), <B as Backend>::Error>> + Send + 'a>>;
 

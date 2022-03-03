@@ -21,4 +21,5 @@
 doc-valid-idents = [
     "GitHub",
     "HarTex",
+    "PostgreSQL",
 ]

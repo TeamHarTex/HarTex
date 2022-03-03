@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(clippy::module_name_repetitions)]
+
 use std::future::Future;
 use std::pin::Pin;
 

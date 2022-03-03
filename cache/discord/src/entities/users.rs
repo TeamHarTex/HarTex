@@ -48,58 +48,72 @@ pub struct CachedCurrentUser {
 }
 
 impl CachedCurrentUser {
+    #[must_use]
     pub fn accent_colour(&self) -> Option<u64> {
         self.accent_colour
     }
 
+    #[must_use]
     pub fn avatar(&self) -> Option<ImageHash> {
         self.avatar
     }
 
+    #[must_use]
     pub fn banner(&self) -> Option<ImageHash> {
         self.banner
     }
 
+    #[must_use]
     pub fn bot(&self) -> bool {
         self.bot
     }
 
+    #[must_use]
     pub fn discriminator(&self) -> &str {
         &self.discriminator
     }
 
+    #[must_use]
     pub fn email(&self) -> Option<&str> {
         self.email.as_deref()
     }
 
+    #[must_use]
     pub fn flags(&self) -> Option<UserFlags> {
         self.flags
     }
 
+    #[must_use]
     pub fn locale(&self) -> Option<&str> {
         self.locale.as_deref()
     }
 
+    #[must_use]
     pub fn mfa_enabled(&self) -> bool {
         self.mfa_enabled
     }
 
+    #[must_use]
     pub fn username(&self) -> &str {
         &self.username
     }
 
+    #[must_use]
     pub fn premium_type(&self) -> Option<PremiumType> {
         self.premium_type
     }
 
+    #[must_use]
     pub fn public_flags(&self) -> Option<UserFlags> {
         self.public_flags
     }
 
+    #[must_use]
     pub fn system(&self) -> Option<bool> {
         self.system
     }
 
+    #[must_use]
     pub fn verified(&self) -> Option<bool> {
         self.verified
     }
