@@ -3,7 +3,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021 HarTex Project Developers
+ * Copyright (c) 2021-2022 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,107 +19,94 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Environments for different aspects of the `HarTex` Discord bot.
+//! # The HarTex Environment Manipulation Library
+//!
+//! The HarTex Environment Manipulation Library is a utility library for interacting with the
+//! system environment (for instance, loading and retrieving environment variables).
+//!
+//! This library provides a helper function to load environment variables from an `Env.vars` file,
+//! which is a custom file format specifically designed for HarTex. Its syntax to some extent
+//! mimics a C header file, and it seemed quite fitting for the implementation and usage for
+//! HarTex.
+//!
+//! After loading the environment variables, the helper function then continues to set the
+//! configured variables for the environment of the current running process, where they only last
+//! for the lifetime of the process. Once the process is terminated, the environment variables for
+//! that running process  are discarded.
 
-#![deny(clippy::pedantic, warnings)]
-#![forbid(unsafe_code)]
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 
-use std::{
-    env,
-    num::NonZeroU64
-};
+use std::env;
+use std::fs;
 
-use hartex_base::{
-    discord::model::id::{
-        GuildId,
-        RoleId,
-        UserId
-    },
-    logging::tracing
-};
+use base::error::{Error, ErrorKind, Result};
 
-/// A collection of environment variables useful for the bot during database manipulations.
-pub struct DatabaseEnv {
-    pub pgsql_credentials_guilds: Option<String>,
-    pub pgsql_credentials_guildconfig: Option<String>
+enum FileScope<'a> {
+    IfConstruct { name: &'a str },
+    Root,
 }
 
-impl DatabaseEnv {
-    /// Retrieves the environment variables.
-    #[must_use]
-    pub fn get() -> Self {
-        tracing::trace!("retrieving `PGSQL_CREDENTIALS_GUILDS` environment variable");
-        let pgsql_credentials_guilds = env::var("PGSQL_CREDENTIALS_GUILDS").ok();
+/// Loads the environment variables from an `Env.vars` file and sets the configured variables for
+/// the environment of the current running process.
+///
+/// ## Errors
+///
+/// This function returns [`ErrorKind::IoError`] if the contents of the `Env.vars` file could not
+/// be read due to some I/O errors, for example the file does not exist, or permission is denied
+/// for the file.
+///
+/// This function returns [`ErrorKind::EnvFileError`] if the contents of the `Env.vars` file are
+/// invalid or has invalid syntax and cannot be further processed.
+#[allow(clippy::missing_panics_doc)] // this function never panics
+pub fn load() -> Result<()> {
+    let file = fs::read_to_string("env.vars")?;
+    let file = file.trim_end().to_string();
 
-        tracing::trace!("retrieving `PGSQL_CREDENTIALS_GUILDCONFIG` environment variable");
-        let pgsql_credentials_guildconfig = env::var("PGSQL_CREDENTIALS_GUILDCONFIG").ok();
+    let lines = file
+        .lines()
+        .filter(|line| !line.starts_with(';') && !line.is_empty());
 
-        Self {
-            pgsql_credentials_guilds,
-            pgsql_credentials_guildconfig
+    let mut state = FileScope::Root;
+    let enable_pgsql = matches!(env!("ENABLE_PGSQL_CACHE_BACKEND"), "true");
+    for line in lines {
+        match state {
+            FileScope::Root => {
+                if line.starts_with("if defined") {
+                    let split = line.split(' ').collect::<Vec<_>>();
+                    let name = split.get(2);
+                    if name.is_none() {
+                        return Err(Error::from(ErrorKind::EnvFileError {
+                            description: "missing identifier to check for definition",
+                        }));
+                    }
+
+                    state = FileScope::IfConstruct {
+                        name: <&str>::clone(name.unwrap()),
+                    };
+                    continue;
+                }
+
+                if line.starts_with("define") {
+                    let split = line.split(' ').collect::<Vec<_>>();
+                    env::set_var(split[1], split[2]);
+                }
+            }
+            FileScope::IfConstruct {
+                name: "ENABLE_PGSQL_CACHE_BACKEND",
+            } => {
+                if enable_pgsql && line.starts_with("define ") {
+                    let split = line.split(' ').collect::<Vec<_>>();
+                    env::set_var(split[1], split[2]);
+                }
+
+                if line.starts_with("endif") {
+                    state = FileScope::Root;
+                }
+            }
+            FileScope::IfConstruct { .. } => (),
         }
     }
-}
 
-/// A collection of environment variables useful for the bot in plugins.
-pub struct PluginEnv {
-    pub global_administrator_uid: Option<UserId>,
-    pub support_guild_gid: Option<GuildId>,
-    pub hartex_guild_owner_rid: Option<RoleId>,
-    pub hartex_user_rid: Option<RoleId>
-}
-
-impl PluginEnv {
-    /// Retrieves the environment variables.
-    #[allow(clippy::missing_panics_doc)] // this function should never panic
-    #[must_use]
-    pub fn get() -> Self {
-        tracing::trace!("retrieving `GLOBAL_ADMINISTRATOR_UID` environment variable");
-        let global_administrator_uid = env::var("GLOBAL_ADMINISTRATOR_UID").ok();
-
-        tracing::trace!("retrieving `SUPPORT_GUILD_GID` environment variable");
-        let support_guild_gid = env::var("SUPPORT_GUILD_GID").ok();
-
-        tracing::trace!("retrieving `HARTEX_GUILD_OWNER_RID` environment variable");
-        let hartex_guild_owner_rid = env::var("HARTEX_GUILD_OWNER_RID").ok();
-
-        tracing::trace!("retrieving `HARTEX_USER_RID` environment variable");
-        let hartex_user_rid = env::var("HARTEX_USER_RID").ok();
-
-        Self {
-            global_administrator_uid: global_administrator_uid
-                .map(|uid| UserId(NonZeroU64::new(uid.parse().unwrap()).unwrap())),
-            support_guild_gid: support_guild_gid
-                .map(|gid| GuildId(NonZeroU64::new(gid.parse().unwrap()).unwrap())),
-            hartex_guild_owner_rid: hartex_guild_owner_rid
-                .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap())),
-            hartex_user_rid: hartex_user_rid
-                .map(|rid| RoleId(NonZeroU64::new(rid.parse().unwrap()).unwrap()))
-        }
-    }
-}
-
-/// A collection of environment variables useful for the bot during startup.
-pub struct StartupEnv {
-    pub application_aid: Option<NonZeroU64>,
-    pub bot_token: Option<String>
-}
-
-impl StartupEnv {
-    /// Retrieves the environment variables.
-    #[allow(clippy::missing_panics_doc)] // this function should never panic
-    #[must_use]
-    pub fn get() -> Self {
-        tracing::trace!("retrieving `APPLICATION_AID` environment variable");
-        let application_aid = env::var("APPLICATION_AID").ok();
-
-        tracing::trace!("retrieving `BOT_TOKEN` environment variable");
-        let bot_token = env::var("BOT_TOKEN").ok();
-
-        Self {
-            application_aid: application_aid
-                .map(|id| NonZeroU64::new(id.parse().unwrap()).unwrap()),
-            bot_token
-        }
-    }
+    Ok(())
 }

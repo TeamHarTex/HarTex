@@ -1,5 +1,6 @@
 # directories
 .idea
+old
 
 # Python virtual environment
 venv
@@ -13,4 +14,10 @@ target
 
 # .lock files
 **/Cargo.lock
-Cargo.lock
+old/Cargo.lock
+
+# local build configuration
+buildconf.toml
+
+# environment variables
+env.vars

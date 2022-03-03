@@ -1,21 +1,22 @@
 [package]
-name = "hartex_cache_discord"
-version = "1.27.0"
+name = "cache_discord"
+version = "0.1.0"
 edition = "2021"
 description = """
-This crate provides an implementation of a cache for Discord objects for HarTex.
+The Discord cache for the bot.
 """
 license = "AGPL-3.0-only"
-rust-version = "1.60.0"
+rust-version = "1.61.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dashmap = { version = "5.0.0", optional = true }
-futures-util = "0.3.19"
-hartex_base = { path = "../../base", features = [ "twilight-bundled" ] }
-hartex_cache_base = { path = "../base" }
+base = { path = "../../base", features = ["discord-model"] }
+cache_base = { path = "../base" }
+
+sqlx = { version = "0.5.11", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
+
+[build-dependencies]
+toml = "0.5.8"
 
 [features]
-default = [ "in-memory-backend" ]
-in-memory-backend = [ "dashmap" ]
