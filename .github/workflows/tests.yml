@@ -14,7 +14,7 @@ env:
 
 jobs:
   Build:
-    name: Full Build
+    name: Full Release Build
     runs-on: ubuntu-latest
 
     steps:

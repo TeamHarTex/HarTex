@@ -49,7 +49,7 @@ impl PanicMessage for HarTexPanicMessage {
             .payload()
             .downcast_ref::<String>()
             .map(String::as_str)
-            .or_else(|| info.payload().downcast_ref::<&str>().cloned())
+            .or_else(|| info.payload().downcast_ref::<&str>().copied())
             .unwrap_or("<unknown panic payload>");
         write!(f, "panic payload: ")?;
         writeln!(f, "{}", payload.cyan())?;

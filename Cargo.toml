@@ -11,6 +11,3 @@ members = [
     "model",
     "rest",
 ]
-
-[profile.release]
-debug = 1
