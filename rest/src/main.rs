@@ -23,6 +23,10 @@
 //!
 //! The REST process binary acts as a proxy over the Discord API.
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+#![feature(let_chains)]
+
 use std::env as stdenv;
 
 use base::error::Result;

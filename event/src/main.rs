@@ -40,6 +40,8 @@
 //! start, and must be an integer.
 
 #![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 use std::env as stdenv;
 
 use base::error::Result;
