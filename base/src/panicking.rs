@@ -73,37 +73,6 @@ impl PanicMessage for HarTexPanicMessage {
 pub fn init() {
     let builder = HookBuilder::blank()
         .add_default_filters()
-        .add_frame_filter(Box::new(|frames| {
-            let filters = vec![
-                "__scrt_common_main_seh",
-                "BaseThreadInitThunk",
-                "core::future::from_generator",
-                "core::ops::function::impls::impl$2",
-                "invoke_main",
-                "RtlUserThreadStart",
-                "std::panic::catch_unwind",
-                "std::panicking::try",
-                "std::rt::lang_start",
-                "std::rt::lang_start_internal",
-                "std::sys_common::backtrace",
-                "std::thread::local::LocalKey",
-                "std::thread::local::LocalKey<T>::with",
-                "tokio::coop::budget",
-                "tokio::coop::with_budget",
-                "tokio::park",
-                "tokio::runtime",
-            ];
-
-            frames.retain(|frame| {
-                let name = if let Some(name) = frame.name.as_ref() {
-                    name.as_str()
-                } else {
-                    return true;
-                };
-
-                !filters.iter().any(|filter| name.contains(filter))
-            })
-        }))
         .capture_span_trace_by_default(true)
         .panic_message(HarTexPanicMessage)
         .theme(Theme::dark());
