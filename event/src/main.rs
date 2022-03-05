@@ -40,12 +40,11 @@
 //! start, and must be an integer.
 
 #![deny(clippy::pedantic)]
-#![deny(warnings)]
-
 use std::env as stdenv;
 
 use base::error::Result;
 use base::logging;
+use base::panicking;
 
 mod guild_create;
 mod ready;
@@ -53,7 +52,8 @@ mod ready;
 #[tokio::main]
 pub async fn main() -> Result<()> {
     logging::init();
-
+    panicking::init();
+    
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
