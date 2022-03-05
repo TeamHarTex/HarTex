@@ -30,6 +30,8 @@ use hyper::client::Client;
 use hyper::header::AUTHORIZATION;
 use hyper::{Body, Method, Request};
 
+pub mod actor;
+
 /// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
 /// server for further processing.
 pub async fn emit_event(event: Event) -> Result<()> {
