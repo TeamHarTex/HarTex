@@ -50,6 +50,7 @@ use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePre
 use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use base::error::Result;
 use base::logging;
+use base::panicking;
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
 
@@ -62,6 +63,7 @@ const INTENTS: Intents = Intents::all();
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
+    panicking::init();
 
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
