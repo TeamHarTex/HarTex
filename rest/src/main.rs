@@ -52,7 +52,7 @@ pub async fn main() -> Result<()> {
 
     log::trace!("retrieving port to listen on");
     let result = stdenv::var("REST_SERVER_PORT");
-    let port = if let Ok(port) = result {
+    let _port = if let Ok(port) = result {
         let result = port.parse::<u16>();
         if let Ok(port) = result {
             port
@@ -78,7 +78,7 @@ pub async fn main() -> Result<()> {
             .https_only()
             .enable_http1();
 
-        if let Ok(enabled) = stdenv::var("REST_HTTP_2_ENABLED") && matches!(&enabled, "true") {
+        if let Ok(enabled) = stdenv::var("REST_HTTP_2_ENABLED") && matches!(enabled.as_str(), "true") {
             builder.enable_http2().wrap_connector(connector)
         } else {
             builder.wrap_connector(connector)
@@ -86,7 +86,7 @@ pub async fn main() -> Result<()> {
     };
 
     log::trace!("creating http client");
-    let client = Client::builder().build::<_, Body>(https_connector);
+    let _client = Client::builder().build::<_, Body>(https_connector);
 
     Ok(())
 }
