@@ -101,9 +101,7 @@ pub fn init() {
                     return true;
                 };
 
-                !filters.iter().any(|filter| {
-                    name.contains(filter)
-                })
+                !filters.iter().any(|filter| name.contains(filter))
             })
         }))
         .capture_span_trace_by_default(true)
