@@ -53,7 +53,7 @@ mod ready;
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
-    
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
