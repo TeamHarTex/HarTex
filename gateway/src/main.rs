@@ -127,6 +127,7 @@ pub async fn main() -> Result<()> {
     }
 
     let (cluster, mut events) = result.unwrap();
+    let handle = request::actor::EventRequestActorHandle::new();
 
     tokio::spawn(async move {
         cluster.up().await;
@@ -138,7 +139,7 @@ pub async fn main() -> Result<()> {
             event.as_str()
         );
 
-        tokio::spawn(request::emit_event(event));
+        tokio::spawn(request::emit_event(event, handle.clone()));
     }
 
     Ok(())

@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hyper::client::Client;
 use hyper::{Body, Request};
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
@@ -38,11 +39,17 @@ impl EventRequestActor {
         }
     }
 
-    pub(self) async fn send_request(&self, _: Request<Body>) {
-        todo!()
+    pub(self) async fn send_request(&self, request: Request<Body>) {
+        log::trace!("sending request to request server");
+        let client = Client::new();
+
+        if let Err(error) = client.request(request).await {
+            log::error!("failed to send request: {error}");
+        }
     }
 }
 
+#[derive(Clone)]
 pub struct EventRequestActorHandle {
     sender: Sender<Request<Body>>,
 }
@@ -55,5 +62,12 @@ impl EventRequestActorHandle {
         tokio::spawn(async move { actor.run().await });
 
         Self { sender }
+    }
+
+    pub async fn send(&self, request: Request<Body>) {
+        self.sender
+            .send(request)
+            .await
+            .expect("failed to add request to queue");
     }
 }
