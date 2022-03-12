@@ -9,4 +9,5 @@ members = [
     "gateway",
     "manidb",
     "model",
+    "rest",
 ]

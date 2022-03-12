@@ -78,4 +78,8 @@ the bot.
 
 Common and useful models used throughout the codebase.
 
+#### `rest`
+
+The standalone REST process that acts as a proxy over the Discord API.
+
 Made with :heart:, using [The Rust Programming Language](https://www.rust-lang.org/)
