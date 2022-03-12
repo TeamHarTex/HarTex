@@ -1,3 +1,24 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+ *
+ * This file is part of HarTex.
+ *
+ * HarTex
+ * Copyright (c) 2021-2022 HarTex Project Developers
+ *
+ * HarTex is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HarTex is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along
+ * with HarTex. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 //! Helper functions to send an HTTP request to the event HTTP server when an event is received
 //! from the Discord gateway.
 
@@ -5,15 +26,14 @@ use std::env as stdenv;
 
 use base::discord::model::gateway::event::Event;
 use base::error::{Error, ErrorKind, Result};
-use hyper::client::Client;
 use hyper::header::AUTHORIZATION;
 use hyper::{Body, Method, Request};
 
+pub mod actor;
+
 /// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
 /// server for further processing.
-pub async fn emit_event(event: Event) -> Result<()> {
-    let client = Client::new();
-
+pub async fn emit_event(event: Event, handle: actor::EventRequestActorHandle) -> Result<()> {
     log::trace!("retrieving the port of the event server");
     let result = stdenv::var("EVENT_SERVER_PORT");
 
@@ -93,11 +113,8 @@ pub async fn emit_event(event: Event) -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("sending request to event server");
-    if let Err(src) = client.request(request.unwrap()).await {
-        log::error!("request error: could not send request: {src}");
-        return Err(Error::from(ErrorKind::HyperError { src }));
-    }
+    log::trace!("adding request to queue");
+    tokio::spawn(async move { handle.send(request.unwrap()).await });
 
     Ok(())
 }
