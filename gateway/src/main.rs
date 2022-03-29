@@ -21,7 +21,7 @@
 
 //! # The HarTex Gateway Process Binary
 //!
-//! The HarTex Gateway Process Binary connects to the Discord gateway,
+//! The HarTex Gateway Process Binary connects to the Discord gateway.
 //!
 //! There are various environment variables that needs to be set to send requests to the event HTTP
 //! server correctly. The list of environment variables are listed below.
@@ -50,6 +50,7 @@ use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePre
 use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use base::error::Result;
 use base::logging;
+use base::panicking;
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
 
@@ -62,6 +63,7 @@ const INTENTS: Intents = Intents::all();
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
+    panicking::init();
 
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
@@ -127,6 +129,7 @@ pub async fn main() -> Result<()> {
     }
 
     let (cluster, mut events) = result.unwrap();
+    let handle = request::actor::EventRequestActorHandle::new();
 
     tokio::spawn(async move {
         cluster.up().await;
@@ -138,7 +141,7 @@ pub async fn main() -> Result<()> {
             event.as_str()
         );
 
-        tokio::spawn(request::emit_event(event));
+        tokio::spawn(request::emit_event(event, handle.clone()));
     }
 
     Ok(())

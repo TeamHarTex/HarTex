@@ -74,6 +74,13 @@
 //! avoid including the required dependencies for logging when the crate (that includes the Base
 //! Library) does not need any logging implementation at all.
 //!
+//! ### Panic Handler
+//!
+//! The HarTex Base Library contains a [`panicking`] module and contains a custom panic hook
+//! implementation using the `color-eyre` crate.
+//!
+//! This component of the Base Library is as well gated behind a feature flag - `panicking`.
+//!
 //! ## Enabling Optional Feature Flags
 //!
 //! To enable these feature flags, you may follow the following instructions to do so:
@@ -120,3 +127,5 @@ pub mod discord;
 pub mod error;
 #[cfg(feature = "logging")]
 pub mod logging;
+#[cfg(feature = "panicking")]
+pub mod panicking;
