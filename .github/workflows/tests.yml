@@ -53,6 +53,6 @@ jobs:
       - name: Obtain Default Build Configuration
         run: curl https://gist.githubusercontent.com/HTG-YT/9f0786e09b7fb7be1e8ea6b50dbeaee2/raw/a3b5c67d3fddc8a3e3be6861995b3ad098d04d83/buildconf.toml > buildconf.toml
       - name: Test
-        run: cargo nextest
+        run: cargo nextest run
         env:
           ENABLE_PGSQL_CACHE_BACKEND: false
