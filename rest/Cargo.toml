@@ -1,0 +1,21 @@
+[package]
+name = "rest"
+version = "0.1.0"
+edition = "2021"
+description = """
+The rest process for the bot.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.61.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base = { path = "../base", features = ["logging", "panicking"] }
+env = { path = "../env" }
+
+hyper = { version = "0.14.17", default-features = false, features = ["client", "http1", "http2", "server", "tcp"] }
+hyper-rustls = { version = "0.23.0", default-features = false, features = ["http1", "http2", "webpki-tokio"] }
+hyper-trust-dns = { version = "0.3.1", default-features = false }
+log = "0.4.14"
+tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread"] }

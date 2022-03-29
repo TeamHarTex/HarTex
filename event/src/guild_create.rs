@@ -29,7 +29,7 @@ use serde_json::json;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result, StatusCode};
 
-/// Request handler for a `READY` event.
+/// Request handler for a `GUILD_CREATE` event.
 ///
 /// The `GUILD_CREATE` event is received through the `/guild-create` endpoint.
 pub async fn guild_create(mut request: Request<()>) -> Result<Response> {

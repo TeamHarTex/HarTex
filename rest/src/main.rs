@@ -19,37 +19,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The HarTex Event Process Binary
+//! # The HarTex REST Process Binary
 //!
-//! The HarTex Event Process Binary sets up an HTTP server, and receives HTTP requests as the
-//! standalone gateway process receives events emitted by the Discord gateway.
-//!
-//! There are various environment variables that needs to be configured for the event HTTP server
-//! to operate correctly. The list of environment variables are listed below.
-//!
-//! ## Environment Variables Required
-//!
-//! ### `EVENT_SERVER_AUTH`
-//!
-//! A secret key expected as the `Authorization` header with incoming HTTP requests to validate the
-//! requests.
-//!
-//! ### `EVENT_SERVER_PORT`
-//!
-//! The port for the event HTTP server to listen on. This must be configured for the server to
-//! start, and must be an integer.
+//! The REST process binary acts as a proxy over the Discord API.
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![feature(let_chains)]
 
 use std::env as stdenv;
 
 use base::error::Result;
 use base::logging;
 use base::panicking;
-
-mod guild_create;
-mod ready;
+use hyper::{Body, Client};
+use hyper_rustls::HttpsConnectorBuilder;
+use hyper_trust_dns::{TrustDnsHttpConnector, TrustDnsResolver};
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
@@ -66,8 +51,8 @@ pub async fn main() -> Result<()> {
     }
 
     log::trace!("retrieving port to listen on");
-    let result = stdenv::var("EVENT_SERVER_PORT");
-    let port = if let Ok(port) = result {
+    let result = stdenv::var("REST_SERVER_PORT");
+    let _port = if let Ok(port) = result {
         let result = port.parse::<u16>();
         if let Ok(port) = result {
             port
@@ -83,15 +68,25 @@ pub async fn main() -> Result<()> {
         return Ok(());
     };
 
-    log::trace!("creating http server");
-    let mut server = tide::new();
-    server.at("/ready").post(ready::ready);
-    server.at("/guild-create").post(guild_create::guild_create);
+    log::trace!("creating https connector for http client");
+    let https_connector = {
+        let mut connector = TrustDnsHttpConnector::new_with_resolver(TrustDnsResolver::new());
+        connector.enforce_http(false);
 
-    log::trace!("listening on port {port}");
-    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
-        log::error!("server error: could not listen on port {port}: {error}");
-    }
+        let builder = HttpsConnectorBuilder::new()
+            .with_webpki_roots()
+            .https_only()
+            .enable_http1();
+
+        if let Ok(enabled) = stdenv::var("REST_HTTP_2_ENABLED") && matches!(enabled.as_str(), "true") {
+            builder.enable_http2().wrap_connector(connector)
+        } else {
+            builder.wrap_connector(connector)
+        }
+    };
+
+    log::trace!("creating http client");
+    let _client = Client::builder().build::<_, Body>(https_connector);
 
     Ok(())
 }
