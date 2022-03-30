@@ -13,7 +13,7 @@ rust-version = "1.61.0"
 [dependencies]
 base = { path = "../base", features = ["discord-gateway", "discord-model", "logging", "panicking"] }
 env = { path = "../env" }
-ext = { path = "../ext", features = ["discord-model"] }
+ext = { path = "../ext", features = ["discord-model-ext"] }
 
 ctrlc = "3.2.1"
 futures-util = "0.3.21"
