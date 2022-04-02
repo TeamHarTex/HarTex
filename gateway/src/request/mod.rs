@@ -33,7 +33,7 @@ pub mod actor;
 
 /// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
 /// server for further processing.
-pub async fn emit_event(event: Event, handle: &'static actor::EventRequestActorHandle) -> Result<()> {
+pub async fn emit_event(event: Event, handle: actor::EventRequestActorHandle) -> Result<()> {
     log::trace!("retrieving the port of the event server");
     let result = stdenv::var("EVENT_SERVER_PORT");
 
