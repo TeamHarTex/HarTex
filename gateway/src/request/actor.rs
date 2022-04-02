@@ -28,6 +28,7 @@ pub struct EventRequestActor {
     mpsc_receiver: MpscReceiver<EventRequest>,
 }
 
+#[derive(Debug)]
 pub struct EventRequest {
     request: Request<Body>,
     tries: u64,
