@@ -44,9 +44,7 @@ impl EventRequest {
 }
 
 impl EventRequestActor {
-    pub(self) fn new(
-        mpsc_receiver: MpscReceiver<EventRequest>,
-    ) -> Self {
+    pub(self) fn new(mpsc_receiver: MpscReceiver<EventRequest>) -> Self {
         Self { mpsc_receiver }
     }
 
