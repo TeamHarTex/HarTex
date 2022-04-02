@@ -19,5 +19,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(feature = "discord-model")]
+#[cfg(feature = "discord-model-ext")]
 pub mod model;

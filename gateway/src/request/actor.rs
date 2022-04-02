@@ -19,91 +19,71 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::time::Duration;
-
 use hyper::client::Client;
 use hyper::{Body, Request};
-use hyper::header::AUTHORIZATION;
 use tokio::sync::mpsc::{self, Receiver as MpscReceiver, Sender as MpscSender};
-use tokio::time;
 
 #[allow(clippy::module_name_repetitions)]
 pub struct EventRequestActor {
-    mpsc_receiver: MpscReceiver<(Request<Body>, usize)>,
-    mpsc_sender: MpscSender<(Request<Body>, usize)>,
+    mpsc_receiver: MpscReceiver<EventRequest>,
+}
+
+pub struct EventRequest {
+    request: Request<Body>,
+    tries: u64,
+}
+
+impl EventRequest {
+    pub fn new(request: Request<Body>) -> Self {
+        Self { request, tries: 0 }
+    }
+
+    pub fn increment_tries(&mut self) {
+        self.tries += 1;
+    }
 }
 
 impl EventRequestActor {
     pub(self) fn new(
-        mpsc_receiver: MpscReceiver<(Request<Body>, usize)>,
-    ) -> (Self, MpscReceiver<(Request<Body>, usize)>) {
-        let (mpsc_sender, new_mpsc_receiver) = mpsc::channel(16);
-
-        (
-            Self {
-                mpsc_receiver,
-                mpsc_sender,
-            },
-            new_mpsc_receiver,
-        )
+        mpsc_receiver: MpscReceiver<EventRequest>,
+    ) -> Self {
+        Self { mpsc_receiver }
     }
 
     pub(self) async fn run(&mut self) {
-        while let Some((request, tries)) = self.mpsc_receiver.recv().await {
-            self.send_request(request, tries).await;
+        while let Some(request) = self.mpsc_receiver.recv().await {
+            self.send_request(request).await;
         }
     }
 
-    pub(self) async fn send_request(&self, request: Request<Body>, tries: usize) {
+    pub(self) async fn send_request(&self, mut request: EventRequest) {
         log::trace!("sending request to request server");
         let client = Client::new();
 
-        if let Err(error) = client.request(request).await {
+        if let Err(error) = client.request(request.request).await {
             log::error!("failed to send request: {error}");
-
-            if let Err(error) = self.mpsc_sender.send((request, tries + 1)).await {
-                log::error!("failed to send failed request back to handle: {error}");
-            }
         }
     }
 }
 
+#[derive(Clone)]
 pub struct EventRequestActorHandle {
-    mpsc_receiver: MpscReceiver<(Request<Body>, usize)>,
-    mpsc_sender: MpscSender<(Request<Body>, usize)>,
+    mpsc_sender: MpscSender<EventRequest>,
 }
 
 impl EventRequestActorHandle {
     pub fn new() -> Self {
         let (mpsc_sender, mpsc_receiver) = mpsc::channel(16);
-        let (mut actor, new_mpsc_receiver) = EventRequestActor::new(mpsc_receiver);
+        let mut actor = EventRequestActor::new(mpsc_receiver);
 
         tokio::spawn(async move { actor.run().await });
 
-        let mut this = Self {
-            mpsc_receiver: new_mpsc_receiver,
-            mpsc_sender,
-        };
-        tokio::spawn(this.run());
-
-        this
-    }
-
-    pub(self) async fn run(&mut self) {
-        while let Some((failed_request, tries)) = self.mpsc_receiver.recv().await {
-            log::trace!("received a failed request to endpoint {}, tries: {tries}", failed_request.uri());
-            log::trace!("sleeping for {} seconds before retrying", tries * 5);
-
-            time::sleep(Duration::from_secs((tries * 5) as u64));
-
-            log::trace!("retrying request...");
-            self.mpsc_sender.send((failed_request, tries));
-        }
+        Self { mpsc_sender }
     }
 
     pub async fn send(&self, request: Request<Body>) {
         self.mpsc_sender
-            .send((request, 0))
+            .send(EventRequest::new(request))
             .await
             .expect("failed to add request to queue");
     }

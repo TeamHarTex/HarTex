@@ -141,7 +141,7 @@ pub async fn main() -> Result<()> {
             event.as_str()
         );
 
-        tokio::spawn(request::emit_event(event, &handle));
+        tokio::spawn(request::emit_event(event, handle.clone()));
     }
 
     Ok(())
