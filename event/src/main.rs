@@ -33,11 +33,6 @@
 //!
 //! A secret key expected as the `Authorization` header with incoming HTTP requests to validate the
 //! requests.
-//!
-//! ### `EVENT_SERVER_PORT`
-//!
-//! The port for the event HTTP server to listen on. This must be configured for the server to
-//! start, and must be an integer.
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
