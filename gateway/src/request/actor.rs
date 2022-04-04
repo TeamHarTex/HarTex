@@ -31,16 +31,11 @@ pub struct EventRequestActor {
 #[derive(Debug)]
 pub struct EventRequest {
     request: Request<Body>,
-    tries: u64,
 }
 
 impl EventRequest {
     pub fn new(request: Request<Body>) -> Self {
-        Self { request, tries: 0 }
-    }
-
-    pub fn increment_tries(&mut self) {
-        self.tries += 1;
+        Self { request }
     }
 }
 
@@ -55,7 +50,7 @@ impl EventRequestActor {
         }
     }
 
-    pub(self) async fn send_request(&self, mut request: EventRequest) {
+    pub(self) async fn send_request(&self, request: EventRequest) {
         log::trace!("sending request to request server");
         let client = Client::new();
 
