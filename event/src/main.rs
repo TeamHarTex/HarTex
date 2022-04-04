@@ -37,7 +37,6 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 #![feature(let_else)]
-
 // allow match_result_ok lint
 #![allow(clippy::match_result_ok)]
 
