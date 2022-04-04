@@ -55,8 +55,12 @@ pub async fn main() -> Result<()> {
 
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
-    let options = cmdline::Options::new()
-        .reqopt("", "port", "The port for the event server to run on", "PORT");
+    let options = cmdline::Options::new().reqopt(
+        "",
+        "port",
+        "The port for the event server to run on",
+        "PORT",
+    );
     let Some(matches) = options.parse(args).ok() else {
         log::error!("could not parse command line arguments; exiting");
 
