@@ -25,10 +25,13 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![feature(let_else)]
 #![feature(let_chains)]
+#![allow(clippy::match_result_ok)]
 
 use std::env as stdenv;
 
+use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
@@ -40,6 +43,25 @@ use hyper_trust_dns::{TrustDnsHttpConnector, TrustDnsResolver};
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
+    let args = stdenv::args().collect::<Vec<_>>();
+    let args = &args[1..];
+    let mut base_options = cmdline::Options::new();
+    let options = base_options.reqopt(
+        "",
+        "port",
+        "The port for the event server to run on",
+        "PORT",
+    );
+    let Some(matches) = options.parse(args).ok() else {
+        log::error!("could not parse command line arguments; exiting");
+
+        return Ok(());
+    };
+    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
+        log::error!("could not parse port argument; exiting");
+
+        return Ok(());
+    };
 
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
@@ -49,24 +71,6 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     }
-
-    log::trace!("retrieving port to listen on");
-    let result = stdenv::var("REST_SERVER_PORT");
-    let _port = if let Ok(port) = result {
-        let result = port.parse::<u16>();
-        if let Ok(port) = result {
-            port
-        } else {
-            log::error!(
-                "processing error: port is not an integer: {}",
-                result.unwrap_err()
-            );
-            return Ok(());
-        }
-    } else {
-        log::error!("env error: {}", result.unwrap_err());
-        return Ok(());
-    };
 
     log::trace!("creating https connector for http client");
     let https_connector = {
