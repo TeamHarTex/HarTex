@@ -38,6 +38,9 @@
 #![deny(warnings)]
 #![feature(let_else)]
 
+// allow match_result_ok lint
+#![allow(clippy::match_result_ok)]
+
 use std::env as stdenv;
 
 use base::cmdline;
@@ -62,7 +65,6 @@ pub async fn main() -> Result<()> {
         "The port for the event server to run on",
         "PORT",
     );
-    #[allow(clippy::match_result_ok)]
     let Some(matches) = options.parse(args).ok() else {
         log::error!("could not parse command line arguments; exiting");
 
