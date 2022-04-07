@@ -27,13 +27,11 @@ use std::env as stdenv;
 use base::discord::model::gateway::event::Event;
 use base::error::{Error, ErrorKind, Result};
 use hyper::header::AUTHORIZATION;
-use hyper::{Body, Method, Request};
-
-pub mod actor;
+use hyper::{Body, Client, Method, Request};
 
 /// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
 /// server for further processing.
-pub async fn emit_event(event: Event, handle: actor::EventRequestActorHandle) -> Result<()> {
+pub async fn emit_event(event: Event) -> Result<()> {
     log::trace!("retrieving the port of the event server");
     let result = stdenv::var("EVENT_SERVER_PORT");
 
@@ -114,7 +112,10 @@ pub async fn emit_event(event: Event, handle: actor::EventRequestActorHandle) ->
     }
 
     log::trace!("adding request to queue");
-    tokio::spawn(async move { handle.send(request.unwrap()).await });
+    tokio::spawn(async move {
+        let client = Client::new();
+        client.request(request.unwrap()).await
+    });
 
     Ok(())
 }
