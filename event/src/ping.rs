@@ -19,4 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+//! Acts as a health-checker for this microservice.
+
+use tide::{Request, Response, Result};
+
+pub async fn ping(_: Request<()>) -> Result<Response> {
+    Ok(Response::new(200))
+}
