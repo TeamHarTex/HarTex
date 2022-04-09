@@ -23,4 +23,9 @@
 //!
 //! Implementation of load balancing for servers used by the codebase.
 
-pub fn main() {}
+use base::error::Result;
+
+#[tokio::main(flavor = "multi-thread")]
+pub async fn main() -> Result<()> {
+    Ok(())
+}
