@@ -48,7 +48,7 @@ pub fn main() {
     if let Value::String(backend) = backend_value {
         if !BACKENDS.contains(&backend.as_str()) {
             println!(
-                "cargo:warning=invalid backend; must be one of: {}l the `cache_discord` will not compile",
+                "cargo:warning=invalid backend; must be one of: {}; the `cache_discord` will not compile",
                 BACKENDS.join(", ")
             );
             return;

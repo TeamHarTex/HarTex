@@ -6,12 +6,13 @@ description = """
 The base library of the bot.
 """
 license = "AGPL-3.0-only"
-rust-version = "1.61.0"
+rust-version = "1.62.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 color-eyre = { version = "0.6.1", default-features = false, optional = true }
+getopts = { version = "0.2.21", optional = true }
 http = "0.2.6"
 hyper = { version = "0.14.17", default-features = false }
 log = { version = "0.4.14", optional = true }
@@ -23,6 +24,7 @@ twilight-gateway = { version = "0.10.1", optional = true }
 twilight-model = { version = "0.10.1", optional = true }
 
 [features]
+cmdline = ["getopts"]
 discord-gateway = ["twilight-gateway"]
 discord-model = ["twilight-model"]
 logging = ["log", "log4rs"]

@@ -19,5 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(feature = "discord-model-ext")]
-pub mod model;
+//! Command line utilities.
+
+pub use getopts::*;

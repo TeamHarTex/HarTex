@@ -1,9 +1,9 @@
 [package]
-name = "model"
+name = "loadbal"
 version = "0.1.0"
 edition = "2021"
 description = """
-The models for the bot.
+Load balancer implementation.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.62.0"
@@ -11,6 +11,3 @@ rust-version = "1.62.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../base", features = ["discord-model"] }
-
-sqlx = { version = "0.5.11", default-features = false, features = ["postgres", "time"] }
