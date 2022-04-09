@@ -69,6 +69,10 @@ Useful extensions to various libraries used by the bot.
 The standalone process that connects to the Discord gateway; sends requests to the event handler processor
 when events are received from the Discord gateway.
 
+#### `loadbal`
+
+Implementation of a load balancer.
+
 #### `manidb`
 
 Database manipulation procedures for the codebase. These are used to interact with the databases used by
