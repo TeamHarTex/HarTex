@@ -33,17 +33,16 @@
 //!
 //! A secret key expected as the `Authorization` header with incoming HTTP requests to validate the
 //! requests.
-//!
-//! ### `EVENT_SERVER_PORT`
-//!
-//! The port for the event HTTP server to listen on. This must be configured for the server to
-//! start, and must be an integer.
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![feature(let_else)]
+// allow match_result_ok lint
+#![allow(clippy::match_result_ok)]
 
 use std::env as stdenv;
 
+use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
@@ -56,6 +55,50 @@ pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
 
+    let args = stdenv::args().collect::<Vec<_>>();
+    let args = &args[1..];
+    let mut base_options = cmdline::Options::new();
+    let options = base_options
+        .reqopt(
+            "",
+            "port",
+            "The port for the event server to run on",
+            "PORT",
+        )
+        .reqopt(
+            "",
+            "loadbal-port",
+            "The port of the load balancer for the event server to send heartbeat packets to",
+            "PORT",
+        );
+
+    if args.is_empty() {
+        event_usage(options);
+        return Ok(());
+    }
+
+    let result = options.parse(args);
+    if let Err(error) = result {
+        match error {
+            cmdline::Fail::UnrecognizedOption(option) => {
+                println!("event: unrecognized option: {option}");
+            }
+            cmdline::Fail::OptionMissing(option) => {
+                println!("event: missing required option: {option}");
+            }
+            _ => (),
+        }
+
+        return Ok(());
+    }
+    let matches = result.unwrap();
+
+    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
+        log::error!("could not parse port argument; exiting");
+
+        return Ok(());
+    };
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -65,28 +108,10 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("retrieving port to listen on");
-    let result = stdenv::var("EVENT_SERVER_PORT");
-    let port = if let Ok(port) = result {
-        let result = port.parse::<u16>();
-        if let Ok(port) = result {
-            port
-        } else {
-            log::error!(
-                "processing error: port is not an integer: {}",
-                result.unwrap_err()
-            );
-            return Ok(());
-        }
-    } else {
-        log::error!("env error: {}", result.unwrap_err());
-        return Ok(());
-    };
-
     log::trace!("creating http server");
     let mut server = tide::new();
-    server.at("/ready").post(ready::ready);
     server.at("/guild-create").post(guild_create::guild_create);
+    server.at("/ready").post(ready::ready);
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
@@ -94,4 +119,8 @@ pub async fn main() -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn event_usage(options: &mut cmdline::Options) {
+    println!("{}", options.usage("Usage: event [options] [args...]"));
 }

@@ -6,14 +6,14 @@ description = """
 The gateway process for the bot.
 """
 license = "AGPL-3.0-only"
-rust-version = "1.61.0"
+rust-version = "1.62.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 base = { path = "../base", features = ["discord-gateway", "discord-model", "logging", "panicking"] }
 env = { path = "../env" }
-ext = { path = "../ext", features = ["discord-model"] }
+ext = { path = "../ext", features = ["discord-model-ext"] }
 
 ctrlc = "3.2.1"
 futures-util = "0.3.21"

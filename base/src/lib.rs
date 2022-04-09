@@ -62,6 +62,11 @@
 //! [`Err`]. It is to be noted that the `?` operator is only usable on [`Result<T>`]s when the
 //! function to use the operator in itself returns a [`Result<T>`].
 //!
+//! ### Command Line Utilities
+//!
+//! The HarTex Base Library exposes a [`cmdline`] module for handling command line options. It is
+//! gated behind a feature flag: `cmdline`.
+//!
 //! ### Logging Facilities
 //!
 //! The HarTex Base Library contains a [`logging`] module, and has an [`init()`] function for
@@ -123,6 +128,8 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
+#[cfg(feature = "cmdline")]
+pub mod cmdline;
 pub mod discord;
 pub mod error;
 #[cfg(feature = "logging")]

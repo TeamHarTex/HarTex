@@ -32,11 +32,6 @@
 //!
 //! A secret key to be passed as the `Authorization` header with outgoing HTTP requests for the
 //! event HTTP server requests.
-//!
-//! ### `EVENT_SERVER_PORT`
-//!
-//! The port the event HTTP server listens on. This must be configured for the gateway process to
-//! send requests to the event HTTP server, and must be an integer.
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
@@ -129,7 +124,6 @@ pub async fn main() -> Result<()> {
     }
 
     let (cluster, mut events) = result.unwrap();
-    let handle = request::actor::EventRequestActorHandle::new();
 
     tokio::spawn(async move {
         cluster.up().await;
@@ -141,7 +135,7 @@ pub async fn main() -> Result<()> {
             event.as_str()
         );
 
-        tokio::spawn(request::emit_event(event, handle.clone()));
+        tokio::spawn(request::emit_event(event));
     }
 
     Ok(())

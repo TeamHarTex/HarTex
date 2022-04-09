@@ -19,5 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(feature = "discord-model-ext")]
-pub mod model;
+//! # HarTex Load Balancer
+//!
+//! Implementation of load balancing for servers used by the codebase.
+
+pub fn main() {}
