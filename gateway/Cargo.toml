@@ -11,11 +11,10 @@ rust-version = "1.62.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../base", features = ["discord-gateway", "discord-model", "logging", "panicking"] }
+base = { path = "../base", features = ["cmdline", "discord-gateway", "discord-model", "logging", "panicking"] }
 env = { path = "../env" }
 ext = { path = "../ext", features = ["discord-model-ext"] }
 
-ctrlc = "3.2.1"
 futures-util = "0.3.21"
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
 log = "0.4.14"
