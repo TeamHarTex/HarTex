@@ -48,7 +48,6 @@ use base::logging;
 use base::panicking;
 
 mod guild_create;
-mod ping;
 mod ready;
 
 #[tokio::main]
@@ -88,7 +87,6 @@ pub async fn main() -> Result<()> {
     log::trace!("creating http server");
     let mut server = tide::new();
     server.at("/guild-create").post(guild_create::guild_create);
-    server.at("/ping").post(ping::ping);
     server.at("/ready").post(ready::ready);
 
     log::trace!("listening on port {port}");
