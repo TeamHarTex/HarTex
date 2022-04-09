@@ -175,7 +175,7 @@ pub async fn main() -> Result<()> {
             event.as_str()
         );
 
-        tokio::spawn(request::emit_event(event));
+        tokio::spawn(request::emit_event(event, port));
     }
 
     Ok(())
