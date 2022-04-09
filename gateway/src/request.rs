@@ -31,27 +31,7 @@ use hyper::{Body, Client, Method, Request};
 
 /// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
 /// server for further processing.
-pub async fn emit_event(event: Event) -> Result<()> {
-    log::trace!("retrieving the port of the event server");
-    let result = stdenv::var("EVENT_SERVER_PORT");
-
-    let port = if let Ok(port) = result {
-        let result = port.parse::<u16>();
-        if let Ok(port) = result {
-            port
-        } else {
-            log::error!(
-                "processing error: port is not an integer: {}",
-                result.unwrap_err()
-            );
-            return Ok(());
-        }
-    } else {
-        let error = result.unwrap_err();
-        log::error!("env error: {error}");
-        return Err(Error::from(error));
-    };
-
+pub async fn emit_event(event: Event, port: u16) -> Result<()> {
     let result = stdenv::var("EVENT_SERVER_AUTH");
     let auth = if let Ok(ref auth) = result {
         auth

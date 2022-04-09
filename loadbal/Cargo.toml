@@ -11,3 +11,10 @@ rust-version = "1.62.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+base = { path = "../base", features = ["cmdline", "logging", "panicking"] }
+env = { path = "../env" }
+
+hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
+log = "0.4.14"
+tokio = { version = "1.17.0", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
+tokio-tungstenite = "0.17.1"
