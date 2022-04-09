@@ -4,7 +4,7 @@
 
 [![GitHub Badge](https://img.shields.io/badge/github-HarTex-6f42c1.svg?style=for-the-badge&logo=github)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
 [![License](https://img.shields.io/github/license/HarTexTeam/HarTex-rust-discord-bot?style=for-the-badge&logo=pastebin)](https://www.apache.org/licenses/LICENSE-2.0.txt)
-![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.60-93450a.svg?style=for-the-badge&logo=rust)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rust-1.62-93450a.svg?style=for-the-badge&logo=rust)
 
 ![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
 
@@ -27,10 +27,10 @@ You may follow the latest developments as well as ask for support in the guild.
 
 ### Minimum Supported Rust Version (MSRV)
 
-This project has an MSRV of `1.61.0`. What this means is that, a Rust compiler of version
-`1.61.0` or above is required to build and run the entire project.
+This project has an MSRV of `1.62.0`. What this means is that, a Rust compiler of version
+`1.62.0` or above is required to build and run the entire project.
 
-`1.61.0` is typically the latest nightly version of the compiler - we use the nightly release
+`1.62.0` is typically the latest nightly version of the compiler - we use the nightly release
 channel because there are certain features we need are gated behind a feature flag which is
 only usable when using the nightly compiler.
 
