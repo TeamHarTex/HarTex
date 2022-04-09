@@ -57,6 +57,7 @@ const EVENT_TYPE_FLAGS: EventTypeFlags = EventTypeFlags::all();
 
 const INTENTS: Intents = Intents::all();
 
+#[allow(clippy::too_many_lines)]
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
