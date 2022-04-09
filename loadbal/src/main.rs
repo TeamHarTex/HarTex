@@ -31,6 +31,7 @@ use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
+use tokio::net::{TcpListener, TcpStream};
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
@@ -42,8 +43,8 @@ pub async fn main() -> Result<()> {
     let mut base_options = cmdline::Options::new();
     let options = base_options.reqopt(
         "",
-        "port",
-        "The port for the load balancer to run on",
+        "ws-port",
+        "The websocket port for the load balancer to run on",
         "PORT",
     );
 
@@ -77,11 +78,24 @@ pub async fn main() -> Result<()> {
     }
     let matches = result.unwrap();
 
-    let Ok(Some(_port)) = matches.opt_get::<u16>("port") else {
+    let Ok(Some(port)) = matches.opt_get::<u16>("ws-port") else {
         log::error!("could not parse port argument; exiting");
 
         return Ok(());
     };
+    let result = TcpListener::bind(format!("127.0.0.1:{port}")).await;
+    if let Err(error) = result {
+        log::error!("failed to bind tcp listener");
+
+        return Ok(());
+    }
+
+    let listener = result.unwrap();
+
+    log::trace!("running load balancer websocket gateway");
+    while let Ok((stream, addr)) = listener.accept().await {
+        todo!()
+    }
 
     Ok(())
 }

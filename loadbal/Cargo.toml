@@ -16,5 +16,5 @@ env = { path = "../env" }
 
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
 log = "0.4.14"
-tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread", "sync"] }
+tokio = { version = "1.17.0", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
 tokio-tungstenite = "0.17.1"
