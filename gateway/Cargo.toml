@@ -6,7 +6,7 @@ description = """
 The gateway process for the bot.
 """
 license = "AGPL-3.0-only"
-rust-version = "1.61.0"
+rust-version = "1.62.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
