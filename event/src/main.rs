@@ -58,39 +58,37 @@ pub async fn main() -> Result<()> {
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
     let mut base_options = cmdline::Options::new();
-    let options = base_options.optflag(
-        "",
-        "help",
-        "Shows this message"
-    )
-    .reqopt(
-        "",
-        "port",
-        "The port for the event server to run on",
-        "PORT",
-    )
-    .reqopt(
-        "",
-        "loadbal-port",
-        "The port of the load balancer for the event server to send heartbeat packets to",
-        "PORT",
-    );
+    let options = base_options
+        .reqopt(
+            "",
+            "port",
+            "The port for the event server to run on",
+            "PORT",
+        )
+        .reqopt(
+            "",
+            "loadbal-port",
+            "The port of the load balancer for the event server to send heartbeat packets to",
+            "PORT",
+        );
 
     if args.is_empty() {
         event_usage(options);
         return Ok(());
     }
 
-    let Some(matches) = options.parse(args).ok() else {
-        log::error!("could not parse command line arguments; exiting");
+    let result = options.parse(args);
+    if let Err(error) = result {
+        match error {
+            cmdline::Fail::UnrecognizedOption(option) => {
+                println!("event: unrecognized option: {option}");
+            }
+            _ => (),
+        }
 
-        return Ok(());
-    };
-
-    if matches.opt_present("help") {
-        event_usage(options);
         return Ok(());
     }
+    let matches = result.unwrap();
 
     let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
         log::error!("could not parse port argument; exiting");
