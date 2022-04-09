@@ -83,6 +83,9 @@ pub async fn main() -> Result<()> {
             cmdline::Fail::UnrecognizedOption(option) => {
                 println!("event: unrecognized option: {option}");
             }
+            cmdline::Fail::OptionMissing(option) => {
+                println!("event: missing required option: {option}");
+            }
             _ => (),
         }
 
