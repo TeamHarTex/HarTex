@@ -32,7 +32,7 @@ use base::error::Result;
 use base::logging;
 use base::panicking;
 
-#[tokio::main(flavor = "multi-thread")]
+#[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
