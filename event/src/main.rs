@@ -63,6 +63,12 @@ pub async fn main() -> Result<()> {
         "port",
         "The port for the event server to run on",
         "PORT",
+    )
+    .reqopt(
+        "",
+        "loadbal-port",
+        "The port of the load balancer for the event server to send heartbeat packets to",
+        "PORT",
     );
     let Some(matches) = options.parse(args).ok() else {
         log::error!("could not parse command line arguments; exiting");
