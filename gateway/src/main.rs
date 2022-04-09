@@ -35,10 +35,12 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![feature(let_else)]
 #![feature(once_cell)]
 
 use std::env as stdenv;
 
+use base::cmdline;
 use base::discord::gateway::cluster::{ClusterStartErrorType, ShardScheme};
 use base::discord::gateway::{Cluster, EventTypeFlags, Intents};
 use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
@@ -60,6 +62,22 @@ pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
 
+    let args = stdenv::args().collect::<Vec<_>>();
+    let args = &args[1..];
+    let mut base_options = cmdline::Options::new();
+    let options = base_options
+        .reqopt(
+            "",
+            "port",
+            "The port for gateway process to send events to for further processing",
+            "PORT",
+        );
+
+    if args.is_empty() {
+        gateway_usage(options);
+        return Ok(());
+    }
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -68,6 +86,28 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     }
+
+    let result = options.parse(args);
+    if let Err(error) = result {
+        match error {
+            cmdline::Fail::UnrecognizedOption(option) => {
+                println!("event: unrecognized option: {option}");
+            }
+            cmdline::Fail::OptionMissing(option) => {
+                println!("event: missing required option: {option}");
+            }
+            _ => (),
+        }
+
+        return Ok(());
+    }
+    let matches = result.unwrap();
+
+    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
+        log::error!("could not parse port argument; exiting");
+
+        return Ok(());
+    };
 
     let result = stdenv::var("BOT_TOKEN");
     let token = if let Ok(token) = result {
@@ -139,4 +179,8 @@ pub async fn main() -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn gateway_usage(options: &mut cmdline::Options) {
+    println!("{}", options.usage("Usage: gateway [options] [args...]"));
 }
