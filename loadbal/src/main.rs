@@ -33,6 +33,8 @@ use base::logging;
 use base::panicking;
 use tokio::net::{TcpListener, TcpStream};
 
+mod gateway;
+
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
@@ -93,8 +95,8 @@ pub async fn main() -> Result<()> {
     let listener = result.unwrap();
 
     log::trace!("running load balancer websocket gateway");
-    while let Ok((stream, addr)) = listener.accept().await {
-        todo!()
+    while let Ok((stream, _)) = listener.accept().await {
+        gateway::handle_connection(stream)
     }
 
     Ok(())
