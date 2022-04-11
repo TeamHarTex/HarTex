@@ -23,6 +23,7 @@
 //!
 //! Implementation of load balancing for servers used by the codebase.
 
+#![feature(is_some_with)]
 #![feature(let_else)]
 
 use std::env as stdenv;

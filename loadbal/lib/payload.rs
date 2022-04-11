@@ -19,21 +19,29 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! WebSocket Gateway for servers to load balance to connect to.
+//! Websocket payloads for each connection.
 
-use futures_util::StreamExt;
-use tokio::net::TcpStream;
+use serde::{Deserialize, Serialize};
 
-pub async fn handle_connection(stream: TcpStream) {
-    log::trace!("opening websocket gateway for {:?}", stream.local_addr().ok());
-    let result = tokio_tungstenite::accept_async(stream).await;
-    if let Err(error) = result {
-        log::error!("failed to open websocket for {:?}: {error}", stream.local_addr().ok());
-        return;
-    }
+#[derive(Deserialize, Serialize)]
+pub struct Payload {
+    pub opcode: u8,
+    pub payload: PayloadInner,
+}
 
-    let websocket = result.unwrap();
-    let (outgoing, mut incoming) = websocket.split();
+#[derive(Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum PayloadInner {
+    PayloadIdentify(Identify),
+}
 
-    let expected_identify = incoming.next().await;
+#[derive(Deserialize, Serialize)]
+pub struct Identify {
+    pub server_type: ServerType,
+}
+
+#[derive(Deserialize, Serialize)]
+#[non_exhaustive]
+pub enum ServerType {
+    Event,
 }
