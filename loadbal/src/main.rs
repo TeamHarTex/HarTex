@@ -96,7 +96,7 @@ pub async fn main() -> Result<()> {
 
     log::trace!("running load balancer websocket gateway");
     while let Ok((stream, _)) = listener.accept().await {
-        gateway::handle_connection(stream)
+        tokio::spawn(gateway::handle_connection(stream))
     }
 
     Ok(())
