@@ -23,6 +23,15 @@
 
 use tokio::net::TcpStream;
 
-pub async fn handle_connection(_: TcpStream) {
+pub async fn handle_connection(stream: TcpStream) {
+    log::trace!("opening websocket gateway for {:?}", stream.local_addr().ok());
+    let result = tokio_tungstenite::accept_async(stream).await;
+    if let Err(error) = result {
+        log::error!("failed to open websocket for {:?}: {error}", stream.local_addr().ok());
+        return;
+    }
+
+    let websocket = result.unwrap();
+
     todo!()
 }
