@@ -21,6 +21,7 @@
 
 //! WebSocket Gateway for servers to load balance to connect to.
 
+use futures_util::StreamExt;
 use tokio::net::TcpStream;
 
 pub async fn handle_connection(stream: TcpStream) {
@@ -32,6 +33,7 @@ pub async fn handle_connection(stream: TcpStream) {
     }
 
     let websocket = result.unwrap();
+    let (outgoing, mut incoming) = websocket.split();
 
-    todo!()
+    let expected_identify = incoming.next().await;
 }
