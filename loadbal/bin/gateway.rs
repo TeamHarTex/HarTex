@@ -33,10 +33,7 @@ pub async fn handle_connection(stream: TcpStream) {
     );
     let result = tokio_tungstenite::accept_async(stream).await;
     if let Err(error) = result {
-        log::error!(
-            "failed to open websocket for {:?}: {error}",
-            stream.local_addr().ok()
-        );
+        log::error!("failed to open websocket: {error}");
         return;
     }
 
