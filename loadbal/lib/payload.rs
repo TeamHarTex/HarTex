@@ -33,11 +33,23 @@ pub struct Payload {
 #[serde(untagged)]
 pub enum PayloadInner {
     PayloadIdentify(Identify),
+    PayloadInvalidSession(InvalidSession),
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Identify {
     pub server_type: ServerType,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct InvalidSession {
+    pub error_type: ErrorType,
+}
+
+#[derive(Deserialize, Serialize)]
+#[non_exhaustive]
+pub enum ErrorType {
+    IdentifyNotReceived,
 }
 
 #[derive(Deserialize, Serialize)]
