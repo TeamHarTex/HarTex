@@ -22,7 +22,7 @@
 //! WebSocket Gateway for servers to load balance to connect to.
 
 use futures_util::{SinkExt, StreamExt};
-use loadbal::payload::{ErrorType, InvalidSession, Payload, PayloadInner};
+use loadbal::payload::{ErrorType, InvalidSession, Payload, PayloadInner, Welcome};
 use tokio::net::TcpStream;
 use tokio_tungstenite::tungstenite::Message;
 
@@ -48,12 +48,22 @@ pub async fn handle_connection(stream: TcpStream) {
                 error_type: ErrorType::IdentifyNotReceived,
             }),
         };
-
         outgoing
             .send(Message::Text(
                 serde_json::to_string(&invalid_session).unwrap(),
             ))
             .await;
+
         return;
     }
+
+    // todo: register server to load balance
+
+    let welcome = Payload {
+        opcode: 2,
+        payload: PayloadInner::PayloadWelcome(Welcome {
+            heartbeat_interval_ms: 30500,
+        }),
+    };
+    outgoing.send(Message::Text(serde_json::to_string(&welcome).unwrap()));
 }

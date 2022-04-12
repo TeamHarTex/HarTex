@@ -34,6 +34,7 @@ pub struct Payload {
 pub enum PayloadInner {
     PayloadIdentify(Identify),
     PayloadInvalidSession(InvalidSession),
+    PayloadWelcome(Welcome),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -44,6 +45,11 @@ pub struct Identify {
 #[derive(Deserialize, Serialize)]
 pub struct InvalidSession {
     pub error_type: ErrorType,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct Welcome {
+    pub heartbeat_interval_ms: u16,
 }
 
 #[derive(Deserialize, Serialize)]
