@@ -27,10 +27,16 @@ use tokio::net::TcpStream;
 use tokio_tungstenite::tungstenite::Message;
 
 pub async fn handle_connection(stream: TcpStream) {
-    log::trace!("opening websocket gateway for {:?}", stream.local_addr().ok());
+    log::trace!(
+        "opening websocket gateway for {:?}",
+        stream.local_addr().ok()
+    );
     let result = tokio_tungstenite::accept_async(stream).await;
     if let Err(error) = result {
-        log::error!("failed to open websocket for {:?}: {error}", stream.local_addr().ok());
+        log::error!(
+            "failed to open websocket for {:?}: {error}",
+            stream.local_addr().ok()
+        );
         return;
     }
 
@@ -46,7 +52,11 @@ pub async fn handle_connection(stream: TcpStream) {
             }),
         };
 
-        outgoing.send(Message::Text(serde_json::to_string(&invalid_session).unwrap())).await;
+        outgoing
+            .send(Message::Text(
+                serde_json::to_string(&invalid_session).unwrap(),
+            ))
+            .await;
         return;
     }
 }
