@@ -21,8 +21,10 @@
 
 //! WebSocket Gateway for servers to load balance to connect to.
 
-use futures_util::StreamExt;
+use futures_util::{SinkExt, StreamExt};
+use loadbal::payload::{ErrorType, InvalidSession, Payload, PayloadInner};
 use tokio::net::TcpStream;
+use tokio_tungstenite::tungstenite::Message;
 
 pub async fn handle_connection(stream: TcpStream) {
     log::trace!("opening websocket gateway for {:?}", stream.local_addr().ok());
@@ -33,10 +35,18 @@ pub async fn handle_connection(stream: TcpStream) {
     }
 
     let websocket = result.unwrap();
-    let (outgoing, mut incoming) = websocket.split();
+    let (mut outgoing, mut incoming) = websocket.split();
 
     let expected_identify = incoming.next().await;
     if expected_identify.is_none() || expected_identify.is_some_and(|result| result.is_err()) {
+        let invalid_session = Payload {
+            opcode: 1,
+            payload: PayloadInner::PayloadInvalidSession(InvalidSession {
+                error_type: ErrorType::IdentifyNotReceived,
+            }),
+        };
 
+        outgoing.send(Message::Text(serde_json::to_string(&invalid_session).unwrap())).await;
+        return;
     }
 }
