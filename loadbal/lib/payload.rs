@@ -32,9 +32,10 @@ pub struct Payload {
 #[derive(Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PayloadInner {
-    PayloadIdentify(Identify),
-    PayloadInvalidSession(InvalidSession),
-    PayloadWelcome(Welcome),
+    PayloadHeartbeat,  // 4
+    PayloadIdentify(Identify),  // 3
+    PayloadInvalidSession(InvalidSession),  // 1
+    PayloadWelcome(Welcome),  // 2
 }
 
 #[derive(Deserialize, Serialize)]
