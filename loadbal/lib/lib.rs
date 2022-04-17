@@ -20,5 +20,3 @@
  */
 
 //! Library interface of the load balancer.
-
-pub mod payload;
