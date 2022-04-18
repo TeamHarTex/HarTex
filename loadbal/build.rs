@@ -19,9 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(let_else)]
+
 use std::fs;
 
-use toml_edit::{Document, Value};
+use toml_edit::{Document, Item, Value};
 
 pub fn main() {
     let result = fs::read_to_string("../buildconf.toml");
@@ -36,10 +38,16 @@ pub fn main() {
     let result = config.parse::<Document>();
     if let Err(error) = &result {
         println!(
-            "cargo:warning=invalid build configuration file: `{error}`; the `env` crate will not compile"
+            "cargo:warning=invalid build configuration file: `{error}`; the `loadbal` (bin and lib) crate will not compile"
         );
         return;
     }
     let value = result.unwrap();
-    let servers = value["loadbal"]["servers"].clone();
+    let servers_item = value["loadbal"]["servers"].clone();
+    let Item::ArrayOfTables(servers) = servers_item else {
+        println!(
+            "cargo:warning=servers not found in configuration file; the `loadbal` (bin and lib) crate will not compile"
+        );
+        return;
+    };
 }
