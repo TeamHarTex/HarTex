@@ -46,6 +46,3 @@ jobs:
           profile: default
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
-        env:
-          CFG_IS_STABLE: "false"
-          CFG_VERSION_STR: "dummy version str"
