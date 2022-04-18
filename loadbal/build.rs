@@ -38,7 +38,7 @@ pub fn main() {
     let result = config.parse::<Document>();
     if let Err(error) = &result {
         println!(
-            "cargo:warning=invalid build configuration file: `{error}`; the `loadbal` (bin and lib) crate will not compile"
+            "cargo:warning=invalid build configuration file: `{error}`; the `loadbal` (bin and lib) crates will not compile"
         );
         return;
     }
@@ -46,14 +46,24 @@ pub fn main() {
     let servers_item = value["loadbal"]["servers"].clone();
     let Item::ArrayOfTables(servers) = servers_item else {
         println!(
-            "cargo:warning=servers not found in configuration file; the `loadbal` (bin and lib) crate will not compile"
+            "cargo:warning=servers not found in configuration file; the `loadbal` (bin and lib) crates will not compile"
         );
         return;
     };
     let mut servers_env = String::from("cargo:rustc-env=LOADBAL_SERVERS=");
     servers.iter().for_each(|table| {
-        let Item::Value(Value::String(server_type)) = table["type"].clone() else {};
-        let Item::Value(Value::String(server_address)) = table["address"].clone() else {};
+        let Item::Value(Value::String(server_type)) = table["type"].clone() else {
+            println!(
+                "cargo:warning=configuration file invalid: expected string for server type; the `loadbal` (bin and lib) crates will not compile"
+            );
+            return;
+        };
+        let Item::Value(Value::String(server_address)) = table["address"].clone() else {
+            println!(
+                "cargo:warning=configuration file invalid: expected string for server address; the `loadbal` (bin and lib) crates will not compiler"
+            );
+            return;
+        };
         servers_env.push_str(&format!(
             "{}-{};",
             server_type.value().as_str(),
