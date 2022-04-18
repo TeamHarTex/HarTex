@@ -20,3 +20,16 @@
  */
 
 //! Library interface of the load balancer.
+
+use std::collections::HashMap;
+
+use serde::{Serialize, Deserialize};
+
+#[derive(Deserialize, Serialize)]
+pub struct Request {
+    server_type: String,
+    method: String,
+    route: String,
+    headers: HashMap<String, String>,
+    body: String,
+}
