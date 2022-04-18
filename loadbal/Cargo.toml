@@ -14,6 +14,7 @@ rust-version = "1.62.0"
 base = { path = "../base", features = ["cmdline", "logging", "panicking"] }
 env = { path = "../env" }
 
+dashmap = "5.2.0"
 futures-util = "0.3.21"
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
 log = "0.4.16"

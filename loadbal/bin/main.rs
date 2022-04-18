@@ -23,8 +23,8 @@
 //!
 //! Implementation of load balancing for servers used by the codebase.
 
-#![feature(is_some_with)]
 #![feature(let_else)]
+#![feature(once_cell)]
 
 use std::env as stdenv;
 
@@ -32,6 +32,8 @@ use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
+
+mod servers;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
@@ -77,6 +79,8 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
     let matches = result.unwrap();
+
+    servers::init();
 
     Ok(())
 }
