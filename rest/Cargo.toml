@@ -17,5 +17,5 @@ env = { path = "../env" }
 hyper = { version = "0.14.17", default-features = false, features = ["client", "http1", "http2", "server", "tcp"] }
 hyper-rustls = { version = "0.23.0", default-features = false, features = ["http1", "http2", "webpki-tokio"] }
 hyper-trust-dns = { version = "0.3.1", default-features = false }
-log = "0.4.14"
+log = "0.4.16"
 tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread"] }
