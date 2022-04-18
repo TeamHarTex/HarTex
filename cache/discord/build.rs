@@ -54,7 +54,10 @@ pub fn main() {
             return;
         }
 
-        println!("cargo:rustc-cfg={backend}", backend = backend.value().as_str());
+        println!(
+            "cargo:rustc-cfg={backend}",
+            backend = backend.value().as_str()
+        );
     } else {
         println!("cargo:warning=invalid value for `backend` value in build configuration; the `cache_discord` crate wil not compile");
     }
