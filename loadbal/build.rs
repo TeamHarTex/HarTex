@@ -41,4 +41,5 @@ pub fn main() {
         return;
     }
     let value = result.unwrap();
+    let servers = value["loadbal"]["servers"].clone();
 }
