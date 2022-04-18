@@ -40,7 +40,7 @@ pub static SERVERS: SyncLazy<DashMap<&str, Uri>> = SyncLazy::new(|| {
         }
 
         let parts = server.split("-").collect::<Vec<_>>();
-        map.insert(parts[0], Uri::from_str(parts[1]).unwrap())
+        map.insert(parts[0], Uri::from_str(parts[1]).unwrap());
     }
 
     map
