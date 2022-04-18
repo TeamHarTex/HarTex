@@ -66,10 +66,10 @@ pub async fn main() -> Result<()> {
     if let Err(error) = result {
         match error {
             cmdline::Fail::UnrecognizedOption(option) => {
-                println!("gateway: unrecognized option: {option}");
+                println!("loadbal: unrecognized option: {option}");
             }
             cmdline::Fail::OptionMissing(option) => {
-                println!("gateway: missing required option: {option}");
+                println!("loadbal: missing required option: {option}");
             }
             _ => (),
         }
