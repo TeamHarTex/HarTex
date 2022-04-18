@@ -50,4 +50,11 @@ pub fn main() {
         );
         return;
     };
+    let mut servers_env = String::from("cargo:rustc-env=LOADBAL_SERVERS=");
+    servers.iter().for_each(|table| {
+        let Item::Value(Value::String(server_type)) = table["type"].clone() else {};
+        let Item::Value(Value::String(server_address)) = table["address"].clone() else {};
+        servers_env.push_str(&format!("{}-{}", server_type.value().as_str(), server_address.value().as_str()));
+    });
+    println!("{servers_env}");
 }
