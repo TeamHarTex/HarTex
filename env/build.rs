@@ -56,7 +56,7 @@ pub fn main() {
 
         println!(
             "cargo:rustc-env=ENABLE_PGSQL_CACHE_BACKEND={}",
-            backend == "postgres"
+            backend.value().as_str() == "postgres"
         );
     } else {
         println!("cargo:warning=invalid value for `backend` value in build configuration; the `env` crate will not compile");
