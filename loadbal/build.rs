@@ -44,21 +44,27 @@ pub fn main() {
     }
     let value = result.unwrap();
     let servers_item = value["loadbal"]["servers"].clone();
-    let Item::ArrayOfTables(servers) = servers_item else {
+    let Item::Value(Value::Array(servers)) = servers_item else {
         println!(
             "cargo:warning=servers not found in configuration file; the `loadbal` (bin and lib) crates will not compile"
         );
         return;
     };
     let mut servers_env = String::from("cargo:rustc-env=LOADBAL_SERVERS=");
-    servers.iter().for_each(|table| {
-        let Item::Value(Value::String(server_type)) = table["type"].clone() else {
+    servers.iter().for_each(|table_value| {
+        let Value::InlineTable(table) = table_value else {
+            println!(
+                "cargo:warning=configuration file invalid: expected array of inline tables for servers; the `loadbal` (bin and lib) crates will not compile"
+            );
+            return;
+        };
+        let Value::String(server_type) = table["type"].clone() else {
             println!(
                 "cargo:warning=configuration file invalid: expected string for server type; the `loadbal` (bin and lib) crates will not compile"
             );
             return;
         };
-        let Item::Value(Value::String(server_address)) = table["address"].clone() else {
+        let Value::String(server_address) = table["address"].clone() else {
             println!(
                 "cargo:warning=configuration file invalid: expected string for server address; the `loadbal` (bin and lib) crates will not compiler"
             );

@@ -78,7 +78,7 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     }
-    let matches = result.unwrap();
+    let _matches = result.unwrap();
 
     servers::init();
 
