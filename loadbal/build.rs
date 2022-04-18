@@ -19,4 +19,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+use std::fs;
+use toml::Value;
+
+pub fn main() {
+    let result = fs::read_to_string("../buildconf.toml");
+    if let Err(error) = &result {
+        println!("cargo:warning=cannot open build configuration file: `{error}`; the `loadbal` (bin and lib) crates will not compile");
+        return;
+    }
+
+    let config = result.unwrap();
+    let config = config.trim_end().to_string();
+
+    let result = toml::from_str::<Value>(&config);
+    if let Err(error) = &result {
+        println!(
+            "cargo:warning=invalid build configuration file: `{error}`; the `env` crate will not compile"
+        );
+        return;
+    }
+    let value = result.unwrap();
+}
