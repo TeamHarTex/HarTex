@@ -21,7 +21,7 @@
 
 use std::fs;
 
-use toml_edit::{Document, Value};
+use toml_edit::{Document, Item, Value};
 
 pub const BACKENDS: [&str; 1] = ["postgres"];
 
@@ -45,7 +45,7 @@ pub fn main() {
     let value = result.unwrap();
 
     let backend_value = value["cache"]["backend"].clone();
-    if let Value::String(backend) = backend_value {
+    if let Item::Value(Value::String(backend)) = backend_value {
         if !BACKENDS.contains(&backend.value().as_str()) {
             println!(
                 "cargo:warning=invalid backend; must be one of: {}; the `env` crate will not compile",
