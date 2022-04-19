@@ -19,8 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tide::{Body, Request, Response, Result};
+use tide::{Request, Response, Result};
 
-pub async fn handle_request(_: Request<Body>) -> Result<Response> {
+pub async fn handle_request(_: Request<()>) -> Result<Response> {
     todo!()
 }
