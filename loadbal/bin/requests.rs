@@ -19,8 +19,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use loadbal::Request as LoadbalRequest;
+use serde_json::json;
 use tide::{Request, Response, Result};
 
-pub async fn handle_request(_: Request<()>) -> Result<Response> {
+pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
+    log::trace!("received a request into load balancer, processing request");
+    let result = request.body_json::<LoadbalRequest>().await;
+    if let Err(error) = result {
+        log::error!("failed to deserialize guild create payload; see http error below");
+        log::error!("http error: {error}; responding with the status of the error");
+        return Ok(Response::builder(error.status())
+            .body_json(&json!({
+                "code": error.status(),
+                "message": error.status().canonical_reason(),
+            }))
+            .unwrap()
+            .build());
+    }
+    let _ = result.unwrap();
+
     todo!()
 }
