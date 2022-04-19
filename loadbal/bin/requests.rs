@@ -19,17 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Library interface of the load balancer.
+use tide::{Request, Response, Result};
 
-use std::collections::HashMap;
-
-use serde::{Deserialize, Serialize};
-
-#[derive(Deserialize, Serialize)]
-pub struct Request {
-    server_type: String,
-    method: String,
-    route: String,
-    headers: HashMap<String, String>,
-    body: String,
+pub async fn handle_request(_: Request<()>) -> Result<Response> {
+    todo!()
 }
