@@ -33,6 +33,7 @@ use base::error::Result;
 use base::logging;
 use base::panicking;
 
+mod requests;
 mod servers;
 
 #[tokio::main(flavor = "multi_thread")]
@@ -78,9 +79,24 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     }
-    let _matches = result.unwrap();
+    let matches = result.unwrap();
+
+    let Ok(Some(_port)) = matches.opt_get::<u16>("port") else {
+        log::error!("could not parse port argument; exiting");
+
+        return Ok(());
+    };
 
     servers::init();
+
+    log::trace!("creating http server");
+    let mut server = tide::new();
+    server.at("/request").post(requests::handle_request);
+
+    log::trace!("listening on port {port}");
+    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
+        log::error!("server error: could not listen on port {port}: {error}");
+    }
 
     Ok(())
 }
