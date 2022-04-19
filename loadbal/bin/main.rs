@@ -81,7 +81,7 @@ pub async fn main() -> Result<()> {
     }
     let matches = result.unwrap();
 
-    let Ok(Some(_port)) = matches.opt_get::<u16>("port") else {
+    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
         log::error!("could not parse port argument; exiting");
 
         return Ok(());
