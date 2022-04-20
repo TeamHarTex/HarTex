@@ -56,8 +56,13 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         .collect::<Vec<_>>();
     if let Some(ip) = get_good_ip(target_ips).await {
         log::trace!("building http request to actual server");
-        let mut builder =
-            HyperRequest::builder().uri(format!("http://{}/{}", ip, loadbal_request.route()));
+        log::trace!(
+            "route: {}",
+            format!("http://{}/{}", &ip, loadbal_request.route())
+        );
+        let mut builder = HyperRequest::builder()
+            .uri(format!("http://{}/{}", ip, loadbal_request.route()))
+            .method(loadbal_request.method());
         let headers = builder.headers_mut().unwrap();
         for (name, value) in loadbal_request.headers() {
             headers.insert(
