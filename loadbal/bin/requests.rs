@@ -62,7 +62,9 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
             );
         }
 
-        let request = builder.body(Body::from(loadbal_request.body().to_string())).unwrap();
+        let request = builder
+            .body(Body::from(loadbal_request.body().to_string()))
+            .unwrap();
         let Ok(_) = Client::new().request(request).await else {
             return Ok(Response::new(503));
         };
