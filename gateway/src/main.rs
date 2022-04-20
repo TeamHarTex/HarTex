@@ -68,8 +68,8 @@ pub async fn main() -> Result<()> {
     let mut base_options = cmdline::Options::new();
     let options = base_options.reqopt(
         "",
-        "port",
-        "The port for gateway process to send events to for further processing",
+        "loadbal-port",
+        "The port for gateway process to send event requests to for load balancing",
         "PORT",
     );
 
@@ -103,7 +103,7 @@ pub async fn main() -> Result<()> {
     }
     let matches = result.unwrap();
 
-    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
+    let Ok(Some(port)) = matches.opt_get::<u16>("loadbal-port") else {
         log::error!("could not parse port argument; exiting");
 
         return Ok(());

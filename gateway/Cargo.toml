@@ -14,6 +14,7 @@ rust-version = "1.62.0"
 base = { path = "../base", features = ["cmdline", "discord-gateway", "discord-model", "logging", "panicking"] }
 env = { path = "../env" }
 ext = { path = "../ext", features = ["discord-model-ext"] }
+loadbal = { path = "../loadbal" }
 
 futures-util = "0.3.21"
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }

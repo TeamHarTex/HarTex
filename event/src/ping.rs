@@ -19,39 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Library interface of the load balancer.
+use tide::{Request, Response, Result};
 
-use std::collections::HashMap;
-
-use serde::{Deserialize, Serialize};
-
-#[derive(Deserialize, Serialize)]
-pub struct Request {
-    pub target_server_type: String,
-    pub method: String,
-    pub route: String,
-    pub headers: HashMap<String, String>,
-    pub body: String,
-}
-
-impl Request {
-    pub fn target_server_type(&self) -> &str {
-        self.target_server_type.as_str()
-    }
-
-    pub fn method(&self) -> &str {
-        self.method.as_str()
-    }
-
-    pub fn route(&self) -> &str {
-        self.route.as_str()
-    }
-
-    pub fn headers(&self) -> HashMap<String, String> {
-        self.headers.clone()
-    }
-
-    pub fn body(&self) -> &str {
-        self.body.as_str()
-    }
+#[allow(clippy::unused_async)]
+pub async fn ping(_: Request<()>) -> Result<Response> {
+    Ok(Response::new(200))
 }
