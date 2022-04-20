@@ -48,6 +48,7 @@ use base::logging;
 use base::panicking;
 
 mod guild_create;
+mod ping;
 mod ready;
 
 #[tokio::main]
@@ -63,12 +64,6 @@ pub async fn main() -> Result<()> {
             "",
             "port",
             "The port for the event server to run on",
-            "PORT",
-        )
-        .reqopt(
-            "",
-            "loadbal-port",
-            "The port of the load balancer for the event server to send heartbeat packets to",
             "PORT",
         );
 
@@ -112,6 +107,7 @@ pub async fn main() -> Result<()> {
     let mut server = tide::new();
     server.at("/guild-create").post(guild_create::guild_create);
     server.at("/ready").post(ready::ready);
+    server.at("/ping").post(ping::ping);
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {

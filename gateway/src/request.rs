@@ -22,12 +22,13 @@
 //! Helper functions to send an HTTP request to the event HTTP server when an event is received
 //! from the Discord gateway.
 
+use std::collections::HashMap;
 use std::env as stdenv;
 
 use base::discord::model::gateway::event::Event;
 use base::error::{Error, ErrorKind, Result};
-use hyper::header::AUTHORIZATION;
 use hyper::{Body, Client, Method, Request};
+use loadbal::Request as LoadbalRequest;
 
 /// Send an HTTP request containing the corresponding gateway event payload to the event HTTP
 /// server for further processing.
@@ -41,7 +42,10 @@ pub async fn emit_event(event: Event, port: u16) -> Result<()> {
         return Err(Error::from(error));
     };
 
-    let request = match event {
+    let mut map = HashMap::new();
+    map.insert("Authorization".to_string(), auth.clone());
+
+    let loadbal_request = match event {
         Event::GuildCreate(guild_create) => {
             log::trace!("serializing guild create payload");
             let serde_result = serde_json::to_string(&guild_create);
@@ -51,17 +55,13 @@ pub async fn emit_event(event: Event, port: u16) -> Result<()> {
             }
 
             log::trace!("building request");
-            let result = Request::builder()
-                .header(AUTHORIZATION, auth)
-                .method(Method::POST)
-                .uri(format!("http://127.0.0.1:{port}/guild-create"))
-                .body(Body::from(serde_result.unwrap()));
-            if let Err(src) = result {
-                log::error!("request error: could not build request: {src}");
-                return Err(Error::from(ErrorKind::HttpError { src }));
-            }
-
-            Some(result.unwrap())
+            Some(LoadbalRequest {
+                target_server_type: "event".to_string(),
+                method: "POST".to_string(),
+                route: "guild-create".to_string(),
+                headers: map,
+                body: serde_result.unwrap(),
+            })
         }
         Event::Ready(ready) => {
             log::trace!("serializing ready payload");
@@ -72,29 +72,37 @@ pub async fn emit_event(event: Event, port: u16) -> Result<()> {
             }
 
             log::trace!("building request");
-            let result = Request::builder()
-                .header(AUTHORIZATION, auth)
-                .method(Method::POST)
-                .uri(format!("http://127.0.0.1:{port}/ready"))
-                .body(Body::from(serde_result.unwrap()));
-            if let Err(src) = result {
-                log::error!("request error: could not build request: {src}");
-                return Err(Error::from(ErrorKind::HttpError { src }));
-            }
-
-            Some(result.unwrap())
+            Some(LoadbalRequest {
+                target_server_type: "event".to_string(),
+                method: "POST".to_string(),
+                route: "ready".to_string(),
+                headers: map,
+                body: serde_result.unwrap(),
+            })
         }
         _ => None,
     };
 
-    if request.is_none() {
+    let Some(loadbal_request) = loadbal_request else {
         return Ok(());
+    };
+
+    let serde_result = serde_json::to_string(&loadbal_request);
+    let result = Request::builder()
+        .method(Method::POST)
+        .uri(format!("http://127.0.0.1:{port}/request"))
+        .body(Body::from(serde_result.unwrap()));
+    if let Err(src) = result {
+        log::error!("request error: could not build request: {src}");
+        return Err(Error::from(ErrorKind::HttpError { src }));
     }
 
-    log::trace!("adding request to queue");
+    let request = result.unwrap();
+
+    log::trace!("sending request");
     tokio::spawn(async move {
         let client = Client::new();
-        client.request(request.unwrap()).await
+        client.request(request).await
     });
 
     Ok(())
