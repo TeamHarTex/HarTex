@@ -50,8 +50,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         .collect::<Vec<_>>();
     if let Some(_) = get_good_ip(target_ips).await {
         todo!()
-    }
-    else {
+    } else {
         Ok(Response::new(503))
     }
 }
