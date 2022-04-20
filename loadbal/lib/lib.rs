@@ -38,4 +38,20 @@ impl Request {
     pub fn target_server_type(&self) -> &str {
         self.target_server_type.as_str()
     }
+
+    pub fn method(&self) -> &str {
+        self.method.as_str()
+    }
+
+    pub fn route(&self) -> &str {
+        self.route.as_str()
+    }
+
+    pub fn headers(&self) -> HashMap<String, String> {
+        self.headers.clone()
+    }
+
+    pub fn body(&self) -> &str {
+        self.body.as_str()
+    }
 }
