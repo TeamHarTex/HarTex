@@ -19,6 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::str::FromStr;
+
+use hyper::header::{HeaderName, HeaderValue};
 use hyper::{Body, Client, Method, Request as HyperRequest, Uri};
 use loadbal::Request as LoadbalRequest;
 use serde_json::json;
@@ -49,11 +52,22 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         .map(|entry| entry.value().clone())
         .collect::<Vec<_>>();
     if let Some(ip) = get_good_ip(target_ips).await {
-        let _ = HyperRequest::builder()
-            .uri(format!("http://{ip}/{}", loadbal_request.route()))
-            .body(Body::empty())
-            .unwrap();
-        todo!()
+        let mut builder =
+            HyperRequest::builder().uri(format!("http://{ip}/{}", loadbal_request.route()));
+        let headers = builder.headers_mut().unwrap();
+        for (name, value) in loadbal_request.headers() {
+            headers.insert(
+                HeaderName::from_str(&name).unwrap(),
+                HeaderValue::from_str(&value).unwrap(),
+            );
+        }
+
+        let request = builder.body(Body::from(loadbal_request.body().to_string())).unwrap();
+        let Ok(_) = Client::new().request(request).await else {
+            return Ok(Response::new(503));
+        };
+
+        Ok(Response::new(200))
     } else {
         Ok(Response::new(503))
     }
