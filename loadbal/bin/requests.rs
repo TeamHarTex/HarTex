@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hyper::{Body, Client, Method, Request as HyperRequest, Uri};
 use loadbal::Request as LoadbalRequest;
 use serde_json::json;
 use tide::{Request, Response, Result};
@@ -47,6 +48,26 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         .filter(|entry| entry.key() == &target)
         .map(|entry| entry.value().clone())
         .collect::<Vec<_>>();
+    if let Some(_) = get_good_ip(target_ips).await {
+        todo!()
+    }
+    else {
+        Ok(Response::new(503))
+    }
+}
 
-    todo!()
+async fn get_good_ip(all: Vec<Uri>) -> Option<Uri> {
+    for ip in all {
+        let request = HyperRequest::builder()
+            .method(Method::POST)
+            .uri(format!("http://{ip}/ping"))
+            .body(Body::empty())
+            .unwrap();
+
+        if let Ok(_) = Client::new().request(request).await {
+            return Some(ip);
+        }
+    }
+
+    None
 }
