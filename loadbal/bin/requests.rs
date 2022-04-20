@@ -48,7 +48,11 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         .filter(|entry| entry.key() == &target)
         .map(|entry| entry.value().clone())
         .collect::<Vec<_>>();
-    if let Some(_) = get_good_ip(target_ips).await {
+    if let Some(ip) = get_good_ip(target_ips).await {
+        let _ = HyperRequest::builder()
+            .uri(format!("http://{ip}/{}", loadbal_request.route()))
+            .body(Body::empty())
+            .unwrap();
         todo!()
     } else {
         Ok(Response::new(503))
