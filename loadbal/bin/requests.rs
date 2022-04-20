@@ -71,7 +71,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
             .unwrap();
 
         log::trace!("sending request");
-        if let Err(_) = Client::new().request(request).await {
+        if Client::new().request(request).await.is_err() {
             log::trace!("request failed, responding with HTTP 503");
             return Ok(Response::new(503));
         };
@@ -95,7 +95,7 @@ async fn get_good_ip(all: Vec<Uri>) -> Option<Uri> {
             .body(Body::empty())
             .unwrap();
 
-        if let Ok(_) = Client::new().request(request).await {
+        if Client::new().request(request).await.is_ok() {
             log::trace!("server at {ip} is available");
 
             return Some(ip);
