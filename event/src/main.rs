@@ -59,13 +59,12 @@ pub async fn main() -> Result<()> {
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
     let mut base_options = cmdline::Options::new();
-    let options = base_options
-        .reqopt(
-            "",
-            "port",
-            "The port for the event server to run on",
-            "PORT",
-        );
+    let options = base_options.reqopt(
+        "",
+        "port",
+        "The port for the event server to run on",
+        "PORT",
+    );
 
     if args.is_empty() {
         event_usage(options);
