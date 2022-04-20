@@ -32,14 +32,14 @@ pub static SERVERS: SyncLazy<DashMap<&str, Uri>> = SyncLazy::new(|| {
     let map = DashMap::new();
 
     let servers = env!("LOADBAL_SERVERS");
-    let mut servers = servers.split(";");
+    let mut servers = servers.split(';');
 
-    while let Some(server) = servers.next() {
+    for server in servers.by_ref() {
         if server.is_empty() {
             break;
         }
 
-        let parts = server.split("-").collect::<Vec<_>>();
+        let parts = server.split('-').collect::<Vec<_>>();
         map.insert(parts[0], Uri::from_str(parts[1]).unwrap());
     }
 
