@@ -31,6 +31,7 @@ use crate::servers;
 
 pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     log::trace!("received a request into load balancer, processing request");
+    log::trace!("deserializing request payload");
     let result = request.body_json::<LoadbalRequest>().await;
     if let Err(error) = result {
         log::error!("failed to deserialize guild create payload; see http error below");
@@ -45,6 +46,8 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     }
 
     let loadbal_request = result.unwrap();
+
+    log::trace!("retrieving all possible servers");
     let target = loadbal_request.target_server_type();
     let target_ips = servers::SERVERS
         .iter()
@@ -52,8 +55,9 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         .map(|entry| entry.value().clone())
         .collect::<Vec<_>>();
     if let Some(ip) = get_good_ip(target_ips).await {
+        log::trace!("building http request to actual server");
         let mut builder =
-            HyperRequest::builder().uri(format!("http://{ip}/{}", loadbal_request.route()));
+            HyperRequest::builder().uri(format!("http://{}/{}", ip, loadbal_request.route()));
         let headers = builder.headers_mut().unwrap();
         for (name, value) in loadbal_request.headers() {
             headers.insert(
@@ -65,18 +69,26 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
         let request = builder
             .body(Body::from(loadbal_request.body().to_string()))
             .unwrap();
-        let Ok(_) = Client::new().request(request).await else {
+
+        log::trace!("sending request");
+        if let Err(_) = Client::new().request(request).await {
+            log::trace!("request failed, responding with HTTP 503");
             return Ok(Response::new(503));
         };
 
         Ok(Response::new(200))
     } else {
+        log::trace!("no server available, responding with HTTP 503");
         Ok(Response::new(503))
     }
 }
 
 async fn get_good_ip(all: Vec<Uri>) -> Option<Uri> {
+    log::trace!("retrieving available servers");
+
     for ip in all {
+        log::trace!("pinging {ip}");
+
         let request = HyperRequest::builder()
             .method(Method::POST)
             .uri(format!("http://{ip}/ping"))
@@ -84,6 +96,8 @@ async fn get_good_ip(all: Vec<Uri>) -> Option<Uri> {
             .unwrap();
 
         if let Ok(_) = Client::new().request(request).await {
+            log::trace!("server at {ip} is available");
+
             return Some(ip);
         }
     }
