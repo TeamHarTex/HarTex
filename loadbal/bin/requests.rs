@@ -23,6 +23,8 @@ use loadbal::Request as LoadbalRequest;
 use serde_json::json;
 use tide::{Request, Response, Result};
 
+use crate::servers;
+
 pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     log::trace!("received a request into load balancer, processing request");
     let result = request.body_json::<LoadbalRequest>().await;
@@ -37,7 +39,14 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
             .unwrap()
             .build());
     }
-    let _ = result.unwrap();
+
+    let loadbal_request = result.unwrap();
+    let target = loadbal_request.target_server_type();
+    let target_ips = servers::SERVERS
+        .iter()
+        .filter(|entry| entry.key() == &target)
+        .map(|entry| entry.value().clone())
+        .collect::<Vec<_>>();
 
     todo!()
 }

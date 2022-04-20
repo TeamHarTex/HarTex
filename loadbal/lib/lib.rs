@@ -27,9 +27,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
 pub struct Request {
-    server_type: String,
+    target_server_type: String,
     method: String,
     route: String,
     headers: HashMap<String, String>,
     body: String,
+}
+
+impl Request {
+    pub fn target_server_type(&self) -> &str {
+        self.target_server_type.as_str()
+    }
 }
