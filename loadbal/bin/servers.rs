@@ -28,7 +28,7 @@ use std::str::FromStr;
 use dashmap::DashMap;
 use hyper::Uri;
 
-pub static SERVERS: SyncLazy<DashMap<&str, Uri>> = SyncLazy::new(|| {
+pub static SERVERS: SyncLazy<DashMap<String, Vec<Uri>>> = SyncLazy::new(|| {
     let map = DashMap::new();
 
     let servers = env!("LOADBAL_SERVERS");
@@ -39,8 +39,14 @@ pub static SERVERS: SyncLazy<DashMap<&str, Uri>> = SyncLazy::new(|| {
             break;
         }
 
-        let parts = server.split('-').collect::<Vec<_>>();
-        map.insert(parts[0], Uri::from_str(parts[1]).unwrap());
+        let parts = server.split('-').map(|str| String::from(str)).collect::<Vec<String>>();
+        let uri = Uri::from_str(&parts[1]).unwrap();
+        if map.contains_key(&parts[0]) {
+            map.alter(&parts[0], |_, mut vec: Vec<Uri>| { vec.push(uri); vec });
+        }
+        else {
+            map.insert(parts[0].to_string(), vec![uri]);
+        }
     }
 
     map
