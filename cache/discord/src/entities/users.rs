@@ -22,7 +22,7 @@
 //! Users in the Discord entity cache.
 
 use base::discord::model::id::{marker::UserMarker, Id};
-use base::discord::model::user::{CurrentUser, PremiumType, UserFlags};
+use base::discord::model::user::{CurrentUser, UserFlags};
 use base::discord::model::util::ImageHash;
 use cache_base::Entity;
 

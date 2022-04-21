@@ -68,20 +68,7 @@ impl Repository<PostgresBackend, CachedCurrentUser> for CurrentUserRepository {
                 .bind(current_user.username)
                 .bind(current_user.discriminator)
                 .bind(current_user.avatar.map(|hash| hash.to_string()))
-                .bind(current_user.bot)
-                .bind(current_user.system)
-                .bind(current_user.mfa_enabled)
-                .bind(current_user.banner.map(|hash| hash.to_string()))
-                .bind(current_user.accent_colour.map(|colour| colour.to_string()))
-                .bind(current_user.locale)
-                .bind(current_user.verified)
-                .bind(current_user.email)
                 .bind(current_user.flags.map(|flags| flags.bits().to_string()))
-                .bind(current_user.premium_type.map(|premium| match premium {
-                    PremiumType::None => "None",
-                    PremiumType::Nitro => "Nitro",
-                    PremiumType::NitroClassic => "Nitro Classic",
-                }))
                 .bind(
                     current_user
                         .public_flags
