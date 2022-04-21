@@ -24,7 +24,6 @@
 use std::env;
 
 use base::discord::model::id::{marker::UserMarker, Id};
-use base::discord::model::user::PremiumType;
 use cache_base::future::{GetEntityFuture, UpsertEntityFuture};
 use cache_base::Repository;
 use sqlx::postgres::PgPool;
