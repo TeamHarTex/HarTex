@@ -49,11 +49,13 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
 
     log::trace!("retrieving all possible servers");
     let target = loadbal_request.target_server_type();
-    let target_ips = servers::SERVERS
+    let Some(target_ips) = servers::SERVERS
         .iter()
-        .filter(|entry| entry.key() == &target)
-        .map(|entry| entry.value().clone())
-        .collect::<Vec<_>>();
+        .find(|entry| entry.key() == &target)
+        .map(|entry| entry.value().clone()) else {
+        log::trace!("invalid server type, responding with HTTP 503");
+        return Ok(Response::new(503));
+    };
     if let Some(ip) = get_good_ip(target_ips).await {
         log::trace!("building http request to actual server");
         log::trace!(

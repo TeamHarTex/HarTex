@@ -66,7 +66,7 @@ pub fn main() {
         };
         let Value::String(server_address) = table["address"].clone() else {
             println!(
-                "cargo:warning=configuration file invalid: expected string for server address; the `loadbal` (bin and lib) crates will not compiler"
+                "cargo:warning=configuration file invalid: expected string for server address; the `loadbal` (bin and lib) crates will not compile"
             );
             return;
         };
