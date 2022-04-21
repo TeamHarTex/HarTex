@@ -30,42 +30,18 @@ use cache_base::Entity;
 ///
 /// This structure is here only for a separate cache for the current user (aka the bot itself).
 pub struct CachedCurrentUser {
-    pub(in crate) accent_colour: Option<u64>,
     pub(in crate) avatar: Option<ImageHash>,
-    pub(in crate) banner: Option<ImageHash>,
-    pub(in crate) bot: bool,
     pub(in crate) discriminator: String,
-    pub(in crate) email: Option<String>,
     pub(in crate) flags: Option<UserFlags>,
     pub(in crate) id: Id<UserMarker>,
-    pub(in crate) locale: Option<String>,
-    pub(in crate) mfa_enabled: bool,
     pub(in crate) username: String,
-    pub(in crate) premium_type: Option<PremiumType>,
     pub(in crate) public_flags: Option<UserFlags>,
-    pub(in crate) system: Option<bool>,
-    pub(in crate) verified: Option<bool>,
 }
 
 impl CachedCurrentUser {
     #[must_use]
-    pub fn accent_colour(&self) -> Option<u64> {
-        self.accent_colour
-    }
-
-    #[must_use]
     pub fn avatar(&self) -> Option<ImageHash> {
         self.avatar
-    }
-
-    #[must_use]
-    pub fn banner(&self) -> Option<ImageHash> {
-        self.banner
-    }
-
-    #[must_use]
-    pub fn bot(&self) -> bool {
-        self.bot
     }
 
     #[must_use]
@@ -74,23 +50,8 @@ impl CachedCurrentUser {
     }
 
     #[must_use]
-    pub fn email(&self) -> Option<&str> {
-        self.email.as_deref()
-    }
-
-    #[must_use]
     pub fn flags(&self) -> Option<UserFlags> {
         self.flags
-    }
-
-    #[must_use]
-    pub fn locale(&self) -> Option<&str> {
-        self.locale.as_deref()
-    }
-
-    #[must_use]
-    pub fn mfa_enabled(&self) -> bool {
-        self.mfa_enabled
     }
 
     #[must_use]
@@ -99,23 +60,8 @@ impl CachedCurrentUser {
     }
 
     #[must_use]
-    pub fn premium_type(&self) -> Option<PremiumType> {
-        self.premium_type
-    }
-
-    #[must_use]
     pub fn public_flags(&self) -> Option<UserFlags> {
         self.public_flags
-    }
-
-    #[must_use]
-    pub fn system(&self) -> Option<bool> {
-        self.system
-    }
-
-    #[must_use]
-    pub fn verified(&self) -> Option<bool> {
-        self.verified
     }
 }
 
@@ -130,21 +76,12 @@ impl Entity for CachedCurrentUser {
 impl From<CurrentUser> for CachedCurrentUser {
     fn from(other: CurrentUser) -> Self {
         Self {
-            accent_colour: other.accent_color,
             avatar: other.avatar,
-            banner: other.banner,
-            bot: other.bot,
             discriminator: other.discriminator.to_string(),
-            email: other.email,
             flags: other.flags,
             id: other.id,
-            locale: other.locale,
-            mfa_enabled: other.mfa_enabled,
             username: other.name,
-            premium_type: other.premium_type,
             public_flags: other.public_flags,
-            system: Some(false),
-            verified: other.verified,
         }
     }
 }
