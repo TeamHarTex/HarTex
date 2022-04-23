@@ -19,30 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Guilds in the Discord entity cache.
+use std::str::FromStr;
 
-use base::discord::model::guild::Guild;
-use base::discord::model::id::{marker::GuildMarker, Id};
-use cache_base::Entity;
+use sqlx::postgres::PgRow;
+use sqlx::{FromRow, Row};
 
-/// A cached guild.
-pub struct CachedGuild {
-    pub(in crate) id: Id<GuildMarker>,
-}
+impl<'r> FromRow<'r, PgRow> for CachedGuild {
+    fn from_row(row: &'r PgRow) -> Result<Self, sqlx::Error> {
+        let id_string = row.try_get::<String, &str>("id")?;
+        let id = Id::new_checked(id_string.parse::<u64>().unwrap()).unwrap();
 
-impl Entity for CachedGuild {
-    type Id = Id<GuildMarker>;
-
-    fn id(&self) -> Self::Id {
-        self.id
+        Ok(Self {
+            id
+        })
     }
 }
-
-impl From<Guild> for CachedGuild {
-    fn from(from: Guild) -> Self {
-        Self { id: from.id }
-    }
-}
-
-#[cfg(postgres)]
-include!("postgres_backend_include/guilds.rs");

@@ -29,6 +29,7 @@ use cache_base::Entity;
 /// This is basically identical to a regular cached user.
 ///
 /// This structure is here only for a separate cache for the current user (aka the bot itself).
+#[derive(Clone)]
 pub struct CachedCurrentUser {
     pub(in crate) avatar: Option<ImageHash>,
     pub(in crate) discriminator: String,
@@ -74,14 +75,14 @@ impl Entity for CachedCurrentUser {
 }
 
 impl From<CurrentUser> for CachedCurrentUser {
-    fn from(other: CurrentUser) -> Self {
+    fn from(from: CurrentUser) -> Self {
         Self {
-            avatar: other.avatar,
-            discriminator: other.discriminator.to_string(),
-            flags: other.flags,
-            id: other.id,
-            username: other.name,
-            public_flags: other.public_flags,
+            avatar: from.avatar,
+            discriminator: from.discriminator.to_string(),
+            flags: from.flags,
+            id: from.id,
+            username: from.name,
+            public_flags: from.public_flags,
         }
     }
 }
