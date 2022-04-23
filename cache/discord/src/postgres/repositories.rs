@@ -23,12 +23,16 @@
 
 use std::env;
 
-use base::discord::model::id::{marker::UserMarker, Id};
+use base::discord::model::id::{
+    marker::{GuildMarker, UserMarker},
+    Id,
+};
 use cache_base::future::{GetEntityFuture, UpsertEntityFuture};
 use cache_base::Repository;
 use sqlx::postgres::PgPool;
 use sqlx::Postgres;
 
+use crate::entities::guilds::CachedGuild;
 use crate::entities::users::CachedCurrentUser;
 use crate::postgres::error::PostgresBackendError;
 use crate::postgres::PostgresBackend;
@@ -73,6 +77,42 @@ impl Repository<PostgresBackend, CachedCurrentUser> for CurrentUserRepository {
                         .public_flags
                         .map(|flags| flags.bits().to_string()),
                 )
+                .execute(&pool)
+                .await?;
+
+            Ok(())
+        })
+    }
+}
+
+pub struct GuildRepository;
+
+impl Repository<PostgresBackend, CachedGuild> for GuildRepository {
+    fn get(
+        &self,
+        entity_id: Id<GuildMarker>,
+    ) -> GetEntityFuture<'_, CachedGuild, PostgresBackendError> {
+        Box::pin(async move {
+            let pgsql_creds = env::var("PGSQL_CACHE_DB_CREDENTIALS")?;
+            let pool = PgPool::connect(&pgsql_creds).await?;
+            let query = include_str!("../../include/postgres/repositories/guilds/get.sql");
+
+            sqlx::query_as::<Postgres, CachedGuild>(query)
+                .bind(entity_id.to_string())
+                .fetch_one(&pool)
+                .await
+                .map_err(PostgresBackendError::from)
+        })
+    }
+
+    fn upsert(&self, guild: CachedGuild) -> UpsertEntityFuture<'_, PostgresBackendError> {
+        Box::pin(async move {
+            let pgsql_creds = env::var("PGSQL_CACHE_DB_CREDENTIALS")?;
+            let pool = PgPool::connect(&pgsql_creds).await?;
+            let query = include_str!("../../include/postgres/repositories/guilds/upsert.sql");
+
+            sqlx::query(query)
+                .bind(guild.id.to_string())
                 .execute(&pool)
                 .await?;
 
