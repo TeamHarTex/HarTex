@@ -23,6 +23,7 @@ use tide::{Request, Response, Result};
 
 use crate::state::RestState;
 
+#[allow(clippy::module_name_repetitions)]
 pub async fn proxy_request(_: Request<RestState>) -> Result<Response> {
     todo!()
 }
