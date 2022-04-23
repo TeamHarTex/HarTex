@@ -51,7 +51,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     let target = loadbal_request.target_server_type();
     let Some(target_ips) = servers::SERVERS
         .iter()
-        .find(|entry| entry.key() == &target)
+        .find(|entry| entry.key() == target)
         .map(|entry| entry.value().clone()) else {
         log::trace!("invalid server type, responding with HTTP 503");
         return Ok(Response::new(503));

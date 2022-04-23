@@ -23,6 +23,7 @@ use hyper::Client;
 use hyper_rustls::HttpsConnector;
 use hyper_trust_dns::TrustDnsHttpConnector;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct RestState {
     pub client: Client<HttpsConnector<TrustDnsHttpConnector>>,

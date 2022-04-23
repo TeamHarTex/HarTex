@@ -41,7 +41,7 @@ pub static SERVERS: SyncLazy<DashMap<String, Vec<Uri>>> = SyncLazy::new(|| {
 
         let parts = server
             .split('-')
-            .map(|str| String::from(str))
+            .map(String::from)
             .collect::<Vec<String>>();
         let uri = Uri::from_str(&parts[1]).unwrap();
         if map.contains_key(&parts[0]) {
