@@ -14,8 +14,9 @@ rust-version = "1.62.0"
 base = { path = "../base", features = ["cmdline", "logging", "panicking"] }
 env = { path = "../env" }
 
-hyper = { version = "0.14.17", default-features = false, features = ["client", "http1", "http2", "server", "tcp"] }
+hyper = { version = "0.14.17", default-features = false, features = ["client", "http1", "http2", "tcp"] }
 hyper-rustls = { version = "0.23.0", default-features = false, features = ["http1", "http2", "webpki-tokio"] }
 hyper-trust-dns = { version = "0.3.1", default-features = false }
 log = "0.4.16"
+tide = "0.17.0-beta.1"
 tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread"] }
