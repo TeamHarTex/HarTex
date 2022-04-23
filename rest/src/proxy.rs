@@ -19,9 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hyper::Client;
-use hyper_rustls::HttpsConnector;
-use hyper_trust_dns::TrustDnsHttpConnector;
 use tide::{Request, Response, Result};
 
 use crate::state::RestState;
