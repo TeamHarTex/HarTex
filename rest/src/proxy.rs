@@ -24,6 +24,6 @@ use hyper_rustls::HttpsConnector;
 use hyper_trust_dns::TrustDnsHttpConnector;
 use tide::{Request, Response, Result};
 
-pub async fn proxy_request(_: Request<()>, ) -> Result<Response> {
+pub async fn proxy_request(_: Request<()>) -> Result<Response> {
     todo!()
 }
