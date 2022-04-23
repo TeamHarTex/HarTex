@@ -19,12 +19,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use base::discord::model::gateway::payload::incoming::Ready;
+use base::discord::model::gateway::payload::incoming::{GuildCreate, Ready};
 use cache_base::Repository;
 
+use crate::entities::guilds::CachedGuild;
 use crate::entities::users::CachedCurrentUser;
 use crate::postgres::PostgresBackend;
-use crate::repositories::CurrentUserRepository;
+use crate::repositories::{CurrentUserRepository, GuildRepository};
+
+impl CacheUpdatable<PostgresBackend> for GuildCreate {
+    fn update(&self, _: &DiscordCache) -> UpdateCacheFuture<'_, PostgresBackend> {
+        let guild = CachedGuild::from(self.0.clone());
+
+        GuildRepository.upsert(guild)
+    }
+}
 
 impl CacheUpdatable<PostgresBackend> for Ready {
     fn update(&self, _: &DiscordCache) -> UpdateCacheFuture<'_, crate::postgres::PostgresBackend> {

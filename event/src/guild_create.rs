@@ -24,6 +24,7 @@
 use std::env as stdenv;
 
 use base::discord::model::gateway::payload::incoming::GuildCreate;
+use cache_discord::DiscordCache;
 use manidb::whitelist::GetGuildWhitelistStatus;
 use serde_json::json;
 use tide::http::headers::HeaderValue;
@@ -116,6 +117,18 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
         );
     } else {
         log::error!("guild of id is not whitelisted {}", guild_create.id);
+    }
+
+    log::trace!("caching guild");
+    if let Err(error) = DiscordCache.update(&guild_create).await {
+        log::trace!("failed to cache guild: {error:?}; responding with HTTP 500");
+        return Ok(Response::builder(500)
+            .body_json(&json!({
+                "code": 500i16,
+                "message": "Internal Server Error",
+            }))
+            .unwrap()
+            .build());
     }
 
     log::trace!("processing completed, responding with HTTP 200");

@@ -19,7 +19,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Entities in the Discord entity cache.
+//! Guilds in the Discord entity cache.
 
-pub mod guilds;
-pub mod users;
+use base::discord::model::guild::Guild;
+use base::discord::model::id::{marker::GuildMarker, Id};
+use cache_base::Entity;
+
+/// A cached guild.
+pub struct CachedGuild {
+    pub(in crate) id: Id<GuildMarker>,
+}
+
+impl Entity for CachedGuild {
+    type Id = Id<GuildMarker>;
+
+    fn id(&self) -> Self::Id {
+        self.id
+    }
+}
+
+impl From<Guild> for CachedGuild {
+    fn from(from: Guild) -> Self {
+        Self { id: from.id }
+    }
+}
+
+#[cfg(postgres)]
+include!("postgres_backend_include/guilds.rs");
