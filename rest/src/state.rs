@@ -22,8 +22,14 @@
 use hyper::Client;
 use hyper_rustls::HttpsConnector;
 use hyper_trust_dns::TrustDnsHttpConnector;
-use tide::{Request, Response, Result};
 
-pub async fn proxy_request(_: Request<()>, ) -> Result<Response> {
-    todo!()
+#[derive(Clone)]
+pub struct RestState {
+    pub client: Client<HttpsConnector<TrustDnsHttpConnector>>,
+}
+
+impl RestState {
+    pub fn new(client: Client<HttpsConnector<TrustDnsHttpConnector>>) -> Self {
+        Self { client }
+    }
 }
