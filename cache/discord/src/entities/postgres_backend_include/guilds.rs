@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::str::FromStr;
-
 use sqlx::postgres::PgRow;
 use sqlx::{FromRow, Row};
 
