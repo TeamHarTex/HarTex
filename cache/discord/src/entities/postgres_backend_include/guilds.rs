@@ -19,7 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Entities in the Discord entity cache.
+use sqlx::postgres::PgRow;
+use sqlx::{FromRow, Row};
 
-pub mod guilds;
-pub mod users;
+impl<'r> FromRow<'r, PgRow> for CachedGuild {
+    fn from_row(row: &'r PgRow) -> Result<Self, sqlx::Error> {
+        let id_string = row.try_get::<String, &str>("id")?;
+        let id = Id::new_checked(id_string.parse::<u64>().unwrap()).unwrap();
+
+        Ok(Self {
+            id
+        })
+    }
+}
