@@ -98,7 +98,7 @@ pub async fn main() -> Result<()> {
 
     log::trace!("creating http server");
     let mut server = tide::with_state(state::RestState::new(client));
-    server.at("/proxy").post(proxy::proxy_request);
+    server.at("/*path").post(proxy::proxy_request);
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
