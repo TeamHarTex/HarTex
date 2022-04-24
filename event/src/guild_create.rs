@@ -39,13 +39,7 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
     if option.is_none() {
         log::error!("`Authorization` header was not found, responding with HTTP 401");
 
-        return Ok(Response::builder(StatusCode::Unauthorized)
-            .body_json(&json!({
-                "code": 401i16,
-                "message": "Unauthorized",
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(401));
     }
 
     let auth_header = option.unwrap();
@@ -55,25 +49,13 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
     } else {
         let error = result.unwrap_err();
         log::error!("env error: {error}; responding with HTTP 500");
-        return Ok(Response::builder(StatusCode::InternalServerError)
-            .body_json(&json!({
-                "code": 500i16,
-                "message": "Internal Server Error",
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(500));
     };
 
     if !auth_header.contains(&HeaderValue::from_bytes(auth.as_bytes().to_vec()).unwrap()) {
         log::error!("`Authorization` header does not contain the correct secret key; responding with HTTP 401");
 
-        return Ok(Response::builder(StatusCode::Unauthorized)
-            .body_json(&json!({
-                "code": 401i16,
-                "message": "Unauthorized",
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(401));
     }
 
     log::trace!("deserializing guild create payload");
@@ -81,13 +63,7 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
     if let Err(error) = result {
         log::error!("failed to deserialize guild create payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
-        return Ok(Response::builder(error.status())
-            .body_json(&json!({
-                "code": error.status(),
-                "message": error.status().canonical_reason(),
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(error.status()));
     }
 
     let guild_create = result.unwrap();
@@ -100,13 +76,7 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
     let result = GetGuildWhitelistStatus::new(guild_create.id).await;
     if result.is_err() {
         log::trace!("internal error occurred, responding with HTTP 500");
-        return Ok(Response::builder(StatusCode::InternalServerError)
-            .body_json(&json!({
-                "code": 500i16,
-                "message": "Internal Server Error",
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(500));
     }
 
     if let Some(whitelist_status) = result.unwrap() {
@@ -122,22 +92,10 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
     log::trace!("caching guild");
     if let Err(error) = DiscordCache.update(&guild_create).await {
         log::trace!("failed to cache guild: {error:?}; responding with HTTP 500");
-        return Ok(Response::builder(500)
-            .body_json(&json!({
-                "code": 500i16,
-                "message": "Internal Server Error",
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(500));
     }
 
     log::trace!("processing completed, responding with HTTP 200");
 
-    Ok(Response::builder(StatusCode::Ok)
-        .body_json(&json!({
-            "code": 200i16,
-            "message": "OK",
-        }))
-        .unwrap()
-        .build())
+    Ok(Response::new(200))
 }
