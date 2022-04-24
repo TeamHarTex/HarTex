@@ -25,9 +25,8 @@ use std::env as stdenv;
 
 use base::discord::model::gateway::payload::incoming::Ready;
 use cache_discord::DiscordCache;
-use serde_json::json;
 use tide::http::headers::HeaderValue;
-use tide::{Request, Response, Result, StatusCode};
+use tide::{Request, Response, Result};
 
 /// Request handler for a `READY` event.
 ///
