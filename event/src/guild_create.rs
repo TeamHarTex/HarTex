@@ -26,9 +26,8 @@ use std::env as stdenv;
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use cache_discord::DiscordCache;
 use manidb::whitelist::GetGuildWhitelistStatus;
-use serde_json::json;
 use tide::http::headers::HeaderValue;
-use tide::{Request, Response, Result, StatusCode};
+use tide::{Request, Response, Result};
 
 /// Request handler for a `GUILD_CREATE` event.
 ///
