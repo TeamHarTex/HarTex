@@ -32,7 +32,7 @@ pub struct RestState {
 
 impl RestState {
     pub fn new(client: Client<HttpsConnector<TrustDnsHttpConnector>>) -> Self {
-        Self { client }
+        Self { client, ratelimit: RestRatelimit {} }
     }
 }
 
