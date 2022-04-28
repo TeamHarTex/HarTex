@@ -27,14 +27,16 @@ use hyper_trust_dns::TrustDnsHttpConnector;
 #[derive(Clone)]
 pub struct RestState {
     pub client: Client<HttpsConnector<TrustDnsHttpConnector>>,
-    pub ratelimit: RestRatelimit,
+    pub ratelimit: RatelimitManager,
 }
 
 impl RestState {
     pub fn new(client: Client<HttpsConnector<TrustDnsHttpConnector>>) -> Self {
-        Self { client, ratelimit: RestRatelimit {} }
+        Self {
+            client,
+            ratelimit: RestRatelimit {},
+        }
     }
 }
 
-#[derive(Clone)]
-pub struct RestRatelimit {}
+pub struct RatelimitManager {}
