@@ -34,7 +34,7 @@ impl RestState {
     pub fn new(client: Client<HttpsConnector<TrustDnsHttpConnector>>) -> Self {
         Self {
             client,
-            ratelimit: RestRatelimit {},
+            ratelimit: RatelimitManager {},
         }
     }
 }
