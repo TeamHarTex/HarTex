@@ -19,9 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hyper::{Body, Response, StatusCode};
 use std::collections::HashMap;
 use std::time::{Duration, SystemTime};
-use hyper::{Body, Response, StatusCode};
 
 use serde::{Deserialize, Serialize};
 use tokio::time;
@@ -105,7 +105,7 @@ impl Default for Ratelimit {
             limit: i64::MAX,
             remaining: i64::MAX,
             reset: None,
-            reset_after: None
+            reset_after: None,
         }
     }
 }
