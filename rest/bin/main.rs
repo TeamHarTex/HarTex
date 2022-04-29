@@ -25,6 +25,7 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![feature(async_closure)]
 #![feature(let_else)]
 #![feature(let_chains)]
 #![allow(clippy::match_result_ok)]
@@ -38,6 +39,9 @@ use base::panicking;
 use hyper::{Body, Client};
 use hyper_rustls::HttpsConnectorBuilder;
 use hyper_trust_dns::{TrustDnsHttpConnector, TrustDnsResolver};
+use rest::RestState;
+
+mod proxy;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
@@ -57,7 +61,7 @@ pub async fn main() -> Result<()> {
 
         return Ok(());
     };
-    let Ok(Some(_port)) = matches.opt_get::<u16>("port") else {
+    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
         log::error!("could not parse port argument; exiting");
 
         return Ok(());
@@ -90,7 +94,16 @@ pub async fn main() -> Result<()> {
     };
 
     log::trace!("creating http client");
-    let _client = Client::builder().build::<_, Body>(https_connector);
+    let client = Client::builder().build::<_, Body>(https_connector);
+
+    log::trace!("creating http server");
+    let mut server = tide::with_state(RestState::new(client));
+    server.at("/*").post(proxy::proxy_request);
+
+    log::trace!("listening on port {port}");
+    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
+        log::error!("server error: could not listen on port {port}: {error}");
+    }
 
     Ok(())
 }

@@ -34,7 +34,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     log::trace!("deserializing request payload");
     let result = request.body_json::<LoadbalRequest>().await;
     if let Err(error) = result {
-        log::error!("failed to deserialize guild create payload; see http error below");
+        log::error!("failed to deserialize loadbal request payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
         return Ok(Response::builder(error.status())
             .body_json(&json!({
@@ -51,7 +51,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     let target = loadbal_request.target_server_type();
     let Some(target_ips) = servers::SERVERS
         .iter()
-        .find(|entry| entry.key() == &target)
+        .find(|entry| entry.key() == target)
         .map(|entry| entry.value().clone()) else {
         log::trace!("invalid server type, responding with HTTP 503");
         return Ok(Response::new(503));
