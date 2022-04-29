@@ -39,9 +39,9 @@ use base::panicking;
 use hyper::{Body, Client};
 use hyper_rustls::HttpsConnectorBuilder;
 use hyper_trust_dns::{TrustDnsHttpConnector, TrustDnsResolver};
+use rest::RestState;
 
 mod proxy;
-mod state;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
@@ -97,8 +97,8 @@ pub async fn main() -> Result<()> {
     let client = Client::builder().build::<_, Body>(https_connector);
 
     log::trace!("creating http server");
-    let mut server = tide::with_state(state::RestState::new(client));
-    server.at("/*path").post(proxy::proxy_request);
+    let mut server = tide::with_state(RestState::new(client));
+    server.at("/*").post(proxy::proxy_request);
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {

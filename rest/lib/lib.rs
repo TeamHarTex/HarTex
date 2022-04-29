@@ -19,12 +19,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(let_else)]
+
 use std::sync::Arc;
 
+use dashmap::DashMap;
 use hyper::Client;
 use hyper_rustls::HttpsConnector;
 use hyper_trust_dns::TrustDnsHttpConnector;
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, RwLock};
+
+use crate::request::Ratelimit;
+
+pub mod request;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -44,7 +51,8 @@ impl RestState {
 
 #[derive(Clone)]
 pub struct RatelimitManager {
-    global: Arc<Mutex<()>>,
+    pub buckets: Arc<RwLock<DashMap<String, Arc<Mutex<Ratelimit>>>>>,
+    pub global: Arc<Mutex<()>>,
 }
 
 impl RatelimitManager {
@@ -54,6 +62,7 @@ impl RatelimitManager {
 
     pub(in crate) fn __internal_new() -> Self {
         Self {
+            buckets: Arc::default(),
             global: Arc::default(),
         }
     }

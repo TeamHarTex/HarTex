@@ -34,7 +34,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     log::trace!("deserializing request payload");
     let result = request.body_json::<LoadbalRequest>().await;
     if let Err(error) = result {
-        log::error!("failed to deserialize guild create payload; see http error below");
+        log::error!("failed to deserialize loadbal request payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
         return Ok(Response::builder(error.status())
             .body_json(&json!({
