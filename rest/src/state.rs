@@ -42,6 +42,7 @@ impl RestState {
     }
 }
 
+#[derive(Clone)]
 pub struct RatelimitManager {
     global: Arc<Mutex<()>>,
 }
