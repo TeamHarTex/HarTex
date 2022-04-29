@@ -19,9 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::sync::Arc;
+
 use hyper::Client;
 use hyper_rustls::HttpsConnector;
 use hyper_trust_dns::TrustDnsHttpConnector;
+use tokio::sync::Mutex;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
@@ -34,9 +37,23 @@ impl RestState {
     pub fn new(client: Client<HttpsConnector<TrustDnsHttpConnector>>) -> Self {
         Self {
             client,
-            ratelimit: RatelimitManager {},
+            ratelimit: RatelimitManager::new(),
         }
     }
 }
 
-pub struct RatelimitManager {}
+pub struct RatelimitManager {
+    global: Arc<Mutex<()>>,
+}
+
+impl RatelimitManager {
+    pub fn new() -> Self {
+        Self::__internal_new()
+    }
+
+    pub(in crate) fn __internal_new() -> Self {
+        Self {
+            global: Arc::default(),
+        }
+    }
+}
