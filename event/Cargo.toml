@@ -16,6 +16,7 @@ cache_discord = { path = "../cache/discord" }
 env = { path = "../env" }
 loadbal = { path = "../loadbal" }
 manidb = { path = "../manidb" }
+rest = { path = "../rest" }
 
 async-std = { version = "1.10.0", features = ["unstable", "tokio1"] }
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
