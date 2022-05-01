@@ -64,6 +64,12 @@ pub async fn main() -> Result<()> {
         "port",
         "The port for the event server to run on",
         "PORT",
+    )
+    .reqopt(
+        "",
+        "loadbal-port",
+        "The load balancer port.",
+        "PORT"
     );
 
     if args.is_empty() {
@@ -93,6 +99,12 @@ pub async fn main() -> Result<()> {
         return Ok(());
     };
 
+    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("port") else {
+        log::error!("could not parse port argument; exiting");
+
+        return Ok(());
+    };
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -103,7 +115,7 @@ pub async fn main() -> Result<()> {
     }
 
     log::trace!("creating http server");
-    let mut server = tide::new();
+    let mut server = tide::with_state(loadbal_port);
     server.at("/guild-create").post(guild_create::guild_create);
     server.at("/ping").post(ping::ping);
     server.at("/ready").post(ready::ready);
