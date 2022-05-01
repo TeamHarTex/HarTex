@@ -85,7 +85,7 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
             whitelist_status.whitelisted_since()
         );
     } else {
-        log::error!("guild of id is not whitelisted {}", guild_create.id);
+        log::error!("guild of id {} is not whitelisted", guild_create.id);
     }
 
     log::trace!("caching guild");

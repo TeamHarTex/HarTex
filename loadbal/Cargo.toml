@@ -14,12 +14,12 @@ rust-version = "1.62.0"
 base = { path = "../base", features = ["cmdline", "logging", "panicking"] }
 env = { path = "../env" }
 
-dashmap = "5.2.0"
+dashmap = "5.3.2"
 futures-util = "0.3.21"
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
 log = "0.4.16"
-serde = { version = "1.0.136", features = ["derive", "std"], default-features = false }
-serde_json = "1.0.79"
+serde = { version = "1.0.137", features = ["derive", "std"], default-features = false }
+serde_json = "1.0.80"
 tide = "0.17.0-beta.1"
 tokio = { version = "1.17.0", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
 
