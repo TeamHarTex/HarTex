@@ -106,7 +106,7 @@ pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
         let rl_request = RatelimitRequest {
             method: "DELETE".to_string(),
             headers,
-            body: "".to_string()
+            body: "".to_string(),
         };
         let serde_result = serde_json::to_string(&rl_request);
         let Ok(body) = serde_result else {
@@ -119,7 +119,7 @@ pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
             method: "POST".to_string(),
             route: format!("users/@me/guilds/{}", guild_create.id),
             headers: HashMap::new(),
-            body
+            body,
         };
 
         let serde_result = serde_json::to_string(&loadbal_request);
