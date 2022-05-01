@@ -31,7 +31,7 @@ use tide::{Request, Response, Result};
 /// Request handler for a `READY` event.
 ///
 /// The `READY` event is received through the `/ready` endpoint.
-pub async fn ready(mut request: Request<()>) -> Result<Response> {
+pub async fn ready(mut request: Request<u16>) -> Result<Response> {
     log::trace!("received ready event payload from gateway, validating request...");
     let option = request.header("Authorization");
     if option.is_none() {
