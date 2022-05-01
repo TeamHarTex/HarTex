@@ -86,7 +86,10 @@ pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
             whitelist_status.whitelisted_since()
         );
     } else {
-        log::error!("guild of id {} is not whitelisted, leaving guild", guild_create.id);
+        log::error!(
+            "guild of id {} is not whitelisted, leaving guild",
+            guild_create.id
+        );
 
         let mut headers = HashMap::new();
 
@@ -104,7 +107,7 @@ pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
             method: "DELETE".to_string(),
             route: format!("users/@me/guilds/{}", guild_create.id),
             headers,
-            body: "".to_string()
+            body: "".to_string(),
         };
 
         let serde_result = serde_json::to_string(&loadbal_request);
