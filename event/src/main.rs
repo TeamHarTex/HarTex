@@ -95,7 +95,7 @@ pub async fn main() -> Result<()> {
         return Ok(());
     };
 
-    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("port") else {
+    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("loadbal-port") else {
         log::error!("could not parse port argument; exiting");
 
         return Ok(());
