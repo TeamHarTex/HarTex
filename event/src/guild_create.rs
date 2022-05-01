@@ -29,6 +29,7 @@ use cache_discord::DiscordCache;
 use hyper::{Body, Client, Method, Request as Hyper};
 use loadbal::Request as LoadbalRequest;
 use manidb::whitelist::GetGuildWhitelistStatus;
+use rest::request::RatelimitRequest;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result};
 
@@ -94,20 +95,31 @@ pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
         let mut headers = HashMap::new();
 
         let result = stdenv::var("BOT_TOKEN");
-        let Ok(token) = result else {
+        let Ok(mut token) = result else {
             let error = result.unwrap_err();
             log::error!("env error: {error}; responding with HTTP 500");
             return Ok(Response::new(500));
         };
-
+        token.insert_str(0, "Bot ");
         headers.insert(String::from("Authorization"), token);
+
+        let rl_request = RatelimitRequest {
+            method: "DELETE".to_string(),
+            headers,
+            body: "".to_string()
+        };
+        let serde_result = serde_json::to_string(&rl_request);
+        let Ok(body) = serde_result else {
+            log::error!("failed to serialize ratelimited request; responding with HTTP 500");
+            return Ok(Response::new(500));
+        };
 
         let loadbal_request = LoadbalRequest {
             target_server_type: "rest".to_string(),
-            method: "DELETE".to_string(),
+            method: "POST".to_string(),
             route: format!("users/@me/guilds/{}", guild_create.id),
-            headers,
-            body: "".to_string(),
+            headers: HashMap::new(),
+            body
         };
 
         let serde_result = serde_json::to_string(&loadbal_request);
@@ -127,6 +139,9 @@ pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
             let client = Client::new();
             client.request(request).await
         });
+
+        log::trace!("processing completed, responding with HTTP 200");
+        return Ok(Response::new(200));
     }
 
     log::trace!("caching guild");

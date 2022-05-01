@@ -112,9 +112,9 @@ impl Default for Ratelimit {
 
 #[derive(Deserialize, Serialize)]
 pub struct RatelimitRequest {
-    method: String,
-    headers: HashMap<String, String>,
-    body: String,
+    pub method: String,
+    pub headers: HashMap<String, String>,
+    pub body: String,
 }
 
 impl RatelimitRequest {
