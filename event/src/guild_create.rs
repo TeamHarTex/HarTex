@@ -31,12 +31,11 @@ use loadbal::Request as LoadbalRequest;
 use manidb::whitelist::GetGuildWhitelistStatus;
 use tide::http::headers::HeaderValue;
 use tide::{Request, Response, Result};
-use base::error::{Error, ErrorKind};
 
 /// Request handler for a `GUILD_CREATE` event.
 ///
 /// The `GUILD_CREATE` event is received through the `/guild-create` endpoint.
-pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
+pub async fn guild_create(mut request: Request<u16>) -> Result<Response> {
     log::trace!("received guild create event payload from gateway, validating request...");
     let option = request.header("Authorization");
     if option.is_none() {
@@ -111,7 +110,7 @@ pub async fn guild_create(mut request: Request<()>) -> Result<Response> {
         let serde_result = serde_json::to_string(&loadbal_request);
         let result = Hyper::builder()
             .method(Method::POST)
-            .uri(format!("http://127.0.0.1:{port}/request"))
+            .uri(format!("http://127.0.0.1:{}/request", request.state()))
             .body(Body::from(serde_result.unwrap()));
         if let Err(src) = result {
             log::error!("request error: could not build request: {src}; responding with HTTP 500");
