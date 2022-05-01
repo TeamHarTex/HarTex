@@ -22,6 +22,6 @@
 use tide::{Request, Response, Result};
 
 #[allow(clippy::unused_async)]
-pub async fn ping(_: Request<()>) -> Result<Response> {
+pub async fn ping(_: Request<u16>) -> Result<Response> {
     Ok(Response::new(200))
 }
