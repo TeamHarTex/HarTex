@@ -19,5 +19,5 @@ loadbal = { path = "../loadbal" }
 futures-util = "0.3.21"
 hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
 log = "0.4.16"
-serde_json = "1.0.79"
+serde_json = "1.0.80"
 tokio = { version = "1.17.0", features = ["macros", "rt", "rt-multi-thread", "sync"] }
