@@ -24,7 +24,6 @@
 //! Implementation of load balancing for servers used by the codebase.
 
 #![deny(warnings)]
-
 #![feature(let_else)]
 #![feature(once_cell)]
 
