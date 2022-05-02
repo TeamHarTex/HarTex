@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(warnings)]
 #![feature(let_else)]
 
 use std::sync::Arc;
