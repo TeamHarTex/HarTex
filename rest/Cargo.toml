@@ -14,11 +14,11 @@ rust-version = "1.62.0"
 base = { path = "../base", features = ["cmdline", "logging", "panicking"] }
 env = { path = "../env" }
 
-dashmap = "5.3.2"
+dashmap = "5.3.3"
 hyper = { version = "0.14.17", default-features = false, features = ["client", "http1", "http2", "tcp"] }
 hyper-rustls = { version = "0.23.0", default-features = false, features = ["http1", "http2", "webpki-tokio"] }
 hyper-trust-dns = { version = "0.3.1", default-features = false }
-log = "0.4.16"
+log = "0.4.17"
 tide = "0.17.0-beta.1"
 serde = { version = "1.0.137", features = ["derive", "std"], default-features = false }
 serde_json = "1.0.80"
