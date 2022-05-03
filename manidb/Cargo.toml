@@ -14,5 +14,5 @@ rust-version = "1.62.0"
 base = { path = "../base", default-features = false, features = ["discord-model"] }
 model = { path = "../model" }
 
-log = "0.4.16"
+log = "0.4.17"
 sqlx = { version = "0.5.13", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
