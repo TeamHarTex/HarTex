@@ -19,14 +19,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Interactions API.
+pub mod help;
 
-use base::discord::model::application::command::Command;
-
-pub mod general;
-
-pub trait InteractionHandler {
-    fn commands() -> Vec<Command> {
-        vec![]
-    }
-}

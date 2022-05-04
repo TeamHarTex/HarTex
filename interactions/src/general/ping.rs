@@ -19,14 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Interactions API.
+use crate::InteractionCommand;
 
-use base::discord::model::application::command::Command;
+pub struct PingCommand;
 
-pub mod general;
+impl InteractionCommand for PingCommand {
 
-pub trait InteractionHandler {
-    fn commands() -> Vec<Command> {
-        vec![]
-    }
 }
+
