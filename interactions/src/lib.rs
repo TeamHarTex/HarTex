@@ -20,3 +20,9 @@
  */
 
 //! Interactions API.
+
+use base::discord::model::application::command::Command;
+
+pub trait InteractionHandler {
+    fn commands() -> Vec<Command>;
+}
