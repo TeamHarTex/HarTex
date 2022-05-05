@@ -23,7 +23,4 @@ use crate::InteractionCommand;
 
 pub struct PingCommand;
 
-impl InteractionCommand for PingCommand {
-
-}
-
+impl InteractionCommand for PingCommand {}
