@@ -21,10 +21,10 @@ log = "0.4.17"
 serde = { version = "1.0.137", features = ["derive", "std"], default-features = false }
 serde_json = "1.0.80"
 tide = "0.17.0-beta.1"
-tokio = { version = "1.17.0", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
+tokio = { version = "1.17.1", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
 
 [build-dependencies]
-toml_edit = "0.14.2"
+toml_edit = "0.14.3"
 
 [[bin]]
 name = "loadbal"
