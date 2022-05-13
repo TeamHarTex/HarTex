@@ -6,7 +6,7 @@ old
 venv
 
 # built binaries (local host), optional
-_binaries
+out
 
 # target directories
 **/target
