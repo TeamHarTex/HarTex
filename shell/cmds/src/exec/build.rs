@@ -28,6 +28,7 @@ pub fn run_build(options: Vec<&str>) {
     };
 
     println!("build: checking out branch {branch}");
+    println!("build: git checkout {branch}");
     if let Err(error) = Command::new("git")
         .arg("checkout")
         .arg(branch)
@@ -35,4 +36,7 @@ pub fn run_build(options: Vec<&str>) {
         println!("build: \x1B[1;31merror: \x1B[0m\x1B[1mfailed to checkout branch: {error}\x1B[0m");
         return;
     }
+
+    println!("build: building binaries");
+    println!("build: cargo build --release");
 }
