@@ -36,4 +36,8 @@ pub fn run_build(options: Vec<&str>) {
 
     println!("build: building binaries");
     println!("build: cargo build --release");
+    if let Err(error) = Command::new("cargo").arg("build").arg("--release").status() {
+        println!("build: \x1B[1;31merror: \x1B[0m\x1B[1mfailed to build workspace: {error}\x1B[0m");
+        return;
+    }
 }
