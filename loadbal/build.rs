@@ -21,6 +21,7 @@
 
 #![feature(let_else)]
 
+use std::fmt::Write;
 use std::fs;
 
 use toml_edit::{Document, Item, Value};
@@ -70,11 +71,12 @@ pub fn main() {
             );
             return;
         };
-        servers_env.push_str(&format!(
-            "{}-{};",
+
+        write!(
+            servers_env, "{}-{};",
             server_type.value().as_str(),
             server_address.value().as_str()
-        ));
+        ).unwrap();
     });
     println!("{servers_env}");
 }
