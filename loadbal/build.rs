@@ -21,6 +21,7 @@
 
 #![feature(let_else)]
 
+use std::fmt::Write;
 use std::fs;
 
 use toml_edit::{Document, Item, Value};
