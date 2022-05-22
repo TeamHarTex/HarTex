@@ -119,7 +119,6 @@ pub async fn main() -> Result<()> {
 
     let result = Cluster::builder(token.clone(), INTENTS)
         .event_types(EVENT_TYPE_FLAGS)
-        .shard_scheme(ShardScheme::Auto)
         .shard_presence(|id| {
             Some(
                 UpdatePresencePayload::new(
