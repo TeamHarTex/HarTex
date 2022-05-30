@@ -23,21 +23,25 @@ use std::process::Command;
 
 pub fn run_build(options: Vec<&str>) {
     let Some(branch) = options.get(0) else {
-        println!("build: \x1B[1;31merror: \x1B[0m\x1B[1mmissing branch to compile\x1B[0m");
+        println!("\x1B[1mbuild: \x1B[31merror: \x1B[0m\x1B[1mmissing branch to compile\x1B[0m");
         return;
     };
 
-    println!("build: checking out branch {branch}");
-    println!("build: git checkout {branch}");
+    println!("\x1B[1mbuild: checking out branch {branch}\x1B[0m");
+    println!("\x1B[1mbuild: git checkout {branch}\x1B[0m");
     if let Err(error) = Command::new("git").arg("checkout").arg(branch).status() {
-        println!("build: \x1B[1;31merror: \x1B[0m\x1B[1mfailed to checkout branch: {error}\x1B[0m");
+        println!(
+            "\x1B[1mbuild: \x1B[31merror: \x1B[0m\x1B[1mfailed to checkout branch: {error}\x1B[0m"
+        );
         return;
     }
 
-    println!("build: building binaries");
-    println!("build: cargo build --release");
+    println!("\x1B[1mbuild: building binaries\x1B[0m");
+    println!("\x1B[1mbuild: cargo build --release\x1B[0m");
     if let Err(error) = Command::new("cargo").arg("build").arg("--release").status() {
-        println!("build: \x1B[1;31merror: \x1B[0m\x1B[1mfailed to build workspace: {error}\x1B[0m");
+        println!(
+            "\x1B[1mbuild: \x1B[31merror: \x1B[0m\x1B[1mfailed to build workspace: {error}\x1B[0m"
+        );
         return;
     }
 }
