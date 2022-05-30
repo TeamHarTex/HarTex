@@ -41,7 +41,7 @@
 use std::env as stdenv;
 
 use base::cmdline;
-use base::discord::gateway::cluster::{ClusterStartErrorType, ShardScheme};
+use base::discord::gateway::cluster::ClusterStartErrorType;
 use base::discord::gateway::{Cluster, EventTypeFlags, Intents};
 use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
 use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
@@ -119,7 +119,6 @@ pub async fn main() -> Result<()> {
 
     let result = Cluster::builder(token.clone(), INTENTS)
         .event_types(EVENT_TYPE_FLAGS)
-        .shard_scheme(ShardScheme::Auto)
         .shard_presence(|id| {
             Some(
                 UpdatePresencePayload::new(
