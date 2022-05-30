@@ -27,7 +27,7 @@ use cache_base::Entity;
 
 /// A cached guild.
 pub struct CachedGuild {
-    pub(in crate) id: Id<GuildMarker>,
+    pub(crate) id: Id<GuildMarker>,
 }
 
 impl Entity for CachedGuild {

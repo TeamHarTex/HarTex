@@ -31,12 +31,12 @@ use cache_base::Entity;
 /// This structure is here only for a separate cache for the current user (aka the bot itself).
 #[derive(Clone)]
 pub struct CachedCurrentUser {
-    pub(in crate) avatar: Option<ImageHash>,
-    pub(in crate) discriminator: String,
-    pub(in crate) flags: Option<UserFlags>,
-    pub(in crate) id: Id<UserMarker>,
-    pub(in crate) username: String,
-    pub(in crate) public_flags: Option<UserFlags>,
+    pub(crate) avatar: Option<ImageHash>,
+    pub(crate) discriminator: String,
+    pub(crate) flags: Option<UserFlags>,
+    pub(crate) id: Id<UserMarker>,
+    pub(crate) username: String,
+    pub(crate) public_flags: Option<UserFlags>,
 }
 
 impl CachedCurrentUser {
