@@ -31,10 +31,10 @@ use sqlx::{Error, FromRow, Row};
 
 /// A whitelisted guild in the database.
 pub struct WhitelistedGuild {
-    pub(in crate) id: Id<GuildMarker>,
-    pub(in crate) name: String,
-    pub(in crate) owner_id: Id<UserMarker>,
-    pub(in crate) whitelisted_since: OffsetDateTime,
+    pub(crate) id: Id<GuildMarker>,
+    pub(crate) name: String,
+    pub(crate) owner_id: Id<UserMarker>,
+    pub(crate) whitelisted_since: OffsetDateTime,
 }
 
 impl WhitelistedGuild {

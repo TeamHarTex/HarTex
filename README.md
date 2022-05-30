@@ -27,10 +27,10 @@ You may follow the latest developments as well as ask for support in the guild.
 
 ### Minimum Supported Rust Version (MSRV)
 
-This project has an MSRV of `1.62.0`. What this means is that, a Rust compiler of version
-`1.62.0` or above is required to build and run the entire project.
+This project has an MSRV of `1.63.0`. What this means is that, a Rust compiler of version
+`1.63.0` or above is required to build and run the entire project.
 
-`1.62.0` is typically the latest nightly version of the compiler - we use the nightly release
+`1.63.0` is typically the latest nightly version of the compiler - we use the nightly release
 channel because there are certain features we need are gated behind a feature flag which is
 only usable when using the nightly compiler.
 
