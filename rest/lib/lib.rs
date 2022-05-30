@@ -61,7 +61,7 @@ impl RatelimitManager {
         Self::__internal_new()
     }
 
-    pub(in crate) fn __internal_new() -> Self {
+    pub(crate) fn __internal_new() -> Self {
         Self {
             buckets: Arc::default(),
             global: Arc::default(),
