@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::path::PathBuf;
+
 use nu_ansi_term::{Color, Style};
 use reedline::{DefaultHinter, FileBackedHistory, Reedline, Signal};
 
@@ -37,7 +39,9 @@ Type `help` for a list of available commands.",
         .with_hinter(Box::new(
             DefaultHinter::default().with_style(Style::new().fg(Color::DarkGray)),
         ))
-        .with_history(Box::new(FileBackedHistory::new(5)));
+        .with_history(Box::new(
+            FileBackedHistory::with_file(1000, PathBuf::from("./shelldata/history")).unwrap(),
+        ));
 
     loop {
         match ed.read_line(&prompt::ShellPropmt) {
