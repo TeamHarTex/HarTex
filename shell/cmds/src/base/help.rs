@@ -25,6 +25,7 @@ pub fn run_help() {
 
     build      Builds the entire bot, on a specific Git branch
     help       Shows this message
+    start      Runs all the components of the bot
     version    Shows version information"
     );
 }
