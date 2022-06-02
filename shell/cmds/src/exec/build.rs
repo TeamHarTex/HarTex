@@ -44,4 +44,10 @@ pub fn run_build(options: Vec<&str>) {
         );
         return;
     }
+
+    // TODO: move the built artefacts into their correct directories
+    if options.iter().any(|opt| opt == &"--staging") {
+    }
+    else {
+    }
 }

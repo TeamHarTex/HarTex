@@ -19,20 +19,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(let_else)]
+use std::process::Command;
 
-mod base;
-mod exec;
+pub fn run_start(options: Vec<&str>) {
+    let Some(branch) = options.get(0) else {
+        println!("\x1B[1mstart: \x1B[31merror: \x1B[0m\x1B[1mmissing branch to run\x1B[0m");
+        return;
+    };
 
-pub fn process_command(command: String) {
-    let parts = command.split(" ").collect::<Vec<_>>();
-
-    match parts[0] {
-        "build" => exec::build::run_build(parts[1..].to_vec()),
-        "help" => base::help::run_help(),
-        "start" => exec::start::run_start(parts[1..].to_vec()),
-        "version" => base::version::run_version(),
-        s if s.is_empty() => (),
-        cmd => println!("\x1B[1m{cmd}: \x1B[31mcommand not found\x1B[0m"),
+    println!("\x1B[1mstart: starting event server\x1B[0m");
+    println!("\x1B[1mstart: pwsh -Command Start-Process ./out/{branch}/event\x1B[0m");
+    let result = Command::new("pwsh")
+        .arg("-Command")
+        .arg("Start-Process")
+        .arg(format!("./out/{}/event", branch))
+        .status();
+    if let Err(error) = result {
+        println!("\x1B[1mstart: \x1B[31merror: \x1B[0m\x1B[1mfailed to start event server: {error}\x1B[0m");
+        return;
     }
 }
