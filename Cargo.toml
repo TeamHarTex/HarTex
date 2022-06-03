@@ -12,6 +12,4 @@ members = [
     "manidb",
     "model",
     "rest",
-    "shell/cli",
-    "shell/cmds",
 ]
