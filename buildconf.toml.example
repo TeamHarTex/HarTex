@@ -17,5 +17,5 @@
 
 # Configures the servers to load balance.
 #servers = [
-#    { type = "event", address = "0.0.0.0:0000" }
+#    { type = "rest", address = "0.0.0.0:0000" }
 #]

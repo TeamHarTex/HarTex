@@ -6,7 +6,6 @@ members = [
     "env",
     "event",
     "ext",
-    "gateway",
     "interactions",
     "loadbal",
     "manidb",
