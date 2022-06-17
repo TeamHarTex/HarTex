@@ -47,6 +47,7 @@ mod proxy;
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
+
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
     let mut base_options = cmdline::Options::new();

@@ -19,6 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(let_else)]
+
+use std::env as stdenv;
+use tide_websockets::WebSocket;
+
 use base::cmdline;
 use base::error::Result;
 use base::logging;
@@ -29,14 +34,37 @@ pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
 
+    let args = stdenv::args().collect::<Vec<_>>();
+    let args = &args[1..];
     let mut base_options = cmdline::Options::new();
-    let options = base_options
-        .reqopt(
-            "",
-            "port",
-            "The port for the gateway server to run on",
-            "PORT",
-        );
+    let options = base_options.reqopt(
+        "",
+        "port",
+        "The port for the gateway server to run on",
+        "PORT",
+    );
+
+    let Some(matches) = options.parse(args).ok() else {
+        log::error!("could not parse command line arguments; exiting");
+
+        return Ok(());
+    };
+    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
+        log::error!("could not parse port argument; exiting");
+
+        return Ok(());
+    };
+
+    log::trace!("creating http server");
+    let mut server = tide::new();
+    server.at("/ws").get(WebSocket::new(|request, connection| async move {
+        Ok(())
+    }));
+
+    log::trace!("listening on port {port}");
+    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
+        log::error!("server error: could not listen on port {port}: {error}");
+    }
 
     Ok(())
 }
