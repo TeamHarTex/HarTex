@@ -13,6 +13,9 @@ rust-version = "1.63.0"
 [dependencies]
 base = { path = "../base", features = ["cmdline", "logging", "panicking"] }
 
+log = "0.4.17"
+tide = "0.17.0-beta.1"
+tide-websockets = "0.4.0"
 tokio = { version = "1.17.1", features = ["macros", "rt", "rt-multi-thread"] }
 
 [[bin]]
