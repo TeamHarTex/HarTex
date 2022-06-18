@@ -18,3 +18,19 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use tide_websockets::WebSocketConnection;
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone)]
+pub struct GatewayState {
+    pub connections: Vec<WebSocketConnection>,
+}
+
+impl GatewayState {
+    pub fn new() -> Self {
+        Self {
+            connections: Vec::new(),
+        }
+    }
+}

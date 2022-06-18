@@ -22,12 +22,14 @@
 #![feature(let_else)]
 
 use std::env as stdenv;
+use tide::Request;
 use tide_websockets::WebSocket;
 
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
+use gateway::GatewayState;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
@@ -56,8 +58,8 @@ pub async fn main() -> Result<()> {
     };
 
     log::trace!("creating http server");
-    let mut server = tide::new();
-    server.at("/ws").get(WebSocket::new(|request, connection| async move {
+    let mut server = tide::with_state(GatewayState::new());
+    server.at("/ws").get(WebSocket::new(|_request, _connection| async move {
         Ok(())
     }));
 
