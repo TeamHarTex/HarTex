@@ -29,7 +29,7 @@ use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
-use gateway::GatewayState;
+use env;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
@@ -57,9 +57,18 @@ pub async fn main() -> Result<()> {
         return Ok(());
     };
 
-    log::trace!("creating http server");
-    let mut server = tide::with_state(GatewayState::new());
-    server.at("/ws").get(WebSocket::new(|_request, _connection| async move {
+    if let Err(error) = env::load() {
+        log::error!("env error: {error}");
+        log::warn!("environment variables cannot be loaded; exiting");
+        log::info!("help: please make sure that the required environment variables are present");
+        log::info!(r#"help: see the above errors (those that start with "retrieval failed")"#);
+
+        return Ok(());
+    }
+
+    log::trace!("creating websocket server");
+    let mut server = tide::new();
+    server.at("/ws").get(WebSocket::new(|_request, connection| async move {
         Ok(())
     }));
 
