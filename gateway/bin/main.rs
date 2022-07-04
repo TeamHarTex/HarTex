@@ -22,7 +22,6 @@
 #![feature(let_else)]
 
 use std::env as stdenv;
-use tide::Request;
 use tide_websockets::WebSocket;
 
 use base::cmdline;
@@ -66,9 +65,12 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
+    let mut connections = slotmap::SlotMap::new();
+
     log::trace!("creating websocket server");
     let mut server = tide::new();
     server.at("/ws").get(WebSocket::new(|_request, connection| async move {
+        connections.insert(connection);
         Ok(())
     }));
 
