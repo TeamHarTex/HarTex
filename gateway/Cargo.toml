@@ -15,6 +15,7 @@ base = { path = "../base", features = ["cmdline", "discord-gateway", "logging", 
 env = { path = "../env" }
 
 log = "0.4.17"
+slotmap = "1.0.6"
 tide = "0.16.0"
 tide-websockets = "0.4.0"
 tokio = { version = "1.17.1", features = ["macros", "rt", "rt-multi-thread"] }
