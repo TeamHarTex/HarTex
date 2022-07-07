@@ -22,8 +22,8 @@
 
 //! Service to get servers to load balance from the environment.
 
-use std::sync::LazyLock;
 use std::str::FromStr;
+use std::sync::LazyLock;
 
 use dashmap::DashMap;
 use hyper::Uri;

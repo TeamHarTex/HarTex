@@ -70,15 +70,17 @@ pub async fn main() -> Result<()> {
 
     log::trace!("creating websocket server");
     let mut server = tide::new();
-    server.at("/ws").get(WebSocket::new(|_request, connection| async move {
-        tokio::spawn(async move {
-            let mut new_rx = tx.subscribe();
-            while let Ok(payload) = new_rx.recv().await {
-                todo!()
-            }
-        });
-        Ok(())
-    }));
+    server
+        .at("/ws")
+        .get(WebSocket::new(|_request, connection| async move {
+            tokio::spawn(async move {
+                let mut new_rx = tx.subscribe();
+                while let Ok(payload) = new_rx.recv().await {
+                    todo!()
+                }
+            });
+            Ok(())
+        }));
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
