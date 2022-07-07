@@ -22,13 +22,14 @@
 #![feature(let_else)]
 
 use std::env as stdenv;
-use tide_websockets::WebSocket;
 
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
 use env;
+use tide_websockets::WebSocket;
+use tokio::sync::broadcast;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
@@ -65,12 +66,17 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    let mut connections = slotmap::SlotMap::new();
+    let (tx, mut rx) = broadcast::channel::<()>(50);
 
     log::trace!("creating websocket server");
     let mut server = tide::new();
     server.at("/ws").get(WebSocket::new(|_request, connection| async move {
-        connections.insert(connection);
+        tokio::spawn(async move {
+            let mut new_rx = tx.subscribe();
+            while let Ok(payload) = new_rx.recv().await {
+                todo!()
+            }
+        });
         Ok(())
     }));
 
