@@ -22,13 +22,13 @@
 
 //! Service to get servers to load balance from the environment.
 
-use std::lazy::SyncLazy;
 use std::str::FromStr;
+use std::sync::LazyLock;
 
 use dashmap::DashMap;
 use hyper::Uri;
 
-pub static SERVERS: SyncLazy<DashMap<String, Vec<Uri>>> = SyncLazy::new(|| {
+pub static SERVERS: LazyLock<DashMap<String, Vec<Uri>>> = LazyLock::new(|| {
     let map = DashMap::new();
 
     let servers = env!("LOADBAL_SERVERS");
@@ -55,5 +55,5 @@ pub static SERVERS: SyncLazy<DashMap<String, Vec<Uri>>> = SyncLazy::new(|| {
 });
 
 pub fn init() {
-    SyncLazy::force(&SERVERS);
+    LazyLock::force(&SERVERS);
 }

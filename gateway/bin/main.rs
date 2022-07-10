@@ -19,31 +19,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The HarTex REST Process Binary
-//!
-//! The REST process binary acts as a proxy over the Discord API.
-
-#![deny(clippy::pedantic)]
-#![deny(warnings)]
-#![feature(async_closure)]
 #![feature(let_else)]
-#![feature(let_chains)]
-#![allow(clippy::match_result_ok)]
 
 use std::env as stdenv;
 
+use async_std::channel;
+use async_std::task;
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
-use hyper::{Body, Client};
-use hyper_rustls::HttpsConnectorBuilder;
-use hyper_trust_dns::{TrustDnsHttpConnector, TrustDnsResolver};
-use rest::RestState;
+use env;
+use tide_websockets::WebSocket;
 
-mod proxy;
-
-#[tokio::main]
+#[async_std::main]
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
@@ -54,9 +43,10 @@ pub async fn main() -> Result<()> {
     let options = base_options.reqopt(
         "",
         "port",
-        "The port for the event server to run on",
+        "The port for the gateway server to run on",
         "PORT",
     );
+
     let Some(matches) = options.parse(args).ok() else {
         log::error!("could not parse command line arguments; exiting");
 
@@ -77,29 +67,26 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("creating https connector for http client");
-    let https_connector = {
-        let mut connector = TrustDnsHttpConnector::new_with_resolver(TrustDnsResolver::new());
-        connector.enforce_http(false);
+    let (_tx, rx) = channel::unbounded::<()>();
 
-        let builder = HttpsConnectorBuilder::new()
-            .with_webpki_roots()
-            .https_only()
-            .enable_http1();
+    log::trace!("creating websocket server");
+    let mut server = tide::new();
+    server
+        .at("/ws")
+        .get(WebSocket::new(move |_request, _connection| {
+            let new_rx = rx.clone();
 
-        if let Ok(enabled) = stdenv::var("REST_HTTP_2_ENABLED") && matches!(enabled.as_str(), "true") {
-            builder.enable_http2().wrap_connector(connector)
-        } else {
-            builder.wrap_connector(connector)
-        }
-    };
+            async {
+                let task = task::spawn(async move {
+                    while let Ok(_payload) = new_rx.recv().await {
+                        todo!()
+                    }
 
-    log::trace!("creating http client");
-    let client = Client::builder().build::<_, Body>(https_connector);
-
-    log::trace!("creating http server");
-    let mut server = tide::with_state(RestState::new(client));
-    server.at("/*").post(proxy::proxy_request);
+                    Ok(())
+                });
+                task.await
+            }
+        }));
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
