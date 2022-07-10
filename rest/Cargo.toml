@@ -20,8 +20,8 @@ hyper-rustls = { version = "0.23.0", default-features = false, features = ["http
 hyper-trust-dns = { version = "0.3.1", default-features = false }
 log = "0.4.17"
 tide = "0.17.0-beta.1"
-serde = { version = "1.0.137", features = ["derive", "std"], default-features = false }
-serde_json = "1.0.80"
+serde = { version = "1.0.138", features = ["derive", "std"], default-features = false }
+serde_json = "1.0.82"
 tokio = { version = "1.17.1", features = ["macros", "rt", "rt-multi-thread", "sync", "time"] }
 url = "2.2.2"
 

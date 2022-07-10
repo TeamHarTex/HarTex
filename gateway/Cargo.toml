@@ -11,13 +11,14 @@ rust-version = "1.63.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../base", features = ["cmdline", "discord-gateway", "discord-model", "logging", "panicking"] }
+base = { path = "../base", features = ["cmdline", "discord-gateway", "logging", "panicking"] }
 env = { path = "../env" }
-ext = { path = "../ext", features = ["discord-model-ext"] }
-loadbal = { path = "../loadbal" }
 
-futures-util = "0.3.21"
-hyper = { version = "0.14.17", features = ["client", "http1"], default-features = false }
+async-std = { version = "1.12.0", features = ["attributes"] }
 log = "0.4.17"
-serde_json = "1.0.80"
-tokio = { version = "1.17.1", features = ["macros", "rt", "rt-multi-thread", "sync"] }
+tide = "0.16.0"
+tide-websockets = "0.4.0"
+
+[[bin]]
+name = "gateway"
+path = "bin/main.rs"
