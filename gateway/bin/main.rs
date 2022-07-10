@@ -36,7 +36,8 @@ use base::panicking;
 use env;
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
-use tide_websockets::WebSocket;
+use tide_websockets::{Message, WebSocket};
+use gateway::Payload;
 
 // FIXME: avoid receiving all events and using all gateway intents
 const EVENT_TYPE_FLAGS: EventTypeFlags = EventTypeFlags::all();
@@ -83,13 +84,21 @@ pub async fn main() -> Result<()> {
     let mut server = tide::new();
     server
         .at("/ws")
-        .get(WebSocket::new(move |_request, _connection| {
+        .get(WebSocket::new(move |_request, connection| {
             let new_rx = rx.clone();
 
             async {
                 let task = task::spawn(async move {
-                    while let Ok((_shard, _event)) = new_rx.recv().await {
-                        todo!()
+                    while let Ok((shard_id, _event)) = new_rx.recv().await {
+                        let payload = Payload {
+                            shard_id,
+                        };
+
+                        if let Err(error) = connection
+                            .send(Message::Text(serde_json::to_string(&payload).unwrap()))
+                            .await {
+                            log::trace!("server error: failed to send websocket payload: {error}");
+                        }
                     }
 
                     Ok(())
@@ -98,7 +107,7 @@ pub async fn main() -> Result<()> {
             }
         }));
 
-    if task::spawn(async {
+    if task::spawn(async move {
         let result = stdenv::var("BOT_TOKEN");
         let token = if let Ok(token) = result {
             token
