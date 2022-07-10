@@ -34,6 +34,7 @@ use base::error::Result;
 use base::logging;
 use base::panicking;
 use env;
+use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
 use tide_websockets::WebSocket;
 
