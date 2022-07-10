@@ -26,11 +26,20 @@ use std::env as stdenv;
 use async_std::channel;
 use async_std::task;
 use base::cmdline;
+use base::discord::gateway::cluster::ClusterStartErrorType;
+use base::discord::gateway::{Cluster, Event, EventTypeFlags, Intents};
+use base::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
+use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use base::error::Result;
 use base::logging;
 use base::panicking;
 use env;
+use futures_util::StreamExt;
 use tide_websockets::WebSocket;
+
+// FIXME: avoid receiving all events and using all gateway intents
+const EVENT_TYPE_FLAGS: EventTypeFlags = EventTypeFlags::all();
+const GATEWAY_INTENTS: Intents = Intents::all();
 
 #[async_std::main]
 pub async fn main() -> Result<()> {
@@ -67,7 +76,7 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    let (_tx, rx) = channel::unbounded::<()>();
+    let (tx, rx) = channel::unbounded::<(u64, Event)>();
 
     log::trace!("creating websocket server");
     let mut server = tide::new();
@@ -78,7 +87,7 @@ pub async fn main() -> Result<()> {
 
             async {
                 let task = task::spawn(async move {
-                    while let Ok(_payload) = new_rx.recv().await {
+                    while let Ok((_shard, _event)) = new_rx.recv().await {
                         todo!()
                     }
 
@@ -87,6 +96,89 @@ pub async fn main() -> Result<()> {
                 task.await
             }
         }));
+
+    if task::spawn(async {
+        let result = stdenv::var("BOT_TOKEN");
+        let token = if let Ok(token) = result {
+            token
+        } else {
+            log::error!("env error: {}", result.unwrap_err());
+            return Err(());
+        };
+
+        log::trace!("creating gateway cluster");
+        let result = Cluster::builder(token, GATEWAY_INTENTS)
+            .event_types(EVENT_TYPE_FLAGS)
+            .shard_presence(|id| {
+                Some(
+                    UpdatePresencePayload::new(
+                        vec![Activity {
+                            application_id: None,
+                            assets: None,
+                            buttons: vec![],
+                            created_at: None,
+                            details: None,
+                            emoji: None,
+                            flags: None,
+                            id: None,
+                            instance: None,
+                            kind: ActivityType::Watching,
+                            name: format!("development | shard {id}"),
+                            party: None,
+                            secrets: None,
+                            state: None,
+                            timestamps: None,
+                            url: None,
+                        }],
+                        false,
+                        None,
+                        Status::Idle,
+                    )
+                    .unwrap(),
+                )
+            })
+            .build()
+            .await;
+
+        if let Err(error) = &result {
+            log::warn!("cluster could not be built; exiting");
+
+            let reason = match error.kind() {
+                ClusterStartErrorType::RetrievingGatewayInfo => {
+                    "gateway information retrieval failed"
+                }
+                ClusterStartErrorType::Tls => "tls connector creation failed",
+                _ => "unknown error",
+            };
+            log::error!(r#"this is due to "{reason}""#);
+
+            return Err(());
+        }
+
+        let (cluster, mut events) = result.unwrap();
+
+        task::spawn(async move {
+            cluster.up().await;
+        });
+
+        while let Some((shard_id, event)) = events.next().await {
+            let new_tx = tx.clone();
+
+            log::trace!(
+                "shard {shard_id} received an event of type {} from the discord gateway",
+                event.as_str()
+            );
+
+            new_tx.send((shard_id, event)).await.unwrap()
+        }
+
+        Ok(())
+    })
+    .await
+    .is_err()
+    {
+        return Ok(());
+    }
 
     log::trace!("listening on port {port}");
     if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
