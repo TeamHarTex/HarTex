@@ -36,8 +36,8 @@ use base::panicking;
 use env;
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
-use tide_websockets::{Message, WebSocket};
 use gateway::Payload;
+use tide_websockets::{Message, WebSocket};
 
 // FIXME: avoid receiving all events and using all gateway intents
 const EVENT_TYPE_FLAGS: EventTypeFlags = EventTypeFlags::all();
@@ -90,13 +90,12 @@ pub async fn main() -> Result<()> {
             async {
                 let task = task::spawn(async move {
                     while let Ok((shard_id, _event)) = new_rx.recv().await {
-                        let payload = Payload {
-                            shard_id,
-                        };
+                        let payload = Payload { shard_id };
 
                         if let Err(error) = connection
                             .send(Message::Text(serde_json::to_string(&payload).unwrap()))
-                            .await {
+                            .await
+                        {
                             log::trace!("server error: failed to send websocket payload: {error}");
                         }
                     }
