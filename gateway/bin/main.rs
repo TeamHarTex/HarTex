@@ -23,15 +23,16 @@
 
 use std::env as stdenv;
 
+use async_std::channel;
+use async_std::task;
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
 use env;
 use tide_websockets::WebSocket;
-use tokio::sync::broadcast;
 
-#[tokio::main]
+#[async_std::main]
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
@@ -66,20 +67,25 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    let (tx, mut rx) = broadcast::channel::<()>(50);
+    let (_tx, rx) = channel::unbounded::<()>();
 
     log::trace!("creating websocket server");
     let mut server = tide::new();
     server
         .at("/ws")
-        .get(WebSocket::new(|_request, connection| async move {
-            tokio::spawn(async move {
-                let mut new_rx = tx.subscribe();
-                while let Ok(payload) = new_rx.recv().await {
-                    todo!()
-                }
-            });
-            Ok(())
+        .get(WebSocket::new(move |_request, _connection| {
+            let new_rx = rx.clone();
+
+            async {
+                let task = task::spawn(async move {
+                    while let Ok(_payload) = new_rx.recv().await {
+                        todo!()
+                    }
+
+                    Ok(())
+                });
+                task.await
+            }
         }));
 
     log::trace!("listening on port {port}");
