@@ -21,7 +21,10 @@
 
 use serde::{Deserialize, Serialize};
 
+pub mod event;
+
 #[derive(Deserialize, Serialize)]
 pub struct Payload {
+    pub event: event::SerdeableEvent,
     pub shard_id: u64,
 }
