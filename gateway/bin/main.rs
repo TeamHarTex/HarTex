@@ -36,6 +36,7 @@ use base::panicking;
 use env;
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
+use gateway::event::SerdeableEvent;
 use gateway::Payload;
 use tide_websockets::{Message, WebSocket};
 
@@ -89,8 +90,11 @@ pub async fn main() -> Result<()> {
 
             async {
                 let task = task::spawn(async move {
-                    while let Ok((shard_id, _event)) = new_rx.recv().await {
-                        let payload = Payload { shard_id };
+                    while let Ok((shard_id, event)) = new_rx.recv().await {
+                        let payload = Payload {
+                            event: SerdeableEvent::from(event),
+                            shard_id,
+                        };
 
                         if let Err(error) = connection
                             .send(Message::Text(serde_json::to_string(&payload).unwrap()))
