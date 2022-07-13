@@ -42,13 +42,13 @@
 
 use std::env as stdenv;
 
-use async_tungstenite::tokio;
+use async_tungstenite::tokio as tokio_tungstenite;
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
@@ -62,8 +62,7 @@ pub async fn main() -> Result<()> {
             "gateway-port",
             "The port of the gateway server ",
             "PORT",
-        )
-        .reqopt("", "loadbal-port", "The load balancer port.", "PORT");
+        );
 
     if args.is_empty() {
         event_usage(options);
@@ -92,12 +91,6 @@ pub async fn main() -> Result<()> {
         return Ok(());
     };
 
-    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("loadbal-port") else {
-        log::error!("could not parse port argument; exiting");
-
-        return Ok(());
-    };
-
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -107,7 +100,8 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    let result = tokio::connect_async(&format!("http://127.0.0.1:{gateway_port}")).await;
+    log::trace!("attempting to connect to gateway...");
+    let result = tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_port}")).await;
     if let Err(error) = result {
         log::error!("connect error: failed to connect to gateway: {error}");
 
@@ -115,6 +109,7 @@ pub async fn main() -> Result<()> {
     }
 
     let _ = result.unwrap();
+    log::trace!("successfully connected to gateway");
 
     Ok(())
 }

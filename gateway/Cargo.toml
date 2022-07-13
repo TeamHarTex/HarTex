@@ -15,7 +15,7 @@ base = { path = "../base", features = ["cmdline", "discord-gateway", "logging", 
 env = { path = "../env" }
 ext = { path = "../ext", features = ["discord-model-ext"] }
 
-async-std = { version = "1.12.0", features = ["attributes"] }
+async-std = { version = "1.12.0", features = ["attributes", "tokio1"] }
 futures-util = "0.3.21"
 log = "0.4.17"
 serde = "1.0.139"
