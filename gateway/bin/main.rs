@@ -22,6 +22,7 @@
 #![feature(let_else)]
 
 use std::env as stdenv;
+use std::time::Duration;
 
 use async_std::channel;
 use async_std::task;
@@ -118,6 +119,9 @@ pub async fn main() -> Result<()> {
             log::error!("env error: {}", result.unwrap_err());
             return Err(());
         };
+
+        log::trace!("allowing a 5-minute buffer for event servers to connect");
+        task::sleep(Duration::from_secs(300)).await;
 
         log::trace!("creating gateway cluster");
         let result = Cluster::builder(token, GATEWAY_INTENTS)
