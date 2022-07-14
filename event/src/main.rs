@@ -43,10 +43,15 @@
 use std::env as stdenv;
 
 use async_tungstenite::tokio as tokio_tungstenite;
+use async_tungstenite::tungstenite::Message;
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
+use futures_util::StreamExt;
+use gateway::Payload;
+
+mod payload;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
@@ -100,15 +105,29 @@ pub async fn main() -> Result<()> {
     }
 
     log::trace!("attempting to connect to gateway...");
-    let result = tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_port}")).await;
+    let result =
+        tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_port}/ws")).await;
     if let Err(error) = result {
         log::error!("connect error: failed to connect to gateway: {error}");
 
         return Ok(());
     }
 
-    let _ = result.unwrap();
+    let (mut connection, _) = result.unwrap();
     log::trace!("successfully connected to gateway");
+
+    while let Some(result) = connection.next().await {
+        if let Ok(message) = result {
+            match message {
+                Message::Text(json) => {
+                    tokio::spawn(payload::handle_payload(
+                        serde_json::from_str::<Payload>(&json).unwrap(),
+                    ));
+                }
+                _ => (),
+            }
+        }
+    }
 
     Ok(())
 }
