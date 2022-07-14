@@ -42,16 +42,13 @@
 
 use std::env as stdenv;
 
+use async_tungstenite::tokio as tokio_tungstenite;
 use base::cmdline;
 use base::error::Result;
 use base::logging;
 use base::panicking;
 
-mod guild_create;
-mod ping;
-mod ready;
-
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
     logging::init();
     panicking::init();
@@ -59,14 +56,12 @@ pub async fn main() -> Result<()> {
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
     let mut base_options = cmdline::Options::new();
-    let options = base_options
-        .reqopt(
-            "",
-            "port",
-            "The port for the event server to run on",
-            "PORT",
-        )
-        .reqopt("", "loadbal-port", "The load balancer port.", "PORT");
+    let options = base_options.reqopt(
+        "",
+        "gateway-port",
+        "The port of the gateway server ",
+        "PORT",
+    );
 
     if args.is_empty() {
         event_usage(options);
@@ -89,14 +84,8 @@ pub async fn main() -> Result<()> {
     }
     let matches = result.unwrap();
 
-    let Ok(Some(port)) = matches.opt_get::<u16>("port") else {
-        log::error!("could not parse port argument; exiting");
-
-        return Ok(());
-    };
-
-    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("loadbal-port") else {
-        log::error!("could not parse port argument; exiting");
+    let Ok(Some(gateway_port)) = matches.opt_get::<u16>("gateway-port") else {
+        log::error!("could not parse gateway port argument; exiting");
 
         return Ok(());
     };
@@ -110,16 +99,16 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("creating http server");
-    let mut server = tide::with_state(loadbal_port);
-    server.at("/guild-create").post(guild_create::guild_create);
-    server.at("/ping").post(ping::ping);
-    server.at("/ready").post(ready::ready);
+    log::trace!("attempting to connect to gateway...");
+    let result = tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_port}")).await;
+    if let Err(error) = result {
+        log::error!("connect error: failed to connect to gateway: {error}");
 
-    log::trace!("listening on port {port}");
-    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
-        log::error!("server error: could not listen on port {port}: {error}");
+        return Ok(());
     }
+
+    let _ = result.unwrap();
+    log::trace!("successfully connected to gateway");
 
     Ok(())
 }
