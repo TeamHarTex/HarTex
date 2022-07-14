@@ -19,9 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tide::{Request, Response, Result};
+use serde::{Deserialize, Serialize};
 
-#[allow(clippy::unused_async)]
-pub async fn ping(_: Request<u16>) -> Result<Response> {
-    Ok(Response::new(200))
+pub mod event;
+
+#[derive(Deserialize, Serialize)]
+pub struct Payload {
+    pub event: event::SerdeableEvent,
+    pub shard_id: u64,
 }
