@@ -57,6 +57,7 @@ pub fn init() {
         .logger(Logger::builder().build("async_h1", LevelFilter::Off))
         .logger(Logger::builder().build("async_io", LevelFilter::Off))
         .logger(Logger::builder().build("async_std", LevelFilter::Off))
+        .logger(Logger::builder().build("async_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("gateway", LevelFilter::Trace))
         .logger(Logger::builder().build("mio", LevelFilter::Off))
         .logger(Logger::builder().build("polling", LevelFilter::Off))

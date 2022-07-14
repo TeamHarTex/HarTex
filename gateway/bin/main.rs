@@ -86,7 +86,12 @@ pub async fn main() -> Result<()> {
     let mut server = tide::new();
     server
         .at("/ws")
-        .get(WebSocket::new(move |_request, connection| {
+        .get(WebSocket::new(move |request, connection| {
+            log::trace!(
+                "received new websocket connection from {:?}",
+                request.remote()
+            );
+
             let new_rx = rx.clone();
 
             async {
@@ -101,7 +106,7 @@ pub async fn main() -> Result<()> {
                             .send(Message::Text(serde_json::to_string(&payload).unwrap()))
                             .await
                         {
-                            log::trace!("server error: failed to send websocket payload: {error}");
+                            log::error!("server error: failed to send websocket payload: {error}");
                         }
                     }
 
@@ -110,6 +115,13 @@ pub async fn main() -> Result<()> {
                 task.await
             }
         }));
+
+    task::spawn(async move {
+        log::trace!("listening on port {port}");
+        if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
+            log::error!("server error: could not listen on port {port}: {error}");
+        }
+    });
 
     if task::spawn(async move {
         let result = stdenv::var("BOT_TOKEN");
@@ -120,8 +132,8 @@ pub async fn main() -> Result<()> {
             return Err(());
         };
 
-        log::trace!("allowing a 5-minute buffer for event servers to connect");
-        task::sleep(Duration::from_secs(300)).await;
+        log::trace!("allowing a 1-minute buffer for event servers to connect");
+        task::sleep(Duration::from_secs(60)).await;
 
         log::trace!("creating gateway cluster");
         let result = Cluster::builder(token, GATEWAY_INTENTS)
@@ -195,11 +207,6 @@ pub async fn main() -> Result<()> {
     .is_err()
     {
         return Ok(());
-    }
-
-    log::trace!("listening on port {port}");
-    if let Err(error) = server.listen(format!("127.0.0.1:{port}")).await {
-        log::error!("server error: could not listen on port {port}: {error}");
     }
 
     Ok(())
