@@ -26,7 +26,7 @@ mod ready;
 
 pub async fn handle_payload(payload: Payload) {
     match payload.event {
-        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id),
+        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
         _ => (),
     }
 }
