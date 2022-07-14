@@ -123,7 +123,7 @@ pub async fn main() -> Result<()> {
                     tokio::spawn(payload::handle_payload(
                         serde_json::from_str::<Payload>(&json).unwrap(),
                     ));
-                },
+                }
                 _ => (),
             }
         }
