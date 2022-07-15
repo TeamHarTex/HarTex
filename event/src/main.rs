@@ -63,8 +63,8 @@ pub async fn main() -> Result<()> {
     let mut base_options = cmdline::Options::new();
     let options = base_options.reqopt(
         "",
-        "gateway-port",
-        "The port of the gateway server ",
+        "gateway-proxy-port",
+        "The port of the gateway port",
         "PORT",
     );
 
@@ -89,7 +89,7 @@ pub async fn main() -> Result<()> {
     }
     let matches = result.unwrap();
 
-    let Ok(Some(gateway_port)) = matches.opt_get::<u16>("gateway-port") else {
+    let Ok(Some(gateway_proxy_port)) = matches.opt_get::<u16>("gateway-proxy-port") else {
         log::error!("could not parse gateway port argument; exiting");
 
         return Ok(());
@@ -104,9 +104,9 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("attempting to connect to gateway...");
+    log::trace!("attempting to connect to the gateway proxy...");
     let result =
-        tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_port}/ws")).await;
+        tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_proxy_port}/ws")).await;
     if let Err(error) = result {
         log::error!("connect error: failed to connect to gateway: {error}");
 
@@ -114,7 +114,7 @@ pub async fn main() -> Result<()> {
     }
 
     let (mut connection, _) = result.unwrap();
-    log::trace!("successfully connected to gateway");
+    log::trace!("successfully connected to the gateway proxy");
 
     while let Some(result) = connection.next().await {
         if let Ok(message) = result {
