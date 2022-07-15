@@ -22,6 +22,4 @@
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use cache_discord::DiscordCache;
 
-pub async fn handle_guild_create(payload: Box<GuildCreate>) {
-
-}
+pub async fn handle_guild_create(payload: Box<GuildCreate>) {}
