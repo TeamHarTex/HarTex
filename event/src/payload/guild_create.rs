@@ -19,16 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use gateway::event::SerdeableEvent;
-use gateway::Payload;
+use base::discord::model::gateway::payload::incoming::GuildCreate;
+use cache_discord::DiscordCache;
 
-mod guild_create;
-mod ready;
+pub async fn handle_guild_create(payload: Box<GuildCreate>) {
 
-pub async fn handle_payload(payload: Payload) {
-    match payload.event {
-        SerdeableEvent::GuildCreate(guild_create) => guild_create::handle_guild_create(guild_create).await,
-        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
-        _ => (),
-    }
 }
