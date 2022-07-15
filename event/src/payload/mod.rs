@@ -27,7 +27,9 @@ mod ready;
 
 pub async fn handle_payload(payload: Payload) {
     match payload.event {
-        SerdeableEvent::GuildCreate(guild_create) => guild_create::handle_guild_create(guild_create).await,
+        SerdeableEvent::GuildCreate(guild_create) => {
+            guild_create::handle_guild_create(guild_create).await
+        }
         SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
         _ => (),
     }
