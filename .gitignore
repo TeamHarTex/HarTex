@@ -12,10 +12,6 @@ out
 **/target
 target
 
-# .lock files
-**/Cargo.lock
-old/Cargo.lock
-
 # local build configuration
 buildconf.toml
 
