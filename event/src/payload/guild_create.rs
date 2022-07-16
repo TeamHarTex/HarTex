@@ -20,6 +20,35 @@
  */
 
 use base::discord::model::gateway::payload::incoming::GuildCreate;
+use base::error::Result;
 use cache_discord::DiscordCache;
+use manidb::whitelist::GetGuildWhitelistStatus;
 
-pub async fn handle_guild_create(payload: Box<GuildCreate>) {}
+pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
+    log::info!(
+        "joined a new guild `{}` (id {}); checking its whitelist status...",
+        &payload.name,
+        payload.id
+    );
+
+    let result = GetGuildWhitelistStatus::new(payload.id).await;
+    if let Err(error) = result {
+        log::error!("failed to check whitelist status: {error}");
+        return Err(error);
+    }
+
+    let option = result.unwrap();
+    if let Some(whitelist) = option {
+        log::info!(
+            "guild `{}` (id {}) is whitelisted and is so since {}",
+            &whitelist.name,
+            whitelist.id,
+            whitelist.whitelisted_since
+        );
+    }
+    else {
+        todo!()
+    }
+
+    Ok(())
+}
