@@ -20,9 +20,10 @@
  */
 
 use base::discord::model::gateway::payload::incoming::Ready;
+use base::error::Result;
 use cache_discord::DiscordCache;
 
-pub async fn handle_ready(payload: Box<Ready>, shard_id: u64) {
+pub async fn handle_ready(payload: Box<Ready>, shard_id: u64) -> Result<()> {
     log::info!(
         "shard {shard_id} is connected to the Discord gateway, using API v{}",
         payload.version
@@ -32,4 +33,6 @@ pub async fn handle_ready(payload: Box<Ready>, shard_id: u64) {
     if let Err(error) = DiscordCache.update(&*payload).await {
         log::trace!("failed to cache current user: {error:?}");
     }
+
+    Ok(())
 }
