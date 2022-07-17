@@ -707,9 +707,9 @@ dependencies = [
 
 [[package]]
 name = "crypto-common"
-version = "0.1.5"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ccfd8c0ee4cce11e45b3fd6f9d5e69e0cc62912aa6a0cb1bf4617b0eba5a12f"
+checksum = "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
 dependencies = [
  "generic-array",
  "typenum",
@@ -3160,9 +3160,9 @@ dependencies = [
 
 [[package]]
 name = "twilight-model"
-version = "0.11.2"
+version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da3881807717963c8fe0afc7ce4e6f64cc3c5ae3ec0a9ba4a13462b1367a266d"
+checksum = "aa7475388ee4cd61769e19d5ae100b2fbafcf570f4e9647350546eebd679214b"
 dependencies = [
  "bitflags",
  "serde",
