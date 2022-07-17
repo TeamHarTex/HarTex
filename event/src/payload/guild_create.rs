@@ -44,8 +44,7 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
             whitelist.id,
             whitelist.whitelisted_since
         );
-    }
-    else {
+    } else {
         todo!()
     }
 
