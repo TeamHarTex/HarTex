@@ -28,6 +28,7 @@
 #![feature(async_closure)]
 #![feature(let_else)]
 #![feature(let_chains)]
+#![allow(clippy::let_underscore_drop)]
 #![allow(clippy::match_result_ok)]
 
 use std::env as stdenv;
