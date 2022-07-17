@@ -34,7 +34,6 @@ use base::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use base::error::Result;
 use base::logging;
 use base::panicking;
-use env;
 use ext::discord::model::gateway::event::EventExt;
 use futures_util::StreamExt;
 use gateway::event::SerdeableEvent;
@@ -123,7 +122,7 @@ pub async fn main() -> Result<()> {
         }
     });
 
-    if task::spawn(async move {
+    let gateway_task = task::spawn(async move {
         let result = stdenv::var("BOT_TOKEN");
         let token = if let Ok(token) = result {
             token
@@ -203,9 +202,9 @@ pub async fn main() -> Result<()> {
 
         Ok(())
     })
-    .await
-    .is_err()
-    {
+    .await;
+
+    if gateway_task.is_err() {
         return Ok(());
     }
 
