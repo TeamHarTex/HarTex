@@ -19,19 +19,33 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use base::discord::model::gateway::payload::incoming::Ready;
+use base::discord::model::gateway::payload::incoming::GuildCreate;
 use base::error::Result;
-use cache_discord::DiscordCache;
+use manidb::whitelist::GetGuildWhitelistStatus;
 
-pub async fn handle_ready(payload: Box<Ready>, shard_id: u64) -> Result<()> {
+pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
     log::info!(
-        "shard {shard_id} is connected to the Discord gateway, using API v{}",
-        payload.version
+        "joined a new guild `{}` (id {}); checking its whitelist status...",
+        &payload.name,
+        payload.id
     );
 
-    log::trace!("caching current user");
-    if let Err(error) = DiscordCache.update(&*payload).await {
-        log::trace!("failed to cache current user: {error:?}");
+    let result = GetGuildWhitelistStatus::new(payload.id).await;
+    if let Err(error) = result {
+        log::error!("failed to check whitelist status: {error}");
+        return Err(error);
+    }
+
+    let option = result.unwrap();
+    if let Some(whitelist) = option {
+        log::info!(
+            "guild `{}` (id {}) is whitelisted and is so since {}",
+            &whitelist.name,
+            whitelist.id,
+            whitelist.whitelisted_since
+        );
+    } else {
+        todo!()
     }
 
     Ok(())

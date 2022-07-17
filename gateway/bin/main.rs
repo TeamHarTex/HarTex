@@ -173,10 +173,10 @@ pub async fn main() -> Result<()> {
             log::warn!("cluster could not be built; exiting");
 
             let reason = match error.kind() {
-                ClusterStartErrorType::RetrievingGatewayInfo => {
-                    "gateway information retrieval failed"
+                ClusterStartErrorType::AutoSharding => {
+                    "failed to retrieve recommended number of shards"
                 }
-                ClusterStartErrorType::Tls => "tls connector creation failed",
+                ClusterStartErrorType::Tls => "failed to create a tls connector",
                 _ => "unknown error",
             };
             log::error!(r#"this is due to "{reason}""#);

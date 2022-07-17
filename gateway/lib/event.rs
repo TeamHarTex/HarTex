@@ -24,22 +24,28 @@ use base::discord::model::gateway::event::shard::{
     Connected, Connecting, Disconnected, Identifying, Payload, Reconnecting, Resuming,
 };
 use base::discord::model::gateway::payload::incoming::{
-    BanAdd, BanRemove, ChannelCreate, ChannelDelete, ChannelPinsUpdate, ChannelUpdate,
-    CommandPermissionsUpdate, GuildCreate, GuildDelete, GuildEmojisUpdate, GuildIntegrationsUpdate,
-    GuildScheduledEventCreate, GuildScheduledEventDelete, GuildScheduledEventUpdate,
-    GuildScheduledEventUserAdd, GuildScheduledEventUserRemove, GuildStickersUpdate, GuildUpdate,
-    IntegrationCreate, IntegrationDelete, IntegrationUpdate, InteractionCreate, InviteCreate,
-    InviteDelete, MemberAdd, MemberChunk, MemberRemove, MemberUpdate, MessageCreate, MessageDelete,
-    MessageDeleteBulk, MessageUpdate, PresenceUpdate, ReactionAdd, ReactionRemove,
-    ReactionRemoveAll, ReactionRemoveEmoji, Ready, RoleCreate, RoleDelete, RoleUpdate,
-    StageInstanceCreate, StageInstanceDelete, StageInstanceUpdate, ThreadCreate, ThreadDelete,
-    ThreadListSync, ThreadMemberUpdate, ThreadMembersUpdate, ThreadUpdate, TypingStart,
-    UnavailableGuild, UserUpdate, VoiceServerUpdate, VoiceStateUpdate, WebhooksUpdate,
+    AutoModerationActionExecution, AutoModerationRuleCreate, AutoModerationRuleDelete,
+    AutoModerationRuleUpdate, BanAdd, BanRemove, ChannelCreate, ChannelDelete, ChannelPinsUpdate,
+    ChannelUpdate, CommandPermissionsUpdate, GuildCreate, GuildDelete, GuildEmojisUpdate,
+    GuildIntegrationsUpdate, GuildScheduledEventCreate, GuildScheduledEventDelete,
+    GuildScheduledEventUpdate, GuildScheduledEventUserAdd, GuildScheduledEventUserRemove,
+    GuildStickersUpdate, GuildUpdate, IntegrationCreate, IntegrationDelete, IntegrationUpdate,
+    InteractionCreate, InviteCreate, InviteDelete, MemberAdd, MemberChunk, MemberRemove,
+    MemberUpdate, MessageCreate, MessageDelete, MessageDeleteBulk, MessageUpdate, PresenceUpdate,
+    ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji, Ready, RoleCreate,
+    RoleDelete, RoleUpdate, StageInstanceCreate, StageInstanceDelete, StageInstanceUpdate,
+    ThreadCreate, ThreadDelete, ThreadListSync, ThreadMemberUpdate, ThreadMembersUpdate,
+    ThreadUpdate, TypingStart, UnavailableGuild, UserUpdate, VoiceServerUpdate, VoiceStateUpdate,
+    WebhooksUpdate,
 };
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
 pub enum SerdeableEvent {
+    AutoModerationActionExecution(AutoModerationActionExecution),
+    AutoModerationRuleCreate(Box<AutoModerationRuleCreate>),
+    AutoModerationRuleDelete(Box<AutoModerationRuleDelete>),
+    AutoModerationRuleUpdate(Box<AutoModerationRuleUpdate>),
     BanAdd(BanAdd),
     BanRemove(BanRemove),
     ChannelCreate(Box<ChannelCreate>),
@@ -70,7 +76,7 @@ pub enum SerdeableEvent {
     IntegrationCreate(Box<IntegrationCreate>),
     IntegrationDelete(IntegrationDelete),
     IntegrationUpdate(Box<IntegrationUpdate>),
-    InteractionCreate(InteractionCreate),
+    InteractionCreate(Box<InteractionCreate>),
     InviteCreate(Box<InviteCreate>),
     InviteDelete(InviteDelete),
     MemberAdd(Box<MemberAdd>),
@@ -119,6 +125,12 @@ pub enum SerdeableEvent {
 impl From<Event> for SerdeableEvent {
     fn from(event: Event) -> Self {
         match event {
+            Event::AutoModerationActionExecution(payload) => {
+                Self::AutoModerationActionExecution(payload)
+            }
+            Event::AutoModerationRuleCreate(payload) => Self::AutoModerationRuleCreate(payload),
+            Event::AutoModerationRuleDelete(payload) => Self::AutoModerationRuleDelete(payload),
+            Event::AutoModerationRuleUpdate(payload) => Self::AutoModerationRuleUpdate(payload),
             Event::BanAdd(payload) => Self::BanAdd(payload),
             Event::BanRemove(payload) => Self::BanRemove(payload),
             Event::ChannelCreate(payload) => Self::ChannelCreate(payload),
