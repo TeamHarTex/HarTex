@@ -37,8 +37,8 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 #![feature(let_else)]
-// allow match_result_ok lint
 #![allow(clippy::match_result_ok)]
+#![allow(clippy::module_name_repetitions)]
 
 use std::env as stdenv;
 
@@ -118,13 +118,10 @@ pub async fn main() -> Result<()> {
 
     while let Some(result) = connection.next().await {
         if let Ok(message) = result {
-            match message {
-                Message::Text(json) => {
-                    tokio::spawn(payload::handle_payload(
-                        serde_json::from_str::<Payload>(&json).unwrap(),
-                    ));
-                }
-                _ => (),
+            if let Message::Text(json) = message {
+                tokio::spawn(payload::handle_payload(
+                    serde_json::from_str::<Payload>(&json).unwrap(),
+                ));
             }
         }
     }
