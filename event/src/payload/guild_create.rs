@@ -20,6 +20,7 @@
  */
 
 use base::discord::model::gateway::payload::incoming::GuildCreate;
+use base::discord::http::routing::Path;
 use base::error::Result;
 use manidb::whitelist::GetGuildWhitelistStatus;
 
