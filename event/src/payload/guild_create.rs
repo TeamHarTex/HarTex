@@ -21,7 +21,6 @@
 
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use base::error::Result;
-use cache_discord::DiscordCache;
 use manidb::whitelist::GetGuildWhitelistStatus;
 
 pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
