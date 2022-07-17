@@ -117,12 +117,10 @@ pub async fn main() -> Result<()> {
     log::trace!("successfully connected to the gateway proxy");
 
     while let Some(result) = connection.next().await {
-        if let Ok(message) = result {
-            if let Message::Text(json) = message {
-                tokio::spawn(payload::handle_payload(
-                    serde_json::from_str::<Payload>(&json).unwrap(),
-                ));
-            }
+        if let Ok(Message::Text(json)) = result {
+            tokio::spawn(payload::handle_payload(
+                serde_json::from_str::<Payload>(&json).unwrap(),
+            ));
         }
     }
 
