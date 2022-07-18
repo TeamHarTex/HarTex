@@ -1,0 +1,8 @@
+import cachedCurrentUsersTable from "../tables/CachedCurrentUsersTable";
+
+harTexNightlyCacheDatabase = databaseOf(
+  name = "HarTexNightlyCacheDatabase",
+  tables = listOf(
+    cachedCurrentUsersTable,
+  )
+)
