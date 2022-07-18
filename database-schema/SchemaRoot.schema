@@ -1,5 +1,7 @@
+import harTexNightlyCacheDatabase from "databases/HarTexNightlyCacheDatabase";
 import harTexNightlyWhitelistDatabase from "databases/HarTexNightlyWhitelistDatabase"
 
 databases = listOf(
-   harTexNightlyWhitelistDatabase,
+  harTexNightlyCacheDatabase,
+  harTexNightlyWhitelistDatabase,
 )
