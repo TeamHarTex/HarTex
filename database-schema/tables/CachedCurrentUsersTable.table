@@ -1,2 +1,42 @@
 cachedCurrentUsersTable = tableOf(
+  name = "CachedCurrentUsers",
+  columns = listOf(
+    columnOf(
+      name = "id",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+        Constraint.PRIMARY_KEY,
+      )
+    ),
+    columnOf(
+      name = "username",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+      )
+    ),
+    columnOf(
+      name = "discriminator",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL
+      )
+    ),
+    columnOf(
+      name = "avatar",
+      type = ColumnType.TEXT,
+      constraints = listOf(),
+    ),
+    columnOf(
+      name = "flags",
+      type = ColumnType.TEXT,
+      constraints = listOf(),
+    ),
+    columnOf(
+      name = "public_flags",
+      type = ColumnType.TEXT,
+      constraints = listOf(),
+    )
+  )
 )
