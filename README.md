@@ -31,3 +31,4 @@ Below is a brief summary on the individual folders (detailed documentation for e
 
 - `database-schema`: the database schema specification for the bot
 - `discord-frontend`: the source code of the Discord bot
+- `web-frontend`: the source code for the web dashboard
