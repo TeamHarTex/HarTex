@@ -1,0 +1,34 @@
+whitelistedGuildsTable = tableOf(
+  name = "WhitelistedGuilds",
+  columns = listOf(
+    columnOf(
+      name = "id",
+      type = ColumnType.TEXT,
+      constraints = listof(
+        Constraint.NOT_NULL,
+        Constraint.PRIMARY_KEY,
+      )
+    ),
+    columnOf(
+      name = "name",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+      )
+    ),
+    columnOf(
+      name = "owner_id",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+      )
+    ),
+    columnOf(
+      name = "whitelisted_since",
+      type = ColumnType.TIMESTAMP_TZ,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+      )
+    )
+  )
+)
