@@ -1,0 +1,13 @@
+cachedGuildsTable = tableOf(
+  name = "CachedGuilds",
+  columns = listOf(
+    columnOf(
+      name = "id",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+        Constraint.PRIMARY_KEY,
+      )
+    ),
+  )
+)
