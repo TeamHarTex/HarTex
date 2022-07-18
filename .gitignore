@@ -1,19 +1,27 @@
-# directories
-.idea
-old
-
-# Python virtual environment
-venv
-
-# built binaries (local host), optional
-out
-
-# target directories
+**/.idea
+**/.DS_Store
+**/venv
+**/out
 **/target
-target
-
-# local build configuration
 **/buildconf.toml
-
-# environment variables
 **/env.vars
+**/.env
+**/.netlify
+**/.redwood
+**/dev.db*
+**/dist
+**/dist-babel
+**/node_modules
+**/yarn-error.log
+**/web/public/mockServiceWorker.js
+**/web/types/graphql.d.ts
+**/api/types/graphql.d.ts
+**/api/src/lib/generateGraphiQLHeader.*
+**/.pnp.*
+**/.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
