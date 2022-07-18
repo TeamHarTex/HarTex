@@ -1,0 +1,5 @@
+import harTexNightlyWhitelistDatabase from "databases/HarTexNightlyWhitelistDatabase"
+
+databases = listOf(
+   harTexNightlyWhitelistDatabase,
+)
