@@ -1,8 +1,10 @@
 import cachedCurrentUsersTable from "../tables/CachedCurrentUsersTable";
+import cachedGuildsTable from "../tables/CachedGuildsTable";
 
 harTexNightlyCacheDatabase = databaseOf(
   name = "HarTexNightlyCacheDatabase",
   tables = listOf(
     cachedCurrentUsersTable,
+    cachedGuildsTable,
   )
 )
