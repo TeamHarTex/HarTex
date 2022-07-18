@@ -13,7 +13,7 @@ out
 target
 
 # local build configuration
-buildconf.toml
+**/buildconf.toml
 
 # environment variables
-env.vars
+**/env.vars
