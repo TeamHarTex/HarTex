@@ -1,4 +1,4 @@
-# HarTex, a Rust Discord Bot
+# HarTex, a Discord Bot
 
 [![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)](https://discord.gg/Xu8453VBAv)
 
