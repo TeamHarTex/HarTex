@@ -19,7 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use base::discord::http::routing::Path;
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use base::error::Result;
 use manidb::whitelist::GetGuildWhitelistStatus;
