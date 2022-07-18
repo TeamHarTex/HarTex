@@ -29,4 +29,5 @@ This project is a monorepository with separate components placed in their own in
 
 Below is a brief summary on the individual folders (detailed documentation for each are in the individual directories):
 
+- `database-schema`: the database schema specification for the bot
 - `discord-frontend`: the source code of the Discord bot

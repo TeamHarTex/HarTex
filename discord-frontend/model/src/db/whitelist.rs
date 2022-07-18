@@ -42,7 +42,7 @@ impl<'r> FromRow<'r, PgRow> for WhitelistedGuild {
         let id_string = row.try_get::<String, &str>("id")?;
         let id = Id::new_checked(id_string.parse::<u64>().unwrap()).unwrap();
         let name = row.try_get::<String, &str>("name")?;
-        let owner_id_string = row.try_get::<String, &str>("id")?;
+        let owner_id_string = row.try_get::<String, &str>("owner_id")?;
         let owner_id = Id::new_checked(owner_id_string.parse::<u64>().unwrap()).unwrap();
         let whitelisted_since = row.try_get::<OffsetDateTime, &str>("whitelisted_since")?;
 
