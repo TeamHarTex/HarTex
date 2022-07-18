@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "base",
+    "buildsys/configure",
     "cache/base",
     "cache/discord",
     "env",

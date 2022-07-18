@@ -18,5 +18,3 @@ sqlx = { version = "0.6.0", default-features = false, features = ["postgres", "r
 
 [build-dependencies]
 toml_edit = "0.14.4"
-
-[features]
