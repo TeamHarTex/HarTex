@@ -36,8 +36,7 @@ pub fn main() -> io::Result<()> {
 
         println!("configure: run `./out/make` to build the bot");
         return Ok(());
-    }
-    else {
+    } else {
         File::create(buildconf_toml)?
     };
 
@@ -45,13 +44,15 @@ pub fn main() -> io::Result<()> {
     println!("configure: using default load balancer configuration:");
     println!("           - 1 server of type `rest`, host `127.0.0.1`,  listening on port `8000`");
 
-    file.write_all(br#"[cache]
+    file.write_all(
+        br#"[cache]
 backend = "postgres"
 
 [loadbal]
 servers = [
     { type = "rest", address = "127.0.0.1:8000" }
-]"#)?;
+]"#,
+    )?;
 
     println!("configure: initial configuration done.");
     println!("configure: refer to buildconf.toml.example for more configuration keys");
