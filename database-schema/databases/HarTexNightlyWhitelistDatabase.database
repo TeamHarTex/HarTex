@@ -1,0 +1,8 @@
+import whitelistedGuildsTable from "../tables/WhitelistedGuildsTable";
+
+harTexNightlyWhitelistDatabase = databaseOf(
+  name = "HarTexNightlyWhitelistDatabase",
+  tables = listOf(
+    whitelilstedGuildsTable,
+  )
+)

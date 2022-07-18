@@ -25,10 +25,10 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
-      - name: Obtain Default Build Configuration
-        run: curl https://gist.githubusercontent.com/HTG-YT/9f0786e09b7fb7be1e8ea6b50dbeaee2/raw/a353e5c6f927ad63b9ebeae09a44b5e4c4955b0b/buildconf.toml > buildconf.toml
+      - name: Build and run configure
+        run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Build
-        run: cargo build --release
+        run: cd discord-frontend && cargo build --release
         env:
           ENABLE_PGSQL_CACHE_BACKEND: false
 
@@ -50,9 +50,9 @@ jobs:
         uses: baptiste0928/cargo-install@v1
         with:
           crate: cargo-nextest
-      - name: Obtain Default Build Configuration
-        run: curl https://gist.githubusercontent.com/HTG-YT/9f0786e09b7fb7be1e8ea6b50dbeaee2/raw/a353e5c6f927ad63b9ebeae09a44b5e4c4955b0b/buildconf.toml > buildconf.toml
+      - name: Build and run configure
+        run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Test
-        run: cargo nextest run
+        run: cd discord-frontend && cargo nextest run
         env:
           ENABLE_PGSQL_CACHE_BACKEND: false
