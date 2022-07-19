@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(warnings)]
+
 #[macro_use]
 extern crate rocket;
 
