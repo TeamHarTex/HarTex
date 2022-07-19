@@ -21,4 +21,5 @@
 
 //! Database models.
 
+pub mod session;
 pub mod whitelist;

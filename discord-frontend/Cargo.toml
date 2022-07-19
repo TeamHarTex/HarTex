@@ -9,6 +9,5 @@ members = [
     "interactions",
     "loadbal",
     "manidb",
-    "model",
     "rest",
 ]

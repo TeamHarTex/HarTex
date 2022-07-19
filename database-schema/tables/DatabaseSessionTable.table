@@ -1,0 +1,18 @@
+export databaseSessionTable = tableOf(
+  name = "DatabaseSession",
+  columns = listOf(
+    columnOf(
+      name = "session_id",
+      type = ColumnType.TEXT,
+      constraints = listOf(
+        Constraint.NOT_NULL,
+        Constraint.PRIMARY_KEY
+      )
+    ),
+    columnOf(
+      name = "expires_at",
+      type = ColumnType.TIMESTAMP_TZ,
+      constraints = listOf()
+    )
+  )
+)

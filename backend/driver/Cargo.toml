@@ -11,5 +11,7 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+model = { path = "../../common/model" }
+pg-sess-store = { path = "../pg-sess-store" }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git" }
 rocket-session-store = "0.2.0"

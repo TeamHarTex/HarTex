@@ -19,12 +19,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use model::db::session::SessionEntry;
+use base::discord::model::id::{marker::UserMarker, Id};
+use sqlx::{Error, FromRow, Row};
 
-use rocket::response::Responder;
-use rocket_session_store::{Session, SessionResult};
+pub struct SessionEntry {
+    pub session_id: String,
+    pub user_id: Id<UserMarker>,
+}
 
-#[get("/api/users/@me")]
-pub async fn api_users_me(_: Session<'_, SessionEntry>) -> SessionResult<()> {
-    Ok(())
+impl<'r> FromRow<'r, PgRow> for SessionEntry {
+    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
+        let session_id = row.try_get::<String, &str>("session_id")?;
+        let user_id_string = row.try_get::<String, &str>("user_id")?;
+        let user_id = Id::new_checked(user_id_string.parse::<u64>().unwrap()).unwrap();
+
+        Ok(Self {
+            session_id,
+            user_id,
+        })
+    }
 }

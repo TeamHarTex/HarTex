@@ -22,7 +22,12 @@
 #[macro_use]
 extern crate rocket;
 
+use std::time::Duration;
+
+use model::db::session::SessionEntry;
+use pg_sess_store::PgSessionStore;
 use rocket::{Build, Rocket};
+use rocket_session_store::{CookieConfig, SessionStore};
 
 use crate::routes::api_users_me::api_users_me;
 
@@ -30,7 +35,21 @@ mod routes;
 
 #[rocket::main]
 pub async fn main() {
+    let store = PgSessionStore::<SessionEntry>::new();
+    let session_store = SessionStore {
+        store: Box::new(store),
+        name: String::from("hartex-dashboard-session"),
+        duration: Duration::from_secs(3600 * 24 * 3),
+        cookie: CookieConfig {
+            path: None,
+            same_site: None,
+            secure: false,
+            http_only: true
+        }
+    };
+
     rocket::build()
+        .attach(session_store.fairing())
         .mount("/", routes![api_users_me])
         .launch()
         .await
