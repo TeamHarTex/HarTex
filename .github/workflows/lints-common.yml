@@ -28,7 +28,7 @@ jobs:
       - name: Build and run configure
         run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Run cargo clippy
-        run: cd ../common && cargo clippy --workspace
+        run: cd common && cargo clippy --workspace
 
   Rustfmt:
     name: Rustfmt
