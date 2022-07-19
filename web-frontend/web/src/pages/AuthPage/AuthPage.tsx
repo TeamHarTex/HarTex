@@ -19,22 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
-import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
+import { MetaTags } from '@redwoodjs/web'
+import AuthWithDiscord from "src/components/AuthWithDiscord";
 
-import FatalErrorPage from 'src/pages/FatalErrorPage'
-import Routes from 'src/Routes'
+const AuthPage = () => {
+  return (
+    <>
+      <MetaTags title="Authenticate With Discord" />
+      <AuthWithDiscord />
+    </>
+  )
+}
 
-import './index.css'
-
-const App = () => (
-  <FatalErrorBoundary page={FatalErrorPage}>
-    <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-      <RedwoodApolloProvider>
-        <Routes />
-      </RedwoodApolloProvider>
-    </RedwoodProvider>
-  </FatalErrorBoundary>
-)
-
-export default App
+export default AuthPage
