@@ -44,8 +44,8 @@ pub async fn main() {
             path: None,
             same_site: None,
             secure: false,
-            http_only: true
-        }
+            http_only: true,
+        },
     };
 
     rocket::build()
