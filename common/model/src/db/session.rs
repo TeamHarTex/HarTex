@@ -23,6 +23,7 @@ use base::discord::model::id::{marker::UserMarker, Id};
 use sqlx::postgres::PgRow;
 use sqlx::{Error, FromRow, Row};
 
+#[derive(Clone)]
 pub struct SessionEntry {
     pub session_id: String,
     pub user_id: Id<UserMarker>,

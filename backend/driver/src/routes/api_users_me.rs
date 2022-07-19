@@ -24,6 +24,6 @@ use model::db::session::SessionEntry;
 use rocket_session_store::{Session, SessionResult};
 
 #[get("/api/users/@me")]
-pub async fn api_users_me(_: Session<'_, SessionEntry>) -> SessionResult<()> {
-    Ok(())
+pub async fn api_users_me(_session: Session<'_, SessionEntry>) -> SessionResult<String> {
+    todo!()
 }
