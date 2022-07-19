@@ -21,5 +21,12 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.1",
+  "resolutions": {
+    "glob-parent": "5.1.2",
+    "got": "11.8.5",
+    "trim": "0.0.3",
+    "trim-newlines": "3.0.1",
+    "undici": "5.5.1"
+  }
 }
