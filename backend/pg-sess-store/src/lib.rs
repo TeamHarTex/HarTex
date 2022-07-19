@@ -28,6 +28,14 @@ pub struct PgSessionStore<T> {
     phantom: PhantomData<T>
 }
 
+impl<T> PgSessionStore<T> {
+    pub fn new() -> Self {
+        Self {
+            phantom: PhantomData
+        }
+    }
+}
+
 #[rocket::async_trait]
 impl<T> Store for PgSessionStore<T> {
     type Value = T;
