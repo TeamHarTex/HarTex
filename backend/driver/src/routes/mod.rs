@@ -19,20 +19,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[macro_use]
-extern crate rocket;
-
-use rocket::{Build, Rocket};
-
-use crate::routes::api_users_me::api_users_me;
-
-mod routes;
-
-#[rocket::main]
-pub async fn main() {
-    rocket::build()
-        .mount("/", routes![api_users_me])
-        .launch()
-        .await
-        .unwrap();
-}
+pub mod api_users_me;

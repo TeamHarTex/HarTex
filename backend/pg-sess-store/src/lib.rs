@@ -19,20 +19,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[macro_use]
-extern crate rocket;
+use std::marker::PhantomData;
+use std::time::Duration;
 
-use rocket::{Build, Rocket};
+use rocket_session_store::{SessionResult, Store};
 
-use crate::routes::api_users_me::api_users_me;
+pub struct PgSessionStore<T> {
+    phantom: PhantomData<T>
+}
 
-mod routes;
+#[rocket::async_trait]
+impl<T> Store for PgSessionStore<T> {
+    type Value = T;
 
-#[rocket::main]
-pub async fn main() {
-    rocket::build()
-        .mount("/", routes![api_users_me])
-        .launch()
-        .await
-        .unwrap();
+    async fn get(&self, id: &str) -> SessionResult<Option<Self::Value>> {
+        todo!()
+    }
+
+    async fn set(&self, id: &str, value: Self::Value, duration: Duration) -> SessionResult<()> {
+        todo!()
+    }
+
+    async fn touch(&self, id: &str, duration: Duration) -> SessionResult<()> {
+        todo!()
+    }
+
+    async fn remove(&self, id: &str) -> SessionResult<()> {
+        todo!()
+    }
 }

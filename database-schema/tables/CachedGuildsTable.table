@@ -1,4 +1,4 @@
-cachedGuildsTable = tableOf(
+export cachedGuildsTable = tableOf(
   name = "CachedGuilds",
   columns = listOf(
     columnOf(
