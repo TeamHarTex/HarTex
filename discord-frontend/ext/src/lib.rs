@@ -27,7 +27,6 @@
 //! The extensions may include, but not limited to: extension functions using traits, additional
 //! helper functions, additional constants (with or without traits), etc.
 
-#![deny(clippy::pedantic)]
 #![deny(warnings)]
 
 pub mod discord;

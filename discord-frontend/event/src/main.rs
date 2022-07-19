@@ -34,7 +34,6 @@
 //! A secret key expected as the `Authorization` header with incoming HTTP requests to validate the
 //! requests.
 
-#![deny(clippy::pedantic)]
 #![deny(warnings)]
 #![feature(let_else)]
 #![allow(clippy::match_result_ok)]
