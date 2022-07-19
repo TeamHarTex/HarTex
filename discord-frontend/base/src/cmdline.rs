@@ -19,6 +19,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Command line utilities.
-
 pub use getopts::*;

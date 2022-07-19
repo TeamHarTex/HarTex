@@ -1,0 +1,18 @@
+[package]
+name = "base"
+version = "0.1.0"
+edition = "2021"
+description = """
+The base library for the backend.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.64.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = { version = "0.4.17", optional = true }
+log4rs = { version = "1.1.1", default-features = false, features = ["console_appender"], optional = true }
+
+[features]
+logging = ["log", "log4rs"]

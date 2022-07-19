@@ -19,11 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Error handling facilities for the HarTex codebase.
-//!
-//! This module contains types [`Error`] and [`Result<T>`], convenience types for error handling
-//! throughout the HarTex codebase.
-
 use std::env::VarError;
 use std::error::Error as StdError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
@@ -35,12 +30,8 @@ use hyper::Error as HyperError;
 use serde_json::Error as JsonError;
 use sqlx::Error as SqlxError;
 
-/// An error returned during some computation or operation in HarTex.
 #[derive(Debug)]
 pub struct Error {
-    /// The kind of the error that occurred, represented with the [`ErrorKind`] enum.
-    ///
-    /// See the documentation of [`ErrorKind`], as well as its variants, for more information.
     pub kind: ErrorKind,
 }
 
@@ -88,46 +79,30 @@ impl From<VarError> for Error {
 
 impl StdError for Error {}
 
-/// The type of the error that occurred during a computation or operation in HarTex.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum ErrorKind {
-    /// An error occurred while trying to interact with environment variables of the host system.
     EnvVarError {
-        /// The source of the error.
         src: VarError,
     },
-    /// An error occurred while trying to manipulate an environment variable configuration file.
     EnvFileError {
-        /// The description of the error.
         description: &'static str,
     },
-    /// A generic error occurred relating to an HTTP connection.
     HttpError {
-        /// The source of the error.
         src: HttpError,
     },
-    /// An error occurred when handling HTTP streams, returned from [`hyper`].
-    ///
-    /// [`hyper`]: https://docs.rs/hyper/latest/hyper/index.html
     HyperError {
-        /// The source of the error.
         src: HyperError,
     },
-    /// An error occurred during I/O operations.
+
     IoError {
-        /// The source of the error.
         src: IoError,
     },
-    /// An error occurred when handling JSON data, for example deserialization or serialization.
     JsonError {
-        /// The source of the error.
         src: JsonError,
     },
-    /// An error occurred during database operations.
     SqlxError {
-        /// The source of the error.
         src: SqlxError,
     },
 }

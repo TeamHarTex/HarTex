@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Panic hook implementation utilizing `color-eyre`.
-
 use std::fmt::{Formatter, Result};
 use std::panic::PanicInfo;
 
@@ -69,7 +67,6 @@ impl PanicMessage for HarTexPanicMessage {
     }
 }
 
-/// Initializes the panic hook.
 pub fn init() {
     let builder = HookBuilder::blank()
         .add_default_filters()
