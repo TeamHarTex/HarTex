@@ -26,7 +26,7 @@ jobs:
           override: true
           profile: default
       - name: Build and run configure
-        run: cd discord-backend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
+        run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Run cargo clippy
         run: cd ../common && cargo clippy --workspace
 
