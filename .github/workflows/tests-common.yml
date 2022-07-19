@@ -28,7 +28,7 @@ jobs:
       - name: Build and run configure
         run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Build
-        run: cd ../common && cargo build --release
+        run: cd common && cargo build --release
 
   Test:
     name: Test
