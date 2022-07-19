@@ -13206,12 +13206,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob-parent@npm:5.1.2":
-  version: 5.1.2
-  resolution: "glob-parent@npm:5.1.2"
+"glob-parent@npm:6.0.1":
+  version: 6.0.1
+  resolution: "glob-parent@npm:6.0.1"
   dependencies:
     is-glob: ^4.0.1
-  checksum: cab87638e2112bee3f839ef5f6e0765057163d39c66be8ec1602f3823da4692297ad4e972de876ea17c44d652978638d2fd583c6713d0eb6591706825020c9ee
+  checksum: 56ce13bde074bda072550a8a1c1fe1f8554c68382b1901cb7d08abf27ce42d33c03dcef189501772dda67c858508ec2086bfde83a1e8a3b71481f553dd3bc94a
   languageName: node
   linkType: hard
 

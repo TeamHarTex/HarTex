@@ -19,22 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
-import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
+import { Redirect, routes } from '@redwoodjs/router'
 
-import FatalErrorPage from 'src/pages/FatalErrorPage'
-import Routes from 'src/Routes'
+const RootPage = () => {
+  return (
+    <>
+      <Redirect to={routes.auth()}/>
+    </>
+  )
+}
 
-import './index.css'
-
-const App = () => (
-  <FatalErrorBoundary page={FatalErrorPage}>
-    <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-      <RedwoodApolloProvider>
-        <Routes />
-      </RedwoodApolloProvider>
-    </RedwoodProvider>
-  </FatalErrorBoundary>
-)
-
-export default App
+export default RootPage

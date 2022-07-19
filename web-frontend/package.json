@@ -23,7 +23,7 @@
   },
   "packageManager": "yarn@3.2.1",
   "resolutions": {
-    "glob-parent": "5.1.2",
+    "glob-parent": "6.0.1",
     "got": "11.8.5",
     "trim": "0.0.3",
     "trim-newlines": "3.0.1",
