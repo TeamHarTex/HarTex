@@ -29,6 +29,8 @@ jobs:
         run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Build
         run: cd common && cargo build --release
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false
 
   Test:
     name: Test
@@ -51,4 +53,6 @@ jobs:
       - name: Build and run configure
         run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
       - name: Test
-        run: cd ../common && cargo nextest run
+        run: cd common && cargo nextest run
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false
