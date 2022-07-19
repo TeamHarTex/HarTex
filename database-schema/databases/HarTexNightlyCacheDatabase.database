@@ -1,7 +1,7 @@
-import cachedCurrentUsersTable from "../tables/CachedCurrentUsersTable";
-import cachedGuildsTable from "../tables/CachedGuildsTable";
+import cachedCurrentUsersTable from "../tables/CachedCurrentUsersTable"
+import cachedGuildsTable from "../tables/CachedGuildsTable"
 
-harTexNightlyCacheDatabase = databaseOf(
+export harTexNightlyCacheDatabase = databaseOf(
   name = "HarTexNightlyCacheDatabase",
   tables = listOf(
     cachedCurrentUsersTable,

@@ -1,9 +1,9 @@
 [package]
-name = "driver"
+name = "pg-sess-store"
 version = "0.1.0"
 edition = "2021"
 description = """
-The main binary for the backend.
+An implementation of a PostgreSQL session store for the backend.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.64.0"

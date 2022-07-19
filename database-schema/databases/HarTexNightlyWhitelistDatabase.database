@@ -1,6 +1,6 @@
-import whitelistedGuildsTable from "../tables/WhitelistedGuildsTable";
+import whitelistedGuildsTable from "../tables/WhitelistedGuildsTable"
 
-harTexNightlyWhitelistDatabase = databaseOf(
+export harTexNightlyWhitelistDatabase = databaseOf(
   name = "HarTexNightlyWhitelistDatabase",
   tables = listOf(
     whitelilstedGuildsTable,

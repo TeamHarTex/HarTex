@@ -60,7 +60,7 @@ enum FileScope<'a> {
 /// invalid or has invalid syntax and cannot be further processed.
 #[allow(clippy::missing_panics_doc)] // this function never panics
 pub fn load() -> Result<()> {
-    let file = fs::read_to_string("env.vars")?;
+    let file = fs::read_to_string("../../../discord-frontend/env.vars")?;
     let file = file.trim_end().to_string();
 
     let lines = file

@@ -11,7 +11,7 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../base", default-features = false, features = ["discord-model"] }
+base = { path = "../../common/base", default-features = false, features = ["discord-model"] }
 model = { path = "../model" }
 
 log = "0.4.17"

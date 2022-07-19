@@ -1,4 +1,4 @@
-cachedCurrentUsersTable = tableOf(
+export cachedCurrentUsersTable = tableOf(
   name = "CachedCurrentUsers",
   columns = listOf(
     columnOf(
