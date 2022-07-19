@@ -32,6 +32,12 @@ pub struct PgSessionStore<T: Send + Sync> {
 
 impl<T: Send + Sync> PgSessionStore<T> {
     pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl<T: Send + Sync> Default for PgSessionStore<T> {
+    fn default() -> Self {
         Self {
             phantom: PhantomData,
         }
