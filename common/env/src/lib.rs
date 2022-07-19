@@ -34,7 +34,6 @@
 //! for the lifetime of the process. Once the process is terminated, the environment variables for
 //! that running process  are discarded.
 
-#![deny(clippy::pedantic)]
 #![deny(warnings)]
 
 use std::env;

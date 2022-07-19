@@ -23,7 +23,6 @@
 //!
 //! The implementation of a cache for storing Discord entities.
 
-#![deny(clippy::pedantic)]
 #![deny(warnings)]
 
 pub mod entities;
