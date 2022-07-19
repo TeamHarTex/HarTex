@@ -13,5 +13,5 @@ rust-version = "1.64.0"
 [dependencies]
 model = { path = "../../common/model" }
 pg-sess-store = { path = "../pg-sess-store" }
-rocket = { git = "https://github.com/SergioBenitez/Rocket.git" }
+rocket = "0.5.0-rc.2"
 rocket-session-store = "0.2.0"

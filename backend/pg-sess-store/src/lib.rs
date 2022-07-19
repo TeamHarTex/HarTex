@@ -26,11 +26,11 @@ use std::time::Duration;
 
 use rocket_session_store::{SessionResult, Store};
 
-pub struct PgSessionStore<T> {
+pub struct PgSessionStore<T: Send + Sync> {
     phantom: PhantomData<T>,
 }
 
-impl<T> PgSessionStore<T> {
+impl<T: Send + Sync> PgSessionStore<T> {
     pub fn new() -> Self {
         Self {
             phantom: PhantomData,
@@ -39,22 +39,22 @@ impl<T> PgSessionStore<T> {
 }
 
 #[rocket::async_trait]
-impl<T> Store for PgSessionStore<T> {
+impl<T: Send + Sync> Store for PgSessionStore<T> {
     type Value = T;
 
-    async fn get(&self, id: &str) -> SessionResult<Option<Self::Value>> {
+    async fn get(&self, _: &str) -> SessionResult<Option<Self::Value>> {
         todo!()
     }
 
-    async fn set(&self, id: &str, value: Self::Value, duration: Duration) -> SessionResult<()> {
+    async fn set(&self, _: &str, _: Self::Value, _: Duration) -> SessionResult<()> {
         todo!()
     }
 
-    async fn touch(&self, id: &str, duration: Duration) -> SessionResult<()> {
+    async fn touch(&self, _: &str, _: Duration) -> SessionResult<()> {
         todo!()
     }
 
-    async fn remove(&self, id: &str) -> SessionResult<()> {
+    async fn remove(&self, _: &str) -> SessionResult<()> {
         todo!()
     }
 }

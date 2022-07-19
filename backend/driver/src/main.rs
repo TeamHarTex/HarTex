@@ -28,7 +28,6 @@ use std::time::Duration;
 
 use model::db::session::SessionEntry;
 use pg_sess_store::PgSessionStore;
-use rocket::{Build, Rocket};
 use rocket_session_store::{CookieConfig, SessionStore};
 
 use crate::routes::api_users_me::api_users_me;
@@ -50,7 +49,7 @@ pub async fn main() {
         },
     };
 
-    rocket::build()
+    let _ = rocket::build()
         .attach(session_store.fairing())
         .mount("/", routes![api_users_me])
         .launch()
