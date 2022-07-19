@@ -1,0 +1,46 @@
+name: Lints (common)
+
+on:
+  push:
+    branches:
+      - nightly
+      - stable
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Build and run configure
+        run: cd discord-backend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
+      - name: Run cargo clippy
+        run: cd ../common && cargo clippy --workspace
+
+  Rustfmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Run cargo fmt
+        run: cd common && cargo fmt --all -- --check

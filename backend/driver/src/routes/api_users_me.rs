@@ -21,7 +21,6 @@
 
 use model::db::session::SessionEntry;
 
-use rocket::response::Responder;
 use rocket_session_store::{Session, SessionResult};
 
 #[get("/api/users/@me")]
