@@ -25,13 +25,13 @@ use std::time::Duration;
 use rocket_session_store::{SessionResult, Store};
 
 pub struct PgSessionStore<T> {
-    phantom: PhantomData<T>
+    phantom: PhantomData<T>,
 }
 
 impl<T> PgSessionStore<T> {
     pub fn new() -> Self {
         Self {
-            phantom: PhantomData
+            phantom: PhantomData,
         }
     }
 }

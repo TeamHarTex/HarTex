@@ -20,8 +20,8 @@
  */
 
 use base::discord::model::id::{marker::UserMarker, Id};
-use sqlx::{Error, FromRow, Row};
 use sqlx::postgres::PgRow;
+use sqlx::{Error, FromRow, Row};
 
 pub struct SessionEntry {
     pub session_id: String,

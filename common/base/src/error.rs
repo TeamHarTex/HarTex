@@ -83,28 +83,14 @@ impl StdError for Error {}
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum ErrorKind {
-    EnvVarError {
-        src: VarError,
-    },
-    EnvFileError {
-        description: &'static str,
-    },
-    HttpError {
-        src: HttpError,
-    },
-    HyperError {
-        src: HyperError,
-    },
+    EnvVarError { src: VarError },
+    EnvFileError { description: &'static str },
+    HttpError { src: HttpError },
+    HyperError { src: HyperError },
 
-    IoError {
-        src: IoError,
-    },
-    JsonError {
-        src: JsonError,
-    },
-    SqlxError {
-        src: SqlxError,
-    },
+    IoError { src: IoError },
+    JsonError { src: JsonError },
+    SqlxError { src: SqlxError },
 }
 
 pub type Result<T> = StdResult<T, Error>;
