@@ -25,8 +25,12 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
-      - name: Build and run configure
-        run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
+      - uses: actions/setup-python@v4
+      - name: Install Python 3.10
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
       - name: Build
         run: cd discord-frontend && cargo build --release
         env:
@@ -50,8 +54,12 @@ jobs:
         uses: baptiste0928/cargo-install@v1
         with:
           crate: cargo-nextest
-      - name: Build and run configure
-        run: cd discord-frontend && cargo build --release -p buildsys_configure -Z unstable-options --out-dir=out && ./out/configure
+      - uses: actions/setup-python@v4
+      - name: Install Python 3.10
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
       - name: Test
         run: cd discord-frontend && cargo nextest run
         env:
