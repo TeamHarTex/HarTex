@@ -1,5 +1,5 @@
-export databaseSessionTable = tableOf(
-  name = "DatabaseSession",
+export dashboardSessionsTable = tableOf(
+  name = "DashboardSessions",
   columns = listOf(
     columnOf(
       name = "session_id",
@@ -9,6 +9,13 @@ export databaseSessionTable = tableOf(
         Constraint.PRIMARY_KEY
       )
     ),
+    columnOf(
+      name = "user_id",
+      type = ColumnType.TEXT,
+      contraints = listOf(
+        Constraint.NOT_NULL
+      )
+    )
     columnOf(
       name = "expires_at",
       type = ColumnType.TIMESTAMP_TZ,

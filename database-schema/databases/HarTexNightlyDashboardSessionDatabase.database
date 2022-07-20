@@ -1,8 +1,8 @@
-import databaseSessionTable from "../tables/DatabaseSessionTable"
+import dashboardSessionsTable from "../tables/DashboardSessionsTable"
 
 export harTexNightlyDashboardSessionDatabase = databaseOf(
   name = "HarTexNightlyDashboardSessionDatabase",
   tables = listOf(
-    databaseSessionTable,
+    dashboardSessionsTable,
   )
 )
