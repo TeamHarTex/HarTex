@@ -29,7 +29,6 @@
 //! The cache of HarTex is specifically using a PostgreSQL database for its caching
 //! implementation.
 
-#![deny(clippy::pedantic)]
 #![deny(warnings)]
 
 use std::hash::Hash;

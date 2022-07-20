@@ -1,7 +1,9 @@
-import harTexNightlyCacheDatabase from "databases/HarTexNightlyCacheDatabase";
+import harTexNightlyCacheDatabase from "databases/HarTexNightlyCacheDatabase"
+import harTexNightlyDashboardSessionDatabase from "databases/HarTexNightlyDashboardSessionDatabase";
 import harTexNightlyWhitelistDatabase from "databases/HarTexNightlyWhitelistDatabase"
 
 databases = listOf(
   harTexNightlyCacheDatabase,
+  harTexNightlyDashboardSessionDatabase,
   harTexNightlyWhitelistDatabase,
 )

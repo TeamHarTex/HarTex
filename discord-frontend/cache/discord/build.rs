@@ -28,7 +28,7 @@ use toml_edit::{Document, Item, Value};
 pub const BACKENDS: [&str; 1] = ["postgres"];
 
 pub fn main() {
-    let result = fs::read_to_string("../../buildconf.toml");
+    let result = fs::read_to_string("../../../buildconf.toml");
     if let Err(error) = &result {
         println!("cargo:warning=cannot open build configuration file: `{error}`; the `cache_discord` crate will not compile");
         return;

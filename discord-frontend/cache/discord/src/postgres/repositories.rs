@@ -45,7 +45,11 @@ impl Repository<PostgresBackend, CachedCurrentUser> for CurrentUserRepository {
         entity_id: Id<UserMarker>,
     ) -> GetEntityFuture<'_, CachedCurrentUser, PostgresBackendError> {
         Box::pin(async move {
+            #[cfg(stable)]
             let pgsql_creds = env::var("PGSQL_CACHE_DB_CREDENTIALS")?;
+            #[cfg(not(stable))]
+            let pgsql_creds = env::var("PGSQL_CACHE_DB_NIGHTLY_CREDENTIALS")?;
+
             let pool = PgPool::connect(&pgsql_creds).await?;
             let query = include_str!("../../include/postgres/repositories/current_user/get.sql");
 
@@ -62,7 +66,10 @@ impl Repository<PostgresBackend, CachedCurrentUser> for CurrentUserRepository {
         current_user: CachedCurrentUser,
     ) -> UpsertEntityFuture<'_, PostgresBackendError> {
         Box::pin(async move {
+            #[cfg(stable)]
             let pgsql_creds = env::var("PGSQL_CACHE_DB_CREDENTIALS")?;
+            #[cfg(not(stable))]
+            let pgsql_creds = env::var("PGSQL_CACHE_DB_NIGHTLY_CREDENTIALS")?;
             let pool = PgPool::connect(&pgsql_creds).await?;
             let query = include_str!("../../include/postgres/repositories/current_user/upsert.sql");
 
@@ -93,7 +100,10 @@ impl Repository<PostgresBackend, CachedGuild> for GuildRepository {
         entity_id: Id<GuildMarker>,
     ) -> GetEntityFuture<'_, CachedGuild, PostgresBackendError> {
         Box::pin(async move {
+            #[cfg(stable)]
             let pgsql_creds = env::var("PGSQL_CACHE_DB_CREDENTIALS")?;
+            #[cfg(not(stable))]
+            let pgsql_creds = env::var("PGSQL_CACHE_DB_NIGHTLY_CREDENTIALS")?;
             let pool = PgPool::connect(&pgsql_creds).await?;
             let query = include_str!("../../include/postgres/repositories/guilds/get.sql");
 
@@ -107,7 +117,10 @@ impl Repository<PostgresBackend, CachedGuild> for GuildRepository {
 
     fn upsert(&self, guild: CachedGuild) -> UpsertEntityFuture<'_, PostgresBackendError> {
         Box::pin(async move {
+            #[cfg(stable)]
             let pgsql_creds = env::var("PGSQL_CACHE_DB_CREDENTIALS")?;
+            #[cfg(not(stable))]
+            let pgsql_creds = env::var("PGSQL_CACHE_DB_NIGHTLY_CREDENTIALS")?;
             let pool = PgPool::connect(&pgsql_creds).await?;
             let query = include_str!("../../include/postgres/repositories/guilds/upsert.sql");
 

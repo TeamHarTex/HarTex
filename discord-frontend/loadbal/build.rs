@@ -27,7 +27,7 @@ use std::fs;
 use toml_edit::{Document, Item, Value};
 
 pub fn main() {
-    let result = fs::read_to_string("../buildconf.toml");
+    let result = fs::read_to_string("../../buildconf.toml");
     if let Err(error) = &result {
         println!("cargo:warning=cannot open build configuration file: `{error}`; the `loadbal` (src and lib) crates will not compile");
         return;

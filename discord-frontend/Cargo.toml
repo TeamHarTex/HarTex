@@ -1,16 +1,12 @@
 [workspace]
 members = [
-    "base",
-    "buildsys/configure",
     "cache/base",
     "cache/discord",
-    "env",
     "event",
     "ext",
     "gateway",
     "interactions",
     "loadbal",
     "manidb",
-    "model",
     "rest",
 ]

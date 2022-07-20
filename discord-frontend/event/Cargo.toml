@@ -11,9 +11,9 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../base", features = ["cmdline", "discord-http", "discord-model", "logging", "panicking"] }
+base = { path = "../../common/base", features = ["cmdline", "discord-http", "discord-model", "logging", "panicking"] }
 cache_discord = { path = "../cache/discord" }
-env = { path = "../env" }
+env = { path = "../../common/env" }
 gateway = { path = "../gateway" }
 loadbal = { path = "../loadbal" }
 manidb = { path = "../manidb" }
