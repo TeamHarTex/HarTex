@@ -1,4 +1,4 @@
-whitelistedGuildsTable = tableOf(
+export whitelistedGuildsTable = tableOf(
   name = "WhitelistedGuilds",
   columns = listOf(
     columnOf(

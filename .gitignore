@@ -3,7 +3,7 @@
 **/venv
 **/out
 **/target
-**/buildconf.toml
+buildconf.toml
 **/env.vars
 **/.env
 **/.netlify
@@ -19,6 +19,7 @@
 **/api/src/lib/generateGraphiQLHeader.*
 **/.pnp.*
 **/.yarn/*
+**/__pycache__
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases

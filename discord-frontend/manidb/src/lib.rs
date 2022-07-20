@@ -24,7 +24,6 @@
 //! The `manidb` crate implements database manipulation procedures for utilization in the
 //! codebase.
 
-#![deny(clippy::pedantic)]
 #![deny(warnings)]
 
 use std::future::Future;

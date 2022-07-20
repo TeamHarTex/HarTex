@@ -69,12 +69,21 @@ impl Future for GetGuildWhitelistStatus {
 }
 
 async fn exec(guild_id: Id<GuildMarker>) -> Result<Option<WhitelistedGuild>> {
+    #[cfg(stable)]
     let pgsql_creds = env::var("PGSQL_WHITELIST_DB_CREDENTIALS").map_err(|src| {
         log::error!(
             "could not retrieve `PGSQL_WHITELIST_DB_CREDENTIALS` environment variable: {src}"
         );
         Error::from(src)
     })?;
+    #[cfg(not(stable))]
+        let pgsql_creds = env::var("PGSQL_WHITELIST_DB_NIGHTLY_CREDENTIALS").map_err(|src| {
+        log::error!(
+            "could not retrieve `PGSQL_WHITELIST_DB_NIGHTLY_CREDENTIALS` environment variable: {src}"
+        );
+        Error::from(src)
+    })?;
+
     let pool = PgPool::connect(&pgsql_creds).await.map_err(|src| {
         log::error!("could not connect to whitelist database: {src}");
         Error::from(src)

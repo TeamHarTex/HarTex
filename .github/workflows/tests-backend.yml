@@ -1,0 +1,50 @@
+name: Tests (backend)
+
+on:
+  push:
+    branches:
+      - nightly
+      - stable
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Build:
+    name: Full Release Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Build
+        run: cd backend && cargo build --release
+
+  Test:
+    name: Test
+    needs:
+      - Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install cargo-nextest
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: cargo-nextest
+      - name: Test
+        run: cd backend && cargo nextest run

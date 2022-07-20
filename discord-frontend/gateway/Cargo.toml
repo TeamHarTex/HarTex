@@ -11,8 +11,8 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../base", features = ["cmdline", "discord-gateway", "logging", "panicking"] }
-env = { path = "../env" }
+base = { path = "../../common/base", features = ["cmdline", "discord-gateway", "logging", "panicking"] }
+env = { path = "../../common/env" }
 ext = { path = "../ext", features = ["discord-model-ext"] }
 
 async-std = { version = "1.12.0", features = ["attributes", "tokio1"] }

@@ -1,0 +1,52 @@
+name: Lints (common)
+
+on:
+  push:
+    branches:
+      - nightly
+      - stable
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
+      - name: Run cargo clippy
+        run: cd common && cargo clippy --workspace
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false
+
+  Rustfmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Run cargo fmt
+        run: cd common && cargo fmt --all -- --check

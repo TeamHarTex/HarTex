@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "base",
+    "env",
+    "model",
+]
