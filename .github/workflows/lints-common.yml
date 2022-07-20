@@ -25,8 +25,8 @@ jobs:
           toolchain: nightly
           override: true
           profile: default
-      - uses: actions/setup-python@v4
       - name: Install Python 3.10
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
       - name: Run configure
