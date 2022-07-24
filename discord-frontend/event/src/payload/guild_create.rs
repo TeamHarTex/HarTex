@@ -19,13 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+use std::env as stdenv;
+
 use base::discord::model::gateway::payload::incoming::GuildCreate;
-use base::error::Result;
+use base::error::{Error, ErrorKind, Result};
+use hyper::Method;
 use manidb::whitelist::GetGuildWhitelistStatus;
+use rest::request::RatelimitRequest;
 
 pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
     log::info!(
-        "joined a new guild `{}` (id {}); checking its whitelist status...",
+        "joined a new guild `{}` (id {}); checking its whitelist status",
         &payload.name,
         payload.id
     );
@@ -45,6 +50,36 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
             whitelist.whitelisted_since
         );
     } else {
+        log::error!("guild `{}` (id {}) is not whitelisted. attempting to dm owner about this", payload.name, payload.id);
+
+        let mut headers = HashMap::new();
+
+        let result = stdenv::var("BOT_TOKEN");
+        if let Err(src) = result {
+            return Err(Error {
+                kind: ErrorKind::EnvVarError { src }
+            });
+        }
+
+        let mut token = result.unwrap();
+        if !token.starts_with("Bot ") {
+            token.insert_str(0, "Bot ");
+        }
+        headers.insert(String::from("Authorization"), token);
+
+        let rl_request = RatelimitRequest {
+            body: String::new(),
+            method: Method::POST.to_string(),
+            headers,
+        };
+        let serde_result = serde_json::to_string(&rl_request);
+        if let Err(src) = serde_result {
+            return Err(Error {
+                kind: ErrorKind::JsonError { src }
+            });
+        }
+        let body = serde_result.unwrap();
+
         todo!()
     }
 

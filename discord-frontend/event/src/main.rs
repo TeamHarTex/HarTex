@@ -103,7 +103,7 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("attempting to connect to the gateway proxy...");
+    log::trace!("attempting to connect to the gateway proxy");
     let result =
         tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_proxy_port}/ws")).await;
     if let Err(error) = result {
