@@ -23,7 +23,7 @@ use std::str::FromStr;
 use std::time::Duration;
 
 use hyper::body;
-use hyper::header::{HeaderName, HeaderValue};
+use hyper::header::{HeaderName, HeaderValue, USER_AGENT};
 use hyper::{Body, Request as HyperRequest};
 use rest::request::RatelimitRequest;
 use rest::RestState;
@@ -71,6 +71,15 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
                 HeaderValue::from_str(&value).unwrap(),
             );
         }
+
+        let mut user_agent = format!("DiscordBot (https://github.com/twilight-rs/twilight, 0.12) Twilight-rs, HarTexBot {}", env!("CARGO_PKG_VERSION"));
+        #[cfg(not(stable))]
+        {
+            user_agent.push_str("Nightly");
+        }
+
+        headers.insert(USER_AGENT, HeaderValue::from_str(&user_agent).unwrap());
+
         let hyper = builder
             .body(Body::from(rl_request.body().to_string()))
             .unwrap();
