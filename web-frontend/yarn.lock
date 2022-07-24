@@ -12071,7 +12071,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^4.0.0":
+"eventemitter3@npm:4.0.7, eventemitter3@npm:^4.0.0":
   version: 4.0.7
   resolution: "eventemitter3@npm:4.0.7"
   checksum: 5f6d97cbcbac47be798e6355e3a7639a84ee1f7d9b199a07017f1d2f1e2fe236004d14fa5dfaeba661f94ea57805385e326236a6debbc7145c8877fbc0297c6b
@@ -23099,10 +23099,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:5.5.1":
-  version: 5.5.1
-  resolution: "undici@npm:5.5.1"
-  checksum: 3818c32473e71f2d6405c7e202d239b5a85625faab4523e48918f324056402aa557b9764a8545a5f08b0d346088158efe1072a4061fd3d2d80e2d415618bb6ca
+"undici@npm:5.8.0":
+  version: 5.8.0
+  resolution: "undici@npm:5.8.0"
+  checksum: caa7f9eaf002b737c0549055d56afe2f52101295091e44c76462ba7761b2ba51e35d74855bd6c9a99b74c89bc04915e4ce1eeb27988447c0818b186788303911
   languageName: node
   linkType: hard
 
@@ -23767,6 +23767,7 @@ __metadata:
     "@redwoodjs/forms": 2.1.0
     "@redwoodjs/router": 2.1.0
     "@redwoodjs/web": 2.1.0
+    eventemitter3: 4.0.7
     prop-types: 15.8.1
     react: 17.0.2
     react-dom: 17.0.2
