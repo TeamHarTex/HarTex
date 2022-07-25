@@ -18,7 +18,7 @@ dashmap = "5.3.4"
 futures-util = "0.3.21"
 hyper = { version = "0.14.20", features = ["client", "http1"], default-features = false }
 log = "0.4.17"
-serde = { version = "1.0.139", features = ["derive", "std"], default-features = false }
+serde = { version = "1.0.140", features = ["derive", "std"], default-features = false }
 serde_json = "1.0.82"
 tide = "0.17.0-beta.1"
 tokio = { version = "1.20.0", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
