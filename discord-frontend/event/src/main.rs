@@ -60,18 +60,14 @@ pub async fn main() -> Result<()> {
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
     let mut base_options = cmdline::Options::new();
-    let options = base_options.reqopt(
-        "",
-        "gateway-proxy-port",
-        "The port of the gateway port",
-        "PORT",
-    )
-    .reqopt(
-        "",
-        "loadbal-port",
-        "The port of the load balancer",
-        "PORT"
-    );
+    let options = base_options
+        .reqopt(
+            "",
+            "gateway-proxy-port",
+            "The port of the gateway port",
+            "PORT",
+        )
+        .reqopt("", "loadbal-port", "The port of the load balancer", "PORT");
 
     if args.is_empty() {
         event_usage(options);
