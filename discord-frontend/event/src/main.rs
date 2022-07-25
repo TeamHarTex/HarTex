@@ -65,6 +65,12 @@ pub async fn main() -> Result<()> {
         "gateway-proxy-port",
         "The port of the gateway port",
         "PORT",
+    )
+    .reqopt(
+        "",
+        "loadbal-port",
+        "The port of the load balancer",
+        "PORT"
     );
 
     if args.is_empty() {
@@ -89,6 +95,12 @@ pub async fn main() -> Result<()> {
     let matches = result.unwrap();
 
     let Ok(Some(gateway_proxy_port)) = matches.opt_get::<u16>("gateway-proxy-port") else {
+        log::error!("could not parse gateway port argument; exiting");
+
+        return Ok(());
+    };
+
+    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("loadbal-port") else {
         log::error!("could not parse gateway port argument; exiting");
 
         return Ok(());
@@ -119,6 +131,7 @@ pub async fn main() -> Result<()> {
         if let Ok(Message::Text(json)) = result {
             tokio::spawn(payload::handle_payload(
                 serde_json::from_str::<Payload>(&json).unwrap(),
+                loadbal_port,
             ));
         }
     }
