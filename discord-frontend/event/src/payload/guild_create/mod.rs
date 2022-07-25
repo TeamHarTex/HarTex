@@ -22,11 +22,11 @@
 use std::collections::HashMap;
 use std::env as stdenv;
 
+use base::discord::http::routing::Route;
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use base::error::{Error, ErrorKind, Result};
-use hyper::{Body, Method, Request};
-use base::discord::http::routing::Route;
 use cache_discord::DiscordCache;
+use hyper::{Body, Method, Request};
 use loadbal::Request as LoadbalRequest;
 use manidb::whitelist::GetGuildWhitelistStatus;
 use rest::request::RatelimitRequest;
@@ -61,7 +61,7 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -
         let result = stdenv::var("BOT_TOKEN");
         if let Err(src) = result {
             return Err(Error {
-                kind: ErrorKind::EnvVarError { src }
+                kind: ErrorKind::EnvVarError { src },
             });
         }
 
@@ -70,7 +70,11 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -
             token.insert_str(0, "Bot ");
         }
         let _ = async move {
-            log::error!("guild `{}` (id {}) is not whitelisted. attempting to leave the guild", &payload.name, payload.id);
+            log::error!(
+                "guild `{}` (id {}) is not whitelisted. attempting to leave the guild",
+                &payload.name,
+                payload.id
+            );
 
             let mut headers = HashMap::new();
             headers.insert(String::from("Authorization"), token.clone());
@@ -83,7 +87,7 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -
             let serde_result = serde_json::to_string(&rl_request);
             if let Err(src) = serde_result {
                 return Err(Error {
-                    kind: ErrorKind::JsonError { src }
+                    kind: ErrorKind::JsonError { src },
                 });
             }
             let body = serde_result.unwrap();
@@ -91,14 +95,17 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -
             let loadbal_request = LoadbalRequest {
                 target_server_type: String::from("rest"),
                 method: Method::POST.to_string(),
-                route: Route::LeaveGuild { guild_id: payload.id.get() }.to_string(),
+                route: Route::LeaveGuild {
+                    guild_id: payload.id.get(),
+                }
+                .to_string(),
                 headers: HashMap::new(),
                 body,
             };
             let serde_result = serde_json::to_string(&loadbal_request);
             if let Err(src) = serde_result {
                 return Err(Error {
-                    kind: ErrorKind::JsonError { src }
+                    kind: ErrorKind::JsonError { src },
                 });
             }
             let actual_json = serde_result.unwrap();
@@ -109,7 +116,7 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -
                 .body(Body::from(actual_json));
             if let Err(src) = result {
                 return Err(Error {
-                    kind: ErrorKind::HttpError { src }
+                    kind: ErrorKind::HttpError { src },
                 });
             }
 

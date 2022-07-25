@@ -72,7 +72,10 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
             );
         }
 
-        let mut user_agent = format!("DiscordBot (https://github.com/twilight-rs/twilight, 0.12) Twilight-rs, HarTexBot {}", env!("CARGO_PKG_VERSION"));
+        let mut user_agent = format!(
+            "DiscordBot (https://github.com/twilight-rs/twilight, 0.12) Twilight-rs, HarTexBot {}",
+            env!("CARGO_PKG_VERSION")
+        );
         #[cfg(not(stable))]
         {
             user_agent.push_str("Nightly");
