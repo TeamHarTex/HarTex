@@ -19,19 +19,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
 use std::env as stdenv;
+use hyper::Client;
 
-use base::discord::http::routing::Route;
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use base::error::{Error, ErrorKind, Result};
 use cache_discord::DiscordCache;
-use hyper::{Body, Method, Request};
-use loadbal::Request as LoadbalRequest;
 use manidb::whitelist::GetGuildWhitelistStatus;
-use rest::request::RatelimitRequest;
 
-pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -> Result<()> {
+mod extras;
+
+pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u16) -> Result<()> {
     log::info!(
         "joined a new guild `{}` (id {}); checking its whitelist status",
         &payload.name,
@@ -69,61 +67,8 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u64) -
         if !token.starts_with("Bot ") {
             token.insert_str(0, "Bot ");
         }
-        let _ = async move {
-            log::error!(
-                "guild `{}` (id {}) is not whitelisted. attempting to leave the guild",
-                &payload.name,
-                payload.id
-            );
 
-            let mut headers = HashMap::new();
-            headers.insert(String::from("Authorization"), token.clone());
-
-            let rl_request = RatelimitRequest {
-                body: String::new(),
-                method: Method::POST.to_string(),
-                headers,
-            };
-            let serde_result = serde_json::to_string(&rl_request);
-            if let Err(src) = serde_result {
-                return Err(Error {
-                    kind: ErrorKind::JsonError { src },
-                });
-            }
-            let body = serde_result.unwrap();
-
-            let loadbal_request = LoadbalRequest {
-                target_server_type: String::from("rest"),
-                method: Method::POST.to_string(),
-                route: Route::LeaveGuild {
-                    guild_id: payload.id.get(),
-                }
-                .to_string(),
-                headers: HashMap::new(),
-                body,
-            };
-            let serde_result = serde_json::to_string(&loadbal_request);
-            if let Err(src) = serde_result {
-                return Err(Error {
-                    kind: ErrorKind::JsonError { src },
-                });
-            }
-            let actual_json = serde_result.unwrap();
-
-            let result = Request::builder()
-                .method(Method::POST)
-                .uri(format!("http://127.0.0.1:{loadbal_port}/request"))
-                .body(Body::from(actual_json));
-            if let Err(src) = result {
-                return Err(Error {
-                    kind: ErrorKind::HttpError { src },
-                });
-            }
-
-            Ok(())
-        };
-
-        todo!()
+        tokio::spawn(Client::new().request(extras::leave_guild(payload, token)?));
     }
 
     Ok(())
