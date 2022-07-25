@@ -19,8 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env as stdenv;
 use hyper::Client;
+use std::env as stdenv;
 
 use base::discord::model::gateway::payload::incoming::GuildCreate;
 use base::error::{Error, ErrorKind, Result};
