@@ -40,7 +40,7 @@ pub fn leave_guild(
     );
 
     let mut headers = HashMap::new();
-    headers.insert(String::from("Authorization"), token.clone());
+    headers.insert(String::from("Authorization"), token);
 
     let rl_request = RatelimitRequest {
         body: String::new(),
