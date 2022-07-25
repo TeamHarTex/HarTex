@@ -60,12 +60,14 @@ pub async fn main() -> Result<()> {
     let args = stdenv::args().collect::<Vec<_>>();
     let args = &args[1..];
     let mut base_options = cmdline::Options::new();
-    let options = base_options.reqopt(
-        "",
-        "gateway-proxy-port",
-        "The port of the gateway port",
-        "PORT",
-    );
+    let options = base_options
+        .reqopt(
+            "",
+            "gateway-proxy-port",
+            "The port of the gateway port",
+            "PORT",
+        )
+        .reqopt("", "loadbal-port", "The port of the load balancer", "PORT");
 
     if args.is_empty() {
         event_usage(options);
@@ -94,6 +96,12 @@ pub async fn main() -> Result<()> {
         return Ok(());
     };
 
+    let Ok(Some(loadbal_port)) = matches.opt_get::<u16>("loadbal-port") else {
+        log::error!("could not parse gateway port argument; exiting");
+
+        return Ok(());
+    };
+
     if let Err(error) = env::load() {
         log::error!("env error: {error}");
         log::warn!("environment variables cannot be loaded; exiting");
@@ -103,7 +111,7 @@ pub async fn main() -> Result<()> {
         return Ok(());
     }
 
-    log::trace!("attempting to connect to the gateway proxy...");
+    log::trace!("attempting to connect to the gateway proxy");
     let result =
         tokio_tungstenite::connect_async(&format!("ws://127.0.0.1:{gateway_proxy_port}/ws")).await;
     if let Err(error) = result {
@@ -119,6 +127,7 @@ pub async fn main() -> Result<()> {
         if let Ok(Message::Text(json)) = result {
             tokio::spawn(payload::handle_payload(
                 serde_json::from_str::<Payload>(&json).unwrap(),
+                loadbal_port,
             ));
         }
     }
