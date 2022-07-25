@@ -68,7 +68,7 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u16) -
             token.insert_str(0, "Bot ");
         }
 
-        tokio::spawn(Client::new().request(extras::leave_guild(payload, token)?));
+        tokio::spawn(Client::new().request(extras::leave_guild(payload, token, loadbal_port)?));
     }
 
     Ok(())
