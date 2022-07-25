@@ -1,0 +1,154 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - nightly
+      - stable
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  BuildBackend:
+    name: Full Release Build (backend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Build
+        run: cd backend && cargo build --release
+
+  TestBackend:
+    name: Test (backend)
+    needs:
+      - BuildBackend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install cargo-nextest
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: cargo-nextest
+      - name: Test
+        run: cd backend && cargo nextest run
+
+  BuildCommon:
+    name: Full Release Build (common)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
+      - name: Build
+        run: cd common && cargo build --release
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false
+
+  TestCommon:
+    name: Test (common)
+    needs:
+      - BuildCommon
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install cargo-nextest
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: cargo-nextest
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
+      - name: Test
+        run: cd common && cargo nextest run
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false
+
+  BuildDiscordFrontend:
+    name: Full Release Build (discord-frontend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
+      - name: Build
+        run: cd discord-frontend && cargo build --release
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false
+
+  TestDiscordFrontend:
+    name: Test (discord-frontend)
+    needs:
+      - BuildDiscordFrontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          profile: default
+      - name: Install cargo-nextest
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: cargo-nextest
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run configure
+        run: python ./x.py configure
+      - name: Test
+        run: cd discord-frontend && cargo nextest run
+        env:
+          ENABLE_PGSQL_CACHE_BACKEND: false

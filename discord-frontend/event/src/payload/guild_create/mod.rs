@@ -19,13 +19,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hyper::Client;
+use std::env as stdenv;
+
 use base::discord::model::gateway::payload::incoming::GuildCreate;
-use base::error::Result;
+use base::error::{Error, ErrorKind, Result};
+use cache_discord::DiscordCache;
 use manidb::whitelist::GetGuildWhitelistStatus;
 
-pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
+mod extras;
+
+pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u16) -> Result<()> {
     log::info!(
-        "joined a new guild `{}` (id {}); checking its whitelist status...",
+        "joined a new guild `{}` (id {}); checking its whitelist status",
         &payload.name,
         payload.id
     );
@@ -44,8 +50,25 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>) -> Result<()> {
             whitelist.id,
             whitelist.whitelisted_since
         );
+
+        log::trace!("caching guild");
+        if let Err(error) = DiscordCache.update(&*payload).await {
+            log::trace!("failed to cache guild {error:?}")
+        }
     } else {
-        todo!()
+        let result = stdenv::var("BOT_TOKEN");
+        if let Err(src) = result {
+            return Err(Error {
+                kind: ErrorKind::EnvVarError { src },
+            });
+        }
+
+        let mut token = result.unwrap();
+        if !token.starts_with("Bot ") {
+            token.insert_str(0, "Bot ");
+        }
+
+        tokio::spawn(Client::new().request(extras::leave_guild(payload, token, loadbal_port)?));
     }
 
     Ok(())
