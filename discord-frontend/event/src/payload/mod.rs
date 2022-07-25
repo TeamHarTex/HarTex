@@ -26,7 +26,7 @@ use gateway::Payload;
 mod guild_create;
 mod ready;
 
-pub async fn handle_payload(payload: Payload, loadbal_port: u64) -> Result<()> {
+pub async fn handle_payload(payload: Payload, loadbal_port: u16) -> Result<()> {
     match payload.event {
         SerdeableEvent::GuildCreate(guild_create) => {
             guild_create::handle_guild_create(guild_create, loadbal_port).await
