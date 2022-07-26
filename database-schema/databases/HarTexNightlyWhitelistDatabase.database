@@ -1,8 +1,0 @@
-import whitelistedGuildsTable from "../tables/WhitelistedGuildsTable"
-
-export harTexNightlyWhitelistDatabase = databaseOf(
-  name = "HarTexNightlyWhitelistDatabase",
-  tables = listOf(
-    whitelilstedGuildsTable,
-  )
-)

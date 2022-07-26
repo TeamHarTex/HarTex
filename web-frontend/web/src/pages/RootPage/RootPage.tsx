@@ -19,12 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Redirect, routes } from '@redwoodjs/router'
-
 const RootPage = () => {
   return (
     <>
-      <Redirect to={routes.auth()}/>
     </>
   )
 }
