@@ -24,7 +24,6 @@ use std::str::FromStr;
 use hyper::header::{HeaderName, HeaderValue};
 use hyper::{Body, Client, Method, Request as HyperRequest, Uri};
 use loadbal::Request as LoadbalRequest;
-use serde_json::json;
 use tide::{Request, Response, Result};
 
 use crate::servers;
@@ -36,13 +35,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
     if let Err(error) = result {
         log::error!("failed to deserialize loadbal request payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
-        return Ok(Response::builder(error.status())
-            .body_json(&json!({
-                "code": error.status(),
-                "message": error.status().canonical_reason(),
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(error.status()));
     }
 
     let loadbal_request = result.unwrap();
@@ -83,6 +76,7 @@ pub async fn handle_request(mut request: Request<()>) -> Result<Response> {
             return Ok(Response::new(503));
         };
 
+        log::trace!("request sent; responding with HTTP 200");
         Ok(Response::new(200))
     } else {
         log::trace!("no server available, responding with HTTP 503");
