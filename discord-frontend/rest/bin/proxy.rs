@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env as stdenv;
 use std::str::FromStr;
 use std::time::Duration;
 
@@ -27,26 +28,44 @@ use hyper::header::{HeaderName, HeaderValue, USER_AGENT};
 use hyper::{Body, Request as HyperRequest};
 use rest::request::RatelimitRequest;
 use rest::RestState;
-use serde_json::json;
 use tide::{Request, Response, Result};
 use tokio::time;
 use url::Position;
 
 #[allow(clippy::module_name_repetitions)]
 pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> {
-    log::trace!("received request to forward to Discord API");
+    log::trace!(
+        "received request to forward to Discord API: {}",
+        &request.url()[Position::BeforePath..]
+    );
+    log::trace!("validating request authorization");
+    let Ok(key) = stdenv::var("REST_SERVER_AUTH") else {
+        return Ok(Response::new(500));
+    };
+
+    let option = request.header("X-Authorization");
+    if option.is_none() {
+        log::trace!("header `X-Authorization` is not set; responding with HTTP 401");
+        return Ok(Response::new(401));
+    }
+
+    let option = option.unwrap().get(0);
+    if option.is_none() {
+        log::trace!("header `X-Authorization` is set but has no value; responding with HTTP 401");
+        return Ok(Response::new(401));
+    }
+
+    if *option.unwrap() != key {
+        log::trace!("invalid authorization key in `X-Authorization`; responding with HTTP 401");
+        return Ok(Response::new(401));
+    }
+
     log::trace!("deserializing request payload");
     let result = request.body_json::<RatelimitRequest>().await;
     if let Err(error) = result {
         log::error!("failed to deserialize proxy request payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
-        return Ok(Response::builder(error.status())
-            .body_json(&json!({
-                "code": error.status(),
-                "message": error.status().canonical_reason(),
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(error.status()));
     }
 
     let path = &request.url()[Position::BeforePath..];
@@ -115,6 +134,7 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
         };
 
         if !retry {
+            log::trace!("request successfully sent");
             let mut ret = Response::new(200);
             let bytes = body::to_bytes(response.body_mut()).await.unwrap();
             ret.body_bytes(bytes);
