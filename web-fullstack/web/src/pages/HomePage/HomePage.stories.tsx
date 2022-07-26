@@ -19,11 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const RootPage = () => {
-  return (
-    <>
-    </>
-  )
+import HomePage from './HomePage'
+
+export const generated = () => {
+  return <HomePage />
 }
 
-export default RootPage
+export default { title: 'Pages/HomePage' }

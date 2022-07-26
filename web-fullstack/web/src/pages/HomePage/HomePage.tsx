@@ -19,10 +19,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import RootPage from './RootPage'
+import { MetaTags } from '@redwoodjs/web'
 
-export const generated = () => {
-  return <RootPage />
+const HomePage = () => {
+  return (
+    <main>
+      <MetaTags title="Home" description="HarTex" />
+      <section className="hero flex justify-center items-center">
+        <div className="flex-1">
+          <h1 className="text-7xl font-semibold">HarTex</h1>
+          <br />
+          <p className="text-xl">
+            The administration assistant
+            <br /> and moderation bot you will need for Discord.
+          </p>
+          <br />
+          <br />
+          <button>Get Started</button>
+        </div>
+        <div className="flex-1 hidden md:block">
+          <img src="" alt=""></img>
+        </div>
+      </section>
+    </main>
+  )
 }
 
-export default { title: 'Pages/RootPage' }
+export default HomePage
