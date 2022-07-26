@@ -19,17 +19,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { render } from '@redwoodjs/testing/web'
+// In this file, all Page components from 'src/pages` are auto-imported. Nested
+// directories are supported, and should be uppercase. Each subdirectory will be
+// prepended onto the component name.
+//
+// Examples:
+//
+// 'src/pages/HomePage/HomePage.js'         -> HomePage
+// 'src/pages/Admin/BooksPage/BooksPage.js' -> AdminBooksPage
 
-import AuthWithDiscord from './AuthWithDiscord'
+import { Router, Route } from '@redwoodjs/router'
 
-//   Improve this test with help from the Redwood Testing Doc:
-//    https://redwoodjs.com/docs/testing#testing-components
+const Routes = () => {
+  return (
+    <Router>
+      <Route path="/" page={RootPage} name="root" />
+      <Route notfound page={NotFoundPage} />
+    </Router>
+  )
+}
 
-describe('AuthWithDiscord', () => {
-  it('renders successfully', () => {
-    expect(() => {
-      render(<AuthWithDiscord />)
-    }).not.toThrow()
-  })
-})
+export default Routes
