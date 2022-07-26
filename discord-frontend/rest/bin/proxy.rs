@@ -34,22 +34,29 @@ use url::Position;
 
 #[allow(clippy::module_name_repetitions)]
 pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> {
-    log::trace!("received request to forward to Discord API");
+    log::trace!(
+        "received request to forward to Discord API: {}",
+        &request.url()[Position::BeforePath..]
+    );
     log::trace!("validating request authorization");
     let Ok(key) = stdenv::var("REST_SERVER_AUTH") else {
-        return Ok(Response::new(500))
+        return Ok(Response::new(500));
     };
 
-    let option = request.header("X-Rest-Authorization");
+    let option = request.header("X-Authorization");
     if option.is_none() {
+        log::trace!("header `X-Authorization` is not set; responding with HTTP 401");
         return Ok(Response::new(401));
     }
 
-    let Some(value) = option else {
-        unreachable!()
-    };
+    let option = option.unwrap().get(0);
+    if option.is_none() {
+        log::trace!("header `X-Authorization` is set but has no value; responding with HTTP 401");
+        return Ok(Response::new(401));
+    }
 
-    if value.to_string() != key {
+    if option.unwrap().to_string() != key {
+        log::trace!("invalid authorization key in `X-Authorization`; responding with HTTP 401");
         return Ok(Response::new(401));
     }
 
@@ -127,6 +134,7 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
         };
 
         if !retry {
+            log::trace!("request successfully sent");
             let mut ret = Response::new(200);
             let bytes = body::to_bytes(response.body_mut()).await.unwrap();
             ret.body_bytes(bytes);
