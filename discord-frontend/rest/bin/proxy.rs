@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env as stdenv;
 use std::str::FromStr;
 use std::time::Duration;
 
@@ -27,7 +28,6 @@ use hyper::header::{HeaderName, HeaderValue, USER_AGENT};
 use hyper::{Body, Request as HyperRequest};
 use rest::request::RatelimitRequest;
 use rest::RestState;
-use serde_json::json;
 use tide::{Request, Response, Result};
 use tokio::time;
 use url::Position;
@@ -35,18 +35,30 @@ use url::Position;
 #[allow(clippy::module_name_repetitions)]
 pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> {
     log::trace!("received request to forward to Discord API");
+    log::trace!("validating request authorization");
+    let Ok(key) = stdenv::var("REST_SERVER_AUTH") else {
+        return Ok(Response::new(500))
+    };
+
+    let option = request.header("X-Rest-Authorization");
+    if option.is_none() {
+        return Ok(Response::new(401));
+    }
+
+    let Some(value) = option else {
+        unreachable!()
+    };
+
+    if value.to_string() != key {
+        return Ok(Response::new(401));
+    }
+
     log::trace!("deserializing request payload");
     let result = request.body_json::<RatelimitRequest>().await;
     if let Err(error) = result {
         log::error!("failed to deserialize proxy request payload; see http error below");
         log::error!("http error: {error}; responding with the status of the error");
-        return Ok(Response::builder(error.status())
-            .body_json(&json!({
-                "code": error.status(),
-                "message": error.status().canonical_reason(),
-            }))
-            .unwrap()
-            .build());
+        return Ok(Response::new(error.status()));
     }
 
     let path = &request.url()[Position::BeforePath..];
