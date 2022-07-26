@@ -1,0 +1,40 @@
+/**
+ * START --- SETUP TAILWINDCSS EDIT
+ *
+ * `yarn rw setup ui tailwindcss` placed these imports here
+ * to inject Tailwind's styles into your CSS.
+ * For more information, see: https://tailwindcss.com/docs/installation#include-tailwind-in-your-css
+ */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/**
+ * END --- SETUP TAILWINDCSS EDIT
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap');
+
+* {
+  @apply m-0 p-0 outline-none;
+  @apply text-tertiary;
+  font-family: 'Raleway', sans-serif;
+}
+
+body {
+  @apply w-full h-full;
+  @apply bg-primary;
+}
+
+br {
+  @apply select-none;
+}
+
+button {
+  @apply px-10 py-2 select-none;
+  @apply bg-secondary font-medium rounded-md;
+}
+
+section {
+  @apply min-h-screen;
+  @apply px-10 md:px-24 lg:px-60 2xl:px-96 py-20;
+}
