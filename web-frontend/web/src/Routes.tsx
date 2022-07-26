@@ -34,7 +34,6 @@ const Routes = () => {
   return (
     <Router>
       <Route path="/" page={RootPage} name="root" />
-      <Route path="/auth" page={AuthPage} name="auth" />
       <Route notfound page={NotFoundPage} />
     </Router>
   )
