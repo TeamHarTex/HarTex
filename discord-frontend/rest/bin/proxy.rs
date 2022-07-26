@@ -55,7 +55,7 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
         return Ok(Response::new(401));
     }
 
-    if option.unwrap().to_string() != key {
+    if *option.unwrap() != key {
         log::trace!("invalid authorization key in `X-Authorization`; responding with HTTP 401");
         return Ok(Response::new(401));
     }
