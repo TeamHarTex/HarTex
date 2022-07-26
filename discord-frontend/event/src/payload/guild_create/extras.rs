@@ -20,6 +20,7 @@
  */
 
 use std::collections::HashMap;
+use std::env as stdenv;
 
 use base::discord::http::routing::Route;
 use base::discord::model::gateway::payload::incoming::GuildCreate;
@@ -44,7 +45,7 @@ pub fn leave_guild(
 
     let rl_request = RatelimitRequest {
         body: String::new(),
-        method: Method::POST.to_string(),
+        method: Method::DELETE.to_string(),
         headers,
     };
     let serde_result = serde_json::to_string(&rl_request);
@@ -55,6 +56,16 @@ pub fn leave_guild(
     }
     let body = serde_result.unwrap();
 
+    let mut headers2 = HashMap::new();
+    let result = stdenv::var("REST_SERVER_AUTH");
+    if let Err(src) = result {
+        return Err(Error {
+            kind: ErrorKind::EnvVarError { src },
+        });
+    }
+
+    headers2.insert(String::from("X-Authorization"), result.unwrap());
+
     let loadbal_request = LoadbalRequest {
         target_server_type: String::from("rest"),
         method: Method::POST.to_string(),
@@ -62,7 +73,7 @@ pub fn leave_guild(
             guild_id: payload.id.get(),
         }
         .to_string(),
-        headers: HashMap::new(),
+        headers: headers2,
         body,
     };
     let serde_result = serde_json::to_string(&loadbal_request);
