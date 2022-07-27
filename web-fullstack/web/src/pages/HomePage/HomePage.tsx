@@ -27,9 +27,9 @@ const HomePage = () => {
       <MetaTags title="Home" description="HarTex" />
       <section className="hero flex justify-center items-center">
         <div className="flex-1">
-          <h1 className="text-8xl font-bold tracking-wide">HarTex</h1>
+          <h1 className="text-8xl font-bold">HarTex</h1>
           <br />
-          <p className="text-2xl tracking-wide font-normal">
+          <p className="text-2xl font-normal">
             An advanced adminsitration assistant
             <br /> and moderation bot for Discord.
           </p>

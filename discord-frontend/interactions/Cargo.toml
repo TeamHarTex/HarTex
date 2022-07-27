@@ -12,3 +12,4 @@ rust-version = "1.62.0"
 
 [dependencies]
 base = { path = "../../common/base", features = ["discord-model"] }
+ext = { path = "../ext", features = ["discord-model-ext"] }
