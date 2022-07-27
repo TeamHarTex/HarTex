@@ -31,7 +31,7 @@ const HomePage = () => {
           <br />
           <p className="text-2xl tracking-wide">
             The administration assistant
-            <br /> and moderation bot you will need for Discord.
+            <br /> and moderation bot you need for Discord.
           </p>
           <br />
           <br />
