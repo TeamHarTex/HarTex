@@ -25,7 +25,7 @@ use base::discord::model::application::command::Command;
 
 pub mod general;
 
-pub trait InteractionHandler {
+pub trait BaseInteraction {
     fn commands() -> Vec<Command> {
         vec![]
     }

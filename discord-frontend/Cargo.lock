@@ -947,6 +947,7 @@ name = "ext"
 version = "0.1.0"
 dependencies = [
  "base",
+ "serde",
 ]
 
 [[package]]
@@ -1490,6 +1491,7 @@ name = "interactions"
 version = "0.1.0"
 dependencies = [
  "base",
+ "ext",
 ]
 
 [[package]]
