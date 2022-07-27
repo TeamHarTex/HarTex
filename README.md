@@ -6,7 +6,7 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
 
-A Discord bot primarily for moderation and administration; built to be stable, flexible and
+An advanced administration assistant and moderation bot for Discord; built to be stable, flexible and
 customizable.
 
 ## Honourable Mention
@@ -27,9 +27,10 @@ You may follow the latest developments as well as ask for support in the guild.
 
 This project is a monorepository with separate components placed in their own individual directories.
 
-Below is a brief summary on the individual folders (detailed documentation for each are in the individual directories):
+Below is a brief summary on the individual folders (detailed documentation for each are in the 
+individual directories):
 
 - `backend`: the source code for the backend server
 - `database-schema`: the database schema specification for the bot
 - `discord-frontend`: the source code of the Discord bot
-- `web-frontend`: the source code for the web dashboard
+- `web-fullstack`: the source code for the web components
