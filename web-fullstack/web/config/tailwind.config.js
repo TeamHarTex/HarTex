@@ -3,11 +3,11 @@ module.exports = {
   content: ['src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     colors: {
-      primary: '#06283D',
-      secondary: '#1363DF',
-      secondaryHover: '#0C408D',
+      blurple: '#5866EF',
+      'dark-blurple': '#4454C4',
+      grey: '#37393E',
       highlight: '#F66B0E',
-      tertiary: '#DFF6FF',
+      white: '#FFFFFF',
     },
   },
   plugins: [],

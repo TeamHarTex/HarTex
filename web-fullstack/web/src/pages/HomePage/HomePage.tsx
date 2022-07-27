@@ -35,7 +35,7 @@ const HomePage = () => {
           </p>
           <br />
           <br />
-          <button className="group hover:bg-secondaryHover text-xl">
+          <button className="btn-get-started transition ease-in-out hover:bg-dark-blurple text-xl">
             Get Started
           </button>
         </div>

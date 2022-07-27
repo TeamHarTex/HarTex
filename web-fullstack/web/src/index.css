@@ -16,25 +16,30 @@
 
 * {
   @apply m-0 p-0 outline-none;
-  @apply text-tertiary;
+  @apply text-white;
   font-family: 'Raleway', sans-serif;
 }
 
 body {
   @apply w-full h-full;
-  @apply bg-primary;
+  @apply bg-grey;
+}
+
+button {
+  @apply px-10 py-3 select-none;
+  @apply font-medium rounded-md;
 }
 
 br {
   @apply select-none;
 }
 
-button {
-  @apply px-10 py-3 select-none;
-  @apply bg-secondary font-medium rounded-md;
-}
-
 section {
   @apply min-h-screen;
   @apply px-10 md:px-24 lg:px-60 2xl:px-96 py-20;
 }
+
+.btn-get-started {
+  @apply bg-blurple;
+}
+
