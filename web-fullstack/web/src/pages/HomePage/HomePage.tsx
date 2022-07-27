@@ -27,11 +27,11 @@ const HomePage = () => {
       <MetaTags title="Home" description="HarTex" />
       <section className="hero flex justify-center items-center">
         <div className="flex-1">
-          <h1 className="text-7xl font-semibold tracking-wide">HarTex</h1>
+          <h1 className="text-8xl font-bold tracking-wide">HarTex</h1>
           <br />
-          <p className="text-2xl tracking-wide">
-            The administration assistant
-            <br /> and moderation bot you need for Discord.
+          <p className="text-2xl tracking-wide font-normal">
+            An advanced adminsitration assistant
+            <br /> and moderation bot for Discord.
           </p>
           <br />
           <br />
