@@ -30,7 +30,7 @@ br {
 }
 
 button {
-  @apply px-10 py-2 select-none;
+  @apply px-10 py-3 select-none;
   @apply bg-secondary font-medium rounded-md;
 }
 
