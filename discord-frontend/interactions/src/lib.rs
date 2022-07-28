@@ -21,20 +21,23 @@
 
 //! Interactions API.
 
+#![deny(warnings)]
+
 use std::future::Future;
 use std::pin::Pin;
-use base::discord::model::application::command::Command;
-use base::discord::model::application::interaction::Interaction;
+
+use base::discord::model::application::interaction::InteractionData;
 use base::error::Result;
+use ext::discord::model::application::command::HarTexCommand;
 
 pub mod general;
 
 pub trait BaseInteraction {
-    fn commands() -> Vec<Command> {
+    fn commands() -> Vec<HarTexCommand> {
         vec![]
     }
 
-    fn handle(interaction: Interaction) -> HandleInteractionFuture;
+    fn handle(interaction: InteractionData) -> HandleInteractionFuture;
 }
 
 pub type HandleInteractionFuture = Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>>;
