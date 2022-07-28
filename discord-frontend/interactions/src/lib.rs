@@ -21,7 +21,11 @@
 
 //! Interactions API.
 
+use std::future::Future;
+use std::pin::Pin;
 use base::discord::model::application::command::Command;
+use base::discord::model::application::interaction::Interaction;
+use base::error::Result;
 
 pub mod general;
 
@@ -29,4 +33,8 @@ pub trait BaseInteraction {
     fn commands() -> Vec<Command> {
         vec![]
     }
+
+    fn handle(interaction: Interaction) -> HandleInteractionFuture;
 }
+
+pub type HandleInteractionFuture = Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>>;

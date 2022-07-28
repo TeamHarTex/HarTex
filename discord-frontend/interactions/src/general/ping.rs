@@ -20,9 +20,10 @@
  */
 
 use base::discord::model::application::command::{Command, CommandType};
+use base::discord::model::application::interaction::Interaction;
 use base::discord::model::id::Id;
 
-use crate::BaseInteraction;
+use crate::{BaseInteraction, HandleInteractionFuture};
 
 pub struct PingCommand;
 
@@ -49,5 +50,9 @@ impl BaseInteraction for PingCommand {
                 version: Id::new(1),
             }
         ]
+    }
+
+    fn handle(interation: Interaction) -> HandleInteractionFuture {
+        todo!()
     }
 }
