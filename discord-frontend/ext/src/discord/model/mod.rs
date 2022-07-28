@@ -19,5 +19,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod application;
 pub mod gateway;
