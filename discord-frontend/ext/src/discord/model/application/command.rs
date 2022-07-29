@@ -19,4 +19,45 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct HarTexCommand;
+use std::collections::HashMap;
+use serde::Serialize;
+use base::discord::model::application::command::{CommandOption, CommandType};
+use base::discord::model::guild::Permissions;
+use base::discord::model::id::Id;
+use base::discord::model::id::marker::ApplicationMarker;
+
+#[derive(Clone, Serialize)]
+pub struct HarTexCommand {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub application_id: Option<Id<ApplicationMarker>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub default_member_permissions: Option<Permissions>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub dm_permission: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description_localizations: Option<HashMap<String, String>>, ]
+    pub r#type: CommandType,
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name_localizations: Option<HashMap<String, String>>,
+    #[serde(default)]
+    pub options: Option<Vec<CommandOption>>,
+}
+
+impl Default for HarTexCommand {
+    fn default() -> Self {
+        Self {
+            application_id: None,
+            default_member_permissions: None,
+            dm_permission: None,
+            description: None,
+            description_localizations: None,
+            r#type: CommandType::ChatInput,
+            name: String::default(),
+            name_localizations: None,
+            options: None,
+        }
+    }
+}
