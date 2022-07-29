@@ -19,9 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use base::discord::model::application::interaction::InteractionData;
 use base::discord::model::gateway::payload::incoming::InteractionCreate;
 use base::error::Result;
+use interactions::general::ping::PingCommand;
+use interactions::BaseInteraction;
 
 pub async fn handle_interaction_create(payload: Box<InteractionCreate>) -> Result<()> {
-    Ok(())
+    match &payload.0.data {
+        Some(InteractionData::ApplicationCommand(command)) => match &*command.name {
+            "ping" => PingCommand.handle(payload.0).await,
+            _ => Ok(()),
+        },
+        _ => Ok(()),
+    }
 }

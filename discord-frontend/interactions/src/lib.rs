@@ -19,15 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Interactions API.
-
 #![deny(warnings)]
 #![feature(let_else)]
 
 use std::future::Future;
 use std::pin::Pin;
 
-use base::discord::model::application::interaction::InteractionData;
+use base::discord::model::application::interaction::Interaction;
 use base::error::Result;
 use ext::discord::model::application::command::HarTexCommand;
 
@@ -38,7 +36,7 @@ pub trait BaseInteraction {
         vec![]
     }
 
-    fn handle(interaction: InteractionData) -> HandleInteractionFuture;
+    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture;
 }
 
 pub type HandleInteractionFuture = Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>>;

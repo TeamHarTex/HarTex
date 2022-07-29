@@ -19,12 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use serde::Serialize;
 use base::discord::model::application::command::{CommandOption, CommandType};
 use base::discord::model::guild::Permissions;
-use base::discord::model::id::Id;
 use base::discord::model::id::marker::ApplicationMarker;
+use base::discord::model::id::Id;
+use serde::Serialize;
+use std::collections::HashMap;
 
 #[derive(Clone, Serialize)]
 pub struct HarTexCommand {
@@ -37,7 +37,7 @@ pub struct HarTexCommand {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub description_localizations: Option<HashMap<String, String>>, ]
+    pub description_localizations: Option<HashMap<String, String>>,
     pub r#type: CommandType,
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]

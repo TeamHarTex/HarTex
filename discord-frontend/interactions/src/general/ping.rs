@@ -20,8 +20,7 @@
  */
 
 use base::discord::model::application::command::CommandType;
-use base::discord::model::application::interaction::InteractionData;
-use base::discord::model::id::Id;
+use base::discord::model::application::interaction::{Interaction, InteractionData};
 use base::error::Result;
 use ext::discord::model::application::command::HarTexCommand;
 
@@ -31,18 +30,16 @@ pub struct PingCommand;
 
 impl BaseInteraction for PingCommand {
     fn commands() -> Vec<HarTexCommand> {
-        vec![
-            HarTexCommand {
-                dm_permission: Some(false),
-                name: String::from("ping"),
-                r#type: CommandType::ChatInput,
-                ..Default::default()
-            }
-        ]
+        vec![HarTexCommand {
+            dm_permission: Some(false),
+            name: String::from("ping"),
+            r#type: CommandType::ChatInput,
+            ..Default::default()
+        }]
     }
 
-    fn handle(interation: InteractionData) -> HandleInteractionFuture {
-        let InteractionData::ApplicationCommand(data) = interation else {
+    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture {
+        let Some(InteractionData::ApplicationCommand(data)) = interaction.data else {
             unreachable!()
         };
 
@@ -50,10 +47,10 @@ impl BaseInteraction for PingCommand {
             unreachable!()
         }
 
-        Box::pin(ping_chat_input())
+        Box::pin(ping_chat_input(interaction.token))
     }
 }
 
-async fn ping_chat_input() -> Result<()> {
+async fn ping_chat_input(_: String) -> Result<()> {
     Ok(())
 }
