@@ -15,9 +15,11 @@ base = { path = "../../common/base", features = ["cmdline", "discord-http", "dis
 cache_discord = { path = "../cache/discord" }
 env = { path = "../../common/env" }
 gateway = { path = "../gateway" }
+interactions = { path = "../interactions" }
 loadbal = { path = "../loadbal" }
 manidb = { path = "../manidb" }
 rest = { path = "../rest" }
+restreq = { path = "../restreq" }
 
 async-tungstenite = { version = "0.17.2", features = ["tokio-runtime"] }
 futures-util = "0.3.21"
