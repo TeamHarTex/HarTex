@@ -19,8 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use base::discord::model::application::command::CommandType;
 use base::discord::model::application::interaction::InteractionData;
 use base::discord::model::id::Id;
+use base::error::Result;
 use ext::discord::model::application::command::HarTexCommand;
 
 use crate::{BaseInteraction, HandleInteractionFuture};
@@ -29,10 +31,29 @@ pub struct PingCommand;
 
 impl BaseInteraction for PingCommand {
     fn commands() -> Vec<HarTexCommand> {
-        vec![]
+        vec![
+            HarTexCommand {
+                dm_permission: Some(false),
+                name: String::from("ping"),
+                r#type: CommandType::ChatInput,
+                ..Default::default()
+            }
+        ]
     }
 
     fn handle(interation: InteractionData) -> HandleInteractionFuture {
-        todo!()
+        let InteractionData::ApplicationCommand(data) = interation else {
+            unreachable!()
+        };
+
+        if data.kind != CommandType::ChatInput {
+            unreachable!()
+        }
+
+        Box::pin(ping_chat_input())
     }
+}
+
+async fn ping_chat_input() -> Result<()> {
+    Ok(())
 }

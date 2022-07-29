@@ -22,6 +22,7 @@
 //! Interactions API.
 
 #![deny(warnings)]
+#![feature(let_else)]
 
 use std::future::Future;
 use std::pin::Pin;
