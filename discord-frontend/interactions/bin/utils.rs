@@ -18,21 +18,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-use base::error::Result;
-use clap::ArgMatches;
-use base::discord::model::application::command::CommandType;
-use ext::discord::model::application::command::HarTexCommand;
-
-pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
-    let name = *matches.get_one::<&str>("COMMAND_NAME").unwrap();
-    let r#type = *matches.get_one::<u8>("COMMAND_TYPE").unwrap();
-
-    let _ = HarTexCommand {
-        name: name.to_string(),
-        r#type: CommandType::from(r#type),
-        ..Default::default()
-    };
-
-    Ok(())
-}
