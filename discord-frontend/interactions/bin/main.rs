@@ -19,8 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(result_option_inspect)]
+
 use base::error::Result;
 use clap::Command;
+
+mod create_cmd;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
@@ -30,7 +34,9 @@ pub async fn main() -> Result<()> {
     ]));
     let matches = command.get_matches();
     match matches.subcommand() {
-        Some(("create-cmd", _)) => todo!(),
+        Some(("create-cmd", subcommand_matches)) => create_cmd::create_cmd(subcommand_matches)
+            .await
+            .inspect_err(|error| println!("error: failed to create command: {error:?}"))?,
         _ => (),
     }
 
