@@ -19,9 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use base::discord::model::application::command::CommandType;
 use base::error::Result;
 use clap::ArgMatches;
-use base::discord::model::application::command::CommandType;
 use ext::discord::model::application::command::HarTexCommand;
 
 pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
