@@ -25,6 +25,7 @@ use base::error::Result;
 use clap::Command;
 
 mod create_cmd;
+mod utils;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
