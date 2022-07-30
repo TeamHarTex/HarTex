@@ -19,8 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hyper::{Body, Request};
 use base::error::Result;
+use hyper::{Body, Request};
 
 pub fn create_global_application_command() -> Result<Request<Body>> {
     todo!()
