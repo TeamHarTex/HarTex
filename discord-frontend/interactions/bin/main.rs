@@ -19,23 +19,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::Command;
 use base::error::Result;
+use clap::Command;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
-    let command = clap::command!()
-        .subcommand(
-            Command::new("create-cmd")
-                .args(&[
-                    clap::arg!(<COMMAND_NAME> "The name of the command"),
-                    clap::arg!(<COMMAND_TYPE> "The type of the command to create")
-                ])
-        );
+    let command = clap::command!().subcommand(Command::new("create-cmd").args(&[
+        clap::arg!(<COMMAND_NAME> "The name of the command"),
+        clap::arg!(<COMMAND_TYPE> "The type of the command to create"),
+    ]));
     let matches = command.get_matches();
     match matches.subcommand() {
         Some(("create-cmd", _)) => todo!(),
-        _ => ()
+        _ => (),
     }
 
     Ok(())
