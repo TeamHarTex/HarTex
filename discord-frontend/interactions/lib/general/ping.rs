@@ -19,24 +19,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(warnings)]
-#![feature(let_else)]
-
-use std::future::Future;
-use std::pin::Pin;
-
-use base::discord::model::application::interaction::Interaction;
+use base::discord::model::application::command::CommandType;
+use base::discord::model::application::interaction::{Interaction, InteractionData};
 use base::error::Result;
-use ext::discord::model::application::command::HarTexCommand;
 
-pub mod general;
+use crate::{BaseInteraction, HandleInteractionFuture};
 
-pub trait BaseInteraction {
-    fn commands() -> Vec<HarTexCommand> {
-        vec![]
+pub struct PingCommand;
+
+impl BaseInteraction for PingCommand {
+    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture {
+        let Some(InteractionData::ApplicationCommand(data)) = interaction.data else {
+            unreachable!()
+        };
+
+        if data.kind != CommandType::ChatInput {
+            unreachable!()
+        }
+
+        Box::pin(ping_chat_input(interaction.token))
     }
-
-    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture;
 }
 
-pub type HandleInteractionFuture = Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>>;
+async fn ping_chat_input(_: String) -> Result<()> {
+    Ok(())
+}

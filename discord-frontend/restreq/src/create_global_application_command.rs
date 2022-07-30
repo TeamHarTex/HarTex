@@ -19,5 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod create_global_application_command;
-pub mod leave_guild;
+use hyper::{Body, Request};
+use base::error::Result;
+
+pub fn create_global_application_command() -> Result<Request<Body>> {
+    todo!()
+}
