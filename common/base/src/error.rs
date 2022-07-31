@@ -40,6 +40,7 @@ impl Display for Error {
         f.write_str("hartex error: ")?;
 
         match &self.kind {
+            ErrorKind::AnyError { description } => write!(f, "error: {description}")?,
             ErrorKind::EnvVarError { src } => write!(f, "env error: {src}")?,
             ErrorKind::EnvFileError { description } => write!(f, "envfile error: {description}")?,
             ErrorKind::HttpError { src } => write!(f, "http error: {src}")?,
@@ -83,11 +84,11 @@ impl StdError for Error {}
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum ErrorKind {
+    AnyError { description: &'static str },
     EnvVarError { src: VarError },
     EnvFileError { description: &'static str },
     HttpError { src: HttpError },
     HyperError { src: HyperError },
-
     IoError { src: IoError },
     JsonError { src: JsonError },
     SqlxError { src: SqlxError },
