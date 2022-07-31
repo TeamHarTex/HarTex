@@ -20,8 +20,9 @@
  */
 
 use base::error::Result;
+use ext::discord::model::application::command::HarTexCommand;
 use hyper::{Body, Request};
 
-pub fn create_global_application_command() -> Result<Request<Body>> {
+pub fn create_global_application_command(command: HarTexCommand) -> Result<Request<Body>> {
     todo!()
 }
