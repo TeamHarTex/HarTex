@@ -19,31 +19,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import EventEmitter from 'eventemitter3'
-
-class SessionState {
-  events: EventEmitter
-  ready: boolean
-  user: User | null
-
-  constructor() {
-    this.events = new EventEmitter()
-
-    this.ready = false
-    this.user = null
-  }
-
-  getUser(refresh: boolean = false) {
-    if (this.user && !refresh) {
-      return new Promise((resolve) => {
-        resolve(this.user)
-      })
-    }
-
-    return new Promise((resolve, reject) => {
-      throw new Error('to be implemented')
-    })
-  }
+const Navbar = () => {
+  return (
+    <header className="fixed w-screen">
+      <i className="fa-solid fa-bars block xl:hidden text-right"></i>
+      <nav className="hidden xl:block">
+        <ul className="text-right">
+          <li>
+            <i className="fa-brands fa-discord"></i>
+          </li>
+          <li>
+            <i className="fa-solid fa-book"></i>
+          </li>
+          <li>
+            <i className="fa-solid fa-circle-user"></i>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  )
 }
 
-export var globalState = SessionState
+export default Navbar

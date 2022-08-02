@@ -27,19 +27,30 @@ body {
 
 button {
   @apply px-10 py-3 select-none;
-  @apply font-medium rounded-md;
+  @apply transition ease-in-out font-medium rounded-md;
+  @apply bg-blurple hover:bg-dark-blurple;
 }
 
 br {
   @apply select-none;
 }
 
+i {
+  @apply text-xl;
+}
+
+nav ul li {
+  @apply inline-block px-8;
+}
+
+nav ul li i {
+  @apply cursor-pointer;
+}
+
 section {
   @apply min-h-screen;
+}
+
+section, header {
   @apply px-10 md:px-24 lg:px-60 2xl:px-96 py-20;
 }
-
-.btn-get-started {
-  @apply bg-blurple;
-}
-
