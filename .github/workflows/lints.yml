@@ -20,11 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install latest nightly Rust toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
-          profile: default
+          toolchain: nightly-2022-07-31
       - name: Install Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -43,11 +41,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
-          profile: default
+          toolchain: nightly-2022-07-31
       - name: Run cargo fmt
         run: cd common && cargo fmt --all -- --check
 
@@ -58,11 +54,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install latest nightly Rust toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
-          profile: default
+          toolchain: nightly-2022-07-31
       - name: Install Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -81,10 +75,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
-          profile: default
+          toolchain: nightly-2022-07-31
       - name: Run cargo fmt
         run: cd discord-frontend && cargo fmt --all -- --check
