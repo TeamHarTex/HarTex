@@ -19,15 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use base::error::{Error, ErrorKind, Result};
 use std::fmt::Display;
 use std::io;
 use std::io::{BufRead, Write};
 use std::str::FromStr;
-use base::error::{Error, ErrorKind, Result};
 
 pub(crate) fn prompt<T>(_: &str, _: T) -> Result<T>
 where
-    T: Display + FromStr {
+    T: Display + FromStr,
+{
     todo!()
 }
 
@@ -40,7 +41,7 @@ fn readln() -> Result<String> {
 
     lines.ok_or(Error {
         kind: ErrorKind::AnyError {
-            description: "failed to read lines from stdin"
-        }
+            description: "failed to read lines from stdin",
+        },
     })
 }
