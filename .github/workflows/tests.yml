@@ -23,8 +23,6 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: nightly-2022-07-31
-          override: true
-          profile: default
       - name: Install Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -48,8 +46,6 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: nightly-2022-07-31
-          override: true
-          profile: default
       - name: Install cargo-nextest
         uses: baptiste0928/cargo-install@v1
         with:
@@ -75,8 +71,6 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: nightly-2022-07-31
-          override: true
-          profile: default
       - name: Install Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -100,8 +94,6 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: nightly-2022-07-31
-          override: true
-          profile: default
       - name: Install cargo-nextest
         uses: baptiste0928/cargo-install@v1
         with:
