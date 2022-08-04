@@ -24,15 +24,19 @@ use base::error::Result;
 use clap::ArgMatches;
 use ext::discord::model::application::command::HarTexCommand;
 
-pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
-    let name = *matches.get_one::<&str>("COMMAND_NAME").unwrap();
-    let r#type = *matches.get_one::<u8>("COMMAND_TYPE").unwrap();
+use crate::utils;
 
-    let _ = HarTexCommand {
-        name: name.to_string(),
-        r#type: CommandType::from(r#type),
+pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
+    let name = matches.get_one::<String>("COMMAND_NAME").unwrap();
+    let r#type = matches.get_one::<String>("COMMAND_TYPE").unwrap();
+
+    let mut command = HarTexCommand {
+        name: name.clone(),
+        r#type: CommandType::from(r#type.parse::<u8>()?),
         ..Default::default()
     };
+
+    command.description.replace(utils::prompt("Command description?")?);
 
     Ok(())
 }

@@ -25,11 +25,19 @@ use std::io;
 use std::io::{BufRead, Write};
 use std::str::FromStr;
 
-pub(crate) fn prompt<T>(_: &str, _: T) -> Result<T>
+pub(crate) fn prompt<T>(question: &str) -> Result<T>
 where
-    T: Display + FromStr,
+    T: Default + Display + FromStr,
 {
-    todo!()
+    let default = T::default();
+
+    println!("{question} [default: {default}]");
+    let _ = io::stdout().flush();
+    let input = readln()?;
+
+    println!();
+
+    Ok(input.parse().unwrap_or(default))
 }
 
 fn readln() -> Result<String> {

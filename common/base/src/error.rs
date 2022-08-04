@@ -23,6 +23,7 @@ use std::env::VarError;
 use std::error::Error as StdError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::io::Error as IoError;
+use std::num::ParseIntError;
 use std::result::Result as StdResult;
 
 use http::Error as HttpError;
@@ -47,6 +48,7 @@ impl Display for Error {
             ErrorKind::HyperError { src } => write!(f, "hyper error: {src}")?,
             ErrorKind::IoError { src } => write!(f, "io error: {src}")?,
             ErrorKind::JsonError { src } => write!(f, "json error: {src}")?,
+            ErrorKind::ParseIntError { src } => write!(f, "parse int error: {src}")?,
             ErrorKind::SqlxError { src } => write!(f, "sqlx error: {src}")?,
         }
 
@@ -63,6 +65,12 @@ impl From<ErrorKind> for Error {
 impl From<IoError> for Error {
     fn from(src: IoError) -> Self {
         Self::from(ErrorKind::IoError { src })
+    }
+}
+
+impl From<ParseIntError> for Error {
+    fn from(src: ParseIntError) -> Self {
+        Self::from(ErrorKind::ParseIntError { src })
     }
 }
 
@@ -91,6 +99,7 @@ pub enum ErrorKind {
     HyperError { src: HyperError },
     IoError { src: IoError },
     JsonError { src: JsonError },
+    ParseIntError { src: ParseIntError },
     SqlxError { src: SqlxError },
 }
 
