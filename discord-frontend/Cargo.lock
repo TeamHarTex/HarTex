@@ -1534,6 +1534,7 @@ dependencies = [
  "base",
  "clap",
  "ext",
+ "restreq",
  "tokio",
 ]
 
