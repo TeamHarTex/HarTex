@@ -37,6 +37,7 @@ pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
     };
 
     command.description.replace(utils::prompt("Command description?")?);
+    command.dm_permission.replace(utils::prompt("Enable command for DM?")?);
 
     Ok(())
 }
