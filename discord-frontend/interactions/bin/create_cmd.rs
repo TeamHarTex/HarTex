@@ -36,8 +36,14 @@ pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
         ..Default::default()
     };
 
-    command.description.replace(utils::prompt("Command description?")?);
-    command.dm_permission.replace(utils::prompt("Enable command for DM?")?);
+    command
+        .description
+        .replace(utils::prompt("Command description?")?);
+    command
+        .dm_permission
+        .replace(utils::prompt("Enable command for DM?")?);
+
+    let _ = restreq::create_global_application_command::create_global_application_command(command)?;
 
     Ok(())
 }
