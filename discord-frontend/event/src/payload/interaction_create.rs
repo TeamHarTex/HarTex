@@ -19,23 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use base::discord::model::application::interaction::InteractionData;
+use base::discord::model::gateway::payload::incoming::InteractionCreate;
 use base::error::Result;
-use gateway::event::SerdeableEvent;
-use gateway::Payload;
+use interactions::general::ping::PingCommand;
+use interactions::BaseInteraction;
 
-mod guild_create;
-mod interaction_create;
-mod ready;
-
-pub async fn handle_payload(payload: Payload, loadbal_port: u16) -> Result<()> {
-    match payload.event {
-        SerdeableEvent::GuildCreate(guild_create) => {
-            guild_create::handle_guild_create(guild_create, loadbal_port).await
-        }
-        SerdeableEvent::InteractionCreate(interaction_create) => {
-            interaction_create::handle_interaction_create(interaction_create).await
-        }
-        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
+pub async fn handle_interaction_create(payload: Box<InteractionCreate>) -> Result<()> {
+    match &payload.0.data {
+        Some(InteractionData::ApplicationCommand(command)) => match &*command.name {
+            "ping" => PingCommand.handle(payload.0).await,
+            _ => Ok(()),
+        },
         _ => Ok(()),
     }
 }
