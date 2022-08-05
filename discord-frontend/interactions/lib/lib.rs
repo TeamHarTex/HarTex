@@ -19,23 +19,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(warnings)]
+#![feature(let_else)]
+
+use std::future::Future;
+use std::pin::Pin;
+
+use base::discord::model::application::interaction::Interaction;
 use base::error::Result;
-use gateway::event::SerdeableEvent;
-use gateway::Payload;
 
-mod guild_create;
-mod interaction_create;
-mod ready;
+pub mod general;
 
-pub async fn handle_payload(payload: Payload, loadbal_port: u16) -> Result<()> {
-    match payload.event {
-        SerdeableEvent::GuildCreate(guild_create) => {
-            guild_create::handle_guild_create(guild_create, loadbal_port).await
-        }
-        SerdeableEvent::InteractionCreate(interaction_create) => {
-            interaction_create::handle_interaction_create(interaction_create).await
-        }
-        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
-        _ => Ok(()),
-    }
+pub trait BaseInteraction {
+    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture;
 }
+
+pub type HandleInteractionFuture = Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>>;

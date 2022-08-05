@@ -12,6 +12,7 @@ rust-version = "1.64.0"
 
 [dependencies]
 base = { path = "../../common/base" }
+serde = { version = "1.0.142", features = ["derive"] }
 
 [features]
 discord-model-ext = ["base/discord-model"]

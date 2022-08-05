@@ -19,23 +19,31 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use base::discord::model::application::command::CommandType;
 use base::error::Result;
-use gateway::event::SerdeableEvent;
-use gateway::Payload;
+use clap::ArgMatches;
+use ext::discord::model::application::command::HarTexCommand;
 
-mod guild_create;
-mod interaction_create;
-mod ready;
+use crate::utils;
 
-pub async fn handle_payload(payload: Payload, loadbal_port: u16) -> Result<()> {
-    match payload.event {
-        SerdeableEvent::GuildCreate(guild_create) => {
-            guild_create::handle_guild_create(guild_create, loadbal_port).await
-        }
-        SerdeableEvent::InteractionCreate(interaction_create) => {
-            interaction_create::handle_interaction_create(interaction_create).await
-        }
-        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
-        _ => Ok(()),
-    }
+pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
+    let name = matches.get_one::<String>("COMMAND_NAME").unwrap();
+    let r#type = matches.get_one::<String>("COMMAND_TYPE").unwrap();
+
+    let mut command = HarTexCommand {
+        name: name.clone(),
+        r#type: CommandType::from(r#type.parse::<u8>()?),
+        ..Default::default()
+    };
+
+    command
+        .description
+        .replace(utils::prompt("Command description?")?);
+    command
+        .dm_permission
+        .replace(utils::prompt("Enable command for DM?")?);
+
+    let _ = restreq::create_global_application_command::create_global_application_command(command)?;
+
+    Ok(())
 }

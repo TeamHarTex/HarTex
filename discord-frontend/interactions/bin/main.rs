@@ -19,23 +19,27 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(result_option_inspect)]
+
 use base::error::Result;
-use gateway::event::SerdeableEvent;
-use gateway::Payload;
+use clap::Command;
 
-mod guild_create;
-mod interaction_create;
-mod ready;
+mod create_cmd;
+mod utils;
 
-pub async fn handle_payload(payload: Payload, loadbal_port: u16) -> Result<()> {
-    match payload.event {
-        SerdeableEvent::GuildCreate(guild_create) => {
-            guild_create::handle_guild_create(guild_create, loadbal_port).await
-        }
-        SerdeableEvent::InteractionCreate(interaction_create) => {
-            interaction_create::handle_interaction_create(interaction_create).await
-        }
-        SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
-        _ => Ok(()),
+#[tokio::main(flavor = "multi_thread")]
+pub async fn main() -> Result<()> {
+    let command = clap::command!().subcommand(Command::new("create-cmd").args(&[
+        clap::arg!(<COMMAND_NAME> "The name of the command"),
+        clap::arg!(<COMMAND_TYPE> "The type of the command to create"),
+    ]));
+    let matches = command.get_matches();
+    match matches.subcommand() {
+        Some(("create-cmd", subcommand_matches)) => create_cmd::create_cmd(subcommand_matches)
+            .await
+            .inspect_err(|error| println!("error: failed to create command: {error:?}"))?,
+        _ => (),
     }
+
+    Ok(())
 }
