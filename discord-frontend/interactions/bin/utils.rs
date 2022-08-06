@@ -19,14 +19,37 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Interactions API.
+use base::error::{Error, ErrorKind, Result};
+use std::fmt::Display;
+use std::io;
+use std::io::{BufRead, Write};
+use std::str::FromStr;
 
-use base::discord::model::application::command::Command;
+pub(crate) fn prompt<T>(question: &str) -> Result<T>
+where
+    T: Default + Display + FromStr,
+{
+    let default = T::default();
 
-pub mod general;
+    println!("{question} [default: {default}]");
+    let _ = io::stdout().flush();
+    let input = readln()?;
 
-pub trait InteractionHandler {
-    fn commands() -> Vec<Command> {
-        vec![]
-    }
+    println!();
+
+    Ok(input.parse().unwrap_or(default))
+}
+
+fn readln() -> Result<String> {
+    let stdin = io::stdin();
+    let stdin = stdin.lock();
+
+    let mut lines = stdin.lines();
+    let lines = lines.next().transpose()?;
+
+    lines.ok_or(Error {
+        kind: ErrorKind::AnyError {
+            description: "failed to read lines from stdin",
+        },
+    })
 }
