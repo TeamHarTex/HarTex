@@ -30,7 +30,6 @@ This project is a monorepository with separate components placed in their own in
 Below is a brief summary on the individual folders (detailed documentation for each are in the 
 individual directories):
 
-- `backend`: the source code for the backend server
-- `database-schema`: the database schema specification for the bot
+- `common`: commonly used code within the repository
 - `discord-frontend`: the source code of the Discord bot
 - `web-fullstack`: the source code for the web components

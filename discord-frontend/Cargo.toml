@@ -9,4 +9,5 @@ members = [
     "loadbal",
     "manidb",
     "rest",
+    "restreq",
 ]

@@ -18,3 +18,29 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use base::discord::model::application::command::CommandType;
+use base::discord::model::application::interaction::{Interaction, InteractionData};
+use base::error::Result;
+
+use crate::{BaseInteraction, HandleInteractionFuture};
+
+pub struct PingCommand;
+
+impl BaseInteraction for PingCommand {
+    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture {
+        let Some(InteractionData::ApplicationCommand(data)) = interaction.data else {
+            unreachable!()
+        };
+
+        if data.kind != CommandType::ChatInput {
+            unreachable!()
+        }
+
+        Box::pin(ping_chat_input(interaction.token))
+    }
+}
+
+async fn ping_chat_input(_: String) -> Result<()> {
+    Ok(())
+}

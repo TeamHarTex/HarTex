@@ -6,9 +6,23 @@ description = """
 Interactions for the bot.
 """
 license = "AGPL-3.0-only"
-rust-version = "1.62.0"
+rust-version = "1.64.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 base = { path = "../../common/base", features = ["discord-model"] }
+ext = { path = "../ext", features = ["discord-model-ext"] }
+restreq = { path = "../restreq" }
+
+clap = { version = "3.2.16", features = ["cargo"] }
+tokio = { version = "1.20.1", features = ["macros", "rt", "rt-multi-thread"] }
+
+[[bin]]
+name = "interactions"
+path = "bin/main.rs"
+
+[lib]
+name = "interactions"
+crate-type = ["rlib"]
+path = "lib/lib.rs"
