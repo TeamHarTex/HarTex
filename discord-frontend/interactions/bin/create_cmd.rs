@@ -23,6 +23,7 @@ use base::discord::model::application::command::CommandType;
 use base::error::Result;
 use clap::ArgMatches;
 use ext::discord::model::application::command::HarTexCommand;
+use hyper::Client;
 
 use crate::utils;
 
@@ -36,6 +37,11 @@ pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
         ..Default::default()
     };
 
+    let Some(loadbal_port) = matches.get_one::<String>("PORT") else {
+        println!("create-cmd: load balancer port is missing");
+        return Ok(());
+    };
+
     command
         .description
         .replace(utils::prompt("Command description?")?);
@@ -43,7 +49,17 @@ pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
         .dm_permission
         .replace(utils::prompt("Enable command for DM?")?);
 
-    let _ = restreq::create_global_application_command::create_global_application_command(command)?;
+    println!("create-cmd: sending request");
+    Client::new()
+        .request(
+            restreq::create_global_application_command::create_global_application_command(
+                command,
+                loadbal_port.parse::<u16>()?,
+            )?,
+        )
+        .await
+        .inspect_err(|error| println!("create-cmd: failed to send request: {error}"))
+        .unwrap();
 
     Ok(())
 }

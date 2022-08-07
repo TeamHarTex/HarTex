@@ -29,16 +29,10 @@ use hyper::{Body, Method, Request};
 use loadbal::Request as LoadbalRequest;
 use rest::request::RatelimitRequest;
 
-pub fn leave_guild(
-    payload: Box<GuildCreate>,
-    token: String,
-    loadbal_port: u16,
-) -> Result<Request<Body>> {
-    log::error!(
-        "guild `{}` (id {}) is not whitelisted. attempting to leave the guild",
-        &payload.name,
-        payload.id
-    );
+use crate::util;
+
+pub fn leave_guild(payload: Box<GuildCreate>, loadbal_port: u16) -> Result<Request<Body>> {
+    let token = util::token()?;
 
     let mut headers = HashMap::new();
     headers.insert(String::from("Authorization"), token);

@@ -21,15 +21,19 @@
 
 use base::discord::model::application::command::CommandType;
 use base::discord::model::application::interaction::{Interaction, InteractionData};
+use base::discord::model::http::interaction::{
+    InteractionResponse, InteractionResponseData, InteractionResponseType,
+};
 use base::error::Result;
+use hyper::Client;
 
 use crate::{BaseInteraction, HandleInteractionFuture};
 
 pub struct PingCommand;
 
 impl BaseInteraction for PingCommand {
-    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture {
-        let Some(InteractionData::ApplicationCommand(data)) = interaction.data else {
+    fn handle(&self, interaction: Interaction, loadbal_port: u16) -> HandleInteractionFuture {
+        let Some(InteractionData::ApplicationCommand(ref data)) = interaction.data else {
             unreachable!()
         };
 
@@ -37,10 +41,35 @@ impl BaseInteraction for PingCommand {
             unreachable!()
         }
 
-        Box::pin(ping_chat_input(interaction.token))
+        Box::pin(ping_chat_input(interaction, loadbal_port))
     }
 }
 
-async fn ping_chat_input(_: String) -> Result<()> {
+async fn ping_chat_input(interaction: Interaction, loadbal_port: u16) -> Result<()> {
+    log::trace!("command `ping` was executed");
+
+    tokio::spawn(Client::new().request(
+        restreq::create_interaction_response::create_interaction_response(
+            interaction.id.get(),
+            interaction.token,
+            InteractionResponse {
+                data: Some(InteractionResponseData {
+                    allowed_mentions: None,
+                    attachments: None,
+                    choices: None,
+                    components: None,
+                    content: Some(String::from("Pong! Did you need anything? :eyes:")),
+                    custom_id: None,
+                    embeds: None,
+                    flags: None,
+                    title: None,
+                    tts: None,
+                }),
+                kind: InteractionResponseType::ChannelMessageWithSource,
+            },
+            loadbal_port,
+        )?,
+    ));
+
     Ok(())
 }
