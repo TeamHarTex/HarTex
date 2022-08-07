@@ -19,12 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hyper::Client;
-use std::env as stdenv;
-
 use base::discord::model::gateway::payload::incoming::GuildCreate;
-use base::error::{Error, ErrorKind, Result};
+use base::error::Result;
 use cache_discord::DiscordCache;
+use hyper::Client;
 use manidb::whitelist::GetGuildWhitelistStatus;
 
 pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u16) -> Result<()> {
@@ -54,23 +52,15 @@ pub async fn handle_guild_create(payload: Box<GuildCreate>, loadbal_port: u16) -
             log::trace!("failed to cache guild {error:?}")
         }
     } else {
-        let result = stdenv::var("BOT_TOKEN");
-        if let Err(src) = result {
-            return Err(Error {
-                kind: ErrorKind::EnvVarError { src },
-            });
-        }
+        log::error!(
+            "guild `{}` (id {}) is not whitelisted. attempting to leave the guild",
+            &payload.name,
+            payload.id
+        );
 
-        let mut token = result.unwrap();
-        if !token.starts_with("Bot ") {
-            token.insert_str(0, "Bot ");
-        }
-
-        tokio::spawn(Client::new().request(restreq::leave_guild::leave_guild(
-            payload,
-            token,
-            loadbal_port,
-        )?));
+        tokio::spawn(
+            Client::new().request(restreq::leave_guild::leave_guild(payload, loadbal_port)?),
+        );
     }
 
     Ok(())
