@@ -33,7 +33,7 @@ pub async fn handle_payload(payload: Payload, loadbal_port: u16) -> Result<()> {
             guild_create::handle_guild_create(guild_create, loadbal_port).await
         }
         SerdeableEvent::InteractionCreate(interaction_create) => {
-            interaction_create::handle_interaction_create(interaction_create).await
+            interaction_create::handle_interaction_create(interaction_create, loadbal_port).await
         }
         SerdeableEvent::Ready(ready) => ready::handle_ready(ready, payload.shard_id).await,
         _ => Ok(()),

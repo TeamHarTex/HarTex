@@ -18,6 +18,7 @@ restreq = { path = "../restreq" }
 
 clap = { version = "3.2.16", features = ["cargo"] }
 hyper = { version = "0.14.20", default-features = false, features = ["client", "http1", "http2", "tcp"] }
+log = "0.4.17"
 tokio = { version = "1.20.1", features = ["macros", "rt", "rt-multi-thread"] }
 
 [[bin]]

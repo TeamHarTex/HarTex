@@ -29,18 +29,10 @@ use hyper::{Body, Method, Request};
 use loadbal::Request as LoadbalRequest;
 use rest::request::RatelimitRequest;
 
-pub fn leave_guild(payload: Box<GuildCreate>, loadbal_port: u16) -> Result<Request<Body>> {
-    let result = stdenv::var("BOT_TOKEN");
-    if let Err(src) = result {
-        return Err(Error {
-            kind: ErrorKind::EnvVarError { src },
-        });
-    }
+use crate::util;
 
-    let mut token = result.unwrap();
-    if !token.starts_with("Bot ") {
-        token.insert_str(0, "Bot ");
-    }
+pub fn leave_guild(payload: Box<GuildCreate>, loadbal_port: u16) -> Result<Request<Body>> {
+    let token = util::token()?;
 
     let mut headers = HashMap::new();
     headers.insert(String::from("Authorization"), token);

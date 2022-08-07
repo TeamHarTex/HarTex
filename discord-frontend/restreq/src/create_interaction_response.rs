@@ -23,16 +23,18 @@ use std::collections::HashMap;
 use std::env as stdenv;
 
 use base::discord::http::routing::Route;
+use base::discord::model::http::interaction::InteractionResponse;
 use base::error::{Error, ErrorKind, Result};
-use ext::discord::model::application::command::HarTexCommand;
 use hyper::{Body, Method, Request};
 use loadbal::Request as LoadbalRequest;
 use rest::request::RatelimitRequest;
 
 use crate::util;
 
-pub fn create_global_application_command(
-    command: HarTexCommand,
+pub fn create_interaction_response(
+    interaction_id: u64,
+    interaction_token: String,
+    response: InteractionResponse,
     loadbal_port: u16,
 ) -> Result<Request<Body>> {
     let token = util::token()?;
@@ -44,7 +46,7 @@ pub fn create_global_application_command(
         String::from("application/json"),
     );
 
-    let serde_result = serde_json::to_string(&command);
+    let serde_result = serde_json::to_string(&response);
     if let Err(src) = serde_result {
         return Err(Error {
             kind: ErrorKind::JsonError { src },
@@ -73,18 +75,18 @@ pub fn create_global_application_command(
 
     headers2.insert(String::from("X-Authorization"), result.unwrap());
 
-    #[cfg(stable)]
-    let application_id = 936431574310879332;
-    #[cfg(not(stable))]
-    let application_id = 936432439767740436;
-
     let loadbal_request = LoadbalRequest {
         target_server_type: String::from("rest"),
         method: Method::POST.to_string(),
-        route: Route::CreateGlobalCommand { application_id }.to_string(),
+        route: Route::InteractionCallback {
+            interaction_id,
+            interaction_token: interaction_token.as_str(),
+        }
+        .to_string(),
         headers: headers2,
         body,
     };
+
     let serde_result = serde_json::to_string(&loadbal_request);
     if let Err(src) = serde_result {
         return Err(Error {
