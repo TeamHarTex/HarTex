@@ -51,7 +51,7 @@ async fn ping_chat_input(interaction: Interaction, loadbal_port: u16) -> Result<
     tokio::spawn(Client::new().request(
         restreq::create_interaction_response::create_interaction_response(
             interaction.id.get(),
-            interaction.token.clone(),
+            interaction.token,
             InteractionResponse {
                 data: Some(InteractionResponseData {
                     allowed_mentions: None,
