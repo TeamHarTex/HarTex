@@ -31,7 +31,7 @@ use base::error::Result;
 pub mod general;
 
 pub trait BaseInteraction {
-    fn handle(&self, interaction: Interaction) -> HandleInteractionFuture;
+    fn handle(&self, interaction: Interaction, loadbal_port: u16) -> HandleInteractionFuture;
 }
 
 pub type HandleInteractionFuture = Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>>;
