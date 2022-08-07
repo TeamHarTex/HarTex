@@ -33,7 +33,7 @@ pub struct PingCommand;
 
 impl BaseInteraction for PingCommand {
     fn handle(&self, interaction: Interaction, loadbal_port: u16) -> HandleInteractionFuture {
-        let Some(InteractionData::ApplicationCommand(data)) = interaction.clone().data else {
+        let Some(InteractionData::ApplicationCommand(ref data)) = interaction.data else {
             unreachable!()
         };
 
