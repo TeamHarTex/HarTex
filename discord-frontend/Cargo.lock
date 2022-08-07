@@ -1536,7 +1536,6 @@ dependencies = [
  "clap",
  "env",
  "ext",
- "futures-util",
  "hyper",
  "restreq",
  "tokio",

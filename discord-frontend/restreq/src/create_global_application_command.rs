@@ -47,6 +47,7 @@ pub fn create_global_application_command(
 
     let mut headers = HashMap::new();
     headers.insert(String::from("Authorization"), token);
+    headers.insert(String::from("Content-Type"), String::from("application/json"));
 
     let serde_result = serde_json::to_string(&command);
     if let Err(src) = serde_result {
