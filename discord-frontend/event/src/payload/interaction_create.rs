@@ -25,10 +25,15 @@ use base::error::Result;
 use interactions::general::ping::PingCommand;
 use interactions::BaseInteraction;
 
-pub async fn handle_interaction_create(payload: Box<InteractionCreate>) -> Result<()> {
+pub async fn handle_interaction_create(
+    payload: Box<InteractionCreate>,
+    loadbal_port: u16,
+) -> Result<()> {
+    log::trace!("received an interaction; handling interaction");
+
     match &payload.0.data {
         Some(InteractionData::ApplicationCommand(command)) => match &*command.name {
-            "ping" => PingCommand.handle(payload.0).await,
+            "ping" => PingCommand.handle(payload.0, loadbal_port).await,
             _ => Ok(()),
         },
         _ => Ok(()),

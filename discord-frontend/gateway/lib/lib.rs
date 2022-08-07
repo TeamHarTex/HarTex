@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(warnings)]
+
 use serde::{Deserialize, Serialize};
 
 pub mod event;

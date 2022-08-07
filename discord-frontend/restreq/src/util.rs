@@ -19,10 +19,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(warnings)]
+use std::env as stdenv;
 
-pub mod create_global_application_command;
-pub mod create_interaction_response;
-pub mod leave_guild;
+use base::error::{Error, ErrorKind, Result};
 
-pub(crate) mod util;
+pub fn token() -> Result<String> {
+    let result = stdenv::var("BOT_TOKEN");
+    if let Err(src) = result {
+        return Err(Error {
+            kind: ErrorKind::EnvVarError { src },
+        });
+    }
+
+    let mut token = result.unwrap();
+    if !token.starts_with("Bot ") {
+        token.insert_str(0, "Bot ");
+    }
+
+    Ok(token)
+}
