@@ -23,7 +23,6 @@ use base::discord::model::application::command::CommandType;
 use base::error::Result;
 use clap::ArgMatches;
 use ext::discord::model::application::command::HarTexCommand;
-use futures_util::TryFutureExt;
 use hyper::Client;
 
 use crate::utils;
@@ -51,16 +50,16 @@ pub async fn create_cmd(matches: &ArgMatches) -> Result<()> {
         .replace(utils::prompt("Enable command for DM?")?);
 
     println!("create-cmd: sending request");
-    tokio::spawn(
-        Client::new()
-            .request(
-                restreq::create_global_application_command::create_global_application_command(
-                    command,
-                    loadbal_port.parse::<u16>()?,
-                )?,
-            )
-            .inspect_err(|error| println!("create-cmd: failed to send request: {error}")),
-    );
+    Client::new()
+        .request(
+            restreq::create_global_application_command::create_global_application_command(
+                command,
+                loadbal_port.parse::<u16>()?,
+            )?,
+        )
+        .await
+        .inspect_err(|error| println!("create-cmd: failed to send request: {error}"))
+        .unwrap();
 
     Ok(())
 }

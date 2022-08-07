@@ -20,7 +20,7 @@
  */
 
 use std::env as stdenv;
-use std::str::FromStr;
+use std::str::{self, FromStr};
 use std::time::Duration;
 
 use hyper::body;
@@ -137,7 +137,9 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
             log::trace!("request successfully sent");
             let mut ret = Response::new(200);
             let bytes = body::to_bytes(response.body_mut()).await.unwrap();
-            ret.body_bytes(bytes);
+            ret.body_bytes(bytes.clone());
+
+            log::trace!("response: {}", str::from_utf8(&bytes).unwrap());
 
             return Ok(ret);
         }
