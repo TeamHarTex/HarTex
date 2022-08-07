@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(let_else)]
 #![feature(result_option_inspect)]
 
 use base::error::Result;
@@ -29,15 +30,21 @@ mod utils;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> Result<()> {
+    if let Err(error) = env::load() {
+        println!("interactions: failed to load environment variables: {error}");
+        return Ok(());
+    }
+
     let command = clap::command!().subcommand(Command::new("create-cmd").args(&[
         clap::arg!(<COMMAND_NAME> "The name of the command"),
         clap::arg!(<COMMAND_TYPE> "The type of the command to create"),
+        clap::arg!(<PORT> "The port to the load balancer"),
     ]));
     let matches = command.get_matches();
     match matches.subcommand() {
         Some(("create-cmd", subcommand_matches)) => create_cmd::create_cmd(subcommand_matches)
             .await
-            .inspect_err(|error| println!("error: failed to create command: {error:?}"))?,
+            .inspect_err(|error| println!("create-cmd: failed to create command: {error:?}"))?,
         _ => (),
     }
 
