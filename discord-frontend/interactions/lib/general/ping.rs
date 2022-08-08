@@ -48,22 +48,15 @@ impl BaseInteraction for PingCommand {
 async fn ping_chat_input(interaction: Interaction, loadbal_port: u16) -> Result<()> {
     log::trace!("command `ping` was executed");
 
+    // TODO: get latency information
     tokio::spawn(Client::new().request(
         restreq::create_interaction_response::create_interaction_response(
             interaction.id.get(),
             interaction.token,
             InteractionResponse {
                 data: Some(InteractionResponseData {
-                    allowed_mentions: None,
-                    attachments: None,
-                    choices: None,
-                    components: None,
                     content: Some(String::from("Pong! Did you need anything? :eyes:")),
-                    custom_id: None,
-                    embeds: None,
-                    flags: None,
-                    title: None,
-                    tts: None,
+                    ..Default::default()
                 }),
                 kind: InteractionResponseType::ChannelMessageWithSource,
             },
