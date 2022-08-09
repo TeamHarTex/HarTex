@@ -11,8 +11,8 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../../common/base" }
-serde = { version = "1.0.142", features = ["derive"] }
+base = { path = "../base" }
+serde = { version = "1.0.143", features = ["derive"] }
 
 [features]
 discord-model-ext = ["base/discord-model"]
