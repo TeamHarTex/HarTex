@@ -53,13 +53,15 @@ async fn about_chat_input(interaction: Interaction, loadbal_port: u16) -> Result
 
     #[cfg(stable)]
     let embed = EmbedBuilder::new()
-        .author(EmbedAuthorBuilder::new("HarTex").icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png?size=256").unwrap()));
+        .author(EmbedAuthorBuilder::new("HarTex").icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png?size=256").unwrap()))
+        .color(0x0099FF);
     #[cfg(not(stable))]
     let embed = EmbedBuilder::new()
-        .author(EmbedAuthorBuilder::new("HarTex Nightly").icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936432439767740436/388c658aedb5f9ec5f99b85159514451.png?size=256").unwrap()));
+        .author(EmbedAuthorBuilder::new("HarTex Nightly").icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936432439767740436/388c658aedb5f9ec5f99b85159514451.png?size=256").unwrap()))
+        .color(0xE68A00);
 
     let embed = embed.description("HarTex is an advanced administration assistant and moderation bot for Discord, designed with stability and flexibility in mind.")
-        .footer(EmbedFooterBuilder::new("Powered by Open Source, Powered by a Community: https://github.com/TeamHarTex"))
+        .footer(EmbedFooterBuilder::new("Powered by Open Source, Powered by a Community: [GitHub](https://github.com/TeamHarTex)"))
         .validate()
         .unwrap()
         .build();
