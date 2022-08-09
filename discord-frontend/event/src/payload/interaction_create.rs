@@ -22,6 +22,7 @@
 use base::discord::model::application::interaction::InteractionData;
 use base::discord::model::gateway::payload::incoming::InteractionCreate;
 use base::error::Result;
+use interactions::general::about::AboutCommand;
 use interactions::general::ping::PingCommand;
 use interactions::BaseInteraction;
 
@@ -33,6 +34,7 @@ pub async fn handle_interaction_create(
 
     match &payload.0.data {
         Some(InteractionData::ApplicationCommand(command)) => match &*command.name {
+            "about" => AboutCommand.handle(payload.0, loadbal_port).await,
             "ping" => PingCommand.handle(payload.0, loadbal_port).await,
             _ => Ok(()),
         },

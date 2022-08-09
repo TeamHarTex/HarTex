@@ -24,14 +24,17 @@ use base::discord::model::application::interaction::{Interaction, InteractionDat
 use base::discord::model::http::interaction::{
     InteractionResponse, InteractionResponseData, InteractionResponseType,
 };
+use base::discord::util::builder::embed::{
+    EmbedAuthorBuilder, EmbedBuilder, EmbedFooterBuilder, ImageSource,
+};
 use base::error::Result;
 use hyper::Client;
 
 use crate::{BaseInteraction, HandleInteractionFuture};
 
-pub struct PingCommand;
+pub struct AboutCommand;
 
-impl BaseInteraction for PingCommand {
+impl BaseInteraction for AboutCommand {
     fn handle(&self, interaction: Interaction, loadbal_port: u16) -> HandleInteractionFuture {
         let Some(InteractionData::ApplicationCommand(ref data)) = interaction.data else {
             unreachable!()
@@ -41,21 +44,35 @@ impl BaseInteraction for PingCommand {
             unreachable!()
         }
 
-        Box::pin(ping_chat_input(interaction, loadbal_port))
+        Box::pin(about_chat_input(interaction, loadbal_port))
     }
 }
 
-async fn ping_chat_input(interaction: Interaction, loadbal_port: u16) -> Result<()> {
-    log::trace!("command `ping` was executed");
+async fn about_chat_input(interaction: Interaction, loadbal_port: u16) -> Result<()> {
+    log::trace!("command `about` was executed");
 
-    // TODO: get latency information
+    #[cfg(stable)]
+    let embed = EmbedBuilder::new()
+        .author(EmbedAuthorBuilder::new("HarTex").icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png?size=256").unwrap()))
+        .color(0x0099FF);
+    #[cfg(not(stable))]
+    let embed = EmbedBuilder::new()
+        .author(EmbedAuthorBuilder::new("HarTex Nightly").icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936432439767740436/388c658aedb5f9ec5f99b85159514451.png?size=256").unwrap()))
+        .color(0xE68A00);
+
+    let embed = embed.description("HarTex is an advanced administration assistant and moderation bot for Discord, designed with stability and flexibility in mind.")
+        .footer(EmbedFooterBuilder::new("Powered by Open Source, Powered by a Community: [GitHub](https://github.com/TeamHarTex)"))
+        .validate()
+        .unwrap()
+        .build();
+
     tokio::spawn(Client::new().request(
         restreq::create_interaction_response::create_interaction_response(
             interaction.id.get(),
             interaction.token,
             InteractionResponse {
                 data: Some(InteractionResponseData {
-                    content: Some(String::from("Pong! Did you need anything? :eyes:")),
+                    embeds: Some(vec![embed]),
                     ..Default::default()
                 }),
                 kind: InteractionResponseType::ChannelMessageWithSource,
