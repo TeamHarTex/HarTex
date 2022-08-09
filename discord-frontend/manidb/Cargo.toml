@@ -11,8 +11,8 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../../common/base", default-features = false, features = ["discord-model"] }
-model = { path = "../../common/model" }
+base = { path = "../base", default-features = false, features = ["discord-model"] }
+model = { path = "../model" }
 
 log = "0.4.17"
 sqlx = { version = "0.6.1", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }

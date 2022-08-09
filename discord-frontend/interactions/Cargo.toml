@@ -11,8 +11,8 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base = { path = "../../common/base", features = ["discord-model"] }
-env = { path = "../../common/env" }
+base = { path = "../base", features = ["discord-model", "discord-util"] }
+env = { path = "../env" }
 ext = { path = "../ext", features = ["discord-model-ext"] }
 restreq = { path = "../restreq" }
 
