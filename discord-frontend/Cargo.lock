@@ -133,9 +133,9 @@ dependencies = [
 
 [[package]]
 name = "async-channel"
-version = "1.6.1"
+version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2114d64672151c0c5eaa5e131ec84a74f06e1e559830dabba01ca30605d66319"
+checksum = "4b31b87a3367ed04dbcbc252bce3f2a8172fef861d47177524c503c908dff2c6"
 dependencies = [
  "concurrent-queue",
  "event-listener",
@@ -435,6 +435,7 @@ dependencies = [
  "twilight-gateway",
  "twilight-http",
  "twilight-model",
+ "twilight-util",
 ]
 
 [[package]]
@@ -2356,9 +2357,9 @@ checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
 
 [[package]]
 name = "serde"
-version = "1.0.142"
+version = "1.0.143"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e590c437916fb6b221e1d00df6e3294f3fccd70ca7e92541c475d6ed6ef5fee2"
+checksum = "53e8e5d5b70924f74ff5c6d64d9a5acd91422117c60f48c4e07855238a254553"
 dependencies = [
  "serde_derive",
 ]
@@ -2375,9 +2376,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.142"
+version = "1.0.143"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34b5b8d809babe02f538c2cfec6f2c1ed10804c0e5a6a041a049a4f5588ccc2e"
+checksum = "d3d8e8de557aee63c26b85b947f5e59b690d0454c753f3adeb5cd7835ab88391"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3303,6 +3304,16 @@ dependencies = [
  "serde_repr",
  "time 0.3.12",
  "tracing",
+]
+
+[[package]]
+name = "twilight-util"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b70d18462269ead0abd8e66b7a1656911457af44d9a7f9873d8e7b64235a4227"
+dependencies = [
+ "twilight-model",
+ "twilight-validate",
 ]
 
 [[package]]

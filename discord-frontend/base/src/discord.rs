@@ -27,3 +27,6 @@ pub use twilight_http as http;
 
 #[cfg(feature = "discord-model")]
 pub use twilight_model as model;
+
+#[cfg(feature = "twilight-util")]
+pub use twilight_util as util;
