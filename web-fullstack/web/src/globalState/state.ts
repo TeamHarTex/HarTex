@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import EventEmitter from 'eventemitter3';
+import EventEmitter from 'eventemitter3'
 
 class SessionState {
   events: EventEmitter
@@ -41,7 +41,7 @@ class SessionState {
     }
 
     return new Promise((resolve, reject) => {
-      throw new Error("to be implemented")
+      throw new Error('to be implemented')
     })
   }
 }
