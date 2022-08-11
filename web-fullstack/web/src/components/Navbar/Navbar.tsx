@@ -26,10 +26,20 @@ const Navbar = () => {
       <nav className="hidden xl:block">
         <ul className="text-right">
           <li>
-            <i className="fa-brands fa-github"></i>
+            <a
+              className="fa-brands fa-github"
+              href="https://github.com/TeamHarTex/HarTex"
+              target="_blank"
+              type="button"
+            />
           </li>
           <li>
-            <i className="fa-brands fa-discord"></i>
+            <a
+              className="fa-brands fa-discord"
+              href="https://discord.gg/Xu8453VBAv"
+              target="_blank"
+              type="button"
+            />
           </li>
           <li>
             <i className="fa-solid fa-book"></i>
