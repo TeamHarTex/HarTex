@@ -41,10 +41,10 @@ const HomePage = () => {
         </div>
       </section>
       <section className="features">
-        <h2>Features</h2>
+        <h2>Why HarTex?</h2>
       </section>
       <section className="faq">
-        <h2>F.A.Q</h2>
+        <h2>Frequently Asked Questions</h2>
       </section>
     </main>
   )
