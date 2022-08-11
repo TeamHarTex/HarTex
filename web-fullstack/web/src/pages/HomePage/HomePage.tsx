@@ -41,6 +41,12 @@ const HomePage = () => {
           <img src="" alt=""></img>
         </div>
       </section>
+      <section className="features">
+        <h2 className="text-7xl font-bold">Features</h2>
+      </section>
+      <section className="faq">
+        <h2 className="text-7xl font-bold">F.A.Q</h2>
+      </section>
     </main>
   )
 }
