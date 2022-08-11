@@ -30,12 +30,11 @@ const HomePage = () => {
           <h1>HarTex</h1>
           <br />
           <p className="text-xl font-normal">
-            An advanced adminsitration assistant
+            An advanced administration assistant
             <br /> and moderation bot for Discord.
           </p>
           <br />
-          <br />
-          <button>Get Started</button>
+          <button className="text-lg">Get Started</button>
         </div>
         <div className="flex-1 hidden xl:block">
           <img src="" alt=""></img>
