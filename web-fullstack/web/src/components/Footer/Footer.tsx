@@ -19,28 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
-import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
+const Footer = () => {
+  return (
+    <footer className="my-10 text-center">
+      <p>Footer Text, to be changed...</p>
+    </footer>
+  )
+}
 
-import FatalErrorPage from 'src/pages/FatalErrorPage'
-import Routes from 'src/Routes'
-
-import Footer from './components/Footer/Footer'
-import Navbar from './components/Navbar/Navbar'
-
-import 'windi.css'
-import './index.css'
-
-const App = () => (
-  <FatalErrorBoundary page={FatalErrorPage}>
-    <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-      <RedwoodApolloProvider>
-        <Navbar />
-        <Routes />
-        <Footer />
-      </RedwoodApolloProvider>
-    </RedwoodProvider>
-  </FatalErrorBoundary>
-)
-
-export default App
+export default Footer

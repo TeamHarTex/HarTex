@@ -25,23 +25,27 @@ const HomePage = () => {
   return (
     <main>
       <MetaTags title="Home" description="HarTex" />
-      <section className="hero flex justify-center items-center">
+      <section className="flex justify-center items-center text-center xl:text-left">
         <div className="flex-1">
-          <h1 className="text-8xl font-bold">HarTex</h1>
+          <h1>HarTex</h1>
           <br />
-          <p className="text-2xl font-normal">
+          <p className="text-xl font-normal">
             An advanced adminsitration assistant
             <br /> and moderation bot for Discord.
           </p>
           <br />
           <br />
-          <button className="btn-get-started transition ease-in-out hover:bg-dark-blurple text-xl">
-            Get Started
-          </button>
+          <button>Get Started</button>
         </div>
-        <div className="flex-1 hidden md:block">
+        <div className="flex-1 hidden xl:block">
           <img src="" alt=""></img>
         </div>
+      </section>
+      <section className="features">
+        <h2>Features</h2>
+      </section>
+      <section className="faq">
+        <h2>F.A.Q</h2>
       </section>
     </main>
   )
