@@ -26,6 +26,9 @@ const Navbar = () => {
       <nav className="hidden xl:block">
         <ul className="text-right">
           <li>
+            <i className="fa-brands fa-github"></i>
+          </li>
+          <li>
             <i className="fa-brands fa-discord"></i>
           </li>
           <li>
