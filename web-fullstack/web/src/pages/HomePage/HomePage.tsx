@@ -29,7 +29,7 @@ const HomePage = () => {
         <div className="flex-1">
           <h1>
             HarTex
-            <span className="text-base bg-blurple ml-3 px-2 py-1 rounded">
+            <span className="text-base bg-blurple ml-3 px-2 py-1 rounded relative inline-block">
               DEV
             </span>
           </h1>
