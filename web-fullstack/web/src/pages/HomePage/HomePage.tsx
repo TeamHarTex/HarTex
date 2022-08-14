@@ -46,10 +46,7 @@ const HomePage = () => {
         </div>
       </section>
       <section className="features">
-        <h2>Why HarTex?</h2>
-      </section>
-      <section className="faq">
-        <h2>Frequently Asked Questions</h2>
+        <h2 className="text-center">Why HarTex?</h2>
       </section>
     </main>
   )
