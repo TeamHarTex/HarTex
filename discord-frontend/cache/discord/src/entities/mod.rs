@@ -19,7 +19,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Entities in the Discord entity cache.
-
 pub mod guilds;
 pub mod users;
