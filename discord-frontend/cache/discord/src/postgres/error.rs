@@ -19,19 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Errors for the PostgreSQL cache backend.
-
 use std::env::VarError;
 
 use sqlx::Error as SqlxError;
 
-/// Error generated from a backend operation.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum PostgresBackendError {
-    /// An error occurred whilst performing environment variable operations.
     EnvVar { src: VarError },
-    /// An error occurred whilst performing database operations.
     Sqlx { src: SqlxError },
 }
 
