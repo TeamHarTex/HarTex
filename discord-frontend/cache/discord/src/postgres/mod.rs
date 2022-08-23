@@ -19,13 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! The PostgreSQL cache backend.
-
 use cache_base::Backend;
 
 pub mod error;
 
-/// The PostgreSQL cache backend implementation.
 #[allow(clippy::module_name_repetitions)]
 pub struct PostgresBackend;
 

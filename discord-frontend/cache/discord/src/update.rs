@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Base trait for event payloads that can update the cache to implement.
-
 use std::future::Future;
 use std::pin::Pin;
 

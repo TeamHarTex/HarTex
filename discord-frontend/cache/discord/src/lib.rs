@@ -19,10 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The HarTex Discord Cache
-//!
-//! The implementation of a cache for storing Discord entities.
-
 #![deny(warnings)]
 
 pub mod entities;
@@ -36,13 +32,6 @@ pub struct DiscordCache;
 
 impl DiscordCache {
     #[cfg(postgres)]
-    /// Updates the cache with the event.
-    ///
-    /// ## Errors
-    ///
-    /// Returns errors generated from PostgreSQL backend operations.
-    ///
-    /// See documentation for [`PostgresBackendError`] for more details.
     pub async fn update<'a>(
         &'a self,
         updatable: &'a impl update::CacheUpdatable<postgres::PostgresBackend>,

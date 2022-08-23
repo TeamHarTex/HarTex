@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Repositories in the PostgreSQL backend.
-
 use std::env;
 
 use base::discord::model::id::{
