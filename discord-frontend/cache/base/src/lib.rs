@@ -19,41 +19,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The HarTex Cache Framework
-//!
-//! The `cache_base` crate provides a foundation of cache implementations for HarTex.
-//!
-//! The cache can be built upon any backend, examples of supported backends are redis,
-//! in-memory, and mostly any relational databases.
-//!
-//! The cache of HarTex is specifically using a PostgreSQL database for its caching
-//! implementation.
-
 #![deny(warnings)]
 
 use std::hash::Hash;
 
 pub mod future;
 
-/// A cache backend.
 pub trait Backend: Send + Sized + Sync + 'static {
-    /// Error returned by backend operations.
     type Error: Send + 'static;
 }
 
-/// An entity in the cache.
 pub trait Entity: Send + Sync {
-    /// An ID that uniquely identifies the entity.
     type Id: Copy + Eq + Hash + Send + Sync;
 
     fn id(&self) -> Self::Id;
 }
 
-/// A repository of a specific entity in the cache.
 pub trait Repository<B: Backend, T: Entity> {
-    /// Retrieve an entity from the repository, by its ID.
     fn get(&self, entity_id: T::Id) -> future::GetEntityFuture<'_, T, B::Error>;
 
-    /// Upsert an entity into the repository.
     fn upsert(&self, entity: T) -> future::UpsertEntityFuture<'_, B::Error>;
 }

@@ -19,13 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Guilds in the Discord entity cache.
-
 use base::discord::model::guild::Guild;
 use base::discord::model::id::{marker::GuildMarker, Id};
 use cache_base::Entity;
 
-/// A cached guild.
 pub struct CachedGuild {
     pub(crate) id: Id<GuildMarker>,
 }

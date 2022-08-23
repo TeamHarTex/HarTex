@@ -19,16 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Users in the Discord entity cache.
-
 use base::discord::model::id::{marker::UserMarker, Id};
 use base::discord::model::user::{CurrentUser, UserFlags};
 use base::discord::model::util::ImageHash;
 use cache_base::Entity;
 
-/// This is basically identical to a regular cached user.
-///
-/// This structure is here only for a separate cache for the current user (aka the bot itself).
 #[derive(Clone)]
 pub struct CachedCurrentUser {
     pub(crate) avatar: Option<ImageHash>,
