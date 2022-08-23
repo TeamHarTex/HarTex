@@ -92,7 +92,7 @@ pub async fn proxy_request(mut request: Request<RestState>) -> Result<Response> 
         }
 
         let mut user_agent = format!(
-            "DiscordBot (https://github.com/twilight-rs/twilight, 0.12) Twilight-rs, HarTexBot {}",
+            "DiscordBot (https://github.com/twilight-rs/twilight 0.13) Rust/1.64.0 HarTexBot/{}",
             env!("CARGO_PKG_VERSION")
         );
         #[cfg(not(stable))]
