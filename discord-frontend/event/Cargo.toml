@@ -22,8 +22,8 @@ rest = { path = "../rest" }
 restreq = { path = "../restreq" }
 
 async-tungstenite = { version = "0.17.2", features = ["tokio-runtime"] }
-futures-util = "0.3.21"
+futures-util = "0.3.23"
 hyper = { version = "0.14.20", features = ["client", "http1"], default-features = false }
 log = "0.4.17"
-serde_json = "1.0.83"
+serde_json = "1.0.85"
 tokio = { version = "1.20.1", features = ["macros", "rt", "rt-multi-thread"] }
