@@ -1,9 +1,6 @@
 ![IronJVM](./meta/images/hartexbanner.png)
 
-<p align="center">
-    <img src="meta/images/hartexpfp.png" width="200" />
-    <h1 align="center">HarTex</h1>
-</p>
+<h1 align="center">HarTex</h1>
 
 > ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
