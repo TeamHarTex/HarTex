@@ -1,35 +1,29 @@
-# HarTex, a Discord Bot
+![IronJVM](./meta/images/hartexbanner.png)
 
-[![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)](https://discord.gg/Xu8453VBAv)
+<h1 align="center">HarTex</h1>
 
-[![GitHub Badge](https://img.shields.io/badge/github-HarTex-6f42c1.svg?style=for-the-badge&logo=github)](https://github.com/TeamHarTex/HarTex)
+> ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
-![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
+> **Supported by [JetBrains](https://www.jetbrains.com/) (they are amazing!)**
 
-An advanced administration assistant and moderation bot for Discord; built to be stable, flexible and
-customizable.
+**HarTex is an advanced administration assistant and moderation bot for Discord; built to be stable, flexible and customizable.**
 
-## Honourable Mention
+## Quick Start
 
-<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo." width="100">
+The simplest way to use HarTex is by using the publicly hosted instance of it. As of now, HarTex is currently only for
+internal use as it is under heavy development. We will keep the usage of HarTex internal as we go through the development
+stages, further announcements will be made when we open the bot up for public usage.
 
-This project is built with the amazing JetBrains products. [Check them out!](https://www.jetbrains.com/)
+## Self-hosting
 
-## Project Information
+If you are interested in using HarTex at an early age, then you may host your own instance of HarTex. Documentation for
+which will be added at a later date.
 
-### Community Guild
+## Support
 
-[There is an official Discord community guild for this project!](https://discord.gg/Xu8453VBAv)
+Should you need any support, have any questions or need further information, please feel free to join our 
+[support Discord](https://discord.gg/Xu8453VBAv).
 
-You may follow the latest developments as well as ask for support in the guild.
+## License
 
-### Project Structure
-
-This project is a monorepository with separate components placed in their own individual directories.
-
-Below is a brief summary on the individual folders (detailed documentation for each are in the 
-individual directories):
-
-- `common`: commonly used code within the repository
-- `discord-frontend`: the source code of the Discord bot
-- `web-fullstack`: the source code for the web components
+HarTex is distributed under the **GNU Affero General Public License 3.0**. See [COPYING](./COPYING) for more details.
