@@ -2,7 +2,7 @@
 
 [![HarTex Community](https://img.shields.io/discord/886101109331075103?color=%237289DA&label=HarTex%20Community&logo=discord&style=for-the-badge)](https://discord.gg/Xu8453VBAv)
 
-[![GitHub Badge](https://img.shields.io/badge/github-HarTex-6f42c1.svg?style=for-the-badge&logo=github)](https://github.com/HT-Studios/HarTex-rust-discord-bot)
+[![GitHub Badge](https://img.shields.io/badge/github-HarTex-6f42c1.svg?style=for-the-badge&logo=github)](https://github.com/TeamHarTex/HarTex)
 
 ![Alt](https://repobeats.axiom.co/api/embed/19c38ac467e75c4e7bb533031896ac6e299321c6.svg "Repobeats analytics image")
 
