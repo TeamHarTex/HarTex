@@ -8,7 +8,20 @@ const DocumentationPage = () => {
       <div className="flex overflow-hidden">
         <div className="flex-[0_0_350px] overflow-hidden bg-dark-grey">
         </div>
-        <div className="flex-[1_1_1440px] overflow-hidden pr-[17px]">
+        <div className="flex-[1_1_1440px] overflow-hidden pr-[17px] flex items-center flex-col">
+          <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
+            <h3>Welcome</h3>
+            <br />
+            You've found the HarTex Documentation! Whoever you may be, whether you're a HarTex user going through the documentation, or just someone intrigued wanting to
+            take a deeper look on HarTex, this Documentation's got you covered!
+            <br />
+            <br />
+            All the contents in this Documentation are <a className="text-base text-blurple" href="https://github.com/TeamHarTex/HarTex">publicly hosted at GitHub</a>.
+            Corrections and improvements are more than appreciated! &lt;3
+            <br />
+            <br />
+            <h3>Documentation Organization</h3>
+          </div>
         </div>
       </div>
     </main>
