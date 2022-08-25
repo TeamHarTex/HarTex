@@ -21,7 +21,7 @@
 
 const Footer = () => {
   return (
-    <footer className="my-10 text-center">
+    <footer className="my-10 text-center select-none">
       <p>© 2022 HarTex Community. All Rights Reserved.</p>
     </footer>
   )

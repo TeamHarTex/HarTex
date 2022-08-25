@@ -42,7 +42,11 @@ const Navbar = () => {
             />
           </li>
           <li>
-            <i className="fa-solid fa-book"></i>
+            <a
+              className="fa-solid fa-book"
+              href="/documentation"
+              type="button"
+            />
           </li>
           <li>
             <i className="fa-solid fa-circle-user"></i>
