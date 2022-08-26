@@ -22,7 +22,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2022-07-30
+          toolchain: nightly
       - name: Install Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -45,7 +45,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2022-07-30
+          toolchain: nightly
       - name: Install cargo-nextest
         uses: baptiste0928/cargo-install@v1
         with:
