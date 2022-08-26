@@ -1,5 +1,7 @@
 import { MetaTags } from '@redwoodjs/web'
-import Admonition from "src/components/Admonition/Admonition";
+import Admonition from "src/components/Admonition/Admonition"
+
+import './DocumentationPage.styles.css'
 
 const DocumentationPage = () => {
   return (
@@ -15,7 +17,10 @@ const DocumentationPage = () => {
               The HarTex Documentation in its current state is highly experimental and is subject to rapid change with or without prior notice. It is recommended to use
               this Documentation with caution.
             </Admonition>
-            <h3>Welcome</h3>
+            <h3 className="group" id="welcome">
+              Welcome
+              <a className="header-anchor" href="#welcome" aria-hidden="true" >#</a>
+            </h3>
             <br />
             You've found the HarTex Documentation! Whoever you may be, whether you're a HarTex user going through the documentation, or just someone intrigued wanting to
             take a deeper look, this Documentation's got you covered!
