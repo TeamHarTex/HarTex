@@ -19,17 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { render } from '@redwoodjs/testing/web'
+import Admonition from './Admonition'
 
-import Navbar from './Navbar'
+export const generated = (args) => {
+  return <Admonition {...args}>
+    This is an admonition story.
+  </Admonition>
+}
 
-//   Improve this test with help from the Redwood Testing Doc:
-//    https://redwoodjs.com/docs/testing#testing-components
-
-describe('Navbar', () => {
-  it('renders successfully', () => {
-    expect(() => {
-      render(<Navbar />)
-    }).not.toThrow()
-  })
-})
+export default { title: 'Components/Admonition' }
