@@ -8,8 +8,8 @@ export default defineConfig({
     colors: {
       'dark-grey': '#23272A',
       grey: '#36393F',
-      blurple: '#7289DA',
-      'dark-blurple': '#4E5D94',
+      blurple: '#5866EF',
+      'dark-blurple': '#4455EE',
       'dark-orange': '#7B4A04',
       white: '#FFFFFF',
       orange: '#F8A532',
