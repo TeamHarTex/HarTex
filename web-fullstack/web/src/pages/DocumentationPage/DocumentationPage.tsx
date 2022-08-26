@@ -18,11 +18,11 @@ const DocumentationPage = () => {
             <h3>Welcome</h3>
             <br />
             You've found the HarTex Documentation! Whoever you may be, whether you're a HarTex user going through the documentation, or just someone intrigued wanting to
-            take a deeper look on HarTex, this Documentation's got you covered!
+            take a deeper look, this Documentation's got you covered!
             <br />
             <br />
-            All the contents in this Documentation are <a className="text-base text-blurple" href="https://github.com/TeamHarTex/HarTex">publicly hosted at GitHub</a>.
-            Corrections and improvements are more than appreciated! &lt;3
+            This Documentation is <a className="text-base text-blurple" href="https://github.com/TeamHarTex/HarTex">publicly hosted at GitHub</a>. Corrections and improvements
+            are more than appreciated! &lt;3
           </div>
         </div>
       </div>
