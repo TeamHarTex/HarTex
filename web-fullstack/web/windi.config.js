@@ -6,12 +6,13 @@ export default defineConfig({
   },
   theme: {
     colors: {
-      'dark-grey': '#2F3136',
-      grey: '#37393E',
+      'dark-grey': '#23272A',
+      grey: '#36393F',
       blurple: '#5866EF',
-      'dark-blurple': '#4454C4',
+      'dark-blurple': '#4455EE',
+      'dark-orange': '#7B4A04',
       white: '#FFFFFF',
-      orange: '#F66B0E',
+      orange: '#F8A532',
     },
   },
   plugins: [],

@@ -21,15 +21,17 @@
 
 import { render } from '@redwoodjs/testing/web'
 
-import Navbar from './Navbar'
+import Admonition from './Admonition'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //    https://redwoodjs.com/docs/testing#testing-components
 
-describe('Navbar', () => {
+describe('Admonition', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<Navbar />)
+      render(<Admonition type="warning">
+        This warning renders successfully.
+      </Admonition>)
     }).not.toThrow()
   })
 })
