@@ -1,9 +1,13 @@
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url      = "postgres://"
 }
 
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = "native"
+}
+
+model Temp {
+  id Int @id
 }
