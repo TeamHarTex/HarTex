@@ -16,7 +16,7 @@ stages, further announcements will be made when we open the bot up for public us
 
 ## Self-hosting
 
-If you are interested in using HarTex at an early age, then you may host your own instance of HarTex. Documentation for
+If you are interested in using HarTex at an early stage, then you may host your own instance of HarTex. Documentation for
 which will be added at a later date.
 
 ## Support
