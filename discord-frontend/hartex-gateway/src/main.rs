@@ -19,5 +19,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod frame;
-mod stacktrace;
+#![feature(error_reporter)]
+
+use std::error::Report;
+
+use hartex_core::dotenv;
+use hartex_core::result::ResultExt;
+use hartex_core::tokio;
+
+use crate::error::GatewayError;
+
+mod error;
+
+#[tokio::main(flavor = "multi_thread")]
+pub async fn main() -> Result<(), Report<GatewayError>> {
+    dotenv::dotenv().map_report()?;
+
+    Ok(())
+}

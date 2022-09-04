@@ -11,6 +11,9 @@ rust-version = "1.64.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
+dotenv = { version = "0.15.0", optional = true }
+tokio = { version = "1.21.0", optional = true }
 
 [features]
+async-runtime = ["tokio", "tokio/macros", "tokio/rt", "tokio/rt-multi-thread"]
+environment = ["dotenv"]

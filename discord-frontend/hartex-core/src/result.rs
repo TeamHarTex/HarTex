@@ -19,13 +19,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::marker::PhantomData;
+use std::error::{Error, Report};
 
-use crate::frame::Frame;
+pub trait ResultExt<T, E>
+where {
+    fn map_report(self) -> Result<T, Report<E>>
+    where
+        E: Error;
+}
 
-#[must_use]
-#[repr(transparent)]
-pub struct Stacktrace<C> {
-    frames: Vec<Frame>,
-    phantom: PhantomData<C>,
+impl<T, E> ResultExt<T, E> for Result<T, E> {
+    fn map_report(self) -> Result<T, Report<E>>
+    where
+        E: Error {
+        self
+            .map_err(E::from)
+            .map_err(Report::new)
+            .map_err(|report| report.pretty(true).show_backtrace(true))
+    }
 }
