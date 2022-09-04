@@ -27,26 +27,28 @@ const Navbar = () => {
         <ul className="text-right">
           <li>
             <a
-              className="fa-brands fa-github"
               href="https://github.com/TeamHarTex/HarTex"
               target="_blank"
               type="button"
-            />
+              rel="noreferrer"
+            >
+              <i className="fa-brands fa-github"></i>
+            </a>
           </li>
           <li>
             <a
-              className="fa-brands fa-discord"
               href="https://discord.gg/Xu8453VBAv"
               target="_blank"
               type="button"
-            />
+              rel="noreferrer"
+            >
+              <i className="fa-brands fa-discord"></i>
+            </a>
           </li>
           <li>
-            <a
-              className="fa-solid fa-book"
-              href="/documentation"
-              type="button"
-            />
+            <a href="/documentation" type="button">
+              <i className="fa-solid fa-book"></i>
+            </a>
           </li>
           <li>
             <i className="fa-solid fa-circle-user"></i>

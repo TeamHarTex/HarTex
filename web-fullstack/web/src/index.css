@@ -65,11 +65,11 @@ h3 {
 }
 
 a, i {
-  @apply text-2xl;
+  @apply text-xl;
 }
 
 nav ul li {
-  @apply inline-block px-8;
+  @apply inline-block px-7;
 }
 
 nav ul li i {

@@ -19,8 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare module "@components/Admonition" {
-  import type { ReactNode } from "react"
+declare module '@components/Admonition' {
+  import type { ReactNode } from 'react'
 
   export interface IAdmonitionProps {
     readonly children: ReactNode
