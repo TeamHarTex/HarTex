@@ -19,18 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The HarTex Core Library
-//!
-//! The HarTex Core Library is the foundation of the HarTex. It defines the primitive building
-//! blocks for all the components of HarTex.
-//!
-//! The HarTex Core Library is *minimal*: it is not aware of the implementation of the components
-//! of HarTex, as they are out of scope of this crate.
-//!
-//! # Using the HarTex Core Library
-//!
-//! The HarTex Core Library mostly consists of feature flags that can be enabled when necessary.
-//! Acknowledging the fact that not all usages of the HarTex Core Library requires *all* of the
-//! exposed public API from it, the introduction of feature flags can reduce unncessary bloat
-//! included for certain usages that may otherwise determine some components of the HarTex Core
-//! Library being unncessary.
+#![feature(error_reporter)]
+
+#[cfg(feature = "environment")]
+pub use dotenv;
+#[cfg(feature = "async-runtime")]
+pub use tokio;
+
+pub mod error;
+pub mod result;

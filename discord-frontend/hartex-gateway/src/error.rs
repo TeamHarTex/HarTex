@@ -19,8 +19,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct Frame {
-    frame: Box<dyn FrameImplementation>,
+use std::error::Error;
+use std::fmt::{Display, Formatter, Result as FmtResult};
+
+use hartex_core::dotenv::Error as DotenvError;
+
+#[derive(Debug)]
+pub enum GatewayError {
+    Dotenv { source: DotenvError }
 }
 
-pub unsafe trait FrameImplementation {}
+impl Display for GatewayError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match self {
+            Self::Dotenv { source } => write!(f, "dotenv error: {source}"),
+        }
+    }
+}
+
+impl Error for GatewayError {}
+
+impl From<DotenvError> for GatewayError {
+    fn from(source: DotenvError) -> Self {
+        Self::Dotenv { source }
+    }
+}
