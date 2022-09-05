@@ -26,5 +26,5 @@ pub use dotenv;
 #[cfg(feature = "async-runtime")]
 pub use tokio;
 
-pub mod error;
-pub mod result;
+#[cfg(feature = "logging-facilities")]
+pub mod log;
