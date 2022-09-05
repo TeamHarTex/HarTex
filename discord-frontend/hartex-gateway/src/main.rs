@@ -19,12 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(error_reporter)]
-
-use std::error::Report;
-
 use hartex_core::dotenv;
-use hartex_core::result::ResultExt;
+use hartex_core::log;
 use hartex_core::tokio;
 
 use crate::error::GatewayError;
@@ -32,8 +28,11 @@ use crate::error::GatewayError;
 mod error;
 
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> Result<(), Report<GatewayError>> {
-    dotenv::dotenv().map_report()?;
+pub async fn main() -> Result<(), GatewayError> {
+    log::initialize();
+
+    log::trace!("loading environment variables");
+    dotenv::dotenv().ok();
 
     Ok(())
 }

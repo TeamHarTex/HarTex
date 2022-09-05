@@ -18,23 +18,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-use std::error::{Error, Report};
-
-pub trait ResultExt<T, E>
-where {
-    fn map_report(self) -> Result<T, Report<E>>
-    where
-        E: Error;
-}
-
-impl<T, E> ResultExt<T, E> for Result<T, E> {
-    fn map_report(self) -> Result<T, Report<E>>
-    where
-        E: Error {
-        self
-            .map_err(E::from)
-            .map_err(Report::new)
-            .map_err(|report| report.pretty(true).show_backtrace(true))
-    }
-}
