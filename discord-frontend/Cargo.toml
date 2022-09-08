@@ -1,5 +1,6 @@
 [workspace]
 members = [
     "hartex-core",
+    "hartex-eyre",
     "hartex-gateway"
 ]
