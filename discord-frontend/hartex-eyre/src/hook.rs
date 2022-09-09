@@ -19,11 +19,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod hook;
+pub struct HookBuilder;
 
-pub use eyre;
+impl HookBuilder {
+    pub fn new() -> Self {
+        Self
+    }
 
-pub fn initialize() -> Result<(), eyre::Report> {
-    hook::HookBuilder::new()
-        .install_hooks()
+    pub fn install_hooks(self) -> Result<(), eyre::Report> {
+        todo!()
+    }
+}
+
+impl Default for HookBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
 }
