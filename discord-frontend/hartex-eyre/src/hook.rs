@@ -27,7 +27,16 @@ impl HookBuilder {
     }
 
     pub fn install_hooks(self) -> Result<(), eyre::Report> {
-        todo!()
+        let (eyre_hook, panic_hook) = self.try_into_hooks();
+        eyre_hook.install_hook()?;
+        panic_hook.install_hook();
+
+        Ok(())
+
+    }
+
+    pub fn try_into_hooks(self) -> (EyreHook, PanicHook) {
+        (EyreHook, PanicHook)
     }
 }
 
@@ -35,4 +44,18 @@ impl Default for HookBuilder {
     fn default() -> Self {
         Self::new()
     }
+}
+
+pub struct EyreHook;
+
+impl EyreHook {
+    pub fn install_hook(self) -> Result<(), eyre::Report> {
+        todo!()
+    }
+}
+
+pub struct PanicHook;
+
+impl PanicHook {
+    pub fn install_hook(self) {}
 }
