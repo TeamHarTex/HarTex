@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
@@ -26,7 +28,6 @@ use hartex_core::tokio::signal;
 use lapin::options::{ExchangeDeclareOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
-use std::collections::HashMap;
 
 mod clusters;
 mod error;
