@@ -19,12 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use sqlx::{Executor, Row};
 use std::collections::HashMap;
 
 use hartex_core::discord::gateway::shard::ResumeSession;
 use hartex_core::log;
 use sqlx::postgres::PgPool;
+use sqlx::{Executor, Row};
 
 pub async fn get_sessions() -> hartex_eyre::Result<HashMap<u64, ResumeSession>> {
     log::trace!("connecting to session database");
@@ -59,7 +59,7 @@ pub async fn get_sessions() -> hartex_eyre::Result<HashMap<u64, ResumeSession>> 
 pub async fn set_sessions(sessions: HashMap<u64, ResumeSession>) -> hartex_eyre::Result<()> {
     log::trace!("connecting to session database");
     let credentials = std::env::var("POSTGRES_NIGHTLY_CACHE_DATABASE_CREDENTIALS")?;
-    let connection = PgPool::connect(&credentials).await?;
+    let connection = PgPool::connect(&*credentials).await?;
 
     log::trace!("clearing previous sessions");
     connection
