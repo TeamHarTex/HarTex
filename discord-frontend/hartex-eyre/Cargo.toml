@@ -1,0 +1,17 @@
+[package]
+name = "hartex_eyre"
+version = "0.1.0"
+edition = "2021"
+description = """
+Eyre handler implementation for HarTex.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.65.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+backtrace = "0.3.66"
+eyre = "0.6.8"
+
+[features]
