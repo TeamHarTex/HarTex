@@ -21,6 +21,8 @@
 
 use std::collections::HashMap;
 use hartex_core::discord::gateway::shard::ResumeSession;
+use hartex_eyre::eyre::Report;
+use crate::error::GatewayError;
 
 pub async fn set_sessions(_: HashMap<u64, ResumeSession>) -> hartex_eyre::Result<()> {
     todo!()

@@ -19,5 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::error::Error;
+use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
+
 #[derive(Debug)]
 pub enum GatewayError {}
+
+impl Display for GatewayError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        Debug::fmt(self, f)
+    }
+}
+
+impl Error for GatewayError {}
