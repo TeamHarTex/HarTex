@@ -22,7 +22,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2022-07-30
+          toolchain: nightly
           components: clippy
       - name: Install Python 3.10
         uses: actions/setup-python@v4
@@ -44,7 +44,7 @@ jobs:
       - name: Install latest nightly
         uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2022-07-30
+          toolchain: nightly
           components: rustfmt
       - name: Run cargo fmt
         run: cd discord-frontend && cargo fmt --all -- --check
