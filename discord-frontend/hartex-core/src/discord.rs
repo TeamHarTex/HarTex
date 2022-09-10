@@ -19,13 +19,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(error_reporter)]
-
-#[cfg(feature = "environment")]
-pub use dotenv;
-#[cfg(feature = "async-runtime")]
-pub use tokio;
-
-pub mod discord;
-#[cfg(feature = "logging-facilities")]
-pub mod log;
+#[cfg(feature = "discord-gateway")]
+pub use twilight_gateway as gateway;

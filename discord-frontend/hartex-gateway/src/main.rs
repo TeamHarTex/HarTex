@@ -22,14 +22,17 @@
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
+use hartex_core::tokio::signal;
 use lapin::options::{ExchangeDeclareOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
+mod clusters;
 mod error;
+mod queue;
 
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::eyre::Result<()> {
+pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
     log::initialize();
 
@@ -49,6 +52,7 @@ pub async fn main() -> hartex_eyre::eyre::Result<()> {
     let channel_recv = amqp_connection.create_channel().await?;
     let channel_send = amqp_connection.create_channel().await?;
 
+    log::trace!("declaring amqp exchange");
     channel_recv
         .exchange_declare(
             "gateway",
@@ -64,6 +68,7 @@ pub async fn main() -> hartex_eyre::eyre::Result<()> {
         )
         .await?;
 
+    log::trace!("declaring amqp send queue");
     channel_send
         .queue_declare(
             "gateway.send",
@@ -75,7 +80,23 @@ pub async fn main() -> hartex_eyre::eyre::Result<()> {
                 nowait: false,
             },
             FieldTable::default(),
-        ).await?;
+        )
+        .await?;
+
+    log::trace!("building clusters");
+    let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
+    let queue = queue::get_queue()?;
+    let (clusters, events) = clusters::get_clusters(shards, queue).await?;
+
+    log::trace!("launching {} cluster(s) with {shards} shard(s)", clusters.len());
+    for (cluster, _) in clusters.clone().into_iter().zip(events.into_iter()) {
+        let cluster_clone = cluster.clone();
+        tokio::spawn(async move {
+            cluster_clone.up().await;
+        });
+    }
+
+    signal::ctrl_c().await?;
 
     Ok(())
 }

@@ -40,7 +40,11 @@ pub fn initialize() {
             ),
         )
         .logger(Logger::builder().build("async_io", LevelFilter::Off))
+        .logger(Logger::builder().build("mio", LevelFilter::Off))
         .logger(Logger::builder().build("polling", LevelFilter::Off))
+        .logger(Logger::builder().build("rustls", LevelFilter::Off))
+        .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
+        .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))
         .expect("failed to build log4rs configuration");
 

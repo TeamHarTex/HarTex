@@ -24,6 +24,8 @@ pub mod hook;
 
 pub use eyre;
 
-pub fn initialize() -> Result<(), eyre::Report> {
+pub fn initialize() -> Result<()> {
     hook::HookBuilder::new().install_hooks()
 }
+
+pub type Result<T, E = eyre::Report> = eyre::Result<T, E>;
