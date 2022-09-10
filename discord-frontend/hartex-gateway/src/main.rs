@@ -22,7 +22,9 @@
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
-use lapin::{Connection, ConnectionProperties};
+use lapin::options::{ExchangeDeclareOptions, QueueDeclareOptions};
+use lapin::types::FieldTable;
+use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
 mod error;
 
@@ -42,11 +44,38 @@ pub async fn main() -> hartex_eyre::eyre::Result<()> {
     let uri_log = format!("amqp://{}:<redacted>@{}:{}", username, host, port);
 
     log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
-    let _ = Connection::connect(
-        &uri,
-        ConnectionProperties::default(),
-    )
-    .await?;
+    let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
+
+    let channel_recv = amqp_connection.create_channel().await?;
+    let channel_send = amqp_connection.create_channel().await?;
+
+    channel_recv
+        .exchange_declare(
+            "gateway",
+            ExchangeKind::Topic,
+            ExchangeDeclareOptions {
+                passive: false,
+                durable: true,
+                auto_delete: false,
+                internal: false,
+                nowait: false,
+            },
+            FieldTable::default(),
+        )
+        .await?;
+
+    channel_send
+        .queue_declare(
+            "gateway.send",
+            QueueDeclareOptions {
+                passive: false,
+                durable: true,
+                exclusive: false,
+                auto_delete: false,
+                nowait: false,
+            },
+            FieldTable::default(),
+        ).await?;
 
     Ok(())
 }
