@@ -100,7 +100,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
 
     signal::ctrl_c().await?;
 
-    log::trace!("shutting down (resumable)");
+    log::trace!("shutting down resumably");
     let mut sessions = HashMap::new();
     for cluster in clusters {
         for (key, value) in cluster.down_resumable() {
