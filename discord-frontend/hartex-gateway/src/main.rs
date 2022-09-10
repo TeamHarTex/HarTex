@@ -19,7 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
@@ -27,6 +26,7 @@ use hartex_core::tokio::signal;
 use lapin::options::{ExchangeDeclareOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
+use std::collections::HashMap;
 
 mod clusters;
 mod error;
@@ -90,7 +90,10 @@ pub async fn main() -> hartex_eyre::Result<()> {
     let queue = queue::get_queue()?;
     let (clusters, events) = clusters::get_clusters(shards, queue).await?;
 
-    log::trace!("launching {} cluster(s) with {shards} shard(s)", clusters.len());
+    log::trace!(
+        "launching {} cluster(s) with {shards} shard(s)",
+        clusters.len()
+    );
     for (cluster, _) in clusters.clone().into_iter().zip(events.into_iter()) {
         let cluster_clone = cluster.clone();
         tokio::spawn(async move {
