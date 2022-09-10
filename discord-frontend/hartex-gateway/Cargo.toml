@@ -12,5 +12,6 @@ rust-version = "1.65.0"
 
 [dependencies]
 hartex_core = { path = "../hartex-core", features = ["async-runtime", "environment", "logging-facilities"] }
+hartex_eyre = { path = "../hartex-eyre" }
 
 [features]

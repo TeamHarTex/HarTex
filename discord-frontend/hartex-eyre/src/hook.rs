@@ -19,6 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::error::Error;
+
+use backtrace::Backtrace;
+
+use crate::handler::HookHandler;
+
 pub struct HookBuilder;
 
 impl HookBuilder {
@@ -27,16 +33,14 @@ impl HookBuilder {
     }
 
     pub fn install_hooks(self) -> Result<(), eyre::Report> {
-        let (eyre_hook, panic_hook) = self.try_into_hooks();
+        let eyre_hook = self.try_into_hook();
         eyre_hook.install_hook()?;
-        panic_hook.install_hook();
 
         Ok(())
-
     }
 
-    pub fn try_into_hooks(self) -> (EyreHook, PanicHook) {
-        (EyreHook, PanicHook)
+    pub fn try_into_hook(self) -> EyreHook {
+        EyreHook
     }
 }
 
@@ -49,13 +53,20 @@ impl Default for HookBuilder {
 pub struct EyreHook;
 
 impl EyreHook {
-    pub fn install_hook(self) -> Result<(), eyre::Report> {
-        todo!()
+    pub fn install_hook(self) -> Result<(), eyre::InstallError> {
+        eyre::set_hook(self.into_eyre_hook())
     }
-}
 
-pub struct PanicHook;
+    pub fn into_eyre_hook(
+        self,
+    ) -> Box<dyn Fn(&(dyn Error + 'static)) -> Box<dyn eyre::EyreHandler> + Send + Sync + 'static>
+    {
+        Box::new(move |error| Box::new(self.handler(error)))
+    }
 
-impl PanicHook {
-    pub fn install_hook(self) {}
+    pub(crate) fn handler(&self, _: &(dyn Error + 'static)) -> HookHandler {
+        HookHandler {
+            backtrace: Backtrace::new()
+        }
+    }
 }

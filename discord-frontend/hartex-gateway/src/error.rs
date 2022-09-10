@@ -20,5 +20,4 @@
  */
 
 #[derive(Debug)]
-pub enum GatewayError {
-}
+pub enum GatewayError {}
