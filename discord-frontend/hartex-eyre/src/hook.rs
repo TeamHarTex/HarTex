@@ -66,7 +66,7 @@ impl EyreHook {
 
     pub(crate) fn handler(&self, _: &(dyn Error + 'static)) -> HookHandler {
         HookHandler {
-            backtrace: Backtrace::new()
+            backtrace: Backtrace::new(),
         }
     }
 }
