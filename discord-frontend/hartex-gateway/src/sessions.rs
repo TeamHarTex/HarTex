@@ -19,10 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use crate::error::GatewayError;
 use hartex_core::discord::gateway::shard::ResumeSession;
 use hartex_eyre::eyre::Report;
-use crate::error::GatewayError;
+use std::collections::HashMap;
 
 pub async fn set_sessions(_: HashMap<u64, ResumeSession>) -> hartex_eyre::Result<()> {
     todo!()
