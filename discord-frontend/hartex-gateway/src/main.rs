@@ -22,6 +22,7 @@
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
+use lapin::{Connection, ConnectionProperties};
 
 mod error;
 
@@ -32,6 +33,20 @@ pub async fn main() -> hartex_eyre::eyre::Result<()> {
 
     log::trace!("loading environment variables");
     dotenv::dotenv()?;
+
+    let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
+    let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
+    let host = std::env::var("RABBITMQ_HOST")?;
+    let port = std::env::var("RABBITMQ_PORT")?;
+    let uri = format!("amqp://{}:{}@{}:{}", username, password, host, port);
+    let uri_log = format!("amqp://{}:<redacted>@{}:{}", username, host, port);
+
+    log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
+    let _ = Connection::connect(
+        &uri,
+        ConnectionProperties::default(),
+    )
+    .await?;
 
     Ok(())
 }

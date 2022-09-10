@@ -22,7 +22,7 @@
 pub use log::*;
 
 use log4rs::append::console::ConsoleAppender;
-use log4rs::config::{Appender, Config, Root};
+use log4rs::config::{Appender, Config, Logger, Root};
 use log4rs::encode::pattern::PatternEncoder;
 
 pub fn initialize() {
@@ -39,6 +39,8 @@ pub fn initialize() {
                 ),
             ),
         )
+        .logger(Logger::builder().build("async_io", LevelFilter::Off))
+        .logger(Logger::builder().build("polling", LevelFilter::Off))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))
         .expect("failed to build log4rs configuration");
 
