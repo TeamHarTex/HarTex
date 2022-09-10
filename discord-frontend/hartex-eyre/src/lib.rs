@@ -19,11 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+pub mod handler;
 pub mod hook;
 
 pub use eyre;
 
 pub fn initialize() -> Result<(), eyre::Report> {
-    hook::HookBuilder::new()
-        .install_hooks()
+    hook::HookBuilder::new().install_hooks()
 }

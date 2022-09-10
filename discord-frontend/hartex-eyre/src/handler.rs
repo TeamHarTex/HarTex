@@ -19,19 +19,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_core::dotenv;
-use hartex_core::log;
-use hartex_core::tokio;
+use std::error::Error;
+use std::fmt::{Formatter, Result as FmtResult};
 
-mod error;
+use backtrace::Backtrace;
 
-#[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::eyre::Result<()> {
-    hartex_eyre::initialize()?;
-    log::initialize();
+pub struct HookHandler {
+    pub(crate) backtrace: Backtrace,
+}
 
-    log::trace!("loading environment variables");
-    dotenv::dotenv()?;
+impl eyre::EyreHandler for HookHandler {
+    fn debug(&self, error: &(dyn Error + 'static), f: &mut Formatter<'_>) -> FmtResult {
+        // writeln!(f, "{error:?}")?;
 
-    Ok(())
+        Ok(())
+    }
 }
