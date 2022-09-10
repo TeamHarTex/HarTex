@@ -87,12 +87,14 @@ pub async fn main() -> hartex_eyre::Result<()> {
 
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
+    let resume_sessions = sessions::get_sessions().await?;
     let queue = queue::get_queue()?;
-    let (clusters, events) = clusters::get_clusters(shards, queue).await?;
+    let (clusters, events) = clusters::get_clusters(shards, queue, resume_sessions.clone()).await?;
 
     log::trace!(
-        "launching {} cluster(s) with {shards} shard(s)",
-        clusters.len()
+        "launching {} cluster(s) with {shards} shard(s); resuming {} session(s)",
+        clusters.len(),
+        resume_sessions.len(),
     );
     for (cluster, _) in clusters.clone().into_iter().zip(events.into_iter()) {
         let cluster_clone = cluster.clone();
@@ -103,7 +105,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
 
     signal::ctrl_c().await?;
 
-    log::trace!("shutting down resumably");
+    log::trace!("shutting down, storing resumable sessions");
     let mut sessions = HashMap::new();
     for cluster in clusters {
         for (key, value) in cluster.down_resumable() {
