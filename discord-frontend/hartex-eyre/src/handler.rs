@@ -54,16 +54,9 @@ impl eyre::EyreHandler for HookHandler {
                     continue;
                 }
 
-                if [
-                    "std",
-                    "core",
-                    "eyre",
-                    "backtrace",
-                    "hartex_eyre",
-                    "tokio",
-                ]
-                .iter()
-                .any(|prefix| format!("{symbol_name}").starts_with(prefix))
+                if ["std", "core", "eyre", "backtrace", "hartex_eyre", "tokio"]
+                    .iter()
+                    .any(|prefix| format!("{symbol_name}").starts_with(prefix))
                 {
                     continue;
                 }
