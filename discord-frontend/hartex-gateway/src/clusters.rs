@@ -19,17 +19,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use futures_util::Stream;
 use hartex_core::discord::gateway::cluster::ShardScheme;
 use hartex_core::discord::gateway::queue::Queue;
+use hartex_core::discord::gateway::shard::ResumeSession;
 use hartex_core::discord::gateway::{Cluster, Event, EventTypeFlags, Intents};
 use hartex_core::log;
 
 pub async fn get_clusters(
     num_shards: u64,
     queue: Arc<dyn Queue>,
+    resume_sessions: HashMap<u64, ResumeSession>,
 ) -> hartex_eyre::Result<(
     Vec<Arc<Cluster>>,
     Vec<impl Stream<Item = (u64, Event)> + Send + Sync + Unpin + 'static>,
@@ -60,6 +63,7 @@ pub async fn get_clusters(
             })
             .queue(queue.clone())
             .event_types(EventTypeFlags::all())
+            .resume_sessions(resume_sessions.clone())
             .build()
             .await?;
         clusters.push(Arc::new(cluster));
