@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
@@ -30,6 +31,7 @@ use lapin::{Connection, ConnectionProperties, ExchangeKind};
 mod clusters;
 mod error;
 mod queue;
+mod sessions;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
@@ -97,6 +99,16 @@ pub async fn main() -> hartex_eyre::Result<()> {
     }
 
     signal::ctrl_c().await?;
+
+    log::trace!("shutting down (resumable)");
+    let mut sessions = HashMap::new();
+    for cluster in clusters {
+        for (key, value) in cluster.down_resumable() {
+            sessions.insert(key, value);
+        }
+    }
+
+    sessions::set_sessions(sessions).await?;
 
     Ok(())
 }

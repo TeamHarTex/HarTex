@@ -51,7 +51,7 @@ pub async fn get_clusters(
             last_shard_index + num_base - 1
         };
 
-        log::trace!("cluster {i} with shards {last_shard_index}..{index}");
+        log::trace!("building cluster {i} with shards {last_shard_index}..{index}");
         let (cluster, event) = Cluster::builder(bot_token.clone(), Intents::all())
             .shard_scheme(ShardScheme::Range {
                 from: last_shard_index,
