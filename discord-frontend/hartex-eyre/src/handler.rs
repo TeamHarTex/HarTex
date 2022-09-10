@@ -21,8 +21,10 @@
 
 use std::error::Error;
 use std::fmt::{Formatter, Result as FmtResult};
+use std::path::Path;
+use std::thread;
 
-use backtrace::Backtrace;
+use backtrace::{Backtrace, SymbolName};
 
 pub struct HookHandler {
     pub(crate) backtrace: Backtrace,
@@ -30,8 +32,58 @@ pub struct HookHandler {
 
 impl eyre::EyreHandler for HookHandler {
     fn debug(&self, error: &(dyn Error + 'static), f: &mut Formatter<'_>) -> FmtResult {
-        // writeln!(f, "{error:?}")?;
+        write!(f, "\r\x1B[2K")?;
+        writeln!(
+            f,
+            "\x1B[0;31mError occurred in thread {:?}: {error:?}",
+            thread::current().name().unwrap_or("<unknown>")
+        )?;
 
-        Ok(())
+        for frame in self.backtrace.frames() {
+            for symbol in frame.symbols() {
+                let symbol_name = symbol.name().unwrap_or(SymbolName::new(b"<unknown>"));
+                if [
+                    "RtlUserThreadStart",
+                    "BaseThreadInitThunk",
+                    "__scrt_common_main_seh",
+                    "invoke_main",
+                    "main",
+                ]
+                .contains(&&*format!("{symbol_name}"))
+                {
+                    continue;
+                }
+
+                if [
+                    "std",
+                    "core",
+                    "eyre",
+                    "backtrace",
+                    "hartex_eyre",
+                    "tokio",
+                ]
+                .iter()
+                .any(|prefix| format!("{symbol_name}").starts_with(prefix))
+                {
+                    continue;
+                }
+
+                write!(f, "        at {symbol_name}",)?;
+                writeln!(
+                    f,
+                    "({}:{})",
+                    symbol
+                        .filename()
+                        .map(|path| path.display())
+                        .unwrap_or(Path::new("<unknown>").display()),
+                    symbol
+                        .lineno()
+                        .map(|lineno| lineno.to_string())
+                        .unwrap_or(String::from("<unknown>")),
+                )?;
+            }
+        }
+
+        write!(f, "\x1B[0m")
     }
 }
