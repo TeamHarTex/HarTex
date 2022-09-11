@@ -25,12 +25,13 @@ use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
 use hartex_core::tokio::signal;
-use lapin::options::{ExchangeDeclareOptions, QueueDeclareOptions};
+use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
 mod clusters;
 mod error;
+mod inbound;
 mod queue;
 mod sessions;
 
@@ -52,11 +53,11 @@ pub async fn main() -> hartex_eyre::Result<()> {
     log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
     let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
 
-    let channel_recv = amqp_connection.create_channel().await?;
-    let channel_send = amqp_connection.create_channel().await?;
+    let channel = amqp_connection.create_channel().await?;
+    let channel_outbound = amqp_connection.create_channel().await?;
 
     log::trace!("declaring amqp exchange");
-    channel_recv
+    channel
         .exchange_declare(
             "gateway",
             ExchangeKind::Topic,
@@ -71,10 +72,10 @@ pub async fn main() -> hartex_eyre::Result<()> {
         )
         .await?;
 
-    log::trace!("declaring amqp send queue");
-    channel_send
+    log::trace!("declaring amqp outbound queue");
+    channel_outbound
         .queue_declare(
-            "gateway.send",
+            "gateway.outbound",
             QueueDeclareOptions {
                 passive: false,
                 durable: true,
@@ -82,6 +83,30 @@ pub async fn main() -> hartex_eyre::Result<()> {
                 auto_delete: false,
                 nowait: false,
             },
+            FieldTable::default(),
+        )
+        .await?;
+
+    log::trace!("declaring and binding amqp inbound queue");
+    channel
+        .queue_declare(
+            "gateway.inbound",
+            QueueDeclareOptions {
+                passive: false,
+                durable: true,
+                exclusive: false,
+                auto_delete: false,
+                nowait: false,
+            },
+            FieldTable::default(),
+        )
+        .await?;
+    channel
+        .queue_bind(
+            "gateway.inbound",
+            "gateway",
+            "#",
+            QueueBindOptions::default(),
             FieldTable::default(),
         )
         .await?;
@@ -97,14 +122,24 @@ pub async fn main() -> hartex_eyre::Result<()> {
         clusters.len(),
         resume_sessions.len(),
     );
-    for (cluster, _) in clusters.clone().into_iter().zip(events.into_iter()) {
+    for (cluster_id, (cluster, events)) in clusters
+        .clone()
+        .into_iter()
+        .zip(events.into_iter())
+        .enumerate()
+    {
         let cluster_clone = cluster.clone();
         tokio::spawn(async move {
             cluster_clone.up().await;
         });
+
+        tokio::spawn(async move {
+            inbound::handle_inbound(cluster_id, events).await;
+        });
     }
 
     signal::ctrl_c().await?;
+    log::warn!("ctrl-c signal received");
 
     log::trace!("shutting down, storing resumable sessions");
     let mut sessions = HashMap::new();
