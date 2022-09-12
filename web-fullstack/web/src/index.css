@@ -84,3 +84,7 @@ section,
 header {
   @apply px-10 md:px-24 lg:px-60 2xl:px-96 py-20;
 }
+
+footer {
+  @apply bg-darker-grey;
+}
