@@ -2027,9 +2027,9 @@ dependencies = [
 
 [[package]]
 name = "twilight-gateway"
-version = "0.13.1"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5fd0fa1ef021ac6bc3027e2feae5743c8ee62072a56b0f947ed67bb5709fb02"
+checksum = "a3d86532689973fa62c54c06af32586ca7de71a70e3e9e1d10506614f151195b"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2050,9 +2050,9 @@ dependencies = [
 
 [[package]]
 name = "twilight-gateway-queue"
-version = "0.13.0"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b6fe5aa417d1705793a9588d6782880e7834432f01ff65abe67ef6f23d9dd53"
+checksum = "0083e5c38dfd74df50ef554e79a5487f7df6efa777a18556479a3c1e66f7f1b4"
 dependencies = [
  "tokio",
  "tracing",
