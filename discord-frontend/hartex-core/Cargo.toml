@@ -15,7 +15,7 @@ dotenv = { version = "0.15.0", optional = true }
 log = { version = "0.4.17", optional = true }
 log4rs = { version = "1.1.1", default-features = false, optional = true }
 tokio = { version = "1.21.0", optional = true }
-twilight-gateway = { version = "0.13.1", optional = true }
+twilight-gateway = { version = "0.13.0", optional = true }
 
 [features]
 async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thread"]
