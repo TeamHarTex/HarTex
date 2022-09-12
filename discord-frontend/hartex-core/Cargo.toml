@@ -1,0 +1,25 @@
+[package]
+name = "hartex_core"
+version = "0.1.0"
+edition = "2021"
+description = """
+The base library of the bot.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.65.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dotenv = { version = "0.15.0", optional = true }
+log = { version = "0.4.17", optional = true }
+log4rs = { version = "1.1.1", default-features = false, optional = true }
+tokio = { version = "1.21.0", optional = true }
+twilight-gateway = { version = "0.13.0", optional = true }
+
+[features]
+async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thread"]
+async-signal = ["tokio?/signal"]
+discord-gateway = ["dep:twilight-gateway"]
+environment = ["dep:dotenv"]
+logging-facilities = ["dep:log", "dep:log4rs", "log4rs?/console_appender"]

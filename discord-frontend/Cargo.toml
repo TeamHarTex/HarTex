@@ -1,16 +1,9 @@
 [workspace]
 members = [
-    "base",
-    "cache/base",
-    "cache/discord",
-    "env",
-    "event",
-    "ext",
-    "gateway",
-    "interactions",
-    "loadbal",
-    "manidb",
-    "model",
-    "rest",
-    "restreq",
+    "hartex-core",
+    "hartex-eyre",
+    "hartex-gateway"
 ]
+
+[profile.release]
+debug = true
