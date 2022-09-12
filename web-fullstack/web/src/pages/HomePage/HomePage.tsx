@@ -20,13 +20,11 @@
  */
 
 import { MetaTags } from '@redwoodjs/web'
-import Navbar from "src/components/Navbar/Navbar";
 
 const HomePage = () => {
   return (
     <main>
       <MetaTags title="Home" description="HarTex" />
-      <Navbar />
       <section className="flex justify-center items-center text-center xl:text-left">
         <div className="flex-1">
           <h1>

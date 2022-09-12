@@ -19,20 +19,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { IAdmonitionProps } from "@components/Admonition"
+import { ComponentType, ReactNode } from 'react'
+
+import type { IAdmonitionProps } from '@components/Admonition'
 import { clsx } from 'clsx'
-import { ComponentType, ReactNode } from "react"
 
 import './Admonition.styles.css'
 
 type AdmonitionTypeConfig = {
-  iconComponent: ComponentType,
-  title: ReactNode,
+  iconComponent: ComponentType
+  title: ReactNode
 }
 
 const WarningAdmonitionIcon = () => {
   return (
-    <svg className="admonition-icon inline-block h-[1.6em] w-[1.6em]" viewBox="0 0 16 16">
+    <svg
+      className="admonition-icon inline-block h-[1.6em] w-[1.6em]"
+      viewBox="0 0 16 16"
+    >
       <path
         fillRule="evenodd"
         d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"
@@ -44,12 +48,14 @@ const WarningAdmonitionIcon = () => {
 const configs: Record<IAdmonitionProps['type'], AdmonitionTypeConfig> = {
   warning: {
     iconComponent: WarningAdmonitionIcon,
-    title: "warning"
-  }
+    title: 'warning',
+  },
 }
 
 function extractAdmonitionConfig(admonitionType: string): AdmonitionTypeConfig {
-  const config = (configs as {[key: string]: AdmonitionTypeConfig})[admonitionType];
+  const config = (configs as { [key: string]: AdmonitionTypeConfig })[
+    admonitionType
+  ]
 
   return config ? config : configs.warning
 }
@@ -60,14 +66,12 @@ const Admonition = (props: IAdmonitionProps) => {
   const icon = props.icon ?? <admonitionConfig.iconComponent />
 
   return (
-    <div className={clsx("admonition", `admonition-${props.type}`)}>
+    <div className={clsx('admonition', `admonition-${props.type}`)}>
       <div className="admonition-heading uppercase mb-[0.3em]">
         <span className="inline-block align-middle mr-[0.4em]">{icon}</span>
         {title}
       </div>
-      <div>
-        {props.children}
-      </div>
+      <div>{props.children}</div>
     </div>
   )
 }

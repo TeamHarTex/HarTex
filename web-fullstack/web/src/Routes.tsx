@@ -19,13 +19,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Router, Route } from '@redwoodjs/router'
+import { Router, Route, Set } from '@redwoodjs/router'
+
+import DocumentationLayout from './layouts/DocumentationLayout/DocumentationLayout'
+import HomeLayout from './layouts/HomeLayout/HomeLayout'
 
 const Routes = () => {
   return (
     <Router>
-      <Route path="/documentation" page={DocumentationPage} name="documentation" />
-      <Route path="/" page={HomePage} name="home" />
+      <Set wrap={DocumentationLayout}>
+        <Route path="/documentation" page={DocumentationPage} name="documentation" />
+      </Set>
+      <Set wrap={HomeLayout}>
+        <Route path="/" page={HomePage} name="home" />
+      </Set>
       <Route notfound page={NotFoundPage} />
     </Router>
   )
