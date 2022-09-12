@@ -25,8 +25,6 @@ import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
 
-import Footer from './components/Footer/Footer'
-
 import 'windi.css'
 import './index.css'
 
@@ -35,7 +33,6 @@ const App = () => (
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
       <RedwoodApolloProvider>
         <Routes />
-        <Footer />
       </RedwoodApolloProvider>
     </RedwoodProvider>
   </FatalErrorBoundary>
