@@ -4,7 +4,7 @@ const DocumentationRedirectPage = () => {
   return (
     <>
       <Redirect to={routes.documentation({
-        "path...": "welcome"
+        "path": "welcome"
       })} />
     </>
   )
