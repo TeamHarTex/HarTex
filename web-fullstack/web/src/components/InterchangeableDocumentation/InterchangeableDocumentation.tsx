@@ -19,20 +19,45 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { IInterchangeableDocumentationProps } from '@components/InterchangeableDocumentation';
-import { default as axios } from 'axios';
+import { default as axios } from 'axios'
+import { useEffect,  useState } from 'react'
+import { useRemark } from 'react-remark'
+import remarkHarTexParagraphing from 'remark-hartex-paragraphing'
+
+import { IInterchangeableDocumentationProps } from '@components/InterchangeableDocumentation'
 
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
-  axios.get(props.markdownUrl)
-    .then((response) => {
-      console.log(response.data)
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+  const [reactContent, setMarkdownSource] = useRemark({
+    remarkPlugins: [
+      remarkHarTexParagraphing
+    ],
+    rehypeReactOptions: {
+      components: {
+        a: (props) => <a className="text-base text-blurple" {...props}></a>
+      }
+    }
+  })
+  const [markdown, setMarkdown] = useState("")
+
+  useEffect(() => {
+    async function getMarkdown() {
+      let response = await axios.get(props.markdownUrl)
+      if (response.status == 200)
+        setMarkdown(response.data)
+    }
+
+    if (!markdown)
+      getMarkdown()
+  }, [])
+
+  useEffect(() => {
+    console.log(markdown)
+    setMarkdownSource(markdown)
+  }, [markdown])
 
   return (
     <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
+      {reactContent}
     </div>
   )
 }
