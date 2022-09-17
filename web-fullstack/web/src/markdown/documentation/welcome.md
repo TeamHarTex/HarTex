@@ -8,13 +8,13 @@ notice. It is recommended to use this Documentation with caution.
 
 ### Welcome
 
-:::1
+:::br1
 
 You've found the HarTex Documentation! Whoever you may be,
 whether you're a HarTex user going through the documentation,
 or just someone intrigued wanting to take a deeper look, this
 Documentation's got you covered!
 
-:::2
+:::br2
 
 This Documentation is [publicly hosted at GitHub](https://github.com/TeamHarTex/HarTex).  Corrections and improvements are more than appreciated! <3
