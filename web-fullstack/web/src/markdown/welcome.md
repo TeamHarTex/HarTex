@@ -8,9 +8,9 @@ notice. It is recommended to use this Documentation with caution.
 
 # Welcome
 
-You&apos;ve found the HarTex Documentation! Whoever you may be,
-whether you&apos;re a HarTex user going through the documentation,
+You've found the HarTex Documentation! Whoever you may be,
+whether you're a HarTex user going through the documentation,
 or just someone intrigued wanting to take a deeper look, this
-Documentation&apos;s got you covered!
+Documentation's got you covered!
 
 This Documentation is [publicly hosted at GitHub](https://github.com/TeamHarTex/HarTex).  Corrections and improvements are more than appreciated! <3
