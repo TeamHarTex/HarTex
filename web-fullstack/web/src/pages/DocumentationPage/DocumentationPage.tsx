@@ -1,3 +1,4 @@
+import { useLocation } from "@redwoodjs/router";
 import { MetaTags } from '@redwoodjs/web'
 
 import Admonition from 'src/components/Admonition/Admonition'
@@ -5,6 +6,8 @@ import Admonition from 'src/components/Admonition/Admonition'
 import './DocumentationPage.styles.css'
 
 const DocumentationPage = () => {
+  const { pathname } = useLocation()
+
   return (
     <main>
       <MetaTags title="Documentation" description="HarTex" />
