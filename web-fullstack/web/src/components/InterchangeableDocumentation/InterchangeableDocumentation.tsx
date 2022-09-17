@@ -19,19 +19,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare module '@components/Admonition' {
-  import type { ReactNode } from 'react'
+import { IInterchangeableDocumentationProps } from '@components/InterchangeableDocumentation';
+import { default as axios } from 'axios';
 
-  export interface IAdmonitionProps {
-    readonly children: ReactNode
-    readonly type: 'warning'
-    readonly icon?: ReactNode
-    readonly title?: ReactNode
-  }
+const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
+  axios.get(props.markdownUrl)
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+
+  return (
+    <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
+    </div>
+  )
 }
 
-declare module '@components/InterchangeableDocumentation' {
-  export interface IInterchangeableDocumentationProps {
-    readonly markdownUrl: string
-  }
-}
+export default InterchangeableDocumentation

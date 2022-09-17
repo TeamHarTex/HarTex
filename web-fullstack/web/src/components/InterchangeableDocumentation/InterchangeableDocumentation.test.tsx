@@ -19,19 +19,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare module '@components/Admonition' {
-  import type { ReactNode } from 'react'
+import { render } from '@redwoodjs/testing/web'
 
-  export interface IAdmonitionProps {
-    readonly children: ReactNode
-    readonly type: 'warning'
-    readonly icon?: ReactNode
-    readonly title?: ReactNode
-  }
-}
+import InterchangeableDocumentation from './InterchangeableDocumentation'
 
-declare module '@components/InterchangeableDocumentation' {
-  export interface IInterchangeableDocumentationProps {
-    readonly markdownUrl: string
-  }
-}
+//   Improve this test with help from the Redwood Testing Doc:
+//    https://redwoodjs.com/docs/testing#testing-components
+
+describe('InterchangeableDocumentation', () => {
+  it('renders successfully', () => {
+    expect(() => {
+      render(<InterchangeableDocumentation />)
+    }).not.toThrow()
+  })
+})
