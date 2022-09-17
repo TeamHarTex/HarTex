@@ -19,19 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare module '@components/Admonition' {
-  import type { ReactNode } from 'react'
+import InterchangeableDocumentation from './InterchangeableDocumentation'
 
-  export interface IAdmonitionProps {
-    readonly children: ReactNode
-    readonly type: 'warning'
-    readonly icon?: ReactNode
-    readonly title?: ReactNode
-  }
+export const generated = (args) => {
+  return <InterchangeableDocumentation {...args} />
 }
 
-declare module '@components/InterchangeableDocumentation' {
-  export interface IInterchangeableDocumentationProps {
-    readonly markdownUrl: string
-  }
-}
+export default { title: 'Components/InterchangeableDocumentation' }
