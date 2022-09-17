@@ -19,10 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { clsx } from 'clsx'
 import { ComponentType, ReactNode } from 'react'
 
 import type { IAdmonitionProps } from '@components/Admonition'
-import { clsx } from 'clsx'
 
 import './Admonition.styles.css'
 

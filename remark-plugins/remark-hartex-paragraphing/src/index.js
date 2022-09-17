@@ -19,25 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-class User {
-  admin: boolean
-  avatar: string
-  bot: boolean
-  discriminator: string
-  guilds: Guild[] | null
-  guildsPromise: Promise<Guild[]> | null
-  id: string
-  username: string
+import { visit } from 'unist-util-visit'
 
-  constructor(data) {
-    this.admin = data.admin
-    this.avatar = data.avatar
-    this.bot = data.bot
-    this.discriminator = data.discriminator
-    this.id = data.id
-    this.username = data.username
-
-    this.guilds = null
-    this.guildsPromise = null
+export default function remarkHarTexParagraphing() {
+  return (tree) => {
+    visit(tree, "paragraph", (node) => {
+      visit(node, "text", (innerNode) => {
+        console.log(innerNode)
+      })
+    })
   }
 }
