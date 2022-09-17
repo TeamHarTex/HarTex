@@ -19,25 +19,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-class User {
-  admin: boolean
-  avatar: string
-  bot: boolean
-  discriminator: string
-  guilds: Guild[] | null
-  guildsPromise: Promise<Guild[]> | null
-  id: string
-  username: string
+import { ReactElement } from 'react';
 
-  constructor(data) {
-    this.admin = data.admin
-    this.avatar = data.avatar
-    this.bot = data.bot
-    this.discriminator = data.discriminator
-    this.id = data.id
-    this.username = data.username
+export function renderDocumentationMarkdown(markdownUrl: string): ReactElement {
+  fetch(markdownUrl)
+    .then((response) => {
+      if (response.ok) {
+        console.log(response.body)
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 
-    this.guilds = null
-    this.guildsPromise = null
-  }
+  return React.createElement(null, null, null)
 }
