@@ -36,7 +36,7 @@ const DocumentationPage = () => {
       <div className="flex overflow-hidden h-screen">
         <div className="flex-[0_0_350px] overflow-hidden bg-dark-grey"></div>
         <div className="flex-[1_1_1440px] overflow-hidden pr-[17px] flex items-center flex-col">
-          <InterchangeableDocumentation markdownUrl={`https://raw.githubusercontent.com/TeamHarTex/HarTex/nightly/web-fullstack/web/src/markdown${pathname}.md`} />
+          <InterchangeableDocumentation markdownUrl={`https://raw.githubusercontent.com/HTG-YT/HarTex-rust-discord-bot/nightly/web-fullstack/web/src/markdown${pathname}.md`} />
         </div>
       </div>
     </main>

@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Redirect, routes } from "@redwoodjs/router";
+import { Redirect, routes } from '@redwoodjs/router'
 
 const DocumentationRedirectPage = () => {
   return (
