@@ -2,11 +2,13 @@ import { useLocation } from "@redwoodjs/router";
 import { MetaTags } from '@redwoodjs/web'
 
 import Admonition from 'src/components/Admonition/Admonition'
+import { renderDocumentationMarkdown } from 'src/documentation/markdown-render';
 
 import './DocumentationPage.styles.css'
 
 const DocumentationPage = () => {
   const { pathname } = useLocation()
+  renderDocumentationMarkdown(`https://raw.githubusercontent.com/HTG-YT/HarTex-rust-discord-bot/nightly/web-fullstack/web/src/markdown${pathname}.md`)
 
   return (
     <main>
