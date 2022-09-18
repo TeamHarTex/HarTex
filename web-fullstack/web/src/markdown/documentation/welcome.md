@@ -16,6 +16,5 @@ or just someone intrigued wanting to take a deeper look, this
 Documentation's got you covered!
 
 :::br
-:::br
 
 This Documentation is [publicly hosted at GitHub](https://github.com/TeamHarTex/HarTex).  Corrections and improvements are more than appreciated! <3
