@@ -22,18 +22,21 @@
 import { default as axios } from 'axios'
 import { useEffect,  useState } from 'react'
 import { useRemark } from 'react-remark'
-import remarkHarTexParagraphing from 'remark-hartex-paragraphing'
+import { visit } from 'unist-util-visit'
 
 import { IInterchangeableDocumentationProps } from '@components/InterchangeableDocumentation'
 
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
   const [reactContent, setMarkdownSource] = useRemark({
     remarkPlugins: [
-      remarkHarTexParagraphing
+      remarkHarTexAdmonitions
+    ],
+    rehypePlugins: [
+      rehypeHarTexParagraphing,
     ],
     rehypeReactOptions: {
       components: {
-        a: (props) => <a className="text-base text-blurple" {...props}></a>
+        a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
       }
     }
   })
@@ -41,7 +44,7 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
 
   useEffect(() => {
     async function getMarkdown() {
-      let response = await axios.get(props.markdownUrl)
+      const response = await axios.get(props.markdownUrl)
       if (response.status == 200)
         setMarkdown(response.data)
     }
@@ -51,8 +54,11 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
   }, [])
 
   useEffect(() => {
-    console.log(markdown)
-    setMarkdownSource(markdown)
+    if (!markdown) {
+    }
+    else {
+      setMarkdownSource(markdown)
+    }
   }, [markdown])
 
   return (
@@ -60,6 +66,31 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
       {reactContent}
     </div>
   )
+}
+
+function remarkHarTexAdmonitions() {
+  function nodePredicate(node: any): boolean {
+    return true
+  }
+
+  return (tree) => {
+    visit(tree, nodePredicate, (node) => {
+    })
+  }
+}
+
+function rehypeHarTexParagraphing() {
+  function nodePredicate(node: any): boolean {
+    const { children, type } = node
+    return type === "element" && children[0].type === "text" && children[0].value === ":::br"
+  }
+
+  return (tree) => {
+    visit(tree, nodePredicate, (node) => {
+      node.children = []
+      node.tagName = "br"
+    })
+  }
 }
 
 export default InterchangeableDocumentation
