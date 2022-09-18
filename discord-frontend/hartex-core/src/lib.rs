@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(error_reporter)]
-
 #[cfg(feature = "environment")]
 pub use dotenv;
 #[cfg(feature = "async-runtime")]
