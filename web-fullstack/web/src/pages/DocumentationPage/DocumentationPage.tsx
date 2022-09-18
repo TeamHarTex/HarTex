@@ -19,13 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { useLocation } from '@redwoodjs/router';
+import { useLocation } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
-import Admonition from 'src/components/Admonition/Admonition'
-
 import './DocumentationPage.styles.css'
-import InterchangeableDocumentation from 'src/components/InterchangeableDocumentation/InterchangeableDocumentation';
+import InterchangeableDocumentation from 'src/components/InterchangeableDocumentation/InterchangeableDocumentation'
 
 const DocumentationPage = () => {
   const { pathname } = useLocation()
