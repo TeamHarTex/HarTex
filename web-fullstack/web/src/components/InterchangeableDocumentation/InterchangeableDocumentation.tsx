@@ -103,7 +103,6 @@ function remarkHarTexAdmonitions() {
 
         headingSpan.children = [
           admonitionTypeInformation.icon(),
-          admonitionTypeInformation.title,
         ]
 
         const heading = h('div')
@@ -111,7 +110,7 @@ function remarkHarTexAdmonitions() {
         headingData.hName = "div"
         headingData.hProperties = h('div', { class: "admonition-heading uppercase mb-[0.3em]"}).properties
 
-        heading.children = [headingSpan]
+        heading.children = [headingSpan, admonitionTypeInformation.title]
 
         const admonitionContent = h('div')
         admonitionContent.children = [...node.children]
