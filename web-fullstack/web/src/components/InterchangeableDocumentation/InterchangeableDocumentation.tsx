@@ -28,6 +28,9 @@ import { IInterchangeableDocumentationProps } from '@components/InterchangeableD
 
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
   const [reactContent, setMarkdownSource] = useRemark({
+    remarkPlugins: [
+      remarkHarTexAdmonitions
+    ],
     rehypePlugins: [
       rehypeHarTexParagraphing,
     ],
@@ -41,7 +44,7 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
 
   useEffect(() => {
     async function getMarkdown() {
-      let response = await axios.get(props.markdownUrl)
+      const response = await axios.get(props.markdownUrl)
       if (response.status == 200)
         setMarkdown(response.data)
     }
@@ -51,7 +54,11 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
   }, [])
 
   useEffect(() => {
-    setMarkdownSource(markdown)
+    if (!markdown) {
+    }
+    else {
+      setMarkdownSource(markdown)
+    }
   }, [markdown])
 
   return (
@@ -61,12 +68,21 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
   )
 }
 
+function remarkHarTexAdmonitions() {
+  function nodePredicate(node: any): boolean {
+    return true
+  }
+
+  return (tree) => {
+    visit(tree, nodePredicate, (node) => {
+    })
+  }
+}
+
 function rehypeHarTexParagraphing() {
   function nodePredicate(node: any): boolean {
-    if (node.type !== "element")
-      return false
-
-    return node.children[0].type === "text" && node.children[0].value === ":::br"
+    const { children, type } = node
+    return type === "element" && children[0].type === "text" && children[0].value === ":::br"
   }
 
   return (tree) => {
