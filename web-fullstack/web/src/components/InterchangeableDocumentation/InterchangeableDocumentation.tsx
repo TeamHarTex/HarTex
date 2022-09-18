@@ -84,7 +84,7 @@ function remarkHarTexAdmonitions() {
       },
       title: {
         type: "text",
-        value: "welcome"
+        value: "warning"
       }
     }
   }
