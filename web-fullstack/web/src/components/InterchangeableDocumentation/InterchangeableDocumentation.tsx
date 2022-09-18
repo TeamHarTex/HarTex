@@ -20,26 +20,19 @@
  */
 
 import { default as axios } from 'axios'
+import { clsx } from 'clsx'
+import { h, s } from 'hastscript'
+import { directiveFromMarkdown, directiveToMarkdown } from 'mdast-util-directive'
+import { directive } from 'micromark-extension-directive'
 import { useEffect,  useState } from 'react'
-import { useRemark } from 'react-remark'
+import ReactMarkdown from 'react-markdown'
 import { visit } from 'unist-util-visit'
 
 import { IInterchangeableDocumentationProps } from '@components/InterchangeableDocumentation'
 
+import './InterchangeableDocumentation.styles.css'
+
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
-  const [reactContent, setMarkdownSource] = useRemark({
-    remarkPlugins: [
-      remarkHarTexAdmonitions
-    ],
-    rehypePlugins: [
-      rehypeHarTexParagraphing,
-    ],
-    rehypeReactOptions: {
-      components: {
-        a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
-      }
-    }
-  })
   const [markdown, setMarkdown] = useState("")
 
   useEffect(() => {
@@ -53,43 +46,106 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
       getMarkdown()
   }, [])
 
-  useEffect(() => {
-    if (!markdown) {
-    }
-    else {
-      setMarkdownSource(markdown)
-    }
-  }, [markdown])
-
   return (
     <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
-      {reactContent}
+      <ReactMarkdown
+        children={markdown}
+        components={{
+          a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
+        }}
+        remarkPlugins={[remarkHarTexDirectives, remarkHarTexAdmonitions]}
+      />
     </div>
   )
 }
 
 function remarkHarTexAdmonitions() {
   function nodePredicate(node: any): boolean {
-    return true
+    const { type } = node
+    return type === "textDirective" || type === "leafDirective" || type === "containerDirective"
+  }
+
+  const admonitionTypes = {
+    'warning': {
+      icon: () => {
+        const path = h('path')
+        const pathData = path.data || (path.data = {})
+        pathData.hName = "path"
+        pathData.hProperties = h('path', { fillrule: 'evenodd', d: "M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z" }).properties
+
+        const svg = s('svg')
+        svg.children = [path]
+
+        const svgData = svg.data || (svg.data = {})
+        svgData.hName = "svg"
+        svgData.hProperties = s('svg', { class: "admonition-icon inline-block h-[1.6em] w-[1.6em]", viewbox: "0 0 16 16" }).properties
+
+        return svg
+      },
+      title: {
+        type: "text",
+        value: "welcome"
+      }
+    }
   }
 
   return (tree) => {
     visit(tree, nodePredicate, (node) => {
+      const { name } = node
+
+      if (Object.keys(admonitionTypes).includes(name)) {
+        const admonitionTypeInformation = admonitionTypes[name]
+
+        const headingSpan = h('span')
+        const headingSpanData = headingSpan.data || (headingSpan.data = {})
+        headingSpanData.hName = "span"
+        headingSpanData.hProperties = h('span', { class: "inline-block align-middle mr-[0.4em]" }).properties
+
+        headingSpan.children = [
+          admonitionTypeInformation.icon(),
+          admonitionTypeInformation.title,
+        ]
+
+        const heading = h('div')
+        const headingData = heading.data || (heading.data = {})
+        headingData.hName = "div"
+        headingData.hProperties = h('div', { class: "admonition-heading uppercase mb-[0.3em]"}).properties
+
+        heading.children = [headingSpan]
+
+        const admonitionContent = h('div')
+        admonitionContent.children = [...node.children]
+
+        const wrapper = h('div')
+        const wrapperData = wrapper.data || (wrapper.data = {})
+        wrapperData.hName = "div"
+        wrapperData.hProperties = h('div', { class: clsx('admonition', `admonition-${name}`) }).properties
+
+        wrapper.children = [heading, admonitionContent]
+
+        node.children = [wrapper]
+      }
+      else if (name === "br") {
+        const breaker = h('br')
+        const breakerData = breaker.data || (breaker.data = {})
+        breakerData.hName = "br"
+
+        node.children.splice(0, 0, breaker)
+      }
     })
   }
 }
 
-function rehypeHarTexParagraphing() {
-  function nodePredicate(node: any): boolean {
-    const { children, type } = node
-    return type === "element" && children[0].type === "text" && children[0].value === ":::br"
-  }
+function remarkHarTexDirectives() {
+  const data = this.data()
 
-  return (tree) => {
-    visit(tree, nodePredicate, (node) => {
-      node.children = []
-      node.tagName = "br"
-    })
+  add('micromarkExtensions', directive())
+  add('fromMarkdownExtensions', directiveFromMarkdown)
+  add('toMarkdownExtensions', directiveToMarkdown)
+
+  function add(field, value) {
+    const values = data[field] ? data[field] : (data[field] = [])
+    values.push(value)
   }
 }
 
