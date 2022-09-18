@@ -22,18 +22,18 @@
 import { default as axios } from 'axios'
 import { useEffect,  useState } from 'react'
 import { useRemark } from 'react-remark'
-import remarkHarTexParagraphing from 'remark-hartex-paragraphing'
+import { visit } from 'unist-util-visit'
 
 import { IInterchangeableDocumentationProps } from '@components/InterchangeableDocumentation'
 
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
   const [reactContent, setMarkdownSource] = useRemark({
-    remarkPlugins: [
-      remarkHarTexParagraphing
+    rehypePlugins: [
+      rehypeHarTexParagraphing,
     ],
     rehypeReactOptions: {
       components: {
-        a: (props) => <a className="text-base text-blurple" {...props}></a>
+        a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
       }
     }
   })
@@ -51,7 +51,6 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
   }, [])
 
   useEffect(() => {
-    console.log(markdown)
     setMarkdownSource(markdown)
   }, [markdown])
 
@@ -60,6 +59,22 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
       {reactContent}
     </div>
   )
+}
+
+function rehypeHarTexParagraphing() {
+  function nodePredicate(node: any): boolean {
+    if (node.type !== "element")
+      return false
+
+    return node.children[0].type === "text" && node.children[0].value === ":::br"
+  }
+
+  return (tree) => {
+    visit(tree, nodePredicate, (node) => {
+      node.children = []
+      node.tagName = "br"
+    })
+  }
 }
 
 export default InterchangeableDocumentation
