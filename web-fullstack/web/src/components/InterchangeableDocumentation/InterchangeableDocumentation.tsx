@@ -60,9 +60,14 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
 }
 
 function remarkHarTexPlugin() {
-  function nodePredicate(node: any): boolean {
+  function nodePredicate1(node: any): boolean {
     const { type } = node
     return type === "textDirective" || type === "leafDirective" || type === "containerDirective"
+  }
+
+  function nodePredicate2(node: any): boolean {
+    const { type } = node
+    return type === "heading"
   }
 
   const admonitionTypes = {
@@ -90,7 +95,7 @@ function remarkHarTexPlugin() {
   }
 
   return (tree) => {
-    visit(tree, nodePredicate, (node) => {
+    visit(tree, nodePredicate1, (node) => {
       const { name } = node
 
       if (Object.keys(admonitionTypes).includes(name)) {
@@ -131,6 +136,9 @@ function remarkHarTexPlugin() {
 
         node.children.splice(0, 0, breaker)
       }
+    })
+
+    visit(tree, nodePredicate2, (node) => {
     })
   }
 }
