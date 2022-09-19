@@ -53,13 +53,13 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
         components={{
           a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
         }}
-        remarkPlugins={[remarkHarTexDirectives, remarkHarTexAdmonitions]}
+        remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
       />
     </div>
   )
 }
 
-function remarkHarTexAdmonitions() {
+function remarkHarTexPlugin() {
   function nodePredicate(node: any): boolean {
     const { type } = node
     return type === "textDirective" || type === "leafDirective" || type === "containerDirective"
