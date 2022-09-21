@@ -34,35 +34,50 @@ import './InterchangeableDocumentation.styles.css'
 
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
   const [markdown, setMarkdown] = useState("")
+  const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
     async function getMarkdown() {
       const response = await axios.get(props.markdownUrl)
+            
+      if (response.status == 404)
+        setNotFound(true)
+
       if (response.status == 200)
         setMarkdown(response.data)
     }
+
+    if (notFound)
+      return
 
     if (!markdown)
       getMarkdown()
   }, [])
 
-  return (
-    <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
-      <ReactMarkdown
-        children={markdown}
-        components={{
-          a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
-        }}
-        remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
-      />
-    </div>
-  )
+  if (!notFound) {
+    return (
+      <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
+        <ReactMarkdown
+          children={markdown}
+          components={{
+            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
+          }}
+          remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
+        />
+      </div>
+    )
+  }
 }
 
 function remarkHarTexPlugin() {
-  function nodePredicate(node: any): boolean {
+  function nodePredicate1(node: any): boolean {
     const { type } = node
     return type === "textDirective" || type === "leafDirective" || type === "containerDirective"
+  }
+
+  function nodePredicate2(node: any): boolean {
+    const { type } = node
+    return type === "heading"
   }
 
   const admonitionTypes = {
@@ -90,7 +105,7 @@ function remarkHarTexPlugin() {
   }
 
   return (tree) => {
-    visit(tree, nodePredicate, (node) => {
+    visit(tree, nodePredicate1, (node) => {
       const { name } = node
 
       if (Object.keys(admonitionTypes).includes(name)) {
@@ -131,6 +146,9 @@ function remarkHarTexPlugin() {
 
         node.children.splice(0, 0, breaker)
       }
+    })
+
+    visit(tree, nodePredicate2, (node) => {
     })
   }
 }
