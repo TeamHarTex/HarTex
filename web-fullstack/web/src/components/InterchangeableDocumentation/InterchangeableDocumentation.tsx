@@ -34,29 +34,39 @@ import './InterchangeableDocumentation.styles.css'
 
 const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps) => {
   const [markdown, setMarkdown] = useState("")
+  const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
     async function getMarkdown() {
       const response = await axios.get(props.markdownUrl)
+            
+      if (response.status == 404)
+        setNotFound(true)
+
       if (response.status == 200)
         setMarkdown(response.data)
     }
+
+    if (notFound)
+      return
 
     if (!markdown)
       getMarkdown()
   }, [])
 
-  return (
-    <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
-      <ReactMarkdown
-        children={markdown}
-        components={{
-          a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
-        }}
-        remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
-      />
-    </div>
-  )
+  if (!notFound) {
+    return (
+      <div className="overflow-y-scroll max-w-screen-2xl p-10 flex-[1_1_auto]">
+        <ReactMarkdown
+          children={markdown}
+          components={{
+            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
+          }}
+          remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
+        />
+      </div>
+    )
+  }
 }
 
 function remarkHarTexPlugin() {
