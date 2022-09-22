@@ -19,24 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-.admonition {
-  @apply mb-4 p-4 border-l-6;
-  @apply rounded;
-}
-
-.admonition-heading {
-  @apply font-bold;
-}
-
-.admonition-icon {
-  @apply fill-white;
-}
-
-.admonition-warning {
-  @apply border-l-orange;
-  @apply bg-dark-orange;
-}
-
-h1 {
-  @apply text-5xl font-bold;
-}
+ h1 {
+    @apply text-7xl font-bold;
+  }
+  
+  h2 {
+    @apply text-6xl font-bold;
+  }
+  
+  h3 {
+    @apply text-4xl font-bold;
+  }

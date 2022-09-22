@@ -21,6 +21,8 @@
 
 import { MetaTags } from '@redwoodjs/web'
 
+import './HomePage.styles.css'
+
 const HomePage = () => {
   return (
     <main>
