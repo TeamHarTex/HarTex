@@ -72,14 +72,14 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
 }
 
 function rehypeHarTexPlugin() {
-  function nodePredicate(node: any): boolean {
+  function nodePredicate1(node: any): boolean {
     const { type, tagName } = node
-    return type === 'element' && tagName === 'a'
+    return type === 'element' && tagName === 'h1'
   }
 
   return (tree) => {
-    visit(tree, nodePredicate, (node) => {
-      console.log(node)
+    visit(tree, nodePredicate1, (node) => {
+      node.properties = { id: node.children[0].value.toLowerCase() }
     })
   }
 }
