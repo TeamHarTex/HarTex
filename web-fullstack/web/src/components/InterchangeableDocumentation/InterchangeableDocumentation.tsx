@@ -60,7 +60,7 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
         <ReactMarkdown
           children={markdown}
           components={{
-            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"></a>
+            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"/>
           }}
           remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
         />
@@ -149,6 +149,7 @@ function remarkHarTexPlugin() {
     })
 
     visit(tree, nodePredicate2, (node) => {
+      // todo: add pound referencing to documentation
     })
   }
 }
