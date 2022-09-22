@@ -37,6 +37,12 @@
   @apply bg-dark-orange;
 }
 
+.hash-link {
+  @apply pl-2;
+  @apply select-none;
+  @apply text-4xl text-blurple opacity-0;
+}
+
 h1 {
   @apply text-5xl font-bold;
 }

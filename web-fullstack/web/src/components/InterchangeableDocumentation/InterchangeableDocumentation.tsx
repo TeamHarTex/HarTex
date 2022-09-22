@@ -60,12 +60,27 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
         <ReactMarkdown
           children={markdown}
           components={{
-            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"/>
+            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"/>,
+            h1: (props) => <h1 className="group" {...props}/>
           }}
           remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
+          rehypePlugins={[rehypeHarTexPlugin]}
         />
       </div>
     )
+  }
+}
+
+function rehypeHarTexPlugin() {
+  function nodePredicate1(node: any): boolean {
+    const { type, tagName } = node
+    return type === 'element' && tagName === 'h1'
+  }
+
+  return (tree) => {
+    visit(tree, nodePredicate1, (node) => {
+      node.properties = { id: node.children[0].value.toLowerCase() }
+    })
   }
 }
 
@@ -149,7 +164,21 @@ function remarkHarTexPlugin() {
     })
 
     visit(tree, nodePredicate2, (node) => {
-      // todo: add pound referencing to documentation
+      const referenceName = node.children[0].value.toLowerCase()
+
+      const hashLink = h('a')
+      const hashLinkData = hashLink.data || (hashLink.data = {})
+      hashLinkData.hName = "a"
+      hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hash-link", href: `#${referenceName}` }).properties
+
+      hashLink.children = [
+        {
+          type: 'text',
+          value: "#"
+        }
+      ]
+
+      node.children.push(hashLink)
     })
   }
 }
