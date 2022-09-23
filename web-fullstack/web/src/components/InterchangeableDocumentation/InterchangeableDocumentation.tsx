@@ -61,7 +61,11 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
           children={markdown}
           components={{
             a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"/>,
-            h1: (props) => <h1 className="group" {...props}/>
+            h2: (props) => <h2 className="group" {...props}/>,
+            h3: (props) => <h3 className="group" {...props}/>,
+            h4: (props) => <h4 className="group" {...props}/>,
+            h5: (props) => <h5 className="group" {...props}/>,
+            h6: (props) => <h6 className="group" {...props}/>,
           }}
           remarkPlugins={[remarkHarTexDirectives, remarkHarTexPlugin]}
           rehypePlugins={[rehypeHarTexPlugin]}
@@ -74,7 +78,7 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
 function rehypeHarTexPlugin() {
   function nodePredicate1(node: any): boolean {
     const { type, tagName } = node
-    return type === 'element' && tagName === 'h1'
+    return type === "element" && ["h2", "h3", "h4", "h5", "h6"].includes(tagName)
   }
 
   return (tree) => {
