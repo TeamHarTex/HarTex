@@ -10,8 +10,6 @@ notice. It is recommended to use this Documentation with caution.
 
 :::
 
-:::br
-
 You've found the HarTex Documentation! Whoever you may be,
 whether you're a HarTex user going through the documentation,
 or just someone intrigued wanting to take a deeper look, this
