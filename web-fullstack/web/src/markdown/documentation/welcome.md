@@ -1,3 +1,7 @@
+# Welcome
+
+:::br
+
 :::warning
 
 The HarTex Documentation in its current state is highly
@@ -5,8 +9,6 @@ experimental and is subject to rapid change with or without prior
 notice. It is recommended to use this Documentation with caution.
 
 :::
-
-# Welcome
 
 :::br
 

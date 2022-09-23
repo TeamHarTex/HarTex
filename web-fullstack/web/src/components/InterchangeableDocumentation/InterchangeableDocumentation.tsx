@@ -91,8 +91,8 @@ function remarkHarTexPlugin() {
   }
 
   function nodePredicate2(node: any): boolean {
-    const { type } = node
-    return type === "heading"
+    const { type, tagName } = node
+    return type === "heading" && ["h2", "h3", "h4", "h5", "h6"].includes(tagName)
   }
 
   const admonitionTypes = {
@@ -169,7 +169,7 @@ function remarkHarTexPlugin() {
       const hashLink = h('a')
       const hashLinkData = hashLink.data || (hashLink.data = {})
       hashLinkData.hName = "a"
-      hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hash-link", href: `#${referenceName}` }).properties
+      hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hash-link transition-opacity duration-200", href: `#${referenceName}` }).properties
 
       hashLink.children = [
         {
