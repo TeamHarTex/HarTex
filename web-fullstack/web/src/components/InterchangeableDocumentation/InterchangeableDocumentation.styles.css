@@ -50,7 +50,7 @@ h1 {
 
 h2 {
   @apply text-3xl font-bold;
-  @apply mt-9 mb-5;
+  @apply mt-6 mb-5;
 }
 
 p {
