@@ -83,7 +83,7 @@ function rehypeHarTexPlugin() {
 
   return (tree) => {
     visit(tree, nodePredicate1, (node) => {
-      node.properties = { id: node.children[0].value.toLowerCase().replace(" ", "-") }
+      node.properties = { id: node.children[0].value.toLowerCase().replace(/\s+/g, "-") }
     })
   }
 }
@@ -161,7 +161,7 @@ function remarkHarTexPlugin() {
     })
 
     visit(tree, nodePredicate2, (node) => {
-      const referenceName = node.children[0].value.toLowerCase()
+      const referenceName = node.children[0].value.toLowerCase().replace(/\s+/g, "-")
 
       const hashLink = h('a')
       const hashLinkData = hashLink.data || (hashLink.data = {})
