@@ -19,8 +19,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
@@ -30,10 +28,8 @@ use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
 mod clusters;
-mod error;
 mod inbound;
 mod queue;
-mod sessions;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
@@ -113,34 +109,24 @@ pub async fn main() -> hartex_eyre::Result<()> {
 
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
-    let resume_sessions = sessions::get_sessions().await?;
     let queue = queue::get_queue()?;
-    let (clusters, events) = clusters::get_clusters(shards, queue, resume_sessions.clone()).await?;
+    let clusters = clusters::get_clusters(shards).await?;
 
     log::trace!(
-        "launching {} cluster(s) with {shards} shard(s); resuming {} session(s)",
+        "launching {} cluster(s) with {shards} shard(s)",
         clusters.len(),
-        resume_sessions.len(),
     );
-    for (cluster_id, (cluster, events)) in clusters
-        .clone()
-        .into_iter()
-        .zip(events.into_iter())
-        .enumerate()
-    {
-        let cluster_clone = cluster.clone();
-        tokio::spawn(async move {
-            cluster_clone.up().await;
-        });
 
+    for (cluster_id, mut cluster) in clusters.into_iter().enumerate() {
         tokio::spawn(async move {
-            inbound::handle_inbound(cluster_id, events).await;
+            inbound::handle_inbound(cluster_id, cluster).await
         });
     }
 
     signal::ctrl_c().await?;
     log::warn!("ctrl-c signal received");
 
+    /*
     log::trace!("shutting down, storing resumable sessions");
     let mut sessions = HashMap::new();
     for cluster in clusters {
@@ -149,7 +135,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         }
     }
 
-    sessions::set_sessions(sessions).await?;
+    sessions::set_sessions(sessions).await?;*/
 
     Ok(())
 }
