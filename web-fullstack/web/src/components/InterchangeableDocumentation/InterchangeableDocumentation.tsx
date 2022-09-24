@@ -60,7 +60,7 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
         <ReactMarkdown
           children={markdown}
           components={{
-            a: (props) => <a className="text-base text-blurple" {...props} target="_blank" rel="noreferrer"/>,
+            a: (props) => <a className="text-base text-blurple hover:underline" {...props} target="_blank" rel="noreferrer"/>,
             h2: (props) => <h2 className="group" {...props}/>,
             h3: (props) => <h3 className="group" {...props}/>,
             h4: (props) => <h4 className="group" {...props}/>,
@@ -166,7 +166,7 @@ function remarkHarTexPlugin() {
       const hashLink = h('a')
       const hashLinkData = hashLink.data || (hashLink.data = {})
       hashLinkData.hName = "a"
-      hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hash-link transition-opacity duration-200", href: `#${referenceName}` }).properties
+      hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hover:underline hash-link transition-opacity duration-200", href: `#${referenceName}` }).properties
 
       hashLink.children = [
         {
