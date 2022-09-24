@@ -158,13 +158,6 @@ function remarkHarTexPlugin() {
 
         node.children = [wrapper]
       }
-      else if (name === "br") {
-        const breaker = h('br')
-        const breakerData = breaker.data || (breaker.data = {})
-        breakerData.hName = "br"
-
-        node.children.splice(0, 0, breaker)
-      }
     })
 
     visit(tree, nodePredicate2, (node) => {
