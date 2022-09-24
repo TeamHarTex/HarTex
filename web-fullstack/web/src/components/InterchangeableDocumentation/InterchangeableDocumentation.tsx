@@ -83,7 +83,7 @@ function rehypeHarTexPlugin() {
 
   return (tree) => {
     visit(tree, nodePredicate1, (node) => {
-      node.properties = { id: node.children[0].value.toLowerCase() }
+      node.properties = { id: node.children[0].value.toLowerCase().replace(" ", "-") }
     })
   }
 }
