@@ -95,8 +95,8 @@ function remarkHarTexPlugin() {
   }
 
   function nodePredicate2(node: any): boolean {
-    const { type, tagName } = node
-    return type === "heading" && ["h2", "h3", "h4", "h5", "h6"].includes(tagName)
+    const { type, depth } = node
+    return type === "heading" && depth >= 2
   }
 
   const admonitionTypes = {
