@@ -60,7 +60,12 @@ const InterchangeableDocumentation = (props: IInterchangeableDocumentationProps)
         <ReactMarkdown
           children={markdown}
           components={{
-            a: (props) => <a className="text-base text-blurple hover:underline" {...props} target="_blank" rel="noreferrer"/>,
+            a: (props) => {
+              if (props.className && props.className.indexOf("hash-link") !== -1)
+                return <a className="text-base text-blurple hover:underline" {...props}/>
+              else
+                return <a className="text-base text-blurple hover:underline" {...props} target="_blank" rel="noreferrer"/>
+            },
             h2: (props) => <h2 className="group" {...props}/>,
             h3: (props) => <h3 className="group" {...props}/>,
             h4: (props) => <h4 className="group" {...props}/>,
