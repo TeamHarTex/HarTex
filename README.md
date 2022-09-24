@@ -4,7 +4,7 @@
 
 > ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
-> **Supported by [JetBrains](https://www.jetbrains.com/) (they are amazing!)**
+> **Supported by [JetBrains](https://www.jetbrains.com/) through their [Open Source Licenses](https://www.jetbrains.com/community/opensource/#support) (they are amazing!)**
 
 **HarTex is an advanced administration assistant and moderation bot for Discord; built to be stable, flexible and customizable.**
 
