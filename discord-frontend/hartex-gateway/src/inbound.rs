@@ -19,59 +19,41 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use futures_util::{Stream, StreamExt};
-use hartex_core::discord::gateway::Event;
+use futures_util::{StreamExt};
+use hartex_core::discord::gateway::{Event, Shard};
+use hartex_core::discord::gateway::stream::ShardEventStream;
 use hartex_core::log;
 
 pub async fn handle_inbound(
     cluster_id: usize,
-    mut events: impl Stream<Item = (u64, Event)> + Send + Sync + Unpin + 'static,
+    mut cluster: Vec<Shard>
 ) {
-    while let Some((shard_id, event)) = events.next().await {
-        match event {
-            Event::GatewayHello(heartbeat_interval) => {
-                log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_HELLO (heartbeat interval: {heartbeat_interval})");
-            }
-            Event::GatewayInvalidateSession(resumable) => {
-                log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_INVALID_SESSION (resumable: {resumable})");
-            }
-            Event::Ready(_) => {
-                log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_READY");
-            }
-            Event::Resumed => {
-                log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_RESUMED");
-            }
-            Event::ShardConnected(_) => {
-                log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_CONNECTED");
-            }
-            Event::ShardConnecting(payload) => {
-                log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_CONNECTING (gateway uri: {})", payload.gateway);
-            }
-            Event::ShardDisconnected(payload) => {
-                if let Some(code) = payload.code {
-                    let reason = payload.reason.unwrap_or_default();
-                    if !reason.is_empty() {
-                        log::warn!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_DISCONNECTED (code: {code}, reason: {reason})",);
-                    } else {
-                        log::warn!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_DISCONNECTED (code: {code})");
+    let mut stream = ShardEventStream::new(cluster.iter_mut());
+
+    while let Some((shard, result)) = stream.next().await {
+        match result {
+            Ok(event) => {
+                match event {
+                    Event::GatewayHello(heartbeat_interval) => {
+                        log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_HELLO (heartbeat interval: {heartbeat_interval})", shard_id = shard.id());
                     }
-                } else {
-                    log::warn!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_DISCONNECTED");
+                    Event::GatewayInvalidateSession(resumable) => {
+                        log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_INVALID_SESSION (resumable: {resumable})", shard_id = shard.id());
+                    }
+                    Event::Ready(_) => {
+                        log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_READY", shard_id = shard.id());
+                    }
+                    Event::Resumed => {
+                        log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_RESUMED", shard_id = shard.id());
+                    },
+                    _ => {}
                 }
             }
-            Event::ShardIdentifying(_) => {
-                log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_IDENTIFYING");
+            Err(error) => {
+                if error.is_fatal() {
+                    break
+                }
             }
-            Event::ShardReconnecting(_) => {
-                log::info!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_RECONNECTING");
-            }
-            Event::ShardResuming(payload) => {
-                log::info!(
-                    "[cluster {cluster_id} - shard {shard_id}] GATEWAY_RESUMING (sequence: {})",
-                    payload.seq
-                );
-            }
-            _ => {}
         }
     }
 }
