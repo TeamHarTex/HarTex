@@ -83,7 +83,7 @@ function rehypeHarTexPlugin() {
 
   return (tree) => {
     visit(tree, nodePredicate1, (node) => {
-      node.properties = { id: node.children[0].value.toLowerCase() }
+      node.properties = { id: node.children[0].value.toLowerCase().replace(" ", "-") }
     })
   }
 }
@@ -95,8 +95,8 @@ function remarkHarTexPlugin() {
   }
 
   function nodePredicate2(node: any): boolean {
-    const { type, tagName } = node
-    return type === "heading" && ["h2", "h3", "h4", "h5", "h6"].includes(tagName)
+    const { type, depth } = node
+    return type === "heading" && depth >= 2
   }
 
   const admonitionTypes = {
@@ -157,13 +157,6 @@ function remarkHarTexPlugin() {
         wrapper.children = [heading, admonitionContent]
 
         node.children = [wrapper]
-      }
-      else if (name === "br") {
-        const breaker = h('br')
-        const breakerData = breaker.data || (breaker.data = {})
-        breakerData.hName = "br"
-
-        node.children.splice(0, 0, breaker)
       }
     })
 

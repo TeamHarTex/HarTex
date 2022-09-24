@@ -45,4 +45,15 @@
 
 h1 {
   @apply text-5xl font-bold;
+  @apply mb-[18px];
+}
+
+h2 {
+  @apply text-3xl font-bold;
+  @apply mt-9 mb-5;
+}
+
+.admonition p {
+  @apply text-1xl;
+  @apply mt-[18px];
 }
