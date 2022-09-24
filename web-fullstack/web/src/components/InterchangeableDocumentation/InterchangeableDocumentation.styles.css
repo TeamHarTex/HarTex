@@ -53,7 +53,6 @@ h2 {
   @apply mt-9 mb-5;
 }
 
-.admonition p {
-  @apply text-1xl;
+p {
   @apply mt-[18px];
 }
