@@ -20,8 +20,8 @@
  */
 
 use futures_util::StreamExt;
-use hartex_core::log;
 use hartex_core::discord::gateway::{stream, Config, EventTypeFlags, Intents, Shard};
+use hartex_core::log;
 
 pub async fn get_clusters(num_shards: u64) -> hartex_eyre::Result<Vec<Vec<Shard>>> {
     let num_clusters = std::env::var("NUM_CLUSTERS")?.parse::<u64>()?;

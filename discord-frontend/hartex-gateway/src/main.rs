@@ -118,9 +118,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
     );
 
     for (cluster_id, mut cluster) in clusters.into_iter().enumerate() {
-        tokio::spawn(async move {
-            inbound::handle_inbound(cluster_id, cluster).await
-        });
+        tokio::spawn(async move { inbound::handle_inbound(cluster_id, cluster).await });
     }
 
     signal::ctrl_c().await?;
