@@ -19,39 +19,81 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::sync::Arc;
+
 use futures_util::StreamExt;
 use hartex_core::discord::gateway::{stream, Config, EventTypeFlags, Intents, Shard};
+use hartex_core::discord::gateway::queue::Queue;
+use hartex_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
+use hartex_core::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use hartex_core::log;
 
-pub async fn get_clusters(num_shards: u64) -> hartex_eyre::Result<Vec<Vec<Shard>>> {
+pub async fn get_clusters(num_shards: u64, queue: Arc<dyn Queue>) -> hartex_eyre::Result<Vec<(u64, Vec<Shard>)>> {
     let num_clusters = std::env::var("NUM_CLUSTERS")?.parse::<u64>()?;
-    let num_base = num_shards / num_clusters;
-    let num_extra = num_shards % num_clusters;
+    let shard_per_cluster = num_shards.div_ceil(num_clusters);
+    let remaining_shards = num_shards % num_clusters;
 
     let bot_token = std::env::var("BOT_TOKEN")?;
 
-    let mut last_shard_index = std::env::var("SHARDS_START_INDEX")?.parse::<u64>()?;
+    let mut shard_start_index = std::env::var("SHARDS_START_INDEX")?.parse::<u64>()?;
 
     let mut clusters = Vec::with_capacity(num_clusters as usize);
     for i in 0..num_clusters {
-        let index = if i < num_extra {
-            last_shard_index + num_base
-        } else {
-            last_shard_index + num_base - 1
-        };
+        let total = shard_start_index + shard_per_cluster;
 
-        log::trace!("building cluster {i} with shards {last_shard_index}..{index}");
-        let cluster = stream::start_cluster(last_shard_index, 1, index, |shard_id| {
+        log::trace!("building cluster {i} with shards {shard_start_index}..{total}");
+        let cluster = stream::start_cluster(shard_start_index, 1, total, |shard_id| {
             Config::builder(bot_token.clone(), Intents::all())
                 .event_types(EventTypeFlags::all())
+                .presence(UpdatePresencePayload {
+                    activities: vec![
+                        Activity {
+                            application_id: None,
+                            assets: None,
+                            buttons: vec![],
+                            created_at: None,
+                            details: None,
+                            emoji: None,
+                            flags: None,
+                            id: None,
+                            instance: None,
+                            kind: ActivityType::Watching,
+                            name: format!("development | shard {}", shard_id.number()),
+                            party: None,
+                            secrets: None,
+                            state: None,
+                            timestamps: None,
+                            url: None
+                        }
+                    ],
+                    afk: false,
+                    since: None,
+                    status: Status::Online
+                })
+                .queue(queue.clone())
                 .build()
         })
-        .filter_map(|shard| async move { shard.ok() })
+        .filter_map(|result| async move { result.ok() })
         .collect::<Vec<_>>()
         .await;
+        clusters.push((i, cluster));
+        shard_start_index = total;
+    }
 
-        clusters.push(cluster);
-        last_shard_index = index + 1;
+    if remaining_shards > 0 {
+        log::trace!(
+            "building cluster {num_clusters} with shards {shard_start_index}..{remaining_shards}"
+        );
+        let cluster = stream::start_cluster(shard_start_index, 1, remaining_shards, |_| {
+            Config::builder(bot_token.clone(), Intents::all())
+                .event_types(EventTypeFlags::all())
+                .queue(queue.clone())
+                .build()
+        })
+        .filter_map(|result| async move { result.ok() })
+        .collect::<Vec<_>>()
+        .await;
+        clusters.push((num_clusters, cluster));
     }
 
     Ok(clusters)
