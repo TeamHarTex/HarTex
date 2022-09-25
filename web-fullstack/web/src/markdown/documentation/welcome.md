@@ -16,6 +16,16 @@ Documentation's got you covered!
 This Documentation is [publicly hosted at GitHub](https://github.com/TeamHarTex/HarTex).
 Corrections and improvements are more than appreciated! <3
 
+## Documentation Organization
+
+This Documentation consists of two parts: the [Usage Documentation]() and [Contribution Documentation]().
+
+The [Usage Documentation]() contains thorough documentation for the usage of HarTex as well as comprehensive
+documentation for the Configuration DSL.
+
+The [Contribution Documentation]() contains in-depth documentation for the inner-workings of HarTex and its
+internal architecture as resources for contributors to get started relatively easier.
+
 ## Bug Reporting
 
 If you believe you're experiencing a bug with the bot or want to report incorrect
