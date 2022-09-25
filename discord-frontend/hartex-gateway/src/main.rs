@@ -19,10 +19,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(int_roundings)]
+
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
 use hartex_core::tokio::signal;
+use hartex_core::tokio::task::LocalSet;
 use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
@@ -110,30 +113,24 @@ pub async fn main() -> hartex_eyre::Result<()> {
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::get_queue()?;
-    let clusters = clusters::get_clusters(shards).await?;
+    let clusters = clusters::get_clusters(shards, queue.clone()).await?;
 
     log::trace!(
         "launching {} cluster(s) with {shards} shard(s)",
         clusters.len(),
     );
 
-    for (cluster_id, mut cluster) in clusters.into_iter().enumerate() {
-        tokio::spawn(async move { inbound::handle_inbound(cluster_id, cluster).await });
+    let local = LocalSet::new();
+    for (cluster_id, cluster) in clusters {
+        local.spawn_local(
+            async move { inbound::handle_inbound(cluster_id as usize, cluster).await },
+        );
     }
+
+    local.await;
 
     signal::ctrl_c().await?;
-    log::warn!("ctrl-c signal received");
-
-    /*
-    log::trace!("shutting down, storing resumable sessions");
-    let mut sessions = HashMap::new();
-    for cluster in clusters {
-        for (key, value) in cluster.down_resumable() {
-            sessions.insert(key, value);
-        }
-    }
-
-    sessions::set_sessions(sessions).await?;*/
+    log::warn!("ctrl-c signal received, shutting dowm");
 
     Ok(())
 }
