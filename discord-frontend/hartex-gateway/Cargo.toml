@@ -11,7 +11,7 @@ rust-version = "1.66.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_core = { path = "../hartex-core", features = ["async-runtime", "async-signal", "discord-gateway", "environment", "logging-facilities"] }
+hartex_core = { path = "../hartex-core", features = ["async-runtime", "async-signal", "discord-model", "discord-gateway", "environment", "logging-facilities"] }
 hartex_eyre = { path = "../hartex-eyre" }
 
 futures-util = "0.3.24"

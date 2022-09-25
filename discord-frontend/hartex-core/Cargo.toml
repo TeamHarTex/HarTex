@@ -16,10 +16,12 @@ log = { version = "0.4.17", optional = true }
 log4rs = { version = "1.1.1", default-features = false, optional = true }
 tokio = { version = "1.21.1", optional = true }
 twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git", branch = "next", optional = true }
+twilight-model = { git = "https://github.com/twilight-rs/twilight.git", branch = "next", optional = true }
 
 [features]
 async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thread"]
 async-signal = ["tokio?/signal"]
 discord-gateway = ["dep:twilight-gateway"]
+discord-model = ["dep:twilight-model"]
 environment = ["dep:dotenv"]
 logging-facilities = ["dep:log", "dep:log4rs", "log4rs?/console_appender"]

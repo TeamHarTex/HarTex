@@ -31,21 +31,21 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
         match result {
             Ok(event) => match event {
                 Event::GatewayHello(heartbeat_interval) => {
-                    log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_HELLO (heartbeat interval: {heartbeat_interval})", shard_id = shard.id());
+                    log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_HELLO (heartbeat interval: {heartbeat_interval})", shard_id = shard.id().number());
                 }
                 Event::GatewayInvalidateSession(resumable) => {
-                    log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_INVALID_SESSION (resumable: {resumable})", shard_id = shard.id());
+                    log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_INVALID_SESSION (resumable: {resumable})", shard_id = shard.id().number());
                 }
                 Event::Ready(_) => {
                     log::info!(
                         "[cluster {cluster_id} - shard {shard_id}] GATEWAY_READY",
-                        shard_id = shard.id()
+                        shard_id = shard.id().number()
                     );
                 }
                 Event::Resumed => {
                     log::info!(
                         "[cluster {cluster_id} - shard {shard_id}] GATEWAY_RESUMED",
-                        shard_id = shard.id()
+                        shard_id = shard.id().number()
                     );
                 }
                 _ => {}
