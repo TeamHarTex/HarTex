@@ -21,6 +21,7 @@
 
 #![feature(int_roundings)]
 
+use futures_util::FutureExt;
 use hartex_core::dotenv;
 use hartex_core::log;
 use hartex_core::tokio;
@@ -127,10 +128,13 @@ pub async fn main() -> hartex_eyre::Result<()> {
         );
     }
 
-    local.await;
-
-    signal::ctrl_c().await?;
-    log::warn!("ctrl-c signal received, shutting dowm");
+    let ctrlc = signal::ctrl_c();
+    futures_util::select! {
+        _ = local.fuse() => {},
+        _ = ctrlc.fuse() => {
+            log::warn!("ctrl-c signal received, shutting down")
+        }
+    };
 
     Ok(())
 }
