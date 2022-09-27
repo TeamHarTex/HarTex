@@ -85,7 +85,8 @@ pub async fn get_clusters(
         log::trace!(
             "building cluster {num_clusters} with shards {shard_start_index}..{remaining_shards}"
         );
-        let cluster = stream::start_cluster(shard_start_index, 1, remaining_shards, |_| {
+        let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse()?;
+        let cluster = stream::start_cluster(shard_start_index, concurrency, remaining_shards, |_| {
             Config::builder(bot_token.clone(), Intents::all())
                 .event_types(EventTypeFlags::all())
                 .queue(queue.clone())
