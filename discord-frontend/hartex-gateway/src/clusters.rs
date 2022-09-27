@@ -86,15 +86,16 @@ pub async fn get_clusters(
             "building cluster {num_clusters} with shards {shard_start_index}..{remaining_shards}"
         );
         let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse()?;
-        let cluster = stream::start_cluster(shard_start_index, concurrency, remaining_shards, |_| {
-            Config::builder(bot_token.clone(), Intents::all())
-                .event_types(EventTypeFlags::all())
-                .queue(queue.clone())
-                .build()
-        })
-        .filter_map(|result| async move { result.ok() })
-        .collect::<Vec<_>>()
-        .await;
+        let cluster =
+            stream::start_cluster(shard_start_index, concurrency, remaining_shards, |_| {
+                Config::builder(bot_token.clone(), Intents::all())
+                    .event_types(EventTypeFlags::all())
+                    .queue(queue.clone())
+                    .build()
+            })
+            .filter_map(|result| async move { result.ok() })
+            .collect::<Vec<_>>()
+            .await;
         clusters.push((num_clusters, cluster));
     }
 
