@@ -132,7 +132,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
     futures_util::select! {
         _ = local.fuse() => {},
         _ = ctrlc.fuse() => {
-            log::warn!("ctrl-c signal received, shutting down")
+            log::warn!("ctrl-c signal received, shutting down");
         }
     };
 
