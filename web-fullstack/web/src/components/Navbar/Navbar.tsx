@@ -46,7 +46,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="/documentation" type="button">
+            <a href="/documentation/welcome" type="button">
               <i className="fa-solid fa-book"></i>
             </a>
           </li>
