@@ -27,7 +27,6 @@ import HomeLayout from './layouts/HomeLayout/HomeLayout'
 const Routes = () => {
   return (
     <Router>
-      <Route path="/documentation" page={DocumentationRedirectPage} name="documentationRedirect" />
       <Set wrap={DocumentationLayout}>
         <Route path="/documentation/{path...}" page={DocumentationPage} name="documentation" />
       </Set>
