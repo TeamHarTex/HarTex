@@ -22,6 +22,7 @@
 use futures_util::StreamExt;
 use hartex_core::discord::gateway::stream::ShardEventStream;
 use hartex_core::discord::gateway::{Event, Shard};
+use hartex_core::discord::model::gateway::payload::incoming::{Hello, Ready};
 use hartex_core::log;
 
 pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
@@ -30,7 +31,7 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
     while let Some((shard, result)) = stream.next().await {
         match result {
             Ok(event) => match event {
-                Event::GatewayHello(heartbeat_interval) => {
+                Event::GatewayHello(Hello { heartbeat_interval }) => {
                     log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_HELLO (heartbeat interval: {heartbeat_interval})", shard_id = shard.id().number());
                 }
                 Event::GatewayInvalidateSession(resumable) => {
