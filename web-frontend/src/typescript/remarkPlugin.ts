@@ -73,7 +73,7 @@ export function remarkHarTexPlugin() {
                 headingSpanData.hProperties = h('span', { class: "inline-block align-middle mr-[0.4em]" }).properties
 
                 headingSpan.children = [
-                admonitionTypeInformation.icon(),
+                    admonitionTypeInformation.icon(),
                 ]
 
                 const heading = h('div')
@@ -111,7 +111,7 @@ export function remarkHarTexPlugin() {
                     value: "#"
                 }
             ]
-
+            
             node.children.push(hashLink)
         })
     }
