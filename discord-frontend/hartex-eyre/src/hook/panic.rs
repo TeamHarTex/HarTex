@@ -21,6 +21,7 @@
 
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::panic::{self, PanicInfo};
+use std::thread;
 
 use backtrace::Backtrace;
 
@@ -52,6 +53,15 @@ pub struct PanicReport<'a> {
 
 impl Display for PanicReport<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        todo!()
+        write!(f, "\r\x1B[2K")?;
+
+        writeln!(
+            f,
+            "\x1B[0;31mPanic occurred in thread {:?}: {}",
+            thread::current().name().unwrap_or("<unknown>"),
+            self.panic_info.payload().downcast_ref::<&str>().unwrap_or(&"Box<dyn Any>")
+        )?;
+
+        write!(f, "\x1B[0m")
     }
 }
