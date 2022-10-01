@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use crate::hook::panic::PanicHook;
 use self::eyre::EyreHook;
 
 mod eyre;
@@ -32,14 +33,15 @@ impl HookBuilder {
     }
 
     pub fn install_hooks(self) -> Result<(), ::eyre::Report> {
-        let eyre_hook = self.try_into_hook();
+        let (eyre_hook, panic_hook) = self.try_into_hooks();
         eyre_hook.install_hook()?;
+        panic_hook.install_hook();
 
         Ok(())
     }
 
-    pub fn try_into_hook(self) -> EyreHook {
-        EyreHook
+    pub fn try_into_hooks(self) -> (EyreHook, PanicHook) {
+        (EyreHook, PanicHook)
     }
 }
 
