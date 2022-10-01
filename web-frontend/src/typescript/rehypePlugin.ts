@@ -22,14 +22,29 @@
 import { visit } from 'unist-util-visit'
 
 export function rehypeHarTexPlugin() {
-    function nodePredicate(node: any): boolean {
+    function nodePredicate1(node: any): boolean {
         const { tagName } = node
         return tagName === "h2"
     }
 
+    function nodePredicate2(node: any): boolean {
+        const { tagName } = node
+        return tagName === "a"
+    }
+
     return (tree) => {
-        visit(tree, nodePredicate, (node) => {
+        visit(tree, nodePredicate1, (node) => {
             node.properties.class = "group"
+        })
+
+        visit(tree, nodePredicate2, (node) => {
+            if (node.properties.className && node.properties.className.indexOf("hash-link") != -1) {
+                node.properties.className.push.apply(node.properties.className, ["text-blurple", "hover:underline"])
+            } else {
+                node.properties.className = ["text-base", "text-blurple", "hover:underline"]
+                node.properties.target = "_blank"
+                node.properties.rel = "noreferrer"
+            }
         })
     }
 }
