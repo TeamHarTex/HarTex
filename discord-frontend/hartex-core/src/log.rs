@@ -49,6 +49,7 @@ pub fn initialize() {
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_gateway", LevelFilter::Off))
+        .logger(Logger::builder().build("twilight_model", LevelFilter::Off))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))
         .expect("failed to build log4rs configuration");
 
