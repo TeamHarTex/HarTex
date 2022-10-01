@@ -30,7 +30,6 @@ export function rehypeHarTexPlugin() {
     return (tree) => {
         visit(tree, nodePredicate, (node) => {
             node.properties.class = "group"
-            console.log(node)
         })
     }
 }
