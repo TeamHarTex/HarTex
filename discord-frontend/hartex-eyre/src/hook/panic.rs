@@ -19,24 +19,49 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt::{Formatter, Result as FmtResult};
+use std::fmt::{Display, Formatter, Result as FmtResult};
+use std::panic::{self, PanicInfo};
 use std::path::Path;
 use std::thread;
 
 use backtrace::{Backtrace, SymbolName};
 
-pub struct HookHandler {
-    pub(crate) backtrace: Backtrace,
+pub struct PanicHook;
+
+impl PanicHook {
+    pub fn install_hook(self) {
+        panic::set_hook(self.into_panic_hook())
+    }
+
+    pub fn into_panic_hook(self) -> Box<dyn Fn(&PanicInfo<'_>) + Send + Sync + 'static> {
+        Box::new(move |panic_info| eprintln!("{}", self.report(panic_info)))
+    }
+
+    pub(crate) fn report<'a>(&'a self, panic_info: &'a PanicInfo<'a>) -> PanicReport<'a> {
+        PanicReport {
+            backtrace: Backtrace::new(),
+            panic_info,
+        }
+    }
 }
 
-impl eyre::EyreHandler for HookHandler {
-    fn debug(&self, error: &(dyn Error + 'static), f: &mut Formatter<'_>) -> FmtResult {
+pub struct PanicReport<'a> {
+    backtrace: Backtrace,
+    panic_info: &'a PanicInfo<'a>,
+}
+
+impl Display for PanicReport<'_> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "\r\x1B[2K")?;
+
         writeln!(
             f,
-            "\x1B[0;31mError occurred in thread {:?}: {error:?}",
-            thread::current().name().unwrap_or("<unknown>")
+            "\x1B[0;31mPanic occurred in thread {:?}: {}",
+            thread::current().name().unwrap_or("<unknown>"),
+            self.panic_info
+                .payload()
+                .downcast_ref::<&str>()
+                .unwrap_or(&"Box<dyn Any>")
         )?;
 
         for frame in self.backtrace.frames() {
@@ -56,7 +81,7 @@ impl eyre::EyreHandler for HookHandler {
 
                 if ["std", "core", "eyre", "backtrace", "hartex_eyre"]
                     .iter()
-                    .any(|prefix| format!("{symbol_name}").starts_with(prefix))
+                    .any(|prefix| format!("{symbol_name}").contains(prefix))
                 {
                     continue;
                 }
@@ -77,6 +102,8 @@ impl eyre::EyreHandler for HookHandler {
             }
         }
 
+        writeln!(f, "\nNote: this is an internal error.")?;
+        writeln!(f, "Help: please report this issue at https://github.com/TeamHarTex/HarTex/issues/new?assignees=&labels=Bot%3A+Bug%2CBot%3A+Internal+Error&template=internal-error.yml")?;
         write!(f, "\x1B[0m")
     }
 }
