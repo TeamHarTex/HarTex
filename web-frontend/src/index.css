@@ -1,0 +1,78 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+ *
+ * This file is part of HarTex.
+ *
+ * HarTex
+ * Copyright (c) 2021-2022 HarTex Project Developers
+ *
+ * HarTex is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HarTex is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along
+ * with HarTex. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap');
+
+::-webkit-scrollbar {
+    @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-grey;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-white rounded-md;
+}
+
+* {
+@apply m-0 p-0 outline-none text-white;
+    font-family: 'Raleway', sans-serif;
+}
+
+body {
+    @apply w-full h-full bg-grey;
+}
+
+button {
+    @apply px-10 py-3 select-none;
+    @apply transition ease-in-out font-medium rounded-md;
+    @apply bg-blurple hover:bg-dark-blurple;
+}
+
+br {
+    @apply select-none;
+}
+
+a, i {
+    @apply text-xl;
+}
+
+nav ul li {
+    @apply inline-block px-7;
+}
+
+nav ul li i {
+    @apply cursor-pointer;
+}
+
+section {
+    @apply min-h-screen;
+}
+
+section,
+header {
+    @apply px-10 md:px-24 lg:px-60 2xl:px-96 py-20;
+}
+
+footer {
+    @apply bg-darker-grey;
+}
