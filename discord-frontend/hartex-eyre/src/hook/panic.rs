@@ -102,6 +102,8 @@ impl Display for PanicReport<'_> {
             }
         }
 
+        writeln!(f, "\nNote: this is an internal error.")?;
+        writeln!(f, "Help: please report this issue at https://github.com/TeamHarTex/HarTex/issues/new?assignees=&labels=Bot%3A+Bug%2CBot%3A+Internal+Error&template=internal-error.yml")?;
         write!(f, "\x1B[0m")
     }
 }
