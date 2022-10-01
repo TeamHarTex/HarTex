@@ -24,12 +24,14 @@ import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import tailwind from '@astrojs/tailwind'
 
+import {rehypeHarTexPlugin} from './src/typescript/rehypePlugin'
 import {remarkHarTexPlugin, remarkHarTexDirectives} from './src/typescript/remarkPlugin'
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [mdx(), react(), tailwind()],
   markdown: {
+    rehypePlugins: [rehypeHarTexPlugin],
     remarkPlugins: [remarkHarTexPlugin, remarkHarTexDirectives]
   }
 })
