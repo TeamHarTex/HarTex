@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fmt::{Display, Formatter, Result as FmtResult}
+use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::panic::{self, PanicInfo};
 
 use backtrace::Backtrace;
@@ -32,16 +32,14 @@ impl PanicHook {
     }
 
     pub fn into_panic_hook(self) -> Box<dyn Fn(&PanicInfo<'_>) + Send + Sync + 'static> {
-        Box::new(move |panic_info| {
-            eprintln!("{}", self.report(panic_info))
-        })
+        Box::new(move |panic_info| eprintln!("{}", self.report(panic_info)))
     }
 
     pub(crate) fn report<'a>(&'a self, panic_info: &'a PanicInfo<'a>) -> PanicReport<'a> {
         PanicReport {
             backtrace: Backtrace::new(),
             hook: self,
-            panic_info
+            panic_info,
         }
     }
 }
@@ -49,7 +47,7 @@ impl PanicHook {
 pub struct PanicReport<'a> {
     backtrace: Backtrace,
     hook: &'a PanicHook,
-    panic_info: &'a PanicInfo<'a>
+    panic_info: &'a PanicInfo<'a>,
 }
 
 impl Display for PanicReport<'_> {
