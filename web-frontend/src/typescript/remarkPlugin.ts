@@ -103,7 +103,7 @@ export function remarkHarTexPlugin() {
             const hashLink = h('a')
             const hashLinkData = hashLink.data || (hashLink.data = {})
             hashLinkData.hName = "a"
-            hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hover:underline hash-link transition-opacity duration-200", href: `#${referenceName}` }).properties
+            hashLinkData.hProperties = h('a', { class: "group-hover:opacity-100 hash-link transition-opacity duration-200", href: `#${referenceName}` }).properties
 
             hashLink.children = [
                 {
@@ -111,7 +111,7 @@ export function remarkHarTexPlugin() {
                     value: "#"
                 }
             ]
-            
+
             node.children.push(hashLink)
         })
     }
