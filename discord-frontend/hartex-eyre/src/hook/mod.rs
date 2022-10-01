@@ -19,8 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::hook::panic::PanicHook;
 use self::eyre::EyreHook;
+use crate::hook::panic::PanicHook;
 
 mod eyre;
 mod panic;
