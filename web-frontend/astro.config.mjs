@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+import { defineConfig } from 'astro/config'
 
-import { defineConfig } from 'astro/config';
-
-import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import mdx from '@astrojs/mdx'
+import react from '@astrojs/react'
+import tailwind from '@astrojs/tailwind'
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), tailwind()]
-});
+  integrations: [mdx(), react(), tailwind()]
+})
