@@ -24,7 +24,7 @@ import React from 'react'
 const Footer = () => {
     return (
         <footer className="py-10 text-center select-none">
-        <p>© 2021 - 2022 Team HarTex. All Rights Reserved.</p>
+            <p>© 2021 - 2022 Team HarTex. All Rights Reserved.</p>
         </footer>
     )
 }
