@@ -53,8 +53,17 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
             },
             Err(error) => {
                 if error.is_fatal() {
+                    log::error!(
+                        "[cluster {cluster_id} - shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
+                        shard_id = shard.id().number()
+                    );
                     break;
                 }
+
+                log::warn!(
+                    "[cluster {cluster_id} - shard {shard_id}] error when receiving gateway message: {error}",
+                    shard_id = shard.id().number()
+                )
             }
         }
     }
