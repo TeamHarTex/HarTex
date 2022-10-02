@@ -32,7 +32,7 @@ export function rehypeHarTexPlugin() {
         return tagName === "a"
     }
 
-    return (tree) => {
+    return (tree: any) => {
         visit(tree, nodePredicate1, (node) => {
             node.properties.class = "group"
         })

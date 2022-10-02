@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import React from 'react'
+
 const Navbar = () => {
     return (
         <header className="fixed w-screen">
@@ -57,5 +59,5 @@ const Navbar = () => {
         </header>
     )
 }
-  
+
 export default Navbar
