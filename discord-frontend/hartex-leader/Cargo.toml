@@ -1,9 +1,9 @@
 [package]
-name = "hartex_gateway"
+name = "hartex-leader"
 version = "0.1.0"
 edition = "2021"
 description = """
-The gateway component of the bot.
+The leader component of the bot.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.66.0"
