@@ -134,7 +134,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         _ = ctrlc.fuse() => {
             log::warn!("ctrl-c signal received, shutting down");
         }
-    };
+    }
 
     Ok(())
 }
