@@ -1,3 +1,4 @@
+---
 /* SPDX-License-Identifier: AGPL-3.0-only
  *
  * This file is part of HarTex.
@@ -19,14 +20,29 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import Footer from '../components/Footer'
+import Navbar from '../components/Navbar'
+---
 
-const Footer = () => {
-    return (
-        <footer className="py-10 text-center select-none">
-        <p>© 2022 HarTex Community. All Rights Reserved.</p>
-        </footer>
-    )
-}
-
-export default Footer
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+			integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+			crossorigin="anonymous"
+			referrerPolicy="no-referrer"
+		/>
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>HarTex</title>
+		<meta name="description" content="HarTex" />
+	</head>
+	<body>
+		<Navbar />
+		<slot />
+		<Footer />
+	</body>
+</html>

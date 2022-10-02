@@ -19,10 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import React from 'react'
+
 const Navbar = () => {
     return (
         <header className="fixed w-screen">
-            <i className="fa-solid fa-bars block xl:hidden text-right"></i>
             <nav className="xl:block">
                 <ul className="text-right">
                     <li>
@@ -58,5 +59,5 @@ const Navbar = () => {
         </header>
     )
 }
-  
+
 export default Navbar
