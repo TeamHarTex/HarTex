@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import React from 'react'
+
 const Footer = () => {
     return (
         <footer className="py-10 text-center select-none">
@@ -28,4 +30,3 @@ const Footer = () => {
 }
 
 export default Footer
-  

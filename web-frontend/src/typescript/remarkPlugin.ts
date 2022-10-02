@@ -60,11 +60,12 @@ export function remarkHarTexPlugin() {
         }
     }
 
-    return (tree) => {
+    return (tree: any) => {
         visit(tree, nodePredicate1, (node) => {
             const { name } = node
 
             if (Object.keys(admonitionTypes).includes(name)) {
+                // @ts-ignore
                 const admonitionTypeInformation = admonitionTypes[name]
 
                 const headingSpan = h('span')
@@ -118,13 +119,14 @@ export function remarkHarTexPlugin() {
 }
 
 export function remarkHarTexDirectives() {
+    // @ts-ignore
     const data = this.data()
 
     add('micromarkExtensions', directive())
     add('fromMarkdownExtensions', directiveFromMarkdown)
     add('toMarkdownExtensions', directiveToMarkdown)
 
-    function add(field, value) {
+    function add(field: any, value: any) {
         const values = data[field] ? data[field] : (data[field] = [])
         values.push(value)
     }
