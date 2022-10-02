@@ -732,6 +732,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex-leader"
+version = "0.1.0"
+dependencies = [
+ "futures-util",
+ "hartex_core",
+ "hartex_eyre",
+ "lapin",
+ "sqlx",
+ "tracing",
+]
+
+[[package]]
 name = "hartex_core"
 version = "0.1.0"
 dependencies = [
@@ -749,18 +761,6 @@ version = "0.1.0"
 dependencies = [
  "backtrace",
  "eyre",
-]
-
-[[package]]
-name = "hartex_gateway"
-version = "0.1.0"
-dependencies = [
- "futures-util",
- "hartex_core",
- "hartex_eyre",
- "lapin",
- "sqlx",
- "tracing",
 ]
 
 [[package]]
