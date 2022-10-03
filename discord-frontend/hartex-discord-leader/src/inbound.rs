@@ -20,10 +20,10 @@
  */
 
 use futures_util::StreamExt;
-use hartex_core::discord::gateway::stream::ShardEventStream;
-use hartex_core::discord::gateway::{Event, Shard};
-use hartex_core::discord::model::gateway::payload::incoming::Hello;
-use hartex_core::log;
+use hartex_discord_core::discord::gateway::stream::ShardEventStream;
+use hartex_discord_core::discord::gateway::{Event, Shard};
+use hartex_discord_core::discord::model::gateway::payload::incoming::Hello;
+use hartex_discord_core::log;
 
 pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
     let mut stream = ShardEventStream::new(cluster.iter_mut());

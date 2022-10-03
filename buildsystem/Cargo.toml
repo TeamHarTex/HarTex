@@ -1,7 +1,6 @@
 [workspace]
 members = [
-    "hartex-discord-core",
-    "hartex-discord-leader"
+    "hartex-buildsystem-driver",
 ]
 
 [profile.release]
