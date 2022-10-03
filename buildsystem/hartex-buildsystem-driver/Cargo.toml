@@ -1,9 +1,9 @@
 [package]
-name = "hartex_eyre"
+name = "hartex_buildsystem_driver"
 version = "0.1.0"
 edition = "2021"
 description = """
-Eyre handler implementation for HarTex.
+HarTex buildsystem driver
 """
 license = "AGPL-3.0-only"
 rust-version = "1.66.0"
@@ -11,7 +11,6 @@ rust-version = "1.66.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-backtrace = "0.3.66"
-eyre = "0.6.8"
+hartex_common_eyre = { path = "../../common/hartex-common-eyre" }
 
 [features]

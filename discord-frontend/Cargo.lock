@@ -732,19 +732,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex-leader"
+name = "hartex_common_eyre"
 version = "0.1.0"
 dependencies = [
- "futures-util",
- "hartex_core",
- "hartex_eyre",
- "lapin",
- "sqlx",
- "tracing",
+ "backtrace",
+ "eyre",
 ]
 
 [[package]]
-name = "hartex_core"
+name = "hartex_discord_core"
 version = "0.1.0"
 dependencies = [
  "dotenv",
@@ -756,11 +752,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_eyre"
+name = "hartex_discord_leader"
 version = "0.1.0"
 dependencies = [
- "backtrace",
- "eyre",
+ "futures-util",
+ "hartex_common_eyre",
+ "hartex_discord_core",
+ "lapin",
+ "sqlx",
+ "tracing",
 ]
 
 [[package]]
