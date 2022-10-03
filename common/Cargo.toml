@@ -1,7 +1,6 @@
 [workspace]
 members = [
-    "hartex-core",
-    "hartex-leader"
+    "hartex-eyre",
 ]
 
 [profile.release]

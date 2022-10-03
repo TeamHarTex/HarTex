@@ -12,7 +12,7 @@ rust-version = "1.66.0"
 
 [dependencies]
 hartex_core = { path = "../hartex-core", features = ["async-runtime", "async-signal", "discord-model", "discord-gateway", "environment", "logging-facilities"] }
-hartex_eyre = { path = "../hartex-eyre" }
+hartex_eyre = { path = "../../common/hartex-eyre" }
 
 futures-util = "0.3.24"
 lapin = "2.1.1"
