@@ -22,16 +22,16 @@
 use std::sync::Arc;
 
 use futures_util::StreamExt;
-use hartex_core::discord::gateway::queue::Queue;
-use hartex_core::discord::gateway::{stream, Config, EventTypeFlags, Intents, Shard};
-use hartex_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
-use hartex_core::discord::model::gateway::presence::{Activity, ActivityType, Status};
-use hartex_core::log;
+use hartex_discord_core::discord::gateway::queue::Queue;
+use hartex_discord_core::discord::gateway::{stream, Config, EventTypeFlags, Intents, Shard};
+use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
+use hartex_discord_core::discord::model::gateway::presence::{Activity, ActivityType, Status};
+use hartex_discord_core::log;
 
 pub async fn get_clusters(
     num_shards: u64,
     queue: Arc<dyn Queue>,
-) -> hartex_eyre::Result<Vec<(u64, Vec<Shard>)>> {
+) -> hartex_common_eyre::Result<Vec<(u64, Vec<Shard>)>> {
     let num_clusters = std::env::var("NUM_CLUSTERS")?.parse::<u64>()?;
     let shard_per_cluster = num_shards.div_ceil(num_clusters);
     let remaining_shards = num_shards % num_clusters;

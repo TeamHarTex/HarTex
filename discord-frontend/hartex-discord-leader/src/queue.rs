@@ -24,13 +24,13 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::time::Duration;
 
-use hartex_core::discord::gateway::queue::Queue;
-use hartex_core::log;
-use hartex_core::tokio;
-use hartex_core::tokio::sync::mpsc::UnboundedReceiver;
-use hartex_core::tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
-use hartex_core::tokio::sync::oneshot::{self, Sender};
-use hartex_core::tokio::time::sleep;
+use hartex_discord_core::discord::gateway::queue::Queue;
+use hartex_discord_core::log;
+use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::sync::mpsc::UnboundedReceiver;
+use hartex_discord_core::tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
+use hartex_discord_core::tokio::sync::oneshot::{self, Sender};
+use hartex_discord_core::tokio::time::sleep;
 
 #[derive(Clone, Debug)]
 pub struct LocalQueue(UnboundedSender<Sender<()>>);
@@ -101,7 +101,7 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
     }
 }
 
-pub fn get_queue() -> hartex_eyre::Result<Arc<dyn Queue>> {
+pub fn get_queue() -> hartex_common_eyre::Result<Arc<dyn Queue>> {
     let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse::<usize>()?;
     let wait =
         Duration::from_secs(std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS")?.parse::<u64>()?);
