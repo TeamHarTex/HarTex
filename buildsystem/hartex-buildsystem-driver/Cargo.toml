@@ -11,6 +11,6 @@ rust-version = "1.66.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
+hartex_common_eyre = { path = "../../common/hartex-common-eyre" }
 
 [features]

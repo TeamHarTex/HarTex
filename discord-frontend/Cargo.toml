@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "hartex-core",
-    "hartex-leader"
+    "hartex-discord-core",
+    "hartex-discord-leader"
 ]
 
 [profile.release]

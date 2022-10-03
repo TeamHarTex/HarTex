@@ -22,11 +22,11 @@
 #![feature(int_roundings)]
 
 use futures_util::FutureExt;
-use hartex_core::dotenv;
-use hartex_core::log;
-use hartex_core::tokio;
-use hartex_core::tokio::signal;
-use hartex_core::tokio::task::LocalSet;
+use hartex_discord_core::dotenv;
+use hartex_discord_core::log;
+use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::signal;
+use hartex_discord_core::tokio::task::LocalSet;
 use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
@@ -36,8 +36,8 @@ mod inbound;
 mod queue;
 
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub async fn main() -> hartex_common_eyre::Result<()> {
+    hartex_common_eyre::initialize()?;
     log::initialize();
 
     log::trace!("loading environment variables");

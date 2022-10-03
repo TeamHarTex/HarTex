@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "hartex-eyre",
+    "hartex-common-eyre",
 ]
 
 [profile.release]

@@ -19,5 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {
+pub fn main() -> hartex_common_eyre::Result<()> {
+    hartex_common_eyre::initialize()?;
+
+    Ok(())
 }
