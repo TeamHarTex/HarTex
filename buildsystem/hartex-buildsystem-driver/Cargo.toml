@@ -13,4 +13,6 @@ rust-version = "1.66.0"
 [dependencies]
 hartex_common_eyre = { path = "../../common/hartex-common-eyre" }
 
+clap = { version = "4.0.9", features = ["derive"] }
+
 [features]
