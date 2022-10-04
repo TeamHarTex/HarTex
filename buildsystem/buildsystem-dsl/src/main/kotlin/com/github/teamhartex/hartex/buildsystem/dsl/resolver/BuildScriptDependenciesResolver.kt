@@ -19,5 +19,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[derive(clap::Parser)]
-pub struct Cli;
+package com.github.teamhartex.hartex.buildsystem.dsl.resolver
+
+import kotlin.script.dependencies.ScriptDependenciesResolver
+
+class BuildScriptDependenciesResolver : ScriptDependenciesResolver {
+}
