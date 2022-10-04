@@ -10,5 +10,4 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
 }
