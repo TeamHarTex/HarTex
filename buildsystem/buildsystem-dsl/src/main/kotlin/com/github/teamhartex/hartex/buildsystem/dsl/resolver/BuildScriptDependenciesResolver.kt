@@ -22,18 +22,35 @@
 package com.github.teamhartex.hartex.buildsystem.dsl.resolver
 
 import com.github.teamhartex.hartex.buildsystem.dsl.concurrent.future
+import java.io.File
 import java.util.concurrent.Future
 import kotlin.script.dependencies.Environment
 import kotlin.script.dependencies.KotlinScriptExternalDependencies
 import kotlin.script.dependencies.ScriptContents
 import kotlin.script.dependencies.ScriptDependenciesResolver
 
+private typealias ReportFun = (ScriptDependenciesResolver.ReportSeverity, String, ScriptContents.Position?) -> Unit
+
 class BuildScriptDependenciesResolver : ScriptDependenciesResolver {
   override fun resolve(
     script: ScriptContents,
     environment: Environment?,
-    report: (ScriptDependenciesResolver.ReportSeverity, String, ScriptContents.Position?) -> Unit,
+    report: ReportFun,
     previousDependencies: KotlinScriptExternalDependencies?): Future<KotlinScriptExternalDependencies?> = future {
-      TODO("to be implemented")
+      try {
+        assembleDependenciesFrom(script.file, environment!!, report, previousDependencies)
+      } catch (exception: Exception) {
+        previousDependencies
+      }
+  }
+
+  private suspend fun assembleDependenciesFrom(
+    scriptFile: File?,
+    environment: Environment,
+    report: ReportFun,
+    previousDependencies: KotlinScriptExternalDependencies?,
+    classPathBlocksHash: ByteArray? = null
+  ): KotlinScriptExternalDependencies {
+    TODO("to be implemented")
   }
 }
