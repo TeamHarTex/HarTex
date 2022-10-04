@@ -21,7 +21,19 @@
 
 package com.github.teamhartex.hartex.buildsystem.dsl.resolver
 
+import com.github.teamhartex.hartex.buildsystem.dsl.concurrent.future
+import java.util.concurrent.Future
+import kotlin.script.dependencies.Environment
+import kotlin.script.dependencies.KotlinScriptExternalDependencies
+import kotlin.script.dependencies.ScriptContents
 import kotlin.script.dependencies.ScriptDependenciesResolver
 
 class BuildScriptDependenciesResolver : ScriptDependenciesResolver {
+  override fun resolve(
+    script: ScriptContents,
+    environment: Environment?,
+    report: (ScriptDependenciesResolver.ReportSeverity, String, ScriptContents.Position?) -> Unit,
+    previousDependencies: KotlinScriptExternalDependencies?): Future<KotlinScriptExternalDependencies?> = future {
+      TODO("to be implemented")
+  }
 }
