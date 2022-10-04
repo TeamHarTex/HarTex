@@ -1,0 +1,24 @@
+use hartex_buildsystem::functions::{setWorkspaceBuildProcedure, setWorkspaces}
+use hartex_buildsystem::models::cargo::{CargoBuildProfile}
+use hartex_buildsystem::models::{Workspace, WorkspaceBuildTool, WorkspaceType}
+
+commonWorkspace = Workspace::new("./common", WorkspaceType::RUST)
+discordFrontendWorkspace = Workspaces::new("./discord-frontend", WorkspaceType::RUST)
+webFrontendWorkspace = Workspace::new("./web-frontend", WorkspaceType::TYPESCRIPT)
+
+setWorkspaces(commonWorkspace, discordFrontendWorkspace, webFrontendWorkspace)
+
+setWorkspaceBuildOptions(commonWorkspace, WorkspaceBuildTool::CARGO) {
+    options.setDebugInformation(true)
+    options.setLinker("rust-lld")
+    options.setProfile(CargoBuildProfile::RELEASE)
+}
+
+setWorkspaceBuildOptions(discordFrontendWorkspace, WorkspaceBuildTool::CARGO) {
+    options.setDebugInformation(true)
+    options.setLinker("rust-lld")
+    options.setProfile(CargoBuildProfile::RELEASE)
+}
+
+setWorkspaceBuildOptions(webFrontendWorkspace, WorkspaceBuildTool::YARN) {
+}
