@@ -58,6 +58,7 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
 
   private fun createScriptModelRequest(scriptFile: File?, environment: Environment_T): KotlinBuildScriptModelRequest =
     KotlinBuildScriptModelRequest(
+      javaHome = environment.javaHome,
       projectRoot = environment.projectRoot,
       scriptFile = scriptFile
     )
