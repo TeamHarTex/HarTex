@@ -19,22 +19,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
+package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent
 
-import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver.KotlinBuildScriptDependenciesResolver
-import kotlin.script.templates.ScriptTemplateAdditionalCompilerArguments
-import kotlin.script.templates.ScriptTemplateDefinition
+import kotlin.concurrent.thread
 
-@BuildsystemDsl
-@ScriptTemplateAdditionalCompilerArguments(
-  [
-    "-language-version", "1.7",
-    "-api-version", "1.7",
-    "-jvm-target", "1.8"
-  ]
-)
-@ScriptTemplateDefinition(
-  resolver = KotlinBuildScriptDependenciesResolver::class,
-  scriptFilePattern = "(?:.+\\.)?build\\.hartex\\.kts"
-)
-abstract class KotlinBuildScript
+class ResurrectingThread(val threadName: String, val blockFun: () -> Unit) {
+  private var thread: Thread? = null
+
+  fun wake() = synchronized(this) {
+    if (thread?.isAlive != true)
+      thread = thread(name = threadName, isDaemon = true, block = blockFun)
+  }
+}
