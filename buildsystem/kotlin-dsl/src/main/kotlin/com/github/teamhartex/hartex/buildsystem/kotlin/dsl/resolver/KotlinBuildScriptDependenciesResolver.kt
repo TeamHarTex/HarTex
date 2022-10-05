@@ -23,6 +23,7 @@ package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.concurrentFuture
 import java.io.File
+import java.lang.Exception
 import java.util.concurrent.Future as IFuture
 import kotlin.script.dependencies.Environment as Environment_T
 import kotlin.script.dependencies.KotlinScriptExternalDependencies as IKotlinScriptExternalDependencies
@@ -39,6 +40,19 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
     report: (ReportSeverity_T, String, Position_T?) -> Unit,
     previousDependencies: IKotlinScriptExternalDependencies?
   ): IFuture<IKotlinScriptExternalDependencies?> = concurrentFuture {
+    try {
+      assembleScriptDependencies(scriptFile = script.file, environment!!, previousDependencies)
+    } catch (exception: Exception) {
+      previousDependencies
+    }
+  }
+
+  private fun assembleScriptDependencies(
+    scriptFile: File?,
+    environment: Environment_T,
+    previousDependencies: IKotlinScriptExternalDependencies?,
+  ): IKotlinScriptExternalDependencies? {
+    val request = createScriptModelRequest(scriptFile, environment)
     TODO("to be implemented")
   }
 
