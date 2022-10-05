@@ -19,20 +19,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
+package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
-import kotlin.script.templates.ScriptTemplateAdditionalCompilerArguments
-import kotlin.script.templates.ScriptTemplateDefinition
+import java.io.File
 
-@BuildsystemDsl
-@ScriptTemplateAdditionalCompilerArguments(
-  [
-    "-language-version", "1.7",
-    "-api-version", "1.7",
-    "-jvm-target", "1.8"
-  ]
+data class KotlinBuildScriptModelRequest(
+  val projectRoot: File,
+  val scriptFile: File? = null,
 )
-@ScriptTemplateDefinition(
-  scriptFilePattern = "(?:.+\\.)?build\\.hartex\\.kts"
-)
-abstract class KotlinBuildScript
