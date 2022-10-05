@@ -19,22 +19,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
+package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
-import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver.KotlinBuildScriptDependenciesResolver
-import kotlin.script.templates.ScriptTemplateAdditionalCompilerArguments
-import kotlin.script.templates.ScriptTemplateDefinition
+import java.io.File
+import kotlin.script.dependencies.Environment as Environment_T
 
-@BuildsystemDsl
-@ScriptTemplateAdditionalCompilerArguments(
-  [
-    "-language-version", "1.7",
-    "-api-version", "1.7",
-    "-jvm-target", "1.8"
-  ]
-)
-@ScriptTemplateDefinition(
-  resolver = KotlinBuildScriptDependenciesResolver::class,
-  scriptFilePattern = "(?:.+\\.)?build\\.hartex\\.kts"
-)
-abstract class KotlinBuildScript
+internal val Environment_T.javaHome: File?
+  get() = path("gradleJavaHome")
+
+internal val Environment_T.projectRoot: File
+  get() = get("projectRoot") as File
+
+private fun Environment_T.path(key: String): File? =
+  (get(key) as? String)?.let(::File)
