@@ -1,7 +1,0 @@
-[workspace]
-members = [
-    "hartex-buildsystem-driver",
-]
-
-[profile.release]
-debug = true
