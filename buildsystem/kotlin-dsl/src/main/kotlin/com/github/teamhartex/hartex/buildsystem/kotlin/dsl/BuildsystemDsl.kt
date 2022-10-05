@@ -19,5 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[derive(clap::Parser)]
-pub struct Cli;
+package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
+
+@DslMarker
+annotation class BuildsystemDsl

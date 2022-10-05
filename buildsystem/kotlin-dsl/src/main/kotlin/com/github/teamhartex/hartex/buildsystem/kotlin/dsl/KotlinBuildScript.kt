@@ -19,14 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::Parser;
+package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
 
-mod cli;
-
-pub fn main() -> hartex_common_eyre::Result<()> {
-    hartex_common_eyre::initialize()?;
-
-    let _ = cli::Cli::parse();
-
-    Ok(())
-}
+@BuildsystemDsl
+abstract class KotlinBuildScript
