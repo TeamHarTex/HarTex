@@ -21,10 +21,40 @@
 
 package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
+import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ConcurrentGroupQueue
+import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ResurrectingThread
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.KotlinBuildScriptModel
+import kotlin.collections.List as IList
 import kotlin.coroutines.Continuation as IContinuation
 
+private typealias AsynchronousKotlinBuildScriptModelRequest_T = Pair<KotlinBuildScriptModelRequest, IContinuation<KotlinBuildScriptModel>>
+
 open class KotlinBuildScriptModelRepository {
+  private val requestProcessor = ResurrectingThread("Kotlin Build Script Model Repository") {
+    while (true) {
+      val group = queue.nextGroup()
+      if (group.isEmpty())
+        break
+
+      process(group)
+    }
+  }
+
+  private val queue = ConcurrentGroupQueue<AsynchronousKotlinBuildScriptModelRequest_T> {
+      first.scriptFile == it.first.scriptFile && first.projectRoot == it.first.projectRoot
+  }
+
   open fun accept(request: KotlinBuildScriptModelRequest, continuation: IContinuation<KotlinBuildScriptModel>) {
+    queue.push(request to continuation)
+  }
+
+  private fun process(group: IList<AsynchronousKotlinBuildScriptModelRequest_T>) {
+    val (request, continuation) = group.first()
+    val requestResult = runCatching {
+      // fetch(request)
+    }
+
+    // resumeAll(supersededRequests(group), Result.success(null))
+    // resume(continuation, requestResult)
   }
 }

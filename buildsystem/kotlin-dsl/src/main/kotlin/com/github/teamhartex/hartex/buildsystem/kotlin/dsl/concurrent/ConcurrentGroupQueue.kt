@@ -21,5 +21,55 @@
 
 package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent
 
-class ConcurrentGroupQueue {
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
+import kotlin.collections.List as IList
+
+class ConcurrentGroupQueue<T>(private val supersedesFun: T.(T) -> Boolean) {
+  private val lock = ReentrantLock()
+  private val queue = ArrayDeque<T>()
+
+  private val notEmpty = lock.newCondition()
+
+  fun nextGroup(timeoutMilliseconds: Long = 5000L): IList<T> {
+    lock.withLock {
+      if (queue.isNotEmpty())
+        takeNextGroup()
+
+      if (notEmpty.await(timeoutMilliseconds, TimeUnit.MILLISECONDS))
+        return takeNextGroup()
+    }
+
+    return emptyList()
+  }
+
+  fun push(element: T) {
+    lock.withLock {
+      queue.addFirst(element)
+
+      if (queue.size == 1)
+        notEmpty.signal()
+    }
+  }
+
+  private fun takeNextGroup(): IList<T> {
+    require(queue.isNotEmpty())
+
+    val group = mutableListOf<T>()
+    queue.iterator().run {
+      val nextItem = next()
+      group.add(nextItem)
+      remove()
+
+      for (next in this) {
+        if (next.supersedesFun(next)) {
+          group.add(next)
+          remove()
+        }
+      }
+    }
+
+    return group
+  }
 }

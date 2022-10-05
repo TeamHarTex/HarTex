@@ -21,6 +21,7 @@
 
 package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
 
+import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver.KotlinBuildScriptDependenciesResolver
 import kotlin.script.templates.ScriptTemplateAdditionalCompilerArguments
 import kotlin.script.templates.ScriptTemplateDefinition
 
@@ -33,6 +34,7 @@ import kotlin.script.templates.ScriptTemplateDefinition
   ]
 )
 @ScriptTemplateDefinition(
+  resolver = KotlinBuildScriptDependenciesResolver::class,
   scriptFilePattern = "(?:.+\\.)?build\\.hartex\\.kts"
 )
 abstract class KotlinBuildScript

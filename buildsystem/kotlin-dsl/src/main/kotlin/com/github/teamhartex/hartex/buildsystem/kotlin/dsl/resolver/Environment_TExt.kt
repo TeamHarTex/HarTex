@@ -24,5 +24,11 @@ package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 import java.io.File
 import kotlin.script.dependencies.Environment as Environment_T
 
+internal val Environment_T.javaHome: File?
+  get() = path("gradleJavaHome")
+
 internal val Environment_T.projectRoot: File
   get() = get("projectRoot") as File
+
+private fun Environment_T.path(key: String): File? =
+  (get(key) as? String)?.let(::File)

@@ -19,12 +19,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
+package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent
 
-import java.io.File
+import kotlin.concurrent.thread
 
-data class KotlinBuildScriptModelRequest(
-  val projectRoot: File,
-  val scriptFile: File? = null,
-  val javaHome: File? = null
-)
+class ResurrectingThread(val threadName: String, val blockFun: () -> Unit) {
+  private var thread: Thread? = null
+
+  fun wake() = synchronized(this) {
+    if (thread?.isAlive != true)
+      thread = thread(name = threadName, isDaemon = true, block = blockFun)
+  }
+}
