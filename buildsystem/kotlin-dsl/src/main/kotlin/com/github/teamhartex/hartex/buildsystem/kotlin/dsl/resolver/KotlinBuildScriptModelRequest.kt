@@ -21,10 +21,38 @@
 
 package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
+import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.KotlinBuildScriptModel
+import com.github.teamhartex.hartex.buildsystem.tooling.IModelBuilder
 import java.io.File
+
+internal typealias ModelBuilderCustomization_T = IModelBuilder<KotlinBuildScriptModel>.() -> Unit
 
 data class KotlinBuildScriptModelRequest(
   val projectRoot: File,
   val scriptFile: File? = null,
   val javaHome: File? = null
 )
+
+private data class KotlinBuildScriptModelRequestFetchParameters(
+  val projectRoot: File,
+  val scriptFile: File?,
+  val modelBuilderCustomization: ModelBuilderCustomization_T = {}
+)
+
+private fun fetchKotlinBuildScriptModelFor(parameters: KotlinBuildScriptModelRequestFetchParameters): KotlinBuildScriptModel {
+  TODO("to be implemented")
+}
+
+private fun KotlinBuildScriptModelRequest.toFetchParametersWith(modelBuilderCustomization: ModelBuilderCustomization_T) =
+  KotlinBuildScriptModelRequestFetchParameters(
+    projectRoot,
+    scriptFile,
+    modelBuilderCustomization
+  )
+
+internal fun fetchKotlinBuildScriptModelFor(request: KotlinBuildScriptModelRequest): KotlinBuildScriptModel =
+  fetchKotlinBuildScriptModelFor(
+    request.toFetchParametersWith {
+      request.javaHome?.let { setJavaHomeDirectory(it) }
+    }
+  )

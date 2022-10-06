@@ -24,10 +24,11 @@ package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ConcurrentGroupQueue
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ResurrectingThread
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.KotlinBuildScriptModel
+import kotlin.coroutines.suspendCoroutine
 import kotlin.collections.List as IList
 import kotlin.coroutines.Continuation as IContinuation
 
-private typealias AsynchronousKotlinBuildScriptModelRequest_T = Pair<KotlinBuildScriptModelRequest, IContinuation<KotlinBuildScriptModel>>
+private typealias AsynchronousKotlinBuildScriptModelRequest_T = Pair<KotlinBuildScriptModelRequest, IContinuation<KotlinBuildScriptModel?>>
 
 open class KotlinBuildScriptModelRepository {
   private val requestProcessor = ResurrectingThread("Kotlin Build Script Model Repository") {
@@ -44,17 +45,47 @@ open class KotlinBuildScriptModelRepository {
       first.scriptFile == it.first.scriptFile && first.projectRoot == it.first.projectRoot
   }
 
-  open fun accept(request: KotlinBuildScriptModelRequest, continuation: IContinuation<KotlinBuildScriptModel>) {
+  open fun fetch(request: KotlinBuildScriptModelRequest): KotlinBuildScriptModel =
+    fetchKotlinBuildScriptModelFor(request)
+
+  open suspend fun requestScriptModel(request: KotlinBuildScriptModelRequest): KotlinBuildScriptModel? =
+    suspendCoroutine {
+      accept(request, it)
+      requestProcessor.wake()
+    }
+
+  open fun accept(request: KotlinBuildScriptModelRequest, continuation: IContinuation<KotlinBuildScriptModel?>) {
     queue.push(request to continuation)
   }
 
   private fun process(group: IList<AsynchronousKotlinBuildScriptModelRequest_T>) {
     val (request, continuation) = group.first()
     val requestResult = runCatching {
-      // fetch(request)
+      fetch(request)
     }
 
-    // resumeAll(supersededRequests(group), Result.success(null))
-    // resume(continuation, requestResult)
+    resumeAll(supersededRequests(group), Result.success(null))
+    resume(continuation, requestResult)
+  }
+
+  private fun resume(continuation: IContinuation<KotlinBuildScriptModel?>, result: Result<KotlinBuildScriptModel?>) {
+    ignoreErrors { continuation.resumeWith(result) }
+  }
+
+  private fun resumeAll(continuations: Sequence<IContinuation<KotlinBuildScriptModel?>>, result: Result<KotlinBuildScriptModel?>) {
+    for (continuation in continuations) {
+      resume(continuation, result)
+    }
+  }
+
+  private fun supersededRequests(group: IList<AsynchronousKotlinBuildScriptModelRequest_T>) =
+    group.asReversed().asSequence().take(group.size - 1).map { (_, continuation) -> continuation }
+
+  private inline fun ignoreErrors(block: () -> Unit) {
+    try {
+      block()
+    } catch (throwable: Throwable) {
+      throwable.printStackTrace()
+    }
   }
 }
