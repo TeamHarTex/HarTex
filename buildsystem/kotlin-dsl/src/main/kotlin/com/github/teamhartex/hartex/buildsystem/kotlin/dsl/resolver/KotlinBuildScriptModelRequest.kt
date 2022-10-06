@@ -43,7 +43,6 @@ private fun fetchKotlinBuildScriptModelFor(parameters: KotlinBuildScriptModelReq
   TODO("to be implemented")
 }
 
-
 private fun KotlinBuildScriptModelRequest.toFetchParametersWith(modelBuilderCustomization: ModelBuilderCustomization_T) =
   KotlinBuildScriptModelRequestFetchParameters(
     projectRoot,
