@@ -47,12 +47,13 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
     }
   }
 
-  private fun assembleScriptDependencies(
+  private suspend fun assembleScriptDependencies(
     scriptFile: File?,
     environment: Environment_T,
     previousDependencies: IKotlinScriptExternalDependencies?,
   ): IKotlinScriptExternalDependencies? {
     val request = createScriptModelRequest(scriptFile, environment)
+    val response = DefaultKotlinBuildScriptModelRepository.requestScriptModel(request)
     TODO("to be implemented")
   }
 
@@ -63,3 +64,5 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
       scriptFile = scriptFile
     )
 }
+
+private object DefaultKotlinBuildScriptModelRepository : KotlinBuildScriptModelRepository()
