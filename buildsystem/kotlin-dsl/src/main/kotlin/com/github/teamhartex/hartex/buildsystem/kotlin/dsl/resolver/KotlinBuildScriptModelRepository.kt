@@ -23,12 +23,12 @@ package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ConcurrentGroupQueue
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ResurrectingThread
-import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.KotlinBuildScriptModel
+import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.IKotlinBuildScriptModel
 import kotlin.coroutines.suspendCoroutine
 import kotlin.collections.List as IList
 import kotlin.coroutines.Continuation as IContinuation
 
-private typealias AsynchronousKotlinBuildScriptModelRequest_T = Pair<KotlinBuildScriptModelRequest, IContinuation<KotlinBuildScriptModel?>>
+private typealias AsynchronousKotlinBuildScriptModelRequest_T = Pair<KotlinBuildScriptModelRequest, IContinuation<IKotlinBuildScriptModel?>>
 
 open class KotlinBuildScriptModelRepository {
   private val requestProcessor = ResurrectingThread("Kotlin Build Script Model Repository") {
@@ -45,16 +45,16 @@ open class KotlinBuildScriptModelRepository {
       first.scriptFile == it.first.scriptFile && first.projectRoot == it.first.projectRoot
   }
 
-  open fun fetch(request: KotlinBuildScriptModelRequest): KotlinBuildScriptModel =
+  open fun fetch(request: KotlinBuildScriptModelRequest): IKotlinBuildScriptModel =
     fetchKotlinBuildScriptModelFor(request)
 
-  open suspend fun requestScriptModel(request: KotlinBuildScriptModelRequest): KotlinBuildScriptModel? =
+  open suspend fun requestScriptModel(request: KotlinBuildScriptModelRequest): IKotlinBuildScriptModel? =
     suspendCoroutine {
       accept(request, it)
       requestProcessor.wake()
     }
 
-  open fun accept(request: KotlinBuildScriptModelRequest, continuation: IContinuation<KotlinBuildScriptModel?>) {
+  open fun accept(request: KotlinBuildScriptModelRequest, continuation: IContinuation<IKotlinBuildScriptModel?>) {
     queue.push(request to continuation)
   }
 
@@ -68,11 +68,11 @@ open class KotlinBuildScriptModelRepository {
     resume(continuation, requestResult)
   }
 
-  private fun resume(continuation: IContinuation<KotlinBuildScriptModel?>, result: Result<KotlinBuildScriptModel?>) {
+  private fun resume(continuation: IContinuation<IKotlinBuildScriptModel?>, result: Result<IKotlinBuildScriptModel?>) {
     ignoreErrors { continuation.resumeWith(result) }
   }
 
-  private fun resumeAll(continuations: Sequence<IContinuation<KotlinBuildScriptModel?>>, result: Result<KotlinBuildScriptModel?>) {
+  private fun resumeAll(continuations: Sequence<IContinuation<IKotlinBuildScriptModel?>>, result: Result<IKotlinBuildScriptModel?>) {
     for (continuation in continuations) {
       resume(continuation, result)
     }
