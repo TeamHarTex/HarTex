@@ -21,4 +21,15 @@
 
 package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model
 
-class KotlinBuildScriptModel
+import java.io.File
+import kotlin.collections.List as IList
+
+interface IKotlinBuildScriptModel {
+  fun getClassPath(): IList<File>
+
+  fun getSourcePath(): IList<File>
+
+  fun getImplicitImports(): IList<String>
+
+  fun getExceptions(): IList<String>
+}
