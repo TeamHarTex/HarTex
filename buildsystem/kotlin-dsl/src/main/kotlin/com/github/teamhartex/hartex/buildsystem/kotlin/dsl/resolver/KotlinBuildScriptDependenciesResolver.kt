@@ -22,6 +22,7 @@
 package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.concurrentFuture
+import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.IKotlinBuildScriptModel
 import java.io.File
 import java.lang.Exception
 import java.util.concurrent.Future as IFuture
@@ -55,7 +56,12 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
     val request = createScriptModelRequest(scriptFile, environment)
     val response = DefaultKotlinBuildScriptModelRepository.requestScriptModel(request) ?: return null
 
-    TODO("to be implemented")
+    return when {
+      previousDependencies != null && previousDependencies.classpath.count() > response.getClassPath().size -> previousDependencies
+      else -> {
+        createBuildScriptDependencies(request, response)
+      }
+    }
   }
 
   private fun createScriptModelRequest(scriptFile: File?, environment: Environment_T): KotlinBuildScriptModelRequest =
@@ -64,6 +70,25 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
       projectRoot = environment.projectRoot,
       scriptFile = scriptFile
     )
+
+  private
+  fun createBuildScriptDependencies(
+    request: KotlinBuildScriptModelRequest,
+    response: IKotlinBuildScriptModel,
+  ) =
+    KotlinBuildScriptDependencies(
+      response.getClassPath(),
+      response.getSourcePath(),
+      response.getImplicitImports(),
+      request.javaHome?.path
+    )
 }
+
+internal class KotlinBuildScriptDependencies(
+  override val classpath: Iterable<File>,
+  override val sources: Iterable<File>,
+  override val imports: Iterable<String>,
+  override val javaHome: String? = null,
+) : IKotlinScriptExternalDependencies
 
 private object DefaultKotlinBuildScriptModelRepository : KotlinBuildScriptModelRepository()
