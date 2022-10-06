@@ -19,22 +19,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.teamhartex.hartex.buildsystem.kotlin.dsl
+package com.github.teamhartex.hartex.buildsystem.tooling
 
-import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver.KotlinBuildScriptDependenciesResolver
-import kotlin.script.templates.ScriptTemplateAdditionalCompilerArguments
-import kotlin.script.templates.ScriptTemplateDefinition
+import org.jetbrains.annotations.NotNull
+import org.jetbrains.annotations.Nullable
+import java.io.File
 
-@BuildsystemDsl
-@ScriptTemplateAdditionalCompilerArguments(
-  [
-    "-language-version", "1.7",
-    "-api-version", "1.7",
-    "-jvm-target", "1.8"
-  ]
-)
-@ScriptTemplateDefinition(
-  resolver = KotlinBuildScriptDependenciesResolver::class,
-  scriptFilePattern = "(?:.+\\.)?build\\.hartex\\.kts"
-)
-abstract class AbstractKotlinBuildScript
+interface ILongOperation {
+  fun setJavaHomeDirectory(@NotNull javaHomeDirectory: File): ILongOperation
+
+  fun setJavaVirtualMachineArguments(@Nullable vararg arguments: String): ILongOperation
+}

@@ -24,6 +24,7 @@ package com.github.teamhartex.hartex.buildsystem.kotlin.dsl.resolver
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ConcurrentGroupQueue
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.concurrent.ResurrectingThread
 import com.github.teamhartex.hartex.buildsystem.kotlin.dsl.model.KotlinBuildScriptModel
+import kotlin.coroutines.suspendCoroutine
 import kotlin.collections.List as IList
 import kotlin.coroutines.Continuation as IContinuation
 
@@ -43,6 +44,12 @@ open class KotlinBuildScriptModelRepository {
   private val queue = ConcurrentGroupQueue<AsynchronousKotlinBuildScriptModelRequest_T> {
       first.scriptFile == it.first.scriptFile && first.projectRoot == it.first.projectRoot
   }
+
+  open suspend fun requestScriptModel(request: KotlinBuildScriptModelRequest): KotlinBuildScriptModel? =
+    suspendCoroutine {
+      accept(request, it)
+      requestProcessor.wake()
+    }
 
   open fun accept(request: KotlinBuildScriptModelRequest, continuation: IContinuation<KotlinBuildScriptModel>) {
     queue.push(request to continuation)
