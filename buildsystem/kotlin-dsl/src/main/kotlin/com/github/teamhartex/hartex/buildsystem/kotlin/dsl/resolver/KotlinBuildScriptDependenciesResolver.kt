@@ -53,7 +53,8 @@ class KotlinBuildScriptDependenciesResolver : IScriptDependenciesResolver {
     previousDependencies: IKotlinScriptExternalDependencies?,
   ): IKotlinScriptExternalDependencies? {
     val request = createScriptModelRequest(scriptFile, environment)
-    val response = DefaultKotlinBuildScriptModelRepository.requestScriptModel(request)
+    val response = DefaultKotlinBuildScriptModelRepository.requestScriptModel(request) ?: return null
+
     TODO("to be implemented")
   }
 
