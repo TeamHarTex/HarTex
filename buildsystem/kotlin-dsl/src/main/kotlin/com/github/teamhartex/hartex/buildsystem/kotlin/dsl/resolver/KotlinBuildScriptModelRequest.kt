@@ -39,14 +39,12 @@ private data class KotlinBuildScriptModelRequestFetchParameters(
   val modelBuilderCustomization: ModelBuilderCustomization_T = {}
 )
 
-private
-fun fetchKotlinBuildScriptModelFor(parameters: KotlinBuildScriptModelRequestFetchParameters): KotlinBuildScriptModel {
+private fun fetchKotlinBuildScriptModelFor(parameters: KotlinBuildScriptModelRequestFetchParameters): KotlinBuildScriptModel {
   TODO("to be implemented")
 }
 
 
-private
-fun KotlinBuildScriptModelRequest.toFetchParametersWith(modelBuilderCustomization: ModelBuilderCustomization_T) =
+private fun KotlinBuildScriptModelRequest.toFetchParametersWith(modelBuilderCustomization: ModelBuilderCustomization_T) =
   KotlinBuildScriptModelRequestFetchParameters(
     projectRoot,
     scriptFile,
