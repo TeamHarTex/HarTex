@@ -22,6 +22,7 @@
 package com.github.teamhartex.hartex.buildsystem.service
 
 import java.io.Closeable as ICloseable
+import kotlin.collections.List as IList
 
 class DefaultServiceRegistry : ICloseable, IServiceContainer, IServiceRegistry {
   private enum class RegistryState {
@@ -31,8 +32,8 @@ class DefaultServiceRegistry : ICloseable, IServiceContainer, IServiceRegistry {
   }
 
   companion object {
-    private val noDependents: Array<IService> = arrayOf()
-    private val noParents: Array<IServiceRegistry> = arrayOf()
-    private val noParameters: Array<Any> = arrayOf()
+    private val noDependents: IList<IService> = listOf()
+    private val noParents: IList<IServiceRegistry> = listOf()
+    private val noParameters: IList<Any> = listOf()
   }
 }
