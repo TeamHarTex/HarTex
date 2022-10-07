@@ -1,5 +1,6 @@
 rootProject.name = "buildsystem"
 
 include("kotlin-dsl")
-include("tooling-api")
+include("reflect-api")
 include("service-api")
+include("tooling-api")
