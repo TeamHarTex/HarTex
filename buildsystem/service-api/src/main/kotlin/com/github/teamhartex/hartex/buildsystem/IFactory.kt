@@ -19,16 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.teamhartex.hartex.buildsystem.service
+package com.github.teamhartex.hartex.buildsystem
 
-import kotlin.Annotation as IAnnotation
-import kotlin.reflect.KClass as IKClass
-import java.lang.reflect.Type as IType
-
-interface IServiceLookup {
-  fun lookup(serviceType: IType): Any?
-
-  fun get(serviceType: IType): Any
-
-  fun get(serviceType: IType, annotatedWith: IKClass<IAnnotation>)
+interface IFactory<T> {
+  fun create(): T
 }

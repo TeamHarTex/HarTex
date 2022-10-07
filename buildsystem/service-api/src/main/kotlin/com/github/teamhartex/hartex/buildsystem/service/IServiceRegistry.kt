@@ -21,4 +21,49 @@
 
 package com.github.teamhartex.hartex.buildsystem.service
 
-interface IServiceRegistry : IServiceLookup
+import com.github.teamhartex.hartex.buildsystem.IFactory
+import kotlin.collections.List
+import kotlin.reflect.KClass
+import java.lang.reflect.Type as IType
+import kotlin.collections.List as IList
+import kotlin.reflect.KClass as IKClass
+
+interface IServiceRegistry : IServiceLookup {
+  fun <T: Any> get(serviceType: IKClass<T>): T
+
+  fun <T: Any> getAll(serviceType: IKClass<T>) : IList<T>
+
+  fun <T: Any> getFactory(serviceType: IKClass<T>): IFactory<T>
+
+  override fun get(serviceType: IType): Any
+
+  override fun lookup(serviceType: IType): Any?
+
+  fun <T: Any> newInstance(serviceType: IKClass<T>): T
+
+  companion object {
+    val EMPTY_REGISTRY = object : IServiceRegistry {
+      private fun emptyServiceRegistryException(type: IType): UnknownServiceException =
+        UnknownServiceException(type, "nothing is available in the empty service registry")
+
+      override fun <T : Any> get(serviceType: KClass<T>): T =
+        throw emptyServiceRegistryException(serviceType.java)
+
+      override fun get(serviceType: IType): Any =
+        throw emptyServiceRegistryException(serviceType)
+
+      override fun get(serviceType: IType, annotatedWith: KClass<Annotation>) =
+        throw emptyServiceRegistryException(serviceType)
+
+      override fun <T : Any> getAll(serviceType: KClass<T>): List<T> = emptyList()
+
+      override fun lookup(serviceType: IType): Any? = null
+
+      override fun <T : Any> getFactory(serviceType: KClass<T>): IFactory<T> =
+        throw emptyServiceRegistryException(serviceType.java)
+
+      override fun <T : Any> newInstance(serviceType: KClass<T>): T =
+        throw emptyServiceRegistryException(serviceType.java)
+    }
+  }
+}
