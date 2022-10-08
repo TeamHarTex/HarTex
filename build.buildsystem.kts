@@ -1,5 +1,5 @@
 projects {
-  project("common", ProjectType.TYPESCRIPT)
+  project("common", ProjectType.RUST)
   project("discord-frontend", ProjectType.RUST)
   project("web-frontend", ProjectType.TYPESCRIPT)
 }
