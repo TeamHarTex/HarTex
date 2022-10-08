@@ -17,4 +17,3 @@ buildConfigurationForProject("discord-frontend") {
   includeDebugInformation(true)
   linker("rust-lld")
 }
-
