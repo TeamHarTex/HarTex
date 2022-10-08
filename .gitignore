@@ -27,3 +27,4 @@ buildconf.toml
 !.yarn/versions
 
 **/.gradle
+**/build
