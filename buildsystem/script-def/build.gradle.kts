@@ -10,4 +10,5 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.7.20")
 }
