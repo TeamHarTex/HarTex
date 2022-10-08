@@ -21,12 +21,34 @@
 
 package com.github.teamhartex.hartex.buildsystem.reflect
 
-import kotlin.reflect.KClass as IKClass
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import kotlin.collections.Collection
+import kotlin.collections.Collection as ICollection
 
-class ClassInspector {
-  companion object {
-    fun inspect(type: IKClass<*>): IClassDetails {
-      TODO("to be implemented")
-    }
+class MutablePropertyDetails(private val name: String) : IPropertyDetails {
+  private val getters = MethodSet()
+  private val setters = MethodSet()
+
+  private lateinit var field: Field
+
+  override fun getName(): String = name
+
+  override fun getGetters(): ICollection<Method> = getters.values()
+
+  override fun getSetters(): Collection<Method> = setters.values()
+
+  override fun getBackingField(): Field = field
+
+  fun addGetter(getter: Method) {
+    getters.add(getter)
+  }
+
+  fun addSetter(setter: Method) {
+    setters.add(setter)
+  }
+
+  fun setBackingField(field: Field) {
+    this.field = field
   }
 }

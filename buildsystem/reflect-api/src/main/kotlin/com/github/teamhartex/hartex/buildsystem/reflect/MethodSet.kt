@@ -23,6 +23,8 @@ class MethodSet : IIterable<Method> {
 
   fun isEmpty(): Boolean = methods.isEmpty()
 
+  fun values(): ICollection<Method> = Collections.unmodifiableCollection(methods.values)
+
   override fun iterator(): Iterator<Method> = values().iterator()
 
   private fun shouldNewReplaceOld(old: Method, new: Method): Boolean {
@@ -34,8 +36,6 @@ class MethodSet : IIterable<Method> {
 
     return old.isBridge && !new.isBridge
   }
-
-  private fun values(): ICollection<Method> = Collections.unmodifiableCollection(methods.values)
 
   class MethodKey(private val method: Method) {
     private val parameterTypes: Array<IKClass<out Any>> = method.parameterTypes.map { it.kotlin }.toTypedArray()

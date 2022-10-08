@@ -21,12 +21,18 @@
 
 package com.github.teamhartex.hartex.buildsystem.reflect
 
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import java.util.TreeMap
+import kotlin.collections.List as IList
+import kotlin.collections.Map as IMap
+import kotlin.collections.Set as ISet
 import kotlin.reflect.KClass as IKClass
 
-class ClassInspector {
-  companion object {
-    fun inspect(type: IKClass<*>): IClassDetails {
-      TODO("to be implemented")
-    }
-  }
+class MutableClassDetails(private val type: IKClass<*>) : IClassDetails {
+  private val instanceMethods = MethodSet()
+  private val properties: IMap<String, MutablePropertyDetails> = TreeMap()
+  private val methods: IList<Method> = ArrayList()
+  private val instanceFields: IList<Field> = ArrayList()
+  private val superTypes: ISet<IKClass<Any>> = LinkedHashSet()
 }
