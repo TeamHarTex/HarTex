@@ -1,3 +1,6 @@
 rootProject.name = "buildsystem"
-include("script-def")
-include("script-host")
+
+include("kotlin-dsl")
+include("reflect-api")
+include("service-api")
+include("tooling-api")
