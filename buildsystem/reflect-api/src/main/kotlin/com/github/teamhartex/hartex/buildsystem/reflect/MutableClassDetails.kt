@@ -21,9 +21,11 @@
 
 package com.github.teamhartex.hartex.buildsystem.reflect
 
+import com.google.common.collect.ImmutableSet
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.util.TreeMap
+import kotlin.collections.Collection as ICollection
 import kotlin.collections.List as IList
 import kotlin.collections.Map as IMap
 import kotlin.collections.Set as ISet
@@ -35,4 +37,19 @@ class MutableClassDetails(private val type: IKClass<*>) : IClassDetails {
   private val methods: IList<Method> = ArrayList()
   private val instanceFields: IList<Field> = ArrayList()
   private val superTypes: ISet<IKClass<Any>> = LinkedHashSet()
+
+  override fun getAllMethods(): IList<Method> = methods
+
+  override fun getInstanceFields(): ICollection<Field>  = instanceFields
+
+  override fun getInstanceMethods(): ICollection<Method> = instanceMethods.values()
+
+  fun getSuperTypes(): ISet<IKClass<Any>> = superTypes
+
+  override fun getProperties(): ICollection<IPropertyDetails> = properties.values
+
+  override fun getPropertyNames(): ISet<String> = ImmutableSet.copyOf(properties.keys)
+
+  override fun getProperty(name: String): IPropertyDetails =
+    properties[name] ?: throw NoSuchPropertyException(name)
 }
