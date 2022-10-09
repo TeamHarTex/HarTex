@@ -27,12 +27,12 @@ import kotlin.script.experimental.api.baseClass
 import kotlin.script.experimental.api.defaultIdentifier
 import kotlin.script.experimental.api.defaultImports
 import kotlin.script.experimental.api.displayName
+import kotlin.script.experimental.api.fileExtension
 import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
 import kotlin.script.experimental.jvm.jvm
 
 @KotlinScript(
   compilationConfiguration = AbstractBuildsystemKotlinScriptDefinition.Configuration::class,
-  fileExtension = "buildsystem.kts"
 )
 abstract class AbstractBuildsystemKotlinScriptDefinition {
   object Configuration : ScriptCompilationConfiguration({
@@ -40,6 +40,7 @@ abstract class AbstractBuildsystemKotlinScriptDefinition {
     defaultIdentifier("BuildsystemKotlinScript")
     defaultImports(CargoBuildProfile::class, ProjectBuildTool::class, ProjectType::class)
     displayName("Buildsystem Kotlin DSL")
+    fileExtension("buildsystem.kts")
 
     jvm {
       dependenciesFromCurrentContext(wholeClasspath = true)
