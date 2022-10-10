@@ -21,18 +21,25 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
-import java.io.File
-import kotlin.script.experimental.api.EvaluationResult
-import kotlin.script.experimental.api.ResultWithDiagnostics
-import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
-import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
+import java.lang.IllegalArgumentException
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.memberProperties
 
-class BuildsystemKotlinScriptHost {
+class ProjectBuilder {
   companion object {
-    fun executeScript(scriptFile: File): ResultWithDiagnostics<EvaluationResult> {
-      val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<AbstractBuildsystemKotlinScriptDefinition>()
-      return BasicJvmScriptingHost().eval(scriptFile.toScriptSource(), compilationConfiguration, null)
+    fun build(scriptClass: KClass<*>, vararg args: String) {
+      if (args.size > 1) {
+        when (args[1]) {
+          "build" -> {
+            val projectsField = scriptClass.memberProperties.find { field -> field.name == "projects" }!!
+            val projects = projectsField.call(scriptClass.createInstance()) as Projects
+
+            val projectToBuild = projects.projects[args[2]] ?: throw IllegalArgumentException()
+            println(projectToBuild.buildTool)
+          }
+        }
+      }
     }
   }
 }
