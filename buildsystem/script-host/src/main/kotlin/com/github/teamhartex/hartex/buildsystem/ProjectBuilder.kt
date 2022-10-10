@@ -38,6 +38,7 @@ class ProjectBuilder {
 
             val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
             val processBuilder = ProcessBuilder()
+              .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
             when (projectToBuild.buildTool) {
               ProjectBuildTool.CARGO -> {
@@ -54,8 +55,17 @@ class ProjectBuilder {
               else -> {}
             }
 
-            processBuilder.directory(File(System.getProperty("user.dir") + """\${args[2]}"""))
-            processBuilder.start().waitFor()
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """\${args[2]}"""))
+              .start()
+            process.waitFor()
+
+            val outputReader = process.errorStream.bufferedReader()
+            var line = outputReader.readLine()
+            while (line != null) {
+              println(line)
+
+              line = outputReader.readLine()
+            }
           }
         }
       }
