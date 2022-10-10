@@ -52,7 +52,7 @@ enum class ProjectType {
 }
 
 open class Workspace {
-  private val projects: Projects = Projects()
+  open val projects: Projects = Projects()
 
   fun buildConfigurationForProject(forProject: String, block: ProjectConfigurationForProjectScope.() -> Unit) {
     val project = projects.projects[forProject] ?: throw NullPointerException()
