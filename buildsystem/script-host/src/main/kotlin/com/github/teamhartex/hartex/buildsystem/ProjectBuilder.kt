@@ -21,7 +21,8 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
-import java.lang.IllegalArgumentException
+import java.io.File
+import java.util.NoSuchElementException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.memberProperties
@@ -35,8 +36,26 @@ class ProjectBuilder {
             val projectsField = scriptClass.memberProperties.find { field -> field.name == "projects" }!!
             val projects = projectsField.call(scriptClass.createInstance()) as Projects
 
-            val projectToBuild = projects.projects[args[2]] ?: throw IllegalArgumentException()
-            println(projectToBuild.buildTool)
+            val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
+            val processBuilder = ProcessBuilder()
+
+            when (projectToBuild.buildTool) {
+              ProjectBuildTool.CARGO -> {
+                processBuilder.command("cargo", "build")
+
+                when (projectToBuild.cargoBuildProfile) {
+                  CargoBuildProfile.RELEASE -> {
+                    processBuilder.command().add("--release")
+                  }
+                  else -> {
+                  }
+                }
+              }
+              else -> {}
+            }
+
+            processBuilder.directory(File(System.getProperty("user.dir") + """\${args[2]}"""))
+            processBuilder.start().waitFor()
           }
         }
       }
