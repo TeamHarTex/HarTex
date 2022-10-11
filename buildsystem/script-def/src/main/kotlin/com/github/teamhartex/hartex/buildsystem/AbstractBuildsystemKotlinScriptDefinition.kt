@@ -21,27 +21,19 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
-import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.baseClass
 import kotlin.script.experimental.api.defaultImports
-import kotlin.script.experimental.jvm.dependenciesFromClassContext
+import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
 import kotlin.script.experimental.jvm.jvm
 
-@KotlinScript(
-  compilationConfiguration = AbstractBuildsystemKotlinScriptDefinition.Configuration::class,
-  fileExtension = "buildsystem.kts"
-)
 abstract class AbstractBuildsystemKotlinScriptDefinition {
   object Configuration : ScriptCompilationConfiguration({
     baseClass(Workspace::class)
     defaultImports(CargoBuildProfile::class, ProjectBuildTool::class, ProjectType::class)
 
     jvm {
-      dependenciesFromClassContext(
-        AbstractBuildsystemKotlinScriptDefinition::class,
-        "kotlin-reflect"
-      )
+      dependenciesFromCurrentContext(wholeClasspath = true)
     }
   })
 }
