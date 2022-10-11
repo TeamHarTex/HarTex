@@ -1,5 +1,5 @@
 [package]
-name = "hartex_common_eyre"
+name = "hartex_discord_eyre"
 version = "0.1.0"
 edition = "2021"
 description = """

@@ -31,7 +31,7 @@ use hartex_discord_core::log;
 pub async fn get_clusters(
     num_shards: u64,
     queue: Arc<dyn Queue>,
-) -> hartex_common_eyre::Result<Vec<(u64, Vec<Shard>)>> {
+) -> hartex_discord_eyre::Result<Vec<(u64, Vec<Shard>)>> {
     let num_clusters = std::env::var("NUM_CLUSTERS")?.parse::<u64>()?;
     let shard_per_cluster = num_shards.div_ceil(num_clusters);
     let remaining_shards = num_shards % num_clusters;
