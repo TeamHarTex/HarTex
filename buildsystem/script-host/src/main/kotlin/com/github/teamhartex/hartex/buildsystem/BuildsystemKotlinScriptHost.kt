@@ -31,7 +31,7 @@ import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromT
 class BuildsystemKotlinScriptHost {
   companion object {
     fun executeScript(scriptFile: File): ResultWithDiagnostics<EvaluationResult> {
-      val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<AbstractBuildsystemKotlinScriptDefinition>()
+      val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<AbstractBuildsystemKotlinScript>()
       return BasicJvmScriptingHost().eval(scriptFile.toScriptSource(), compilationConfiguration, null)
     }
   }
