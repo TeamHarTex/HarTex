@@ -1,7 +1,0 @@
-[workspace]
-members = [
-    "hartex-common-eyre",
-]
-
-[profile.release]
-debug = true
