@@ -36,8 +36,8 @@ mod inbound;
 mod queue;
 
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_common_eyre::Result<()> {
-    hartex_common_eyre::initialize()?;
+pub async fn main() -> hartex_discord_eyre::Result<()> {
+    hartex_discord_eyre::initialize()?;
     log::initialize();
 
     log::trace!("loading environment variables");
