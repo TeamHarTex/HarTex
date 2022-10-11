@@ -786,14 +786,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_common_eyre"
-version = "0.1.0"
-dependencies = [
- "backtrace",
- "eyre",
-]
-
-[[package]]
 name = "hartex_discord_core"
 version = "0.1.0"
 dependencies = [
@@ -806,12 +798,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_eyre"
+version = "0.1.0"
+dependencies = [
+ "backtrace",
+ "eyre",
+]
+
+[[package]]
 name = "hartex_discord_leader"
 version = "0.1.0"
 dependencies = [
  "futures-util",
- "hartex_common_eyre",
  "hartex_discord_core",
+ "hartex_discord_eyre",
  "lapin",
  "sqlx",
  "tracing",
@@ -1067,9 +1067,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.134"
+version = "0.2.135"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "329c933548736bc49fd575ee68c89e8be4d260064184389a5b77517cddd99ffb"
+checksum = "68783febc7782c6c5cb401fbda4de5a9898be1762314da0bb2c10ced61f18b0c"
 
 [[package]]
 name = "libz-sys"
