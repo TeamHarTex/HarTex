@@ -63,10 +63,10 @@ class ProjectBuilder {
             while (line != null) {
               println(line)
               line = outputReader.readLine()
-
-              if (line == "warning: build failed, waiting for other jobs to finish...")
-                throw RuntimeException("build failed")
             }
+
+            if (process.exitValue() != 0)
+              throw RuntimeException("abnormal termination of cargo process")
           }
           "clippy" -> {
             val processBuilder = ProcessBuilder()
