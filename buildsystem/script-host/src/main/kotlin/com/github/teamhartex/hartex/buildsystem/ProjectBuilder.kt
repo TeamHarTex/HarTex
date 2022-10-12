@@ -21,6 +21,8 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import java.io.File
 import java.util.NoSuchElementException
 import kotlin.reflect.KClass
@@ -57,12 +59,14 @@ class ProjectBuilder {
 
             val process = processBuilder.directory(File(System.getProperty("user.dir") + """\${args[2]}"""))
               .start()
-            process.waitFor()
-
             val outputReader = process.errorStream.bufferedReader()
             var line = outputReader.readLine()
             while (line != null) {
-              println(line)
+              val array = line.split("\\s+".toRegex(), limit = 3)
+              when (array[1]) {
+                "Compiling" -> println("   ${(TextColors.green + TextStyles.bold)(array[1])} ${array[2]}")
+                "Finished" -> println("    ${(TextColors.green + TextStyles.bold)(array[1])} ${array[2]}")
+              }
 
               line = outputReader.readLine()
             }
