@@ -2,7 +2,8 @@
 members = [
     "hartex-discord-core",
     "hartex-discord-eyre",
-    "hartex-discord-leader"
+    "hartex-discord-leader",
+    "hartex-discord-worker",
 ]
 
 [profile.release]

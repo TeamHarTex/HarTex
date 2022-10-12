@@ -1,0 +1,21 @@
+[package]
+name = "hartex_discord_worker"
+version = "0.1.0"
+edition = "2021"
+description = """
+The worker component of the bot.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.66.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "environment", "logging-facilities"] }
+hartex_discord_eyre = { path = "../hartex-discord-eyre" }
+
+futures-util = "0.3.24"
+lapin = "2.1.1"
+tracing = { version = "0.1.37", features = ["log-always" ]}
+
+[features]
