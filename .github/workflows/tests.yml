@@ -28,7 +28,7 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Run Buildsystem
-        run: PATH=$HOME/.cargo/bin java -jar ./buildsystem.jar ./build.buildsystem.kts build discord-frontend
+        run: PATH="$HOME/.cargo/bin:$PATH" java -jar ./buildsystem.jar ./build.buildsystem.kts build discord-frontend
 
   TestDiscordFrontend:
     name: Test (discord-frontend)
