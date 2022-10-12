@@ -24,10 +24,13 @@ package com.github.teamhartex.hartex.buildsystem
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import java.io.File
-import java.util.NoSuchElementException
+import java.nio.file.Paths
+import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.memberProperties
+
 
 class ProjectBuilder {
   companion object {
@@ -44,7 +47,7 @@ class ProjectBuilder {
 
             when (projectToBuild.buildTool) {
               ProjectBuildTool.CARGO -> {
-                processBuilder.command("cargo", "build")
+                processBuilder.command(findCargo(), "build")
 
                 when (projectToBuild.cargoBuildProfile) {
                   CargoBuildProfile.RELEASE -> {
@@ -73,6 +76,29 @@ class ProjectBuilder {
           }
         }
       }
+    }
+
+    private fun findCargo(): String? {
+      val envPath = System.getenv("PATH")
+      val system = System.getProperty("os.name").lowercase(Locale.getDefault())
+      val delimiter = when {
+        system.contains("win") -> ";"
+        else -> ":"
+      }
+      val paths = envPath.split(delimiter.toRegex())
+      val fileNameToCheck = when {
+        system.contains("win") -> "cargo.exe"
+        else -> "cargo"
+      }
+
+      for (path in paths) {
+        val cargo = Paths.get(path, fileNameToCheck)
+        val cargoFile = File(cargo.toString())
+        if (cargoFile.canExecute())
+          return cargo.toString()
+      }
+
+      return null
     }
   }
 }
