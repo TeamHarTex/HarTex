@@ -27,9 +27,9 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
-      - name: Environment Variable Stuff
-        run: echo "${HOME}/.cargo/bin" >> $GITHUB_PATH
       - name: Run Buildsystem
+        env:
+          PATH: "/home/runner/.cargo/bin"
         run: java -jar ./buildsystem.jar ./build.buildsystem.kts build discord-frontend
 
   TestDiscordFrontend:
