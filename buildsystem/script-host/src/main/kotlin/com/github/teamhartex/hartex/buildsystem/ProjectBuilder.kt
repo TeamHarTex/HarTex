@@ -60,7 +60,7 @@ class ProjectBuilder {
               else -> {}
             }
 
-            val process = processBuilder.directory(File(System.getProperty("user.dir") + """\${args[2]}"""))
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
               .start()
             val outputReader = process.errorStream.bufferedReader()
             var line = outputReader.readLine()
