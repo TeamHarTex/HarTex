@@ -47,7 +47,7 @@ class ProjectBuilder {
 
             when (projectToBuild.buildTool) {
               ProjectBuildTool.CARGO -> {
-                processBuilder.command(findCargo(), "build")
+                processBuilder.command("cargo", "build")
 
                 when (projectToBuild.cargoBuildProfile) {
                   CargoBuildProfile.RELEASE -> {
@@ -76,29 +76,6 @@ class ProjectBuilder {
           }
         }
       }
-    }
-
-    private fun findCargo(): String? {
-      val envPath = System.getenv("PATH")
-      val system = System.getProperty("os.name").lowercase(Locale.getDefault())
-      val delimiter = when {
-        system.contains("win") -> ";"
-        else -> ":"
-      }
-      val paths = envPath.split(delimiter.toRegex())
-      val fileNameToCheck = when {
-        system.contains("win") -> "cargo.exe"
-        else -> "cargo"
-      }
-
-      for (path in paths) {
-        val cargo = Paths.get(path, fileNameToCheck)
-        val cargoFile = File(cargo.toString())
-        if (cargoFile.canExecute())
-          return cargo.toString()
-      }
-
-      return null
     }
   }
 }
