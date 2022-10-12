@@ -46,16 +46,15 @@ class ProjectBuilder {
             val processBuilder = ProcessBuilder()
               .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
-            when (projectToBuild.buildTool) {
-              ProjectBuildTool.CARGO -> {
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
                 processBuilder.command("cargo", "build")
 
                 when (projectToBuild.cargoBuildProfile) {
                   CargoBuildProfile.RELEASE -> {
                     processBuilder.command().add("--release")
                   }
-                  else -> {
-                  }
+                  else -> {}
                 }
               }
               else -> {}
@@ -74,14 +73,54 @@ class ProjectBuilder {
             val processBuilder = ProcessBuilder()
               .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
-            when (projectToBuild.projectType) {
-              ProjectType.RUST -> {
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
                 processBuilder.command("cargo", "clippy")
               }
               else -> {
                 println("running clippy is not supported in non-Rust projects")
                 return
               }
+            }
+
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+              .start()
+            val outputReader = process.errorStream.bufferedReader()
+            var line = outputReader.readLine()
+            while (line != null) {
+              println(line)
+              line = outputReader.readLine()
+            }
+          }
+          "fmt" -> {
+            val processBuilder = ProcessBuilder()
+              .redirectOutput(ProcessBuilder.Redirect.PIPE)
+
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
+                processBuilder.command("cargo", "fmt", "--all", "--", "--check")
+              }
+              else -> {}
+            }
+
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+              .start()
+            val outputReader = process.errorStream.bufferedReader()
+            var line = outputReader.readLine()
+            while (line != null) {
+              println(line)
+              line = outputReader.readLine()
+            }
+          }
+          "test" -> {
+            val processBuilder = ProcessBuilder()
+              .redirectOutput(ProcessBuilder.Redirect.PIPE)
+
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
+                processBuilder.command("cargo", "nextest", "run")
+              }
+              else -> {}
             }
 
             val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
