@@ -25,8 +25,11 @@ import java.io.File
 import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.ScriptDiagnostic
 import kotlin.script.experimental.api.onSuccess
+import org.fusesource.jansi.AnsiConsole
 
 fun main(vararg args: String) {
+  AnsiConsole.systemInstall()
+
   if (args.isEmpty())
     println("no script file to execute")
   else {
@@ -42,4 +45,6 @@ fun main(vararg args: String) {
       ResultWithDiagnostics.Success(it)
     }
   }
+
+  AnsiConsole.systemUninstall()
 }
