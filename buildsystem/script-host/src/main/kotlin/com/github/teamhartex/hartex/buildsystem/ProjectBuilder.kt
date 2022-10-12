@@ -41,7 +41,6 @@ class ProjectBuilder {
             val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
             val processBuilder = ProcessBuilder()
               .redirectOutput(ProcessBuilder.Redirect.PIPE)
-            println(processBuilder.environment())
 
             when (projectToBuild.buildTool) {
               ProjectBuildTool.CARGO -> {
