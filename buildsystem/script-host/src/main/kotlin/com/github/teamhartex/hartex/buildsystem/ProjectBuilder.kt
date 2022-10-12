@@ -39,6 +39,7 @@ class ProjectBuilder {
             val projects = projectsField.call(scriptClass.createInstance()) as Projects
 
             val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
+            println(System.getenv("PATH"))
             val processBuilder = ProcessBuilder()
               .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
