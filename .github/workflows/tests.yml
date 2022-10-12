@@ -27,7 +27,8 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
-        run: echo $GITHUB_PATH
+      - name: Print
+        run: echo $PATH
       - name: Run Buildsystem
         run: ls /home/runner/.cargo/bin && java -jar ./buildsystem.jar ./build.buildsystem.kts build discord-frontend
 
