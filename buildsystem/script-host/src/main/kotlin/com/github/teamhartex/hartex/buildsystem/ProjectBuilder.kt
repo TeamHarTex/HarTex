@@ -24,10 +24,13 @@ package com.github.teamhartex.hartex.buildsystem
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import java.io.File
-import java.util.NoSuchElementException
+import java.nio.file.Paths
+import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.memberProperties
+
 
 class ProjectBuilder {
   companion object {
@@ -57,7 +60,7 @@ class ProjectBuilder {
               else -> {}
             }
 
-            val process = processBuilder.directory(File(System.getProperty("user.dir") + """\${args[2]}"""))
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
               .start()
             val outputReader = process.errorStream.bufferedReader()
             var line = outputReader.readLine()
