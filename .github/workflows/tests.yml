@@ -27,8 +27,6 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
-      - name: Create Symbolic Link to Cargo
-        run: sudo ln -s /home/runner/.cargo/bin/cargo /usr/bin/cargo
       - name: Run Buildsystem
         run: java -jar ./buildsystem.jar ./build.buildsystem.kts build discord-frontend
 
