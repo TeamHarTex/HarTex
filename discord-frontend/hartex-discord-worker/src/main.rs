@@ -19,6 +19,7 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
+use hartex_discord_core::dotenv;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 
