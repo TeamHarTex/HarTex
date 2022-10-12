@@ -36,25 +36,25 @@ class ProjectBuilder {
   companion object {
     fun build(scriptClass: KClass<*>, vararg args: String) {
       if (args.size > 1) {
+        val projectsField = scriptClass.memberProperties.find { field -> field.name == "projects" }!!
+        val projects = projectsField.call(scriptClass.createInstance()) as Projects
+
+        val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
+
         when (args[1]) {
           "build" -> {
-            val projectsField = scriptClass.memberProperties.find { field -> field.name == "projects" }!!
-            val projects = projectsField.call(scriptClass.createInstance()) as Projects
-
-            val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
             val processBuilder = ProcessBuilder()
               .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
-            when (projectToBuild.buildTool) {
-              ProjectBuildTool.CARGO -> {
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
                 processBuilder.command("cargo", "build")
 
                 when (projectToBuild.cargoBuildProfile) {
                   CargoBuildProfile.RELEASE -> {
                     processBuilder.command().add("--release")
                   }
-                  else -> {
-                  }
+                  else -> {}
                 }
               }
               else -> {}
@@ -65,12 +65,70 @@ class ProjectBuilder {
             val outputReader = process.errorStream.bufferedReader()
             var line = outputReader.readLine()
             while (line != null) {
-              val array = line.split("\\s+".toRegex(), limit = 3)
-              when (array[1]) {
-                "Compiling" -> println("   ${(TextColors.green + TextStyles.bold)(array[1])} ${array[2]}")
-                "Finished" -> println("    ${(TextColors.green + TextStyles.bold)(array[1])} ${array[2]}")
-              }
+              println(line)
+              line = outputReader.readLine()
+            }
+          }
+          "clippy" -> {
+            val processBuilder = ProcessBuilder()
+              .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
+                processBuilder.command("cargo", "clippy")
+              }
+              else -> {
+                println("running clippy is not supported in non-Rust projects")
+                return
+              }
+            }
+
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+              .start()
+            val outputReader = process.errorStream.bufferedReader()
+            var line = outputReader.readLine()
+            while (line != null) {
+              println(line)
+              line = outputReader.readLine()
+            }
+          }
+          "fmt" -> {
+            val processBuilder = ProcessBuilder()
+              .redirectOutput(ProcessBuilder.Redirect.PIPE)
+
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
+                processBuilder.command("cargo", "fmt", "--all", "--", "--check")
+              }
+              else -> {}
+            }
+
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+              .start()
+            val outputReader = process.errorStream.bufferedReader()
+            var line = outputReader.readLine()
+            while (line != null) {
+              println(line)
+              line = outputReader.readLine()
+            }
+          }
+          "test" -> {
+            val processBuilder = ProcessBuilder()
+              .redirectOutput(ProcessBuilder.Redirect.PIPE)
+
+            when (projectToBuild.projectType to projectToBuild.buildTool) {
+              ProjectType.RUST to ProjectBuildTool.CARGO -> {
+                processBuilder.command("cargo", "nextest", "run")
+              }
+              else -> {}
+            }
+
+            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+              .start()
+            val outputReader = process.errorStream.bufferedReader()
+            var line = outputReader.readLine()
+            while (line != null) {
+              println(line)
               line = outputReader.readLine()
             }
           }
