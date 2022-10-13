@@ -65,6 +65,8 @@ class ProjectBuilder {
               line = outputReader.readLine()
             }
 
+            process.waitFor()
+
             if (process.exitValue() != 0)
               throw RuntimeException("abnormal termination of cargo process")
           }
