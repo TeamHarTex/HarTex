@@ -21,11 +21,7 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
-import com.github.ajalt.mordant.rendering.TextColors
-import com.github.ajalt.mordant.rendering.TextStyles
 import java.io.File
-import java.nio.file.Paths
-import java.util.*
 import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -68,6 +64,9 @@ class ProjectBuilder {
               println(line)
               line = outputReader.readLine()
             }
+
+            if (process.exitValue() != 0)
+              throw RuntimeException("abnormal termination of cargo process")
           }
           "clippy" -> {
             val processBuilder = ProcessBuilder()
