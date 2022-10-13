@@ -47,8 +47,8 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
     let host = std::env::var("RABBITMQ_HOST")?;
     let port = std::env::var("RABBITMQ_PORT")?;
-    let uri = format!("amqp://{}:{}@{}:{}", username, password, host, port);
-    let uri_log = format!("amqp://{}:<redacted>@{}:{}", username, host, port);
+    let uri = format!("amqp://{username}:{password}@{host}:{port}");
+    let uri_log = format!("amqp://{username}:<redacted>@{host}:{port}");
 
     log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
     let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
