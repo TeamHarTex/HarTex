@@ -37,7 +37,7 @@ class ProjectBuilder {
 
         val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
 
-        when (args[1]) {
+        val process = when (args[1]) {
           "build" -> {
             val processBuilder = ProcessBuilder()
               .redirectOutput(ProcessBuilder.Redirect.PIPE)
@@ -65,10 +65,7 @@ class ProjectBuilder {
               line = outputReader.readLine()
             }
 
-            process.waitFor()
-
-            if (process.exitValue() != 0)
-              throw RuntimeException("abnormal termination of cargo process")
+            process
           }
           "clippy" -> {
             val processBuilder = ProcessBuilder()
@@ -92,6 +89,8 @@ class ProjectBuilder {
               println(line)
               line = outputReader.readLine()
             }
+
+            process
           }
           "fmt" -> {
             val processBuilder = ProcessBuilder()
@@ -112,6 +111,8 @@ class ProjectBuilder {
               println(line)
               line = outputReader.readLine()
             }
+
+            process
           }
           "test" -> {
             val processBuilder = ProcessBuilder()
@@ -132,8 +133,16 @@ class ProjectBuilder {
               println(line)
               line = outputReader.readLine()
             }
+
+            process
           }
+          else -> throw IllegalArgumentException("invalid command")
         }
+
+        process.waitFor()
+
+        if (process.exitValue() != 0)
+          throw RuntimeException("abnormal termination")
       }
     }
   }
