@@ -19,8 +19,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type {TranslationDictionary} from './translationDictionary';
+import type {AstroGlobal} from 'astro'
 
-export async function getTranslations(): Promise<TranslationDictionary> {
+import type {TranslationDictionary} from './translationDictionary'
+import {getLanguageFromUri} from '../language'
+
+const translationDictonary = mapExports(import.meta.glob("./*/translations.ts", { eager: true }))
+
+export async function getTranslations(astroGlobals: AstroGlobal): Promise<TranslationDictionary> {
+    const language = getLanguageFromUri(astroGlobals.url.pathname) || "en"
+    return await buildContents(language, translationDictonary[language])
+}
+
+function mapExports<T>(modules: Record<string, { default: T }>) {
+    const exportMap: Record<string, T> = {}
+    for (const [path, module] of Object.entries(modules)) {
+        const [_, lang] = path.split('/')
+        exportMap[lang] = module.default
+    }
+
+    return exportMap
+}
+
+async function buildContents(language: string, translationDictionary: TranslationDictionary) {
     throw Error("todo")
 }
