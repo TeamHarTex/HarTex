@@ -21,7 +21,6 @@
  */
 
 import Footer from '../components/Footer'
-import LeftSidebar from '../components/sidebar/LeftSidebar'
 
 const { frontmatter } = Astro.props
 ---
@@ -44,9 +43,7 @@ const { frontmatter } = Astro.props
 	</head>
 	<body>
 		<div class="flex overflow-hidden h-screen">
-			<div class="flex-[0_0_350px] overflow-hidden bg-dark-grey">
-			    <LeftSidebar />
-			</div>
+			<div class="flex-[0_0_350px] overflow-hidden bg-dark-grey" />
 			<div class="flex-[1_1_1440px] overflow-hidden pr-[17px] flex items-center flex-col">
 				<div class="mt-12">
 					<slot />
