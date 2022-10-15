@@ -23,8 +23,18 @@ import React from 'react'
 
 const Sidebar = () => {
     return (
-        <div>
-        </div>
+        <>
+            <div className="min-h-full flex flex-1 overflow-x-hidden overflow-y-scroll z-0">
+                <div className="flex flex-[1_1_auto]">
+                    <div className="flex pl-8 pr-4 flex-[1_1_auto]">
+
+                    </div>
+                </div>
+            </div>
+            <div className="flex w-4 right-0 z-[1]">
+
+            </div>
+        </>
     )
 }
 
