@@ -20,21 +20,24 @@
  */
 
 import type {AstroGlobal} from 'astro'
+import {readdir} from 'fs/promises'
 
 import type {TranslationDictionary} from './translationDictionary'
 import {getLanguageFromUri} from '../language'
 
-const translationDictonary = mapExports(import.meta.glob("./*/translations.ts", { eager: true }))
+const translationDictonary = mapExports<TranslationDictionary>(import.meta.glob("./*/translations.ts", { eager: true }))
 
 export async function getTranslations(astroGlobals: AstroGlobal): Promise<TranslationDictionary> {
     const language = getLanguageFromUri(astroGlobals.url.pathname) || "en"
+    // @ts-ignore
     return await buildContents(language, translationDictonary[language])
 }
 
 function mapExports<T>(modules: Record<string, { default: T }>) {
     const exportMap: Record<string, T> = {}
     for (const [path, module] of Object.entries(modules)) {
-        const [_, lang] = path.split('/')
+        const [_dot, lang] = path.split('/')
+        // @ts-ignore
         exportMap[lang] = module.default
     }
 
@@ -42,5 +45,40 @@ function mapExports<T>(modules: Record<string, { default: T }>) {
 }
 
 async function buildContents(language: string, translationDictionary: TranslationDictionary) {
-    throw Error("todo")
+    const directoryUrl = new URL(
+        import.meta.env.DEV ? `../pages/documentation/${language}` : `../src/pages/documemntation/${language}`,
+        import.meta.url
+    )
+    const urlToSlug = (url: URL) => url.pathname.split(`/src/pages/${language}`)[1]
+    const markdownSlugs = new Set((await markdownPaths(directoryUrl)).map(urlToSlug))
+
+    for (const entry of translationDictionary) {
+        if ("isHeader" in entry)
+            continue
+
+        if (!markdownSlugs.has(entry.slug + ".md")) {
+            entry.isFallback = true
+        }
+    }
+
+    return translationDictionary
+}
+
+async function markdownPaths(url: URL, files: URL[] = []) {
+    if (url.href.at(-1) !== '/')
+        url.pathname = "/"
+
+    const entires = await readdir(url, { withFileTypes: true })
+    await Promise.all(
+        // @ts-ignore
+        entires.map(async (entry) => {
+            if (entry.isDirectory()) {
+                return await markdownPaths(new URL(entry.name, url), files);
+            } else if (entry.name.endsWith(".md")) {
+                files.push(new URL(entry.name, url));
+            }
+        })
+    )
+
+    return files
 }
