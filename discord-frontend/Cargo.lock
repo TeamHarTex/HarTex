@@ -2138,7 +2138,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.13.3"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/fix/gateway/heartbeat#8569f2156b3580176a3f1bd600414d044df6b0fa"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#287d7d87f6901a52e7e2bd4c7e5defbb57c8fdbc"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2159,7 +2159,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.13.1"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/fix/gateway/heartbeat#8569f2156b3580176a3f1bd600414d044df6b0fa"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#287d7d87f6901a52e7e2bd4c7e5defbb57c8fdbc"
 dependencies = [
  "tokio",
  "tracing",
@@ -2168,7 +2168,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.13.2"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/fix/gateway/heartbeat#8569f2156b3580176a3f1bd600414d044df6b0fa"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#287d7d87f6901a52e7e2bd4c7e5defbb57c8fdbc"
 dependencies = [
  "hyper",
  "percent-encoding",
@@ -2185,7 +2185,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.13.2"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/fix/gateway/heartbeat#8569f2156b3580176a3f1bd600414d044df6b0fa"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#287d7d87f6901a52e7e2bd4c7e5defbb57c8fdbc"
 dependencies = [
  "futures-util",
  "http",
@@ -2196,7 +2196,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.13.5"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/fix/gateway/heartbeat#8569f2156b3580176a3f1bd600414d044df6b0fa"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#287d7d87f6901a52e7e2bd4c7e5defbb57c8fdbc"
 dependencies = [
  "bitflags",
  "serde",
@@ -2209,7 +2209,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.13.1"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/fix/gateway/heartbeat#8569f2156b3580176a3f1bd600414d044df6b0fa"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#287d7d87f6901a52e7e2bd4c7e5defbb57c8fdbc"
 dependencies = [
  "twilight-model",
 ]
