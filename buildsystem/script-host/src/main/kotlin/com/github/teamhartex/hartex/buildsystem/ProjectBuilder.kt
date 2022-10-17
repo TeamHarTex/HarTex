@@ -21,7 +21,10 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
-import java.io.File
+import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoBuildProcess
+import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoClippyProcess
+import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoFormatProcess
+import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoTestProcess
 import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -38,104 +41,10 @@ class ProjectBuilder {
         val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
 
         val process = when (args[1]) {
-          "build" -> {
-            val processBuilder = ProcessBuilder()
-              .redirectOutput(ProcessBuilder.Redirect.PIPE)
-
-            when (projectToBuild.projectType to projectToBuild.buildTool) {
-              ProjectType.RUST to ProjectBuildTool.CARGO -> {
-                processBuilder.command("cargo", "build")
-
-                when (projectToBuild.cargoBuildProfile) {
-                  CargoBuildProfile.RELEASE -> {
-                    processBuilder.command().add("--release")
-                  }
-                  else -> {}
-                }
-              }
-              else -> {}
-            }
-
-            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
-              .start()
-            val outputReader = process.errorStream.bufferedReader()
-            var line = outputReader.readLine()
-            while (line != null) {
-              println(line)
-              line = outputReader.readLine()
-            }
-
-            process
-          }
-          "clippy" -> {
-            val processBuilder = ProcessBuilder()
-              .redirectOutput(ProcessBuilder.Redirect.PIPE)
-
-            when (projectToBuild.projectType to projectToBuild.buildTool) {
-              ProjectType.RUST to ProjectBuildTool.CARGO -> {
-                processBuilder.command("cargo", "clippy")
-              }
-              else -> {
-                println("running clippy is not supported in non-Rust projects")
-                return
-              }
-            }
-
-            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
-              .start()
-            val outputReader = process.errorStream.bufferedReader()
-            var line = outputReader.readLine()
-            while (line != null) {
-              println(line)
-              line = outputReader.readLine()
-            }
-
-            process
-          }
-          "fmt" -> {
-            val processBuilder = ProcessBuilder()
-              .redirectOutput(ProcessBuilder.Redirect.PIPE)
-
-            when (projectToBuild.projectType to projectToBuild.buildTool) {
-              ProjectType.RUST to ProjectBuildTool.CARGO -> {
-                processBuilder.command("cargo", "fmt", "--all", "--", "--check")
-              }
-              else -> {}
-            }
-
-            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
-              .start()
-            val outputReader = process.errorStream.bufferedReader()
-            var line = outputReader.readLine()
-            while (line != null) {
-              println(line)
-              line = outputReader.readLine()
-            }
-
-            process
-          }
-          "test" -> {
-            val processBuilder = ProcessBuilder()
-              .redirectOutput(ProcessBuilder.Redirect.PIPE)
-
-            when (projectToBuild.projectType to projectToBuild.buildTool) {
-              ProjectType.RUST to ProjectBuildTool.CARGO -> {
-                processBuilder.command("cargo", "nextest", "run")
-              }
-              else -> {}
-            }
-
-            val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
-              .start()
-            val outputReader = process.errorStream.bufferedReader()
-            var line = outputReader.readLine()
-            while (line != null) {
-              println(line)
-              line = outputReader.readLine()
-            }
-
-            process
-          }
+          "build" -> CargoBuildProcess.new(projectToBuild, args.asList())
+          "clippy" -> CargoClippyProcess.new(projectToBuild, args.asList())
+          "format" -> CargoFormatProcess.new(projectToBuild, args.asList())
+          "test" -> CargoTestProcess.new(projectToBuild, args.asList())
           else -> throw IllegalArgumentException("invalid command")
         }
 
