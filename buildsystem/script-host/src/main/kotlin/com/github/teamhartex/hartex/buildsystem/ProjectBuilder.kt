@@ -22,6 +22,7 @@
 package com.github.teamhartex.hartex.buildsystem
 
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoBuildProcess
+import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoCleanProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoClippyProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoFormatProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoTestProcess
@@ -42,6 +43,8 @@ class ProjectBuilder {
 
         val process = when (args[1]) {
           "build" -> CargoBuildProcess.new(projectToBuild, args.asList())
+          // FIXME(HTG-YT): allow running `clean` for `yarn` as well
+          "clean" -> CargoCleanProcess.new(projectToBuild, args.asList())
           "clippy" -> CargoClippyProcess.new(projectToBuild, args.asList())
           "format" -> CargoFormatProcess.new(projectToBuild, args.asList())
           "test" -> CargoTestProcess.new(projectToBuild, args.asList())
