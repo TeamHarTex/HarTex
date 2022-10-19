@@ -1,11 +1,11 @@
-package com.github.teamhartex.hartex.buildsystem.processes.cargo
+package com.github.teamhartex.hartex.buildsystem.processes.common
 
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
 import java.io.File
 
-class CargoCleanProcess {
+class CommonCleanProcess {
   companion object {
     fun new(projectToBuild: Project, args: List<String>): Process {
       val processBuilder = ProcessBuilder()
@@ -13,7 +13,7 @@ class CargoCleanProcess {
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> processBuilder.command("cargo", "clean")
-        else -> throw IllegalStateException("running cargo clean is not supported in non-Rust projects")
+        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {}
       }
 
       val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
