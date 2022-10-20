@@ -14,7 +14,7 @@ rust-version = "1.66.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "discord-gateway", "environment", "logging-facilities"] }
 hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 
-futures-util = "0.3.24"
+futures-util = "0.3.25"
 lapin = "2.1.1"
 sqlx = { version = "0.6.2", features = ["postgres", "runtime-tokio-rustls"] }
 tracing = { version = "0.1.37", features = ["log-always" ]}
