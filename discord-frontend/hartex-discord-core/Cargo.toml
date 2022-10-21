@@ -15,8 +15,8 @@ dotenv = { version = "0.15.0", optional = true }
 log = { version = "0.4.17", optional = true }
 log4rs = { version = "1.2.0", default-features = false, optional = true }
 tokio = { version = "1.21.2", optional = true }
-twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git", branch = "vilgotf/fix/gateway/resume", optional = true }
-twilight-model = { git = "https://github.com/twilight-rs/twilight.git", branch = "vilgotf/fix/gateway/resume", optional = true }
+twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git", branch = "next", optional = true }
+twilight-model = { git = "https://github.com/twilight-rs/twilight.git", branch = "next", optional = true }
 
 [features]
 async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thread"]
