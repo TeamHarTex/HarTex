@@ -27,7 +27,7 @@ use hartex_discord_core::discord::model::gateway::payload::outgoing::update_pres
 use hartex_discord_core::discord::model::gateway::presence::{Activity, ActivityType, Status};
 use hartex_discord_core::log;
 
-pub async fn get_clusters(
+pub fn get_clusters(
     num_shards: u64,
     queue: Arc<dyn Queue>,
 ) -> hartex_discord_eyre::Result<Vec<(u64, Vec<Shard>)>> {
