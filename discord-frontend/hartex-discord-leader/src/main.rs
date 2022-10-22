@@ -114,7 +114,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::get_queue()?;
-    let clusters = clusters::get_clusters(shards, queue.clone()).await?;
+    let clusters = clusters::get_clusters(shards, queue.clone())?;
 
     log::trace!(
         "launching {} cluster(s) with {shards} shard(s)",
