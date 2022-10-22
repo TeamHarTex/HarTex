@@ -21,7 +21,6 @@
 
 use std::sync::Arc;
 
-use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::{stream, Config, EventTypeFlags, Intents, Shard};
 use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
@@ -74,9 +73,7 @@ pub async fn get_clusters(
                 .queue(queue.clone())
                 .build()
         })
-        .filter_map(|result| async move { result.ok() })
-        .collect::<Vec<_>>()
-        .await;
+        .collect::<Vec<_>>();
         clusters.push((i, cluster));
         shard_start_index = total;
     }
@@ -93,9 +90,7 @@ pub async fn get_clusters(
                     .queue(queue.clone())
                     .build()
             })
-            .filter_map(|result| async move { result.ok() })
-            .collect::<Vec<_>>()
-            .await;
+            .collect::<Vec<_>>();
         clusters.push((num_clusters, cluster));
     }
 
