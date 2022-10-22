@@ -22,6 +22,8 @@
 
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
+
+const {title} = Astro.props
 ---
 
 <html lang="en">
@@ -37,7 +39,7 @@ import Navbar from '../components/Navbar'
 		/>
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>HarTex</title>
+		<title>{title}</title>
 		<meta name="description" content="HarTex" />
 	</head>
 	<body>
