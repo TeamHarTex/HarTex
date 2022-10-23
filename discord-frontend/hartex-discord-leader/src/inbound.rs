@@ -32,26 +32,29 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Ch
 
     while let Some((shard, result)) = stream.next().await {
         match result {
-            Ok(message) => match message {
-                msg => match msg {
-                    Message::Binary(bytes) => {
-                        log::trace!("[cluster {cluster_id} - shard {shard_id}] received binary payload from gateway", shard_id = shard.id().number());
+            Ok(message) => {
+                let Some(bytes) = (match message {
+                    Message::Binary(bytes) => Some(bytes),
+                    Message::Text(string) => Some(string.into_bytes()),
+                    _ => None,
+                }) else {
+                    continue
+                };
 
-                        if let Err(error) = amqp
-                            .basic_publish(
-                                "gateway",
-                                &format!("SHARD_{}_PAYLOAD", shard.id().number()),
-                                BasicPublishOptions::default(),
-                                bytes.as_slice(),
-                                BasicProperties::default(),
-                            )
-                            .await
-                        {
-                            log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to publish payload to worker: {error}", shard_id = shard.id().number())
-                        }
-                    }
-                    _ => (),
-                },
+                log::trace!("[cluster {cluster_id} - shard {shard_id}] received binary payload from gateway", shard_id = shard.id().number());
+
+                if let Err(error) = amqp
+                    .basic_publish(
+                        "gateway",
+                        &format!("SHARD_{}_PAYLOAD", shard.id().number()),
+                        BasicPublishOptions::default(),
+                        bytes.as_slice(),
+                        BasicProperties::default(),
+                    )
+                    .await
+                {
+                    log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to publish payload to worker: {error}", shard_id = shard.id().number())
+                }
             },
             Err(error) => {
                 if error.is_fatal() {
