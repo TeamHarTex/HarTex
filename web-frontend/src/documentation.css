@@ -35,7 +35,7 @@
 .admonition-warning {
     @apply border-l-orange;
     @apply bg-dark-orange;
-    }
+}
 
 .hash-link {
     @apply pl-2;
