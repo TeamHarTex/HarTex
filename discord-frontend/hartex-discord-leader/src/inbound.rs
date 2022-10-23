@@ -20,20 +20,36 @@
  */
 
 use futures_util::StreamExt;
+use hartex_discord_core::discord::gateway::message::Message;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
+use lapin::options::BasicPublishOptions;
+use lapin::{BasicProperties, Channel};
 
-pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
+pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Channel) {
     let mut stream = ShardMessageStream::new(cluster.iter_mut());
 
     while let Some((shard, result)) = stream.next().await {
         match result {
             Ok(message) => match message {
-                msg => log::trace!(
-                    "[cluster {cluster_id} - shard {shard_id}] {msg:?}",
-                    shard_id = shard.id().number()
-                ),
+                msg => match msg {
+                    Message::Binary(bytes) => {
+                        if let Err(error) = amqp
+                            .basic_publish(
+                                "gateway",
+                                &format!("SHARD_{}_PAYLOAD", shard.id().number()),
+                                BasicPublishOptions::default(),
+                                bytes.as_slice(),
+                                BasicProperties::default(),
+                            )
+                            .await
+                        {
+                            log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to send payload to worker: {error}", shard_id = shard.id().number())
+                        }
+                    }
+                    _ => (),
+                },
             },
             Err(error) => {
                 if error.is_fatal() {

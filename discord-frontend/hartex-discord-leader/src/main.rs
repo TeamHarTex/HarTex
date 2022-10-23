@@ -53,11 +53,11 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
     let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
 
-    let channel = amqp_connection.create_channel().await?;
+    let channel_inbound = amqp_connection.create_channel().await?;
     let channel_outbound = amqp_connection.create_channel().await?;
 
     log::trace!("declaring amqp exchange");
-    channel
+    channel_inbound
         .exchange_declare(
             "gateway",
             ExchangeKind::Topic,
@@ -88,7 +88,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         .await?;
 
     log::trace!("declaring and binding amqp inbound queue");
-    channel
+    channel_inbound
         .queue_declare(
             "gateway.inbound",
             QueueDeclareOptions {
@@ -101,7 +101,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
             FieldTable::default(),
         )
         .await?;
-    channel
+    channel_inbound
         .queue_bind(
             "gateway.inbound",
             "gateway",
@@ -123,9 +123,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     let local = LocalSet::new();
     for (cluster_id, cluster) in clusters {
-        local.spawn_local(
-            async move { inbound::handle_inbound(cluster_id as usize, cluster).await },
-        );
+        let amqp = channel_inbound.clone();
+        local.spawn_local(async move {
+            inbound::handle_inbound(cluster_id as usize, cluster, amqp).await
+        });
     }
 
     let ctrlc = signal::ctrl_c();
