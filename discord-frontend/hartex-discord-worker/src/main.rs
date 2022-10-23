@@ -19,9 +19,13 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
+use futures_util::StreamExt;
 use hartex_discord_core::dotenv;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
+use lapin::options::{BasicAckOptions, BasicConsumeOptions};
+use lapin::types::FieldTable;
+use lapin::{Connection, ConnectionProperties};
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_discord_eyre::Result<()> {
@@ -30,6 +34,36 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     log::trace!("loading environment variables");
     dotenv::dotenv()?;
+
+    let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
+    let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
+    let host = std::env::var("RABBITMQ_HOST")?;
+    let port = std::env::var("RABBITMQ_PORT")?;
+    let uri = format!("amqp://{username}:{password}@{host}:{port}");
+    let uri_log = format!("amqp://{username}:<redacted>@{host}:{port}");
+
+    log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
+    let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
+
+    let channel_inbound = amqp_connection.create_channel().await?;
+    let mut consumer = channel_inbound
+        .basic_consume(
+            "gateway.inbound",
+            "consumer",
+            BasicConsumeOptions::default(),
+            FieldTable::default(),
+        )
+        .await?;
+
+    while let Some(result) = consumer.next().await {
+        if let Ok(delivery) = result {
+            delivery
+                .ack(BasicAckOptions::default())
+                .await
+                .expect("failed to ack");
+            log::trace!("{}", String::from_utf8(delivery.data).unwrap());
+        }
+    }
 
     Ok(())
 }

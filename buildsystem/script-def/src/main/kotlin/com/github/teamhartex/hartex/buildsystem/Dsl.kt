@@ -12,6 +12,7 @@ open class Project(val projectType: ProjectType) {
   lateinit var buildTool: ProjectBuildTool
   var includeDebugInformation by Delegates.notNull<Boolean>()
   lateinit var linker: String
+  lateinit var outputDirectory: String
 }
 
 open class Projects {
@@ -43,6 +44,10 @@ open class ProjectConfigurationForProjectScope(private val forProject: Project) 
 
   fun linker(linker: String) {
     forProject.linker = linker
+  }
+
+  fun outputDirectory(buildDirectory: String) {
+    forProject.outputDirectory = buildDirectory
   }
 }
 
