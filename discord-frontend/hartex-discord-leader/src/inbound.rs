@@ -20,36 +20,20 @@
  */
 
 use futures_util::StreamExt;
-use hartex_discord_core::discord::gateway::stream::ShardEventStream;
-use hartex_discord_core::discord::gateway::{Event, Shard};
-use hartex_discord_core::discord::model::gateway::payload::incoming::Hello;
+use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
+use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
 
 pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>) {
-    let mut stream = ShardEventStream::new(cluster.iter_mut());
+    let mut stream = ShardMessageStream::new(cluster.iter_mut());
 
     while let Some((shard, result)) = stream.next().await {
         match result {
-            Ok(event) => match event {
-                Event::GatewayHello(Hello { heartbeat_interval }) => {
-                    log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_HELLO (heartbeat interval: {heartbeat_interval})", shard_id = shard.id().number());
-                }
-                Event::GatewayInvalidateSession(resumable) => {
-                    log::trace!("[cluster {cluster_id} - shard {shard_id}] GATEWAY_INVALID_SESSION (resumable: {resumable})", shard_id = shard.id().number());
-                }
-                Event::Ready(_) => {
-                    log::info!(
-                        "[cluster {cluster_id} - shard {shard_id}] GATEWAY_READY",
-                        shard_id = shard.id().number()
-                    );
-                }
-                Event::Resumed => {
-                    log::info!(
-                        "[cluster {cluster_id} - shard {shard_id}] GATEWAY_RESUMED",
-                        shard_id = shard.id().number()
-                    );
-                }
-                _ => {}
+            Ok(message) => match message {
+                msg => log::trace!(
+                    "[cluster {cluster_id} - shard {shard_id}] {msg:?}",
+                    shard_id = shard.id().number()
+                ),
             },
             Err(error) => {
                 if error.is_fatal() {
