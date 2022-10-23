@@ -1,4 +1,4 @@
-package com.github.teamhartex.hartex.buildsystem.processes.cargo
+package com.github.teamhartex.hartex.buildsystem.processes.common
 
 import com.github.teamhartex.hartex.buildsystem.CargoBuildProfile
 import com.github.teamhartex.hartex.buildsystem.Project
@@ -6,7 +6,7 @@ import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
 import java.io.File
 
-class CargoBuildProcess {
+class CommonBuildProcess {
   companion object {
     fun new(projectToBuild: Project, args: List<String>): Process {
       val processBuilder = ProcessBuilder()
@@ -23,7 +23,7 @@ class CargoBuildProcess {
             else -> {}
           }
         }
-        else -> throw IllegalStateException("running cargo build is not supported in non-Rust projects")
+        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> processBuilder.command("yarn", "build")
       }
 
       val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))

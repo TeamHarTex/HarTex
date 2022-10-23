@@ -9,3 +9,8 @@ buildConfigurationForProject("discord-frontend") {
   includeDebugInformation(true)
   linker("rust-lld")
 }
+
+buildConfigurationForProject("web-frontend") {
+  buildTool(ProjectBuildTool.YARN)
+  outputDirectory("dist")
+}

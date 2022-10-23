@@ -53,4 +53,4 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Run Buildsystem
-        run: java -jar ./buildsystem.jar ./build.buildsystem.kts format discord-frontend
+        run: java -jar ./buildsystem.jar ./build.buildsystem.kts formatck discord-frontend

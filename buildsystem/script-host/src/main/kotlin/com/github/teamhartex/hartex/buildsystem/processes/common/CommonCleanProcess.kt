@@ -13,7 +13,9 @@ class CommonCleanProcess {
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> processBuilder.command("cargo", "clean")
-        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {}
+        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {
+          processBuilder.command("rmdir", projectToBuild.outputDirectory)
+        }
       }
 
       val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
