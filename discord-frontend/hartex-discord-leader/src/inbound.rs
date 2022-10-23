@@ -35,6 +35,8 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Ch
             Ok(message) => match message {
                 msg => match msg {
                     Message::Binary(bytes) => {
+                        log::trace!("[cluster {cluster_id} - shard {shard_id}] received binary payload from gateway", shard_id = shard.id().number());
+
                         if let Err(error) = amqp
                             .basic_publish(
                                 "gateway",
@@ -45,7 +47,7 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Ch
                             )
                             .await
                         {
-                            log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to send payload to worker: {error}", shard_id = shard.id().number())
+                            log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to publish payload to worker: {error}", shard_id = shard.id().number())
                         }
                     }
                     _ => (),
