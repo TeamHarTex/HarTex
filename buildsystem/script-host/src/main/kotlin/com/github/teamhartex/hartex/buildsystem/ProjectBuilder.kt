@@ -21,9 +21,10 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
-import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoBuildProcess
+import com.github.teamhartex.hartex.buildsystem.processes.common.CommonBuildProcess
 import com.github.teamhartex.hartex.buildsystem.processes.common.CommonCleanProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoClippyProcess
+import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoFormatCheckProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoFormatProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoTestProcess
 import kotlin.NoSuchElementException
@@ -41,10 +42,11 @@ class ProjectBuilder {
         val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
 
         val process = when (args[1]) {
-          "build" -> CargoBuildProcess.new(projectToBuild, args.asList())
+          "build" -> CommonBuildProcess.new(projectToBuild, args.asList())
           "clean" -> CommonCleanProcess.new(projectToBuild, args.asList())
           "clippy" -> CargoClippyProcess.new(projectToBuild, args.asList())
           "format" -> CargoFormatProcess.new(projectToBuild, args.asList())
+          "formatck" -> CargoFormatCheckProcess.new(projectToBuild, args.asList())
           "test" -> CargoTestProcess.new(projectToBuild, args.asList())
           else -> throw IllegalArgumentException("invalid command")
         }
