@@ -55,7 +55,7 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Ch
                 {
                     log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to publish payload to worker: {error}", shard_id = shard.id().number())
                 }
-            },
+            }
             Err(error) => {
                 if error.is_fatal() {
                     log::error!(
