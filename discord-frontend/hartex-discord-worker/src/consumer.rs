@@ -21,8 +21,8 @@
 
 use futures_util::StreamExt;
 use hartex_discord_core::log;
-use lapin::Consumer;
 use lapin::options::BasicAckOptions;
+use lapin::Consumer;
 
 pub async fn consume(mut consumer: Consumer) {
     while let Some(result) = consumer.next().await {
