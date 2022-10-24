@@ -46,7 +46,7 @@ pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Ch
                 if let Err(error) = amqp
                     .basic_publish(
                         "gateway",
-                        &format!("SHARD_{}_PAYLOAD", shard.id().number()),
+                        &format!("CLUSTER {cluster_id} SHARD {} PAYLOAD", shard.id().number()),
                         BasicPublishOptions::default(),
                         bytes.as_slice(),
                         BasicProperties::default(),
