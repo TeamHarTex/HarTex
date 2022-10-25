@@ -822,6 +822,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_eyre",
  "lapin",
+ "serde_scan",
  "tracing",
 ]
 
@@ -1647,6 +1648,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_scan"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c328aed355674cef5038b201b14b24eb877213462edb7ba28801c6bdd0ac5597"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
