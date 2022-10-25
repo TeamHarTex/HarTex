@@ -134,6 +134,8 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         _ = local.fuse() => {},
         _ = ctrlc.fuse() => {
             log::warn!("ctrl-c signal received, shutting down");
+            channel_inbound.close(1, "user-initiated shutdown").await?;
+            channel_outbound.close(1, "user-initiated shutdown").await?;
         }
     }
 
