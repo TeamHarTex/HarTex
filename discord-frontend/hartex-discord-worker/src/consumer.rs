@@ -23,15 +23,25 @@ use futures_util::StreamExt;
 use hartex_discord_core::log;
 use lapin::options::BasicAckOptions;
 use lapin::Consumer;
+use serde_scan::scan;
 
-pub async fn consume(mut consumer: Consumer) {
+pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> {
     while let Some(result) = consumer.next().await {
         if let Ok(delivery) = result {
             delivery
                 .ack(BasicAckOptions::default())
                 .await
                 .expect("failed to ack");
-            log::trace!("{}", String::from_utf8(delivery.data).unwrap());
+            let value = delivery.routing_key.as_str();
+            let scanned: (u8, u8) = scan!("CLUSTER {} SHARD {} PAYLOAD" <- value)?;
+            log::trace!(
+                "[cluster {} - shard {}] {}",
+                scanned.0,
+                scanned.1,
+                String::from_utf8(delivery.data).unwrap()
+            );
         }
     }
+
+    Ok(())
 }
