@@ -51,7 +51,10 @@ class ProjectBuilder {
           else -> throw IllegalArgumentException("invalid command")
         }
 
-        process.waitFor()
+        process?.waitFor()
+
+        if (process == null)
+          return
 
         if (process.exitValue() != 0)
           throw RuntimeException("abnormal termination")
