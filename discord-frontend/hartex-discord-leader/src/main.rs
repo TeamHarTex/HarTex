@@ -22,7 +22,7 @@
 #![feature(int_roundings)]
 
 use futures_util::FutureExt;
-use hartex_discord_core::dotenv;
+use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
@@ -41,7 +41,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::initialize();
 
     log::trace!("loading environment variables");
-    dotenv::dotenv()?;
+    dotenvy::dotenv()?;
 
     let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
     let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
