@@ -20,7 +20,7 @@
  */
 
 #[cfg(feature = "environment")]
-pub use dotenv;
+pub use dotenvy;
 #[cfg(feature = "async-runtime")]
 pub use tokio;
 
