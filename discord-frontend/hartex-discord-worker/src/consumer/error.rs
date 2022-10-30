@@ -25,14 +25,18 @@ use std::fmt::{self, Display, Formatter};
 #[derive(Debug)]
 pub struct ConsumerError {
     pub kind: ConsumerErrorKind,
-    pub source: Option<Box<dyn Error + Send + Sync + 'static>>
+    pub source: Option<Box<dyn Error + Send + Sync + 'static>>,
 }
 
 impl Display for ConsumerError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self.kind {
-            ConsumerErrorKind::DeserializationFailed => write!(f, "deserialization failure: {:?}", self.source),
-            ConsumerErrorKind::GatewayPayloadNotUTF8 => f.write_str("gateway payload not encoded in utf-8"),
+            ConsumerErrorKind::DeserializationFailed => {
+                write!(f, "deserialization failure: {:?}", self.source)
+            }
+            ConsumerErrorKind::GatewayPayloadNotUTF8 => {
+                f.write_str("gateway payload not encoded in utf-8")
+            }
             ConsumerErrorKind::InvalidGatewayPayload => f.write_str("invalid gateway payload"),
         }
     }
