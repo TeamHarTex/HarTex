@@ -48,7 +48,7 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                     str::from_utf8(&delivery.data).map_err(|_| ConsumerError {
                         kind: ConsumerErrorKind::GatewayPayloadNotUTF8,
                         source: None,
-                    })?
+                    })?,
                 )
                 .ok_or(ConsumerError {
                     kind: ConsumerErrorKind::InvalidGatewayPayload,
@@ -62,11 +62,9 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
 
             let _ = gateway_deserializer
                 .deserialize(&mut json_deserializer)
-                .map_err(|source| {
-                    ConsumerError {
-                        kind: ConsumerErrorKind::DeserializationFailed,
-                        source: Some(Box::new(source)),
-                    }
+                .map_err(|source| ConsumerError {
+                    kind: ConsumerErrorKind::DeserializationFailed,
+                    source: Some(Box::new(source)),
                 })?;
         }
     }

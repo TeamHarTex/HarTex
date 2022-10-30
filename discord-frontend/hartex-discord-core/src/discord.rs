@@ -21,6 +21,5 @@
 
 #[cfg(feature = "discord-gateway")]
 pub use twilight_gateway as gateway;
-
 #[cfg(feature = "discord-model")]
 pub use twilight_model as model;
