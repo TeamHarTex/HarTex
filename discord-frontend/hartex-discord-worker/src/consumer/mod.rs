@@ -19,11 +19,19 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
+use std::str;
+
 use futures_util::StreamExt;
+use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::log;
 use lapin::options::BasicAckOptions;
 use lapin::Consumer;
+use serde::de::DeserializeSeed;
 use serde_scan::scan;
+
+use crate::consumer::error::{ConsumerError, ConsumerErrorKind};
+
+mod error;
 
 pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> {
     while let Some(result) = consumer.next().await {
@@ -34,12 +42,32 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                 .expect("failed to ack");
             let value = delivery.routing_key.as_str();
             let scanned: (u8, u8) = scan!("CLUSTER {} SHARD {} PAYLOAD" <- value)?;
-            log::trace!(
-                "[cluster {} - shard {}] {}",
-                scanned.0,
-                scanned.1,
-                String::from_utf8(delivery.data).unwrap()
-            );
+
+            let (gateway_deserializer, mut json_deserializer) = {
+                let gateway_deserializer = GatewayEventDeserializer::from_json(
+                    str::from_utf8(&delivery.data).map_err(|_| ConsumerError {
+                        kind: ConsumerErrorKind::GatewayPayloadNotUTF8,
+                        source: None,
+                    })?
+                )
+                .ok_or(ConsumerError {
+                    kind: ConsumerErrorKind::InvalidGatewayPayload,
+                    source: None,
+                })?;
+
+                let json_deserializer = serde_json::Deserializer::from_slice(&delivery.data);
+
+                (gateway_deserializer, json_deserializer)
+            };
+
+            let _ = gateway_deserializer
+                .deserialize(&mut json_deserializer)
+                .map_err(|source| {
+                    ConsumerError {
+                        kind: ConsumerErrorKind::DeserializationFailed,
+                        source: Some(Box::new(source)),
+                    }
+                })?;
         }
     }
 

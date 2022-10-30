@@ -11,12 +11,14 @@ rust-version = "1.66.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "environment", "logging-facilities"] }
+hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment", "logging-facilities"] }
 hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 
 futures-util = "0.3.25"
 lapin = "2.1.1"
+serde = "1.0.147"
+serde_json = "1.0.87"
 serde_scan = "0.4.1"
-tracing = { version = "0.1.37", features = ["log-always" ]}
+tracing = { version = "0.1.37", features = ["log-always" ] }
 
 [features]
