@@ -61,11 +61,21 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
             };
 
             let _ = gateway_deserializer
+                .clone()
                 .deserialize(&mut json_deserializer)
                 .map_err(|source| ConsumerError {
                     kind: ConsumerErrorKind::DeserializationFailed,
                     source: Some(Box::new(source)),
                 })?;
+
+            log::trace!(
+                "[cluster {} - shard {}] {}",
+                scanned.0,
+                scanned.1,
+                gateway_deserializer
+                    .event_type_ref()
+                    .unwrap_or("UNKNOWN_EVENT")
+            )
         }
     }
 
