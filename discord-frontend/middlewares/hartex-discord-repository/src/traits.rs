@@ -19,8 +19,16 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#![allow(incomplete_features)]
-#![feature(async_fn_in_trait)]
+use crate::error::RepositoryResult;
 
-pub mod error;
-mod traits;
+pub trait Entity {
+    type Id;
+
+    fn id(&self) -> Self::Id;
+}
+
+pub trait Repository<T: Entity> {
+    async fn get(&self, entity_id: T::Id) -> RepositoryResult<T>;
+
+    async fn upsert(&self, entity: T) -> RepositoryResult<()>;
+}
