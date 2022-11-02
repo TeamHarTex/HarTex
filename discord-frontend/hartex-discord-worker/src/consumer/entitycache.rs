@@ -29,9 +29,9 @@ pub async fn update_entitycache(event: &GatewayEvent) -> hartex_discord_eyre::Re
                 ready.update().await?;
 
                 Ok(())
-            },
-            _ => Ok(())
+            }
+            _ => Ok(()),
         },
-        _ => Ok(())
+        _ => Ok(()),
     }
 }
