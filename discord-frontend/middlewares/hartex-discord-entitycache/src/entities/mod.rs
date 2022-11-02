@@ -19,8 +19,4 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#![allow(incomplete_features)]
-#![feature(async_fn_in_trait)]
-
-pub mod error;
-mod traits;
+pub mod current_user;

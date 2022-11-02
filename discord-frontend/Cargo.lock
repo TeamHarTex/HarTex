@@ -787,6 +787,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_entitycache"
+version = "0.1.0"
+dependencies = [
+ "hartex_discord_core",
+]
+
+[[package]]
 name = "hartex_discord_eyre"
 version = "0.1.0"
 dependencies = [
@@ -805,10 +812,6 @@ dependencies = [
  "sqlx",
  "tracing",
 ]
-
-[[package]]
-name = "hartex_discord_repository"
-version = "0.1.0"
 
 [[package]]
 name = "hartex_discord_worker"

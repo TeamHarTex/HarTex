@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "middlewares/hartex-discord-repository",
+    "middlewares/hartex-discord-entitycache",
     "hartex-discord-core",
     "hartex-discord-eyre",
     "hartex-discord-leader",
