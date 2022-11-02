@@ -1,9 +1,9 @@
 [package]
-name = "hartex_discord_eyre"
+name = "hartex_discord_repository"
 version = "0.1.0"
 edition = "2021"
 description = """
-Eyre implementation tailored for HarTex.
+The repository cache middleware for HarTex.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.67.0"
@@ -11,7 +11,5 @@ rust-version = "1.67.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-backtrace = "0.3.66"
-eyre = "0.6.8"
 
 [features]
