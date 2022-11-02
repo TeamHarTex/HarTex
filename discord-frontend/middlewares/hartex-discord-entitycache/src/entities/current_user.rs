@@ -20,6 +20,7 @@
 */
 
 use hartex_discord_core::discord::model::id::{marker::UserMarker, Id};
+use hartex_discord_core::discord::model::user::CurrentUser;
 
 use crate::traits::Entity;
 
@@ -32,5 +33,13 @@ impl Entity for CurrentUserEntity {
 
     fn id(&self) -> Self::Id {
         self.id
+    }
+}
+
+impl From<CurrentUser> for CurrentUserEntity {
+    fn from(value: CurrentUser) -> Self {
+        Self {
+            id: value.id
+        }
     }
 }
