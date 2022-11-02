@@ -807,6 +807,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_repository"
+version = "0.1.0"
+
+[[package]]
 name = "hartex_discord_worker"
 version = "0.1.0"
 dependencies = [
