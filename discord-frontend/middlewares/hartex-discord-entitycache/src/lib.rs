@@ -26,5 +26,4 @@ pub mod entities;
 pub mod error;
 pub mod repositories;
 mod traits;
-
-pub struct EntityCache;
+pub mod updaters;

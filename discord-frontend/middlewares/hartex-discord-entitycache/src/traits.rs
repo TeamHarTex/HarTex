@@ -32,3 +32,7 @@ pub trait Repository<T: Entity> {
 
     async fn upsert(&self, entity: T) -> RepositoryResult<()>;
 }
+
+pub trait RepositoryUpdater {
+    async fn update(&self) -> RepositoryResult<()>;
+}
