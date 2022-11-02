@@ -69,12 +69,10 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                 })?;
 
             log::trace!(
-                "[cluster {} - shard {}] {}",
+                "[cluster {} - shard {}] received {} event",
                 scanned.0,
                 scanned.1,
-                gateway_deserializer
-                    .event_type_ref()
-                    .unwrap_or("UNKNOWN_EVENT")
+                gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
             )
         }
     }

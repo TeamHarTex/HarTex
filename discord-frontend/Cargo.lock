@@ -2111,7 +2111,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.13.3"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=next#8bd4899f8a356ad9a06c9dd5761cdb3324e8e394"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#ce989cb8a47cceb4a7c11ff116f12a67de1dc0f0"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2132,7 +2132,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.13.1"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=next#8bd4899f8a356ad9a06c9dd5761cdb3324e8e394"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#ce989cb8a47cceb4a7c11ff116f12a67de1dc0f0"
 dependencies = [
  "tokio",
  "tracing",
@@ -2141,7 +2141,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.13.3"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=next#8bd4899f8a356ad9a06c9dd5761cdb3324e8e394"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#ce989cb8a47cceb4a7c11ff116f12a67de1dc0f0"
 dependencies = [
  "hyper",
  "percent-encoding",
@@ -2158,7 +2158,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.13.3"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=next#8bd4899f8a356ad9a06c9dd5761cdb3324e8e394"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#ce989cb8a47cceb4a7c11ff116f12a67de1dc0f0"
 dependencies = [
  "futures-util",
  "http",
@@ -2168,8 +2168,8 @@ dependencies = [
 
 [[package]]
 name = "twilight-model"
-version = "0.13.6"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=next#8bd4899f8a356ad9a06c9dd5761cdb3324e8e394"
+version = "0.13.7"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#ce989cb8a47cceb4a7c11ff116f12a67de1dc0f0"
 dependencies = [
  "bitflags",
  "serde",
@@ -2182,7 +2182,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.13.2"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=next#8bd4899f8a356ad9a06c9dd5761cdb3324e8e394"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=next#ce989cb8a47cceb4a7c11ff116f12a67de1dc0f0"
 dependencies = [
  "twilight-model",
 ]
