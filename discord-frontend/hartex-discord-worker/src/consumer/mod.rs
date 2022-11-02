@@ -31,6 +31,7 @@ use serde_scan::scan;
 
 use crate::consumer::error::{ConsumerError, ConsumerErrorKind};
 
+mod entitycache;
 mod error;
 
 pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> {
@@ -73,7 +74,8 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                 scanned.0,
                 scanned.1,
                 gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
-            )
+            );
+            entitycache::update_entitycache(&event).await?;
         }
     }
 

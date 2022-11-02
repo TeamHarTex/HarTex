@@ -18,3 +18,19 @@
 * You should have received a copy of the GNU Affero General Public License along
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
+
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
+
+#[derive(Clone, Debug)]
+pub enum RepositoryError {}
+
+impl Display for RepositoryError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str("generic repository error")
+    }
+}
+
+impl Error for RepositoryError {}
+
+pub type RepositoryResult<T> = Result<T, RepositoryError>;
