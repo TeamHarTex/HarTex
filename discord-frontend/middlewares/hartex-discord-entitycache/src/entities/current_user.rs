@@ -38,8 +38,6 @@ impl Entity for CurrentUserEntity {
 
 impl From<CurrentUser> for CurrentUserEntity {
     fn from(value: CurrentUser) -> Self {
-        Self {
-            id: value.id
-        }
+        Self { id: value.id }
     }
 }
