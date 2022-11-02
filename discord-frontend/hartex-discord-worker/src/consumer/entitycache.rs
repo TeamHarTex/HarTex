@@ -19,11 +19,19 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#![allow(incomplete_features)]
-#![feature(async_fn_in_trait)]
+use hartex_discord_core::discord::model::gateway::event::{DispatchEvent, GatewayEvent};
+use hartex_discord_entitycache::traits::RepositoryUpdater;
 
-pub mod entities;
-pub mod error;
-pub mod repositories;
-pub mod traits;
-pub mod updaters;
+pub async fn update_entitycache(event: &GatewayEvent) -> hartex_discord_eyre::Result<()> {
+    match event {
+        GatewayEvent::Dispatch(_, dispatch) => match dispatch {
+            DispatchEvent::Ready(ready) => {
+                ready.update().await?;
+
+                Ok(())
+            },
+            _ => Ok(())
+        },
+        _ => Ok(())
+    }
+}
