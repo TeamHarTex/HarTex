@@ -19,8 +19,18 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#![allow(incomplete_features)]
-#![feature(async_fn_in_trait)]
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
 
-pub mod error;
-mod traits;
+#[derive(Clone, Debug)]
+pub enum RepositoryError {}
+
+impl Display for RepositoryError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str("generic repository error")
+    }
+}
+
+impl Error for RepositoryError {}
+
+pub type RepositoryResult<T> = Result<T, RepositoryError>;
