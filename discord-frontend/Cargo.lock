@@ -819,6 +819,7 @@ version = "0.1.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
+ "hartex_discord_entitycache",
  "hartex_discord_eyre",
  "lapin",
  "serde",
