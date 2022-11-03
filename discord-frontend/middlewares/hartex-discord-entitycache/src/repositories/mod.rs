@@ -19,8 +19,8 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use sqlx::ConnectOptions;
 use sqlx::postgres::PgConnectOptions;
+use sqlx::ConnectOptions;
 
 use crate::entities::current_user::CurrentUserEntity;
 use crate::error::RepositoryResult;
@@ -35,7 +35,8 @@ impl Repository<CurrentUserEntity> for CurrentUserRepository {
     ) -> RepositoryResult<CurrentUserEntity> {
         let _ = PgConnectOptions::new()
             .database("HarTexEntityCache")
-            .connect().await?;
+            .connect()
+            .await?;
 
         todo!()
     }
