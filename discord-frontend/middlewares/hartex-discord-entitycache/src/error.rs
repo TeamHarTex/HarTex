@@ -26,7 +26,7 @@ use sqlx::error::Error as Sqlx;
 
 #[derive(Debug)]
 pub enum RepositoryError {
-    DbError(Sqlx)
+    DbError(Sqlx),
 }
 
 impl Display for RepositoryError {
