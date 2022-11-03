@@ -791,6 +791,7 @@ name = "hartex_discord_entitycache"
 version = "0.1.0"
 dependencies = [
  "hartex_discord_core",
+ "sqlx",
 ]
 
 [[package]]
