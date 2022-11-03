@@ -22,8 +22,12 @@
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
-#[derive(Clone, Debug)]
-pub enum RepositoryError {}
+use sqlx::error::Error as Sqlx;
+
+#[derive(Debug)]
+pub enum RepositoryError {
+    DbError(Sqlx),
+}
 
 impl Display for RepositoryError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -32,5 +36,11 @@ impl Display for RepositoryError {
 }
 
 impl Error for RepositoryError {}
+
+impl From<Sqlx> for RepositoryError {
+    fn from(value: Sqlx) -> Self {
+        Self::DbError(value)
+    }
+}
 
 pub type RepositoryResult<T> = Result<T, RepositoryError>;

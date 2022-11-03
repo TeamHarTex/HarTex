@@ -12,5 +12,6 @@ rust-version = "1.67.0"
 
 [dependencies]
 hartex_discord_core = { path = "../../hartex-discord-core", features = ["discord-model"] }
+sqlx = { version = "0.6.2", features = [ "postgres", "runtime-tokio-rustls" ], default-features = false }
 
 [features]
