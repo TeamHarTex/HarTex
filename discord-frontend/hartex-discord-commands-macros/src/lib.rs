@@ -19,6 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(proc_macro_diagnostic)]
+
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
