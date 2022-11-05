@@ -19,13 +19,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-extern crate proc_macro;
-
 use proc_macro::TokenStream;
 
-mod command;
-
-#[proc_macro_derive(Command, attributes(command))]
-pub fn derive_command_trait(tokens: TokenStream) -> TokenStream {
-    command::expand_command_derivation(tokens)
+pub fn expand_command_derivation(tokens: TokenStream) -> TokenStream {
+    todo!()
 }
