@@ -18,26 +18,3 @@
 * You should have received a copy of the GNU Affero General Public License along
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
-
-use hartex_discord_core::discord::model::id::{marker::UserMarker, Id};
-use hartex_discord_core::discord::model::user::CurrentUser;
-
-use crate::traits::Entity;
-
-pub struct CurrentUserEntity {
-    pub(crate) id: Id<UserMarker>,
-}
-
-impl Entity for CurrentUserEntity {
-    type Id = Id<UserMarker>;
-
-    fn id(&self) -> Self::Id {
-        self.id
-    }
-}
-
-impl From<CurrentUser> for CurrentUserEntity {
-    fn from(value: CurrentUser) -> Self {
-        Self { id: value.id }
-    }
-}

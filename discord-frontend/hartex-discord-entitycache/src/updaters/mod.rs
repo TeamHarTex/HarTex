@@ -18,17 +18,3 @@
 * You should have received a copy of the GNU Affero General Public License along
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
-
-use hartex_discord_core::discord::model::gateway::payload::incoming::Ready;
-
-use crate::entities::current_user::CurrentUserEntity;
-use crate::error::RepositoryResult;
-use crate::repositories::CurrentUserRepository;
-use crate::traits::{Repository, RepositoryUpdater};
-
-impl RepositoryUpdater for Ready {
-    async fn update(&self) -> RepositoryResult<()> {
-        let current_user = CurrentUserEntity::from(self.user.clone());
-        CurrentUserRepository.upsert(current_user).await
-    }
-}
