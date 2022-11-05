@@ -19,10 +19,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub trait Command {
+pub trait CommandMetadata {
     fn command_type(&self) -> u8;
 
     fn description(&self) -> String;
 
     fn name(&self) -> String;
 }
+
+pub trait Command: CommandMetadata {}

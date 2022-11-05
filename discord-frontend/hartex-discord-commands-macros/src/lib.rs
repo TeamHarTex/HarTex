@@ -23,9 +23,9 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 
-mod command;
+mod commandmetadata;
 
-#[proc_macro_derive(Command, attributes(command))]
-pub fn derive_command_trait(tokens: TokenStream) -> TokenStream {
-    command::expand_command_derivation(tokens)
+#[proc_macro_derive(CommandMetadata, attributes(command))]
+pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
+    commandmetadata::expand_command_metadata_derivation(tokens)
 }
