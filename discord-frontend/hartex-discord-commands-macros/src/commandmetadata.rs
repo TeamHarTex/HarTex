@@ -21,8 +21,10 @@
 
 use proc_macro::TokenStream;
 
+use crate::internal::StreamParser;
+
 pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
-    tokens.into_iter().for_each(|item| eprintln!("{item:?}"));
+    let _ = crate::internal::derive::DeriveStream::parse(tokens);
 
     TokenStream::new()
 }

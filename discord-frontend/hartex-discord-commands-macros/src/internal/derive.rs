@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::TokenStream;
+use proc_macro::{Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
@@ -27,6 +27,23 @@ pub struct DeriveStream;
 
 impl StreamParser for DeriveStream {
     fn parse(tokens: TokenStream) -> Self {
-        todo!()
+        let mut iter = tokens.into_iter();
+        let Some(first) = iter.next() else {
+            unreachable!()
+        };
+
+        match first {
+            TokenTree::Punct(_) => (),
+            _ => first
+                .span()
+                .error("no metadata attributes found after derive")
+                .span_note(
+                    Span::call_site(),
+                    "metadata attributes are expected after the derive invocation",
+                )
+                .emit(),
+        }
+
+        DeriveStream
     }
 }

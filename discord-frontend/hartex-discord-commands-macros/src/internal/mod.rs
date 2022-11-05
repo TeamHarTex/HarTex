@@ -21,7 +21,7 @@
 
 use proc_macro::TokenStream;
 
-mod derive;
+pub mod derive;
 
 pub trait StreamParser {
     fn parse(tokens: TokenStream) -> Self;
