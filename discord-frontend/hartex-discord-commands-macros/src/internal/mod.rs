@@ -19,4 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct DeriveTraitInput;
+use proc_macro::TokenStream;
+
+mod derive;
+
+pub trait StreamParser {
+    fn parse(tokens: TokenStream) -> Self;
+}

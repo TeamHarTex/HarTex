@@ -19,14 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-extern crate proc_macro;
+use hartex_discord_commands_macros::CommandMetadata;
 
-use proc_macro::TokenStream;
-
-mod commandmetadata;
-mod internal;
-
-#[proc_macro_derive(CommandMetadata, attributes(metadata))]
-pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
-    commandmetadata::expand_command_metadata_derivation(tokens)
-}
+#[derive(CommandMetadata)]
+#[metadata(name = "test")]
+#[metadata(command_type = "1")]
+#[metadata(description = "just a test")]
+pub struct Test;
