@@ -21,6 +21,6 @@
 
 use proc_macro::TokenStream;
 
-pub fn expand_command_derivation(tokens: TokenStream) -> TokenStream {
+pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
     todo!()
 }
