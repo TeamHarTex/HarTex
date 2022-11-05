@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::{Span, TokenStream, TokenTree};
+use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
@@ -33,7 +33,35 @@ impl StreamParser for DeriveStream {
         };
 
         match first {
-            TokenTree::Punct(_) => (),
+            TokenTree::Punct(punct) if punct.as_char() == '#' => {
+                match iter.peekable().peek().unwrap() {
+                    TokenTree::Group(group) if group.delimiter() == Delimiter::Bracket => {
+                        let mut group_tokens = group.stream().into_iter();
+                        let group_first_option = group_tokens.next();
+                        if group_first_option.is_none() {
+                            group.span().error("empty attribute not allowed").emit();
+                        }
+
+                        let group_first = group_first_option.unwrap();
+                        match group_first {
+                            TokenTree::Ident(ident)
+                                if ident.to_string() == String::from("metadata") =>
+                            {
+                                eprintln!("{:?}", group_tokens.next())
+                            }
+                            _ => group_first
+                                .span()
+                                .error(format!(
+                                    "expected metadata attribute; found {} attribute instead",
+                                    group_first.to_string()
+                                ))
+                                .emit(),
+
+                        }
+                    }
+                    _ => (),
+                }
+            }
             _ => first
                 .span()
                 .error("no metadata attributes found after derive")
