@@ -19,8 +19,21 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
+use hartex_discord_core::discord::model::gateway::event::{DispatchEvent, GatewayEvent};
+use hartex_discord_core::log;
 
-pub async fn update_entitycache(_: &GatewayEvent) -> hartex_discord_eyre::Result<()> {
-    Ok(())
+pub fn handle_event(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
+    match event {
+        GatewayEvent::Dispatch(shard, dispatch) => {
+            match dispatch {
+                DispatchEvent::Ready(ready) => {
+                    log::info!("{}#{} (shard {shard}) has received READY payload from Discord (gateway v{})", ready.user.name, ready.user.discriminator, ready.version);
+
+                    Ok(())
+                }
+                _ => Ok(()),
+            }
+        }
+        _ => Ok(()),
+    }
 }
