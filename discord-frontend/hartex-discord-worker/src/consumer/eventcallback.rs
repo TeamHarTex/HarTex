@@ -19,25 +19,21 @@
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use hartex_discord_core::discord::model::id::{marker::UserMarker, Id};
-use hartex_discord_core::discord::model::user::CurrentUser;
+use hartex_discord_core::discord::model::gateway::event::{DispatchEvent, GatewayEvent};
+use hartex_discord_core::log;
 
-use crate::traits::Entity;
+pub fn handle_event(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
+    match event {
+        GatewayEvent::Dispatch(shard, dispatch) => {
+            match dispatch {
+                DispatchEvent::Ready(ready) => {
+                    log::info!("{}#{} (shard {shard}) has received READY payload from Discord (gateway v{})", ready.user.name, ready.user.discriminator, ready.version);
 
-pub struct CurrentUserEntity {
-    pub(crate) id: Id<UserMarker>,
-}
-
-impl Entity for CurrentUserEntity {
-    type Id = Id<UserMarker>;
-
-    fn id(&self) -> Self::Id {
-        self.id
-    }
-}
-
-impl From<CurrentUser> for CurrentUserEntity {
-    fn from(value: CurrentUser) -> Self {
-        Self { id: value.id }
+                    Ok(())
+                }
+                _ => Ok(()),
+            }
+        }
+        _ => Ok(()),
     }
 }
