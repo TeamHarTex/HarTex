@@ -18,30 +18,3 @@
 * You should have received a copy of the GNU Affero General Public License along
 * with HarTex. If not, see <https://www.gnu.org/licenses/>.
 */
-
-use sqlx::postgres::PgConnectOptions;
-use sqlx::ConnectOptions;
-
-use crate::entities::current_user::CurrentUserEntity;
-use crate::error::RepositoryResult;
-use crate::traits::{Entity, Repository};
-
-pub struct CurrentUserRepository;
-
-impl Repository<CurrentUserEntity> for CurrentUserRepository {
-    async fn get(
-        &self,
-        _: <CurrentUserEntity as Entity>::Id,
-    ) -> RepositoryResult<CurrentUserEntity> {
-        let _ = PgConnectOptions::new()
-            .database("HarTexEntityCache")
-            .connect()
-            .await?;
-
-        todo!()
-    }
-
-    async fn upsert(&self, _: CurrentUserEntity) -> RepositoryResult<()> {
-        todo!()
-    }
-}

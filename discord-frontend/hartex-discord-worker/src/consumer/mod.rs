@@ -33,6 +33,7 @@ use crate::consumer::error::{ConsumerError, ConsumerErrorKind};
 
 mod entitycache;
 mod error;
+mod eventcallback;
 
 pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> {
     while let Some(result) = consumer.next().await {
@@ -76,6 +77,7 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                 gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
             );
             entitycache::update_entitycache(&event).await?;
+            eventcallback::handle_event(event)?;
         }
     }
 
