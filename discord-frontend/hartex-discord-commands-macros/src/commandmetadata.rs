@@ -22,5 +22,9 @@
 use proc_macro::TokenStream;
 
 pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
-    todo!()
+    tokens.into_iter().for_each(|item| {
+        eprintln!("{item:?}")
+    });
+
+    TokenStream::new()
 }
