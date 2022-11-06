@@ -9,6 +9,9 @@ on:
     branches:
       - "**"
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   BuildDiscordFrontend:
     name: Full Release Build (discord-frontend)
