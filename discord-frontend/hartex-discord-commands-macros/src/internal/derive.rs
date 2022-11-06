@@ -56,7 +56,6 @@ impl StreamParser for DeriveStream {
                                     group_first.to_string()
                                 ))
                                 .emit(),
-
                         }
                     }
                     _ => (),
