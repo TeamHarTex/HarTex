@@ -18,12 +18,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-use hartex_discord_commands_macros::CommandMetadata;
-
-#[derive(CommandMetadata)]
-#[metadata(command_type = 1)]
-#[metadata(name = "name")]
-#[metadata(description = "description")]
-#[metadata(interaction_only = true)]
-pub struct Test;
