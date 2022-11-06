@@ -25,6 +25,7 @@ pub mod derive;
 
 pub trait StreamParser
 where
-    Self: Sized {
+    Self: Sized,
+{
     fn parse(tokens: TokenStream) -> Option<Self>;
 }
