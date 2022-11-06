@@ -39,14 +39,14 @@ pub enum DeriveAttribute {
 #[derive(Debug)]
 pub struct DeriveStream {
     pub attributes: Vec<DeriveAttribute>,
-    pub item_name: String,
+    pub identifier: Option<TokenTree>,
 }
 
 impl DeriveStream {
     fn new() -> Self {
         Self {
             attributes: Vec::new(),
-            item_name: String::new(),
+            identifier: None,
         }
     }
 }
@@ -307,7 +307,12 @@ impl StreamParser for DeriveStream {
         }
 
         iter.next();
-        parsed.item_name = iter.next().unwrap().to_string();
+
+        let tree = iter.next().unwrap();
+        let TokenTree::Ident(_) = tree.clone() else {
+            return None;
+        };
+        parsed.identifier = Some(tree);
 
         Some(parsed)
     }
