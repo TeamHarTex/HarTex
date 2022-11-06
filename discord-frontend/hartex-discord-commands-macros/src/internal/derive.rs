@@ -28,11 +28,28 @@ const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
 const LITERAL_PARAMETERS: [&'static str; 3] = ["description", "name", "type"];
 
-pub struct DeriveStream;
+pub enum DeriveAttribute {
+    Description(String),
+    InteractionOnly(bool),
+    Name(String),
+    Type(u8),
+}
+
+pub struct DeriveStream {
+    attributes: Vec<DeriveAttribute>,
+}
+
+impl DeriveStream {
+    fn new() -> Self {
+        Self {
+            attributes: Vec::new(),
+        }
+    }
+}
 
 impl StreamParser for DeriveStream {
     fn parse(tokens: TokenStream) -> Option<Self> {
-        let mut parsed = DeriveStream;
+        let mut parsed = DeriveStream::new();
 
         let mut iter = tokens.into_iter().peekable();
         while let Some(first) = iter.next() && first.to_string() != String::from("pub") {
@@ -190,7 +207,7 @@ impl StreamParser for DeriveStream {
                 return None;
             }
 
-            if LITERAL_PARAMETERS.contains(&ident_str) {
+            let attribute = if LITERAL_PARAMETERS.contains(&ident_str) {
                 // check if a literal follows the "=" sign (for parameters description, name and type)
                 //
                 // #[metadata(name = "name")]
@@ -205,14 +222,62 @@ impl StreamParser for DeriveStream {
                         .emit();
                     return None;
                 };
-            }
-            else if BOOLEAN_PARAMETERS.contains(&ident_str) {
+
+                match ident_str {
+                    "description" => {
+                        let description = literal.to_string();
+                        DeriveAttribute::Description(description)
+                    }
+                    "name" => {
+                        let name = literal.to_string();
+                        DeriveAttribute::Name(name)
+                    }
+                    "type" => {
+                        let Ok(int) = literal.to_string().parse::<u8>() else {
+                            literal
+                                .span()
+                                .error(format!("expected integer literal; found literal {:?}", literal.to_string()))
+                                .emit();
+                            return None;
+                        };
+
+                        DeriveAttribute::Type(int)
+                    }
+                    _ => return None,
+                }
+            } else if BOOLEAN_PARAMETERS.contains(&ident_str) {
                 // check if a boolean follows the "=" sign (for parameters interaction_only)
                 //
                 // #[metadata(interaction_only = true)]
                 //                               ----
-            }
+                let group_token_next = group_inner_tokens.next().unwrap();
+                let TokenTree::Ident(ident) = group_token_next.clone() else {
+                    group_token_next
+                        .span()
+                        .error(format!("expected identifier; found {group_token_next}"))
+                        .emit();
+                    return None;
+                };
 
+                match ident_str {
+                    "interaction_only" => {
+                        let Ok(boolean) = ident.to_string().parse::<bool>() else {
+                            ident
+                                .span()
+                                .error(format!("expected boolean; found {ident}"))
+                                .emit();
+                            return None;
+                        };
+
+                        DeriveAttribute::InteractionOnly(boolean)
+                    }
+                    _ => return None,
+                }
+            } else {
+                return None;
+            };
+
+            parsed.attributes.push(attribute);
             iter.next();
         }
 
