@@ -24,6 +24,8 @@ pub trait CommandMetadata {
 
     fn description(&self) -> String;
 
+    fn interaction_only(&self) -> bool;
+
     fn name(&self) -> String;
 }
 

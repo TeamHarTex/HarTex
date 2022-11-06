@@ -22,8 +22,8 @@
 use hartex_discord_commands_macros::CommandMetadata;
 
 #[derive(CommandMetadata)]
+#[metadata(command_type = 1)]
 #[metadata(name = "name")]
-#[metadata(type = 1)]
 #[metadata(description = "description")]
 #[metadata(interaction_only = true)]
 pub struct Test;
