@@ -38,6 +38,10 @@ impl StreamParser for DeriveStream {
             // #[metadata(name = "name")]
             // ^
             let TokenTree::Punct(punct) = first else {
+                return None;
+            };
+
+            if punct.as_char() != '#' {
                 first
                     .span()
                     .error("no metadata attributes found after derive")
@@ -46,10 +50,6 @@ impl StreamParser for DeriveStream {
                         "metadata attributes are expected after the derive invocation",
                     )
                     .emit();
-                return None;
-            };
-
-            if punct.as_char() != '#' {
                 return None;
             }
 
@@ -74,74 +74,81 @@ impl StreamParser for DeriveStream {
             //
             // #[metadata(name = "name")]
             //   --------
-            match group_first.clone() {
-                TokenTree::Ident(ident)
-                if ident.to_string() == String::from("metadata") =>
-                    {
-                        let group_next_option = group_tokens.next();
-                        if group_next_option.is_some() {
-                            let group_next = group_next_option.unwrap();
+            let TokenTree::Ident(ident) = group_first.clone() else {
+                return None;
+            };
 
-                            // look for a parenthesized group of parameter
-                            //
-                            // #[metadata(name = "name")]
-                            //           ^-------------^
-                            match group_next.clone() {
-                                TokenTree::Group(group) if group.delimiter() == Delimiter::Parenthesis => {
-                                    if group.stream().is_empty() {
-                                        group
-                                            .span()
-                                            .error("parameter expected; none found")
-                                            .note("valid parameters: description, name, type")
-                                            .emit();
-                                    } else {
-                                        let mut group_tokens = group.stream().into_iter();
-                                        let first = group_tokens.next().unwrap();
-
-                                        // check if the parameter name is one of "description", "name" or "type"
-                                        //
-                                        // #[metadata(name = "name)]
-                                        //            ----
-                                        match first.clone() {
-                                            TokenTree::Ident(ident) => {
-                                                let ident_string = ident.to_string();
-                                                let ident_str = ident_string.as_str();
-                                                if !VALID_ATTR_PARAMETER_NAMES.contains(&ident_str) {
-                                                    first
-                                                        .span()
-                                                        .error(format!("unexpected parameter name: {ident_string}"))
-                                                        .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
-                                                        .emit();
-                                                } else {
-
-                                                }
-                                            },
-                                            _ => first
-                                                .span()
-                                                .error(format!("expected identifier; found {}", first.to_string()))
-                                                .emit()
-                                        }
-                                    }
-                                },
-                                _ => group_next
-                                    .span()
-                                    .error("expected parenthesized parameter")
-                                    .emit(),
-                            }
-                        } else {
-                            group_first
-                                .span()
-                                .error("unexpected end of attribute")
-                                .emit();
-                        }
-                    }
-                _ => group_first
+            if ident.to_string().as_str() != "metadata" {
+                group_first
                     .span()
                     .error(format!(
                         "expected metadata attribute; found {} attribute instead",
                         group_first.to_string()
                     ))
-                    .emit(),
+                    .emit();
+                return None;
+            }
+
+            let group_next_option = group_tokens.next();
+            if group_next_option.is_none() {
+                group_first
+                    .span()
+                    .error("unexpected end of attribute")
+                    .emit();
+                return None;
+            }
+
+            let group_next = group_next_option.unwrap();
+
+            // look for a parenthesized group of parameter
+            //
+            // #[metadata(name = "name")]
+            //           ^-------------^
+            let TokenTree::Group(group) = group_next.clone() else {
+                return None;
+            };
+
+            if group.delimiter() != Delimiter::Parenthesis {
+                group_next
+                    .span()
+                    .error("expected parenthesized parameter")
+                    .emit();
+                return None;
+            }
+
+            if group.stream().is_empty() {
+                group
+                    .span()
+                    .error("parameter expected; none found")
+                    .note("valid parameters: description, name, type")
+                    .emit();
+                return None;
+            }
+
+            let mut group_tokens = group.stream().into_iter();
+            let first = group_tokens.next().unwrap();
+
+            // check if the parameter name is one of "description", "name" or "type"
+            //
+            // #[metadata(name = "name)]
+            //            ----
+            let TokenTree::Ident(ident) = first.clone() else {
+                first
+                    .span()
+                    .error(format!("expected identifier; found {} instead", first.to_string()))
+                    .emit();
+                return None;
+            };
+
+            let ident_string = ident.to_string();
+            let ident_str = ident_string.as_str();
+            if !VALID_ATTR_PARAMETER_NAMES.contains(&ident_str) {
+                first
+                    .span()
+                    .error(format!("unexpected parameter name: {ident_string}"))
+                    .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                    .emit();
+                return None;
             }
 
             iter.next();
