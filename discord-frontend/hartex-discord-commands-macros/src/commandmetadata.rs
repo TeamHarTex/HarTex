@@ -24,10 +24,18 @@ use proc_macro::TokenStream;
 use crate::internal::StreamParser;
 
 pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
-    let ret = TokenStream::new();
-    let Some(_) = crate::internal::derive::DeriveStream::parse(tokens) else {
+    let mut ret = TokenStream::new();
+    let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
         return ret;
     };
+
+    let name = stream.item_name;
+    let expanded = proc_macro::quote! {
+        impl hartex_discord_commands_core::CommandMetadata for $name {
+
+        }
+    };
+    ret.extend(expanded);
 
     ret
 }
