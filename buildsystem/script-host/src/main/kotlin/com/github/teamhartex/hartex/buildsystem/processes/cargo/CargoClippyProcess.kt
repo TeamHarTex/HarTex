@@ -18,16 +18,9 @@ class CargoClippyProcess {
         else -> throw IllegalStateException("running cargo clippy is not supported in non-Rust projects")
       }
 
-      val process = processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+      return processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+        .redirectError(ProcessBuilder.Redirect.INHERIT)
         .start()
-      val outputReader = process.errorStream.bufferedReader()
-      var line = outputReader.readLine()
-      while (line != null) {
-        println(line)
-        line = outputReader.readLine()
-      }
-
-      return process
     }
   }
 }
