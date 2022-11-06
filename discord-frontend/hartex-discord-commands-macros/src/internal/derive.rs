@@ -27,27 +27,57 @@ pub struct DeriveStream;
 
 impl StreamParser for DeriveStream {
     fn parse(tokens: TokenStream) -> Self {
-        let mut iter = tokens.into_iter();
+        let mut iter = tokens.into_iter().peekable();
         let Some(first) = iter.next() else {
             unreachable!()
         };
 
+        // look for the beginning of an attribute
+        //
+        // #[metadata(name = "name")]
+        // ^
         match first {
             TokenTree::Punct(punct) if punct.as_char() == '#' => {
-                match iter.peekable().peek().unwrap() {
+                // look for a token group of an attribute after the '#' symbol, delimited by square
+                // brackets: []
+                //
+                // #[metadata(name = "name")]
+                //  ^-----------------------^
+                match iter.peek().unwrap() {
                     TokenTree::Group(group) if group.delimiter() == Delimiter::Bracket => {
                         let mut group_tokens = group.stream().into_iter();
-                        let group_first_option = group_tokens.next();
-                        if group_first_option.is_none() {
-                            group.span().error("empty attribute not allowed").emit();
-                        }
+                        let group_first = group_tokens.next().unwrap();
 
-                        let group_first = group_first_option.unwrap();
-                        match group_first {
+                        // check if the attribute name is exactly equal to "metadata"
+                        //
+                        // #[metadata(name = "name)]
+                        //   --------
+                        match group_first.clone() {
                             TokenTree::Ident(ident)
                                 if ident.to_string() == String::from("metadata") =>
                             {
-                                eprintln!("{:?}", group_tokens.next())
+                                let group_next_option = group_tokens.next();
+                                if group_next_option.is_none() {
+                                    group_first
+                                        .span()
+                                        .error("unexpected end of attribute")
+                                        .emit();
+                                }
+
+                                // look for parenthesized parameters in attribute
+                                //
+                                // #[metadata(name = "name")]
+                                //           ^------------^
+                                let group_next = group_next_option.unwrap();
+                                match group_next.clone() {
+                                    TokenTree::Group(group) if group.delimiter() == Delimiter::Parenthesis => {
+                                        eprintln!("{:?}", group);
+                                    },
+                                    _ => group_next
+                                        .span()
+                                        .error("expected parenthesized parameters")
+                                        .emit(),
+                                }
                             }
                             _ => group_first
                                 .span()
