@@ -54,30 +54,30 @@ impl StreamParser for DeriveStream {
                                 if ident.to_string() == String::from("metadata") =>
                                     {
                                         let group_next_option = group_tokens.next();
-                                        match group_next_option {
-                                            Some(group_next) => {
-                                                match group_next.clone() {
-                                                    TokenTree::Group(group) if group.delimiter() == Delimiter::Parenthesis => {
-                                                        if group.stream().is_empty() {
-                                                            group
-                                                                .span()
-                                                                .error("parameters expected; none found")
-                                                                .note("valid parameters: description, name, type")
-                                                                .emit();
-                                                        } else {
-                                                            eprintln!("{group:?}")
-                                                        }
-                                                    },
-                                                    _ => group_next
-                                                        .span()
-                                                        .error("expected parenthesized parameters")
-                                                        .emit(),
-                                                }
+                                        if group_next_option.is_some() {
+                                            let group_next = group_next_option.unwrap();
+                                            match group_next.clone() {
+                                                TokenTree::Group(group) if group.delimiter() == Delimiter::Parenthesis => {
+                                                    if group.stream().is_empty() {
+                                                        group
+                                                            .span()
+                                                            .error("parameters expected; none found")
+                                                            .note("valid parameters: description, name, type")
+                                                            .emit();
+                                                    } else {
+                                                        eprintln!("{group:?}")
+                                                    }
+                                                },
+                                                _ => group_next
+                                                    .span()
+                                                    .error("expected parenthesized parameters")
+                                                    .emit(),
                                             }
-                                            None => group_first
+                                        } else {
+                                            group_first
                                                 .span()
                                                 .error("unexpected end of attribute")
-                                                .emit(),
+                                                .emit();
                                         }
                                     }
                                 _ => group_first
