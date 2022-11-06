@@ -19,21 +19,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::{Delimiter, Ident, Literal, Span, TokenStream, TokenTree};
+use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
 const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
-    ["description", "interaction_only", "name", "type"];
+    ["command_type", "description", "interaction_only", "name"];
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
-const LITERAL_PARAMETERS: [&'static str; 3] = ["description", "name", "type"];
+const LITERAL_PARAMETERS: [&'static str; 3] = ["command_type", "description", "name"];
 
 #[derive(Debug)]
 pub enum DeriveAttribute {
-    Description(Literal),
-    InteractionOnly(Ident),
-    Name(Literal),
-    Type(Literal),
+    CommandType(TokenTree),
+    Description(TokenTree),
+    InteractionOnly(TokenTree),
+    Name(TokenTree),
 }
 
 #[derive(Debug)]
@@ -260,8 +260,8 @@ impl StreamParser for DeriveStream {
                 };
 
                 match ident_str {
-                    "description" => DeriveAttribute::Description(literal),
-                    "name" => DeriveAttribute::Name(literal),
+                    "description" => DeriveAttribute::Description(group_token_next),
+                    "name" => DeriveAttribute::Name(group_token_next),
                     "type" => {
                         let Ok(_) = literal.to_string().parse::<u8>() else {
                             literal
@@ -271,7 +271,7 @@ impl StreamParser for DeriveStream {
                             return None;
                         };
 
-                        DeriveAttribute::Type(literal)
+                        DeriveAttribute::CommandType(group_token_next)
                     }
                     _ => return None,
                 }
@@ -299,7 +299,7 @@ impl StreamParser for DeriveStream {
                             return None;
                         };
 
-                        DeriveAttribute::InteractionOnly(ident)
+                        DeriveAttribute::InteractionOnly(group_token_next)
                     }
                     _ => return None,
                 }
