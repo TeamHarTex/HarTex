@@ -19,6 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
