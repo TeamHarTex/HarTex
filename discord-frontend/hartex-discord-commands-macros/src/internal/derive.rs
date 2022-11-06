@@ -37,7 +37,7 @@ impl StreamParser for DeriveStream {
             //
             // #[metadata(name = "name")]
             // ^
-            let TokenTree::Punct(punct) = first else {
+            let TokenTree::Punct(punct) = first.clone() else {
                 return None;
             };
 
