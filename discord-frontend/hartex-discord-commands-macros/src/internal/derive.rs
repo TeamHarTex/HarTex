@@ -47,7 +47,7 @@ impl StreamParser for DeriveStream {
 
                             // check if the attribute name is exactly equal to "metadata"
                             //
-                            // #[metadata(name = "name)]
+                            // #[metadata(name = "name")]
                             //   --------
                             match group_first.clone() {
                                 TokenTree::Ident(ident)
@@ -56,21 +56,26 @@ impl StreamParser for DeriveStream {
                                         let group_next_option = group_tokens.next();
                                         if group_next_option.is_some() {
                                             let group_next = group_next_option.unwrap();
+
+                                            // look for a parenthesized group of parameter
+                                            //
+                                            // #[metadata(name = "name")]
+                                            //           ^-------------^
                                             match group_next.clone() {
                                                 TokenTree::Group(group) if group.delimiter() == Delimiter::Parenthesis => {
                                                     if group.stream().is_empty() {
                                                         group
                                                             .span()
-                                                            .error("parameters expected; none found")
+                                                            .error("parameter expected; none found")
                                                             .note("valid parameters: description, name, type")
                                                             .emit();
                                                     } else {
-                                                        eprintln!("{group:?}")
+                                                        eprintln!("{:?}", group.stream());
                                                     }
                                                 },
                                                 _ => group_next
                                                     .span()
-                                                    .error("expected parenthesized parameters")
+                                                    .error("expected parenthesized parameter")
                                                     .emit(),
                                             }
                                         } else {
