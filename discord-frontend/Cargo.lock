@@ -778,6 +778,7 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.1.0"
 dependencies = [
+ "hartex_discord_commands_core",
  "hartex_discord_commands_macros",
 ]
 
@@ -788,9 +789,6 @@ version = "0.1.0"
 [[package]]
 name = "hartex_discord_commands_macros"
 version = "0.1.0"
-dependencies = [
- "hartex_discord_commands_core",
-]
 
 [[package]]
 name = "hartex_discord_core"
