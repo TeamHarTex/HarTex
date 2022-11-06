@@ -19,16 +19,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(proc_macro_diagnostic)]
-
-extern crate proc_macro;
-
 use proc_macro::TokenStream;
 
-mod commandmetadata;
-mod internal;
+pub mod derive;
 
-#[proc_macro_derive(CommandMetadata, attributes(metadata))]
-pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
-    commandmetadata::expand_command_metadata_derivation(tokens)
+pub trait StreamParser {
+    fn parse(tokens: TokenStream) -> Self;
 }
