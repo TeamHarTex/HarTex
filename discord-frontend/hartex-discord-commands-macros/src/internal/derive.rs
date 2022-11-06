@@ -260,9 +260,7 @@ impl StreamParser for DeriveStream {
                 };
 
                 match ident_str {
-                    "description" => DeriveAttribute::Description(group_token_next),
-                    "name" => DeriveAttribute::Name(group_token_next),
-                    "type" => {
+                    "command_type" => {
                         let Ok(_) = literal.to_string().parse::<u8>() else {
                             literal
                                 .span()
@@ -273,6 +271,8 @@ impl StreamParser for DeriveStream {
 
                         DeriveAttribute::CommandType(group_token_next)
                     }
+                    "description" => DeriveAttribute::Description(group_token_next),
+                    "name" => DeriveAttribute::Name(group_token_next),
                     _ => return None,
                 }
             } else if BOOLEAN_PARAMETERS.contains(&ident_str) {
