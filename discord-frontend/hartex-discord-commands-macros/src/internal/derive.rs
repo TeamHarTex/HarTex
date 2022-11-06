@@ -23,7 +23,9 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 3] = ["description", "name", "type"];
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = ["description", "interaction_only", "name", "type"];
+const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
+const LITERAL_PARAMETERS: [&'static str; 3] = ["description", "name", "type"];
 
 pub struct DeriveStream;
 
@@ -82,8 +84,7 @@ impl StreamParser for DeriveStream {
                 group_first
                     .span()
                     .error(format!(
-                        "expected metadata attribute; found {} attribute instead",
-                        group_first.to_string()
+                        "expected metadata attribute; found {group_first} attribute instead"
                     ))
                     .emit();
                 return None;
@@ -135,7 +136,7 @@ impl StreamParser for DeriveStream {
             let TokenTree::Ident(ident) = first.clone() else {
                 first
                     .span()
-                    .error(format!("expected identifier; found {} instead", first.to_string()))
+                    .error(format!("expected identifier; found {first} instead"))
                     .emit();
                 return None;
             };
@@ -159,6 +160,10 @@ impl StreamParser for DeriveStream {
                 return None;
             }
 
+            // check if the "=" sign follows the parameter name
+            //
+            // #[metadata(name = "name")]
+            //                 ^
             let group_token_next = group_inner_tokens.next().unwrap();
             let TokenTree::Punct(punct) = group_token_next.clone() else {
                 first
@@ -174,6 +179,37 @@ impl StreamParser for DeriveStream {
                     .error(format!("expected = punctuation; found {punct} punctuation instead"))
                     .emit();
                 return None;
+            }
+
+            if group_inner_tokens.peek().is_none() {
+                punct
+                    .span()
+                    .error("unexpected end of parameter")
+                    .emit();
+                return None;
+            }
+
+            if LITERAL_PARAMETERS.contains(&ident_str) {
+                // check if a literal follows the "=" sign (for parameters description, name and type)
+                //
+                // #[metadata(name = "name")]
+                //                   ------
+                // #[metadata(type = 1)]
+                //                   -
+                let group_token_next = group_inner_tokens.next().unwrap();
+                let TokenTree::Literal(literal) = group_token_next.clone() else {
+                    group_token_next
+                        .span()
+                        .error(format!("expected literal; found {group_token_next}"))
+                        .emit();
+                    return None;
+                };
+            }
+            else if BOOLEAN_PARAMETERS.contains(&ident_str) {
+                // check if a boolean follows the "=" sign (for parameters interaction_only)
+                //
+                // #[metadata(interaction_only = true)]
+                //                               ----
             }
 
             iter.next();
