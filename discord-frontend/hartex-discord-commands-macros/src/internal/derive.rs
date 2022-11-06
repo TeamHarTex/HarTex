@@ -28,6 +28,7 @@ const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
 const LITERAL_PARAMETERS: [&'static str; 3] = ["description", "name", "type"];
 
+#[derive(Debug)]
 pub enum DeriveAttribute {
     Description(String),
     InteractionOnly(bool),
@@ -35,14 +36,17 @@ pub enum DeriveAttribute {
     Type(u8),
 }
 
+#[derive(Debug)]
 pub struct DeriveStream {
-    attributes: Vec<DeriveAttribute>,
+    pub attributes: Vec<DeriveAttribute>,
+    pub item_name: String,
 }
 
 impl DeriveStream {
     fn new() -> Self {
         Self {
             attributes: Vec::new(),
+            item_name: String::new(),
         }
     }
 }
@@ -52,6 +56,25 @@ impl StreamParser for DeriveStream {
         let mut parsed = DeriveStream::new();
 
         let mut iter = tokens.into_iter().peekable();
+
+        if !iter.clone().any(|tree| {
+            tree.to_string() == String::from("pub")
+        }) {
+            Span::call_site()
+                .error("the CommandMetadata trait can only be derived on pub items")
+                .emit();
+            return None;
+        }
+
+        if !iter.clone().any(|tree| {
+            tree.to_string() == String::from("struct")
+        }) {
+            Span::call_site()
+                .error("the CommandMetadata trait can only be derived on structs")
+                .emit();
+            return None;
+        }
+
         while let Some(first) = iter.next() && first.to_string() != String::from("pub") {
             // look for the beginning of an attribute
             //
@@ -280,6 +303,9 @@ impl StreamParser for DeriveStream {
             parsed.attributes.push(attribute);
             iter.next();
         }
+
+        iter.next();
+        parsed.item_name = iter.next().unwrap().to_string();
 
         Some(parsed)
     }
