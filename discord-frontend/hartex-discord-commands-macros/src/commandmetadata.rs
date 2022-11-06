@@ -21,6 +21,10 @@
 
 use proc_macro::TokenStream;
 
+use crate::internal::StreamParser;
+
 pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
-    todo!()
+    let _ = crate::internal::derive::DeriveStream::parse(tokens);
+
+    TokenStream::new()
 }
