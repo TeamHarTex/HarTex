@@ -125,8 +125,8 @@ impl StreamParser for DeriveStream {
                 return None;
             }
 
-            let mut group_tokens = group.stream().into_iter();
-            let first = group_tokens.next().unwrap();
+            let mut group_inner_tokens = group.stream().into_iter().peekable();
+            let first = group_inner_tokens.next().unwrap();
 
             // check if the parameter name is one of "description", "name" or "type"
             //
@@ -147,6 +147,31 @@ impl StreamParser for DeriveStream {
                     .span()
                     .error(format!("unexpected parameter name: {ident_string}"))
                     .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                    .emit();
+                return None;
+            }
+
+            if group_inner_tokens.peek().is_none() {
+                first
+                    .span()
+                    .error("unexpected end of parameter")
+                    .emit();
+                return None;
+            }
+
+            let group_token_next = group_inner_tokens.next().unwrap();
+            let TokenTree::Punct(punct) = group_token_next.clone() else {
+                first
+                    .span()
+                    .error(format!("expected punctuation; found {group_token_next} instead"))
+                    .emit();
+                return None;
+            };
+
+            if punct.as_char() != '=' {
+                punct
+                    .span()
+                    .error(format!("expected = punctuation; found {punct} punctuation instead"))
                     .emit();
                 return None;
             }
