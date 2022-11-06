@@ -23,6 +23,8 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 3] = ["description", "name", "type"];
+
 pub struct DeriveStream;
 
 impl StreamParser for DeriveStream {
@@ -70,7 +72,32 @@ impl StreamParser for DeriveStream {
                                                             .note("valid parameters: description, name, type")
                                                             .emit();
                                                     } else {
-                                                        eprintln!("{:?}", group.stream());
+                                                        let mut group_tokens = group.stream().into_iter();
+                                                        let first = group_tokens.next().unwrap();
+
+                                                        // check if the parameter name is one of "description", "name" or "type"
+                                                        //
+                                                        // #[metadata(name = "name)]
+                                                        //            ----
+                                                        match first.clone() {
+                                                            TokenTree::Ident(ident) => {
+                                                                let ident_string = ident.to_string();
+                                                                let ident_str = ident_string.as_str();
+                                                                if !VALID_ATTR_PARAMETER_NAMES.contains(&ident_str) {
+                                                                    first
+                                                                        .span()
+                                                                        .error(format!("unexpected parameter name: {ident_string}"))
+                                                                        .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                                                                        .emit();
+                                                                } else {
+                                                                    
+                                                                }
+                                                            },
+                                                            _ => first
+                                                                .span()
+                                                                .error(format!("expected identifier; found {}", first.to_string()))
+                                                                .emit()
+                                                        }
                                                     }
                                                 },
                                                 _ => group_next

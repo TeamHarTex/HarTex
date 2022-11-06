@@ -22,5 +22,5 @@
 use hartex_discord_commands_macros::CommandMetadata;
 
 #[derive(CommandMetadata)]
-#[metadata(name = "name")]
+#[metadata(stuff = "name")]
 pub struct Test;
