@@ -27,8 +27,6 @@ pub struct DeriveStream;
 
 impl StreamParser for DeriveStream {
     fn parse(tokens: TokenStream) -> Self {
-        eprintln!("{:?}", &tokens);
-
         let mut iter = tokens.into_iter().peekable();
         while let Some(first) = iter.next() && first.to_string() != String::from("pub") {
             // look for the beginning of an attribute
