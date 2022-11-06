@@ -19,7 +19,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
+use proc_macro::{Delimiter, Ident, Literal, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
@@ -30,10 +30,10 @@ const LITERAL_PARAMETERS: [&'static str; 3] = ["description", "name", "type"];
 
 #[derive(Debug)]
 pub enum DeriveAttribute {
-    Description(String),
-    InteractionOnly(bool),
-    Name(String),
-    Type(u8),
+    Description(Literal),
+    InteractionOnly(Ident),
+    Name(Literal),
+    Type(Literal),
 }
 
 #[derive(Debug)]
@@ -77,6 +77,8 @@ impl StreamParser for DeriveStream {
             return None;
         }
 
+        let mut previous_attr_name = String::new();
+        let mut previous_attr_span = Span::call_site();
         while let Some(first) = iter.next() && first.to_string() != String::from("pub") {
             // look for the beginning of an attribute
             //
@@ -172,7 +174,7 @@ impl StreamParser for DeriveStream {
             let mut group_inner_tokens = group.stream().into_iter().peekable();
             let first = group_inner_tokens.next().unwrap();
 
-            // check if the parameter name is one of "description", "name" or "type"
+            // check if the parameter name is one of "description", "interaction_only", "name" or "type"
             //
             // #[metadata(name = "name)]
             //            ----
@@ -191,6 +193,15 @@ impl StreamParser for DeriveStream {
                     .span()
                     .error(format!("unexpected parameter name: {ident_string}"))
                     .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                    .emit();
+                return None;
+            }
+
+            if ident_string == previous_attr_name {
+                ident
+                    .span()
+                    .error(format!("duplicate parameter found: {ident_str}"))
+                    .span_help(previous_attr_span, "previous declaration is found here")
                     .emit();
                 return None;
             }
@@ -249,16 +260,10 @@ impl StreamParser for DeriveStream {
                 };
 
                 match ident_str {
-                    "description" => {
-                        let description = literal.to_string();
-                        DeriveAttribute::Description(description)
-                    }
-                    "name" => {
-                        let name = literal.to_string();
-                        DeriveAttribute::Name(name)
-                    }
+                    "description" => DeriveAttribute::Description(literal),
+                    "name" => DeriveAttribute::Name(literal),
                     "type" => {
-                        let Ok(int) = literal.to_string().parse::<u8>() else {
+                        let Ok(_) = literal.to_string().parse::<u8>() else {
                             literal
                                 .span()
                                 .error(format!("expected integer literal; found literal {:?}", literal.to_string()))
@@ -266,7 +271,7 @@ impl StreamParser for DeriveStream {
                             return None;
                         };
 
-                        DeriveAttribute::Type(int)
+                        DeriveAttribute::Type(literal)
                     }
                     _ => return None,
                 }
@@ -286,7 +291,7 @@ impl StreamParser for DeriveStream {
 
                 match ident_str {
                     "interaction_only" => {
-                        let Ok(boolean) = ident.to_string().parse::<bool>() else {
+                        let Ok(_) = ident.to_string().parse::<bool>() else {
                             ident
                                 .span()
                                 .error(format!("expected boolean; found {ident}"))
@@ -294,7 +299,7 @@ impl StreamParser for DeriveStream {
                             return None;
                         };
 
-                        DeriveAttribute::InteractionOnly(boolean)
+                        DeriveAttribute::InteractionOnly(ident)
                     }
                     _ => return None,
                 }
@@ -302,6 +307,8 @@ impl StreamParser for DeriveStream {
                 return None;
             };
 
+            previous_attr_name = ident_string;
+            previous_attr_span = ident.span();
             parsed.attributes.push(attribute);
             iter.next();
         }
