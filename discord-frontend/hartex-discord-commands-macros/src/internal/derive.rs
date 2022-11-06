@@ -57,18 +57,20 @@ impl StreamParser for DeriveStream {
 
         let mut iter = tokens.into_iter().peekable();
 
-        if !iter.clone().any(|tree| {
-            tree.to_string() == String::from("pub")
-        }) {
+        if !iter
+            .clone()
+            .any(|tree| tree.to_string() == String::from("pub"))
+        {
             Span::call_site()
                 .error("the CommandMetadata trait can only be derived on pub items")
                 .emit();
             return None;
         }
 
-        if !iter.clone().any(|tree| {
-            tree.to_string() == String::from("struct")
-        }) {
+        if !iter
+            .clone()
+            .any(|tree| tree.to_string() == String::from("struct"))
+        {
             Span::call_site()
                 .error("the CommandMetadata trait can only be derived on structs")
                 .emit();
