@@ -23,7 +23,8 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = ["description", "interaction_only", "name", "type"];
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
+    ["description", "interaction_only", "name", "type"];
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
 const LITERAL_PARAMETERS: [&'static str; 3] = ["description", "name", "type"];
 
