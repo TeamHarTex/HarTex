@@ -29,9 +29,11 @@ pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
         return ret;
     };
 
-    let name = stream.item_name;
+    let Some(ident) = stream.identifier else {
+        return ret;
+    };
     let expanded = proc_macro::quote! {
-        impl hartex_discord_commands_core::CommandMetadata for $name {
+        impl hartex_discord_commands_core::CommandMetadata for $ident {
 
         }
     };
