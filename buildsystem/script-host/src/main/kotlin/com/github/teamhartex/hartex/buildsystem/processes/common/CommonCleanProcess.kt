@@ -10,7 +10,6 @@ class CommonCleanProcess {
   companion object {
     fun new(projectToBuild: Project, args: List<String>): Process? {
       val processBuilder = ProcessBuilder()
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> processBuilder.command("cargo", "clean")
@@ -26,16 +25,9 @@ class CommonCleanProcess {
         }
       }
 
-      val process = processBuilder.directory(File(System.getProperty("user.dir") + "/${args[2]}"))
+      return processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
+        .redirectError(ProcessBuilder.Redirect.INHERIT)
         .start()
-      val outputReader = process.errorStream.bufferedReader()
-      var line = outputReader.readLine()
-      while (line != null) {
-        println(line)
-        line = outputReader.readLine()
-      }
-
-      return process
     }
   }
 }
