@@ -21,6 +21,7 @@
 
 #![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
+#![feature(proc_macro_quote)]
 
 extern crate proc_macro;
 
