@@ -83,8 +83,11 @@ pub fn get_clusters(
             "building cluster {num_clusters} with shards {shard_start_index}..{remaining_shards}"
         );
         let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse()?;
-        let cluster =
-            stream::start_cluster(shard_start_index, concurrency, remaining_shards, |shard_id| {
+        let cluster = stream::start_cluster(
+            shard_start_index,
+            concurrency,
+            remaining_shards,
+            |shard_id| {
                 Config::builder(bot_token.clone(), Intents::all())
                     .event_types(EventTypeFlags::all())
                     .presence(UpdatePresencePayload {
@@ -112,8 +115,9 @@ pub fn get_clusters(
                     })
                     .queue(queue.clone())
                     .build()
-            })
-            .collect::<Vec<_>>();
+            },
+        )
+        .collect::<Vec<_>>();
         clusters.push((num_clusters, cluster));
     }
 
