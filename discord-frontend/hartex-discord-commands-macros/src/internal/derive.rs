@@ -176,7 +176,7 @@ impl StreamParser for DeriveStream {
 
             // check if the parameter name is one of "description", "interaction_only", "name" or "type"
             //
-            // #[metadata(name = "name)]
+            // #[metadata(name = "name")]
             //            ----
             let TokenTree::Ident(ident) = first.clone() else {
                 first
@@ -306,6 +306,15 @@ impl StreamParser for DeriveStream {
             } else {
                 return None;
             };
+
+            if let Some(extra) = group_inner_tokens.peek() {
+                extra
+                    .span()
+                    .error(format!("unexpected token: {extra}"))
+                    .help("only one parameter is allowed per metadata attribute")
+                    .emit();
+                return None;
+            }
 
             previous_attr_name = ident_string;
             previous_attr_span = ident.span();
