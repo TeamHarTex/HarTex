@@ -30,7 +30,7 @@ use hartex_discord_core::log;
 pub fn get_clusters(
     num_shards: u64,
     queue: Arc<dyn Queue>,
-) -> hartex_discord_eyre::Result<Vec<(u64, Vec<Shard>)>> {
+) -> hartex_discord_eyre::Result<Arc<Vec<(u64, Vec<Shard>)>>> {
     let num_clusters = std::env::var("NUM_CLUSTERS")?.parse::<u64>()?;
     let shard_per_cluster = num_shards.div_ceil(num_clusters);
     let remaining_shards = num_shards % num_clusters;
@@ -83,16 +83,43 @@ pub fn get_clusters(
             "building cluster {num_clusters} with shards {shard_start_index}..{remaining_shards}"
         );
         let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse()?;
-        let cluster =
-            stream::start_cluster(shard_start_index, concurrency, remaining_shards, |_| {
+        let cluster = stream::start_cluster(
+            shard_start_index,
+            concurrency,
+            remaining_shards,
+            |shard_id| {
                 Config::builder(bot_token.clone(), Intents::all())
                     .event_types(EventTypeFlags::all())
+                    .presence(UpdatePresencePayload {
+                        activities: vec![Activity {
+                            application_id: None,
+                            assets: None,
+                            buttons: vec![],
+                            created_at: None,
+                            details: None,
+                            emoji: None,
+                            flags: None,
+                            id: None,
+                            instance: None,
+                            kind: ActivityType::Watching,
+                            name: format!("development | shard {}", shard_id.number()),
+                            party: None,
+                            secrets: None,
+                            state: None,
+                            timestamps: None,
+                            url: None,
+                        }],
+                        afk: false,
+                        since: None,
+                        status: Status::Online,
+                    })
                     .queue(queue.clone())
                     .build()
-            })
-            .collect::<Vec<_>>();
+            },
+        )
+        .collect::<Vec<_>>();
         clusters.push((num_clusters, cluster));
     }
 
-    Ok(clusters)
+    Ok(Arc::new(clusters))
 }
