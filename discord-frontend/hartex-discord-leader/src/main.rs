@@ -122,12 +122,12 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     );
 
     let local = LocalSet::new();
-    for (cluster_id, cluster) in clusters {
+    clusters.clone().iter().for_each(|(cluster_id, cluster)| {
         let amqp = channel_inbound.clone();
         local.spawn_local(async move {
-            inbound::handle_inbound(cluster_id as usize, cluster, amqp).await
+            inbound::handle_inbound(*cluster_id as usize, cluster.to_vec(), amqp).await
         });
-    }
+    });
 
     let ctrlc = signal::ctrl_c();
     futures_util::select! {
@@ -137,6 +137,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
             channel_inbound.close(1, "user-initiated shutdown").await?;
             channel_outbound.close(1, "user-initiated shutdown").await?;
         }
+    }
+
+    for (cluster_id, cluster) in clusters.iter() {
+        todo!()
     }
 
     Ok(())
