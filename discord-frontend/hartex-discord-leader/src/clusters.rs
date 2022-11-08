@@ -32,10 +32,10 @@ pub fn get_clusters(
     queue: Arc<dyn Queue>,
 ) -> hartex_discord_eyre::Result<Vec<Shard>> {
     let bot_token = std::env::var("BOT_TOKEN")?;
-    let total = std::env::var("NUM_SHARDS")?.parse()?;
+    let shard_concurrency = std::env::var("SHARD_CONCURRENCY")?.parse()?;
 
     log::trace!("building cluster");
-    let cluster = stream::start_cluster(0, 1, total, |shard_id| {
+    let cluster = stream::start_cluster(0, shard_concurrency, num_shards, |shard_id| {
         Config::builder(bot_token.clone(), Intents::all())
             .event_types(EventTypeFlags::all())
             .presence(UpdatePresencePayload {

@@ -115,10 +115,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     let queue = queue::get_queue()?;
     let mut cluster = clusters::get_clusters(shards, queue.clone())?;
 
-    log::trace!(
-        "launching {} cluster(s) with {shards} shard(s)",
-        cluster.len(),
-    );
+    log::trace!("launching {shards} shard(s)");
 
     let amqp = channel_inbound.clone();
 
@@ -133,7 +130,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     }
 
     for shard in cluster.iter_mut() {
-        todo!()
+        tsha
     }
 
     Ok(())
