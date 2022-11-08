@@ -26,7 +26,6 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use hartex_discord_core::tokio::task::LocalSet;
 use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
@@ -114,24 +113,18 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::get_queue()?;
-    let clusters = clusters::get_clusters(shards, queue.clone())?;
+    let mut cluster = clusters::get_clusters(shards, queue.clone())?;
 
     log::trace!(
         "launching {} cluster(s) with {shards} shard(s)",
-        clusters.len(),
+        cluster.len(),
     );
 
-    let local = LocalSet::new();
-    clusters.into_iter().for_each(|(cluster_id, mut cluster)| {
-        let amqp = channel_inbound.clone();
-        local.spawn_local(async move {
-            inbound::handle_inbound(cluster_id as usize, cluster.iter_mut(), amqp).await
-        });
-    });
+    let amqp = channel_inbound.clone();
 
     let ctrlc = signal::ctrl_c();
     futures_util::select! {
-        _ = local.fuse() => {},
+        _ = inbound::handle_inbound(cluster.iter_mut(), amqp).fuse() => {},
         _ = ctrlc.fuse() => {
             log::warn!("ctrl-c signal received, shutting down");
             channel_inbound.close(1, "user-initiated shutdown").await?;
@@ -139,7 +132,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         }
     }
 
-    for (cluster_id, cluster) in clusters.iter() {
+    for shard in cluster.iter_mut() {
         todo!()
     }
 
