@@ -130,7 +130,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     }
 
     for shard in cluster.iter_mut() {
-        tsha
+        todo!()
     }
 
     Ok(())
