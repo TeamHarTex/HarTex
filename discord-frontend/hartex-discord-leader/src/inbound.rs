@@ -43,10 +43,7 @@ pub async fn handle_inbound(cluster: IterMut<'_, Shard>, amqp: Channel) {
                     continue
                 };
 
-                log::trace!(
-                    "[shard {shard_id}] received binary payload from gateway",
-                    shard_id = shard.id().number()
-                );
+                log::trace!("[shard {shard_id}] received binary payload from gateway", shard_id = shard.id().number());
 
                 if let Err(error) = amqp
                     .basic_publish(
@@ -58,10 +55,7 @@ pub async fn handle_inbound(cluster: IterMut<'_, Shard>, amqp: Channel) {
                     )
                     .await
                 {
-                    log::warn!(
-                        "[shard {shard_id}] failed to publish payload to worker: {error}",
-                        shard_id = shard.id().number()
-                    )
+                    log::warn!("[shard {shard_id}] failed to publish payload to worker: {error}", shard_id = shard.id().number())
                 }
             }
             Err(error) => {
