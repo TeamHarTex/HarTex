@@ -126,10 +126,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     );
 
     let local = LocalSet::new();
-    for (cluster_id, cluster) in &mut clusters {
+    for (cluster_id, cluster) in clusters {
         let amqp = channel_inbound.clone();
         local.spawn_local(async move {
-            inbound::handle_inbound(*cluster_id as usize, cluster, amqp).await
+            inbound::handle_inbound(cluster_id as usize, cluster, amqp).await
         });
     }
 

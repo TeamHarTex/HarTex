@@ -27,7 +27,7 @@ use hartex_discord_core::log;
 use lapin::options::BasicPublishOptions;
 use lapin::{BasicProperties, Channel};
 
-pub async fn handle_inbound(cluster_id: usize, cluster: &mut Vec<Shard>, amqp: Channel) {
+pub async fn handle_inbound(cluster_id: usize, mut cluster: Vec<Shard>, amqp: Channel) {
     let mut stream = ShardMessageStream::new(cluster.iter_mut());
 
     while let Some((shard, result)) = stream.next().await {
