@@ -122,10 +122,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     );
 
     let local = LocalSet::new();
-    clusters.clone().iter().for_each(|(cluster_id, cluster)| {
+    clusters.into_iter().for_each(|(cluster_id, mut cluster)| {
         let amqp = channel_inbound.clone();
         local.spawn_local(async move {
-            inbound::handle_inbound(*cluster_id as usize, cluster.to_vec(), amqp).await
+            inbound::handle_inbound(cluster_id as usize, cluster.iter_mut(), amqp).await
         });
     });
 
