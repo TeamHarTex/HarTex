@@ -22,6 +22,7 @@
 #![feature(int_roundings)]
 
 use futures_util::FutureExt;
+use futures_util::future;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
@@ -30,6 +31,9 @@ use hartex_discord_core::tokio::task::LocalSet;
 use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
+use hartex_discord_core::discord::gateway::message::CloseFrame;
+use hartex_discord_core::discord::gateway::{Session, Shard};
+use hartex_discord_core::discord::gateway::error::SendError;
 
 mod clusters;
 mod inbound;
@@ -114,7 +118,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::get_queue()?;
-    let clusters = clusters::get_clusters(shards, queue.clone())?;
+    let mut clusters = clusters::get_clusters(shards, queue.clone())?;
 
     log::trace!(
         "launching {} cluster(s) with {shards} shard(s)",
@@ -122,12 +126,12 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     );
 
     let local = LocalSet::new();
-    clusters.into_iter().for_each(|(cluster_id, mut cluster)| {
+    for (cluster_id, cluster) in &clusters {
         let amqp = channel_inbound.clone();
         local.spawn_local(async move {
-            inbound::handle_inbound(cluster_id as usize, cluster.iter_mut(), amqp).await
+            inbound::handle_inbound(*cluster_id as usize, cluster, amqp).await
         });
-    });
+    }
 
     let ctrlc = signal::ctrl_c();
     futures_util::select! {
@@ -139,9 +143,9 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         }
     }
 
-    for (cluster_id, cluster) in clusters.iter() {
-        todo!()
-    }
+    let sessions: Vec<Result<Option<Session>, SendError>> = future::join_all(clusters.iter().flat_map(|(cluster_id, mut cluster)| cluster.iter_mut()).map(|shard: &mut Shard| async {
+        shard.close(CloseFrame::RESUME).await
+    })).await;
 
     Ok(())
 }
