@@ -20,6 +20,9 @@
  */
 
 use futures_util::FutureExt;
+use hartex_discord_core::discord::gateway::error::SendError;
+use hartex_discord_core::discord::gateway::message::CloseFrame;
+use hartex_discord_core::discord::gateway::{Session, Shard};
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
@@ -27,9 +30,6 @@ use hartex_discord_core::tokio::signal;
 use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
-use hartex_discord_core::discord::gateway::message::CloseFrame;
-use hartex_discord_core::discord::gateway::{Session, Shard};
-use hartex_discord_core::discord::gateway::error::SendError;
 
 mod clusters;
 mod inbound;
@@ -130,11 +130,12 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         }
     }
 
-    let sessions: Vec<Result<Option<Session>, SendError>> = futures_util::future::join_all(cluster
-        .iter_mut()
-        .map(|shard: &mut Shard| async move {
-            shard.close(CloseFrame::RESUME).await
-        })).await;
+    let sessions: Vec<Result<Option<Session>, SendError>> = futures_util::future::join_all(
+        cluster
+            .iter_mut()
+            .map(|shard: &mut Shard| async move { shard.close(CloseFrame::RESUME).await }),
+    )
+    .await;
 
     Ok(())
 }
