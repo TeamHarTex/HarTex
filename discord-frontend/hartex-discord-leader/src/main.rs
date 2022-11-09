@@ -143,13 +143,13 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         }
     }
 
-    let _: Vec<Result<Option<Session>, SendError>> = future::join_all(
+    /*let _: Vec<Result<Option<Session>, SendError>> = future::join_all(
         clusters
             .iter_mut()
             .flat_map(|(_, mut cluster)| cluster.iter_mut())
             .map(|shard: &mut Shard| async { shard.close(CloseFrame::RESUME).await }),
     )
-    .await;
+    .await;*/
 
     Ok(())
 }
