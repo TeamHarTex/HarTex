@@ -126,10 +126,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     );
 
     let local = LocalSet::new();
-    for (cluster_id, cluster) in clusters {
+    for (cluster_id, mut cluster) in clusters {
         let amqp = channel_inbound.clone();
         local.spawn_local(async move {
-            inbound::handle_inbound(cluster_id as usize, cluster, amqp).await
+            inbound::handle_inbound(cluster_id as usize, cluster.iter_mut(), amqp).await
         });
     }
 
@@ -143,10 +143,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         }
     }
 
-    let sessions: Vec<Result<Option<Session>, SendError>> = future::join_all(
+    let _: Vec<Result<Option<Session>, SendError>> = future::join_all(
         clusters
             .iter_mut()
-            .flat_map(|(cluster_id, mut cluster)| cluster.iter_mut())
+            .flat_map(|(_, mut cluster)| cluster.iter_mut())
             .map(|shard: &mut Shard| async { shard.close(CloseFrame::RESUME).await }),
     )
     .await;
