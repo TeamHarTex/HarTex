@@ -19,7 +19,7 @@ futures-util = "0.3.25"
 hyper = { version = "0.14.23", features = ["client", "http1"], default-features = false }
 log = "0.4.17"
 serde = { version = "1.0.147", features = ["derive", "std"], default-features = false }
-serde_json = "1.0.85"
+serde_json = "1.0.87"
 tide = "0.17.0-beta.1"
 tokio = { version = "1.21.2", features = ["macros", "net", "rt", "rt-multi-thread", "sync"] }
 
