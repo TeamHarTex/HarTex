@@ -9,7 +9,6 @@ class CargoClippyProcess {
   companion object {
     fun new(projectToBuild: Project, args: List<String>): Process {
       val processBuilder = ProcessBuilder()
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> {
