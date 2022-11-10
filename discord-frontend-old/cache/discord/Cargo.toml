@@ -14,7 +14,7 @@ rust-version = "1.64.0"
 base = { path = "../../base", features = ["discord-model"] }
 cache_base = { path = "../base" }
 
-sqlx = { version = "0.6.1", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
+sqlx = { version = "0.6.2", default-features = false, features = ["postgres", "runtime-tokio-native-tls"] }
 
 [build-dependencies]
 toml_edit = "0.14.4"
