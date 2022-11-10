@@ -13,4 +13,4 @@ rust-version = "1.64.0"
 [dependencies]
 base = { path = "../base", features = ["discord-model"] }
 
-sqlx = { version = "0.6.1", default-features = false, features = ["postgres", "runtime-tokio-native-tls", "time"] }
+sqlx = { version = "0.6.2", default-features = false, features = ["postgres", "runtime-tokio-native-tls", "time"] }
