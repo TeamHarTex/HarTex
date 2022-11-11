@@ -21,7 +21,7 @@ manidb = { path = "../manidb" }
 rest = { path = "../rest" }
 restreq = { path = "../restreq" }
 
-async-tungstenite = { version = "0.17.2", features = ["tokio-runtime"] }
+async-tungstenite = { version = "0.18.0", features = ["tokio-runtime"] }
 futures-util = "0.3.25"
 hyper = { version = "0.14.23", features = ["client", "http1"], default-features = false }
 log = "0.4.17"
