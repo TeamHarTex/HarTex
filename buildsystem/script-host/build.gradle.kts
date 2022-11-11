@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.7.21"
 }
 
 group = "com.github.teamhartex"
@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.7.20")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:1.7.20")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.7.21")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:1.7.21")
     implementation(kotlin("reflect"))
     implementation(project(":script-def"))
 }
