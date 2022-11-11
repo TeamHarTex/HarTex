@@ -16,7 +16,7 @@ env = { path = "../env" }
 ext = { path = "../ext", features = ["discord-model-ext"] }
 restreq = { path = "../restreq" }
 
-clap = { version = "4.0.22", features = ["cargo"] }
+clap = { version = "4.0.23", features = ["cargo"] }
 hyper = { version = "0.14.23", default-features = false, features = ["client", "http1", "http2", "tcp"] }
 log = "0.4.17"
 tokio = { version = "1.21.2", features = ["macros", "rt", "rt-multi-thread"] }
