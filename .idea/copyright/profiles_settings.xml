@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <settings default="agpl-3.0">
+    <module2copyright>
+      <element module="Production" copyright="agpl-3.0" />
+    </module2copyright>
+    <LanguageOptions name="__TEMPLATE__" />
+  </settings>
+</component>
