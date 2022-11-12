@@ -29,6 +29,7 @@ import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoFormatCheck
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoFormatProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoTestProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoUpdateProcess
+import com.github.teamhartex.hartex.buildsystem.processes.common.CommonUpgradeProcess
 import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -51,6 +52,7 @@ class ProjectBuilder {
           "formatck" -> CargoFormatCheckProcess.new(projectToBuild, args.asList())
           "test" -> CargoTestProcess.new(projectToBuild, args.asList())
           "update" -> CargoUpdateProcess.new(projectToBuild, args.asList())
+          "upgrade" -> CommonUpgradeProcess.new(projectToBuild, args.asList())
           else -> throw IllegalArgumentException("invalid command")
         }
 
