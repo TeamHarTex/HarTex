@@ -11,4 +11,11 @@ repositories {
 }
 
 dependencies {
+    runtimeClasspath(project(":script-def"))
+}
+
+tasks.withType<Jar> {
+    from(configurations.runtimeClasspath)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
