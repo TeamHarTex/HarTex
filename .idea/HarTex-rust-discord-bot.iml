@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Python" name="Python facet">
+      <configuration sdkName="Python 3.10" />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cache/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cache/discord/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/env/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/event/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ext/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/interactions/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/manidb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/buildsys/configure/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/driver/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/pg-sess-store/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/sessmgmt/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/buildsys/configure/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/cache/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/cache/discord/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/env/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/event/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/ext/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/interactions/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/manidb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/model/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend-old/restreq/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/stacktrace/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-ext/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/cache/base/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/cache/discord/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/env/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/event/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/ext/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/manidb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/model/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/restreq/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libraries/callstack/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/buildsystem/hartex-buildsystem-driver/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-leader/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-eyre/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-worker/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/target" />
+      <excludeFolder url="file://$MODULE_DIR$/common/target" />
+      <excludeFolder url="file://$MODULE_DIR$/discord-frontend-old/target" />
+      <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
+      <excludeFolder url="file://$MODULE_DIR$/libraries/target" />
+      <excludeFolder url="file://$MODULE_DIR$/buildsystem/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
