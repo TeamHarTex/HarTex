@@ -3,12 +3,13 @@ package com.github.teamhartex.hartex.buildsystem.processes.common
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
+import com.github.teamhartex.hartex.buildsystem.processes.BuildsystemProcess
 import java.io.File
 import java.nio.file.Path
 
 class CommonCleanProcess {
-  companion object {
-    fun new(projectToBuild: Project, args: List<String>): Process? {
+  companion object : BuildsystemProcess {
+    override fun new(projectToBuild: Project, args: List<String>): Process? {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {

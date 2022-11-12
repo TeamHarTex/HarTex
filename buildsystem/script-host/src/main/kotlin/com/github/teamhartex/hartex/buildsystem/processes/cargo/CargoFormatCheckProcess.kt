@@ -3,11 +3,12 @@ package com.github.teamhartex.hartex.buildsystem.processes.cargo
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
+import com.github.teamhartex.hartex.buildsystem.processes.BuildsystemProcess
 import java.io.File
 
 class CargoFormatCheckProcess {
-  companion object {
-    fun new(projectToBuild: Project, args: List<String>): Process {
+  companion object : BuildsystemProcess {
+    override fun new(projectToBuild: Project, args: List<String>): Process {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
