@@ -22,19 +22,26 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
+import kotlin.script.experimental.api.ScriptAcceptedLocation
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
+import kotlin.script.experimental.api.acceptedLocations
 import kotlin.script.experimental.api.baseClass
 import kotlin.script.experimental.api.defaultImports
+import kotlin.script.experimental.api.displayName
+import kotlin.script.experimental.api.ide
 import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
 import kotlin.script.experimental.jvm.jvm
 
-abstract class AbstractBuildsystemKotlinScriptDefinition {
-  object Configuration : ScriptCompilationConfiguration({
-    baseClass(Workspace::class)
-    defaultImports(CargoBuildProfile::class, ProjectBuildTool::class, ProjectType::class)
+class AbstractBuildsystemKotlinScriptDefinition : ScriptCompilationConfiguration({
+  baseClass(Workspace::class)
+  defaultImports(CargoBuildProfile::class, ProjectBuildTool::class, ProjectType::class)
+  displayName("HarTex Build Script")
 
-    jvm {
-      dependenciesFromCurrentContext(wholeClasspath = true)
-    }
-  })
-}
+  jvm {
+    dependenciesFromCurrentContext(wholeClasspath = true)
+  }
+
+  ide {
+    acceptedLocations(ScriptAcceptedLocation.Everywhere)
+  }
+})
