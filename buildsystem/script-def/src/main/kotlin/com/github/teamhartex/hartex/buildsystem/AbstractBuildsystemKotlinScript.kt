@@ -25,7 +25,7 @@ package com.github.teamhartex.hartex.buildsystem
 import kotlin.script.experimental.annotations.KotlinScript
 
 @KotlinScript(
-  compilationConfiguration = AbstractBuildsystemKotlinScriptDefinition.Configuration::class,
+  compilationConfiguration = AbstractBuildsystemKotlinScriptDefinition::class,
   fileExtension = "buildsystem.kts"
 )
-abstract class AbstractBuildsystemKotlinScript
+class AbstractBuildsystemKotlinScript
