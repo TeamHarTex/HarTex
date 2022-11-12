@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="buildststem" target="17" />
+      <module name="buildststem.main" target="17" />
+      <module name="buildststem.test" target="17" />
+      <module name="buildsystem-core-api" target="17" />
+      <module name="buildsystem-core-api.main" target="17" />
+      <module name="buildsystem-core-api.test" target="17" />
+      <module name="buildsystem-dsl" target="17" />
+      <module name="buildsystem-dsl.main" target="17" />
+      <module name="buildsystem-dsl.test" target="17" />
+      <module name="buildsystem.kotlin-dsl" target="17" />
+      <module name="buildsystem.kotlin-dsl.main" target="17" />
+      <module name="buildsystem.kotlin-dsl.test" target="17" />
+      <module name="buildsystem.reflect-api" target="17" />
+      <module name="buildsystem.reflect-api.main" target="17" />
+      <module name="buildsystem.reflect-api.test" target="17" />
+      <module name="buildsystem.reflection-api.main" target="17" />
+      <module name="buildsystem.reflection-api.test" target="17" />
+      <module name="buildsystem.service-api" target="17" />
+      <module name="buildsystem.service-api.main" target="17" />
+      <module name="buildsystem.service-api.test" target="17" />
+      <module name="buildsystem.tooling-api" target="17" />
+      <module name="buildsystem.tooling-api.main" target="17" />
+      <module name="buildsystem.tooling-api.test" target="17" />
+      <module name="com.github.teamhartex.buildsystem" target="17" />
+      <module name="com.github.teamhartex.buildsystem.main" target="17" />
+      <module name="com.github.teamhartex.buildsystem.test" target="17" />
+      <module name="kotlin-dsl" target="17" />
+      <module name="kotlin-dsl.main" target="17" />
+      <module name="kotlin-dsl.test" target="17" />
+      <module name="tooling-api" target="17" />
+      <module name="tooling-api.main" target="17" />
+      <module name="tooling-api.test" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

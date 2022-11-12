@@ -1,4 +1,3 @@
-**/.idea
 **/.fleet
 **/.DS_Store
 **/venv
@@ -26,6 +25,7 @@ buildconf.toml
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.idea/discord.xml
 
 **/.gradle
 **/build
