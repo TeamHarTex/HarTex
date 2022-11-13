@@ -30,6 +30,8 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
+      - name: Download Buildsystem
+        run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar --silent
       - name: Run Buildsystem
         run: java -jar ./buildsystem.jar ./build.buildsystem.kts build discord-frontend
 
@@ -56,5 +58,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
+      - name: Download Buildsystem
+        run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar --silent
       - name: Run Buildsystem
         run: java -jar ./buildsystem.jar ./build.buildsystem.kts test discord-frontend
