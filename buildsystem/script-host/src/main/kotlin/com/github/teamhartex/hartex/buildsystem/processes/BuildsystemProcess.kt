@@ -22,8 +22,9 @@
 
 package com.github.teamhartex.hartex.buildsystem.processes
 
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.teamhartex.hartex.buildsystem.Project
 
 interface BuildsystemProcess {
-  fun new(projectToBuild: Project, args: List<String>): Process?
+  fun new(projectToBuild: Project, args: List<String>, terminal: Terminal): Process?
 }

@@ -22,6 +22,9 @@
 
 package com.github.teamhartex.hartex.buildsystem.processes.common
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.teamhartex.hartex.buildsystem.CargoBuildProfile
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
@@ -31,21 +34,26 @@ import java.io.File
 
 class CommonBuildProcess {
   companion object : BuildsystemProcess {
-    override fun new(projectToBuild: Project, args: List<String>): Process {
+    override fun new(projectToBuild: Project, args: List<String>, terminal: Terminal): Process {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> {
+          terminal.print("${bold(green("Running"))} cargo build")
           processBuilder.command("cargo", "build")
 
           when (projectToBuild.cargoBuildProfile) {
             CargoBuildProfile.RELEASE -> {
+              terminal.println(" --release")
               processBuilder.command().add("--release")
             }
-            else -> {}
+            else -> terminal.println()
           }
         }
-        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> processBuilder.command("yarn", "build")
+        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {
+          terminal.println("${bold(green("Running"))} yarn build")
+          processBuilder.command("yarn", "build")
+        }
       }
 
       return processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))
