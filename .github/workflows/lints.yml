@@ -32,9 +32,9 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Download Buildsystem
-        run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar --silent
+        run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar
       - name: Run Buildsystem
-        run: java -jar ./buildsystem.jar ./build.buildsystem.kts clippy discord-frontend
+        run: ./buildsystem.sh clippy discord-frontend
 
   RustfmtDiscordFrontend:
     name: Rustfmt (discord-frontend)
@@ -55,6 +55,6 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Download Buildsystem
-        run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar --silent
+        run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar
       - name: Run Buildsystem
-        run: java -jar ./buildsystem.jar ./build.buildsystem.kts formatck discord-frontend
+        run: ./buildsystem.sh formatck discord-frontend
