@@ -22,6 +22,9 @@
 
 package com.github.teamhartex.hartex.buildsystem.processes.common
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
@@ -30,12 +33,18 @@ import java.io.File
 
 class CommonUpgradeProcess {
   companion object : BuildsystemProcess {
-    override fun new(projectToBuild: Project, args: List<String>): Process {
+    override fun new(projectToBuild: Project, args: List<String>, terminal: Terminal): Process {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
-        ProjectType.RUST to ProjectBuildTool.CARGO -> processBuilder.command("cargo", "upgrade", "--to-lockfile")
-        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> processBuilder.command("yarn", "upgrade")
+        ProjectType.RUST to ProjectBuildTool.CARGO -> {
+          terminal.println("${bold(green("Running"))} cargo upgrade --to-lockfile")
+          processBuilder.command("cargo", "upgrade", "--to-lockfile")
+        }
+        ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {
+          terminal.println("${bold(green("Running"))} yarn upgrade")
+          processBuilder.command("yarn", "upgrade")
+        }
       }
 
       return processBuilder.directory(File(System.getProperty("user.dir") + """/${args[2]}"""))

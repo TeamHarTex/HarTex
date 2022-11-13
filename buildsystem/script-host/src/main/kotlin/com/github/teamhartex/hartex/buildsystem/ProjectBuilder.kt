@@ -22,6 +22,7 @@
 
 package com.github.teamhartex.hartex.buildsystem
 
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.teamhartex.hartex.buildsystem.processes.common.CommonBuildProcess
 import com.github.teamhartex.hartex.buildsystem.processes.common.CommonCleanProcess
 import com.github.teamhartex.hartex.buildsystem.processes.cargo.CargoClippyProcess
@@ -43,16 +44,17 @@ class ProjectBuilder {
         val projects = projectsField.call(scriptClass.createInstance()) as Projects
 
         val projectToBuild = projects.projects[args[2]] ?: throw NoSuchElementException("no such project")
+        val terminal = Terminal()
 
         val process = when (args[1]) {
-          "build" -> CommonBuildProcess.new(projectToBuild, args.asList())
-          "clean" -> CommonCleanProcess.new(projectToBuild, args.asList())
-          "clippy" -> CargoClippyProcess.new(projectToBuild, args.asList())
-          "format" -> CargoFormatProcess.new(projectToBuild, args.asList())
-          "formatck" -> CargoFormatCheckProcess.new(projectToBuild, args.asList())
-          "test" -> CargoTestProcess.new(projectToBuild, args.asList())
-          "update" -> CargoUpdateProcess.new(projectToBuild, args.asList())
-          "upgrade" -> CommonUpgradeProcess.new(projectToBuild, args.asList())
+          "build" -> CommonBuildProcess.new(projectToBuild, args.asList(), terminal)
+          "clean" -> CommonCleanProcess.new(projectToBuild, args.asList(), terminal)
+          "clippy" -> CargoClippyProcess.new(projectToBuild, args.asList(), terminal)
+          "format" -> CargoFormatProcess.new(projectToBuild, args.asList(), terminal)
+          "formatck" -> CargoFormatCheckProcess.new(projectToBuild, args.asList(), terminal)
+          "test" -> CargoTestProcess.new(projectToBuild, args.asList(), terminal)
+          "update" -> CargoUpdateProcess.new(projectToBuild, args.asList(), terminal)
+          "upgrade" -> CommonUpgradeProcess.new(projectToBuild, args.asList(), terminal)
           else -> throw IllegalArgumentException("invalid command")
         }
 

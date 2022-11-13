@@ -22,6 +22,9 @@
 
 package com.github.teamhartex.hartex.buildsystem.processes.cargo
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
@@ -30,11 +33,12 @@ import java.io.File
 
 class CargoFormatProcess {
   companion object : BuildsystemProcess {
-    override fun new(projectToBuild: Project, args: List<String>): Process {
+    override fun new(projectToBuild: Project, args: List<String>, terminal: Terminal): Process {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> {
+          terminal.println("${bold(green("Running"))} cargo fmt")
           processBuilder.command("cargo", "fmt")
         }
         else -> {}
