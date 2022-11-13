@@ -29,3 +29,5 @@ buildconf.toml
 
 **/.gradle
 **/build
+
+buildsystem.jar
