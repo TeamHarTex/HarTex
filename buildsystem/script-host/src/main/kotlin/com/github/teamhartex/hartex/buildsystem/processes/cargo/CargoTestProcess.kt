@@ -28,13 +28,17 @@ import com.github.teamhartex.hartex.buildsystem.ProjectType
 import com.github.teamhartex.hartex.buildsystem.processes.BuildsystemProcess
 import java.io.File
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
 class CargoTestProcess {
   companion object : BuildsystemProcess {
-    override fun new(projectToBuild: Project, args: List<String>): Process {
+    override fun new(projectToBuild: Project, args: List<String>, terminal: Terminal): Process {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> {
+          terminal.println("${bold(green("Running"))} cargo nextest run")
           processBuilder.command("cargo", "nextest", "run")
         }
         else -> {}

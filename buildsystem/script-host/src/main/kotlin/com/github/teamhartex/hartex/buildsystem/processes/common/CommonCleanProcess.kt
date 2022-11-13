@@ -22,6 +22,9 @@
 
 package com.github.teamhartex.hartex.buildsystem.processes.common
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.teamhartex.hartex.buildsystem.Project
 import com.github.teamhartex.hartex.buildsystem.ProjectBuildTool
 import com.github.teamhartex.hartex.buildsystem.ProjectType
@@ -31,13 +34,18 @@ import java.nio.file.Path
 
 class CommonCleanProcess {
   companion object : BuildsystemProcess {
-    override fun new(projectToBuild: Project, args: List<String>): Process? {
+    override fun new(projectToBuild: Project, args: List<String>, terminal: Terminal): Process? {
       val processBuilder = ProcessBuilder()
 
       when (projectToBuild.projectType to projectToBuild.buildTool) {
-        ProjectType.RUST to ProjectBuildTool.CARGO -> processBuilder.command("cargo", "clean")
+        ProjectType.RUST to ProjectBuildTool.CARGO -> {
+          terminal.println("${bold(green("Running"))} cargo clean")
+          processBuilder.command("cargo", "clean")
+        }
         ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {
           try {
+            terminal.println("${bold(green("Deleting"))} built artifacts")
+
             if (!File(Path.of(System.getProperty("user.dir"), args[2], "dist").toUri()).deleteRecursively())
               throw RuntimeException("failed to delete dist directory")
 
