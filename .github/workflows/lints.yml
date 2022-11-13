@@ -34,7 +34,7 @@ jobs:
       - name: Download Buildsystem
         run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar
       - name: Run Buildsystem
-        run: ./buildsystem.sh clippy discord-frontend
+        run: chmod +x ./buildsystem.sh && ./buildsystem.sh clippy discord-frontend
 
   RustfmtDiscordFrontend:
     name: Rustfmt (discord-frontend)
@@ -57,4 +57,4 @@ jobs:
       - name: Download Buildsystem
         run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar
       - name: Run Buildsystem
-        run: ./buildsystem.sh formatck discord-frontend
+        run: chmod +x ./buildsystem.sh && ./buildsystem.sh formatck discord-frontend
