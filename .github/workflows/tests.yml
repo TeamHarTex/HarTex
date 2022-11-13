@@ -33,7 +33,7 @@ jobs:
       - name: Download Buildsystem
         run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar
       - name: Run Buildsystem
-        run: ./buildsystem.sh build discord-frontend
+        run: chmod +x ./buildsystem.sh && ./buildsystem.sh build discord-frontend
 
   TestDiscordFrontend:
     name: Test (discord-frontend)
@@ -61,4 +61,4 @@ jobs:
       - name: Download Buildsystem
         run: curl https://github.com/TeamHarTex/HarTex/releases/tag/buildsystem-2022-11-13/buildsystem.jar --output buildsystem.jar
       - name: Run Buildsystem
-        run: ./buildsystem.sh test discord-frontend
+        run: chmod +x ./buildsystem.sh && ./buildsystem.sh test discord-frontend
