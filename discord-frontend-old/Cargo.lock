@@ -445,7 +445,7 @@ dependencies = [
  "sqlx",
  "twilight-gateway",
  "twilight-http 0.13.3",
- "twilight-model 0.13.7",
+ "twilight-model 0.14.0",
  "twilight-util",
 ]
 
