@@ -32,9 +32,9 @@ use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptio
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
-mod shards;
 mod inbound;
 mod queue;
+mod shards;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_discord_eyre::Result<()> {
@@ -121,9 +121,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     let local = LocalSet::new();
     let amqp = channel_inbound.clone();
-    local.spawn_local(async move {
-        inbound::handle_inbound(shards.iter_mut(), amqp).await
-    });
+    local.spawn_local(async move { inbound::handle_inbound(shards.iter_mut(), amqp).await });
 
     let ctrlc = signal::ctrl_c();
     futures_util::select! {
