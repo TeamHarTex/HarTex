@@ -32,9 +32,9 @@ use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptio
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
-mod clusters;
 mod inbound;
 mod queue;
+mod shards;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_discord_eyre::Result<()> {
@@ -113,22 +113,15 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         .await?;
 
     log::trace!("building clusters");
-    let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
+    let num_shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::get_queue()?;
-    let clusters = clusters::get_clusters(shards, queue.clone())?;
+    let mut shards = shards::get_shards(num_shards, queue.clone())?;
 
-    log::trace!(
-        "launching {} cluster(s) with {shards} shard(s)",
-        clusters.len(),
-    );
+    log::trace!("launching {num_shards} shard(s)",);
 
     let local = LocalSet::new();
-    for (cluster_id, mut cluster) in clusters {
-        let amqp = channel_inbound.clone();
-        local.spawn_local(async move {
-            inbound::handle_inbound(cluster_id as usize, cluster.iter_mut(), amqp).await
-        });
-    }
+    let amqp = channel_inbound.clone();
+    local.spawn_local(async move { inbound::handle_inbound(shards.iter_mut(), amqp).await });
 
     let ctrlc = signal::ctrl_c();
     futures_util::select! {
