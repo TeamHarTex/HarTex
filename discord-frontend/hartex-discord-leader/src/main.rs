@@ -22,11 +22,7 @@
 
 #![feature(int_roundings)]
 
-use futures_util::future;
 use futures_util::FutureExt;
-use hartex_discord_core::discord::gateway::error::SendError;
-use hartex_discord_core::discord::gateway::message::CloseFrame;
-use hartex_discord_core::discord::gateway::{Session, Shard};
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
@@ -119,7 +115,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("building clusters");
     let shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::get_queue()?;
-    let mut clusters = clusters::get_clusters(shards, queue.clone())?;
+    let clusters = clusters::get_clusters(shards, queue.clone())?;
 
     log::trace!(
         "launching {} cluster(s) with {shards} shard(s)",
