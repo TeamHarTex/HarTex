@@ -30,8 +30,8 @@ use hartex_discord_core::log;
 use lapin::options::BasicPublishOptions;
 use lapin::{BasicProperties, Channel};
 
-pub async fn handle_inbound(cluster_id: usize, cluster: IterMut<'_, Shard>, amqp: Channel) {
-    let mut stream = ShardMessageStream::new(cluster);
+pub async fn handle_inbound(shards: IterMut<'_, Shard>, amqp: Channel) {
+    let mut stream = ShardMessageStream::new(shards);
 
     while let Some((shard, result)) = stream.next().await {
         match result {
@@ -44,32 +44,38 @@ pub async fn handle_inbound(cluster_id: usize, cluster: IterMut<'_, Shard>, amqp
                     continue
                 };
 
-                log::trace!("[cluster {cluster_id} - shard {shard_id}] received binary payload from gateway", shard_id = shard.id().number());
+                log::trace!(
+                    "[shard {shard_id}] received binary payload from gateway",
+                    shard_id = shard.id().number()
+                );
 
                 if let Err(error) = amqp
                     .basic_publish(
                         "gateway",
-                        &format!("CLUSTER {cluster_id} SHARD {} PAYLOAD", shard.id().number()),
+                        &format!("SHARD {} PAYLOAD", shard.id().number()),
                         BasicPublishOptions::default(),
                         bytes.as_slice(),
                         BasicProperties::default(),
                     )
                     .await
                 {
-                    log::warn!("[cluster {cluster_id} - shard {shard_id}] failed to publish payload to worker: {error}", shard_id = shard.id().number())
+                    log::warn!(
+                        "[shard {shard_id}] failed to publish payload to worker: {error}",
+                        shard_id = shard.id().number()
+                    )
                 }
             }
             Err(error) => {
                 if error.is_fatal() {
                     log::error!(
-                        "[cluster {cluster_id} - shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
+                        "[shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
                         shard_id = shard.id().number()
                     );
                     break;
                 }
 
                 log::warn!(
-                    "[cluster {cluster_id} - shard {shard_id}] error when receiving gateway message: {error}",
+                    "[shard {shard_id}] error when receiving gateway message: {error}",
                     shard_id = shard.id().number()
                 )
             }
