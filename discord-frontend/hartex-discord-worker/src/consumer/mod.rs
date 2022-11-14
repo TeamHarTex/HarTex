@@ -44,7 +44,7 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                 .await
                 .expect("failed to ack");
             let value = delivery.routing_key.as_str();
-            let scanned: (u8, u8) = scan!("CLUSTER {} SHARD {} PAYLOAD" <- value)?;
+            let scanned: u8 = scan!("SHARD {} PAYLOAD" <- value)?;
 
             let (gateway_deserializer, mut json_deserializer) = {
                 let gateway_deserializer = GatewayEventDeserializer::from_json(
@@ -72,12 +72,11 @@ pub async fn consume(mut consumer: Consumer) -> hartex_discord_eyre::Result<()> 
                 })?;
 
             log::trace!(
-                "[cluster {} - shard {}] received {} event",
-                scanned.0,
-                scanned.1,
+                "[shard {}] received {} event",
+                scanned,
                 gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
             );
-            entitycache::update_entitycache(&event).await?;
+            // entitycache::update_entitycache(&event).await?;
             eventcallback::handle_event(event)?;
         }
     }
