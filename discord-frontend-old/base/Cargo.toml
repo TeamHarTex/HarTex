@@ -23,7 +23,7 @@ sqlx = "0.6.2"
 twilight-gateway = { version = "0.14.0", optional = true }
 twilight-http = { version = "0.14.0", optional = true }
 twilight-model = { version = "0.14.0", optional = true }
-twilight-util = { version = "0.13.3", features = ["builder"], optional = true }
+twilight-util = { version = "0.14.0", features = ["builder"], optional = true }
 
 [features]
 cmdline = ["getopts"]
