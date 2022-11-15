@@ -32,12 +32,6 @@ pub struct ConsumerError {
 impl Display for ConsumerError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self.kind {
-            ConsumerErrorKind::DeserializationFailed => {
-                write!(f, "deserialization failure: {:?}", self.source)
-            }
-            ConsumerErrorKind::GatewayPayloadNotUTF8 => {
-                f.write_str("gateway payload not encoded in utf-8")
-            }
             ConsumerErrorKind::InvalidGatewayPayload => f.write_str("invalid gateway payload"),
         }
     }
@@ -47,7 +41,5 @@ impl Error for ConsumerError {}
 
 #[derive(Debug)]
 pub enum ConsumerErrorKind {
-    DeserializationFailed,
-    GatewayPayloadNotUTF8,
     InvalidGatewayPayload,
 }

@@ -20,15 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::str;
+
+use futures_util::StreamExt;
+use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use lapin::options::BasicConsumeOptions;
+use lapin::options::{BasicAckOptions, BasicConsumeOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties};
+use serde::de::DeserializeSeed;
+use serde_scan::scan;
 
-mod consumer;
+use crate::error::{ConsumerError, ConsumerErrorKind};
+
+mod entitycache;
+mod error;
+mod eventcallback;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_discord_eyre::Result<()> {
@@ -49,7 +59,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
 
     let channel_inbound = amqp_connection.create_channel().await?;
-    let consumer = channel_inbound
+    let mut consumer = channel_inbound
         .basic_consume(
             "gateway.inbound",
             "consumer",
@@ -58,7 +68,42 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         )
         .await?;
 
-    tokio::spawn(consumer::consume(consumer));
+    while let Some(result) = consumer.next().await {
+        if let Ok(delivery) = result {
+            delivery
+                .ack(BasicAckOptions::default())
+                .await
+                .expect("failed to ack");
+            let value = delivery.routing_key.as_str();
+            let scanned: u8 = scan!("SHARD {} PAYLOAD" <- value)?;
+
+            let (gateway_deserializer, mut json_deserializer) = {
+                let gateway_deserializer = GatewayEventDeserializer::from_json(str::from_utf8(
+                    &delivery.data,
+                )?)
+                .ok_or(ConsumerError {
+                    kind: ConsumerErrorKind::InvalidGatewayPayload,
+                    source: None,
+                })?;
+
+                let json_deserializer = serde_json::Deserializer::from_slice(&delivery.data);
+
+                (gateway_deserializer, json_deserializer)
+            };
+
+            let event = gateway_deserializer
+                .clone()
+                .deserialize(&mut json_deserializer)?;
+
+            log::trace!(
+                "[shard {}] received {} event",
+                scanned,
+                gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
+            );
+            // entitycache::update_entitycache(&event).await?;
+            eventcallback::handle_event(event)?;
+        }
+    }
 
     signal::ctrl_c().await?;
     log::warn!("ctrl-c signal received, shutting down");
