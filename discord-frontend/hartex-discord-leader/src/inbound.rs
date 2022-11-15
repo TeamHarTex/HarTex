@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::slice::IterMut;
-
 use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::message::Message;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
@@ -30,7 +28,7 @@ use hartex_discord_core::log;
 use lapin::options::BasicPublishOptions;
 use lapin::{BasicProperties, Channel};
 
-pub async fn handle_inbound(shards: IterMut<'_, Shard>, amqp: Channel) {
+pub async fn handle_inbound(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
     let mut stream = ShardMessageStream::new(shards);
 
     while let Some((shard, result)) = stream.next().await {
