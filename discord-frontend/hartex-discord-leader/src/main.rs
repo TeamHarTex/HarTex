@@ -23,6 +23,7 @@
 #![feature(int_roundings)]
 
 use std::time::Duration;
+
 use futures_util::future;
 use hartex_discord_core::discord::gateway::message::CloseFrame;
 use hartex_discord_core::discord::gateway::Shard;
@@ -124,15 +125,15 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     let (tx, rx) = watch::channel(false);
 
     log::trace!("launching {num_shards} shard(s)",);
-        let mut rx = rx.clone();
-        let amqp = channel_inbound.clone();
+    let mut rx = rx.clone();
+    let amqp = channel_inbound.clone();
 
     tokio::spawn(async move {
         tokio::select! {
             _ = inbound::handle_inbound(shards.iter_mut(), amqp) => {},
             _ = rx.changed() => {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
-                    shard.close(CloseFrame::RESUME)
+                    shard.close(CloseFrame::RESUME).await
                 })).await;
             }
         }
