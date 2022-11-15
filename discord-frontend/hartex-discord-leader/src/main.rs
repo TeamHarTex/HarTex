@@ -22,12 +22,17 @@
 
 #![feature(int_roundings)]
 
-use futures_util::FutureExt;
+use std::time::Duration;
+
+use futures_util::future;
+use hartex_discord_core::discord::gateway::message::CloseFrame;
+use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use hartex_discord_core::tokio::task::LocalSet;
+use hartex_discord_core::tokio::sync::watch;
+use hartex_discord_core::tokio::time;
 use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties, ExchangeKind};
@@ -117,29 +122,31 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     let queue = queue::get_queue()?;
     let mut shards = shards::get_shards(num_shards, queue.clone())?;
 
+    let (tx, rx) = watch::channel(false);
+
     log::trace!("launching {num_shards} shard(s)",);
-
-    let local = LocalSet::new();
+    let mut rx = rx.clone();
     let amqp = channel_inbound.clone();
-    local.spawn_local(async move { inbound::handle_inbound(shards.iter_mut(), amqp).await });
 
-    let ctrlc = signal::ctrl_c();
-    futures_util::select! {
-        _ = local.fuse() => {},
-        _ = ctrlc.fuse() => {
-            log::warn!("ctrl-c signal received, shutting down");
-            channel_inbound.close(1, "user-initiated shutdown").await?;
-            channel_outbound.close(1, "user-initiated shutdown").await?;
+    tokio::spawn(async move {
+        tokio::select! {
+            _ = inbound::handle_inbound(shards.iter_mut(), amqp) => {},
+            _ = rx.changed() => {
+                future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
+                    shard.close(CloseFrame::RESUME).await
+                })).await;
+            }
         }
-    }
+    });
 
-    /*let _: Vec<Result<Option<Session>, SendError>> = future::join_all(
-        clusters
-            .iter_mut()
-            .flat_map(|(_, mut cluster)| cluster.iter_mut())
-            .map(|shard: &mut Shard| async { shard.close(CloseFrame::RESUME).await }),
-    )
-    .await;*/
+    signal::ctrl_c().await?;
+
+    log::warn!("ctrl-c signal received, shutting down");
+    channel_inbound.close(1, "user-initiated shutdown").await?;
+    channel_outbound.close(1, "user-initiated shutdown").await?;
+
+    tx.send(true)?;
+    time::sleep(Duration::from_secs(5)).await;
 
     Ok(())
 }

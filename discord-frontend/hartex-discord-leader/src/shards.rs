@@ -36,7 +36,7 @@ pub fn get_shards(
     let shard_start_index = std::env::var("SHARDS_START_INDEX")?.parse::<u64>()?;
 
     Ok(
-        stream::start_cluster(shard_start_index, 1, num_shards, |shard_id| {
+        stream::create_bucket(shard_start_index, 1, num_shards, |shard_id| {
             Config::builder(bot_token.clone(), Intents::all())
                 .event_types(EventTypeFlags::all())
                 .presence(UpdatePresencePayload {
