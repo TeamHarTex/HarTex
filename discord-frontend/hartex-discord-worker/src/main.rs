@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use futures_util::FutureExt;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
@@ -59,13 +58,10 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         )
         .await?;
 
-    let ctrlc = signal::ctrl_c();
-    futures_util::select! {
-        _ = consumer::consume(consumer).fuse() => {},
-        _ = ctrlc.fuse() => {
-            log::warn!("ctrl-c signal received, shutting down");
-        }
-    }
+    tokio::spawn(consumer::consume(consumer));
+
+    signal::ctrl_c().await?;
+    log::warn!("ctrl-c signal received, shutting down");
 
     Ok(())
 }
