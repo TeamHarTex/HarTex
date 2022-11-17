@@ -28,12 +28,12 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
+use hartex_discord_eyre::eyre::Report;
 use lapin::options::{BasicAckOptions, BasicConsumeOptions};
 use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties};
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
-use hartex_discord_eyre::eyre::Report;
 
 use crate::error::{ConsumerError, ConsumerErrorKind};
 
@@ -87,11 +87,11 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                     continue;
                 }
 
-                let result = GatewayEventDeserializer::from_json(result.unwrap())
-                .ok_or(ConsumerError {
-                    kind: ConsumerErrorKind::InvalidGatewayPayload,
-                    source: None,
-                });
+                let result =
+                    GatewayEventDeserializer::from_json(result.unwrap()).ok_or(ConsumerError {
+                        kind: ConsumerErrorKind::InvalidGatewayPayload,
+                        source: None,
+                    });
 
                 if let Err(error) = result.clone() {
                     let report = Report::new(error);
