@@ -23,7 +23,7 @@
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ConsumerError {
     pub kind: ConsumerErrorKind,
     pub source: Option<Box<dyn Error + Send + Sync + 'static>>,
@@ -39,7 +39,7 @@ impl Display for ConsumerError {
 
 impl Error for ConsumerError {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum ConsumerErrorKind {
     InvalidGatewayPayload,
 }
