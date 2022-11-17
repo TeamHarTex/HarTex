@@ -33,6 +33,7 @@ use lapin::types::FieldTable;
 use lapin::{Connection, ConnectionProperties};
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
+use hartex_discord_eyre::eyre::Report;
 
 use crate::error::{ConsumerError, ConsumerErrorKind};
 
@@ -78,22 +79,41 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
             let scanned: u8 = scan!("SHARD {} PAYLOAD" <- value)?;
 
             let (gateway_deserializer, mut json_deserializer) = {
-                let gateway_deserializer = GatewayEventDeserializer::from_json(str::from_utf8(
-                    &delivery.data,
-                )?)
+                let result = str::from_utf8(&delivery.data);
+                if let Err(error) = result {
+                    let report = Report::new(error);
+                    println!("{report}");
+
+                    continue;
+                }
+
+                let result = GatewayEventDeserializer::from_json(result.unwrap())
                 .ok_or(ConsumerError {
                     kind: ConsumerErrorKind::InvalidGatewayPayload,
                     source: None,
-                })?;
+                });
+
+                if let Err(error) = result.clone() {
+                    let report = Report::new(error);
+                    println!("{report}");
+
+                    continue;
+                }
 
                 let json_deserializer = serde_json::Deserializer::from_slice(&delivery.data);
 
-                (gateway_deserializer, json_deserializer)
+                (result.unwrap(), json_deserializer)
             };
 
-            let event = gateway_deserializer
+            let result = gateway_deserializer
                 .clone()
-                .deserialize(&mut json_deserializer)?;
+                .deserialize(&mut json_deserializer);
+            if let Err(error) = result {
+                let report = Report::new(error);
+                println!("{report}");
+
+                continue;
+            }
 
             log::trace!(
                 "[shard {}] received {} event",
@@ -101,7 +121,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
             );
             // entitycache::update_entitycache(&event).await?;
-            eventcallback::handle_event(event)?;
+            eventcallback::handle_event(result.unwrap())?;
         }
     }
 
