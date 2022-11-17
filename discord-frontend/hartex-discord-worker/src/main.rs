@@ -90,7 +90,6 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 let result =
                     GatewayEventDeserializer::from_json(result.unwrap()).ok_or(ConsumerError {
                         kind: ConsumerErrorKind::InvalidGatewayPayload,
-                        source: None,
                     });
 
                 if let Err(error) = result.clone() {
