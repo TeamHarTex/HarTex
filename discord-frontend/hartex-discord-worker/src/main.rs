@@ -82,7 +82,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 let result = str::from_utf8(&delivery.data);
                 if let Err(error) = result {
                     let report = Report::new(error);
-                    println!("{report}");
+                    println!("{report:?}");
 
                     continue;
                 }
@@ -94,7 +94,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
                 if let Err(error) = result.clone() {
                     let report = Report::new(error);
-                    println!("{report}");
+                    println!("{report:?}");
 
                     continue;
                 }
@@ -109,7 +109,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 .deserialize(&mut json_deserializer);
             if let Err(error) = result {
                 let report = Report::new(error);
-                println!("{report}");
+                println!("{report:?}");
 
                 continue;
             }
