@@ -14,7 +14,7 @@ rust-version = "1.67.0"
 dotenvy = { version = "0.15.6", optional = true }
 log = { version = "0.4.17", optional = true }
 log4rs = { git = "https://github.com/TeamHarTex/log4rs.git", branch = "master", default-features = false, optional = true }
-tokio = { version = "1.21.2", optional = true }
+tokio = { version = "1.22.0", optional = true }
 twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git", branch = "vilgotf/feat/gateway/parallel-stream", optional = true }
 twilight-model = { git = "https://github.com/twilight-rs/twilight.git", branch = "vilgotf/feat/gateway/parallel-stream", optional = true }
 
