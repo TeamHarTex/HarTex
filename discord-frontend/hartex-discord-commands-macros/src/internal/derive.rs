@@ -25,9 +25,9 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 use crate::internal::StreamParser;
 
 const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
-    ["command_type", "description", "interaction_only", "name"];
-const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
-const LITERAL_PARAMETERS: [&'static str; 3] = ["command_type", "description", "name"];
+    ["`command_type`", "`description`", "`interaction_only`", "`name`"];
+const BOOLEAN_PARAMETERS: [&'static str; 1] = ["`interaction_only`"];
+const LITERAL_PARAMETERS: [&'static str; 3] = ["`command_type`", "`description`", "`name`"];
 
 #[derive(Debug)]
 pub enum DeriveAttribute {
@@ -183,7 +183,7 @@ impl StreamParser for DeriveStream {
                 group
                     .span()
                     .error("parameter expected; none found")
-                    .note("valid parameters: description, name, type")
+                    .note(format!("valid parameters: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
                     .emit();
                 return None;
             }
@@ -198,7 +198,7 @@ impl StreamParser for DeriveStream {
             let TokenTree::Ident(ident) = first.clone() else {
                 first
                     .span()
-                    .error(format!("expected identifier; found {first} instead"))
+                    .error(format!("expected valid parameter name; found `{first}` instead"))
                     .emit();
                 return None;
             };
@@ -208,7 +208,7 @@ impl StreamParser for DeriveStream {
             if !VALID_ATTR_PARAMETER_NAMES.contains(&ident_str) {
                 first
                     .span()
-                    .error(format!("unexpected parameter name: {ident_string}"))
+                    .error(format!("unexpected parameter name: `{ident_string}`"))
                     .note(format!(
                         "valid parameter names: {}",
                         VALID_ATTR_PARAMETER_NAMES.join(", ")

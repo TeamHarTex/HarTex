@@ -1,0 +1,7 @@
+error: parameter expected; none found
+  --> tests/ui/parameter_expected.rs:26:11
+   |
+26 | #[metadata()]
+   |           ^^
+   |
+   = note: valid parameters: `command_type`, `description`, `interaction_only`, `name`
