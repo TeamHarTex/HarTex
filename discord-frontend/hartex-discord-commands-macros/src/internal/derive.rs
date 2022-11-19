@@ -63,7 +63,7 @@ impl StreamParser for DeriveStream {
             .any(|tree| tree.to_string() == String::from("pub"))
         {
             Span::call_site()
-                .error("the CommandMetadata trait can only be derived on pub items")
+                .error("the `CommandMetadata` trait can only be derived on pub items")
                 .emit();
             return None;
         }
@@ -73,7 +73,7 @@ impl StreamParser for DeriveStream {
             .any(|tree| tree.to_string() == String::from("struct"))
         {
             Span::call_site()
-                .error("the CommandMetadata trait can only be derived on structs")
+                .error("the `CommandMetadata` trait can only be derived on structs")
                 .emit();
             return None;
         }
@@ -89,10 +89,10 @@ impl StreamParser for DeriveStream {
                 if previous_attr_name.is_empty() {
                     first
                         .span()
-                        .error("no metadata attributes found after derive")
+                        .error("no `metadata` attributes found after derive")
                         .span_note(
                             Span::call_site(),
-                            "metadata attributes are expected after the derive invocation",
+                            "`metadata` attributes are expected after the derive invocation",
                         )
                         .emit();
                     return None;
@@ -104,10 +104,10 @@ impl StreamParser for DeriveStream {
             if punct.as_char() != '#' {
                 first
                     .span()
-                    .error("no metadata attributes found after derive")
+                    .error("no `metadata` attributes found after derive")
                     .span_note(
                         Span::call_site(),
-                        "metadata attributes are expected after the derive invocation",
+                        "`metadata` attributes are expected after the derive invocation",
                     )
                     .emit();
                 return None;
@@ -141,7 +141,7 @@ impl StreamParser for DeriveStream {
                 group_first
                     .span()
                     .error(format!(
-                        "expected metadata attribute; found {group_first} attribute instead"
+                        "expected `metadata` attribute; found `{group_first}` attribute instead"
                     ))
                     .emit();
                 return None;
