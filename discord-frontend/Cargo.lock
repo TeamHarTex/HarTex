@@ -2159,7 +2159,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.14.0"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#e8de7de0cbb0a63e8989880af069f4af62827208"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=nightly-fix#3f91e8bc01e930844f7cf2ec12f84fb8998095a9"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2180,7 +2180,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.14.0"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#e8de7de0cbb0a63e8989880af069f4af62827208"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=nightly-fix#3f91e8bc01e930844f7cf2ec12f84fb8998095a9"
 dependencies = [
  "tokio",
  "tracing",
@@ -2189,7 +2189,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.14.0"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#e8de7de0cbb0a63e8989880af069f4af62827208"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=nightly-fix#3f91e8bc01e930844f7cf2ec12f84fb8998095a9"
 dependencies = [
  "hyper",
  "percent-encoding",
@@ -2206,7 +2206,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.14.0"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#e8de7de0cbb0a63e8989880af069f4af62827208"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=nightly-fix#3f91e8bc01e930844f7cf2ec12f84fb8998095a9"
 dependencies = [
  "futures-util",
  "http",
@@ -2217,7 +2217,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.14.0"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#e8de7de0cbb0a63e8989880af069f4af62827208"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=nightly-fix#3f91e8bc01e930844f7cf2ec12f84fb8998095a9"
 dependencies = [
  "bitflags",
  "serde",
@@ -2230,7 +2230,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.14.0"
-source = "git+https://github.com/twilight-rs/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#e8de7de0cbb0a63e8989880af069f4af62827208"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=nightly-fix#3f91e8bc01e930844f7cf2ec12f84fb8998095a9"
 dependencies = [
  "twilight-model",
 ]
