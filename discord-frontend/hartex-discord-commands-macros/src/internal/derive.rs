@@ -24,12 +24,8 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = [
-    "command_type",
-    "description",
-    "interaction_only",
-    "name",
-];
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
+    ["command_type", "description", "interaction_only", "name"];
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["`interaction_only`"];
 const LITERAL_PARAMETERS: [&'static str; 3] = ["`command_type`", "`description`", "`name`"];
 
@@ -289,15 +285,15 @@ impl StreamParser for DeriveStream {
             let attribute = if LITERAL_PARAMETERS.contains(&ident_str) {
                 // check if a literal follows the "=" sign (for parameters description, name and type)
                 //
+                // #[metadata(command_type = 1)]
+                //                           -
                 // #[metadata(name = "name")]
                 //                   ------
-                // #[metadata(type = 1)]
-                //                   -
                 let group_token_next = group_inner_tokens.next().unwrap();
                 let TokenTree::Literal(literal) = group_token_next.clone() else {
                     group_token_next
                         .span()
-                        .error(format!("expected literal; found {group_token_next}"))
+                        .error(format!("expected literal; found `{group_token_next}`"))
                         .emit();
                     return None;
                 };
