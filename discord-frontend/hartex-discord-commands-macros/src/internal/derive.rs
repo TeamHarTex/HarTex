@@ -24,8 +24,12 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
-    ["`command_type`", "`description`", "`interaction_only`", "`name`"];
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = [
+    "`command_type`",
+    "`description`",
+    "`interaction_only`",
+    "`name`",
+];
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["`interaction_only`"];
 const LITERAL_PARAMETERS: [&'static str; 3] = ["`command_type`", "`description`", "`name`"];
 
@@ -183,7 +187,10 @@ impl StreamParser for DeriveStream {
                 group
                     .span()
                     .error("parameter expected; none found")
-                    .note(format!("valid parameters: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                    .note(format!(
+                        "valid parameters: {}",
+                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                    ))
                     .emit();
                 return None;
             }
