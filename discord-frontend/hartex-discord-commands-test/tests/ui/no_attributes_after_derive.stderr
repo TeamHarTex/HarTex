@@ -1,0 +1,12 @@
+error: no `metadata` attributes found after derive
+  --> tests/ui/no_attributes_after_derive.rs:26:1
+   |
+26 | pub struct NoAttributesAfterDerive;
+   | ^^^
+   |
+note: `metadata` attributes are expected after the derive invocation
+  --> tests/ui/no_attributes_after_derive.rs:25:10
+   |
+25 | #[derive(CommandMetadata)]
+   |          ^^^^^^^^^^^^^^^
+   = note: this error originates in the derive macro `CommandMetadata` (in Nightly builds, run with -Z macro-backtrace for more info)
