@@ -80,13 +80,25 @@ impl StreamParser for DeriveStream {
 
         let mut previous_attr_name = String::new();
         let mut previous_attr_span = Span::call_site();
-        while let Some(first) = iter.next() && first.to_string() != String::from("pub") {
+        while let Some(first) = iter.next() {
             // look for the beginning of an attribute
             //
             // #[metadata(name = "name")]
             // ^
             let TokenTree::Punct(punct) = first.clone() else {
-                return None;
+                if previous_attr_name.is_empty() {
+                    first
+                        .span()
+                        .error("no metadata attributes found after derive")
+                        .span_note(
+                            Span::call_site(),
+                            "metadata attributes are expected after the derive invocation",
+                        )
+                        .emit();
+                    return None;
+                } else {
+                    break;
+                }
             };
 
             if punct.as_char() != '#' {
