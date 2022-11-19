@@ -1,0 +1,5 @@
+error: expected parenthesized parameter
+  --> tests/ui/expected_parenthesized_parameter.rs:26:11
+   |
+26 | #[metadata[]]
+   |           ^^
