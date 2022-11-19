@@ -106,7 +106,6 @@ impl StreamParser for DeriveStream {
             //
             // #[metadata(name = "name")]
             //  ^-----------------------^
-
             let TokenTree::Group(group) = iter.peek().unwrap() else {
                 return None;
             };

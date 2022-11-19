@@ -13,3 +13,8 @@ rust-version = "1.67.0"
 [dependencies]
 
 [features]
+
+[dev-dependencies]
+hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
+hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
+trybuild = "1.0.71"
