@@ -800,6 +800,10 @@ name = "hartex_discord_commands_macros"
 version = "0.1.0"
 
 [[package]]
+name = "hartex_discord_commands_test"
+version = "0.1.0"
+
+[[package]]
 name = "hartex_discord_core"
 version = "0.1.0"
 dependencies = [

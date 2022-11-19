@@ -3,6 +3,7 @@ members = [
     "hartex-discord-commands",
     "hartex-discord-commands-core",
     "hartex-discord-commands-macros",
+    "hartex-discord-commands-test",
     "hartex-discord-core",
     "hartex-discord-entitycache",
     "hartex-discord-eyre",
