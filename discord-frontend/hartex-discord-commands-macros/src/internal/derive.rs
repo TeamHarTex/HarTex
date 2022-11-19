@@ -97,6 +97,11 @@ impl StreamParser for DeriveStream {
                         .emit();
                     return None;
                 } else {
+                    // stop receiving tokens if it is not a punctuation
+                    // and there is a previous attribute name
+                    //
+                    // assumes that there are no more attributes to define in this case
+                    // so break out of the while loop
                     break;
                 }
             };
@@ -204,7 +209,10 @@ impl StreamParser for DeriveStream {
                 first
                     .span()
                     .error(format!("unexpected parameter name: {ident_string}"))
-                    .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                    .note(format!(
+                        "valid parameter names: {}",
+                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                    ))
                     .emit();
                 return None;
             }
@@ -219,10 +227,7 @@ impl StreamParser for DeriveStream {
             }
 
             if group_inner_tokens.peek().is_none() {
-                first
-                    .span()
-                    .error("unexpected end of parameter")
-                    .emit();
+                first.span().error("unexpected end of parameter").emit();
                 return None;
             }
 
@@ -242,16 +247,15 @@ impl StreamParser for DeriveStream {
             if punct.as_char() != '=' {
                 punct
                     .span()
-                    .error(format!("expected = punctuation; found {punct} punctuation instead"))
+                    .error(format!(
+                        "expected = punctuation; found {punct} punctuation instead"
+                    ))
                     .emit();
                 return None;
             }
 
             if group_inner_tokens.peek().is_none() {
-                punct
-                    .span()
-                    .error("unexpected end of parameter")
-                    .emit();
+                punct.span().error("unexpected end of parameter").emit();
                 return None;
             }
 
