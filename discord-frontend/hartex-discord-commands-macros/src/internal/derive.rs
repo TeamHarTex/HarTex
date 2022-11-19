@@ -25,10 +25,10 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 use crate::internal::StreamParser;
 
 const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = [
-    "`command_type`",
-    "`description`",
-    "`interaction_only`",
-    "`name`",
+    "command_type",
+    "description",
+    "interaction_only",
+    "name",
 ];
 const BOOLEAN_PARAMETERS: [&'static str; 1] = ["`interaction_only`"];
 const LITERAL_PARAMETERS: [&'static str; 3] = ["`command_type`", "`description`", "`name`"];
@@ -189,7 +189,17 @@ impl StreamParser for DeriveStream {
                     .error("parameter expected; none found")
                     .note(format!(
                         "valid parameters: {}",
-                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                        VALID_ATTR_PARAMETER_NAMES
+                            .iter()
+                            .map(|str| {
+                                let mut string = str.to_string();
+                                string.insert(0, '`');
+                                string.insert(string.len(), '`');
+
+                                string
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ")
                     ))
                     .emit();
                 return None;
@@ -218,7 +228,17 @@ impl StreamParser for DeriveStream {
                     .error(format!("unexpected parameter name: `{ident_string}`"))
                     .note(format!(
                         "valid parameter names: {}",
-                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                        VALID_ATTR_PARAMETER_NAMES
+                            .iter()
+                            .map(|str| {
+                                let mut string = str.to_string();
+                                string.insert(0, '`');
+                                string.insert(string.len(), '`');
+
+                                string
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ")
                     ))
                     .emit();
                 return None;
@@ -244,9 +264,9 @@ impl StreamParser for DeriveStream {
             //                 ^
             let group_token_next = group_inner_tokens.next().unwrap();
             let TokenTree::Punct(punct) = group_token_next.clone() else {
-                first
+                group_token_next
                     .span()
-                    .error(format!("expected punctuation; found {group_token_next} instead"))
+                    .error(format!("expected punctuation; found `{group_token_next}` instead"))
                     .emit();
                 return None;
             };

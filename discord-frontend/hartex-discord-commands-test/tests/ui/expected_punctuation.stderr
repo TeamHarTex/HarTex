@@ -1,0 +1,5 @@
+error: expected punctuation; found `expected_punctuation` instead
+  --> tests/ui/expected_punctuation.rs:26:17
+   |
+26 | #[metadata(name expected_punctuation)]
+   |                 ^^^^^^^^^^^^^^^^^^^^
