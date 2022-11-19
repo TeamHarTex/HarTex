@@ -24,10 +24,14 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
-    ["command_type", "description", "interaction_only", "name"];
-const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
-const LITERAL_PARAMETERS: [&'static str; 3] = ["command_type", "description", "name"];
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = [
+    "`command_type`",
+    "`description`",
+    "`interaction_only`",
+    "`name`",
+];
+const BOOLEAN_PARAMETERS: [&'static str; 1] = ["`interaction_only`"];
+const LITERAL_PARAMETERS: [&'static str; 3] = ["`command_type`", "`description`", "`name`"];
 
 #[derive(Debug)]
 pub enum DeriveAttribute {
@@ -63,7 +67,7 @@ impl StreamParser for DeriveStream {
             .any(|tree| tree.to_string() == String::from("pub"))
         {
             Span::call_site()
-                .error("the CommandMetadata trait can only be derived on pub items")
+                .error("the `CommandMetadata` trait can only be derived on pub items")
                 .emit();
             return None;
         }
@@ -73,29 +77,46 @@ impl StreamParser for DeriveStream {
             .any(|tree| tree.to_string() == String::from("struct"))
         {
             Span::call_site()
-                .error("the CommandMetadata trait can only be derived on structs")
+                .error("the `CommandMetadata` trait can only be derived on structs")
                 .emit();
             return None;
         }
 
         let mut previous_attr_name = String::new();
         let mut previous_attr_span = Span::call_site();
-        while let Some(first) = iter.next() && first.to_string() != String::from("pub") {
+        while let Some(first) = iter.next() {
             // look for the beginning of an attribute
             //
             // #[metadata(name = "name")]
             // ^
             let TokenTree::Punct(punct) = first.clone() else {
-                return None;
+                if previous_attr_name.is_empty() {
+                    first
+                        .span()
+                        .error("no `metadata` attributes found after derive")
+                        .span_note(
+                            Span::call_site(),
+                            "`metadata` attributes are expected after the derive invocation",
+                        )
+                        .emit();
+                    return None;
+                } else {
+                    // stop receiving tokens if it is not a punctuation
+                    // and there is a previous attribute name
+                    //
+                    // assumes that there are no more attributes to define in this case
+                    // so break out of the while loop
+                    break;
+                }
             };
 
             if punct.as_char() != '#' {
                 first
                     .span()
-                    .error("no metadata attributes found after derive")
+                    .error("no `metadata` attributes found after derive")
                     .span_note(
                         Span::call_site(),
-                        "metadata attributes are expected after the derive invocation",
+                        "`metadata` attributes are expected after the derive invocation",
                     )
                     .emit();
                 return None;
@@ -106,7 +127,6 @@ impl StreamParser for DeriveStream {
             //
             // #[metadata(name = "name")]
             //  ^-----------------------^
-
             let TokenTree::Group(group) = iter.peek().unwrap() else {
                 return None;
             };
@@ -130,7 +150,7 @@ impl StreamParser for DeriveStream {
                 group_first
                     .span()
                     .error(format!(
-                        "expected metadata attribute; found {group_first} attribute instead"
+                        "expected `metadata` attribute; found `{group_first}` attribute instead"
                     ))
                     .emit();
                 return None;
@@ -167,7 +187,10 @@ impl StreamParser for DeriveStream {
                 group
                     .span()
                     .error("parameter expected; none found")
-                    .note("valid parameters: description, name, type")
+                    .note(format!(
+                        "valid parameters: {}",
+                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                    ))
                     .emit();
                 return None;
             }
@@ -182,7 +205,7 @@ impl StreamParser for DeriveStream {
             let TokenTree::Ident(ident) = first.clone() else {
                 first
                     .span()
-                    .error(format!("expected identifier; found {first} instead"))
+                    .error(format!("expected valid parameter name; found `{first}` instead"))
                     .emit();
                 return None;
             };
@@ -192,8 +215,11 @@ impl StreamParser for DeriveStream {
             if !VALID_ATTR_PARAMETER_NAMES.contains(&ident_str) {
                 first
                     .span()
-                    .error(format!("unexpected parameter name: {ident_string}"))
-                    .note(format!("valid parameter names: {}", VALID_ATTR_PARAMETER_NAMES.join(", ")))
+                    .error(format!("unexpected parameter name: `{ident_string}`"))
+                    .note(format!(
+                        "valid parameter names: {}",
+                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                    ))
                     .emit();
                 return None;
             }
@@ -208,10 +234,7 @@ impl StreamParser for DeriveStream {
             }
 
             if group_inner_tokens.peek().is_none() {
-                first
-                    .span()
-                    .error("unexpected end of parameter")
-                    .emit();
+                first.span().error("unexpected end of parameter").emit();
                 return None;
             }
 
@@ -231,16 +254,15 @@ impl StreamParser for DeriveStream {
             if punct.as_char() != '=' {
                 punct
                     .span()
-                    .error(format!("expected = punctuation; found {punct} punctuation instead"))
+                    .error(format!(
+                        "expected = punctuation; found {punct} punctuation instead"
+                    ))
                     .emit();
                 return None;
             }
 
             if group_inner_tokens.peek().is_none() {
-                punct
-                    .span()
-                    .error("unexpected end of parameter")
-                    .emit();
+                punct.span().error("unexpected end of parameter").emit();
                 return None;
             }
 

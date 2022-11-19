@@ -1,0 +1,11 @@
+error: expected `metadata` attribute; found `expected_metadata_attribute` attribute instead
+  --> tests/ui/expected_metadata_attribute.rs:26:3
+   |
+26 | #[expected_metadata_attribute]
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: cannot find attribute `expected_metadata_attribute` in this scope
+  --> tests/ui/expected_metadata_attribute.rs:26:3
+   |
+26 | #[expected_metadata_attribute]
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
