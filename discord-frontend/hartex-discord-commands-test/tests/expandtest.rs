@@ -20,10 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use trybuild::TestCases;
+#[path = "expand/derive.rs"]
+pub mod derive;
 
 #[test]
-pub fn ui() {
-    let test_cases = TestCases::new();
-    test_cases.compile_fail("tests/ui/*.rs");
+pub fn expand() {
+    macrotest::expand("tests/expand/*.rs");
 }
