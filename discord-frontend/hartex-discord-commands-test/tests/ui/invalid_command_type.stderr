@@ -1,0 +1,7 @@
+error: invalid command type: `4`
+  --> tests/ui/invalid_command_type.rs:26:27
+   |
+26 | #[metadata(command_type = 4)]
+   |                           ^
+   |
+   = help: valid command types: 1 (CHAT_INPUT), 2 (USER), 3 (MESSAGE)
