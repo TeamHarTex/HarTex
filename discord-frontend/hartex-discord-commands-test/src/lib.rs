@@ -19,8 +19,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-#[test]
-pub fn expand() {
-    macrotest::expand_without_refresh("tests/expand/*.rs");
-}
