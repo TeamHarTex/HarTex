@@ -1,0 +1,5 @@
+error: expected boolean; found `expected_boolean`
+  --> tests/ui/expected_boolean.rs:26:31
+   |
+26 | #[metadata(interaction_only = expected_boolean)]
+   |                               ^^^^^^^^^^^^^^^^
