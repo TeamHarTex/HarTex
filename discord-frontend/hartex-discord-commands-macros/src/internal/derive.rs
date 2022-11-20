@@ -300,13 +300,22 @@ impl StreamParser for DeriveStream {
 
                 match ident_str {
                     "command_type" => {
-                        let Ok(_) = literal.to_string().parse::<u8>() else {
+                        let Ok(command_type) = literal.to_string().parse::<u8>() else {
                             literal
                                 .span()
-                                .error(format!("expected integer literal; found literal `{:?}`", literal.to_string()))
+                                .error(format!("expected integer literal; found literal `{literal}`"))
                                 .emit();
                             return None;
                         };
+
+                        if !(1..=3).contains(&command_type) {
+                            literal
+                                .span()
+                                .error(format!("invalid command type: `{literal}`"))
+                                .help("valid command types: 1 (CHAT_INPUT), 2 (USER), 3 (MESSAGE)")
+                                .emit();
+                            return None;
+                        }
 
                         DeriveAttribute::CommandType(group_token_next)
                     }
