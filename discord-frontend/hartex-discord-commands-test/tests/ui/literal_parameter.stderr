@@ -1,0 +1,5 @@
+error: expected literal; found `true`
+  --> tests/ui/literal_parameter.rs:26:27
+   |
+26 | #[metadata(command_type = true)]
+   |                           ^^^^
