@@ -24,14 +24,10 @@ use proc_macro::{Delimiter, Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] = [
-    "`command_type`",
-    "`description`",
-    "`interaction_only`",
-    "`name`",
-];
-const BOOLEAN_PARAMETERS: [&'static str; 1] = ["`interaction_only`"];
-const LITERAL_PARAMETERS: [&'static str; 3] = ["`command_type`", "`description`", "`name`"];
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
+    ["command_type", "description", "interaction_only", "name"];
+const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
+const LITERAL_PARAMETERS: [&'static str; 3] = ["command_type", "description", "name"];
 
 #[derive(Debug)]
 pub enum DeriveAttribute {
@@ -189,7 +185,17 @@ impl StreamParser for DeriveStream {
                     .error("parameter expected; none found")
                     .note(format!(
                         "valid parameters: {}",
-                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                        VALID_ATTR_PARAMETER_NAMES
+                            .iter()
+                            .map(|str| {
+                                let mut string = str.to_string();
+                                string.insert(0, '`');
+                                string.insert(string.len(), '`');
+
+                                string
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ")
                     ))
                     .emit();
                 return None;
@@ -218,7 +224,17 @@ impl StreamParser for DeriveStream {
                     .error(format!("unexpected parameter name: `{ident_string}`"))
                     .note(format!(
                         "valid parameter names: {}",
-                        VALID_ATTR_PARAMETER_NAMES.join(", ")
+                        VALID_ATTR_PARAMETER_NAMES
+                            .iter()
+                            .map(|str| {
+                                let mut string = str.to_string();
+                                string.insert(0, '`');
+                                string.insert(string.len(), '`');
+
+                                string
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ")
                     ))
                     .emit();
                 return None;
@@ -244,9 +260,9 @@ impl StreamParser for DeriveStream {
             //                 ^
             let group_token_next = group_inner_tokens.next().unwrap();
             let TokenTree::Punct(punct) = group_token_next.clone() else {
-                first
+                group_token_next
                     .span()
-                    .error(format!("expected punctuation; found {group_token_next} instead"))
+                    .error(format!("expected punctuation; found `{group_token_next}` instead"))
                     .emit();
                 return None;
             };
@@ -269,15 +285,15 @@ impl StreamParser for DeriveStream {
             let attribute = if LITERAL_PARAMETERS.contains(&ident_str) {
                 // check if a literal follows the "=" sign (for parameters description, name and type)
                 //
+                // #[metadata(command_type = 1)]
+                //                           -
                 // #[metadata(name = "name")]
                 //                   ------
-                // #[metadata(type = 1)]
-                //                   -
                 let group_token_next = group_inner_tokens.next().unwrap();
                 let TokenTree::Literal(literal) = group_token_next.clone() else {
                     group_token_next
                         .span()
-                        .error(format!("expected literal; found {group_token_next}"))
+                        .error(format!("expected literal; found `{group_token_next}`"))
                         .emit();
                     return None;
                 };
@@ -287,7 +303,7 @@ impl StreamParser for DeriveStream {
                         let Ok(_) = literal.to_string().parse::<u8>() else {
                             literal
                                 .span()
-                                .error(format!("expected integer literal; found literal {:?}", literal.to_string()))
+                                .error(format!("expected integer literal; found literal `{:?}`", literal.to_string()))
                                 .emit();
                             return None;
                         };
@@ -307,7 +323,7 @@ impl StreamParser for DeriveStream {
                 let TokenTree::Ident(ident) = group_token_next.clone() else {
                     group_token_next
                         .span()
-                        .error(format!("expected identifier; found {group_token_next}"))
+                        .error(format!("expected identifier; found `{group_token_next}`"))
                         .emit();
                     return None;
                 };
@@ -317,7 +333,7 @@ impl StreamParser for DeriveStream {
                         let Ok(_) = ident.to_string().parse::<bool>() else {
                             ident
                                 .span()
-                                .error(format!("expected boolean; found {ident}"))
+                                .error(format!("expected boolean; found `{ident}`"))
                                 .emit();
                             return None;
                         };
@@ -333,7 +349,7 @@ impl StreamParser for DeriveStream {
             if let Some(extra) = group_inner_tokens.peek() {
                 extra
                     .span()
-                    .error(format!("unexpected token: {extra}"))
+                    .error(format!("unexpected token: `{extra}`"))
                     .help("only one parameter is allowed per metadata attribute")
                     .emit();
                 return None;
