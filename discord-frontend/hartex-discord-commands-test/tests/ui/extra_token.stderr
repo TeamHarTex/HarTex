@@ -1,0 +1,7 @@
+error: unexpected token: `,`
+  --> tests/ui/extra_token.rs:26:28
+   |
+26 | #[metadata(command_type = 1, extra)]
+   |                            ^
+   |
+   = help: only one parameter is allowed per metadata attribute
