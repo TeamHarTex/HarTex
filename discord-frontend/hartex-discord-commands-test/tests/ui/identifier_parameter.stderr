@@ -1,0 +1,5 @@
+error: expected identifier; found `"literal"`
+  --> tests/ui/identifier_parameter.rs:26:31
+   |
+26 | #[metadata(interaction_only = "literal")]
+   |                               ^^^^^^^^^
