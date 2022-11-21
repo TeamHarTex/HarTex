@@ -20,10 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use trybuild::TestCases;
+use hartex_discord_commands_macros::CommandMetadata;
 
-#[test]
-pub fn ui() {
-    let test_cases = TestCases::new();
-    test_cases.compile_fail("tests/ui/*.rs");
-}
+#[derive(CommandMetadata)]
+#[metadata(command_type = 1)]
+#[metadata(description = "derive macro expand test")]
+#[metadata(interaction_only = true)]
+#[metadata(name = "derive")]
+pub struct Derive;
