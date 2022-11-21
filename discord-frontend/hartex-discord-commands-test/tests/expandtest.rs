@@ -20,10 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use trybuild::TestCases;
-
 #[test]
-pub fn ui() {
-    let test_cases = TestCases::new();
-    test_cases.compile_fail("tests/ui/*.rs");
+pub fn expand() {
+    macrotest::expand_without_refresh("tests/expand/*.rs");
 }
