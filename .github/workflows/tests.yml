@@ -53,6 +53,8 @@ jobs:
         uses: baptiste0928/cargo-install@v1
         with:
           crate: cargo-nextest
+      - name: Install cargo-expand
+        uses: dtolnay/install@cargo-expand
       - name: Install Java 17
         uses: actions/setup-java@v3
         with:
