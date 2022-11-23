@@ -13,7 +13,7 @@ rust-version = "1.67.0"
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment", "logging-facilities"] }
 hartex_discord_eyre = { path = "../hartex-discord-eyre" }
-hartex_discord_entitycache = { path = "../hartex-discord-entitycache"}
+hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 
 futures-util = "0.3.25"
 lapin = "2.1.1"
