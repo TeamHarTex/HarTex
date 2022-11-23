@@ -19,3 +19,9 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+#![allow(incomplete_features)]
+#![feature(async_fn_in_trait)]
+
+pub mod error;
+pub mod traits;
