@@ -3,7 +3,7 @@ name = "hartex_discord_entitycache_core"
 version = "0.1.0"
 edition = "2021"
 description = """
-The repository cache middleware for HarTex.
+The core components of the repository cache middleware for HarTex.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.67.0"
