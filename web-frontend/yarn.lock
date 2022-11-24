@@ -68,12 +68,12 @@
     unist-util-visit "^4.1.0"
     vfile "^5.3.2"
 
-"@astrojs/mdx@^0.11.4":
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/@astrojs/mdx/-/mdx-0.11.4.tgz#ad51aa1bee8ebcb4ca800151c6dd857713153e70"
-  integrity sha512-b86Fzd87OCuYUGk7O59mwq0URqLdH40wUJC5UCkFmSquIrk8QNrZ7tdjriBfF+Wq3+2UT5JO4ahxIuP6N3cczQ==
+"@astrojs/mdx@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@astrojs/mdx/-/mdx-0.12.0.tgz#10abd3c97f80e40d1f3056468f3c78f237bef569"
+  integrity sha512-KeX5YYla4KpiiDBVmbaYGqqt9QLVUj/Q2d3u+VRK3WnGI+lN9bVsJLid4wApU/kTA6iWlquIrbX2XmhUUF6viQ==
   dependencies:
-    "@astrojs/prism" "^1.0.1"
+    "@astrojs/prism" "^1.0.2"
     "@mdx-js/mdx" "^2.1.2"
     "@mdx-js/rollup" "^2.1.1"
     acorn "^8.8.0"
@@ -105,10 +105,17 @@
     uvu "^0.5.0"
     vfile-message "^3.0.0"
 
-"@astrojs/prism@^1.0.0", "@astrojs/prism@^1.0.1":
+"@astrojs/prism@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@astrojs/prism/-/prism-1.0.1.tgz#a7a778f9e3814885f587d8074a15452947ab4252"
   integrity sha512-HxEFslvbv+cfOs51q/C7aMVFuW3EAGg0d1xXU/0e/QeScDzfrp5Ra4SOb8mV082SgENVjtVvet4zR84t3at4VQ==
+  dependencies:
+    prismjs "^1.28.0"
+
+"@astrojs/prism@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@astrojs/prism/-/prism-1.0.2.tgz#f01cad9007a46dc006d129d99653bd1652657ecf"
+  integrity sha512-o3cUVoAuALDqdN5puNlsN2eO4Yi1kDh68YO8V7o6U4Ts+J/mMayzlJ7JsgYAmob0xrf/XnADVgu8khfMv/w3uA==
   dependencies:
     prismjs "^1.28.0"
 
