@@ -844,6 +844,9 @@ dependencies = [
 [[package]]
 name = "hartex_discord_entitycache_entities"
 version = "0.1.0"
+dependencies = [
+ "hartex_discord_entitycache_core",
+]
 
 [[package]]
 name = "hartex_discord_eyre"
