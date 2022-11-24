@@ -81,8 +81,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
             let (gateway_deserializer, mut json_deserializer) = {
                 let result = str::from_utf8(&delivery.data);
                 if let Err(error) = result {
-                    let report = Report::new(error);
-                    println!("{report:?}");
+                    println!("{:?}", Report::new(error));
 
                     continue;
                 }
@@ -93,8 +92,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                     });
 
                 if let Err(error) = result.clone() {
-                    let report = Report::new(error);
-                    println!("{report:?}");
+                    println!("{:?}", Report::new(error));
 
                     continue;
                 }
@@ -108,8 +106,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 .clone()
                 .deserialize(&mut json_deserializer);
             if let Err(error) = result {
-                let report = Report::new(error);
-                println!("{report:?}");
+                println!("{:?}", Report::new(error));
 
                 continue;
             }
@@ -119,8 +116,23 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 scanned,
                 gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
             );
-            // entitycache::update_entitycache(&event).await?;
-            eventcallback::handle_event(result.unwrap())?;
+            let event = result.unwrap();
+
+            let (Ok(update_result), Ok(event_result)) = tokio::join!(
+                tokio::spawn(entitycache::update_entitycache(event.clone())),
+                tokio::spawn(eventcallback::handle_event(event))
+            ) else {
+                log::trace!("failed to join futures; skipping event");
+                continue;
+            };
+
+            if let Err(report) = update_result {
+                println!("{report:?}");
+            }
+
+            if let Err(report) = event_result {
+                println!("{report:?}");
+            }
         }
     }
 
