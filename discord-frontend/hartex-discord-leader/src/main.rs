@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(int_roundings)]
-
 use std::time::Duration;
 
 use futures_util::future;

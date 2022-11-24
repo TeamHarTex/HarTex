@@ -23,7 +23,7 @@
 use hartex_discord_core::discord::model::gateway::event::{DispatchEvent, GatewayEvent};
 use hartex_discord_core::log;
 
-pub fn handle_event(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
+pub async fn handle_event(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
     match event {
         GatewayEvent::Dispatch(shard, dispatch) => {
             match dispatch {

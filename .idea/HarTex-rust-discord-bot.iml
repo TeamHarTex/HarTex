@@ -52,9 +52,9 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-macros/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-test/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-test/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-core/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
