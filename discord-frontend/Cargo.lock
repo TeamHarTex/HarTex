@@ -849,6 +849,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_entitycache_macros"
+version = "0.1.0"
+
+[[package]]
 name = "hartex_discord_eyre"
 version = "0.1.0"
 dependencies = [
