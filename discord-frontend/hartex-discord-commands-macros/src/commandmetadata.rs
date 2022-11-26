@@ -55,14 +55,20 @@ pub fn expand_command_metadata_derivation(
         }
     }
 
-    let mut wrong_attrs = input.attrs.clone();
-    let _ = wrong_attrs
-        .drain_filter(|attr| {
-            let _ = attr.style == AttrStyle::Outer;
-
-            todo!()
-        })
+    // split attribute vector into two
+    let mut wrong_paths = input.attrs.clone();
+    let _ = wrong_paths
+        .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path.is_ident("metadata"))
         .collect::<Vec<_>>();
+
+    if !wrong_paths.is_empty() {
+        return Err(wrong_paths
+            .into_iter()
+            .map(|attr| attr.path.span())
+            .map(|span| Error::new(span, "expected `metadata` attribute"))
+            .collect()
+        );
+    }
 
     /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {

@@ -1,4 +1,4 @@
-error: expected `metadata` attribute; found `expected_metadata_attribute` attribute instead
+error: expected `metadata` attribute
   --> tests/ui/expected_metadata_attribute.rs:26:3
    |
 26 | #[expected_metadata_attribute]
