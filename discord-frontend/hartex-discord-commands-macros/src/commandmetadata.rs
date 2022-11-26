@@ -76,6 +76,12 @@ pub fn expand_command_metadata_derivation(
         )]);
     }
 
+    for attr in correct_attrs {
+        if attr.tokens.is_empty() {
+            return Err(vec![Error::new(attr.path.span(), "unexpected end of attribute")]);
+        }
+    }
+
     /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
         return ret;
@@ -121,5 +127,5 @@ pub fn expand_command_metadata_derivation(
 
     ret*/
 
-    todo!()
+    Ok(TokenStream2::new())
 }
