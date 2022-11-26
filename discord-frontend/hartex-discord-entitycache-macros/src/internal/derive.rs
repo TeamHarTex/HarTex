@@ -20,13 +20,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-extern crate proc_macro;
+use proc_macro::{TokenStream, TokenTree};
 
-use proc_macro::TokenStream;
+use crate::internal::StreamParser;
 
-mod internal;
+#[derive(Debug)]
+pub enum DeriveAttribute {
+    IdType(TokenTree)
+}
 
-#[proc_macro_derive(Entity, attributes(entity))]
-pub fn derive_entity_trait(_: TokenStream) -> TokenStream {
-    TokenStream::new()
+#[derive(Debug)]
+pub struct DeriveStream {
+    pub attributes: Vec<DeriveAttribute>,
+    pub identifier: Option<TokenTree>
+}
+
+impl DeriveStream {
+    fn new() -> Self {
+        Self {
+            attributes: Vec::new(),
+            identifier: None,
+        }
+    }
+}
+
+impl StreamParser for DeriveStream {
+    fn parse(_: TokenStream) -> Option<Self> {
+        todo!()
+    }
 }

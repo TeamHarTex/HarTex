@@ -20,13 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-extern crate proc_macro;
-
 use proc_macro::TokenStream;
 
-mod internal;
+pub mod derive;
 
-#[proc_macro_derive(Entity, attributes(entity))]
-pub fn derive_entity_trait(_: TokenStream) -> TokenStream {
-    TokenStream::new()
+pub trait StreamParser
+    where
+        Self: Sized,
+{
+    fn parse(tokens: TokenStream) -> Option<Self>;
 }
