@@ -20,29 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(drain_filter)]
-#![feature(let_chains)]
-#![feature(proc_macro_diagnostic)]
-#![feature(proc_macro_quote)]
-
-extern crate proc_macro;
-
 use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
-use syn::{parse_macro_input, DeriveInput, Error};
 
-mod commandmetadata;
-mod internal;
+pub mod derive;
 
-#[proc_macro_derive(CommandMetadata, attributes(metadata))]
-pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(tokens as DeriveInput);
-    commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or_else(as_compiler_errors)
-        .into()
-}
-
-fn as_compiler_errors(errors: Vec<Error>) -> TokenStream2 {
-    let compiler_errors = errors.iter().map(Error::to_compile_error);
-    quote::quote!(#(#compiler_errors)*)
+pub trait StreamParser
+where
+    Self: Sized,
+{
+    fn parse(tokens: TokenStream) -> Option<Self>;
 }
