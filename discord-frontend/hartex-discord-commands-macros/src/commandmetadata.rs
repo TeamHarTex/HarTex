@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::{Span, TokenStream as TokenStream2};
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
@@ -57,7 +57,7 @@ pub fn expand_command_metadata_derivation(
 
     // split attribute vector into two
     let mut wrong_paths = input.attrs.clone();
-    let _ = wrong_paths
+    let correct_attrs = wrong_paths
         .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path.is_ident("metadata"))
         .collect::<Vec<_>>();
 
@@ -66,8 +66,14 @@ pub fn expand_command_metadata_derivation(
             .into_iter()
             .map(|attr| attr.path.span())
             .map(|span| Error::new(span, "expected `metadata` attribute"))
-            .collect()
-        );
+            .collect());
+    }
+
+    if correct_attrs.is_empty() {
+        return Err(vec![Error::new(
+            Span::call_site(),
+            "expected `metadata` attributes after derive",
+        )]);
     }
 
     /*let mut ret = TokenStream::new();
