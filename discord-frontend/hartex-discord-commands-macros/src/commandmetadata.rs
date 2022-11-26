@@ -20,13 +20,51 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
+use syn::spanned::Spanned;
+use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
-use crate::internal::derive::DeriveAttribute;
-use crate::internal::StreamParser;
+pub fn expand_command_metadata_derivation(
+    input: &mut DeriveInput,
+) -> Result<TokenStream2, Vec<Error>> {
+    // check if item is public
+    match input.vis.clone() {
+        Visibility::Public(_) => {}
+        visibility => {
+            return Err(vec![Error::new(
+                visibility.span(),
+                "trait can only be derived on pub items",
+            )]);
+        }
+    }
 
-pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
-    let mut ret = TokenStream::new();
+    // check if item is a struct
+    match input.data.clone() {
+        Data::Struct(_) => {}
+        Data::Enum(DataEnum { enum_token, .. }) => {
+            return Err(vec![Error::new(
+                enum_token.span(),
+                "trait can only be derived on structs",
+            )]);
+        }
+        Data::Union(DataUnion { union_token, .. }) => {
+            return Err(vec![Error::new(
+                union_token.span(),
+                "trait can only be derived on structs",
+            )]);
+        }
+    }
+
+    let mut wrong_attrs = input.attrs.clone();
+    let _ = wrong_attrs
+        .drain_filter(|attr| {
+            let _ = attr.style == AttrStyle::Outer;
+
+            todo!()
+        })
+        .collect::<Vec<_>>();
+
+    /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
         return ret;
     };
@@ -69,5 +107,7 @@ pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
     };
     ret.extend(expanded);
 
-    ret
+    ret*/
+
+    todo!()
 }

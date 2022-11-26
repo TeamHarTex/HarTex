@@ -1,4 +1,4 @@
-error: the `CommandMetadata` trait can only be derived on pub items
+error: trait can only be derived on pub items
   --> tests/ui/only_pub_items.rs:25:10
    |
 25 | #[derive(CommandMetadata)]
