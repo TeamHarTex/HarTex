@@ -38,6 +38,7 @@ pub fn expand_command_metadata_derivation(
         }
     }
 
+    // check if item is a struct
     match input.data.clone() {
         Data::Struct(_) => {},
         Data::Enum(DataEnum { enum_token, .. }) => {
