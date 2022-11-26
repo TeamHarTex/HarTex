@@ -25,8 +25,8 @@ use proc_macro::TokenStream;
 pub mod derive;
 
 pub trait StreamParser
-    where
-        Self: Sized,
+where
+    Self: Sized,
 {
     fn parse(tokens: TokenStream) -> Option<Self>;
 }
