@@ -21,9 +21,39 @@
  */
 
 use proc_macro2::TokenStream as TokenStream2;
-use syn::{DeriveInput, Error};
+use syn::spanned::Spanned;
+use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
-pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
+pub fn expand_command_metadata_derivation(
+    input: &mut DeriveInput,
+) -> Result<TokenStream2, Vec<Error>> {
+    // check if item is public
+    match input.vis.clone() {
+        Visibility::Public(_) => {}
+        visibility => {
+            return Err(vec![Error::new(
+                visibility.span(),
+                "trait can only be derived on pub items",
+            )]);
+        }
+    }
+
+    match input.data.clone() {
+        Data::Struct(_) => {},
+        Data::Enum(DataEnum { enum_token, .. }) => {
+            return Err(vec![Error::new(
+                enum_token.span(),
+                "trait can only be derived on structs",
+            )]);
+        }
+        Data::Union(DataUnion { union_token, .. }) => {
+            return Err(vec![Error::new(
+                union_token.span(),
+                "trait can only be derived on structs",
+            )]);
+        }
+    }
+
     /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
         return ret;
