@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::{TokenStream, TokenTree};
+use proc_macro::{Span, TokenStream, TokenTree};
 
 use crate::internal::StreamParser;
 
@@ -45,7 +45,21 @@ impl DeriveStream {
 }
 
 impl StreamParser for DeriveStream {
-    fn parse(_: TokenStream) -> Option<Self> {
+    fn parse(tokens: TokenStream) -> Option<Self> {
+        let _ = DeriveStream::new();
+
+        let iter = tokens.into_iter().peekable();
+
+        if !iter
+            .clone()
+            .any(|tree| tree.to_string() == String::from("pub"))
+        {
+            Span::call_site()
+                .error("entitycache traits can only be derived on pub items")
+                .emit();
+            return None;
+        }
+
         todo!()
     }
 }
