@@ -22,7 +22,7 @@
 
 use proc_macro2::TokenStream as TokenStream2;
 use syn::spanned::Spanned;
-use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
+use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
 pub fn expand_command_metadata_derivation(
     input: &mut DeriveInput,
@@ -54,6 +54,13 @@ pub fn expand_command_metadata_derivation(
             )]);
         }
     }
+
+    let mut wrong_attrs = input.attrs.clone();
+    let _ = wrong_attrs.drain_filter(|attr| {
+        let _ = attr.style == AttrStyle::Outer;
+
+        todo!()
+    }).collect::<Vec<_>>();
 
     /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {

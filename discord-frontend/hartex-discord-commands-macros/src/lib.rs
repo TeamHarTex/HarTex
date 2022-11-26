@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(drain_filter)]
 #![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
 #![feature(proc_macro_quote)]
