@@ -26,13 +26,13 @@ use crate::internal::StreamParser;
 
 #[derive(Debug)]
 pub enum DeriveAttribute {
-    IdType(TokenTree)
+    IdType(TokenTree),
 }
 
 #[derive(Debug)]
 pub struct DeriveStream {
     pub attributes: Vec<DeriveAttribute>,
-    pub identifier: Option<TokenTree>
+    pub identifier: Option<TokenTree>,
 }
 
 impl DeriveStream {
