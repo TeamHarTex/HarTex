@@ -20,13 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
+use syn::{DeriveInput, Error};
 
-use crate::internal::derive::DeriveAttribute;
-use crate::internal::StreamParser;
-
-pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
-    let mut ret = TokenStream::new();
+pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
+    /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
         return ret;
     };
@@ -69,5 +67,7 @@ pub fn expand_command_metadata_derivation(tokens: TokenStream) -> TokenStream {
     };
     ret.extend(expanded);
 
-    ret
+    ret*/
+
+    todo!()
 }
