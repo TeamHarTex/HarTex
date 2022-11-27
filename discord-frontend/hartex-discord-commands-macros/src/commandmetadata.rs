@@ -79,7 +79,10 @@ pub fn expand_command_metadata_derivation(
 
     for attr in correct_attrs {
         if attr.tokens.is_empty() {
-            return Err(vec![Error::new(attr.path.span(), "unexpected end of attribute")]);
+            return Err(vec![Error::new(
+                attr.path.span(),
+                "unexpected end of attribute",
+            )]);
         }
     }
 
