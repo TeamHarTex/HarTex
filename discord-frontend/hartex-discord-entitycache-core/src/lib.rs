@@ -21,6 +21,8 @@
  */
 
 #![allow(incomplete_features)]
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
 pub mod error;

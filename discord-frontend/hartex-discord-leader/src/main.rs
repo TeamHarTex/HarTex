@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 use std::time::Duration;
 
 use futures_util::future;

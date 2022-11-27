@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 pub trait CommandMetadata {
     fn command_type(&self) -> u8;
 
