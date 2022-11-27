@@ -55,6 +55,14 @@ pub fn expand_command_metadata_derivation(
         }
     }
 
+    // check for any attributes following derive
+    if input.attrs.is_empty() {
+        return Err(vec![Error::new(
+            Span::call_site(),
+            "expected `metadata` attributes after derive",
+        )]);
+    }
+
     // split attribute vector into two
     let mut wrong_paths = input.attrs.clone();
     let correct_attrs = wrong_paths
@@ -67,13 +75,6 @@ pub fn expand_command_metadata_derivation(
             .map(|attr| attr.path.span())
             .map(|span| Error::new(span, "expected `metadata` attribute"))
             .collect());
-    }
-
-    if correct_attrs.is_empty() {
-        return Err(vec![Error::new(
-            Span::call_site(),
-            "expected `metadata` attributes after derive",
-        )]);
     }
 
     for attr in correct_attrs {
