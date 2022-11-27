@@ -94,7 +94,10 @@ pub fn expand_command_metadata_derivation(
         };
 
         if group.delimiter() != Delimiter::Parenthesis {
-            return Err(vec![Error::new(group.span(), "expected parenthesized parameter")]);
+            return Err(vec![Error::new(
+                group.span(),
+                "expected parenthesized parameter",
+            )]);
         }
     }
 
