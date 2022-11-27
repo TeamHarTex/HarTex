@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::{Span, TokenStream as TokenStream2};
+use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
@@ -83,6 +83,18 @@ pub fn expand_command_metadata_derivation(
                 attr.path.span(),
                 "unexpected end of attribute",
             )]);
+        }
+
+        let mut iter = attr.tokens.into_iter().peekable();
+
+        // obtain the group
+        let tree = iter.next().unwrap();
+        let TokenTree::Group(group) = tree else {
+            return Err(vec![Error::new(tree.span(), "expected token group")]);
+        };
+
+        if group.delimiter() != Delimiter::Parenthesis {
+            return Err(vec![Error::new(group.span(), "expected parenthesized parameter")]);
         }
     }
 
