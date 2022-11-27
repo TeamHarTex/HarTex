@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::{Span, TokenStream as TokenStream2};
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
@@ -55,14 +55,32 @@ pub fn expand_command_metadata_derivation(
         }
     }
 
-    let mut wrong_attrs = input.attrs.clone();
-    let _ = wrong_attrs
-        .drain_filter(|attr| {
-            let _ = attr.style == AttrStyle::Outer;
-
-            todo!()
-        })
+    // split attribute vector into two
+    let mut wrong_paths = input.attrs.clone();
+    let correct_attrs = wrong_paths
+        .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path.is_ident("metadata"))
         .collect::<Vec<_>>();
+
+    if !wrong_paths.is_empty() {
+        return Err(wrong_paths
+            .into_iter()
+            .map(|attr| attr.path.span())
+            .map(|span| Error::new(span, "expected `metadata` attribute"))
+            .collect());
+    }
+
+    if correct_attrs.is_empty() {
+        return Err(vec![Error::new(
+            Span::call_site(),
+            "expected `metadata` attributes after derive",
+        )]);
+    }
+
+    for attr in correct_attrs {
+        if attr.tokens.is_empty() {
+            return Err(vec![Error::new(attr.path.span(), "unexpected end of attribute")]);
+        }
+    }
 
     /*let mut ret = TokenStream::new();
     let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
@@ -109,5 +127,5 @@ pub fn expand_command_metadata_derivation(
 
     ret*/
 
-    todo!()
+    Ok(TokenStream2::new())
 }
