@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 #![feature(drain_filter)]
 #![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
