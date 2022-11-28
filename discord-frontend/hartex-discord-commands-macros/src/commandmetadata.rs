@@ -108,12 +108,15 @@ pub fn expand_command_metadata_derivation(
             return Err(vec![Error::new(group.span(), "expected parameter; found none")]);
         };
 
-        let TokenTree::Ident(ident) = group_tree_first else {
+        let TokenTree::Ident(ident) = group_tree_first.clone() else {
             return Err(vec![Error::new(group_tree_first.span(), format!("expected identifier; found `{group_tree_first}`"))]);
         };
 
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
-            return Err(vec![Error::new(ident.span(), format!("invalid parameter name: `{ident}`"))]);
+            return Err(vec![Error::new(
+                ident.span(),
+                format!("unexpected parameter name: `{ident}`"),
+            )]);
         }
     }
 
