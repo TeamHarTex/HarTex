@@ -3,5 +3,3 @@ error: unexpected parameter name: `unexpected_parameter_name`
    |
 26 | #[metadata(unexpected_parameter_name = "unexpected_parameter_name")]
    |            ^^^^^^^^^^^^^^^^^^^^^^^^^
-   |
-   = note: valid parameter names: `command_type`, `description`, `interaction_only`, `name`

@@ -24,6 +24,9 @@ use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
+const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
+    ["command_type", "description", "interaction_only", "name"];
+
 pub fn expand_command_metadata_derivation(
     input: &mut DeriveInput,
 ) -> Result<TokenStream2, Vec<Error>> {
@@ -97,6 +100,22 @@ pub fn expand_command_metadata_derivation(
             return Err(vec![Error::new(
                 group.span(),
                 "expected parenthesized parameter",
+            )]);
+        }
+
+        let mut group_iter = group.stream().into_iter().peekable();
+        let Some(group_tree_first) = group_iter.next() else {
+            return Err(vec![Error::new(group.span(), "expected parameter; found none")]);
+        };
+
+        let TokenTree::Ident(ident) = group_tree_first.clone() else {
+            return Err(vec![Error::new(group_tree_first.span(), format!("expected identifier; found `{group_tree_first}`"))]);
+        };
+
+        if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
+            return Err(vec![Error::new(
+                ident.span(),
+                format!("unexpected parameter name: `{ident}`"),
             )]);
         }
     }
