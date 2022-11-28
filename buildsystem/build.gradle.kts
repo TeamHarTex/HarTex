@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("jvm") version "1.7.21"
+    kotlin("jvm") version "1.7.22"
 }
 
 group = "com.github.teamhartex"
