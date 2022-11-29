@@ -18,4 +18,4 @@ hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
 
 [dev-dependencies]
 macrotest = "1.0.9"
-trybuild = "1.0.71"
+trybuild = "1.0.72"
