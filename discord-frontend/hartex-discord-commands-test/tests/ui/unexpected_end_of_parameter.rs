@@ -23,7 +23,11 @@
 use hartex_discord_commands_macros::CommandMetadata;
 
 #[derive(CommandMetadata)]
+#[metadata(name)]
+pub struct UnexpectedEndOfParameter1;
+
+#[derive(CommandMetadata)]
 #[metadata(name =)]
-pub struct UnexpectedEndOfParameter;
+pub struct UnexpectedEndOfParameter2;
 
 fn main() {}
