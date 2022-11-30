@@ -118,6 +118,10 @@ pub fn expand_command_metadata_derivation(
                 format!("unexpected parameter name: `{ident}`"),
             )]);
         }
+
+        let Some(_) = group_iter.next() else {
+            return Err(vec![Error::new(group_tree_first.span(), "unexpected end of parameter")]);
+        };
     }
 
     /*let mut ret = TokenStream::new();
