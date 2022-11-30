@@ -3,3 +3,9 @@ error: unexpected end of parameter
    |
 26 | #[metadata(name)]
    |            ^^^^
+
+error: unexpected end of parameter
+  --> tests/ui/unexpected_end_of_parameter.rs:30:17
+   |
+30 | #[metadata(name =)]
+   |                 ^
