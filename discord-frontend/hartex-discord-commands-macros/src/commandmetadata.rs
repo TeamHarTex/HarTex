@@ -119,9 +119,17 @@ pub fn expand_command_metadata_derivation(
             )]);
         }
 
-        let Some(_) = group_iter.next() else {
+        let Some(group_tree_next) = group_iter.next() else {
             return Err(vec![Error::new(group_tree_first.span(), "unexpected end of parameter")]);
         };
+
+        let TokenTree::Punct(punct) = group_tree_next else {
+            return Err(vec![Error::new(group_tree_next.span(), format!("expected punctuation; found `{group_tree_next}` instead"))]);
+        };
+
+        if punct.as_char() != '=' {
+            return Err(vec![Error::new(punct.span(), format!("expected `=`; found `{punct}` instead"))]);
+        }
     }
 
     /*let mut ret = TokenStream::new();
