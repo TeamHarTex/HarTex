@@ -99,11 +99,11 @@ checksum = "983cd8b9d4b02a6dc6ffa557262eb5858a27a0038ffffe21a0f133eaa819a164"
 
 [[package]]
 name = "async-channel"
-version = "1.7.1"
+version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e14485364214912d3b19cc3435dde4df66065127f05fa0d75c712f36f12c2f28"
+checksum = "cf46fee83e5ccffc220104713af3292ff9bc7c64c7de289f66dae8e38d826833"
 dependencies = [
- "concurrent-queue 1.2.4",
+ "concurrent-queue",
  "event-listener",
  "futures-core",
 ]
@@ -116,7 +116,7 @@ checksum = "17adb73da160dfb475c183343c8cccd80721ea5a605d3eb57125f0a7b7a92d0b"
 dependencies = [
  "async-lock",
  "async-task",
- "concurrent-queue 2.0.0",
+ "concurrent-queue",
  "fastrand",
  "futures-lite",
  "slab",
@@ -156,7 +156,7 @@ checksum = "8c374dda1ed3e7d8f0d9ba58715f924862c63eae6849c92d3a18e7fbde9e2794"
 dependencies = [
  "async-lock",
  "autocfg",
- "concurrent-queue 2.0.0",
+ "concurrent-queue",
  "futures-lite",
  "libc",
  "log",
@@ -306,12 +306,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dfb24e866b15a1af2a1b663f10c6b6b8f397a84aadb828f12e5b289ec23a3a3c"
 
 [[package]]
-name = "cache-padded"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1db59621ec70f09c5e9b597b220c7a2b43611f4710dc03ceb8748637775692c"
-
-[[package]]
 name = "cbc"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -362,15 +356,6 @@ checksum = "3538270d33cc669650c4b093848450d380def10c331d38c768e34cac80576e6e"
 dependencies = [
  "termcolor",
  "unicode-width",
-]
-
-[[package]]
-name = "concurrent-queue"
-version = "1.2.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af4780a44ab5696ea9e28294517f1fffb421a83a25af521333c838635509db9c"
-dependencies = [
- "cache-padded",
 ]
 
 [[package]]
@@ -1470,9 +1455,9 @@ checksum = "6ac9a59f73473f1b8d852421e59e64809f025994837ef743615c6d0c5b305160"
 
 [[package]]
 name = "polling"
-version = "2.5.0"
+version = "2.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f7d73f1eaed1ca1fb37b54dcc9b38e3b17d6c7b8ecb7abfffcac8d0351f17d4"
+checksum = "166ca89eb77fd403230b9c156612965a81e094ec6ec3aa13663d4c8b113fa748"
 dependencies = [
  "autocfg",
  "cfg-if",
@@ -2255,7 +2240,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#d2a3b83d1a15876da1c804c9671dcdcd8aa0163a"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#49190f7802e93de06c10258bbd7afe955faf2da4"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2276,7 +2261,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#d2a3b83d1a15876da1c804c9671dcdcd8aa0163a"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#49190f7802e93de06c10258bbd7afe955faf2da4"
 dependencies = [
  "tokio",
  "tracing",
@@ -2285,7 +2270,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#d2a3b83d1a15876da1c804c9671dcdcd8aa0163a"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#49190f7802e93de06c10258bbd7afe955faf2da4"
 dependencies = [
  "hyper",
  "percent-encoding",
@@ -2302,7 +2287,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#d2a3b83d1a15876da1c804c9671dcdcd8aa0163a"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#49190f7802e93de06c10258bbd7afe955faf2da4"
 dependencies = [
  "futures-util",
  "http",
@@ -2313,7 +2298,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#d2a3b83d1a15876da1c804c9671dcdcd8aa0163a"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#49190f7802e93de06c10258bbd7afe955faf2da4"
 dependencies = [
  "bitflags",
  "serde",
@@ -2326,7 +2311,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#d2a3b83d1a15876da1c804c9671dcdcd8aa0163a"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#49190f7802e93de06c10258bbd7afe955faf2da4"
 dependencies = [
  "twilight-model",
 ]
