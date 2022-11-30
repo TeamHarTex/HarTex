@@ -128,7 +128,10 @@ pub fn expand_command_metadata_derivation(
         };
 
         if punct.as_char() != '=' {
-            return Err(vec![Error::new(punct.span(), format!("expected `=`; found `{punct}` instead"))]);
+            return Err(vec![Error::new(
+                punct.span(),
+                format!("expected `=`; found `{punct}` instead"),
+            )]);
         }
 
         let Some(_) = group_iter.next() else {
