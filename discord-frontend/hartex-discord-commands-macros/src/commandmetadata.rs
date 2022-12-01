@@ -24,6 +24,8 @@ use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
+const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
+const LITERAL_PARAMETERS: [&'static str; 3] = ["command_type", "description", "name"];
 const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
     ["command_type", "description", "interaction_only", "name"];
 
@@ -80,6 +82,8 @@ pub fn expand_command_metadata_derivation(
             .collect());
     }
 
+    let mut functions = TokenStream2::new();
+    let mut previous_attr_name = String::new();
     for attr in correct_attrs {
         if attr.tokens.is_empty() {
             return Err(vec![Error::new(
@@ -112,6 +116,13 @@ pub fn expand_command_metadata_derivation(
             return Err(vec![Error::new(group_tree_first.span(), format!("expected identifier; found `{group_tree_first}`"))]);
         };
 
+        if ident.to_string() == previous_attr_name {
+            return Err(vec![Error::new(
+                ident.span(),
+                format!("duplicate attribute: `{ident}`"),
+            )]);
+        }
+
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
             return Err(vec![Error::new(
                 ident.span(),
@@ -134,55 +145,88 @@ pub fn expand_command_metadata_derivation(
             )]);
         }
 
-        let Some(_) = group_iter.next() else {
+        let Some(group_tree_next) = group_iter.next() else {
             return Err(vec![Error::new(group_tree_next.span(), "unexpected end of parameter")]);
         };
-    }
 
-    /*let mut ret = TokenStream::new();
-    let Some(stream) = crate::internal::derive::DeriveStream::parse(tokens) else {
-        return ret;
-    };
+        if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
+            let TokenTree::Literal(literal) = group_tree_next.clone() else {
+                return Err(vec![Error::new(group_tree_next.span(), "expected literal; found `{group_tree_next}`")]);
+            };
 
-    let mut functions = TokenStream::new();
-    stream.attributes.into_iter().for_each(|attribute| {
-        let expanded = match attribute {
-            DeriveAttribute::Description(description) => proc_macro::quote! {
-                fn description(&self) -> String {
-                    String::from($description)
+            match ident.to_string().as_str() {
+                "command_type" => {
+                    let Ok(command_type) = literal.to_string().parse::<u8>() else {
+                        return Err(vec![Error::new(literal.span(), format!("expected integer literal; found literal `{literal}`"))]);
+                    };
+
+                    if !(1..=3).contains(&command_type) {
+                        return Err(vec![Error::new(
+                            literal.span(),
+                            format!("invalid command type: `{literal}`"),
+                        )]);
+                    }
+
+                    let expanded = quote::quote! {
+                        fn command_type(&self) -> u8 {
+                            #group_tree_next
+                        }
+                    };
+                    functions.extend(expanded);
                 }
-            },
-            DeriveAttribute::InteractionOnly(interaction_only) => proc_macro::quote! {
-                fn interaction_only(&self) -> bool {
-                    $interaction_only
+                "description" => {
+                    let expanded = quote::quote! {
+                        fn description(&self) -> String {
+                            #group_tree_next
+                        }
+                    };
+                    functions.extend(expanded);
                 }
-            },
-            DeriveAttribute::Name(name) => proc_macro::quote! {
-                fn name(&self) -> String {
-                    String::from($name)
+                "name" => {
+                    let expanded = quote::quote! {
+                        fn name(&self) -> String {
+                            #group_tree_next
+                        }
+                    };
+                    functions.extend(expanded);
                 }
-            },
-            DeriveAttribute::CommandType(command_type) => proc_macro::quote! {
-                fn command_type(&self) -> u8 {
-                    $command_type
+                _ => unreachable!(),
+            }
+        } else if BOOLEAN_PARAMETERS.contains(&ident.to_string().as_str()) {
+            let TokenTree::Ident(ident) = group_tree_next.clone() else {
+                return Err(vec![Error::new(group_tree_next.span(), format!("expected identifier; found `{group_tree_next}`"))]);
+            };
+
+            match ident.to_string().as_str() {
+                "interaction_only" => {
+                    let Ok(_) = ident.to_string().parse::<bool>() else {
+                        return Err(vec![Error::new(ident.span(), format!("expected boolean; found `{ident}`"))]);
+                    };
+
+                    let expanded = quote::quote! {
+                        fn interaction_only(&self) -> bool {
+                            #group_tree_next
+                        }
+                    };
+                    functions.extend(expanded);
                 }
-            },
+                _ => unreachable!(),
+            }
+        } else {
+            unreachable!()
         };
 
-        functions.extend(expanded);
-    });
+        previous_attr_name = ident.to_string();
+    }
 
-    let Some(ident) = stream.identifier else {
-        return ret;
-    };
-    let expanded = proc_macro::quote! {
-        impl hartex_discord_commands_core::CommandMetadata for $ident {
-            $functions
+    let mut ret = TokenStream2::new();
+    let ident = input.ident.clone();
+    let expanded = quote::quote! {
+        impl hartex_discord_commands_core::CommandMetadata for #ident {
+            #functions
         }
     };
     ret.extend(expanded);
 
-    ret*/
-
-    Ok(TokenStream2::new())
+    Ok(ret)
 }
