@@ -216,6 +216,13 @@ pub fn expand_command_metadata_derivation(
             unreachable!()
         };
 
+        if let Some(extra) = group_iter.next() {
+            return Err(vec![Error::new(
+                extra.span(),
+                format!("unexpected token: `{extra}`"),
+            )]);
+        }
+
         previous_attr_name = ident.to_string();
     }
 
