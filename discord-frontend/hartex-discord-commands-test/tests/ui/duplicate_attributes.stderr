@@ -1,11 +1,5 @@
-error: duplicate parameter found: command_type
+error: duplicate attribute: `command_type`
   --> tests/ui/duplicate_attributes.rs:27:12
    |
 27 | #[metadata(command_type = 2)]
-   |            ^^^^^^^^^^^^
-   |
-help: previous declaration is found here
-  --> tests/ui/duplicate_attributes.rs:26:12
-   |
-26 | #[metadata(command_type = 1)]
    |            ^^^^^^^^^^^^

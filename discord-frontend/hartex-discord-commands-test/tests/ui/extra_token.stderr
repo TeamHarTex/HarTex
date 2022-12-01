@@ -3,5 +3,3 @@ error: unexpected token: `,`
    |
 26 | #[metadata(command_type = 1, extra)]
    |                            ^
-   |
-   = help: only one parameter is allowed per metadata attribute
