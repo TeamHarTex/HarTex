@@ -151,7 +151,7 @@ pub fn expand_command_metadata_derivation(
 
         if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Literal(literal) = group_tree_next.clone() else {
-                return Err(vec![Error::new(group_tree_next.span(), "expected literal; found `{group_tree_next}`")]);
+                return Err(vec![Error::new(group_tree_next.span(), format!("expected literal; found `{group_tree_next}`"))]);
             };
 
             match ident.to_string().as_str() {
