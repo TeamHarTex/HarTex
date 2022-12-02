@@ -193,14 +193,14 @@ pub fn expand_command_metadata_derivation(
                 _ => unreachable!(),
             }
         } else if BOOLEAN_PARAMETERS.contains(&ident.to_string().as_str()) {
-            let TokenTree::Ident(ident) = group_tree_next.clone() else {
+            let TokenTree::Ident(ident_bool) = group_tree_next.clone() else {
                 return Err(vec![Error::new(group_tree_next.span(), format!("expected identifier; found `{group_tree_next}`"))]);
             };
 
             match ident.to_string().as_str() {
                 "interaction_only" => {
-                    let Ok(_) = ident.to_string().parse::<bool>() else {
-                        return Err(vec![Error::new(ident.span(), format!("expected boolean; found `{ident}`"))]);
+                    let Ok(_) = ident_bool.to_string().parse::<bool>() else {
+                        return Err(vec![Error::new(ident_bool.span(), format!("expected boolean; found `{ident_bool}`"))]);
                     };
 
                     let expanded = quote::quote! {
