@@ -28,6 +28,7 @@ pub mod hook;
 
 pub use eyre;
 
+#[allow(clippy::missing_errors_doc)]
 pub fn initialize() -> Result<()> {
     hook::HookBuilder::new().install_hooks()
 }

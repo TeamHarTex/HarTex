@@ -26,9 +26,11 @@ use crate::hook::panic::PanicHook;
 mod eyre;
 mod panic;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct HookBuilder;
 
 impl HookBuilder {
+    #[must_use = "a hook builder must be used"]
     pub fn new() -> Self {
         Self
     }
@@ -41,6 +43,8 @@ impl HookBuilder {
         Ok(())
     }
 
+    #[allow(clippy::missing_errors_doc)]
+    #[must_use = "hooks built must be used"]
     pub fn try_into_hooks(self) -> (EyreHook, PanicHook) {
         (EyreHook, PanicHook)
     }
