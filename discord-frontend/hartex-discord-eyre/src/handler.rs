@@ -27,6 +27,7 @@ use std::thread;
 
 use backtrace::{Backtrace, SymbolName};
 
+#[allow(clippy::module_name_repetitions)]
 pub struct HookHandler {
     pub(crate) backtrace: Backtrace,
 }
@@ -68,12 +69,10 @@ impl eyre::EyreHandler for HookHandler {
                     "({}:{})",
                     symbol
                         .filename()
-                        .map(|path| path.display())
-                        .unwrap_or(Path::new("<unknown>").display()),
+                        .map_or(Path::new("<unknown>").display(), Path::display),
                     symbol
                         .lineno()
-                        .map(|lineno| lineno.to_string())
-                        .unwrap_or(String::from("<unknown>")),
+                        .map_or(String::from("<unknown>"), |lineno| lineno.to_string())
                 )?;
             }
         }

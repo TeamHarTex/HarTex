@@ -25,6 +25,7 @@ use std::fmt::{self, Display, Formatter};
 
 use sqlx::error::Error as Sqlx;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum RepositoryError {
     DbError(Sqlx),
