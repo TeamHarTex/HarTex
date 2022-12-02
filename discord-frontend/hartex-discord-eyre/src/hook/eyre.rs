@@ -26,20 +26,22 @@ use backtrace::Backtrace;
 
 use crate::handler::HookHandler;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct EyreHook;
+
+type EyreHandlerT =
+    Box<dyn Fn(&(dyn Error + 'static)) -> Box<dyn eyre::EyreHandler> + Send + Sync + 'static>;
 
 impl EyreHook {
     pub fn install_hook(self) -> Result<(), eyre::InstallError> {
         eyre::set_hook(self.into_eyre_hook())
     }
 
-    pub fn into_eyre_hook(
-        self,
-    ) -> Box<dyn Fn(&(dyn Error + 'static)) -> Box<dyn eyre::EyreHandler> + Send + Sync + 'static>
-    {
+    pub fn into_eyre_hook(self) -> EyreHandlerT {
         Box::new(move |error| Box::new(self.handler(error)))
     }
 
+    #[allow(clippy::unused_self)]
     pub(crate) fn handler(&self, _: &(dyn Error + 'static)) -> HookHandler {
         HookHandler {
             backtrace: Backtrace::new(),

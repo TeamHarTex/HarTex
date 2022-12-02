@@ -29,15 +29,17 @@ use backtrace::{Backtrace, SymbolName};
 
 pub struct PanicHook;
 
+#[allow(clippy::module_name_repetitions)]
 impl PanicHook {
     pub fn install_hook(self) {
-        panic::set_hook(self.into_panic_hook())
+        panic::set_hook(self.into_panic_hook());
     }
 
     pub fn into_panic_hook(self) -> Box<dyn Fn(&PanicInfo<'_>) + Send + Sync + 'static> {
         Box::new(move |panic_info| eprintln!("{}", self.report(panic_info)))
     }
 
+    #[allow(clippy::unused_self)]
     pub(crate) fn report<'a>(&'a self, panic_info: &'a PanicInfo<'a>) -> PanicReport<'a> {
         PanicReport {
             backtrace: Backtrace::new(),
@@ -46,6 +48,7 @@ impl PanicHook {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct PanicReport<'a> {
     backtrace: Backtrace,
     panic_info: &'a PanicInfo<'a>,
@@ -93,12 +96,10 @@ impl Display for PanicReport<'_> {
                     "({}:{})",
                     symbol
                         .filename()
-                        .map(|path| path.display())
-                        .unwrap_or(Path::new("<unknown>").display()),
+                        .map_or(Path::new("<unknown>").display(), |path| path.display()),
                     symbol
                         .lineno()
-                        .map(|lineno| lineno.to_string())
-                        .unwrap_or(String::from("<unknown>")),
+                        .map_or(String::from("<unknown>"), |lineno| lineno.to_string())
                 )?;
             }
         }
