@@ -69,7 +69,7 @@ impl eyre::EyreHandler for HookHandler {
                     "({}:{})",
                     symbol
                         .filename()
-                        .map_or(Path::new("<unknown>").display(), |path| path.display()),
+                        .map_or(Path::new("<unknown>").display(), Path::display),
                     symbol
                         .lineno()
                         .map_or(String::from("<unknown>"), |lineno| lineno.to_string())

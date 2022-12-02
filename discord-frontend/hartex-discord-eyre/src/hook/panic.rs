@@ -27,9 +27,9 @@ use std::thread;
 
 use backtrace::{Backtrace, SymbolName};
 
+#[allow(clippy::module_name_repetitions)]
 pub struct PanicHook;
 
-#[allow(clippy::module_name_repetitions)]
 impl PanicHook {
     pub fn install_hook(self) {
         panic::set_hook(self.into_panic_hook());
@@ -96,7 +96,7 @@ impl Display for PanicReport<'_> {
                     "({}:{})",
                     symbol
                         .filename()
-                        .map_or(Path::new("<unknown>").display(), |path| path.display()),
+                        .map_or(Path::new("<unknown>").display(), Path::display),
                     symbol
                         .lineno()
                         .map_or(String::from("<unknown>"), |lineno| lineno.to_string())
