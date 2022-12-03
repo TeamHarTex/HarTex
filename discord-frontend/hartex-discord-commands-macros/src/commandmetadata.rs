@@ -24,11 +24,12 @@ use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
-const BOOLEAN_PARAMETERS: [&'static str; 1] = ["interaction_only"];
-const LITERAL_PARAMETERS: [&'static str; 3] = ["command_type", "description", "name"];
-const VALID_ATTR_PARAMETER_NAMES: [&'static str; 4] =
+const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
+const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "description", "name"];
+const VALID_ATTR_PARAMETER_NAMES: [&str; 4] =
     ["command_type", "description", "interaction_only", "name"];
 
+#[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(
     input: &mut DeriveInput,
 ) -> Result<TokenStream2, Vec<Error>> {
@@ -116,7 +117,7 @@ pub fn expand_command_metadata_derivation(
             return Err(vec![Error::new(group_tree_first.span(), format!("expected identifier; found `{group_tree_first}`"))]);
         };
 
-        if ident.to_string() == previous_attr_name {
+        if ident == previous_attr_name {
             return Err(vec![Error::new(
                 ident.span(),
                 format!("duplicate attribute: `{ident}`"),

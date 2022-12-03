@@ -120,8 +120,8 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     log::trace!("building clusters");
     let num_shards = std::env::var("NUM_SHARDS")?.parse::<u64>()?;
-    let queue = queue::get_queue()?;
-    let mut shards = shards::get_shards(num_shards, queue.clone())?;
+    let queue = queue::obtain()?;
+    let mut shards = shards::obtain(num_shards, &queue)?;
 
     let (tx, rx) = watch::channel(false);
 
@@ -131,7 +131,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     tokio::spawn(async move {
         tokio::select! {
-            _ = inbound::handle_inbound(shards.iter_mut(), amqp) => {},
+            _ = inbound::handle(shards.iter_mut(), amqp) => {},
             _ = rx.changed() => {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
                     shard.close(CloseFrame::RESUME).await

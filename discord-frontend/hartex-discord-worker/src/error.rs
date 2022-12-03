@@ -23,6 +23,7 @@
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub struct ConsumerError {
     pub kind: ConsumerErrorKind,
