@@ -23,7 +23,9 @@
 use hartex_discord_core::discord::model::gateway::event::{DispatchEvent, GatewayEvent};
 use hartex_discord_core::log;
 
-pub async fn handle_event(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
+#[allow(clippy::unused_async)]
+pub async fn invoke(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
+    #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(shard, dispatch) => {
             match dispatch {
