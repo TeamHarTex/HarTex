@@ -27,10 +27,7 @@ use hartex_discord_core::discord::gateway::{stream, Config, EventTypeFlags, Inte
 use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
 use hartex_discord_core::discord::model::gateway::presence::{Activity, ActivityType, Status};
 
-pub fn obtain(
-    num_shards: u64,
-    queue: &Arc<dyn Queue>,
-) -> hartex_discord_eyre::Result<Vec<Shard>> {
+pub fn obtain(num_shards: u64, queue: &Arc<dyn Queue>) -> hartex_discord_eyre::Result<Vec<Shard>> {
     let bot_token = std::env::var("BOT_TOKEN")?;
 
     let shard_start_index = std::env::var("SHARDS_START_INDEX")?.parse::<u64>()?;
