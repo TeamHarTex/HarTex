@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(unused_variables)]
+
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 
 pub async fn update_entitycache(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
