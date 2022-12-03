@@ -28,7 +28,7 @@ use hartex_discord_core::log;
 use lapin::options::BasicPublishOptions;
 use lapin::{BasicProperties, Channel};
 
-pub async fn handle_inbound(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
+pub async fn handle(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
     let mut stream = ShardMessageStream::new(shards);
 
     while let Some((shard, result)) = stream.next().await {
@@ -60,7 +60,7 @@ pub async fn handle_inbound(shards: impl Iterator<Item = &mut Shard>, amqp: Chan
                     log::warn!(
                         "[shard {shard_id}] failed to publish payload to worker: {error}",
                         shard_id = shard.id().number()
-                    )
+                    );
                 }
             }
             Err(error) => {
@@ -75,7 +75,7 @@ pub async fn handle_inbound(shards: impl Iterator<Item = &mut Shard>, amqp: Chan
                 log::warn!(
                     "[shard {shard_id}] error when receiving gateway message: {error}",
                     shard_id = shard.id().number()
-                )
+                );
             }
         }
     }

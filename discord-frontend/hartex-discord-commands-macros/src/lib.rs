@@ -34,7 +34,6 @@ use proc_macro2::TokenStream as TokenStream2;
 use syn::{parse_macro_input, DeriveInput, Error};
 
 mod commandmetadata;
-mod internal;
 
 #[proc_macro_derive(CommandMetadata, attributes(metadata))]
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
@@ -44,6 +43,7 @@ pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
         .into()
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn as_compiler_errors(errors: Vec<Error>) -> TokenStream2 {
     let compiler_errors = errors.iter().map(Error::to_compile_error);
     quote::quote!(#(#compiler_errors)*)
