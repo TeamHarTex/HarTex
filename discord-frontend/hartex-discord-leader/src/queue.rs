@@ -33,6 +33,7 @@ use hartex_discord_core::tokio::sync::mpsc::{unbounded_channel, UnboundedSender}
 use hartex_discord_core::tokio::sync::oneshot::{self, Sender};
 use hartex_discord_core::tokio::time::sleep;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub struct LocalQueue(UnboundedSender<Sender<()>>);
 
@@ -60,6 +61,7 @@ impl Queue for LocalQueue {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub struct LargeBotQueue(Vec<UnboundedSender<Sender<()>>>);
 
@@ -69,7 +71,7 @@ impl LargeBotQueue {
         for _ in 0..buckets {
             let (tx, rx) = unbounded_channel();
             tokio::spawn(wait_for_while(rx, duration));
-            queues.push(tx)
+            queues.push(tx);
         }
 
         Self(queues)
@@ -78,6 +80,7 @@ impl LargeBotQueue {
 
 impl Queue for LargeBotQueue {
     fn request(&'_ self, shard_id: [u64; 2]) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
+        #[allow(clippy::cast_possible_truncation)]
         let bucket = (shard_id[0] % (self.0.len() as u64)) as usize;
         let (tx, rx) = oneshot::channel();
 
@@ -102,7 +105,7 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
     }
 }
 
-pub fn get_queue() -> hartex_discord_eyre::Result<Arc<dyn Queue>> {
+pub fn obtain() -> hartex_discord_eyre::Result<Arc<dyn Queue>> {
     let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse::<usize>()?;
     let wait =
         Duration::from_secs(std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS")?.parse::<u64>()?);

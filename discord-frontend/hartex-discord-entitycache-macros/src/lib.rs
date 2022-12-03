@@ -28,8 +28,6 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 
-mod internal;
-
 #[proc_macro_derive(Entity, attributes(entity))]
 pub fn derive_entity_trait(_: TokenStream) -> TokenStream {
     TokenStream::new()
