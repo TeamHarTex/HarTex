@@ -178,7 +178,7 @@ pub fn expand_command_metadata_derivation(
                 "description" => {
                     let expanded = quote::quote! {
                         fn description(&self) -> String {
-                            #group_tree_next
+                            String::from(#group_tree_next)
                         }
                     };
                     functions.extend(expanded);
@@ -186,7 +186,7 @@ pub fn expand_command_metadata_derivation(
                 "name" => {
                     let expanded = quote::quote! {
                         fn name(&self) -> String {
-                            #group_tree_next
+                            String::from(#group_tree_next)
                         }
                     };
                     functions.extend(expanded);
@@ -227,14 +227,23 @@ pub fn expand_command_metadata_derivation(
         previous_attr_name = ident.to_string();
     }
 
-    let mut ret = TokenStream2::new();
+    let core_use = quote::quote! {
+        extern crate hartex_discord_commands_core as _commands_core;
+    };
+    let dummy_const = quote::format_ident!("_");
     let ident = input.ident.clone();
     let expanded = quote::quote! {
-        impl hartex_discord_commands_core::CommandMetadata for #ident {
+        #core_use
+
+        #[automatically_derived]
+        impl _commands_core::CommandMetadata for #ident {
             #functions
         }
     };
-    ret.extend(expanded);
 
-    Ok(ret)
+    Ok(quote::quote! {
+        const #dummy_const: () = {
+            #expanded
+        };
+    })
 }
