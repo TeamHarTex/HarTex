@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="KotlinScriptingSettings" supportWarning="false" />
+  <component name="KotlinScriptingSettings" supportWarning="false">
+    <scriptDefinition className="org.jetbrains.kotlin.scripting.resolve.KotlinScriptDefinitionFromAnnotatedTemplate" definitionName="KotlinInitScript">
+      <order>0</order>
+    </scriptDefinition>
+    <scriptDefinition className="org.jetbrains.kotlin.scripting.resolve.KotlinScriptDefinitionFromAnnotatedTemplate" definitionName="KotlinSettingsScript">
+      <order>1</order>
+    </scriptDefinition>
+    <scriptDefinition className="org.jetbrains.kotlin.scripting.resolve.KotlinScriptDefinitionFromAnnotatedTemplate" definitionName="KotlinBuildScript">
+      <order>2</order>
+    </scriptDefinition>
+    <scriptDefinition className="circlet.pipelines.config.dsl.scriptdefinition.ProjectScriptDefinition" definitionName="ProjectScriptDefinition">
+      <order>3</order>
+    </scriptDefinition>
+    <scriptDefinition className="org.jetbrains.kotlin.mainKts.MainKtsScript" definitionName="MainKtsScript">
+      <order>4</order>
+    </scriptDefinition>
+    <scriptDefinition className="com.github.teamhartex.hartex.buildsystem.Workspace" definitionName="HarTex Build Script">
+      <order>5</order>
+      <autoReloadConfigurations>true</autoReloadConfigurations>
+    </scriptDefinition>
+    <scriptDefinition className="kotlin.script.templates.standard.ScriptTemplateWithBindings" definitionName="Script definition for extension scripts and IDE console">
+      <order>6</order>
+    </scriptDefinition>
+    <scriptDefinition className="org.jetbrains.kotlin.idea.core.script.StandardIdeScriptDefinition" definitionName="Kotlin Script">
+      <order>7</order>
+    </scriptDefinition>
+  </component>
 </project>
