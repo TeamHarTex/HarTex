@@ -1,6 +1,11 @@
 projects {
+  project("buildsystem", ProjectType.JVM)
   project("discord-frontend", ProjectType.RUST)
   project("web-frontend", ProjectType.TYPESCRIPT)
+}
+
+buildConfigurationForProject("buildsystem") {
+  buildTool(ProjectBuildTool.GRADLE)
 }
 
 buildConfigurationForProject("discord-frontend") {
