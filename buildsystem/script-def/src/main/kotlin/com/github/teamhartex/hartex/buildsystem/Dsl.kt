@@ -48,6 +48,7 @@ open class Projects {
 
 enum class ProjectBuildTool {
   CARGO,
+  GRADLE,
   YARN
 }
 
@@ -74,6 +75,7 @@ open class ProjectConfigurationForProjectScope(private val forProject: Project) 
 }
 
 enum class ProjectType {
+  JVM,
   TYPESCRIPT,
   RUST
 }
