@@ -1,45 +1,42 @@
-# Astro Starter Kit: Minimal
+# Nuxt 3 Minimal Starter
 
-```
-npm create astro@latest -- --template minimal
-```
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
+## Setup
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Make sure to install the dependencies:
 
-## 🚀 Project Structure
+```bash
+# yarn
+yarn install
 
-Inside of your Astro project, you'll see the following folders and files:
+# npm
+npm install
 
-```
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+# pnpm
+pnpm install --shamefully-hoist
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Development Server
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Start the development server on http://localhost:3000
 
-Any static assets, like images, can be placed in the `public/` directory.
+```bash
+npm run dev
+```
 
-## 🧞 Commands
+## Production
 
-All commands are run from the root of the project, from a terminal:
+Build the application for production:
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `npm install`          | Installs dependencies                            |
-| `npm run dev`          | Starts local dev server at `localhost:3000`      |
-| `npm run build`        | Build your production site to `./dist/`          |
-| `npm run preview`      | Preview your build locally, before deploying     |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro --help` | Get help using the Astro CLI                     |
+```bash
+npm run build
+```
 
-## 👀 Want to learn more?
+Locally preview production build:
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+npm run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
