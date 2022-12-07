@@ -32,7 +32,7 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2022-11-30/buildsystem.jar
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2022-12-07/buildsystem.jar
       - name: Run Buildsystem
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh clippy discord-frontend
 
@@ -55,6 +55,6 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2022-11-30/buildsystem.jar
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2022-12-07/buildsystem.jar
       - name: Run Buildsystem
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh formatck discord-frontend
