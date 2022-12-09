@@ -1,6 +1,6 @@
-![IronJVM](./meta/images/hartexbanner.png)
+![HarTex](./meta/images/hartexbanner.png)
 
-<h1 align="center">HarTex</h1>
+<div style="text-align: center;"><h1>HarTex</h1></div>
 
 > ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
