@@ -1,4 +1,4 @@
-![IronJVM](./meta/images/hartexbanner.png)
+![HarTex](./meta/images/hartexbanner.png)
 
 <div style="text-align: center;"><h1>HarTex</h1></div>
 
