@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg_attr(not(expandtest), ignore)]
 #[rustversion::attr(not(nightly), ignore)]
 #[test]
 pub fn expand() {
