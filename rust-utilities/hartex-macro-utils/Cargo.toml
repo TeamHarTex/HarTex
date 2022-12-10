@@ -12,5 +12,6 @@ rust-version = "1.67.0"
 
 [dependencies]
 proc-macro2 = "1.0.47"
+syn = "1.0.105"
 
 [features]

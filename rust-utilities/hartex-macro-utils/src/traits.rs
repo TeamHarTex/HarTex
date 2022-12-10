@@ -21,7 +21,14 @@
  */
 
 use proc_macro2::Span;
+use syn::Error;
 
-pub trait SpanExt {}
+pub trait SpanUtils {
+    fn error(&self, message: &str) -> Error;
+}
 
-impl SpanExt for Span {}
+impl SpanUtils for Span {
+    fn error(&self, message: &str) -> Error {
+        Error::new(self.clone(), message)
+    }
+}
