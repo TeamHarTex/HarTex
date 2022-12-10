@@ -57,6 +57,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-entities/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-macro-utils/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
@@ -64,6 +65,7 @@
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
       <excludeFolder url="file://$MODULE_DIR$/libraries/target" />
       <excludeFolder url="file://$MODULE_DIR$/buildsystem/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
