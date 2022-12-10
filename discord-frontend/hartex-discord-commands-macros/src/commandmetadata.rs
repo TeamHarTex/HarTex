@@ -38,9 +38,9 @@ pub fn expand_command_metadata_derivation(
     match input.vis.clone() {
         Visibility::Public(_) => {}
         visibility => {
-            return Err(vec![visibility.span().error(
-                "trait can only be derived on pub items",
-            )]);
+            return Err(vec![visibility
+                .span()
+                .error("trait can only be derived on pub items")]);
         }
     }
 
@@ -48,22 +48,22 @@ pub fn expand_command_metadata_derivation(
     match input.data.clone() {
         Data::Struct(_) => {}
         Data::Enum(DataEnum { enum_token, .. }) => {
-            return Err(vec![enum_token.span().error(
-                "trait can only be derived on structs",
-            )]);
+            return Err(vec![enum_token
+                .span()
+                .error("trait can only be derived on structs")]);
         }
         Data::Union(DataUnion { union_token, .. }) => {
-            return Err(vec![union_token.span().error(
-                "trait can only be derived on structs",
-            )]);
+            return Err(vec![union_token
+                .span()
+                .error("trait can only be derived on structs")]);
         }
     }
 
     // check for any attributes following derive
     if input.attrs.is_empty() {
-        return Err(vec![Span::call_site().error(
-            "expected `metadata` attributes after derive",
-        )]);
+        return Err(vec![
+            Span::call_site().error("expected `metadata` attributes after derive")
+        ]);
     }
 
     // split attribute vector into two
@@ -84,9 +84,7 @@ pub fn expand_command_metadata_derivation(
     let mut previous_attr_name = String::new();
     for attr in correct_attrs {
         if attr.tokens.is_empty() {
-            return Err(vec![attr.path.span().error(
-                "unexpected end of attribute",
-            )]);
+            return Err(vec![attr.path.span().error("unexpected end of attribute")]);
         }
 
         let mut iter = attr.tokens.into_iter().peekable();
@@ -98,9 +96,7 @@ pub fn expand_command_metadata_derivation(
         };
 
         if group.delimiter() != Delimiter::Parenthesis {
-            return Err(vec![group.span().error(
-                "expected parenthesized parameter",
-            )]);
+            return Err(vec![group.span().error("expected parenthesized parameter")]);
         }
 
         let mut group_iter = group.stream().into_iter().peekable();
@@ -113,15 +109,15 @@ pub fn expand_command_metadata_derivation(
         };
 
         if ident == previous_attr_name {
-            return Err(vec![ident.span().error(
-                format!("duplicate attribute: `{ident}`"),
-            )]);
+            return Err(vec![ident
+                .span()
+                .error(format!("duplicate attribute: `{ident}`"))]);
         }
 
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
-            return Err(vec![ident.span().error(
-                format!("unexpected parameter name: `{ident}`"),
-            )]);
+            return Err(vec![ident
+                .span()
+                .error(format!("unexpected parameter name: `{ident}`"))]);
         }
 
         let Some(group_tree_next) = group_iter.next() else {
@@ -133,9 +129,9 @@ pub fn expand_command_metadata_derivation(
         };
 
         if punct.as_char() != '=' {
-            return Err(vec![punct.span().error(
-                format!("expected `=`; found `{punct}` instead"),
-            )]);
+            return Err(vec![punct
+                .span()
+                .error(format!("expected `=`; found `{punct}` instead"))]);
         }
 
         let Some(group_tree_next) = group_iter.next() else {
@@ -154,9 +150,9 @@ pub fn expand_command_metadata_derivation(
                     };
 
                     if !(1..=3).contains(&command_type) {
-                        return Err(vec![literal.span().error(
-                            format!("invalid command type: `{literal}`"),
-                        )]);
+                        return Err(vec![literal
+                            .span()
+                            .error(format!("invalid command type: `{literal}`"))]);
                     }
 
                     let expanded = quote::quote! {
@@ -209,9 +205,9 @@ pub fn expand_command_metadata_derivation(
         };
 
         if let Some(extra) = group_iter.next() {
-            return Err(vec![extra.span().error(
-                format!("unexpected token: `{extra}`"),
-            )]);
+            return Err(vec![extra
+                .span()
+                .error(format!("unexpected token: `{extra}`"))]);
         }
 
         previous_attr_name = ident.to_string();
