@@ -22,11 +22,12 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
-#![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
+
+mod entity;
 
 #[proc_macro_derive(Entity, attributes(entity))]
 pub fn derive_entity_trait(_: TokenStream) -> TokenStream {
