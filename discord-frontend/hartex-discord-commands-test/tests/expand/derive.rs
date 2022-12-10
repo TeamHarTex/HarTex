@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands_macros::CommandMetadata;
+use hartex_discord_commands_core::CommandMetadata;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
