@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::TokenStream  as TokenStream2;
+use proc_macro2::TokenStream as TokenStream2;
 use syn::{DeriveInput, Error};
 
 pub fn expand_entity_derivation(_: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {

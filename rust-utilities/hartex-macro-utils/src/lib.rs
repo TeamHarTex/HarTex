@@ -30,4 +30,3 @@ pub fn as_compiler_errors(errors: Vec<Error>) -> TokenStream2 {
     let compiler_errors = errors.iter().map(Error::to_compile_error);
     quote::quote!(#(#compiler_errors)*)
 }
-
