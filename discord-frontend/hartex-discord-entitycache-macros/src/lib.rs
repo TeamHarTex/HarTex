@@ -26,10 +26,14 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
+use syn::{parse_macro_input, DeriveInput};
 
 mod entity;
 
 #[proc_macro_derive(Entity, attributes(entity))]
-pub fn derive_entity_trait(_: TokenStream) -> TokenStream {
-    TokenStream::new()
+pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
+    let mut input = parse_macro_input!(tokens as DeriveInput);
+    entity::expand_entity_derivation(&mut input)
+        .unwrap_or_else(hartex_macro_utils::as_compiler_errors)
+        .into()
 }
