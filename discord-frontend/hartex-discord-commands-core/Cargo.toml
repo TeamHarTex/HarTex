@@ -11,5 +11,10 @@ rust-version = "1.67.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_discord_commands_macros = { optional = true, path = "../hartex-discord-commands-macros" }
+
+[dev-dependencies]
+hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
 
 [features]
+derive = ["dep:hartex_discord_commands_macros"]
