@@ -846,6 +846,11 @@ dependencies = [
 [[package]]
 name = "hartex_discord_entitycache_macros"
 version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "hartex_discord_eyre"
