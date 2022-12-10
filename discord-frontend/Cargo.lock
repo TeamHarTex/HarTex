@@ -800,6 +800,7 @@ name = "hartex_discord_commands_macros"
 version = "0.1.0"
 dependencies = [
  "hartex_discord_commands_core",
+ "hartex_macro_utils",
  "proc-macro2",
  "quote",
  "syn",
@@ -885,6 +886,14 @@ dependencies = [
  "serde_json",
  "serde_scan",
  "tracing",
+]
+
+[[package]]
+name = "hartex_macro_utils"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "syn",
 ]
 
 [[package]]

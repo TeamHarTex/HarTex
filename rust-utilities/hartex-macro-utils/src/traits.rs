@@ -24,11 +24,11 @@ use proc_macro2::Span;
 use syn::Error;
 
 pub trait SpanUtils {
-    fn error(&self, message: &str) -> Error;
+    fn error(&self, message: impl AsRef<str>) -> Error;
 }
 
 impl SpanUtils for Span {
-    fn error(&self, message: &str) -> Error {
-        Error::new(self.clone(), message)
+    fn error(&self, message: impl AsRef<str>) -> Error {
+        Error::new(self.clone(), message.as_ref())
     }
 }
