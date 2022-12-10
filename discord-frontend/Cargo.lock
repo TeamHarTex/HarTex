@@ -791,11 +791,15 @@ dependencies = [
 [[package]]
 name = "hartex_discord_commands_core"
 version = "0.1.0"
+dependencies = [
+ "hartex_discord_commands_macros",
+]
 
 [[package]]
 name = "hartex_discord_commands_macros"
 version = "0.1.0"
 dependencies = [
+ "hartex_discord_commands_core",
  "proc-macro2",
  "quote",
  "syn",
@@ -1189,8 +1193,7 @@ dependencies = [
 [[package]]
 name = "macrotest"
 version = "1.0.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7489ae0986ce45414b7b3122c2e316661343ecf396b206e3e15f07c846616f10"
+source = "git+https://github.com/TeamHarTex/macrotest.git?branch=master#d3dc088787f9cea39db3097b460ff34d73bcace0"
 dependencies = [
  "diff",
  "glob",

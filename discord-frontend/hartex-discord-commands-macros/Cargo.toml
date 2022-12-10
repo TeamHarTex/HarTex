@@ -15,6 +15,9 @@ proc-macro2 = "1.0.47"
 quote = "1.0.21"
 syn = { version = "1.0.105", features = ["extra-traits", "full"] }
 
+[dev-dependencies]
+hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
+
 [features]
 
 [lib]

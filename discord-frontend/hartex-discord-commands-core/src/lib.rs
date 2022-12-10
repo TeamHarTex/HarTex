@@ -23,14 +23,11 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
-pub trait CommandMetadata {
-    fn command_type(&self) -> u8;
+#[allow(unused_imports)]
+#[cfg(feature = "derive")]
+#[macro_use]
+extern crate hartex_discord_commands_macros;
+#[cfg(feature = "derive")]
+pub use hartex_discord_commands_macros::*;
 
-    fn description(&self) -> String;
-
-    fn interaction_only(&self) -> bool;
-
-    fn name(&self) -> String;
-}
-
-pub trait Command: CommandMetadata {}
+pub mod traits;
