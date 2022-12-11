@@ -22,8 +22,8 @@
 
 use hartex_macro_utils::traits::SpanUtils;
 use proc_macro2::TokenStream as TokenStream2;
-use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 use syn::spanned::Spanned;
+use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
     // check if item is public
