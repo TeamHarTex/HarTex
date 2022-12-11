@@ -21,7 +21,7 @@
  */
 
 use hartex_macro_utils::traits::SpanUtils;
-use proc_macro2::{Span, TokenStream as TokenStream2};
+use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
 use syn::spanned::Spanned;
 use syn::{Data, DataEnum, DataStruct, DataUnion, DeriveInput, Error, Visibility};
 
@@ -64,7 +64,8 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
     }
 
     let attrs_iter = iter.map(|field| (field.clone(), field.attrs));
-    for (_, attrs) in attrs_iter {
+    let mut id_tys = Vec::new();
+    for (field, attrs) in attrs_iter {
         let mut invalid_attrs = attrs.clone();
 
         // look for non-entity attributes
@@ -78,6 +79,39 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
         }
 
         // all attributes are entity attributes
+        for attr in attrs {
+            let mut tree_iter = attr.tokens.into_iter();
+
+            let tree = tree_iter.next();
+            if tree.is_none() {
+                return Err(vec![attr.path.span().error("unexpected end of attribute")]);
+            }
+
+            let TokenTree::Group(group) = tree.clone().unwrap() else {
+                return Err(vec![tree.span().error("expected token group")]);
+            };
+
+            if group.delimiter() != Delimiter::Parenthesis {
+                return Err(vec![group.span().error("expected parenthesized token group")]);
+            }
+
+            let mut group_iter = group.stream().into_iter();
+
+            let tree = group_iter.next();
+            if tree.is_none() {
+                return Err(vec![group.span().error("unexpected end of attribute")]);
+            }
+
+            let TokenTree::Ident(ident) = tree.clone().unwrap() else {
+                return Err(vec![tree.span().error("expected identifier")]);
+            };
+
+            if ident.to_string() != String::from("id") {
+                return Err(vec![ident.span().error(format!("expected `id`; found `{ident}`"))]);
+            }
+
+            id_tys.push(field.ty.clone());
+        }
     }
 
     Ok(TokenStream2::new())
