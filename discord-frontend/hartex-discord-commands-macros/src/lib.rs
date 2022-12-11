@@ -28,8 +28,7 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
-use syn::{parse_macro_input, DeriveInput, Error};
+use syn::{parse_macro_input, DeriveInput};
 
 mod commandmetadata;
 
@@ -37,12 +36,6 @@ mod commandmetadata;
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
     commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or_else(as_compiler_errors)
+        .unwrap_or_else(hartex_macro_utils::as_compiler_errors)
         .into()
-}
-
-#[allow(clippy::needless_pass_by_value)]
-fn as_compiler_errors(errors: Vec<Error>) -> TokenStream2 {
-    let compiler_errors = errors.iter().map(Error::to_compile_error);
-    quote::quote!(#(#compiler_errors)*)
 }
