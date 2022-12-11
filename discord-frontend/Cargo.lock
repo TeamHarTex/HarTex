@@ -834,6 +834,7 @@ name = "hartex_discord_entitycache_core"
 version = "0.1.0"
 dependencies = [
  "hartex_discord_core",
+ "hartex_discord_entitycache_macros",
  "sqlx",
 ]
 

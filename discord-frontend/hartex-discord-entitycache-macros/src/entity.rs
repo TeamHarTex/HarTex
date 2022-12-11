@@ -21,9 +21,9 @@
  */
 
 use hartex_macro_utils::traits::SpanUtils;
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::{Span, TokenStream as TokenStream2};
 use syn::spanned::Spanned;
-use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
+use syn::{Data, DataEnum, DataStruct, DataUnion, DeriveInput, Error, Visibility};
 
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
     // check if item is public
@@ -49,6 +49,16 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
                 .span()
                 .error("trait can only be derived on structs")]);
         }
+    }
+
+    let Data::Struct(DataStruct { fields, .. }) = input.data.clone() else {
+        unreachable!()
+    };
+
+    let iter = fields.into_iter();
+    if !iter.map(|field| field.attrs)
+        .any(|attrs| !attrs.is_empty()) {
+        return Err(vec![Span::call_site().error("no field with entity(id) attribute")]);
     }
 
     Ok(TokenStream2::new())
