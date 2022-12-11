@@ -21,9 +21,9 @@
  */
 
 use hartex_macro_utils::traits::SpanUtils;
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::{Span, TokenStream as TokenStream2};
 use syn::spanned::Spanned;
-use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
+use syn::{Data, DataEnum, DataStruct, DataUnion, DeriveInput, Error, Visibility};
 
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
     // check if item is public
@@ -49,6 +49,35 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
                 .span()
                 .error("trait can only be derived on structs")]);
         }
+    }
+
+    let Data::Struct(DataStruct { fields, .. }) = input.data.clone() else {
+        unreachable!()
+    };
+
+    let iter = fields.into_iter();
+    let mut map = iter.clone().map(|field| field.attrs);
+    if !map.any(|attrs| !attrs.is_empty()) {
+        return Err(vec![
+            Span::call_site().error("no field with `entity(..)` attribute")
+        ]);
+    }
+
+    let attrs_iter = iter.map(|field| (field.clone(), field.attrs));
+    for (_, attrs) in attrs_iter {
+        let mut invalid_attrs = attrs.clone();
+
+        // look for non-entity attributes
+        invalid_attrs.retain(|attr| !attr.path.is_ident("entity"));
+
+        if !invalid_attrs.is_empty() {
+            return Err(invalid_attrs
+                .into_iter()
+                .map(|attr| attr.path.span().error("expected `entity` attribute"))
+                .collect::<Vec<_>>());
+        }
+
+        // all attributes are entity attributes
     }
 
     Ok(TokenStream2::new())
