@@ -25,5 +25,12 @@
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
+#[allow(unused_imports)]
+#[cfg(feature = "derive")]
+#[macro_use]
+extern crate hartex_discord_entitycache_macros;
+#[cfg(feature = "derive")]
+pub use hartex_discord_entitycache_macros::*;
+
 pub mod error;
 pub mod traits;
