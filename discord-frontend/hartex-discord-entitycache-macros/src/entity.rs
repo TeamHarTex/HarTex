@@ -20,9 +20,36 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_macro_utils::traits::SpanUtils;
 use proc_macro2::TokenStream as TokenStream2;
-use syn::{DeriveInput, Error};
+use syn::spanned::Spanned;
+use syn::{Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
 
-pub fn expand_entity_derivation(_: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
+pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
+    // check if item is public
+    match input.vis.clone() {
+        Visibility::Public(_) => {}
+        visibility => {
+            return Err(vec![visibility
+                .span()
+                .error("trait can only be derived on pub items")]);
+        }
+    }
+
+    // check if item is a struct
+    match input.data.clone() {
+        Data::Struct(_) => {}
+        Data::Enum(DataEnum { enum_token, .. }) => {
+            return Err(vec![enum_token
+                .span()
+                .error("trait can only be derived on structs")]);
+        }
+        Data::Union(DataUnion { union_token, .. }) => {
+            return Err(vec![union_token
+                .span()
+                .error("trait can only be derived on structs")]);
+        }
+    }
+
     Ok(TokenStream2::new())
 }
