@@ -92,7 +92,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
             };
 
             if group.delimiter() != Delimiter::Parenthesis {
-                return Err(vec![group.span().error("expected parenthesized token group")]);
+                return Err(vec![group
+                    .span()
+                    .error("expected parenthesized token group")]);
             }
 
             let mut group_iter = group.stream().into_iter();
@@ -107,7 +109,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
             };
 
             if ident.to_string() != String::from("id") {
-                return Err(vec![ident.span().error(format!("expected `id`; found `{ident}`"))]);
+                return Err(vec![ident
+                    .span()
+                    .error(format!("expected `id`; found `{ident}`"))]);
             }
 
             id_tys.push(field.ty.clone());
