@@ -20,4 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro2::TokenStream as TokenStream2;
+use syn::Error;
+
 pub mod traits;
+
+#[allow(clippy::needless_pass_by_value)]
+pub fn as_compiler_errors(errors: Vec<Error>) -> TokenStream2 {
+    let compiler_errors = errors.iter().map(Error::to_compile_error);
+    quote::quote!(#(#compiler_errors)*)
+}

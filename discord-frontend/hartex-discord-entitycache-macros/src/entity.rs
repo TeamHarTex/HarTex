@@ -19,3 +19,10 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use proc_macro2::TokenStream as TokenStream2;
+use syn::{DeriveInput, Error};
+
+pub fn expand_entity_derivation(_: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
+    Ok(TokenStream2::new())
+}
