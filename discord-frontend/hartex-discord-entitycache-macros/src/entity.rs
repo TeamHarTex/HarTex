@@ -56,9 +56,28 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
     };
 
     let iter = fields.into_iter();
-    if !iter.map(|field| field.attrs)
-        .any(|attrs| !attrs.is_empty()) {
-        return Err(vec![Span::call_site().error("no field with entity(id) attribute")]);
+    let mut map = iter.clone().map(|field| field.attrs);
+    if !map.any(|attrs| !attrs.is_empty()) {
+        return Err(vec![
+            Span::call_site().error("no field with `entity(..)` attribute")
+        ]);
+    }
+
+    let attrs_iter = iter.map(|field| (field.clone(), field.attrs));
+    for (_, attrs) in attrs_iter {
+        let mut invalid_attrs = attrs.clone();
+
+        // look for non-entity attributes
+        invalid_attrs.retain(|attr| !attr.path.is_ident("entity"));
+
+        if !invalid_attrs.is_empty() {
+            return Err(invalid_attrs
+                .into_iter()
+                .map(|attr| attr.path.span().error("expected `entity` attribute"))
+                .collect::<Vec<_>>());
+        }
+
+        // all attributes are entity attributes
     }
 
     Ok(TokenStream2::new())
