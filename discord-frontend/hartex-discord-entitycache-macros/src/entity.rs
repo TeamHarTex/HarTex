@@ -26,6 +26,7 @@ use quote::ToTokens;
 use syn::spanned::Spanned;
 use syn::{Data, DataEnum, DataStruct, DataUnion, DeriveInput, Error, Visibility};
 
+#[allow(clippy::too_many_lines)]
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
     // check if item is public
     match input.vis.clone() {
@@ -110,14 +111,17 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
                 return Err(vec![tree.span().error("expected identifier")]);
             };
 
-            if ident.to_string() != String::from("id") {
+            if ident != "id" {
                 return Err(vec![ident
                     .span()
                     .error(format!("expected `id`; found `{ident}`"))]);
             }
 
             if field.ident.is_none() {
-                return Err(vec![field.ty.span().error("cannot apply id attribute on tuple structs")]);
+                return Err(vec![field
+                    .ty
+                    .span()
+                    .error("cannot apply id attribute on tuple structs")]);
             }
 
             field_names.push(field.ident.clone().unwrap());
