@@ -22,6 +22,7 @@
 
 use hartex_macro_utils::traits::SpanUtils;
 use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
+use quote::ToTokens;
 use syn::spanned::Spanned;
 use syn::{Data, DataEnum, DataStruct, DataUnion, DeriveInput, Error, Visibility};
 
@@ -118,5 +119,34 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
         }
     }
 
-    Ok(TokenStream2::new())
+    let type_tokens = if id_tys.len() == 1 {
+        let ty = id_tys[0].to_token_stream();
+        quote::quote! {
+            #ty
+        }
+    } else {
+        quote::quote! {
+            ( #(#id_tys ,)* )
+        }
+    };
+
+    let core_use = quote::quote! {
+        extern crate hartex_discord_entitycache_core as _entitycache_core;
+    };
+    let dummy_const = quote::format_ident!("_");
+    let ident = input.ident.clone();
+    let expanded = quote::quote! {
+        #core_use
+
+        #[automatically_derived]
+        impl _entitycache_core::Entity for #ident {
+            type Id = #type_tokens;
+        }
+    };
+
+    Ok(quote::quote! {
+        const #dummy_const: () = {
+            #expanded
+        };
+    })
 }
