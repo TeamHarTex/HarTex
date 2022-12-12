@@ -7,7 +7,7 @@ pub struct Derive;
 const _: () = {
     extern crate hartex_discord_commands_core as _commands_core;
     #[automatically_derived]
-    impl _commands_core::CommandMetadata for Derive {
+    impl _commands_core::traits::CommandMetadata for Derive {
         fn command_type(&self) -> u8 {
             1
         }
