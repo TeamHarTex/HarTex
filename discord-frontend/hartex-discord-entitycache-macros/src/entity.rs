@@ -65,6 +65,7 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
     }
 
     let attrs_iter = iter.map(|field| (field.clone(), field.attrs));
+    let mut field_names = Vec::new();
     let mut id_tys = Vec::new();
     for (field, attrs) in attrs_iter {
         let mut invalid_attrs = attrs.clone();
@@ -115,6 +116,11 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
                     .error(format!("expected `id`; found `{ident}`"))]);
             }
 
+            if field.ident.is_none() {
+                return Err(vec![field.ty.span().error("cannot apply id attribute on tuple structs")]);
+            }
+
+            field_names.push(field.ident.clone().unwrap());
             id_tys.push(field.ty.clone());
         }
     }
@@ -130,6 +136,17 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
         }
     };
 
+    let field_tokens = if field_names.len() == 1 {
+        let ident = field_names[0].to_token_stream();
+        quote::quote! {
+            self.#ident
+        }
+    } else {
+        quote::quote! {
+            ( #(self.#field_names ,)* )
+        }
+    };
+
     let core_use = quote::quote! {
         extern crate hartex_discord_entitycache_core as _entitycache_core;
     };
@@ -141,6 +158,10 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
         #[automatically_derived]
         impl _entitycache_core::traits::Entity for #ident {
             type Id = #type_tokens;
+
+            fn id(&self) -> <Self as _entitycache_core::traits::Entity>::Id {
+                #field_tokens
+            }
         }
     };
 
