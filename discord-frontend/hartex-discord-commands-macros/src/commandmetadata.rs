@@ -222,7 +222,7 @@ pub fn expand_command_metadata_derivation(
         #core_use
 
         #[automatically_derived]
-        impl _commands_core::CommandMetadata for #ident {
+        impl _commands_core::traits::CommandMetadata for #ident {
             #functions
         }
     };

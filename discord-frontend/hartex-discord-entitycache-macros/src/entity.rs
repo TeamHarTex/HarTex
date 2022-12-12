@@ -139,7 +139,7 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
         #core_use
 
         #[automatically_derived]
-        impl _entitycache_core::Entity for #ident {
+        impl _entitycache_core::traits::Entity for #ident {
             type Id = #type_tokens;
         }
     };
