@@ -1,0 +1,21 @@
+[package]
+name = "hartex_discord_entitycache_test"
+version = "0.1.0"
+edition = "2021"
+description = """
+Test suite for the command framework (macros).
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.67.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
+
+[dev-dependencies]
+hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core", features = ["derive"] }
+hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros" }
+macrotest = { git = "https://github.com/TeamHarTex/macrotest.git", branch = "master" }
+rustversion = "1.0.9"
+trybuild = "1.0.72"

@@ -856,6 +856,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_entitycache_test"
+version = "0.1.0"
+dependencies = [
+ "hartex_discord_entitycache_core",
+ "hartex_discord_entitycache_macros",
+ "macrotest",
+ "rustversion",
+ "trybuild",
+]
+
+[[package]]
 name = "hartex_discord_eyre"
 version = "0.1.0"
 dependencies = [
