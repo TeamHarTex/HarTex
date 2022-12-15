@@ -1,0 +1,7 @@
+error: no field with `entity(..)` attribute
+  --> tests/ui/no_field_with_attribute.rs:25:10
+   |
+25 | #[derive(Entity)]
+   |          ^^^^^^
+   |
+   = note: this error originates in the derive macro `Entity` (in Nightly builds, run with -Z macro-backtrace for more info)
