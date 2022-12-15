@@ -1,0 +1,11 @@
+error: trait can only be derived on structs
+  --> tests/ui/only_structs.rs:28:5
+   |
+28 | pub enum OnlyStructsEnum {}
+   |     ^^^^
+
+error: trait can only be derived on structs
+  --> tests/ui/only_structs.rs:31:5
+   |
+31 | pub union OnlyStructsUnion<T> {
+   |     ^^^^^

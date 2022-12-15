@@ -1,0 +1,13 @@
+error: expected expression, found `]`
+  --> tests/ui/expected_token_group.rs:27:15
+   |
+26 | pub struct ExpectedTokenGroup {
+   |            ------------------ while parsing this struct
+27 |     #[entity =]
+   |               ^ expected expression
+
+error: expected token group
+  --> tests/ui/expected_token_group.rs:27:14
+   |
+27 |     #[entity =]
+   |              ^
