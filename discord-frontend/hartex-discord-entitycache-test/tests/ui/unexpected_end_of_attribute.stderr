@@ -1,0 +1,5 @@
+error: unexpected end of attribute
+  --> tests/ui/unexpected_end_of_attribute.rs:27:7
+   |
+27 |     #[entity]
+   |       ^^^^^^
