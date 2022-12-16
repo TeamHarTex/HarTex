@@ -1,0 +1,5 @@
+error: expected `id`; found `not_id`
+  --> tests/ui/expected_id.rs:27:14
+   |
+27 |     #[entity(not_id)]
+   |              ^^^^^^
