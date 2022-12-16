@@ -1,0 +1,5 @@
+error: expected parenthesized token group
+  --> tests/ui/expected_parenthesized_token_group.rs:27:13
+   |
+27 |     #[entity[]]
+   |             ^^
