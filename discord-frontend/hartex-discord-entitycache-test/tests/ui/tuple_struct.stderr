@@ -1,0 +1,5 @@
+error: cannot apply id attribute on tuple structs
+  --> tests/ui/tuple_struct.rs:26:38
+   |
+26 | pub struct TupleStruct(#[entity(id)] i32);
+   |                                      ^^^

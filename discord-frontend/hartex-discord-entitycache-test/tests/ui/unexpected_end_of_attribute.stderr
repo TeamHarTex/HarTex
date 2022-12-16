@@ -3,3 +3,9 @@ error: unexpected end of attribute
    |
 27 |     #[entity]
    |       ^^^^^^
+
+error: unexpected end of attribute
+  --> tests/ui/unexpected_end_of_attribute.rs:33:13
+   |
+33 |     #[entity()]
+   |             ^^

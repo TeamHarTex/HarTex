@@ -23,15 +23,6 @@
 use hartex_discord_entitycache_macros::Entity;
 
 #[derive(Entity)]
-pub struct UnexpectedEndOfAttribute1 {
-    #[entity]
-    hmm: u64
-}
-
-#[derive(Entity)]
-pub struct UnexpectedEndOfAttribute2 {
-    #[entity()]
-    hmm: u64
-}
+pub struct TupleStruct(#[entity(id)] i32);
 
 fn main() {}
