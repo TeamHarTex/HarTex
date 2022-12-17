@@ -22,11 +22,3 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
-
-use hartex_discord_entitycache_core::Entity;
-
-#[derive(Entity)]
-pub struct CertainEntity {
-    #[entity(id)]
-    pub id: u64,
-}
