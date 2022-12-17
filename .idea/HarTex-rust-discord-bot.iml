@@ -59,6 +59,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-macros/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-macro-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-test/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-rest/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
