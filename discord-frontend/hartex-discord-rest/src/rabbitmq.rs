@@ -20,3 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[allow(clippy::unused_async)]
+pub async fn consume() -> hartex_discord_eyre::Result<()> {
+    Ok(())
+}

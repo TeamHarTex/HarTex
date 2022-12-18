@@ -22,12 +22,17 @@
 
 use hartex_discord_core::tokio;
 
-mod dashboard;
+mod http;
 mod rabbitmq;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_discord_eyre::Result<()> {
     hartex_discord_eyre::initialize()?;
+
+    tokio::join!(
+        tokio::spawn(http::listen()),
+        tokio::spawn(rabbitmq::consume())
+    );
 
     Ok(())
 }
