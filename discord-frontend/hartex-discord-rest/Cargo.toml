@@ -3,7 +3,7 @@ name = "hartex_discord_rest"
 version = "0.1.0"
 edition = "2021"
 description = """
-The REST library for the bot.
+The REST component for the bot.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.68.0"
@@ -11,5 +11,7 @@ rust-version = "1.68.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime"] }
+hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 
 [features]

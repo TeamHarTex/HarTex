@@ -19,3 +19,12 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use hartex_discord_core::tokio;
+
+#[tokio::main(flavor = "multi_thread")]
+pub async fn main() -> hartex_discord_eyre::Result<()> {
+    hartex_discord_eyre::initialize()?;
+
+    Ok(())
+}
