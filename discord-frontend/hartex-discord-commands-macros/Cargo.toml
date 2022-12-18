@@ -12,7 +12,7 @@ rust-version = "1.68.0"
 
 [dependencies]
 hartex_macro_utils = { path = "../../rust-utilities/hartex-macro-utils" }
-proc-macro2 = "1.0.47"
+proc-macro2 = "1.0.48"
 quote = "1.0.21"
 syn = { version = "1.0.105", features = ["extra-traits", "full"] }
 
