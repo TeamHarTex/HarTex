@@ -23,20 +23,9 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
-use std::time::Duration;
-
-use futures_util::future;
-use hartex_discord_core::discord::gateway::message::CloseFrame;
-use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::signal;
-use hartex_discord_core::tokio::sync::watch;
-use hartex_discord_core::tokio::time;
-use lapin::options::{ExchangeDeclareOptions, QueueBindOptions, QueueDeclareOptions};
-use lapin::types::FieldTable;
-use lapin::{Connection, ConnectionProperties, ExchangeKind};
 
 mod inbound;
 mod queue;
@@ -50,7 +39,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
-    let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
+    /*let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
     let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
     let host = std::env::var("RABBITMQ_HOST")?;
     let port = std::env::var("RABBITMQ_PORT")?;
@@ -147,7 +136,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     channel_outbound.close(1, "user-initiated shutdown").await?;
 
     tx.send(true)?;
-    time::sleep(Duration::from_secs(5)).await;
+    time::sleep(Duration::from_secs(5)).await;*/
 
     Ok(())
 }
