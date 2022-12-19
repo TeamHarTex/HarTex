@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "hartex-discord-api",
     "hartex-discord-commands",
     "hartex-discord-commands-core",
     "hartex-discord-commands-macros",
@@ -11,7 +12,6 @@ members = [
     "hartex-discord-entitycache-test",
     "hartex-discord-eyre",
     "hartex-discord-leader",
-    "hartex-discord-rest",
     "hartex-discord-worker",
 ]
 
