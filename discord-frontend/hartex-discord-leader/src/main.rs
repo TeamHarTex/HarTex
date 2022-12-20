@@ -26,7 +26,7 @@
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
-use hartex_rdkafka_utils::java::org::apache::kafka::common::serialization::ByteArraySerializer;
+use hartex_rdkafka_utils::serde::ByteArraySerializer;
 use hartex_rdkafka_utils::traits::ClientConfigUtils;
 use rdkafka::ClientConfig;
 
@@ -142,8 +142,8 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     time::sleep(Duration::from_secs(5)).await;*/
 
     let _ = ClientConfig::new()
-        .key_serializer(ByteArraySerializer::class().get_name())
-        .value_serializer(ByteArraySerializer::class().get_name());
+        .key_serializer(ByteArraySerializer)
+        .value_serializer(ByteArraySerializer);
 
     Ok(())
 }
