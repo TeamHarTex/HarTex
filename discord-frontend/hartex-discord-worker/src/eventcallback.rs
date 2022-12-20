@@ -20,7 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::gateway::event::{DispatchEvent, GatewayEvent};
+use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
+use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::log;
 
 #[allow(clippy::unused_async)]
