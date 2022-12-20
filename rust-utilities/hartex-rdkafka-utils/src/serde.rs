@@ -20,34 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct ByteArrayDeserializer;
-
-impl ByteArrayDeserializer {
-    pub fn class() -> ByteArrayDeserializerClass {
-        ByteArrayDeserializerClass
-    }
-}
-
-pub struct ByteArrayDeserializerClass;
-
-impl ByteArrayDeserializerClass {
-    pub fn get_name(self) -> &'static str {
-        "org.apache.kafka.common.serialization.ByteArrayDeserializer"
-    }
-}
-
 pub struct ByteArraySerializer;
-
-impl ByteArraySerializer {
-    pub fn class() -> ByteArraySerializerClass {
-        ByteArraySerializerClass
-    }
-}
-
-pub struct ByteArraySerializerClass;
-
-impl ByteArraySerializerClass {
-    pub fn get_name(self) -> &'static str {
-        "org.apache.kafka.common.serialization.ByteArraySerializer"
-    }
-}

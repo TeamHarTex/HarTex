@@ -20,5 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod java;
+pub mod serde;
 pub mod traits;

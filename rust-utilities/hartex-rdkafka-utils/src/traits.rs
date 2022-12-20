@@ -22,18 +22,30 @@
 
 use rdkafka::ClientConfig;
 
-pub trait ClientConfigUtils {
-    fn key_serializer(&mut self, serializer: &'static str) -> &mut Self;
+use crate::serde::ByteArraySerializer;
 
-    fn value_serializer(&mut self, serializer: &'static str) -> &mut Self;
+pub trait ClientConfigUtils {
+    fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
+
+    fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
 }
 
 impl ClientConfigUtils for ClientConfig {
-    fn key_serializer(&mut self, serializer: &'static str) -> &mut Self {
-        self.set("key.serializer", serializer)
+    fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
+        self.set("key.serializer", serializer.name())
     }
 
-    fn value_serializer(&mut self, serializer: &'static str) -> &mut Self {
-        self.set("value.serializer", serializer)
+    fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
+        self.set("value.serializer", serializer.name())
+    }
+}
+
+pub trait Serializer {
+    fn name(self) -> &'static str;
+}
+
+impl Serializer for ByteArraySerializer {
+    fn name(self) -> &'static str {
+        "org.apache.kafka.common.serialization.ByteArraySerializer"
     }
 }
