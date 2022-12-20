@@ -21,7 +21,9 @@
  */
 
 use std::error::Error;
-use std::fmt::{self, Display, Formatter};
+use std::fmt;
+use std::fmt::Display;
+use std::fmt::Formatter;
 
 use sqlx::error::Error as Sqlx;
 
