@@ -20,31 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
-
-use sqlx::error::Error as Sqlx;
-
-#[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
-pub enum RepositoryError {
-    DbError(Sqlx),
-}
-
-impl Display for RepositoryError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.write_str("generic repository error")
-    }
-}
-
-impl Error for RepositoryError {}
-
-impl From<Sqlx> for RepositoryError {
-    fn from(value: Sqlx) -> Self {
-        Self::DbError(value)
-    }
-}
-
-pub type RepositoryResult<T> = Result<T, RepositoryError>;
+pub mod serde;
+pub mod traits;

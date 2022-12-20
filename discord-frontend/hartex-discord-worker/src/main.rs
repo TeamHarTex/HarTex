@@ -32,13 +32,16 @@ use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_eyre::eyre::Report;
-use lapin::options::{BasicAckOptions, BasicConsumeOptions};
+use lapin::options::BasicAckOptions;
+use lapin::options::BasicConsumeOptions;
 use lapin::types::FieldTable;
-use lapin::{Connection, ConnectionProperties};
+use lapin::Connection;
+use lapin::ConnectionProperties;
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
 
-use crate::error::{ConsumerError, ConsumerErrorKind};
+use crate::error::ConsumerError;
+use crate::error::ConsumerErrorKind;
 
 mod entitycache;
 mod error;

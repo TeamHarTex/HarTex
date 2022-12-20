@@ -21,7 +21,9 @@
  */
 
 use std::error::Error;
-use std::fmt::{self, Display, Formatter};
+use std::fmt;
+use std::fmt::Display;
+use std::fmt::Formatter;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]

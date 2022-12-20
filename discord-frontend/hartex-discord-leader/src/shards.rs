@@ -23,9 +23,15 @@
 use std::sync::Arc;
 
 use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::gateway::{stream, Config, EventTypeFlags, Intents, Shard};
+use hartex_discord_core::discord::gateway::stream;
+use hartex_discord_core::discord::gateway::Config;
+use hartex_discord_core::discord::gateway::EventTypeFlags;
+use hartex_discord_core::discord::gateway::Intents;
+use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
-use hartex_discord_core::discord::model::gateway::presence::{Activity, ActivityType, Status};
+use hartex_discord_core::discord::model::gateway::presence::Activity;
+use hartex_discord_core::discord::model::gateway::presence::ActivityType;
+use hartex_discord_core::discord::model::gateway::presence::Status;
 
 pub fn obtain(num_shards: u64, queue: &Arc<dyn Queue>) -> hartex_discord_eyre::Result<Vec<Shard>> {
     let bot_token = std::env::var("BOT_TOKEN")?;

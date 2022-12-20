@@ -21,10 +21,19 @@
  */
 
 use hartex_macro_utils::traits::SpanUtils;
-use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
+use proc_macro2::Delimiter;
+use proc_macro2::Span;
+use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::TokenTree;
 use quote::ToTokens;
 use syn::spanned::Spanned;
-use syn::{Data, DataEnum, DataStruct, DataUnion, DeriveInput, Error, Visibility};
+use syn::Data;
+use syn::DataEnum;
+use syn::DataStruct;
+use syn::DataUnion;
+use syn::DeriveInput;
+use syn::Error;
+use syn::Visibility;
 
 #[allow(clippy::too_many_lines)]
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
