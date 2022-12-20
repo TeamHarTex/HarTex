@@ -29,8 +29,10 @@ use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc::UnboundedReceiver;
-use hartex_discord_core::tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
-use hartex_discord_core::tokio::sync::oneshot::{self, Sender};
+use hartex_discord_core::tokio::sync::mpsc::unbounded_channel;
+use hartex_discord_core::tokio::sync::mpsc::UnboundedSender;
+use hartex_discord_core::tokio::sync::oneshot::Sender;
+use hartex_discord_core::tokio::sync::oneshot;
 use hartex_discord_core::tokio::time::sleep;
 
 #[allow(clippy::module_name_repetitions)]
