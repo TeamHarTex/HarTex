@@ -20,12 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fmt::{Display, Formatter, Result as FmtResult};
-use std::panic::{self, PanicInfo};
+use std::fmt;
+use std::fmt::Display;
+use std::fmt::Formatter;
+use std::panic;
+use std::panic::PanicInfo;
 use std::path::Path;
 use std::thread;
 
-use backtrace::{Backtrace, SymbolName};
+use backtrace::Backtrace;
+use backtrace::SymbolName;
 
 #[allow(clippy::module_name_repetitions)]
 pub struct PanicHook;
@@ -55,7 +59,7 @@ pub struct PanicReport<'a> {
 }
 
 impl Display for PanicReport<'_> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "\r\x1B[2K")?;
 
         writeln!(
