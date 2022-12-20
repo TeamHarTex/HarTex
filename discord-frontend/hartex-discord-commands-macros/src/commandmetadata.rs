@@ -21,9 +21,18 @@
  */
 
 use hartex_macro_utils::traits::SpanUtils;
-use proc_macro2::{Delimiter, Span, TokenStream as TokenStream2, TokenTree};
+use proc_macro2::Delimiter;
+use proc_macro2::Span;
+use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::TokenTree;
 use syn::spanned::Spanned;
-use syn::{AttrStyle, Data, DataEnum, DataUnion, DeriveInput, Error, Visibility};
+use syn::AttrStyle;
+use syn::Data;
+use syn::DataEnum;
+use syn::DataUnion;
+use syn::DeriveInput;
+use syn::Error;
+use syn::Visibility;
 
 const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
 const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "description", "name"];
