@@ -1,6 +1,7 @@
 projects {
   project("buildsystem", ProjectType.JVM)
   project("discord-frontend", ProjectType.RUST)
+  project("hartex-kafka", ProjectType.RUST)
   project("rust-utilities", ProjectType.RUST)
   project("web-frontend", ProjectType.TYPESCRIPT)
 }
@@ -14,6 +15,13 @@ buildConfigurationForProject("discord-frontend") {
   cargoBuildProfile(CargoBuildProfile.RELEASE)
   includeDebugInformation(true)
   linker("rust-lld")
+}
+
+buildConfigurationForProject("hartex-kafka") {
+    buildTool(ProjectBuildTool.CARGO)
+    cargoBuildProfile(CargoBuildProfile.RELEASE)
+    includeDebugInformation(true)
+    linker("rust-lld")
 }
 
 buildConfigurationForProject("rust-utilities") {
