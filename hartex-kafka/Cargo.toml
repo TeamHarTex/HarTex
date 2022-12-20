@@ -1,5 +1,5 @@
 [package]
-name = "hartex_discord_kafka"
+name = "hartex_kafka"
 version = "0.1.0"
 edition = "2021"
 description = """
