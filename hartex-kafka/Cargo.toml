@@ -1,9 +1,9 @@
 [package]
-name = "hartex_rdkafka_utils"
+name = "hartex_kafka"
 version = "0.1.0"
 edition = "2021"
 description = """
-rdkafka utilities
+Home-grown Kafka interface in Rust for use in HarTex.
 """
 license = "AGPL-3.0-only"
 rust-version = "1.68.0"
@@ -11,6 +11,5 @@ rust-version = "1.68.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rdkafka = { version = "0.29.0", features = ["cmake-build"] }
 
 [features]
