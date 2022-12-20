@@ -26,7 +26,8 @@ use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
 use lapin::options::BasicPublishOptions;
-use lapin::{BasicProperties, Channel};
+use lapin::BasicProperties;
+use lapin::Channel;
 
 pub async fn handle(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
     let mut stream = ShardMessageStream::new(shards);
