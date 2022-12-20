@@ -21,11 +21,13 @@
  */
 
 use std::error::Error;
-use std::fmt::{Formatter, Result as FmtResult};
+use std::fmt;
+use std::fmt::Formatter;
 use std::path::Path;
 use std::thread;
 
-use backtrace::{Backtrace, SymbolName};
+use backtrace::Backtrace;
+use backtrace::SymbolName;
 
 #[allow(clippy::module_name_repetitions)]
 pub struct HookHandler {
@@ -33,7 +35,7 @@ pub struct HookHandler {
 }
 
 impl eyre::EyreHandler for HookHandler {
-    fn debug(&self, error: &(dyn Error + 'static), f: &mut Formatter<'_>) -> FmtResult {
+    fn debug(&self, error: &(dyn Error + 'static), f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "\r\x1B[2K")?;
         writeln!(
             f,
