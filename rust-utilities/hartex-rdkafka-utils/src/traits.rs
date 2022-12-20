@@ -20,31 +20,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
+use rdkafka::ClientConfig;
 
-use sqlx::error::Error as Sqlx;
+use crate::serde::ByteArraySerializer;
 
-#[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
-pub enum RepositoryError {
-    DbError(Sqlx),
+pub trait ClientConfigUtils {
+    fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
+
+    fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
 }
 
-impl Display for RepositoryError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.write_str("generic repository error")
+impl ClientConfigUtils for ClientConfig {
+    fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
+        self.set("key.serializer", serializer.name())
+    }
+
+    fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
+        self.set("value.serializer", serializer.name())
     }
 }
 
-impl Error for RepositoryError {}
-
-impl From<Sqlx> for RepositoryError {
-    fn from(value: Sqlx) -> Self {
-        Self::DbError(value)
-    }
+pub trait Serializer {
+    fn name(self) -> &'static str;
 }
 
-pub type RepositoryResult<T> = Result<T, RepositoryError>;
+impl Serializer for ByteArraySerializer {
+    fn name(self) -> &'static str {
+        "org.apache.kafka.common.serialization.ByteArraySerializer"
+    }
+}

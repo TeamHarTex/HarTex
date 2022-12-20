@@ -26,6 +26,10 @@
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
+use hartex_rdkafka_utils::serde::ByteArraySerializer;
+use hartex_rdkafka_utils::traits::ClientConfigUtils;
+use rdkafka::producer::FutureProducer;
+use rdkafka::ClientConfig;
 
 mod inbound;
 mod queue;
@@ -137,6 +141,11 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     tx.send(true)?;
     time::sleep(Duration::from_secs(5)).await;*/
+
+    let _ = ClientConfig::new()
+        .key_serializer(ByteArraySerializer)
+        .value_serializer(ByteArraySerializer)
+        .create::<FutureProducer>();
 
     Ok(())
 }
