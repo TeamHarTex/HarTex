@@ -20,4 +20,33 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod protocol;
+use std::io::Read;
+use std::io::Write;
+
+use super::traits::PrimitiveRead;
+use super::traits::PrimitiveWrite;
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct Boolean(pub bool);
+
+impl<R: Read> PrimitiveRead<R> for Boolean {
+    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+        let mut buffer = [0u8; 1];
+        reader.read_exact(&mut buffer)?;
+
+        Ok(Self(match buffer[0] {
+            0 => false,
+            _ => true,
+        }))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for Boolean {
+    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+        Ok(writer.write_all(&[if self.0 {
+            1
+        } else {
+            0
+        }])?)
+    }
+}
