@@ -43,10 +43,6 @@ impl<R: Read> PrimitiveRead<R> for Boolean {
 
 impl<W: Write> PrimitiveWrite<W> for Boolean {
     fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
-        Ok(writer.write_all(&[if self.0 {
-            1
-        } else {
-            0
-        }])?)
+        Ok(writer.write_all(&[self.0.into()])?)
     }
 }
