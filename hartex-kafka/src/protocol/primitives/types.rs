@@ -20,6 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod errors;
-pub mod traits;
-pub mod types;
+
