@@ -31,9 +31,21 @@ pub enum PrimitiveReadError {
     Io(IoError),
 }
 
+impl From<IoError> for PrimitiveReadError {
+    fn from(error: IoError) -> Self {
+        Self::Io(error)
+    }
+}
+
 #[derive(Debug)]
 pub enum PrimitiveWriteError {
     Generic(Box<dyn Error + Send + Sync>),
     IntOverflow(TryFromIntError),
     Io(IoError),
+}
+
+impl From<IoError> for PrimitiveWriteError {
+    fn from(error: IoError) -> Self {
+        Self::Io(error)
+    }
 }
