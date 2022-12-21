@@ -22,6 +22,7 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![allow(dead_code)]
 
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
