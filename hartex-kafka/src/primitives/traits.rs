@@ -20,4 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod primitives;
+use std::io::Read;
+use std::io::Write;
+
+use super::errors::PrimitiveReadError;
+use super::errors::PrimitiveWriteError;
+
+pub trait PrimitiveRead<R: Read>: Sized {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError>;
+}
+
+pub trait PrimitiveWrite<W: Write>: Sized {
+    fn write(writer: &mut W) -> Result<Self, PrimitiveWriteError>;
+}
