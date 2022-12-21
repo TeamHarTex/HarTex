@@ -9,6 +9,7 @@
   },
   "issueSettings": {
     "minSeverityLevel": "LOW",
-    "issueType": "DEPENDENCY"
+    "issueType": "DEPENDENCY",
+    "labels": ["Mend: Security Vulnerability", "Mend: Configuration Error"]
   }
 }
