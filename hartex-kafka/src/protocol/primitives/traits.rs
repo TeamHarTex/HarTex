@@ -31,5 +31,5 @@ pub trait PrimitiveRead<R: Read>: Sized {
 }
 
 pub trait PrimitiveWrite<W: Write>: Sized {
-    fn write(writer: &mut W) -> Result<Self, PrimitiveWriteError>;
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError>;
 }
