@@ -20,4 +20,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod protocol;
+use std::error::Error;
+use std::io::Error as IoError;
+use std::num::TryFromIntError;
+
+#[derive(Debug)]
+pub enum PrimitiveReadError {
+    Generic(Box<dyn Error + Send + Sync>),
+    IntOverflow(TryFromIntError),
+    Io(IoError),
+}
+
+impl From<IoError> for PrimitiveReadError {
+    fn from(error: IoError) -> Self {
+        Self::Io(error)
+    }
+}
+
+#[derive(Debug)]
+pub enum PrimitiveWriteError {
+    Generic(Box<dyn Error + Send + Sync>),
+    IntOverflow(TryFromIntError),
+    Io(IoError),
+}
+
+impl From<IoError> for PrimitiveWriteError {
+    fn from(error: IoError) -> Self {
+        Self::Io(error)
+    }
+}
