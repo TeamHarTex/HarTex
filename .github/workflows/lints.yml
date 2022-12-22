@@ -58,7 +58,7 @@ jobs:
         run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2022-12-07/buildsystem.jar
       - name: Run Buildsystem
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh formatck discord-frontend
-
+  
   ClippyKafka:
     name: Clippy (hartex-kafka)
     runs-on: ubuntu-latest
