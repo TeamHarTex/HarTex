@@ -37,6 +37,12 @@ impl From<IoError> for PrimitiveReadError {
     }
 }
 
+impl From<TryFromIntError> for PrimitiveReadError {
+    fn from(error: TryFromIntError) -> Self {
+        Self::IntOverflow(error)
+    }
+}
+
 #[derive(Debug)]
 pub enum PrimitiveWriteError {
     Generic(Box<dyn Error + Send + Sync>),
@@ -47,5 +53,11 @@ pub enum PrimitiveWriteError {
 impl From<IoError> for PrimitiveWriteError {
     fn from(error: IoError) -> Self {
         Self::Io(error)
+    }
+}
+
+impl From<TryFromIntError> for PrimitiveWriteError {
+    fn from(error: TryFromIntError) -> Self {
+        Self::IntOverflow(error)
     }
 }
