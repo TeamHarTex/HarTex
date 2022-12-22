@@ -23,6 +23,9 @@
 use std::io::Read;
 use std::io::Write;
 
+use integer_encoding::VarIntReader;
+use integer_encoding::VarIntWriter;
+
 use super::traits::PrimitiveRead;
 use super::traits::PrimitiveWrite;
 
@@ -147,6 +150,40 @@ impl<W: Write> PrimitiveWrite<W> for Uint32 {
     fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct VarInt(pub i32);
+
+impl<R: Read> PrimitiveRead<R> for VarInt {
+    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+        Ok(Self(reader.read_varint()?))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for VarInt {
+    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+        writer.write_varint(self.0)?;
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct VarLong(pub i64);
+
+impl<R: Read> PrimitiveRead<R> for VarLong {
+    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+        Ok(Self(reader.read_varint()?))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for VarLong {
+    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+        writer.write_varint(self.0)?;
 
         Ok(())
     }
