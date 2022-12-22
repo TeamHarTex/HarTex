@@ -12,5 +12,6 @@ rust-version = "1.68.0"
 
 [dependencies]
 integer-encoding = "3.0.4"
+uuid = "1.2.2"
 
 [features]
