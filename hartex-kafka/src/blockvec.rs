@@ -20,5 +20,37 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod blockvec;
-pub mod protocol;
+use std::any;
+use std::mem;
+
+#[derive(Debug)]
+pub struct BlockVec<T> {
+    blocks: Vec<Vec<T>>,
+    per_block: usize,
+    remaining: usize,
+}
+
+impl<T> BlockVec<T> {
+    pub fn new(expected: usize) -> Self {
+        Self::with_block_size(expected, 1024 * 1024 * 10)
+    }
+
+    pub fn with_block_size(expected: usize, block_size: usize) -> Self {
+        let size = mem::size_of::<T>();
+        let per_block = if size == 0 {
+            expected
+        } else {
+            block_size / size
+        };
+
+        if per_block == 0 {
+            panic!("insufficient block size for type {}", any::type_name::<T>());
+        }
+
+        Self {
+            blocks: vec![Vec::with_capacity(per_block.min(expected))],
+            per_block,
+            remaining: expected,
+        }
+    }
+}

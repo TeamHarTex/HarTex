@@ -22,11 +22,13 @@
 
 use std::io::Read;
 use std::io::Write;
+use std::string::String as StdString;
 
 use integer_encoding::VarIntReader;
 use integer_encoding::VarIntWriter;
 use uuid::Uuid as UuidInner;
 
+use crate::blockvec::BlockVec;
 use super::errors::PrimitiveReadError;
 use super::errors::PrimitiveWriteError;
 use super::traits::PrimitiveRead;
@@ -264,7 +266,7 @@ impl<W: Write> PrimitiveWrite<W> for Uuid {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Float64(pub f64);
 
 impl<R: Read> PrimitiveRead<R> for Float64 {
@@ -281,5 +283,17 @@ impl<W: Write> PrimitiveWrite<W> for Float64 {
         writer.write_all(&self.0.to_be_bytes())?;
 
         Ok(())
+    }
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct String(pub StdString);
+
+impl<R: Read> PrimitiveRead<R> for String {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let length = usize::try_from(Int16::read(reader)?.0).map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
+        let mut buffer = BlockVec::new(length);
+
+        todo!()
     }
 }
