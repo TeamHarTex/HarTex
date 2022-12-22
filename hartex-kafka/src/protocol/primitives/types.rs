@@ -314,3 +314,23 @@ impl<W: Write> PrimitiveWrite<W> for String {
         Ok(())
     }
 }
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct CompactString(pub StdString);
+
+impl<R: Read> PrimitiveRead<R> for CompactString {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let len = UnsignedVarInt::read(reader)?;
+        match len.0 {
+            0 => Err(PrimitiveReadError::Generic("CompactStrings must have non-zero length".into())),
+            length => {
+                let actual_length = usize::try_from(length)? - 1;
+
+                let mut buffer = BlockVec::new(actual_length);
+                buffer = buffer.read_exact(reader)?;
+
+                Ok(Self(StdString::from_utf8(buffer.into()).map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?))
+            }
+        }
+    }
+}
