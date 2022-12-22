@@ -26,6 +26,8 @@ use std::io::Write;
 use integer_encoding::VarIntReader;
 use integer_encoding::VarIntWriter;
 
+use super::errors::PrimitiveReadError;
+use super::errors::PrimitiveWriteError;
 use super::traits::PrimitiveRead;
 use super::traits::PrimitiveWrite;
 
@@ -33,7 +35,7 @@ use super::traits::PrimitiveWrite;
 pub struct Boolean(pub bool);
 
 impl<R: Read> PrimitiveRead<R> for Boolean {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let mut buffer = [0u8; 1];
         reader.read_exact(&mut buffer)?;
 
@@ -45,7 +47,7 @@ impl<R: Read> PrimitiveRead<R> for Boolean {
 }
 
 impl<W: Write> PrimitiveWrite<W> for Boolean {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         Ok(writer.write_all(&[self.0.into()])?)
     }
 }
@@ -54,7 +56,7 @@ impl<W: Write> PrimitiveWrite<W> for Boolean {
 pub struct Int8(pub i8);
 
 impl<R: Read> PrimitiveRead<R> for Int8 {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let mut buffer = [0u8; 1];
         reader.read_exact(&mut buffer)?;
 
@@ -63,7 +65,7 @@ impl<R: Read> PrimitiveRead<R> for Int8 {
 }
 
 impl<W: Write> PrimitiveWrite<W> for Int8 {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
         
@@ -75,7 +77,7 @@ impl<W: Write> PrimitiveWrite<W> for Int8 {
 pub struct Int16(pub i16);
 
 impl<R: Read> PrimitiveRead<R> for Int16 {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let mut buffer = [0u8; 2];
         reader.read_exact(&mut buffer)?;
 
@@ -84,7 +86,7 @@ impl<R: Read> PrimitiveRead<R> for Int16 {
 }
 
 impl<W: Write> PrimitiveWrite<W> for Int16 {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
 
@@ -96,7 +98,7 @@ impl<W: Write> PrimitiveWrite<W> for Int16 {
 pub struct Int32(pub i32);
 
 impl<R: Read> PrimitiveRead<R> for Int32 {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let mut buffer = [0u8; 4];
         reader.read_exact(&mut buffer)?;
 
@@ -105,7 +107,7 @@ impl<R: Read> PrimitiveRead<R> for Int32 {
 }
 
 impl<W: Write> PrimitiveWrite<W> for Int32 {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
 
@@ -117,7 +119,7 @@ impl<W: Write> PrimitiveWrite<W> for Int32 {
 pub struct Int64(pub i64);
 
 impl<R: Read> PrimitiveRead<R> for Int64 {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let mut buffer = [0u8; 8];
         reader.read_exact(&mut buffer)?;
 
@@ -126,7 +128,7 @@ impl<R: Read> PrimitiveRead<R> for Int64 {
 }
 
 impl<W: Write> PrimitiveWrite<W> for Int64 {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
 
@@ -138,7 +140,7 @@ impl<W: Write> PrimitiveWrite<W> for Int64 {
 pub struct Uint32(pub u32);
 
 impl<R: Read> PrimitiveRead<R> for Uint32 {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let mut buffer = [0u8; 4];
         reader.read_exact(&mut buffer)?;
 
@@ -147,7 +149,7 @@ impl<R: Read> PrimitiveRead<R> for Uint32 {
 }
 
 impl<W: Write> PrimitiveWrite<W> for Uint32 {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
 
@@ -159,13 +161,13 @@ impl<W: Write> PrimitiveWrite<W> for Uint32 {
 pub struct VarInt(pub i32);
 
 impl<R: Read> PrimitiveRead<R> for VarInt {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         Ok(Self(reader.read_varint()?))
     }
 }
 
 impl<W: Write> PrimitiveWrite<W> for VarInt {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         writer.write_varint(self.0)?;
 
         Ok(())
@@ -176,14 +178,66 @@ impl<W: Write> PrimitiveWrite<W> for VarInt {
 pub struct VarLong(pub i64);
 
 impl<R: Read> PrimitiveRead<R> for VarLong {
-    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         Ok(Self(reader.read_varint()?))
     }
 }
 
 impl<W: Write> PrimitiveWrite<W> for VarLong {
-    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         writer.write_varint(self.0)?;
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct UnsignedVarInt(pub u64);
+
+impl<R: Read> PrimitiveRead<R> for UnsignedVarInt {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let mut buffer = [0u8; 1];
+        let mut result = 0;
+        let mut shift = 0;
+
+        loop {
+            reader.read_exact(&mut buffer)?;
+            let last_group_flag: u64 = buffer[0].into();
+
+            result |= (last_group_flag & 0x7F) << shift;
+            shift += 7;
+
+            if (last_group_flag & 0x80) == 0 {
+                break;
+            }
+
+            if shift > 63 {
+                return Err(PrimitiveReadError::Generic("overflow occurred while reading unsigned varint".into()));
+            }
+        }
+
+        Ok(Self(result))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for UnsignedVarInt {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        let mut current = self.0;
+
+        loop {
+            let mut group = u8::try_from(current & 0x7F).map_err(PrimitiveWriteError::IntOverflow)?;\
+            current >>= 7;
+
+            if current > 0 {
+                group |= 0x80;
+            }
+
+            writer.write_all(&[group])?;
+
+            if current == 0 {
+                break;
+            }
+        }
 
         Ok(())
     }
