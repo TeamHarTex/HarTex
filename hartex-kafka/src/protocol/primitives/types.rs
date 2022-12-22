@@ -334,3 +334,13 @@ impl<R: Read> PrimitiveRead<R> for CompactString {
         }
     }
 }
+
+impl<W: Write> PrimitiveWrite<W> for CompactString {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        let length = u64::try_from(self.0.len() + 1).map_err(PrimitiveWriteError::IntOverflow)?;
+        UnsignedVarInt(length).write(writer)?;
+        writer.write_all(self.0.as_bytes())?;
+
+        Ok(())
+    }
+}
