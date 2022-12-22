@@ -304,3 +304,13 @@ impl<R: Read> PrimitiveRead<R> for String {
         )?))
     }
 }
+
+impl<W: Write> PrimitiveWrite<W> for String {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        let length = i16::try_from(self.0.len()).map_err(PrimitiveWriteError::IntOverflow)?;
+        Int16(length).write(writer)?;
+        writer.write_all(self.0.as_bytes())?;
+
+        Ok(())
+    }
+}
