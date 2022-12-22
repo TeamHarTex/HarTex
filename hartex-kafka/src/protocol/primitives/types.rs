@@ -25,6 +25,7 @@ use std::io::Write;
 
 use integer_encoding::VarIntReader;
 use integer_encoding::VarIntWriter;
+use uuid::Uuid as UuidInner;
 
 use super::errors::PrimitiveReadError;
 use super::errors::PrimitiveWriteError;
@@ -225,7 +226,7 @@ impl<W: Write> PrimitiveWrite<W> for UnsignedVarInt {
         let mut current = self.0;
 
         loop {
-            let mut group = u8::try_from(current & 0x7F).map_err(PrimitiveWriteError::IntOverflow)?;\
+            let mut group = u8::try_from(current & 0x7F).map_err(PrimitiveWriteError::IntOverflow)?;
             current >>= 7;
 
             if current > 0 {
@@ -238,6 +239,26 @@ impl<W: Write> PrimitiveWrite<W> for UnsignedVarInt {
                 break;
             }
         }
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct Uuid(pub UuidInner);
+
+impl<R: Read> PrimitiveRead<R> for Uuid {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let mut buffer = [0u8; 16];
+        reader.read_exact(&mut buffer)?;
+
+        Ok(Self(UuidInner::from_bytes(buffer)))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for Uuid {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        writer.write_all(&self.0.into_bytes())?;
 
         Ok(())
     }
