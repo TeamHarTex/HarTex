@@ -263,3 +263,23 @@ impl<W: Write> PrimitiveWrite<W> for Uuid {
         Ok(())
     }
 }
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct Float64(pub f64);
+
+impl<R: Read> PrimitiveRead<R> for Float64 {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let mut buffer = [0u8; 8];
+        reader.read_exact(&mut buffer)?;
+
+        Ok(Self(f64::from_be_bytes(buffer)))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for Float64 {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        writer.write_all(&self.0.to_be_bytes())?;
+
+        Ok(())
+    }
+}
