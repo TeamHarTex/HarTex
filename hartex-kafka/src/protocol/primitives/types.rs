@@ -130,3 +130,24 @@ impl<W: Write> PrimitiveWrite<W> for Int64 {
         Ok(())
     }
 }
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct Uint32(pub u32);
+
+impl<R: Read> PrimitiveRead<R> for Uint32 {
+    fn read(reader: &mut R) -> Result<Self, super::errors::PrimitiveReadError> {
+        let mut buffer = [0u8; 4];
+        reader.read_exact(&mut buffer)?;
+
+        Ok(Self(u32::from_be_bytes(buffer)))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for Uint32 {
+    fn write(&self, writer: &mut W) -> Result<(), super::errors::PrimitiveWriteError> {
+        let buf = self.0.to_be_bytes();
+        writer.write_all(&buf)?;
+
+        Ok(())
+    }
+}
