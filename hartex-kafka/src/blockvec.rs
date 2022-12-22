@@ -60,9 +60,13 @@ impl<T> BlockVec<T> {
 impl BlockVec<u8> {
     pub fn read_exact<R: Read>(mut self, reader: &mut R) -> Result<Self, Error> {
         while self.remaining > 0 {
-            let mut buffer = self.blocks.last_mut().expect("at least one block is expected");
+            let mut buffer = self
+                .blocks
+                .last_mut()
+                .expect("at least one block is expected");
             if buffer.len() >= self.per_block {
-                self.blocks.push(Vec::with_capacity(self.remaining.min(self.per_block)));
+                self.blocks
+                    .push(Vec::with_capacity(self.remaining.min(self.per_block)));
                 buffer = self.blocks.last_mut().expect("just pushed a new block");
             }
 
@@ -75,5 +79,24 @@ impl BlockVec<u8> {
         }
 
         Ok(self)
+    }
+}
+
+impl<T> From<BlockVec<T>> for Vec<T> {
+    fn from(block_vec: BlockVec<T>) -> Self {
+        if block_vec.blocks.len() == 1 {
+            block_vec
+                .blocks
+                .into_iter()
+                .next()
+                .expect("number of blocks has been checked")
+        } else {
+            let mut result = Self::with_capacity(block_vec.blocks.iter().map(Self::len).sum());
+            for mut block in block_vec.blocks.into_iter() {
+                result.append(&mut block);
+            }
+
+            result
+        }
     }
 }

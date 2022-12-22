@@ -28,11 +28,11 @@ use integer_encoding::VarIntReader;
 use integer_encoding::VarIntWriter;
 use uuid::Uuid as UuidInner;
 
-use crate::blockvec::BlockVec;
 use super::errors::PrimitiveReadError;
 use super::errors::PrimitiveWriteError;
 use super::traits::PrimitiveRead;
 use super::traits::PrimitiveWrite;
+use crate::blockvec::BlockVec;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Boolean(pub bool);
@@ -71,7 +71,7 @@ impl<W: Write> PrimitiveWrite<W> for Int8 {
     fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         let buf = self.0.to_be_bytes();
         writer.write_all(&buf)?;
-        
+
         Ok(())
     }
 }
@@ -215,7 +215,9 @@ impl<R: Read> PrimitiveRead<R> for UnsignedVarInt {
             }
 
             if shift > 63 {
-                return Err(PrimitiveReadError::Generic("overflow occurred while reading unsigned varint".into()));
+                return Err(PrimitiveReadError::Generic(
+                    "overflow occurred while reading unsigned varint".into(),
+                ));
             }
         }
 
@@ -228,7 +230,8 @@ impl<W: Write> PrimitiveWrite<W> for UnsignedVarInt {
         let mut current = self.0;
 
         loop {
-            let mut group = u8::try_from(current & 0x7F).map_err(PrimitiveWriteError::IntOverflow)?;
+            let mut group =
+                u8::try_from(current & 0x7F).map_err(PrimitiveWriteError::IntOverflow)?;
             current >>= 7;
 
             if current > 0 {
@@ -291,9 +294,13 @@ pub struct String(pub StdString);
 
 impl<R: Read> PrimitiveRead<R> for String {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
-        let length = usize::try_from(Int16::read(reader)?.0).map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
+        let length = usize::try_from(Int16::read(reader)?.0)
+            .map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
         let mut buffer = BlockVec::new(length);
+        buffer = buffer.read_exact(reader)?;
 
-        todo!()
+        Ok(Self(StdString::from_utf8(buffer.into()).map_err(
+            |error| PrimitiveReadError::Generic(Box::new(error)),
+        )?))
     }
 }
