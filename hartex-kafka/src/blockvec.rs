@@ -21,6 +21,8 @@
  */
 
 use std::any;
+use std::io::Error;
+use std::io::Read;
 use std::mem;
 
 #[derive(Debug)]
@@ -52,5 +54,26 @@ impl<T> BlockVec<T> {
             per_block,
             remaining: expected,
         }
+    }
+}
+
+impl BlockVec<u8> {
+    pub fn read_exact<R: Read>(mut self, reader: &mut R) -> Result<Self, Error> {
+        while self.remaining > 0 {
+            let mut buffer = self.blocks.last_mut().expect("at least one block is expected");
+            if buffer.len() >= self.per_block {
+                self.blocks.push(Vec::with_capacity(self.remaining.min(self.per_block)));
+                buffer = self.blocks.last_mut().expect("just pushed a new block");
+            }
+
+            let read_length = self.remaining.min(self.per_block - buffer.len());
+            let buffer_start_position = buffer.len();
+            buffer.resize(buffer.len() + read_length, 0);
+
+            reader.read_exact(&mut buffer[buffer_start_position..])?;
+            self.remaining -= read_length;
+        }
+
+        Ok(self)
     }
 }
