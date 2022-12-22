@@ -21,15 +21,33 @@
   -->
 
 <template>
-  <div>
-    <p>Hello World</p>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <script setup></script>
 
 <style lang="postcss">
-p {
-  @apply text-red-100;
+a {
+  @apply font-bold text-tertiary hover:text-secondary;
+  @apply transition-colors cursor-pointer;
+}
+
+body {
+  @apply mx-80 my-12 p-0;
+  @apply bg-primary text-secondary;
+
+  font-family: "Lato", sans-serif;
+}
+
+br {
+  @apply select-none;
+}
+
+button {
+  @apply px-12 py-3 cursor-pointer;
+  @apply bg-blue-800 font-bold;
+  @apply border border-blue-800 rounded-3xl;
 }
 </style>

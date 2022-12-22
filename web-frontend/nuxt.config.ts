@@ -1,9 +1,12 @@
 export default defineNuxtConfig({
-  modules: [
-      '@nuxtjs/tailwindcss'
-  ],
+  modules: ["@nuxtjs/google-fonts", "@nuxtjs/tailwindcss"],
   typescript: {
     strict: true,
-    typeCheck: true
+    typeCheck: true,
+  },
+  googleFonts: {
+    families: {
+      Lato: [400, 700],
+    },
   },
 });
