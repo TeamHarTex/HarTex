@@ -439,10 +439,10 @@ impl<R: Read> PrimitiveRead<R> for Bytes {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let length = Int32::read(reader)?;
         let mut buffer =
-            Vec::with_capacity(usize::try_from(length.0).map_err(PrimitiveReadError::IntOverflow)?);
-        reader.read_exact(buffer.as_mut_slice())?;
+            BlockVec::new(usize::try_from(length.0).map_err(PrimitiveReadError::IntOverflow)?);
+        buffer = buffer.read_exact(reader)?;
 
-        Ok(Self(buffer))
+        Ok(Self(buffer.into()))
     }
 }
 
@@ -462,10 +462,10 @@ pub struct CompactBytes(pub Vec<u8>);
 impl<R: Read> PrimitiveRead<R> for CompactBytes {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let length = usize::try_from(UnsignedVarInt::read(reader)?.0).map_err(PrimitiveReadError::IntOverflow)? - 1;
-        let mut buffer = Vec::with_capacity(length);
-        reader.read_exact(buffer.as_mut_slice())?;
+        let mut buffer = BlockVec::new(length);
+        buffer = buffer.read_exact(reader)?;
 
-        Ok(Self(buffer))
+        Ok(Self(buffer.into()))
     }
 }
 
@@ -476,5 +476,42 @@ impl<W: Write> PrimitiveWrite<W> for CompactBytes {
         writer.write_all(self.0.as_slice())?;
 
         Ok(())
+    }
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct NullableBytes(pub Option<Vec<u8>>);
+
+impl<R: Read> PrimitiveRead<R> for NullableBytes {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let length = Int32::read(reader)?;
+        match length.0 {
+            l if l < -1 => Err(PrimitiveReadError::Generic(
+                format!("Invalid negative length for nullable bytes: {l}").into(),
+            )),
+            -1 => Ok(Self(None)),
+            l => {
+                let len = usize::try_from(l)?;
+                let mut buffer = BlockVec::new(len);
+                buffer = buffer.read_exact(reader)?;
+
+                Ok(Self(Some(buffer.into())))
+            }
+        }
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for NullableBytes {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        match &self.0 {
+            Some(string) => {
+                let l = i32::try_from(string.len()).map_err(PrimitiveWriteError::IntOverflow)?;
+                Int32(l).write(writer)?;
+                writer.write_all(string)?;
+
+                Ok(())
+            }
+            None => Int32(-1).write(writer),
+        }
     }
 }
