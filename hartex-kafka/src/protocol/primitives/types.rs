@@ -515,3 +515,44 @@ impl<W: Write> PrimitiveWrite<W> for NullableBytes {
         }
     }
 }
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct CompactNullableBytes(pub Option<Vec<u8>>);
+
+impl<R: Read> PrimitiveRead<R> for CompactNullableBytes {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let len = UnsignedVarInt::read(reader)?;
+        match len.0 {
+            0 => Err(PrimitiveReadError::Generic(
+                    "CompactNullableBytes must have non-zero length".into(),
+            )),
+            length => {
+                let actual_length =
+                    usize::try_from(length).map_err(PrimitiveReadError::IntOverflow)? - 1;
+
+                let mut buffer = BlockVec::new(actual_length);
+                buffer = buffer.read_exact(reader)?;
+
+                Ok(Self(Some(buffer.into())))
+            }
+        }
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for CompactNullableBytes {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        match &self.0 {
+            Some(bytes) => {
+                let len =
+                    u64::try_from(bytes.len() + 1).map_err(PrimitiveWriteError::IntOverflow)?;
+                UnsignedVarInt(len).write(writer)?;
+                writer.write_all(bytes.as_slice())?;
+            }
+            None => {
+                UnsignedVarInt(0).write(writer)?;
+            }
+        }
+
+        Ok(())
+    }
+}
