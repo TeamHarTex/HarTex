@@ -455,3 +455,26 @@ impl<W: Write> PrimitiveWrite<W> for Bytes {
         Ok(())
     }
 }
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct CompactBytes(pub Vec<u8>);
+
+impl<R: Read> PrimitiveRead<R> for CompactBytes {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let length = usize::try_from(UnsignedVarInt::read(reader)?.0).map_err(PrimitiveReadError::IntOverflow)? - 1;
+        let mut buffer = Vec::with_capacity(length);
+        reader.read_exact(buffer.as_mut_slice())?;
+
+        Ok(Self(buffer))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for CompactBytes {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        let length = u64::try_from(self.0.len() + 1).map_err(PrimitiveWriteError::IntOverflow)?;
+        UnsignedVarInt(length).write(writer)?;
+        writer.write_all(self.0.as_slice())?;
+
+        Ok(())
+    }
+}
