@@ -294,8 +294,8 @@ pub struct String(pub StdString);
 
 impl<R: Read> PrimitiveRead<R> for String {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
-        let length = usize::try_from(Int16::read(reader)?.0)
-            .map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
+        let length =
+            usize::try_from(Int16::read(reader)?.0).map_err(PrimitiveReadError::IntOverflow)?;
         let mut buffer = BlockVec::new(length);
         buffer = buffer.read_exact(reader)?;
 
@@ -326,7 +326,8 @@ impl<R: Read> PrimitiveRead<R> for CompactString {
                 "CompactStrings must have non-zero length".into(),
             )),
             length => {
-                let actual_length = usize::try_from(length)? - 1;
+                let actual_length =
+                    usize::try_from(length).map_err(PrimitiveReadError::IntOverflow)? - 1;
 
                 let mut buffer = BlockVec::new(actual_length);
                 buffer = buffer.read_exact(reader)?;
@@ -377,8 +378,8 @@ impl<W: Write> PrimitiveWrite<W> for NullableString {
     fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         match &self.0 {
             Some(string) => {
-                let length = i16::try_from(string.len())
-                    .map_err(|error| PrimitiveWriteError::Generic(Box::new(error)))?;
+                let length =
+                    i16::try_from(string.len()).map_err(PrimitiveWriteError::IntOverflow)?;
                 Int16(length).write(writer)?;
                 writer.write_all(string.as_bytes())?;
                 Ok(())
@@ -399,7 +400,8 @@ impl<R: Read> PrimitiveRead<R> for CompactNullableString {
                 "CompactStrings must have non-zero length".into(),
             )),
             length => {
-                let actual_length = usize::try_from(length)? - 1;
+                let actual_length =
+                    usize::try_from(length).map_err(PrimitiveReadError::IntOverflow)? - 1;
 
                 let mut buffer = BlockVec::new(actual_length);
                 buffer = buffer.read_exact(reader)?;
@@ -425,6 +427,30 @@ impl<W: Write> PrimitiveWrite<W> for CompactNullableString {
                 UnsignedVarInt(0).write(writer)?;
             }
         }
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct Bytes(pub Vec<u8>);
+
+impl<R: Read> PrimitiveRead<R> for Bytes {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let length = Int32::read(reader)?;
+        let mut buffer =
+            Vec::with_capacity(usize::try_from(length.0).map_err(PrimitiveReadError::IntOverflow)?);
+        reader.read_exact(buffer.as_mut_slice())?;
+
+        Ok(Self(buffer))
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for Bytes {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        let length = i32::try_from(self.0.len() + 1).map_err(PrimitiveWriteError::IntOverflow)?;
+        Int32(length).write(writer)?;
+        writer.write_all(self.0.as_slice())?;
 
         Ok(())
     }
