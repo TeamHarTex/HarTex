@@ -348,3 +348,42 @@ impl<W: Write> PrimitiveWrite<W> for CompactString {
         Ok(())
     }
 }
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct NullableString(pub Option<StdString>);
+
+impl<R: Read> PrimitiveRead<R> for NullableString {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let length = Int16::read(reader)?;
+        match length.0 {
+            l if l < -1 => Err(PrimitiveReadError::Generic(
+                format!("invalid length for nullable string: {l}").into(),
+            )),
+            -1 => Ok(Self(None)),
+            l => {
+                let actual = usize::try_from(l)?;
+                let mut buffer = BlockVec::new(actual);
+                buffer = buffer.read_exact(reader)?;
+
+                Ok(Self(Some(StdString::from_utf8(buffer.into()).map_err(
+                    |error| PrimitiveReadError::Generic(Box::new(error)),
+                )?)))
+            }
+        }
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for NullableString {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        match &self.0 {
+            Some(string) => {
+                let length = i16::try_from(string.len())
+                    .map_err(|error| PrimitiveWriteError::Generic(Box::new(error)))?;
+                Int16(length).write(writer)?;
+                writer.write_all(string.as_bytes())?;
+                Ok(())
+            }
+            None => Int16(-1).write(writer),
+        }
+    }
+}
