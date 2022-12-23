@@ -461,7 +461,9 @@ pub struct CompactBytes(pub Vec<u8>);
 
 impl<R: Read> PrimitiveRead<R> for CompactBytes {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
-        let length = usize::try_from(UnsignedVarInt::read(reader)?.0).map_err(PrimitiveReadError::IntOverflow)? - 1;
+        let length = usize::try_from(UnsignedVarInt::read(reader)?.0)
+            .map_err(PrimitiveReadError::IntOverflow)?
+            - 1;
         let mut buffer = BlockVec::new(length);
         buffer = buffer.read_exact(reader)?;
 
@@ -524,7 +526,7 @@ impl<R: Read> PrimitiveRead<R> for CompactNullableBytes {
         let len = UnsignedVarInt::read(reader)?;
         match len.0 {
             0 => Err(PrimitiveReadError::Generic(
-                    "CompactNullableBytes must have non-zero length".into(),
+                "CompactNullableBytes must have non-zero length".into(),
             )),
             length => {
                 let actual_length =
