@@ -19,3 +19,17 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use std::io::Read;
+
+use super::super::errors::PrimitiveReadError;
+use super::super::traits::PrimitiveRead;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatch;
+
+impl<R: Read> PrimitiveRead<R> for RecordBatch {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        todo!()
+    }
+}
