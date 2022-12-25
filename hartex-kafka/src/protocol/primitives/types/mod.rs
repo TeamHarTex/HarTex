@@ -34,6 +34,7 @@ use super::traits::PrimitiveRead;
 use super::traits::PrimitiveWrite;
 use crate::blockvec::BlockVec;
 
+pub mod record;
 pub mod record_batch;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
