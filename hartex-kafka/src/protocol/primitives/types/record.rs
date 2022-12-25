@@ -24,6 +24,7 @@ use std::io::Read;
 
 use super::super::errors::PrimitiveReadError;
 use super::super::traits::PrimitiveRead;
+use super::Boolean;
 use super::Int32;
 use super::Int64;
 use super::Int8;
@@ -83,13 +84,23 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchAttributes {
     pub compression_type: CompressionType,
+    pub has_delete_horizon_ms: Boolean,
+    pub is_transactional: Boolean,
+    pub is_control_batch: Boolean,
+    pub timestamp_type: TimestampType,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CompressionType {
-    None,
     Gzip,
-    Snappy,
     Lz4,
+    None,
+    Snappy,
     Zstd,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum TimestampType {
+    CreateTime,
+    LogAppendTime,
 }
