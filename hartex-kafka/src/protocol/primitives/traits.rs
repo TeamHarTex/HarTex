@@ -20,23 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(warnings)]
+use std::io::Read;
+use std::io::Write;
 
-use hartex_discord_core::tokio;
+use super::errors::PrimitiveReadError;
+use super::errors::PrimitiveWriteError;
 
-mod http;
-mod rabbitmq;
+pub trait PrimitiveRead<R: Read>: Sized {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError>;
+}
 
-#[allow(unused_must_use)]
-#[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_discord_eyre::Result<()> {
-    hartex_discord_eyre::initialize()?;
-
-    tokio::join!(
-        tokio::spawn(http::listen()),
-        tokio::spawn(rabbitmq::consume())
-    );
-
-    Ok(())
+pub trait PrimitiveWrite<W: Write>: Sized {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError>;
 }
