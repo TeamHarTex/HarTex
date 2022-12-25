@@ -20,23 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(warnings)]
-
-use hartex_discord_core::tokio;
-
-mod http;
-mod rabbitmq;
-
-#[allow(unused_must_use)]
-#[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_discord_eyre::Result<()> {
-    hartex_discord_eyre::initialize()?;
-
-    tokio::join!(
-        tokio::spawn(http::listen()),
-        tokio::spawn(rabbitmq::consume())
-    );
-
-    Ok(())
-}
+pub mod primitives;
