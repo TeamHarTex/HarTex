@@ -104,7 +104,11 @@ impl<R: Read> PrimitiveRead<R> for RecordBatchAttributes {
             2 => CompressionType::Snappy,
             3 => CompressionType::Lz4,
             4 => CompressionType::Zstd,
-            other => return Err(PrimitiveReadError::Generic(format!("invalid compression type: {other}").into())),
+            other => {
+                return Err(PrimitiveReadError::Generic(
+                    format!("invalid compression type: {other}").into(),
+                ))
+            }
         };
 
         let timestamp_type = if (attributes >> 3) & 0x1 == 0 {
@@ -114,8 +118,8 @@ impl<R: Read> PrimitiveRead<R> for RecordBatchAttributes {
         };
 
         let is_transactional = Boolean((attributes >> 4) & 0x1 == 1);
-        let is_control_batch  = Boolean((attributes >> 5) & 0x1 == 1);
-        let has_delete_horizon_ms  = Boolean((attributes >> 6) & 0x1 == 1);
+        let is_control_batch = Boolean((attributes >> 5) & 0x1 == 1);
+        let has_delete_horizon_ms = Boolean((attributes >> 6) & 0x1 == 1);
 
         Ok(Self {
             compression_type,
