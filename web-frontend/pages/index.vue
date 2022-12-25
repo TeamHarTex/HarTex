@@ -1,7 +1,7 @@
 <template>
-  <div class="hero">
+  <section class="hero">
     <h2>
-      The speed of thought<br />
+      The speed of thought<br class="hidden sm:block" />
       Discord management bot.
     </h2>
     <br />
@@ -10,19 +10,20 @@
     </p>
     <br />
     <button>Get Started</button>
-  </div>
+  </section>
 </template>
 
 <style lang="postcss" scoped>
 .hero {
-  @apply pt-64;
+  @apply flex flex-col;
+  @apply text-center justify-center items-center;
 }
 
 .hero h2 {
-  @apply text-6xl font-bold tracking-tight;
+  @apply text-4xl sm:text-5xl xl:text-6xl font-bold tracking-tight;
 }
 
 .hero p {
-  @apply text-tertiary;
+  @apply text-sm sm:text-lg text-tertiary;
 }
 </style>

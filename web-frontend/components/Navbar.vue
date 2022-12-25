@@ -16,6 +16,7 @@
         </li>
       </ul>
     </nav>
+    <Icon name="carbon:menu" />
   </header>
 </template>
 
@@ -25,15 +26,23 @@
 
 <style lang="postcss" scoped>
 .navbar {
-  @apply flex flex-row pb-4;
+  @apply flex flex-row pt-16;
   @apply items-center justify-between;
 }
 
 .brand {
-  @apply text-4xl text-secondary;
+  @apply text-2xl sm:text-4xl text-secondary;
+}
+
+nav {
+  @apply hidden sm:block;
 }
 
 nav ul {
   @apply inline-block mx-6 first:ml-0 last:mr-0;
+}
+
+svg {
+  @apply block sm:hidden text-2xl;
 }
 </style>

@@ -35,7 +35,7 @@ a {
 }
 
 body {
-  @apply mx-80 my-12 p-0;
+  @apply mx-12 sm:mx-24 lg:mx-36 xl:mx-80;
   @apply bg-primary text-secondary;
 
   font-family: "Lato", sans-serif;
@@ -49,5 +49,13 @@ button {
   @apply px-12 py-3 cursor-pointer;
   @apply bg-blue-800 font-bold;
   @apply border border-blue-800 rounded-3xl;
+}
+
+section {
+  height: 80vh;
+}
+
+svg {
+  @apply cursor-pointer;
 }
 </style>
