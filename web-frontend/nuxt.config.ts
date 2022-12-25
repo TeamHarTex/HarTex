@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/google-fonts", "@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/google-fonts", "nuxt-icon", "@nuxtjs/tailwindcss"],
   typescript: {
     strict: true,
     typeCheck: true,
