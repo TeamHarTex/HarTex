@@ -25,6 +25,7 @@ use std::io::Read;
 use super::super::errors::PrimitiveReadError;
 use super::super::traits::PrimitiveRead;
 use super::Boolean;
+use super::Int16;
 use super::Int32;
 use super::Int64;
 use super::Int8;
@@ -32,6 +33,7 @@ use crate::blockvec::BlockVec;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatch {
+    pub attributes: RecordBatchAttributes,
     pub base_offset: Int64,
     pub batch_length: Int32,
     pub partition_leader_epoch: Int32,
@@ -73,7 +75,10 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
             ));
         }
 
+        let attributes = RecordBatchAttributes::read(reader)?;
+
         Ok(Self {
+            attributes,
             base_offset,
             batch_length,
             partition_leader_epoch,
@@ -85,9 +90,41 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
 pub struct RecordBatchAttributes {
     pub compression_type: CompressionType,
     pub has_delete_horizon_ms: Boolean,
-    pub is_transactional: Boolean,
     pub is_control_batch: Boolean,
+    pub is_transactional: Boolean,
     pub timestamp_type: TimestampType,
+}
+
+impl<R: Read> PrimitiveRead<R> for RecordBatchAttributes {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let attributes = Int16::read(reader)?.0;
+        let compression_type = match attributes & 0x7 {
+            0 => CompressionType::None,
+            1 => CompressionType::Gzip,
+            2 => CompressionType::Snappy,
+            3 => CompressionType::Lz4,
+            4 => CompressionType::Zstd,
+            other => return Err(PrimitiveReadError::Generic(format!("invalid compression type: {other}").into())),
+        };
+
+        let timestamp_type = if (attributes >> 3) & 0x1 == 0 {
+            TimestampType::CreateTime
+        } else {
+            TimestampType::LogAppendTime
+        };
+
+        let is_transactional = Boolean((attributes >> 4) & 0x1 == 1);
+        let is_control_batch  = Boolean((attributes >> 5) & 0x1 == 1);
+        let has_delete_horizon_ms  = Boolean((attributes >> 6) & 0x1 == 1);
+
+        Ok(Self {
+            compression_type,
+            has_delete_horizon_ms,
+            is_control_batch,
+            is_transactional,
+            timestamp_type,
+        })
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
