@@ -35,8 +35,14 @@ use crate::blockvec::BlockVec;
 pub struct RecordBatch {
     pub attributes: RecordBatchAttributes,
     pub base_offset: Int64,
+    pub base_sequence: Int32,
+    pub base_timestamp: Int64,
     pub batch_length: Int32,
+    pub last_offset_delta: Int32,
+    pub max_timestamp: Int64,
     pub partition_leader_epoch: Int32,
+    pub producer_epoch: Int16,
+    pub producer_id: Int64,
 }
 
 impl<R: Read> PrimitiveRead<R> for RecordBatch {
@@ -77,11 +83,24 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
 
         let attributes = RecordBatchAttributes::read(reader)?;
 
+        let last_offset_delta = Int32::read(reader)?;
+        let base_timestamp = Int64::read(reader)?;
+        let max_timestamp = Int64::read(reader)?;
+        let producer_id = Int64::read(reader)?;
+        let producer_epoch = Int16::read(reader)?;
+        let base_sequence = Int32::read(reader)?;
+
         Ok(Self {
             attributes,
             base_offset,
+            base_sequence,
+            base_timestamp,
             batch_length,
+            last_offset_delta,
+            max_timestamp,
             partition_leader_epoch,
+            producer_epoch,
+            producer_id,
         })
     }
 }
