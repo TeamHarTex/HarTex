@@ -79,3 +79,17 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
         })
     }
 }
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatchAttributes {
+    pub compression_type: CompressionType,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum CompressionType {
+    None,
+    Gzip,
+    Snappy,
+    Lz4,
+    Zstd,
+}
