@@ -30,9 +30,9 @@
       </ul>
       <ul>
         <li>
-          <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank"
-            >GitHub</NuxtLink
-          >
+          <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
+            GitHub
+          </NuxtLink>
         </li>
       </ul>
       <ul>
