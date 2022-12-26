@@ -47,12 +47,12 @@
 </template>
 
 <script setup>
-let isMobile = false;
-
-if (process.client) {
-  const windowWidth = computed(() => window.screen.width);
-  isMobile = windowWidth < 1024;
-}
+const isMobile = computed(() => {
+  const isClientSide = process.client
+  if (isClientSide)
+    return window.screen.width < 1024
+  return false
+})
 </script>
 
 <style lang="postcss" scoped>
