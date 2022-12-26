@@ -21,7 +21,7 @@
   -->
 
 <template>
-  <section class="hero">
+  <Section class="hero">
     <h2>
       The speed-of-thought<br class="hidden sm:block" />
       server management bot for Discord.
@@ -32,7 +32,8 @@
     </p>
     <div class="whitespace" />
     <button>Get Started</button>
-  </section>
+  </Section>
+  <Section></Section>
 </template>
 
 <style lang="postcss" scoped>

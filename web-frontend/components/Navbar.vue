@@ -22,7 +22,7 @@
 
 <template>
   <header class="navbar">
-    <NuxtLink class="brand" to="/">HarTex</NuxtLink>
+    <NuxtLink class="brand font-bold" to="/">HarTex</NuxtLink>
     <Icon name="carbon:menu" />
     <nav>
       <ul>
@@ -30,7 +30,9 @@
       </ul>
       <ul>
         <li>
-          <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">GitHub</NuxtLink>
+          <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank"
+            >GitHub</NuxtLink
+          >
         </li>
       </ul>
       <ul>
@@ -49,7 +51,7 @@
 }
 
 .brand {
-  @apply text-2xl sm:text-4xl text-secondary;
+  @apply text-3xl sm:text-4xl text-secondary;
 }
 
 nav {
