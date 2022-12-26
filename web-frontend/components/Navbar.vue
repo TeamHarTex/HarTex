@@ -23,37 +23,24 @@
 <template>
   <header class="navbar">
     <NuxtLink class="brand" to="/">HarTex</NuxtLink>
-    <div v-if="isMobile">
-      <Icon name="carbon:menu" />
-    </div>
-    <div v-else>
-      <nav>
-        <ul>
-          <li><NuxtLink to="/">Documentation</NuxtLink></li>
-        </ul>
-        <ul>
-          <li>
-            <NuxtLink to="https://github.com/TeamHarTex/HarTex">Github</NuxtLink>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <a v-on:click="">Login/Register</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+    <Icon name="carbon:menu" />
+    <nav>
+      <ul>
+        <li><NuxtLink to="/">Documentation</NuxtLink></li>
+      </ul>
+      <ul>
+        <li>
+          <NuxtLink to="https://github.com/TeamHarTex/HarTex">Github</NuxtLink>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <a v-on:click="">Login/Register</a>
+        </li>
+      </ul>
+    </nav>
   </header>
 </template>
-
-<script setup>
-const isMobile = computed(() => {
-  const isClientSide = process.client
-  if (isClientSide)
-    return window.screen.width < 1024
-  return false
-})
-</script>
 
 <style lang="postcss" scoped>
 .navbar {
@@ -74,6 +61,6 @@ nav ul {
 }
 
 svg {
-  @apply block sm:hidden text-2xl;
+  @apply visible sm:invisible text-2xl;
 }
 </style>
