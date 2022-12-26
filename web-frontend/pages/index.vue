@@ -23,7 +23,7 @@
 <template>
   <section class="hero">
     <h2>
-      The speed of thought<br class="whitespace hidden sm:block" />
+      The speed-of-thought<br class="whitespace hidden sm:block" />
       Discord management bot.
     </h2>
     <div class="whitespace" />
