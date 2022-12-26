@@ -30,12 +30,12 @@
       </ul>
       <ul>
         <li>
-          <NuxtLink to="https://github.com/TeamHarTex/HarTex">Github</NuxtLink>
+          <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">GitHub</NuxtLink>
         </li>
       </ul>
       <ul>
         <li>
-          <a v-on:click="">Login/Register</a>
+          <a v-on:click="">Login</a>
         </li>
       </ul>
     </nav>
