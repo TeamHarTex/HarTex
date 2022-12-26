@@ -58,4 +58,8 @@ section {
 svg {
   @apply cursor-pointer;
 }
+
+.whitespace {
+  @apply my-4;
+}
 </style>
