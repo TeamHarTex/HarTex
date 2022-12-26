@@ -24,7 +24,7 @@
   <section class="hero">
     <h2>
       The speed-of-thought<br class="hidden sm:block" />
-      Discord management bot.
+      server management bot for Discord.
     </h2>
     <div class="whitespace" />
     <p>
