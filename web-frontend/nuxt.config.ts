@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     families: {
-      Lato: [400, 700],
+      Inter: [400, 700],
     },
   },
 });
