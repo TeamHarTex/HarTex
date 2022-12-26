@@ -38,7 +38,7 @@ body {
   @apply mx-12 sm:mx-24 lg:mx-36 xl:mx-80;
   @apply bg-primary text-secondary;
 
-  font-family: "Lato", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 br {

@@ -1,12 +1,12 @@
 ![HarTex](./meta/images/hartexbanner.png)
 
-<div style="text-align: center;"><h1>HarTex</h1></div>
+<div><center><h1>HarTex</h1></center></div>
 
 > ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
 > **Supported by [JetBrains](https://www.jetbrains.com/) through their [Open Source Licenses](https://www.jetbrains.com/community/opensource/#support) (they are amazing!)**
 
-**HarTex is an advanced administration assistant and moderation bot for Discord; built to be stable, flexible and customizable.**
+**HarTex is the spped-of-thought server management bot for Discord; built to be stable, flexible and customizable.**
 
 ## Quick Start
 
