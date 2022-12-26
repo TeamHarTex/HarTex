@@ -30,7 +30,7 @@
 
 <style lang="postcss">
 a {
-  @apply font-bold text-tertiary hover:text-secondary;
+  @apply font-semibold text-tertiary hover:text-secondary;
   @apply transition-colors cursor-pointer;
 }
 
@@ -47,12 +47,8 @@ br {
 
 button {
   @apply px-12 py-3 cursor-pointer;
-  @apply bg-blue-800 font-bold;
-  @apply border border-blue-800 rounded-3xl;
-}
-
-section {
-  height: 80vh;
+  @apply bg-blue-700 font-semibold;
+  @apply border border-blue-700 rounded-3xl;
 }
 
 svg {
