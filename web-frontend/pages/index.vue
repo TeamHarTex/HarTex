@@ -23,14 +23,14 @@
 <template>
   <section class="hero">
     <h2>
-      The speed of thought<br class="hidden sm:block" />
+      The speed of thought<br class="whitespace hidden sm:block" />
       Discord management bot.
     </h2>
-    <br />
+    <div class="whitespace" />
     <p>
       Made with love by Team HarTex.
     </p>
-    <br />
+    <div class="whitespace" />
     <button>Get Started</button>
   </section>
 </template>
