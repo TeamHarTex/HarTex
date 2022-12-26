@@ -1,6 +1,6 @@
 ![HarTex](./meta/images/hartexbanner.png)
 
-<div><center>h1>HarTex</h1></center></div>
+<div><center><h1>HarTex</h1></center></div>
 
 > ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
