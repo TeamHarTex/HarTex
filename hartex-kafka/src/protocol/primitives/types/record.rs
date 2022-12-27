@@ -21,4 +21,7 @@
  */
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub enum RecordBatchRecords {}
+pub enum RecordBatchRecords {
+    ControlBatch,
+    Record,
+}
