@@ -49,6 +49,8 @@ button {
   @apply px-12 py-3 cursor-pointer;
   @apply bg-blue-700 font-semibold;
   @apply border border-blue-700 rounded-3xl;
+
+  @apply transition hover:bg-blue-800 hover:border-blue-800;
 }
 
 svg {
@@ -57,5 +59,9 @@ svg {
 
 .whitespace {
   @apply my-4;
+}
+
+::selection {
+  @apply bg-blue-700 text-white;
 }
 </style>
