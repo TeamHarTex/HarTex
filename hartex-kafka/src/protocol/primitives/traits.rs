@@ -25,6 +25,7 @@ use std::io::Write;
 
 use super::errors::PrimitiveReadError;
 use super::errors::PrimitiveWriteError;
+use super::errors::RecordReadError;
 
 pub trait PrimitiveRead<R: Read>: Sized {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError>;
@@ -32,4 +33,8 @@ pub trait PrimitiveRead<R: Read>: Sized {
 
 pub trait PrimitiveWrite<W: Write>: Sized {
     fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError>;
+}
+
+pub trait RecordRead<R: Read>: Sized {
+    fn read(reader: &mut R, is_control_batch: bool) -> Result<Self, RecordReadError>;
 }

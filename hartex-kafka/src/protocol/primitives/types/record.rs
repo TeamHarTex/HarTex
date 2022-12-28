@@ -20,8 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::io::Read;
+
+use super::super::errors::RecordReadError;
+use super::super::traits::RecordRead;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
     ControlBatch,
-    Record,
+    Records,
+}
+
+impl<R: Read> RecordRead<R> for RecordBatchRecords {
+    fn read(_: &mut R, _: bool) -> Result<Self, RecordReadError> {
+        todo!()
+    }
 }
