@@ -61,3 +61,6 @@ impl From<TryFromIntError> for PrimitiveWriteError {
         Self::IntOverflow(error)
     }
 }
+
+#[derive(Debug)]
+pub enum RecordReadError {}

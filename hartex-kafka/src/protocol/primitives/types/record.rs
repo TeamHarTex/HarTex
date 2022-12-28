@@ -20,5 +20,56 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::io::Read;
+
+use super::super::errors::PrimitiveReadError;
+use super::super::errors::RecordReadError;
+use super::super::traits::PrimitiveRead;
+use super::super::traits::RecordRead;
+use super::super::types::Int16;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub enum RecordBatchRecords {}
+pub enum RecordBatchRecords {
+    ControlBatch(RecordBatchControlBatch),
+    Records,
+}
+
+impl<R: Read> RecordRead<R> for RecordBatchRecords {
+    fn read(_: &mut R, _: bool) -> Result<Self, RecordReadError> {
+        todo!()
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatchControlBatch {
+    pub kind: ControlBatchKind,
+}
+
+impl<R: Read> PrimitiveRead<R> for RecordBatchControlBatch {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let version = Int16::read(reader)?.0;
+        if version != 0 {
+            return Err(PrimitiveReadError::Generic(
+                format!("unexpected version: {version}").into(),
+            ));
+        }
+
+        let kind = match Int16::read(reader)?.0 {
+            0 => ControlBatchKind::Abort,
+            1 => ControlBatchKind::Commit,
+            other => {
+                return Err(PrimitiveReadError::Generic(
+                    format!("unexpected control batch type: {other}").into(),
+                ))
+            }
+        };
+
+        Ok(Self { kind })
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ControlBatchKind {
+    Abort,
+    Commit,
+}
