@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
 }
 
 group = "com.github.teamhartex"
@@ -11,8 +11,8 @@ repositories {
 
 dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta10")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.7.22")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:1.7.22")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.8.0")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:1.8.0")
     implementation(kotlin("reflect"))
     implementation(project(":script-def"))
 }
