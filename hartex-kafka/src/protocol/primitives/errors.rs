@@ -63,4 +63,12 @@ impl From<TryFromIntError> for PrimitiveWriteError {
 }
 
 #[derive(Debug)]
-pub enum RecordReadError {}
+pub enum RecordReadError {
+    PrimitiveRead(PrimitiveReadError),
+}
+
+impl From<PrimitiveReadError> for RecordReadError {
+    fn from(error: PrimitiveReadError) -> Self {
+        Self::PrimitiveRead(error)
+    }
+}

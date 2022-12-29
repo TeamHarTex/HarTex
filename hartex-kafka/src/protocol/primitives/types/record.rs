@@ -35,7 +35,11 @@ pub enum RecordBatchRecords {
 }
 
 impl<R: Read> RecordRead<R> for RecordBatchRecords {
-    fn read(_: &mut R, _: bool) -> Result<Self, RecordReadError> {
+    fn read(reader: &mut R, is_control_batch: bool) -> Result<Self, RecordReadError> {
+        if is_control_batch {
+            return Ok(Self::ControlBatch(RecordBatchControlBatch::read(reader)?));
+        }
+        
         todo!()
     }
 }
