@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::io::Read;
+use std::io::{ErrorKind, Read};
 
 use super::super::errors::PrimitiveReadError;
 use super::super::errors::RecordReadError;
@@ -28,6 +28,7 @@ use super::super::traits::PrimitiveRead;
 use super::super::traits::RecordRead;
 use super::super::types::Int16;
 use super::super::types::Int8;
+use super::super::types::UnsignedVarInt;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
@@ -41,7 +42,21 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
             return Ok(Self::ControlBatch(RecordBatchControlBatch::read(reader)?));
         }
 
-        todo!()
+        let mut records = Vec::new();
+
+        loop {
+            let result = UnsignedVarInt::read(reader);
+
+            match result {
+                Ok(length) =>
+                    records.push(RecordBatchRecord::of_length(length)?),
+                Err(error) => return if let PrimitiveReadError::Io(err) = &error && err.kind() == ErrorKind::UnexpectedEof {
+                    Ok(Self::Records(records))
+                } else {
+                    Err(RecordReadError::from(error))
+                }
+            }
+        }
     }
 }
 
@@ -82,4 +97,11 @@ pub enum ControlBatchKind {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchRecord {
     pub attributes: Int8,
+    pub length: UnsignedVarInt,
+}
+
+impl RecordBatchRecord {
+    pub fn of_length(_: UnsignedVarInt) -> Result<Self, PrimitiveReadError> {
+        todo!()
+    }
 }
