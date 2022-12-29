@@ -47,15 +47,13 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
         loop {
             let result = UnsignedVarInt::read(reader);
 
-            match result {
-                Ok(length) =>
-                    records.push(RecordBatchRecord::of_length(length)?),
-                Err(error) => return if let PrimitiveReadError::Io(err) = &error && err.kind() == ErrorKind::UnexpectedEof {
-                    Ok(Self::Records(records))
-                } else {
-                    Err(RecordReadError::from(error))
-                }
+            if let Err(PrimitiveReadError::Io(err)) = &result && err.kind() == ErrorKind::UnexpectedEof {
+                return Ok(Self::Records(records));
+            } else if result.is_err() {
+                return Err(result.map_err(RecordReadError::from).unwrap_err());
             }
+
+            records.push(RecordBatchRecord::of_length(result.unwrap())?);
         }
     }
 }
