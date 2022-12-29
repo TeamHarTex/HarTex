@@ -20,23 +20,41 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::io::Read;
+use std::io::{ErrorKind, Read};
 
 use super::super::errors::PrimitiveReadError;
 use super::super::errors::RecordReadError;
 use super::super::traits::PrimitiveRead;
 use super::super::traits::RecordRead;
 use super::super::types::Int16;
+use super::super::types::Int8;
+use super::super::types::UnsignedVarInt;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
     ControlBatch(RecordBatchControlBatch),
-    Records,
+    Records(Vec<RecordBatchRecord>),
 }
 
 impl<R: Read> RecordRead<R> for RecordBatchRecords {
-    fn read(_: &mut R, _: bool) -> Result<Self, RecordReadError> {
-        todo!()
+    fn read(reader: &mut R, is_control_batch: bool) -> Result<Self, RecordReadError> {
+        if is_control_batch {
+            return Ok(Self::ControlBatch(RecordBatchControlBatch::read(reader)?));
+        }
+
+        let mut records = Vec::new();
+
+        loop {
+            let result = UnsignedVarInt::read(reader);
+
+            if let Err(PrimitiveReadError::Io(err)) = &result && err.kind() == ErrorKind::UnexpectedEof {
+                return Ok(Self::Records(records));
+            } else if result.is_err() {
+                return Err(result.map_err(RecordReadError::from).unwrap_err());
+            }
+
+            records.push(RecordBatchRecord::of_length(result.unwrap())?);
+        }
     }
 }
 
@@ -72,4 +90,16 @@ impl<R: Read> PrimitiveRead<R> for RecordBatchControlBatch {
 pub enum ControlBatchKind {
     Abort,
     Commit,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatchRecord {
+    pub attributes: Int8,
+    pub length: UnsignedVarInt,
+}
+
+impl RecordBatchRecord {
+    pub fn of_length(_: UnsignedVarInt) -> Result<Self, PrimitiveReadError> {
+        todo!()
+    }
 }
