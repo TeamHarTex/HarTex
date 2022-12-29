@@ -31,7 +31,7 @@ use super::super::types::Int16;
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
     ControlBatch(RecordBatchControlBatch),
-    Records,
+    Records(RecordBatchRecord),
 }
 
 impl<R: Read> RecordRead<R> for RecordBatchRecords {
@@ -39,7 +39,7 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
         if is_control_batch {
             return Ok(Self::ControlBatch(RecordBatchControlBatch::read(reader)?));
         }
-        
+
         todo!()
     }
 }
@@ -77,3 +77,6 @@ pub enum ControlBatchKind {
     Abort,
     Commit,
 }
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatchRecord;
