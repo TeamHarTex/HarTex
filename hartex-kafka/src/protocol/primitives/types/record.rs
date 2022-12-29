@@ -53,7 +53,7 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
                 return Err(result.map_err(RecordReadError::from).unwrap_err());
             }
 
-            records.push(RecordBatchRecord::of_length(result.unwrap())?);
+            records.push(RecordBatchRecord::of_length(result.unwrap(), reader)?);
         }
     }
 }
@@ -99,7 +99,13 @@ pub struct RecordBatchRecord {
 }
 
 impl RecordBatchRecord {
-    pub fn of_length(_: UnsignedVarInt) -> Result<Self, PrimitiveReadError> {
-        todo!()
+    pub fn of_length<R: Read>(length: UnsignedVarInt, reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let _ = length.0;
+        let attributes = Int8::read(reader)?;
+
+        Ok(Self {
+            attributes,
+            length,
+        })
     }
 }
