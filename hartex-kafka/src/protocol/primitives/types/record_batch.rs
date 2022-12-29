@@ -105,6 +105,7 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchAttributes {
     pub compression_type: CompressionType,

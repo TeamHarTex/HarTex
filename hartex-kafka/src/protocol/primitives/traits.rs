@@ -28,13 +28,16 @@ use super::errors::PrimitiveWriteError;
 use super::errors::RecordReadError;
 
 pub trait PrimitiveRead<R: Read>: Sized {
+    #[allow(clippy::missing_errors_doc)]
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError>;
 }
 
 pub trait PrimitiveWrite<W: Write>: Sized {
+    #[allow(clippy::missing_errors_doc)]
     fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError>;
 }
 
 pub trait RecordRead<R: Read>: Sized {
+    #[allow(clippy::missing_errors_doc)]
     fn read(reader: &mut R, is_control_batch: bool) -> Result<Self, RecordReadError>;
 }

@@ -30,6 +30,7 @@ use super::super::types::Int16;
 use super::super::types::Int8;
 use super::super::types::UnsignedVarInt;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
     ControlBatch(RecordBatchControlBatch),
@@ -58,6 +59,7 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchControlBatch {
     pub kind: ControlBatchKind,
@@ -92,6 +94,7 @@ pub enum ControlBatchKind {
     Commit,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchRecord {
     pub attributes: Int8,
@@ -99,6 +102,7 @@ pub struct RecordBatchRecord {
 }
 
 impl RecordBatchRecord {
+    #[allow(clippy::missing_errors_doc)]
     pub fn of_length<R: Read>(
         length: UnsignedVarInt,
         reader: &mut R,
