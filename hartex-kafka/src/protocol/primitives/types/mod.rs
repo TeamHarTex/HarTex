@@ -45,10 +45,7 @@ impl<R: Read> PrimitiveRead<R> for Boolean {
         let mut buffer = [0u8; 1];
         reader.read_exact(&mut buffer)?;
 
-        Ok(Self(match buffer[0] {
-            0 => false,
-            _ => true,
-        }))
+        Ok(Self(!matches!(buffer[0], 0)))
     }
 }
 
