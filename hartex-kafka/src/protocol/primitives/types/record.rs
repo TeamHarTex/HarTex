@@ -99,13 +99,13 @@ pub struct RecordBatchRecord {
 }
 
 impl RecordBatchRecord {
-    pub fn of_length<R: Read>(length: UnsignedVarInt, reader: &mut R) -> Result<Self, PrimitiveReadError> {
+    pub fn of_length<R: Read>(
+        length: UnsignedVarInt,
+        reader: &mut R,
+    ) -> Result<Self, PrimitiveReadError> {
         let _ = length.0;
         let attributes = Int8::read(reader)?;
 
-        Ok(Self {
-            attributes,
-            length,
-        })
+        Ok(Self { attributes, length })
     }
 }
