@@ -33,10 +33,13 @@ pub struct BlockVec<T> {
 }
 
 impl<T> BlockVec<T> {
+    #[must_use]
     pub fn new(expected: usize) -> Self {
         Self::with_block_size(expected, 1024 * 1024 * 10)
     }
 
+    #[allow(clippy::missing_panics_doc)]
+    #[must_use]
     pub fn with_block_size(expected: usize, block_size: usize) -> Self {
         let size = mem::size_of::<T>();
         let per_block = if size == 0 {
@@ -45,9 +48,12 @@ impl<T> BlockVec<T> {
             block_size / size
         };
 
-        if per_block == 0 {
-            panic!("insufficient block size for type {}", any::type_name::<T>());
-        }
+        assert_ne!(
+            per_block,
+            0,
+            "insufficient block size for type {}",
+            any::type_name::<T>()
+        );
 
         Self {
             blocks: vec![Vec::with_capacity(per_block.min(expected))],
@@ -58,6 +64,7 @@ impl<T> BlockVec<T> {
 }
 
 impl BlockVec<u8> {
+    #[allow(clippy::missing_errors_doc)]
     pub fn read_exact<R: Read>(mut self, reader: &mut R) -> Result<Self, Error> {
         while self.remaining > 0 {
             let mut buffer = self
@@ -92,9 +99,10 @@ impl<T> From<BlockVec<T>> for Vec<T> {
                 .expect("number of blocks has been checked")
         } else {
             let mut result = Self::with_capacity(block_vec.blocks.iter().map(Self::len).sum());
-            for mut block in block_vec.blocks.into_iter() {
-                result.append(&mut block);
-            }
+            block_vec
+                .blocks
+                .into_iter()
+                .for_each(|mut block| result.append(&mut block));
 
             result
         }
