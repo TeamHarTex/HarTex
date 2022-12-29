@@ -27,11 +27,12 @@ use super::super::errors::RecordReadError;
 use super::super::traits::PrimitiveRead;
 use super::super::traits::RecordRead;
 use super::super::types::Int16;
+use super::super::types::Int8;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
     ControlBatch(RecordBatchControlBatch),
-    Records(RecordBatchRecord),
+    Records(Vec<RecordBatchRecord>),
 }
 
 impl<R: Read> RecordRead<R> for RecordBatchRecords {
@@ -79,4 +80,6 @@ pub enum ControlBatchKind {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct RecordBatchRecord;
+pub struct RecordBatchRecord {
+    pub attributes: Int8,
+}
