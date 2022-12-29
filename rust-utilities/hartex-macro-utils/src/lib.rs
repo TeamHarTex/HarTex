@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 use proc_macro2::TokenStream as TokenStream2;
 use syn::Error;
 

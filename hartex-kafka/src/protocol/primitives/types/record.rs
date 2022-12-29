@@ -30,6 +30,7 @@ use super::super::types::Int16;
 use super::super::types::Int8;
 use super::super::types::UnsignedVarInt;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RecordBatchRecords {
     ControlBatch(RecordBatchControlBatch),
@@ -53,11 +54,12 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
                 return Err(result.map_err(RecordReadError::from).unwrap_err());
             }
 
-            records.push(RecordBatchRecord::of_length(result.unwrap())?);
+            records.push(RecordBatchRecord::of_length(result.unwrap(), reader)?);
         }
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchControlBatch {
     pub kind: ControlBatchKind,
@@ -92,6 +94,7 @@ pub enum ControlBatchKind {
     Commit,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchRecord {
     pub attributes: Int8,
@@ -99,7 +102,14 @@ pub struct RecordBatchRecord {
 }
 
 impl RecordBatchRecord {
-    pub fn of_length(_: UnsignedVarInt) -> Result<Self, PrimitiveReadError> {
-        todo!()
+    #[allow(clippy::missing_errors_doc)]
+    pub fn of_length<R: Read>(
+        length: UnsignedVarInt,
+        reader: &mut R,
+    ) -> Result<Self, PrimitiveReadError> {
+        let _ = length.0;
+        let attributes = Int8::read(reader)?;
+
+        Ok(Self { attributes, length })
     }
 }
