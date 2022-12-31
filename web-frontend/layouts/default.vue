@@ -25,4 +25,5 @@
   <main>
     <slot />
   </main>
+  <Footer />
 </template>
