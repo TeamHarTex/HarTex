@@ -20,7 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::io::{ErrorKind, Read};
+use std::io::ErrorKind;
+use std::io::Read;
+use std::string::String as StdString;
 
 use super::super::errors::PrimitiveReadError;
 use super::super::errors::RecordReadError;
@@ -28,8 +30,11 @@ use super::super::traits::PrimitiveRead;
 use super::super::traits::RecordRead;
 use super::super::types::Int16;
 use super::super::types::Int8;
+use super::super::types::String;
 use super::super::types::VarInt;
 use super::super::types::VarLong;
+
+use crate::blockvec::BlockVec;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -104,6 +109,7 @@ pub struct RecordBatchRecord {
     pub length: VarInt,
     pub offset_delta: VarInt,
     pub timestamp_delta: VarLong,
+    pub value: Vec<u8>,
     pub value_length: VarInt,
 }
 
@@ -115,25 +121,60 @@ impl RecordBatchRecord {
         let offset_delta = VarInt::read(reader)?;
 
         let key_length = VarInt::read(reader)?;
-        let mut key = Vec::with_capacity(
-            usize::try_from(key_length.0).map_err(PrimitiveReadError::IntOverflow)?,
-        );
-        reader.read_exact(key.as_mut_slice())?;
+        let mut key =
+            BlockVec::new(usize::try_from(key_length.0).map_err(PrimitiveReadError::IntOverflow)?);
+        key = key.read_exact(reader)?;
 
         let value_length = VarInt::read(reader)?;
-        let mut value = Vec::with_capacity(
+        let mut value = BlockVec::new(
             usize::try_from(value_length.0).map_err(PrimitiveReadError::IntOverflow)?,
         );
-        reader.read_exact(value.as_mut_slice())?;
+        value = value.read_exact(reader)?;
 
         Ok(Self {
             attributes,
-            key,
+            key: key.into(),
             key_length,
             length,
             offset_delta,
             timestamp_delta,
+            value: value.into(),
             value_length,
+        })
+    }
+}
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatchRecordHeader {
+    pub header_key: String,
+    pub header_key_length: VarInt,
+    pub header_value: Vec<u8>,
+    pub header_value_length: VarInt,
+}
+
+impl RecordBatchRecordHeader {
+    #[allow(clippy::missing_errors_doc)]
+    pub fn read<R: Read>(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        let header_key_length = VarInt::read(reader)?;
+        let mut header_key_bytes = BlockVec::new(
+            usize::try_from(header_key_length.0).map_err(PrimitiveReadError::IntOverflow)?,
+        );
+        header_key_bytes = header_key_bytes.read_exact(reader)?;
+        let header_key = StdString::from_utf8(header_key_bytes.into())
+            .map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
+
+        let header_value_length = VarInt::read(reader)?;
+        let mut header_value = BlockVec::new(
+            usize::try_from(header_value_length.0).map_err(PrimitiveReadError::IntOverflow)?,
+        );
+        header_value = header_value.read_exact(reader)?;
+
+        Ok(Self {
+            header_key: String(header_key),
+            header_key_length,
+            header_value: header_value.into(),
+            header_value_length,
         })
     }
 }
