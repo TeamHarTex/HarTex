@@ -36,7 +36,6 @@ pub async fn handle(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
         match result {
             Ok(message) => {
                 let Some(bytes) = (match message {
-                    Message::Binary(bytes) => Some(bytes),
                     Message::Text(string) => Some(string.into_bytes()),
                     _ => None,
                 }) else {
