@@ -158,9 +158,9 @@ pub struct RecordBatchRecordHeader {
     pub header_value_length: VarInt,
 }
 
-impl RecordBatchRecordHeader {
+impl<R: Read> PrimitiveRead<R> for RecordBatchRecordHeader {
     #[allow(clippy::missing_errors_doc)]
-    pub fn read<R: Read>(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let header_key_length = VarInt::read(reader)?;
         let mut header_key_bytes = BlockVec::new(
             usize::try_from(header_key_length.0).map_err(PrimitiveReadError::IntOverflow)?,
