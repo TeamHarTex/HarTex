@@ -24,6 +24,7 @@ use std::io::Read;
 
 use super::super::errors::PrimitiveReadError;
 use super::super::traits::PrimitiveRead;
+// use super::record::RecordBatchRecords;
 use super::Boolean;
 use super::Int16;
 use super::Int32;
@@ -43,6 +44,7 @@ pub struct RecordBatch {
     pub partition_leader_epoch: Int32,
     pub producer_epoch: Int16,
     pub producer_id: Int64,
+    // pub records: RecordBatchRecords,
 }
 
 impl<R: Read> PrimitiveRead<R> for RecordBatch {
