@@ -121,9 +121,8 @@ impl RecordBatchRecord {
         let offset_delta = VarInt::read(reader)?;
 
         let key_length = VarInt::read(reader)?;
-        let mut key = BlockVec::new(
-            usize::try_from(key_length.0).map_err(PrimitiveReadError::IntOverflow)?,
-        );
+        let mut key =
+            BlockVec::new(usize::try_from(key_length.0).map_err(PrimitiveReadError::IntOverflow)?);
         key = key.read_exact(reader)?;
 
         let value_length = VarInt::read(reader)?;
@@ -158,12 +157,17 @@ impl RecordBatchRecordHeader {
     #[allow(clippy::missing_errors_doc)]
     pub fn read<R: Read>(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let header_key_length = VarInt::read(reader)?;
-        let mut header_key_bytes = BlockVec::new(usize::try_from(header_key_length.0).map_err(PrimitiveReadError::IntOverflow)?);
+        let mut header_key_bytes = BlockVec::new(
+            usize::try_from(header_key_length.0).map_err(PrimitiveReadError::IntOverflow)?,
+        );
         header_key_bytes = header_key_bytes.read_exact(reader)?;
-        let header_key = StdString::from_utf8(header_key_bytes.into()).map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
+        let header_key = StdString::from_utf8(header_key_bytes.into())
+            .map_err(|error| PrimitiveReadError::Generic(Box::new(error)))?;
 
         let header_value_length = VarInt::read(reader)?;
-        let mut header_value = BlockVec::new(usize::try_from(header_value_length.0).map_err(PrimitiveReadError::IntOverflow)?);
+        let mut header_value = BlockVec::new(
+            usize::try_from(header_value_length.0).map_err(PrimitiveReadError::IntOverflow)?,
+        );
         header_value = header_value.read_exact(reader)?;
 
         Ok(Self {
