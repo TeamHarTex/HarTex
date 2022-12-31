@@ -568,8 +568,8 @@ impl<R: Read, T> PrimitiveRead<R> for Array<T> {
     }
 }
 
-impl<W: Write, T> PrimitiveWrite<R> for Array<T> {
-    fn write(&self, writer: &mut W) -> Result<Self, PrimitiveWriteError> {
+impl<W: Write, T> PrimitiveWrite<W> for Array<T> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
         todo!()
     }
 }
