@@ -137,3 +137,13 @@ impl RecordBatchRecord {
         })
     }
 }
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecordBatchRecordHeader;
+
+impl RecordBatchRecordHeader {
+    pub fn read<R: Read>(_: &mut R) -> Result<Self, PrimitiveReadError> {
+        todo!()
+    }
+}
