@@ -28,7 +28,8 @@ use super::super::traits::PrimitiveRead;
 use super::super::traits::RecordRead;
 use super::super::types::Int16;
 use super::super::types::Int8;
-use super::super::types::UnsignedVarInt;
+use super::super::types::VarInt;
+use super::super::types::VarLong;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -46,7 +47,7 @@ impl<R: Read> RecordRead<R> for RecordBatchRecords {
         let mut records = Vec::new();
 
         loop {
-            let result = UnsignedVarInt::read(reader);
+            let result = VarInt::read(reader);
 
             if let Err(PrimitiveReadError::Io(err)) = &result && err.kind() == ErrorKind::UnexpectedEof {
                 return Ok(Self::Records(records));
@@ -98,18 +99,30 @@ pub enum ControlBatchKind {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchRecord {
     pub attributes: Int8,
-    pub length: UnsignedVarInt,
+    pub key_length: VarInt,
+    pub length: VarInt,
+    pub offset_delta: VarInt,
+    pub timestamp_delta: VarLong,
 }
 
 impl RecordBatchRecord {
     #[allow(clippy::missing_errors_doc)]
     pub fn of_length<R: Read>(
-        length: UnsignedVarInt,
+        length: VarInt,
         reader: &mut R,
     ) -> Result<Self, PrimitiveReadError> {
         let _ = length.0;
         let attributes = Int8::read(reader)?;
+        let timestamp_delta = VarLong::read(reader)?;
+        let offset_delta = VarInt::read(reader)?;
+        let key_length = VarInt::read(reader)?;
 
-        Ok(Self { attributes, length })
+        Ok(Self {
+            attributes,
+            key_length,
+            length,
+            offset_delta,
+            timestamp_delta,
+        })
     }
 }
