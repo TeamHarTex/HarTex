@@ -28,6 +28,7 @@ use super::super::errors::PrimitiveReadError;
 use super::super::errors::RecordReadError;
 use super::super::traits::PrimitiveRead;
 use super::super::traits::RecordRead;
+use super::super::types::Array;
 use super::super::types::Int16;
 use super::super::types::Int8;
 use super::super::types::String;
@@ -104,6 +105,7 @@ pub enum ControlBatchKind {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchRecord {
     pub attributes: Int8,
+    pub headers: Array<RecordBatchRecordHeader>,
     pub key: Vec<u8>,
     pub key_length: VarInt,
     pub length: VarInt,
@@ -131,8 +133,11 @@ impl RecordBatchRecord {
         );
         value = value.read_exact(reader)?;
 
+        let headers = Array::read(reader)?;
+
         Ok(Self {
             attributes,
+            headers,
             key: key.into(),
             key_length,
             length,
@@ -153,9 +158,9 @@ pub struct RecordBatchRecordHeader {
     pub header_value_length: VarInt,
 }
 
-impl RecordBatchRecordHeader {
+impl<R: Read> PrimitiveRead<R> for RecordBatchRecordHeader {
     #[allow(clippy::missing_errors_doc)]
-    pub fn read<R: Read>(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let header_key_length = VarInt::read(reader)?;
         let mut header_key_bytes = BlockVec::new(
             usize::try_from(header_key_length.0).map_err(PrimitiveReadError::IntOverflow)?,

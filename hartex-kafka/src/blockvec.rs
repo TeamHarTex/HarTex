@@ -61,6 +61,24 @@ impl<T> BlockVec<T> {
             remaining: expected,
         }
     }
+
+    #[allow(clippy::missing_panics_doc)]
+    pub fn push(&mut self, element: T) {
+        assert!(self.remaining > 0, "got more elements than expected");
+
+        let mut target_block = self
+            .blocks
+            .last_mut()
+            .expect("at least one block is expected");
+        if target_block.len() >= self.per_block {
+            self.blocks
+                .push(Vec::with_capacity(self.remaining.min(self.per_block)));
+            target_block = self.blocks.last_mut().expect("just pushed a new block");
+        }
+
+        target_block.push(element);
+        self.remaining -= 1;
+    }
 }
 
 impl BlockVec<u8> {
