@@ -581,8 +581,20 @@ impl<R: Read, T: PrimitiveRead<R>> PrimitiveRead<R> for Array<T> {
     }
 }
 
-impl<W: Write, T> PrimitiveWrite<W> for Array<T> {
-    fn write(&self, _: &mut W) -> Result<(), PrimitiveWriteError> {
-        todo!()
+impl<W: Write, T: PrimitiveWrite<W>> PrimitiveWrite<W> for Array<T> {
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        match &self.0 {
+            None => Int32(-1).write(writer),
+            Some(inner) => {
+                let length = i32::try_from(inner.len())?;
+                Int32(length).write(writer)?;
+
+                for element in inner {
+                    element.write(writer)?;
+                }
+
+                Ok(())
+            }
+        }
     }
 }
