@@ -99,30 +99,41 @@ pub enum ControlBatchKind {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordBatchRecord {
     pub attributes: Int8,
+    pub key: Vec<u8>,
     pub key_length: VarInt,
     pub length: VarInt,
     pub offset_delta: VarInt,
     pub timestamp_delta: VarLong,
+    pub value_length: VarInt,
 }
 
 impl RecordBatchRecord {
     #[allow(clippy::missing_errors_doc)]
-    pub fn of_length<R: Read>(
-        length: VarInt,
-        reader: &mut R,
-    ) -> Result<Self, PrimitiveReadError> {
-        let _ = length.0;
+    pub fn of_length<R: Read>(length: VarInt, reader: &mut R) -> Result<Self, PrimitiveReadError> {
         let attributes = Int8::read(reader)?;
         let timestamp_delta = VarLong::read(reader)?;
         let offset_delta = VarInt::read(reader)?;
+
         let key_length = VarInt::read(reader)?;
+        let mut key = Vec::with_capacity(
+            usize::try_from(key_length.0).map_err(PrimitiveReadError::IntOverflow)?,
+        );
+        reader.read_exact(key.as_mut_slice())?;
+
+        let value_length = VarInt::read(reader)?;
+        let mut value = Vec::with_capacity(
+            usize::try_from(value_length.0).map_err(PrimitiveReadError::IntOverflow)?,
+        );
+        reader.read_exact(value.as_mut_slice())?;
 
         Ok(Self {
             attributes,
+            key,
             key_length,
             length,
             offset_delta,
             timestamp_delta,
+            value_length,
         })
     }
 }
