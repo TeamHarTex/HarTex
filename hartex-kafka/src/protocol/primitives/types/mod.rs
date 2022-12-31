@@ -562,14 +562,27 @@ impl<W: Write> PrimitiveWrite<W> for CompactNullableBytes {
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Array<T>(pub Option<Vec<T>>);
 
-impl<R: Read, T> PrimitiveRead<R> for Array<T> {
+impl<R: Read, T: PrimitiveRead<R>> PrimitiveRead<R> for Array<T> {
     fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
-        todo!()
+        let length = Int32::read(reader)?;
+
+        if length.0 == -1 {
+            Ok(Self(None))
+        } else {
+            let length_usize = usize::try_from(length.0)?;
+            let mut result = BlockVec::new(length_usize);
+
+            for _ in 0..length_usize {
+                result.push(T::read(reader)?);
+            }
+
+            Ok(Self(Some(result.into())))
+        }
     }
 }
 
 impl<W: Write, T> PrimitiveWrite<W> for Array<T> {
-    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+    fn write(&self, _: &mut W) -> Result<(), PrimitiveWriteError> {
         todo!()
     }
 }
