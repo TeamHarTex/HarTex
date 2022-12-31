@@ -558,3 +558,18 @@ impl<W: Write> PrimitiveWrite<W> for CompactNullableBytes {
         Ok(())
     }
 }
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct Array<T>(pub Option<Vec<T>>);
+
+impl<R: Read, T> PrimitiveRead<R> for Array<T> {
+    fn read(reader: &mut R) -> Result<Self, PrimitiveReadError> {
+        todo!()
+    }
+}
+
+impl<W: Write, T> PrimitiveWrite<R> for Array<T> {
+    fn write(writer: &mut W) -> Result<Self, PrimitiveWriteError> {
+        todo!()
+    }
+}
