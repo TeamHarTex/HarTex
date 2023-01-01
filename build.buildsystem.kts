@@ -16,13 +16,6 @@ buildConfigurationForProject("discord-frontend") {
   linker("rust-lld")
 }
 
-buildConfigurationForProject("hartex-kafka") {
-    buildTool(ProjectBuildTool.CARGO)
-    cargoBuildProfile(CargoBuildProfile.RELEASE)
-    includeDebugInformation(true)
-    linker("rust-lld")
-}
-
 buildConfigurationForProject("rust-utilities") {
   buildTool(ProjectBuildTool.CARGO)
   cargoBuildProfile(CargoBuildProfile.RELEASE)
