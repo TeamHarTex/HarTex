@@ -21,9 +21,12 @@
  */
 
 use std::io::Read;
+use std::io::Write;
 
 use super::super::errors::PrimitiveReadError;
+use super::super::errors::PrimitiveWriteError;
 use super::super::traits::PrimitiveRead;
+use super::super::traits::PrimitiveWrite;
 use super::super::traits::RecordRead;
 use super::record::RecordBatchRecords;
 use super::Boolean;
@@ -111,6 +114,12 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
             producer_id,
             records,
         })
+    }
+}
+
+impl<W: Write> PrimitiveWrite<W> for RecordBatch {
+    fn write(&self, _: &mut W) -> Result<(), PrimitiveWriteError> {
+        todo!()
     }
 }
 
