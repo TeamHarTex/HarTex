@@ -118,8 +118,15 @@ impl<R: Read> PrimitiveRead<R> for RecordBatch {
 }
 
 impl<W: Write> PrimitiveWrite<W> for RecordBatch {
-    fn write(&self, _: &mut W) -> Result<(), PrimitiveWriteError> {
-        todo!()
+    fn write(&self, writer: &mut W) -> Result<(), PrimitiveWriteError> {
+        self.base_offset.write(writer)?;
+        self.batch_length.write(writer)?;
+        self.partition_leader_epoch.write(writer)?;
+
+        // magic
+        Int8(2).write(writer)?;
+
+        Ok(())
     }
 }
 
