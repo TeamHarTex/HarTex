@@ -1,7 +1,6 @@
 projects {
   project("buildsystem", ProjectType.JVM)
   project("discord-frontend", ProjectType.RUST)
-  project("hartex-kafka", ProjectType.RUST)
   project("rust-utilities", ProjectType.RUST)
   project("web-frontend", ProjectType.TYPESCRIPT)
 }
