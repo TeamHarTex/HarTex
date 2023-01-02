@@ -93,9 +93,9 @@ checksum = "2cb2f989d18dd141ab8ae82f64d1a8cdd37e0840f73a406896cf5e99502fab61"
 
 [[package]]
 name = "arc-swap"
-version = "1.5.1"
+version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "983cd8b9d4b02a6dc6ffa557262eb5858a27a0038ffffe21a0f133eaa819a164"
+checksum = "bddcadddf5e9015d310179a59bb28c4d4b9920ad0f11e8e14dbadf654890c9a6"
 
 [[package]]
 name = "async-channel"
@@ -1402,9 +1402,9 @@ dependencies = [
 
 [[package]]
 name = "nom"
-version = "7.1.1"
+version = "7.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8903e5a29a317527874d0402f867152a3d21c908bb0b933e416c65e301d4c36"
+checksum = "e5507769c4919c998e69e49c839d9dc6e693ede4cc4290d6ad8b41d4f09c548c"
 dependencies = [
  "memchr",
  "minimal-lexical",
@@ -2495,7 +2495,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#865a5d20ad6f0843843701d72d37944be1b95f15"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#c4e8d22dd3478c720a095725e1103780a07b4d65"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2516,7 +2516,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#865a5d20ad6f0843843701d72d37944be1b95f15"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#c4e8d22dd3478c720a095725e1103780a07b4d65"
 dependencies = [
  "tokio",
  "tracing",
@@ -2525,7 +2525,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#865a5d20ad6f0843843701d72d37944be1b95f15"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#c4e8d22dd3478c720a095725e1103780a07b4d65"
 dependencies = [
  "hyper",
  "percent-encoding",
@@ -2542,7 +2542,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#865a5d20ad6f0843843701d72d37944be1b95f15"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#c4e8d22dd3478c720a095725e1103780a07b4d65"
 dependencies = [
  "futures-util",
  "http",
@@ -2553,7 +2553,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#865a5d20ad6f0843843701d72d37944be1b95f15"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#c4e8d22dd3478c720a095725e1103780a07b4d65"
 dependencies = [
  "bitflags",
  "serde",
@@ -2566,7 +2566,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.14.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#865a5d20ad6f0843843701d72d37944be1b95f15"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=vilgotf/feat/gateway/parallel-stream#c4e8d22dd3478c720a095725e1103780a07b4d65"
 dependencies = [
  "twilight-model",
 ]
