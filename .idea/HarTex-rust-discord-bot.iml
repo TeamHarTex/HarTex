@@ -62,6 +62,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-api/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-rdkafka-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/hartex-kafka/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-kafka-utils/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
