@@ -27,6 +27,8 @@
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
+use rdkafka::producer::FutureProducer;
+use rdkafka::ClientConfig;
 
 mod inbound;
 mod queue;
@@ -39,6 +41,8 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
+
+    let _ = ClientConfig::new().create::<FutureProducer>();
 
     /*let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
     let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
