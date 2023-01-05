@@ -14,6 +14,8 @@ rust-version = "1.68.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "discord-gateway", "environment", "logging-facilities"] }
 hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 
+hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
+
 futures-util = "0.3.25"
 lapin = "2.1.1"
 rdkafka = { version = "0.29.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }

@@ -21,13 +21,13 @@
  */
 
 pub trait Serializer {
-    fn java_fqn(&self) -> &'static str;
+    fn java_fqn(&self) -> String;
 }
 
 pub struct ByteArraySerializer;
 
 impl Serializer for ByteArraySerializer {
-    fn java_fqn(&self) -> &'static str {
-        "org.apache.kafka.common.serialization.ByteArraySerializer"
+    fn java_fqn(&self) -> String {
+        String::from("org.apache.kafka.common.serialization.ByteArraySerializer")
     }
 }
