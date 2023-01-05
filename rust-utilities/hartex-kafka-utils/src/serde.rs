@@ -20,7 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(iter_intersperse)]
+pub trait Serializer {
+    fn java_fqn(&self) -> &'static str;
+}
 
-pub mod serde;
-pub mod traits;
+pub struct ByteArraySerializer;
+
+impl Serializer for ByteArraySerializer {
+    fn java_fqn(&self) -> &'static str {
+        "org.apache.kafka.common.serialization.ByteArraySerializer"
+    }
+}

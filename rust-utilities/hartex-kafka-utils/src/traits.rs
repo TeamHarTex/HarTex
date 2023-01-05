@@ -22,6 +22,29 @@
 
 use rdkafka::ClientConfig;
 
-pub trait ClientConfigUtils {}
+use crate::serde::Serializer;
 
-impl ClientConfigUtils for ClientConfig {}
+pub trait ClientConfigUtils {
+    fn bootstrap_servers(&mut self, servers: impl Iterator<Item = &'static str>) -> &mut Self;
+
+    fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
+
+    fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
+}
+
+impl ClientConfigUtils for ClientConfig {
+    fn bootstrap_servers(&mut self, servers: impl Iterator<Item = &'static str>) -> &mut Self {
+        self.set(
+            "bootstrap.servers",
+            servers.intersperse(";").collect::<String>(),
+        )
+    }
+
+    fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
+        self.set("key.serializer", serializer.java_fqn())
+    }
+
+    fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
+        self.set("value.serializer", serializer.java_fqn())
+    }
+}
