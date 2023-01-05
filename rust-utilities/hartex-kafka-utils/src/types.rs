@@ -20,14 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub trait Serializer {
-    fn java_fqn(&self) -> String;
+pub enum CompressionType {
+    Gzip,
+    Lz4,
+    None,
+    Snappy,
+    Zstd,
 }
 
-pub struct ByteArraySerializer;
-
-impl Serializer for ByteArraySerializer {
-    fn java_fqn(&self) -> String {
-        String::from("org.apache.kafka.common.serialization.ByteArraySerializer")
+impl Into<String> for CompressionType {
+    fn into(self) -> String {
+        String::from(match self {
+            Self::Gzip => "gzip",
+            Self::Lz4 => "lz4",
+            Self::None => "none",
+            Self::Snappy => "snappy",
+            Self::Zstd => "Zstd",
+        })
     }
 }

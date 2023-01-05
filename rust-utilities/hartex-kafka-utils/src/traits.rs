@@ -23,9 +23,12 @@
 use rdkafka::ClientConfig;
 
 use crate::serde::Serializer;
+use crate::types::CompressionType;
 
 pub trait ClientConfigUtils {
-    fn bootstrap_servers(&mut self, servers: impl Iterator<Item = &'static str>) -> &mut Self;
+    fn bootstrap_servers(&mut self, servers: impl Iterator<Item = String>) -> &mut Self;
+
+    fn compression_type(&mut self, compression: CompressionType) -> &mut Self;
 
     fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
 
@@ -33,11 +36,15 @@ pub trait ClientConfigUtils {
 }
 
 impl ClientConfigUtils for ClientConfig {
-    fn bootstrap_servers(&mut self, servers: impl Iterator<Item = &'static str>) -> &mut Self {
+    fn bootstrap_servers(&mut self, servers: impl Iterator<Item = String>) -> &mut Self {
         self.set(
             "bootstrap.servers",
-            servers.intersperse(";").collect::<String>(),
+            servers.intersperse(String::from(";")).collect::<String>(),
         )
+    }
+
+    fn compression_type(&mut self, compression: CompressionType) -> &mut Self {
+        self.set("compression.type", compression)
     }
 
     fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
