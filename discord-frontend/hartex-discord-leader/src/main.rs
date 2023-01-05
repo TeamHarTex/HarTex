@@ -31,6 +31,7 @@ use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_kafka_utils::serde::ByteArraySerializer;
 use hartex_kafka_utils::traits::ClientConfigUtils;
+use hartex_kafka_utils::types::CompressionType;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
@@ -50,6 +51,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     let _ = ClientConfig::new()
         .bootstrap_servers(vec![bootstrap_servers].into_iter())
+        .compression_type(CompressionType::Lz4)
         .key_serializer(ByteArraySerializer)
         .value_serializer(ByteArraySerializer)
         .create::<FutureProducer>();
