@@ -20,8 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(iter_intersperse)]
+pub enum CompressionType {
+    Gzip,
+    Lz4,
+    None,
+    Snappy,
+    Zstd,
+}
 
-pub mod serde;
-pub mod traits;
-pub mod types;
+impl Into<String> for CompressionType {
+    fn into(self) -> String {
+        String::from(match self {
+            Self::Gzip => "gzip",
+            Self::Lz4 => "lz4",
+            Self::None => "none",
+            Self::Snappy => "snappy",
+            Self::Zstd => "Zstd",
+        })
+    }
+}
