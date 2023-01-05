@@ -24,9 +24,14 @@
 #![deny(warnings)]
 #![allow(dead_code)]
 
+use std::env;
+
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
+use hartex_kafka_utils::serde::ByteArraySerializer;
+use hartex_kafka_utils::traits::ClientConfigUtils;
+use hartex_kafka_utils::types::CompressionType;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
@@ -42,7 +47,14 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
-    let _ = ClientConfig::new().create::<FutureProducer>();
+    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?;
+
+    let _ = ClientConfig::new()
+        .bootstrap_servers(vec![bootstrap_servers].into_iter())
+        .compression_type(CompressionType::Lz4)
+        .key_serializer(ByteArraySerializer)
+        .value_serializer(ByteArraySerializer)
+        .create::<FutureProducer>();
 
     /*let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
     let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;

@@ -24,3 +24,4 @@
 
 pub mod serde;
 pub mod traits;
+pub mod types;
