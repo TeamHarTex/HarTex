@@ -20,22 +20,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+use std::time::Duration;
+
 use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::message::Message;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
-use lapin::options::BasicPublishOptions;
-use lapin::BasicProperties;
-use lapin::Channel;
+use hartex_discord_eyre::eyre::Report;
+use rdkafka::producer::FutureProducer;
+use rdkafka::producer::FutureRecord;
+use rdkafka::util::Timeout;
 
-pub async fn handle(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
+pub async fn handle(
+    shards: impl Iterator<Item = &mut Shard>,
+    producer: FutureProducer,
+) -> hartex_discord_eyre::Result<()> {
     let mut stream = ShardMessageStream::new(shards);
+    let topic = env::var("KAFKA_LEADER_TOPIC_DISCORD_GATEWAY_PAYLOAD")?;
 
     while let Some((shard, result)) = stream.next().await {
         match result {
             Ok(message) => {
-                let Some(bytes) = (match message {
+                let Some(_) = (match message {
                     Message::Text(string) => Some(string.into_bytes()),
                     _ => None,
                 }) else {
@@ -47,20 +55,16 @@ pub async fn handle(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
                     shard_id = shard.id().number()
                 );
 
-                if let Err(error) = amqp
-                    .basic_publish(
-                        "gateway",
-                        &format!("SHARD {} PAYLOAD", shard.id().number()),
-                        BasicPublishOptions::default(),
-                        bytes.as_slice(),
-                        BasicProperties::default(),
+                if let Err((error, _)) = producer
+                    .send(
+                        FutureRecord::to(&topic),
+                        Timeout::After(Duration::from_secs(0)),
                     )
                     .await
                 {
-                    log::warn!(
-                        "[shard {shard_id}] failed to publish payload to worker: {error}",
-                        shard_id = shard.id().number()
-                    );
+                    println!("{:?}", Report::new(error));
+
+                    continue;
                 }
             }
             Err(error) => {
@@ -79,4 +83,6 @@ pub async fn handle(shards: impl Iterator<Item = &mut Shard>, amqp: Channel) {
             }
         }
     }
+
+    Ok(())
 }
