@@ -30,6 +30,8 @@ pub trait ClientConfigUtils {
 
     fn compression_type(&mut self, compression: CompressionType) -> &mut Self;
 
+    fn delivery_timeout_ms(&mut self, timeout: u32) -> &mut Self;
+
     fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
 
     fn value_serializer(&mut self, serializer: impl Serializer) -> &mut Self;
@@ -45,6 +47,10 @@ impl ClientConfigUtils for ClientConfig {
 
     fn compression_type(&mut self, compression: CompressionType) -> &mut Self {
         self.set("compression.type", compression)
+    }
+
+    fn delivery_timeout_ms(&mut self, timeout: u32) -> &mut Self {
+        self.set("delivery.timeout.ms", timeout.to_string())
     }
 
     fn key_serializer(&mut self, serializer: impl Serializer) -> &mut Self {
