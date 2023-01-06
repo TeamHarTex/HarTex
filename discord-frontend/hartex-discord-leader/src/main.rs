@@ -27,8 +27,9 @@
 use std::env;
 use std::time::Duration;
 
-use hartex_discord_core::discord::gateway::Shard;
+use futures_util::future;
 use hartex_discord_core::discord::gateway::message::CloseFrame;
+use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
@@ -38,7 +39,6 @@ use hartex_discord_core::tokio::time;
 use hartex_kafka_utils::serde::ByteArraySerializer;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
-use futures_util::future;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
@@ -67,7 +67,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("building clusters");
     let num_shards = env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::obtain()?;
-    let shards = shards::obtain(num_shards, &queue)?;
+    let mut shards = shards::obtain(num_shards, &queue)?;
 
     let (tx, rx) = watch::channel(false);
 
