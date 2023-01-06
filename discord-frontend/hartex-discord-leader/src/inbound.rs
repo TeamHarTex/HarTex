@@ -20,15 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+use std::time::Duration;
+
 use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::message::Message;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
+use hartex_discord_eyre::eyre::Report;
 use rdkafka::producer::FutureProducer;
+use rdkafka::producer::FutureRecord;
+use rdkafka::util::Timeout;
 
-pub async fn handle(shards: impl Iterator<Item = &mut Shard>, _: FutureProducer) {
+pub async fn handle(
+    shards: impl Iterator<Item = &mut Shard>,
+    producer: FutureProducer,
+) -> hartex_discord_eyre::Result<()> {
     let mut stream = ShardMessageStream::new(shards);
+    let topic = env::var("KAFKA_LEADER_TOPIC_DISCORD_GATEWAY_PAYLOAD")?;
 
     while let Some((shard, result)) = stream.next().await {
         match result {
@@ -44,6 +54,18 @@ pub async fn handle(shards: impl Iterator<Item = &mut Shard>, _: FutureProducer)
                     "[shard {shard_id}] received binary payload from gateway",
                     shard_id = shard.id().number()
                 );
+
+                if let Err((error, _)) = producer
+                    .send(
+                        FutureRecord::to(&topic),
+                        Timeout::After(Duration::from_secs(0)),
+                    )
+                    .await
+                {
+                    println!("{:?}", Report::new(error));
+
+                    continue;
+                }
             }
             Err(error) => {
                 if error.is_fatal() {
@@ -61,4 +83,6 @@ pub async fn handle(shards: impl Iterator<Item = &mut Shard>, _: FutureProducer)
             }
         }
     }
+
+    Ok(())
 }
