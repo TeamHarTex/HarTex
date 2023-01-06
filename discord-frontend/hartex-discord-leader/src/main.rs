@@ -64,9 +64,9 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("building clusters");
     let num_shards = env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::obtain()?;
-    let mut shards = shards::obtain(num_shards, &queue)?;
+    let mut _ = shards::obtain(num_shards, &queue)?;
 
-    let (tx, rx) = watch::channel(false);
+    let (tx, _) = watch::channel(false);
 
     log::trace!("launching {num_shards} shard(s)",);
     // let mut rx = rx.clone();
