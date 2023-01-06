@@ -52,6 +52,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     let _ = ClientConfig::new()
         .bootstrap_servers(vec![bootstrap_servers].into_iter())
         .compression_type(CompressionType::Lz4)
+        .delivery_timeout_ms(30000)
         .key_serializer(ByteArraySerializer)
         .value_serializer(ByteArraySerializer)
         .create::<FutureProducer>();
