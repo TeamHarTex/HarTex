@@ -29,10 +29,10 @@ use std::time::Duration;
 
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
-use hartex_discord_core::tokio::signal;
-use hartex_discord_core::tokio::time;
-use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::signal;
+use hartex_discord_core::tokio::sync::watch;
+use hartex_discord_core::tokio::time;
 use hartex_kafka_utils::serde::ByteArraySerializer;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
