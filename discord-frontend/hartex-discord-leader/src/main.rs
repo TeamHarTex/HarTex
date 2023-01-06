@@ -27,6 +27,8 @@
 use std::env;
 use std::time::Duration;
 
+use hartex_discord_core::discord::gateway::Shard;
+use hartex_discord_core::discord::gateway::message::CloseFrame;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
@@ -36,6 +38,7 @@ use hartex_discord_core::tokio::time;
 use hartex_kafka_utils::serde::ByteArraySerializer;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
+use futures_util::future;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
@@ -53,34 +56,34 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?;
 
-    let _ = ClientConfig::new()
+    let producer = ClientConfig::new()
         .bootstrap_servers(vec![bootstrap_servers].into_iter())
         .compression_type(CompressionType::Lz4)
         .delivery_timeout_ms(30000)
         .key_serializer(ByteArraySerializer)
         .value_serializer(ByteArraySerializer)
-        .create::<FutureProducer>();
+        .create::<FutureProducer>()?;
 
     log::trace!("building clusters");
     let num_shards = env::var("NUM_SHARDS")?.parse::<u64>()?;
     let queue = queue::obtain()?;
-    let _ = shards::obtain(num_shards, &queue)?;
+    let shards = shards::obtain(num_shards, &queue)?;
 
-    let (tx, _) = watch::channel(false);
+    let (tx, rx) = watch::channel(false);
 
     log::trace!("launching {num_shards} shard(s)",);
-    // let mut rx = rx.clone();
+    let mut rx = rx.clone();
 
-    /*tokio::spawn(async move {
+    tokio::spawn(async move {
         tokio::select! {
-            _ = inbound::handle(shards.iter_mut(), amqp) => {},
+            _ = inbound::handle(shards.iter_mut(), producer) => {},
             _ = rx.changed() => {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
                     shard.close(CloseFrame::RESUME).await
                 })).await;
             }
         }
-    });*/
+    });
 
     signal::ctrl_c().await?;
 
