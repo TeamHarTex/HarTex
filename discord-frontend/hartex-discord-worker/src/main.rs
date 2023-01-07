@@ -97,7 +97,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                         kind: ConsumerErrorKind::InvalidGatewayPayload,
                     });
 
-                if let Err(error) = result.clone() {
+                if let Err(error) = result {
                     println!("{:?}", Report::new(error));
 
                     continue;
@@ -108,20 +108,17 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 (result.unwrap(), json_deserializer)
             };
 
-            let result = gateway_deserializer
-                .clone()
-                .deserialize(&mut json_deserializer);
+            log::trace!(
+                "[shard {scanned}] received {} event; attempting to deserialize",
+                gateway_deserializer.event_type().unwrap_or("UNKNOWN")
+            );
+            let result = gateway_deserializer.deserialize(&mut json_deserializer);
             if let Err(error) = result {
                 println!("{:?}", Report::new(error));
 
                 continue;
             }
 
-            log::trace!(
-                "[shard {}] received {} event",
-                scanned,
-                gateway_deserializer.event_type_ref().unwrap_or("UNKNOWN")
-            );
             let event = result.unwrap();
 
             let (Ok(update_result), Ok(event_result)) = tokio::join!(
