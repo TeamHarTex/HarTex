@@ -44,8 +44,9 @@ pub async fn handle(
         match result {
             Ok(message) => {
                 let Some(_) = (match message {
+                    // todo: handle close frame
+                    Message::Close(_) => None,
                     Message::Text(string) => Some(string.into_bytes()),
-                    _ => None,
                 }) else {
                     continue
                 };
