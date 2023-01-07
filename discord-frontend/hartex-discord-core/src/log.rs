@@ -42,12 +42,8 @@ pub fn initialize() {
                 ),
             ),
         )
-        .logger(Logger::builder().build("amq_protocol_tcp", LevelFilter::Off))
-        .logger(Logger::builder().build("async_io", LevelFilter::Off))
-        .logger(Logger::builder().build("lapin", LevelFilter::Off))
         .logger(Logger::builder().build("mio", LevelFilter::Off))
-        .logger(Logger::builder().build("pinky_swear", LevelFilter::Off))
-        .logger(Logger::builder().build("polling", LevelFilter::Off))
+        .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("tungstenite", LevelFilter::Off))

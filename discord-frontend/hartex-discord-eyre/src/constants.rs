@@ -20,14 +20,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub trait Serializer {
-    fn java_fqn(&self) -> String;
-}
+pub const IGNORED_SYMBOLS: [&str; 7] = [
+    "RtlUserThreadStart",
+    "BaseThreadInitThunk",
+    "__scrt_common_main_seh",
+    "invoke_main",
+    "main",
+    "__libc_start_main",
+    "_start",
+];
 
-pub struct ByteArraySerializer;
-
-impl Serializer for ByteArraySerializer {
-    fn java_fqn(&self) -> String {
-        String::from("org.apache.kafka.common.serialization.ByteArraySerializer")
-    }
-}
+pub const IGNORED_CRATES: [&str; 6] = [
+    "std",
+    "core",
+    "eyre",
+    "backtrace",
+    "hartex_discord_eyre",
+    // workaround for lines like:
+    // <core::result::Result<T,F> as ...
+    "<core",
+];
