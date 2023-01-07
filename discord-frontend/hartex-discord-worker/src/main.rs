@@ -24,8 +24,8 @@
 #![deny(warnings)]
 
 use std::env;
-// use std::str;
 
+// use std::str;
 use futures_util::StreamExt;
 // use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
