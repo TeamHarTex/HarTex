@@ -54,7 +54,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     dotenvy::dotenv()?;
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
-        .split(";")
+        .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
 
