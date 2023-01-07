@@ -24,15 +24,15 @@
 #![deny(warnings)]
 
 use std::env;
-
 // use std::str;
+
 use futures_util::StreamExt;
 // use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-// use hartex_discord_eyre::eyre::Report;
+use hartex_discord_eyre::eyre::Report;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use rdkafka::consumer::StreamConsumer;
@@ -63,7 +63,14 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         .group_id("")
         .create::<StreamConsumer>()?;
 
-    while let Some(_) = consumer.stream().next().await {
+    while let Some(result) = consumer.stream().next().await {
+        let Ok(_) = result else {
+            let error = result.unwrap_err();
+            println!("{:?}", Report::new(error));
+
+            continue;
+        };
+
         /*if let Ok(delivery) = result {
             delivery
                 .ack(BasicAckOptions::default())
