@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub const IGNORED_SYMBOLS: [&'static str; 7] = [
+pub const IGNORED_SYMBOLS: [&str; 7] = [
     "RtlUserThreadStart",
     "BaseThreadInitThunk",
     "__scrt_common_main_seh",
@@ -30,7 +30,7 @@ pub const IGNORED_SYMBOLS: [&'static str; 7] = [
     "_start",
 ];
 
-pub const IGNORED_CRATES: [&'static str; 6] = [
+pub const IGNORED_CRATES: [&str; 6] = [
     "std",
     "core",
     "eyre",

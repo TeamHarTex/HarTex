@@ -24,6 +24,7 @@ pub use log::*;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::Appender;
 use log4rs::config::Config;
+use log4rs::config::Logger;
 use log4rs::config::Root;
 use log4rs::encode::pattern::PatternEncoder;
 
@@ -41,6 +42,13 @@ pub fn initialize() {
                 ),
             ),
         )
+        .logger(Logger::builder().build("mio", LevelFilter::Off))
+        .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
+        .logger(Logger::builder().build("rustls", LevelFilter::Off))
+        .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
+        .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
+        .logger(Logger::builder().build("twilight_gateway", LevelFilter::Off))
+        .logger(Logger::builder().build("twilight_model", LevelFilter::Off))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))
         .expect("failed to build log4rs configuration");
 
