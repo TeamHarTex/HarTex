@@ -23,25 +23,25 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
-use std::str;
+use std::env;
 
+// use std::str;
 use futures_util::StreamExt;
-use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
+// use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use hartex_discord_eyre::eyre::Report;
-use lapin::options::BasicAckOptions;
-use lapin::options::BasicConsumeOptions;
-use lapin::types::FieldTable;
-use lapin::Connection;
-use lapin::ConnectionProperties;
-use serde::de::DeserializeSeed;
-use serde_scan::scan;
+// use hartex_discord_eyre::eyre::Report;
+use hartex_kafka_utils::traits::ClientConfigUtils;
+use hartex_kafka_utils::types::CompressionType;
+use rdkafka::consumer::StreamConsumer;
+use rdkafka::ClientConfig;
+// use serde::de::DeserializeSeed;
+// use serde_scan::scan;
 
-use crate::error::ConsumerError;
-use crate::error::ConsumerErrorKind;
+// use crate::error::ConsumerError;
+// use crate::error::ConsumerErrorKind;
 
 mod entitycache;
 mod error;
@@ -55,28 +55,16 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
-    let username = std::env::var("GATEWAY_RABBITMQ_USERNAME")?;
-    let password = std::env::var("GATEWAY_RABBITMQ_PASSWORD")?;
-    let host = std::env::var("RABBITMQ_HOST")?;
-    let port = std::env::var("RABBITMQ_PORT")?;
-    let uri = format!("amqp://{username}:{password}@{host}:{port}");
-    let uri_log = format!("amqp://{username}:<redacted>@{host}:{port}");
+    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?;
 
-    log::trace!("creating rabbitmq amqp connection (uri: {})", &uri_log);
-    let amqp_connection = Connection::connect(&uri, ConnectionProperties::default()).await?;
+    let consumer = ClientConfig::new()
+        .bootstrap_servers(vec![bootstrap_servers].into_iter())
+        .compression_type(CompressionType::Lz4)
+        .group_id("")
+        .create::<StreamConsumer>()?;
 
-    let channel_inbound = amqp_connection.create_channel().await?;
-    let mut consumer = channel_inbound
-        .basic_consume(
-            "gateway.inbound",
-            "consumer",
-            BasicConsumeOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
-
-    while let Some(result) = consumer.next().await {
-        if let Ok(delivery) = result {
+    while let Some(_) = consumer.stream().next().await {
+        /*if let Ok(delivery) = result {
             delivery
                 .ack(BasicAckOptions::default())
                 .await
@@ -136,7 +124,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
             if let Err(report) = event_result {
                 println!("{report:?}");
             }
-        }
+        }*/
     }
 
     signal::ctrl_c().await?;

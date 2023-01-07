@@ -30,6 +30,8 @@ pub trait ClientConfigUtils {
     fn compression_type(&mut self, compression: CompressionType) -> &mut Self;
 
     fn delivery_timeout_ms(&mut self, timeout: u32) -> &mut Self;
+
+    fn group_id(&mut self, group_id: &str) -> &mut Self;
 }
 
 impl ClientConfigUtils for ClientConfig {
@@ -46,5 +48,9 @@ impl ClientConfigUtils for ClientConfig {
 
     fn delivery_timeout_ms(&mut self, timeout: u32) -> &mut Self {
         self.set("delivery.timeout.ms", timeout.to_string())
+    }
+
+    fn group_id(&mut self, group_id: &str) -> &mut Self {
+        self.set("group.id", group_id)
     }
 }
