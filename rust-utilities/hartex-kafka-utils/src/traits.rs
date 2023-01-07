@@ -22,7 +22,6 @@
 
 use rdkafka::ClientConfig;
 
-use crate::serde::Serializer;
 use crate::types::CompressionType;
 
 pub trait ClientConfigUtils {
