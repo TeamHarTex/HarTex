@@ -36,7 +36,6 @@ use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::time;
-use hartex_kafka_utils::serde::ByteArraySerializer;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use rdkafka::producer::FutureProducer;
@@ -60,8 +59,6 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         .bootstrap_servers(vec![bootstrap_servers].into_iter())
         .compression_type(CompressionType::Lz4)
         .delivery_timeout_ms(30000)
-        .key_serializer(ByteArraySerializer)
-        .value_serializer(ByteArraySerializer)
         .create::<FutureProducer>()?;
 
     log::trace!("building clusters");
