@@ -43,7 +43,7 @@ pub async fn handle(
     while let Some((shard, result)) = stream.next().await {
         match result {
             Ok(message) => {
-                let Some(_) = (match message {
+                let Some(bytes) = (match message {
                     // todo: handle close frame
                     Message::Close(_) => None,
                     Message::Text(string) => Some(string.into_bytes()),
@@ -59,8 +59,8 @@ pub async fn handle(
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic)
-                            .key("meaningless_key")
-                            .payload("meaningless_payload"),
+                            .key("INBOUND_GATEWAY_PAYLOAD")
+                            .payload(&bytes),
                         Timeout::After(Duration::from_secs(0)),
                     )
                     .await
