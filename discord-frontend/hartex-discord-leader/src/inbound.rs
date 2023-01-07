@@ -57,7 +57,9 @@ pub async fn handle(
 
                 if let Err((error, _)) = producer
                     .send(
-                        FutureRecord::to(&topic),
+                        FutureRecord::to(&topic)
+                            .key("meaningless_key")
+                            .payload("meaningless_payload"),
                         Timeout::After(Duration::from_secs(0)),
                     )
                     .await

@@ -31,6 +31,9 @@ use std::thread;
 use backtrace::Backtrace;
 use backtrace::SymbolName;
 
+use crate::constants::IGNORED_CRATES;
+use crate::constants::IGNORED_SYMBOLS;
+
 #[allow(clippy::module_name_repetitions)]
 pub struct PanicHook;
 
@@ -75,19 +78,11 @@ impl Display for PanicReport<'_> {
         for frame in self.backtrace.frames() {
             for symbol in frame.symbols() {
                 let symbol_name = symbol.name().unwrap_or(SymbolName::new(b"<unknown>"));
-                if [
-                    "RtlUserThreadStart",
-                    "BaseThreadInitThunk",
-                    "__scrt_common_main_seh",
-                    "invoke_main",
-                    "main",
-                ]
-                .contains(&&*format!("{symbol_name}"))
-                {
+                if IGNORED_SYMBOLS.contains(&&*format!("{symbol_name}")) {
                     continue;
                 }
 
-                if ["std", "core", "eyre", "backtrace", "hartex_eyre"]
+                if IGNORED_CRATES
                     .iter()
                     .any(|prefix| format!("{symbol_name}").contains(prefix))
                 {
