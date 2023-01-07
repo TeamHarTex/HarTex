@@ -53,10 +53,13 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?;
+    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
+        .split(';')
+        .map(String::from)
+        .collect::<Vec<_>>();
 
     let producer = ClientConfig::new()
-        .bootstrap_servers(vec![bootstrap_servers].into_iter())
+        .bootstrap_servers(bootstrap_servers.into_iter())
         .compression_type(CompressionType::Lz4)
         .delivery_timeout_ms(30000)
         .create::<FutureProducer>()?;

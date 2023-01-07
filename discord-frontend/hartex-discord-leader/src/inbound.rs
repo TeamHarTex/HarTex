@@ -59,7 +59,10 @@ pub async fn handle(
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic)
-                            .key("INBOUND_GATEWAY_PAYLOAD")
+                            .key(&format!(
+                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
+                                shard_id = shard.id().number()
+                            ))
                             .payload(&bytes),
                         Timeout::After(Duration::from_secs(0)),
                     )
