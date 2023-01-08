@@ -26,7 +26,7 @@
 use hartex_discord_core::tokio;
 
 mod http;
-mod rabbitmq;
+mod kafka;
 
 #[allow(unused_must_use)]
 #[tokio::main(flavor = "multi_thread")]
@@ -35,7 +35,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     tokio::join!(
         tokio::spawn(http::listen()),
-        tokio::spawn(rabbitmq::consume())
+        tokio::spawn(kafka::consume())
     );
 
     Ok(())
