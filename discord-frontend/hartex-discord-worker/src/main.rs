@@ -131,7 +131,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
         let (Ok(update_result), Ok(event_result)) = tokio::join!(
                 tokio::spawn(entitycache::update(event.clone())),
-                tokio::spawn(eventcallback::invoke(event))
+                tokio::spawn(eventcallback::invoke(event, scanned))
             ) else {
             log::trace!("failed to join futures; skipping event");
             continue;
