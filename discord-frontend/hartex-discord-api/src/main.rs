@@ -33,10 +33,7 @@ mod kafka;
 pub async fn main() -> hartex_discord_eyre::Result<()> {
     hartex_discord_eyre::initialize()?;
 
-    tokio::join!(
-        tokio::spawn(http::listen()),
-        tokio::spawn(kafka::consume())
-    );
+    tokio::join!(tokio::spawn(http::listen()), tokio::spawn(kafka::consume()));
 
     Ok(())
 }
