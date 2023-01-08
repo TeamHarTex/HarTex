@@ -1,5 +1,14 @@
 version: '3.7'
 services:
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-1
+    command:
+      - redis-server
+      - --loglevel
+      - warning
+    ports:
+      - "6379:6379"
   redpanda:
     image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-1
