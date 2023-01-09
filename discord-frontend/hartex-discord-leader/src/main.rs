@@ -28,7 +28,7 @@ use std::env;
 use std::time::Duration;
 
 use futures_util::future;
-use hartex_discord_core::discord::gateway::message::CloseFrame;
+use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
