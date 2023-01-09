@@ -24,8 +24,8 @@ use std::env;
 use std::time::Duration;
 
 use futures_util::StreamExt;
-use hartex_discord_core::discord::gateway::message::Message;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
+use hartex_discord_core::discord::gateway::Message;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
