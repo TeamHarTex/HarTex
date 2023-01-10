@@ -14,6 +14,8 @@ rust-version = "1.68.0"
 dotenvy = { version = "0.15.6", optional = true }
 log = { version = "0.4.17", optional = true }
 log4rs = { git = "https://github.com/TeamHarTex/log4rs.git", branch = "master", default-features = false, optional = true }
+num_enum = "=0.5.7"
+num_enum_derive = "=0.5.7"
 tokio = { version = "1.24.1", optional = true }
 twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
