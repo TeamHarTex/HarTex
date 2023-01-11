@@ -13,7 +13,7 @@ rust-version = "1.68.0"
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros", optional = true }
-sqlx = { version = "0.6.2", features = [ "postgres", "runtime-tokio-rustls" ], default-features = false }
+redis = { version = "0.22.2", features = ["tokio-comp"] }
 
 [features]
 derive = ["dep:hartex_discord_entitycache_macros"]
