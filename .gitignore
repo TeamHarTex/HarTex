@@ -30,6 +30,4 @@ buildconf.toml
 **/.gradle
 **/build
 
-**/docker-compose.yml
-
 buildsystem.jar
