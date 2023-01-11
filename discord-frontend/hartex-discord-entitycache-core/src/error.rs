@@ -25,13 +25,9 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
-use sqlx::error::Error as Sqlx;
-
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
-pub enum RepositoryError {
-    DbError(Sqlx),
-}
+pub enum RepositoryError {}
 
 impl Display for RepositoryError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -40,11 +36,5 @@ impl Display for RepositoryError {
 }
 
 impl Error for RepositoryError {}
-
-impl From<Sqlx> for RepositoryError {
-    fn from(value: Sqlx) -> Self {
-        Self::DbError(value)
-    }
-}
 
 pub type RepositoryResult<T> = Result<T, RepositoryError>;
