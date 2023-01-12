@@ -25,9 +25,13 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+use redis::RedisError;
+
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
-pub enum RepositoryError {}
+pub enum RepositoryError {
+    Redis(RedisError)
+}
 
 impl Display for RepositoryError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
