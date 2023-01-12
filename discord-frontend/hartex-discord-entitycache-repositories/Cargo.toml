@@ -12,5 +12,6 @@ rust-version = "1.68.0"
 
 [dependencies]
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
+hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-entities" }
 
 [features]

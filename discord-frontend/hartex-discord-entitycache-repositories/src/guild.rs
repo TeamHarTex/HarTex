@@ -20,13 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_entitycache_core::Entity;
+use hartex_discord_entitycache_core::error::RepositoryResult;
+use hartex_discord_entitycache_core::traits::Entity;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::guild::GuildEntity;
 
-#[allow(clippy::module_name_repetitions)]
-#[derive(Entity)]
-pub struct GuildEntity {
-    #[entity(id)]
-    pub id: Id<GuildMarker>,
+pub struct CachedGuildRepository;
+
+impl Repository<GuildEntity> for CachedGuildRepository {
+    async fn get(&self, _: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
+        todo!()
+    }
+
+    async fn upsert(&self, _: GuildEntity) -> RepositoryResult<()> {
+        todo!()
+    }
 }
