@@ -35,7 +35,9 @@ pub enum RepositoryError {
 
 impl Display for RepositoryError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.write_str("generic repository error")
+        match self {
+            Self::Redis(error) => writeln!(f, "redis error: {error}")
+        }
     }
 }
 
