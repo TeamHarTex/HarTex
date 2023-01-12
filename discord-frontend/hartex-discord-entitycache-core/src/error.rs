@@ -43,4 +43,10 @@ impl Display for RepositoryError {
 
 impl Error for RepositoryError {}
 
+impl From<RedisError> for RepositoryError {
+    fn from(error: RedisError) -> Self {
+        Self::Redis(error)
+    }
+}
+
 pub type RepositoryResult<T> = Result<T, RepositoryError>;
