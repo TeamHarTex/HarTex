@@ -913,6 +913,9 @@ dependencies = [
 [[package]]
 name = "hartex_discord_entitycache_repositories"
 version = "0.1.0"
+dependencies = [
+ "hartex_discord_entitycache_core",
+]
 
 [[package]]
 name = "hartex_discord_entitycache_test"
