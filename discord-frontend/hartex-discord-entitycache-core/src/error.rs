@@ -30,7 +30,7 @@ use redis::RedisError;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum RepositoryError {
-    Redis(RedisError)
+    Redis(RedisError),
 }
 
 impl Display for RepositoryError {
