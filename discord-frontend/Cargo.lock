@@ -1562,7 +1562,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3742b2c103b9f06bc9fff0a37ff4912935851bee6d36f3c02bcc755bcfec228f"
 dependencies = [
  "lock_api",
- "parking_lot_core 0.9.5",
+ "parking_lot_core 0.9.6",
 ]
 
 [[package]]
@@ -1581,9 +1581,9 @@ dependencies = [
 
 [[package]]
 name = "parking_lot_core"
-version = "0.9.5"
+version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ff9f3fef3968a3ec5945535ed654cb38ff72d7495a25619e2247fb15a2ed9ba"
+checksum = "ba1ef8814b5c993410bb3adfad7a5ed269563e4a2f90c41f5d85be7fb47133bf"
 dependencies = [
  "cfg-if",
  "libc",
@@ -2550,8 +2550,8 @@ dependencies = [
 
 [[package]]
 name = "twilight-gateway"
-version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#e124e0d53506266e3c39a28c627b4860b58bce52"
+version = "0.15.0-rc.2"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2572,7 +2572,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#e124e0d53506266e3c39a28c627b4860b58bce52"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
  "tokio",
  "tracing",
@@ -2581,7 +2581,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#e124e0d53506266e3c39a28c627b4860b58bce52"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
  "hyper",
  "percent-encoding",
@@ -2598,7 +2598,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#e124e0d53506266e3c39a28c627b4860b58bce52"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
  "futures-util",
  "http",
@@ -2609,7 +2609,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#e124e0d53506266e3c39a28c627b4860b58bce52"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
  "bitflags",
  "serde",
@@ -2622,7 +2622,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#e124e0d53506266e3c39a28c627b4860b58bce52"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
  "twilight-model",
 ]
