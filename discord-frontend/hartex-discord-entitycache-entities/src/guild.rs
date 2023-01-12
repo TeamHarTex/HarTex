@@ -24,6 +24,7 @@ use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::Entity;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Entity)]
 pub struct CachedGuild {
     #[entity(id)]
