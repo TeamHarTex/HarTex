@@ -22,5 +22,3 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
-
-pub mod guild;
