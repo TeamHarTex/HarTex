@@ -11,7 +11,7 @@ rust-version = "1.68.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"]}
+hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core", features = ["derive"] }
 
 [features]

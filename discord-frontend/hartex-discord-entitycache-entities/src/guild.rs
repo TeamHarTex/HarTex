@@ -20,27 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
-
-use redis::RedisError;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_entitycache_core::Entity;
 
 #[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
-pub enum RepositoryError {
-    Redis(RedisError),
+#[derive(Entity)]
+pub struct CachedGuild {
+    #[entity(id)]
+    pub id: Id<GuildMarker>,
 }
-
-impl Display for RepositoryError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Redis(error) => writeln!(f, "redis error: {error}"),
-        }
-    }
-}
-
-impl Error for RepositoryError {}
-
-pub type RepositoryResult<T> = Result<T, RepositoryError>;
