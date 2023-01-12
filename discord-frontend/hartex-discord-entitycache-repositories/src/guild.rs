@@ -24,11 +24,14 @@ use hartex_discord_entitycache_core::error::RepositoryResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
+use redis::Client;
 
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
     async fn get(&self, _: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
+        let _ = Client::open("redis://127.0.0.1/")?;
+        
         todo!()
     }
 
