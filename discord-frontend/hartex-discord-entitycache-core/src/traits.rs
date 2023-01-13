@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::error::RepositoryResult;
+use crate::error::CacheResult;
 
 pub trait Entity {
     type Id;
@@ -29,11 +29,7 @@ pub trait Entity {
 }
 
 pub trait Repository<T: Entity> {
-    async fn get(&self, entity_id: T::Id) -> RepositoryResult<T>;
+    async fn get(&self, entity_id: T::Id) -> CacheResult<T>;
 
-    async fn upsert(&self, entity: T) -> RepositoryResult<()>;
-}
-
-pub trait RepositoryUpdater {
-    async fn update(&self) -> RepositoryResult<()>;
+    async fn upsert(&self, entity: T) -> CacheResult<()>;
 }
