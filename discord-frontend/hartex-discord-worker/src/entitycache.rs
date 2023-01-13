@@ -34,6 +34,6 @@ pub async fn update(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
 
     Ok(match dispatch {
         DispatchEvent::GuildCreate(guild_create) => guild_create.update().await?,
-        _ => ()
+        _ => (),
     })
 }
