@@ -21,7 +21,7 @@
  */
 
 use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_entitycache_core::error::RepositoryResult;
+use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
@@ -31,7 +31,7 @@ use redis::Client;
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
-    async fn get(&self, id: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
+    async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
         let client = Client::open("redis://127.0.0.1/")?;
         let mut connection = client.get_tokio_connection().await?;
 
@@ -45,7 +45,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     }
 
     #[allow(clippy::unused_async)]
-    async fn upsert(&self, entity: GuildEntity) -> RepositoryResult<()> {
+    async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
         let client = Client::open("redis://127.0.0.1/")?;
         let mut connection = client.get_tokio_connection().await?;
 

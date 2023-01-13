@@ -29,11 +29,11 @@ use redis::RedisError;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
-pub enum RepositoryError {
+pub enum CacheError {
     Redis(RedisError),
 }
 
-impl Display for RepositoryError {
+impl Display for CacheError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             Self::Redis(error) => writeln!(f, "redis error: {error}"),
@@ -41,12 +41,12 @@ impl Display for RepositoryError {
     }
 }
 
-impl Error for RepositoryError {}
+impl Error for CacheError {}
 
-impl From<RedisError> for RepositoryError {
+impl From<RedisError> for CacheError {
     fn from(error: RedisError) -> Self {
         Self::Redis(error)
     }
 }
 
-pub type RepositoryResult<T> = Result<T, RepositoryError>;
+pub type CacheResult<T> = Result<T, CacheError>;
