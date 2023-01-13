@@ -30,9 +30,7 @@ use crate::CacheUpdater;
 
 impl CacheUpdater for GuildCreate {
     async fn update(&self) -> CacheResult<()> {
-        let entity = GuildEntity {
-            id: self.id
-        };
+        let entity = GuildEntity { id: self.id };
 
         CachedGuildRepository.upsert(entity).await
     }
