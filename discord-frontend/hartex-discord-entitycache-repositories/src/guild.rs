@@ -31,15 +31,16 @@ use redis::Client;
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
-    #[allow(clippy::unused_async)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
         let client = Client::open("redis://127.0.0.1/")?;
         let mut connection = client.get_tokio_connection().await?;
 
-        let id = connection.get::<String, u64>(format!("guild:{id}:id")).await?;
+        let id = connection
+            .get::<String, u64>(format!("guild:{id}:id"))
+            .await?;
 
         Ok(GuildEntity {
-            id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)")
+            id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
         })
     }
 
