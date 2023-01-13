@@ -22,11 +22,18 @@
 
 use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
 use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::guild::GuildEntity;
+use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 
 use crate::CacheUpdater;
 
 impl CacheUpdater for GuildCreate {
     async fn update(&self) -> CacheResult<()> {
-        todo!()
+        let entity = GuildEntity {
+            id: self.id
+        };
+
+        CachedGuildRepository.upsert(entity).await
     }
 }
