@@ -20,33 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
+use hartex_discord_entitycache_core::error::RepositoryResult;
+use hartex_discord_entitycache_core::traits::Entity;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::guild::GuildEntity;
+use redis::Client;
 
-use redis::RedisError;
+pub struct CachedGuildRepository;
 
-#[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
-pub enum RepositoryError {
-    Redis(RedisError),
-}
+impl Repository<GuildEntity> for CachedGuildRepository {
+    #[allow(clippy::unused_async)]
+    async fn get(&self, _: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
+        let _ = Client::open("redis://127.0.0.1/")?;
 
-impl Display for RepositoryError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Redis(error) => writeln!(f, "redis error: {error}"),
-        }
+        todo!()
+    }
+
+    #[allow(clippy::unused_async)]
+    async fn upsert(&self, _: GuildEntity) -> RepositoryResult<()> {
+        todo!()
     }
 }
-
-impl Error for RepositoryError {}
-
-impl From<RedisError> for RepositoryError {
-    fn from(error: RedisError) -> Self {
-        Self::Redis(error)
-    }
-}
-
-pub type RepositoryResult<T> = Result<T, RepositoryError>;
