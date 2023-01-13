@@ -11,6 +11,7 @@ services:
       - warning
     ports:
       - "6379:6379"
+      - "8001:8001"
   redpanda:
     image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-1
