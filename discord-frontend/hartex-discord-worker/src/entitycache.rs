@@ -22,9 +22,18 @@
 
 #![allow(unused_variables)]
 
+use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
+use hartex_discord_entitycache_cacheupdaters::CacheUpdater;
 
 #[allow(clippy::unused_async)]
 pub async fn update(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
-    Ok(())
+    let GatewayEvent::Dispatch(_, dispatch) = event else {
+        return Ok(());
+    };
+
+    Ok(match dispatch {
+        DispatchEvent::GuildCreate(guild_create) => guild_create.update().await?,
+        _ => ()
+    })
 }
