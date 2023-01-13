@@ -22,10 +22,6 @@
 
 use crate::error::CacheResult;
 
-pub trait CacheUpdater {
-    async fn update(&self) -> CacheResult<()>;
-}
-
 pub trait Entity {
     type Id;
 
