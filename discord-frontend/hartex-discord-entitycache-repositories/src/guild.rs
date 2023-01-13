@@ -29,12 +29,14 @@ use redis::Client;
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
+    #[allow(clippy::unused_async)]
     async fn get(&self, _: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
         let _ = Client::open("redis://127.0.0.1/")?;
 
         todo!()
     }
 
+    #[allow(clippy::unused_async)]
     async fn upsert(&self, _: GuildEntity) -> RepositoryResult<()> {
         todo!()
     }
