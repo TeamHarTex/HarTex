@@ -32,8 +32,11 @@ pub async fn update(event: GatewayEvent) -> hartex_discord_eyre::Result<()> {
         return Ok(());
     };
 
-    Ok(match dispatch {
+    #[allow(clippy::single_match)]
+    match dispatch {
         DispatchEvent::GuildCreate(guild_create) => guild_create.update().await?,
         _ => (),
-    })
+    }
+
+    Ok(())
 }
