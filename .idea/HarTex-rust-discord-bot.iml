@@ -5,7 +5,8 @@
       <configuration sdkName="Python 3.10" />
     </facet>
   </component>
-  <component name="NewModuleRootManager">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/base/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cache/base/src" isTestSource="false" />
@@ -63,6 +64,7 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-rdkafka-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/hartex-kafka/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-kafka-utils/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-repositories/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
