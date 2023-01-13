@@ -31,7 +31,11 @@
       Made with love by Team HarTex.
     </p>
     <div class="whitespace" />
-    <button>Get Started</button>
+    <div>
+      <button class="sm:mr-4">Get Started</button>
+      <div class="whitespace block sm:hidden" />
+      <button>Learn More</button>
+    </div>
   </Section>
   <Section></Section>
 </template>
