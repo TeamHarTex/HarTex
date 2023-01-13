@@ -45,7 +45,14 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     }
 
     #[allow(clippy::unused_async)]
-    async fn upsert(&self, _: GuildEntity) -> RepositoryResult<()> {
-        todo!()
+    async fn upsert(&self, entity: GuildEntity) -> RepositoryResult<()> {
+        let client = Client::open("redis://127.0.0.1/")?;
+        let mut connection = client.get_tokio_connection().await?;
+
+        connection
+            .set(format!("guild:{}:id", entity.id), entity.id.get())
+            .await?;
+
+        Ok(())
     }
 }
