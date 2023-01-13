@@ -20,33 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
+#![allow(incomplete_features)]
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+#![feature(async_fn_in_trait)]
 
-use redis::RedisError;
+use hartex_discord_entitycache_core::error::CacheResult;
 
-#[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
-pub enum CacheError {
-    Redis(RedisError),
+pub mod guild_create;
+
+pub trait CacheUpdater {
+    async fn update(&self) -> CacheResult<()>;
 }
-
-impl Display for CacheError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Redis(error) => writeln!(f, "redis error: {error}"),
-        }
-    }
-}
-
-impl Error for CacheError {}
-
-impl From<RedisError> for CacheError {
-    fn from(error: RedisError) -> Self {
-        Self::Redis(error)
-    }
-}
-
-pub type CacheResult<T> = Result<T, CacheError>;

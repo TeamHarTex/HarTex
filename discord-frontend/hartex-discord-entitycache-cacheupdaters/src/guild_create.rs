@@ -20,33 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
+use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
+use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::guild::GuildEntity;
+use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 
-use redis::RedisError;
+use crate::CacheUpdater;
 
-#[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
-pub enum CacheError {
-    Redis(RedisError),
-}
+impl CacheUpdater for GuildCreate {
+    async fn update(&self) -> CacheResult<()> {
+        let entity = GuildEntity { id: self.id };
 
-impl Display for CacheError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Redis(error) => writeln!(f, "redis error: {error}"),
-        }
+        CachedGuildRepository.upsert(entity).await
     }
 }
-
-impl Error for CacheError {}
-
-impl From<RedisError> for CacheError {
-    fn from(error: RedisError) -> Self {
-        Self::Redis(error)
-    }
-}
-
-pub type CacheResult<T> = Result<T, CacheError>;
