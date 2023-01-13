@@ -20,20 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::RepositoryResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
+use redis::AsyncCommands;
 use redis::Client;
 
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
-    #[allow(clippy::unused_async)]
-    async fn get(&self, _: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
-        let _ = Client::open("redis://127.0.0.1/")?;
+    async fn get(&self, id: <GuildEntity as Entity>::Id) -> RepositoryResult<GuildEntity> {
+        let client = Client::open("redis://127.0.0.1/")?;
+        let mut connection = client.get_tokio_connection().await?;
 
-        todo!()
+        let id = connection
+            .get::<String, u64>(format!("guild:{id}:id"))
+            .await?;
+
+        Ok(GuildEntity {
+            id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
+        })
     }
 
     #[allow(clippy::unused_async)]
