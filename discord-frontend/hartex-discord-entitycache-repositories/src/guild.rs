@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
@@ -32,7 +34,8 @@ pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
-        let client = Client::open("redis://127.0.0.1/")?;
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
         let id = connection
@@ -46,7 +49,8 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
     #[allow(clippy::unused_async)]
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
-        let client = Client::open("redis://127.0.0.1/")?;
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
         connection

@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env::VarError;
 use std::error::Error;
 use std::fmt;
 use std::fmt::Display;
@@ -30,12 +31,14 @@ use redis::RedisError;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum CacheError {
+    Env(VarError),
     Redis(RedisError),
 }
 
 impl Display for CacheError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Env(error) => writeln!(f, "env error: {error}"),
             Self::Redis(error) => writeln!(f, "redis error: {error}"),
         }
     }
@@ -46,6 +49,12 @@ impl Error for CacheError {}
 impl From<RedisError> for CacheError {
     fn from(error: RedisError) -> Self {
         Self::Redis(error)
+    }
+}
+
+impl From<VarError> for CacheError {
+    fn from(error: VarError) -> Self {
+        Self::Env(error)
     }
 }
 
