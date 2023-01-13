@@ -890,6 +890,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_entities",
+ "hartex_discord_entitycache_repositories",
 ]
 
 [[package]]
