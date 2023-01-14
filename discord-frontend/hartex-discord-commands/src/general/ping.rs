@@ -20,16 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub trait CommandMetadata {
-    fn command_type(&self) -> u8;
+use hartex_discord_commands_core::traits::Command;
+use hartex_discord_commands_macros::CommandMetadata;
 
-    fn description(&self) -> String;
+#[derive(CommandMetadata)]
+#[metadata(command_type = 1)]
+#[metadata(description = "Status check")]
+#[metadata(interaction_only = true)]
+#[metadata(name = "ping")]
+pub struct Ping;
 
-    fn interaction_only(&self) -> bool;
-
-    fn name(&self) -> String;
-}
-
-pub trait Command: CommandMetadata {
-    async fn execute() -> hartex_discord_eyre::Result<()>;
+impl Command for Ping {
+    #[allow(clippy::unused_async)]
+    async fn execute() -> hartex_discord_eyre::Result<()> {
+        todo!()
+    }
 }

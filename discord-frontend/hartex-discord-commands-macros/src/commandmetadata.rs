@@ -225,7 +225,6 @@ pub fn expand_command_metadata_derivation(
     let core_use = quote::quote! {
         extern crate hartex_discord_commands_core as _commands_core;
     };
-    let dummy_const = quote::format_ident!("_");
     let ident = input.ident.clone();
     let expanded = quote::quote! {
         #core_use
@@ -237,8 +236,6 @@ pub fn expand_command_metadata_derivation(
     };
 
     Ok(quote::quote! {
-        const #dummy_const: () = {
-            #expanded
-        };
+       #expanded
     })
 }
