@@ -19,8 +19,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-#[allow(clippy::unused_async)]
-pub async fn consume() -> hartex_discord_eyre::Result<()> {
-    Ok(())
-}
