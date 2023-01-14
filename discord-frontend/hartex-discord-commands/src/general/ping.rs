@@ -30,4 +30,8 @@ use hartex_discord_commands_macros::CommandMetadata;
 #[metadata(name = "ping")]
 pub struct Ping;
 
-impl Command for Ping {}
+impl Command for Ping {
+    async fn execute() -> hartex_discord_eyre::Result<()> {
+        todo!()
+    }
+}

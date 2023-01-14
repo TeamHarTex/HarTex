@@ -30,4 +30,6 @@ pub trait CommandMetadata {
     fn name(&self) -> String;
 }
 
-pub trait Command: CommandMetadata {}
+pub trait Command: CommandMetadata {
+    async fn execute() -> hartex_discord_eyre::Result<()>;
+}
