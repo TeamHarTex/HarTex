@@ -6,7 +6,7 @@
 
 > **Supported by [JetBrains](https://www.jetbrains.com/) through their [Open Source Licenses](https://www.jetbrains.com/community/opensource/#support) (they are amazing!)**
 
-**HarTex is the spped-of-thought server management bot for Discord; built to be stable, flexible and customizable.**
+**HarTex is the speed-of-thought server management bot for Discord; built to be stable, flexible and customizable.**
 
 ## Quick Start
 
