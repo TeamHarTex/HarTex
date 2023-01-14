@@ -31,6 +31,7 @@ use hartex_discord_commands_macros::CommandMetadata;
 pub struct Ping;
 
 impl Command for Ping {
+    #[allow(clippy::unused_async)]
     async fn execute() -> hartex_discord_eyre::Result<()> {
         todo!()
     }
