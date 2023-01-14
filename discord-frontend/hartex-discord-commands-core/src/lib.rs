@@ -33,4 +33,3 @@ extern crate hartex_discord_commands_macros;
 pub use hartex_discord_commands_macros::*;
 
 pub mod traits;
-pub mod types;
