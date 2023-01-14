@@ -20,8 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+#![feature(async_fn_in_trait)]
 
 #[allow(unused_imports)]
 #[cfg(feature = "derive")]

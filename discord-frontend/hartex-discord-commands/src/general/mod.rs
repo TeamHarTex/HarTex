@@ -20,16 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub trait CommandMetadata {
-    fn command_type(&self) -> u8;
-
-    fn description(&self) -> String;
-
-    fn interaction_only(&self) -> bool;
-
-    fn name(&self) -> String;
-}
-
-pub trait Command: CommandMetadata {
-    async fn execute() -> hartex_discord_eyre::Result<()>;
-}
+pub mod ping;
