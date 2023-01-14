@@ -483,6 +483,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_discord_commands_core",
  "hartex_discord_commands_macros",
+ "hartex_discord_core",
  "hartex_discord_eyre",
 ]
 
@@ -491,6 +492,7 @@ name = "hartex_discord_commands_core"
 version = "0.1.0"
 dependencies = [
  "hartex_discord_commands_macros",
+ "hartex_discord_core",
  "hartex_discord_eyre",
 ]
 
