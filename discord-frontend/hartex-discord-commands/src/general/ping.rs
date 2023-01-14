@@ -22,6 +22,7 @@
 
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_macros::CommandMetadata;
+use hartex_discord_core::discord::model::application::interaction::Interaction;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -32,7 +33,7 @@ pub struct Ping;
 
 impl Command for Ping {
     #[allow(clippy::unused_async)]
-    async fn execute() -> hartex_discord_eyre::Result<()> {
+    async fn execute(&self, _: Interaction) -> hartex_discord_eyre::Result<()> {
         todo!()
     }
 }
