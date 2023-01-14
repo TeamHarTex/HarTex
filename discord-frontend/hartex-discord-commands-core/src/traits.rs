@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_core::discord::model::application::command::CommandOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
 pub trait CommandMetadata {
@@ -34,4 +35,8 @@ pub trait CommandMetadata {
 
 pub trait Command: CommandMetadata {
     async fn execute(&self, interaction: Interaction) -> hartex_discord_eyre::Result<()>;
+
+    fn options(&self) -> Vec<CommandOption> {
+        vec![]
+    }
 }
