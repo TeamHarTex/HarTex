@@ -22,3 +22,5 @@
 
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
+
+pub mod general;
