@@ -1,0 +1,5 @@
+{
+  "description": "Status check",
+  "name": "ping",
+  "type": "CHAT_INPUT"
+}
