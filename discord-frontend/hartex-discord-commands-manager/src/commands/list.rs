@@ -20,33 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::Command;
-use hartex_discord_core::dotenvy;
-use hartex_discord_core::log;
-use hartex_discord_core::tokio;
-
-mod cmdline;
-mod commands;
-
-#[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_discord_eyre::Result<()> {
-    hartex_discord_eyre::initialize()?;
-    log::initialize();
-
-    log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
-
-    let command = Command::new("cmdmgr")
-        .subcommand(
-            Command::new("list")
-                .about("Lists commands registered with Discord.")
-                .long_about(
-                    "Lists commands registered with Discord. Use the -a/--all option to show all regardless its registration status."
-                )
-        );
-
-    let matches = command.get_matches();
-    cmdline::handle(matches).await?;
-
+pub fn list_command() -> hartex_discord_eyre::Result<()> {
     Ok(())
 }
