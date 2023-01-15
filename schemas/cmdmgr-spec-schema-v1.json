@@ -854,6 +854,12 @@
             "maximum": 6000,
             "minimum": 0
           },
+          "max_value": {
+            "type": ["integer", "number"]
+          },
+          "min_value": {
+            "type": ["integer", "number"]
+          },
           "name": {
             "type": "string",
             "maxLength": 32,
