@@ -31,5 +31,6 @@
 <style lang="postcss" scoped>
 main {
   @apply relative z-10;
+  @apply bg-primary;
 }
 </style>
