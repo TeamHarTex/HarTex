@@ -35,9 +35,9 @@ use syn::Error;
 use syn::Visibility;
 
 const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
-const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "description", "name"];
-const VALID_ATTR_PARAMETER_NAMES: [&str; 4] =
-    ["command_type", "description", "interaction_only", "name"];
+const LITERAL_PARAMETERS: [&str; 2] = ["command_type", "name"];
+const VALID_ATTR_PARAMETER_NAMES: [&str; 3] =
+    ["command_type", "interaction_only", "name"];
 
 #[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(
@@ -167,14 +167,6 @@ pub fn expand_command_metadata_derivation(
                     let expanded = quote::quote! {
                         fn command_type(&self) -> u8 {
                             #group_tree_next
-                        }
-                    };
-                    functions.extend(expanded);
-                }
-                "description" => {
-                    let expanded = quote::quote! {
-                        fn description(&self) -> String {
-                            String::from(#group_tree_next)
                         }
                     };
                     functions.extend(expanded);
