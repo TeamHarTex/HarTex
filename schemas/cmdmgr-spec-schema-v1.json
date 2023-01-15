@@ -7,23 +7,19 @@
   "required": ["name"],
   "properties": {
     "default_member_permissions": {
-      "type": "integer",
-      "description": "Permissions required of the global application command represented as a bit set"
+      "type": "integer"
     },
     "default_permissions": {
       "type": "boolean",
-      "description": "Whether the global application command is enabled by default when the application joins a new guild",
       "deprecationMessage": "This is replaced by default_member_permissions"
     },
     "description": {
       "type": "string",
-      "description": "Description of the global application command",
       "maxLength": 100,
       "minLength": 1
     },
     "description_localizations": {
       "type": "object",
-      "description": "Localization dictionary for the name field",
       "properties": {
         "bg": {
           "type": "string",
@@ -214,18 +210,15 @@
       }
     },
     "dm_permission": {
-      "type": "boolean",
-      "description": "Whether this global application command is available in DMs"
+      "type": "boolean"
     },
     "name": {
       "type": "string",
-      "description": "Name of the global application command",
       "maxLength": 32,
       "minLength": 1
     },
     "name_localizations": {
       "type": "object",
-      "description": "Localization dictionary for the name field",
       "properties": {
         "bg": {
           "type": "string",
@@ -416,25 +409,25 @@
       }
     },
     "nsfw": {
-      "type": "boolean",
-      "description": "Whether the global application command is age-restricted"
+      "type": "boolean"
     },
     "options": {
       "type": "array",
-      "description": "The parameters for the global application command",
       "items": {
         "type": "object",
-        "required": ["description", "name"],
+        "required": ["description", "name", "type"],
         "properties": {
+          "autocomplete": {
+            "type": "boolean",
+            "description": ""
+          },
           "description": {
             "type": "string",
-            "description": "Description of the global application command",
             "maxLength": 100,
             "minLength": 1
           },
           "description_localizations": {
             "type": "object",
-            "description": "Localization dictionary for the name field",
             "properties": {
               "bg": {
                 "type": "string",
@@ -624,15 +617,23 @@
               }
             }
           },
+          "max_length": {
+            "type": ["integer", "number"],
+            "maximum": 6000,
+            "minimum": 1
+          },
+          "min_length": {
+            "type": ["integer", "number"],
+            "maximum": 6000,
+            "minimum": 0
+          },
           "name": {
             "type": "string",
-            "description": "Name of the global application command",
             "maxLength": 32,
             "minLength": 1
           },
           "name_localizations": {
             "type": "object",
-            "description": "Localization dictionary for the name field",
             "properties": {
               "bg": {
                 "type": "string",
@@ -821,13 +822,36 @@
                 "minLength": 1
               }
             }
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SUB_COMMAND",
+              "SUB_COMMAND_GROUP",
+              "STRING",
+              "INTEGER",
+              "BOOLEAN",
+              "USER",
+              "CHANNEL",
+              "ROLE",
+              "MENTIONABLE",
+              "NUMBER",
+              "ATTACHMENT"
+            ]
           }
         }
       }
     },
     "type": {
       "type": "string",
-      "enum": ["CHAT_INPUT", "USER", "MESSAGE"]
+      "enum": [
+        "CHAT_INPUT",
+        "USER",
+        "MESSAGE"
+      ]
     }
   }
 }
