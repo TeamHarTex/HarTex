@@ -1,3 +1,22 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/TeamHarTex/HarTex/blob/nightly/schemas/cmdmgr-spec-schema-v1.json",
+  "title": "Commands Manager Global Application Command Spec",
+  "description": "A global application command spec for use with the Commands Manager",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the global application command",
+      "maxLength": 32,
+      "minLength": 1
+    },
+    "nameLocalizations": {
+      "type": "object",
+      "description": "Localization dictionary for the name field",
+      "properties": {
+      }
+    }
+  },
+  "required": ["name"]
 }
