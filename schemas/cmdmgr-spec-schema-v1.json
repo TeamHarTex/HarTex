@@ -11,10 +11,196 @@
       "maxLength": 32,
       "minLength": 1
     },
-    "nameLocalizations": {
+    "name_localizations": {
       "type": "object",
       "description": "Localization dictionary for the name field",
       "properties": {
+        "bg": {
+          "type": "string",
+          "description": "Bulgarian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "cs": {
+          "type": "string",
+          "description": "Czech localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "da": {
+          "type": "string",
+          "description": "Danish localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "de": {
+          "type": "string",
+          "description": "German localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "el": {
+          "type": "string",
+          "description": "Greek localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "en-GB": {
+          "type": "string",
+          "description": "British English localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "en-US": {
+          "type": "string",
+          "description": "American English localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "es-ES": {
+          "type": "string",
+          "description": "Spanish localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "fi": {
+          "type": "string",
+          "description": "Finnish localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "fr": {
+          "type": "string",
+          "description": "French localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "hi": {
+          "type": "string",
+          "description": "Hindi localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "hu": {
+          "type": "string",
+          "description": "Hungarian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "hr": {
+          "type": "string",
+          "description": "Croatian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "description": "Indonesian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "it": {
+          "type": "string",
+          "description": "Italian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "ja": {
+          "type": "string",
+          "description": "Japanese localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "ko": {
+          "type": "string",
+          "description": "Korean localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "lt": {
+          "type": "string",
+          "description": "Lithuanian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "nl": {
+          "type": "string",
+          "description": "Dutch localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "no": {
+          "type": "string",
+          "description": "Norwegian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "pl": {
+          "type": "string",
+          "description": "Polish localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "pt-BR": {
+          "type": "string",
+          "description": "Portuguese, Brazilian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "ro": {
+          "type": "string",
+          "description": "Romanian, Romania localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "ru": {
+          "type": "string",
+          "description": "Russian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "sv-SE": {
+          "type": "string",
+          "description": "Swedish localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "th": {
+          "type": "string",
+          "description": "Thai localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "vi": {
+          "type": "string",
+          "description": "Vietnamese localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "tr": {
+          "type": "string",
+          "description": "Turkish localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "uk": {
+          "type": "string",
+          "description": "Ukranian localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "zh-CN": {
+          "type": "string",
+          "description": "Chinese, China localization",
+          "maxLength": 32,
+          "minLength": 1
+        },
+        "zh-TW": {
+          "type": "string",
+          "description": "Chinese, Taiwan localization",
+          "maxLength": 32,
+          "minLength": 1
+        }
       }
     }
   },
