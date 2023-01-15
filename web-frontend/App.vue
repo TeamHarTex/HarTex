@@ -36,7 +36,7 @@ a {
 
 body {
   @apply mx-12 sm:mx-24 lg:mx-36 xl:mx-80;
-  @apply bg-primary text-secondary;
+  @apply bg-primary text-secondary mb-40;
 
   font-family: "Inter", sans-serif;
 }
