@@ -26,8 +26,6 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 pub trait CommandMetadata {
     fn command_type(&self) -> u8;
 
-    fn description(&self) -> String;
-
     fn interaction_only(&self) -> bool;
 
     fn name(&self) -> String;
