@@ -16,6 +16,7 @@ hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" 
 [dev-dependencies]
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core", features = ["derive"] }
 hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros" }
+
 macrotest = { git = "https://github.com/TeamHarTex/macrotest.git", branch = "master" }
 rustversion = "1.0.11"
 trybuild = "1.0.75"

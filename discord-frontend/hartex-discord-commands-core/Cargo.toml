@@ -15,8 +15,5 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-mo
 hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros", optional = true }
 
-[dev-dependencies]
-hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
-
 [features]
 derive = ["dep:hartex_discord_commands_macros"]

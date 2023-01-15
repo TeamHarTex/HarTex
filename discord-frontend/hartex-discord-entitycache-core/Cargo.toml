@@ -13,6 +13,7 @@ rust-version = "1.68.0"
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros", optional = true }
+
 redis = { version = "0.22.2", features = ["tokio-comp"] }
 
 [features]
