@@ -27,3 +27,9 @@
   </main>
   <Footer />
 </template>
+
+<style lang="postcss" scoped>
+main {
+  @apply relative z-10;
+}
+</style>

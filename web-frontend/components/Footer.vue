@@ -21,4 +21,13 @@
   -->
 
 <template>
+  <footer>
+    <p>Footer</p>
+  </footer>
 </template>
+
+<style lang="postcss" scoped>
+footer {
+  @apply fixed bottom-0 bg-red-700 h-40 w-40;
+}
+</style>
