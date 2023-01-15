@@ -31,7 +31,14 @@ pub fn main() -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
-    let _ = Command::new("cmdmgr");
+    let _ = Command::new("cmdmgr")
+        .subcommand(
+            Command::new("list")
+                .about("Lists commands registered with Discord.")
+                .long_about(
+                    "Lists commands registered with Discord. Use the -a/--all option to show all regardless its registration status."
+                )
+        );
 
     Ok(())
 }
