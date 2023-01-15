@@ -19,3 +19,26 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use clap::Command;
+use hartex_discord_core::dotenvy;
+use hartex_discord_core::log;
+
+pub fn main() -> hartex_discord_eyre::Result<()> {
+    hartex_discord_eyre::initialize()?;
+    log::initialize();
+
+    log::trace!("loading environment variables");
+    dotenvy::dotenv()?;
+
+    let _ = Command::new("cmdmgr")
+        .subcommand(
+            Command::new("list")
+                .about("Lists commands registered with Discord.")
+                .long_about(
+                    "Lists commands registered with Discord. Use the -a/--all option to show all regardless its registration status."
+                )
+        );
+
+    Ok(())
+}
