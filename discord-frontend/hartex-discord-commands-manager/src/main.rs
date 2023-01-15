@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use clap::Command;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 
@@ -29,6 +30,8 @@ pub fn main() -> hartex_discord_eyre::Result<()> {
 
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
+
+    let _ = Command::new("cmdmgr");
 
     Ok(())
 }

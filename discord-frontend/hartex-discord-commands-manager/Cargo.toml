@@ -14,4 +14,6 @@ rust-version = "1.68.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["environment", "logging-facilities"] }
 hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 
+clap = "4.1.1"
+
 [features]
