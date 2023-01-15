@@ -4,8 +4,17 @@
   "title": "Commands Manager Global Application Command Spec",
   "description": "A global application command spec for use with the Commands Manager",
   "type": "object",
-  "required": ["description", "name", "type"],
+  "required": ["name"],
   "properties": {
+    "default_member_permissions": {
+      "type": "integer",
+      "description": "Permissions required of the global application command represented as a bit set"
+    },
+    "default_permissions": {
+      "type": "boolean",
+      "description": "Whether the global application command is enabled by default when the application joins a new guild",
+      "deprecationMessage": "This is replaced by default_member_permissions"
+    },
     "description": {
       "type": "string",
       "description": "Description of the global application command",
@@ -204,6 +213,10 @@
         }
       }
     },
+    "dm_permission": {
+      "type": "boolean",
+      "description": "Whether this global application command is available in DMs"
+    },
     "name": {
       "type": "string",
       "description": "Name of the global application command",
@@ -399,6 +412,20 @@
           "description": "Chinese, Taiwan localization",
           "maxLength": 32,
           "minLength": 1
+        }
+      }
+    },
+    "nsfw": {
+      "type": "boolean",
+      "description": "Whether the global application command is age-restricted"
+    },
+    "options": {
+      "type": "array",
+      "description": "The parameters for the global application command",
+      "items": {
+        "type": "object",
+        "properties": {
+          
         }
       }
     },
