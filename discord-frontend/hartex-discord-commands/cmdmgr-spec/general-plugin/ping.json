@@ -1,3 +1,4 @@
 {
-  "name": "ping"
+  "name": "ping",
+  "type": "CHAT_INPUT"
 }

@@ -4,6 +4,7 @@
   "title": "Commands Manager Global Application Command Spec",
   "description": "A global application command spec for use with the Commands Manager",
   "type": "object",
+  "required": ["name", "type"],
   "properties": {
     "name": {
       "type": "string",
@@ -202,7 +203,10 @@
           "minLength": 1
         }
       }
+    },
+    "type": {
+      "type": "string",
+      "enum": ["CHAT_INPUT", "USER", "MESSAGE"]
     }
-  },
-  "required": ["name"]
+  }
 }
