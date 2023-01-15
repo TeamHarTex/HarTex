@@ -26,7 +26,6 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
-#[metadata(description = "Status check")]
 #[metadata(interaction_only = true)]
 #[metadata(name = "ping")]
 pub struct Ping;
