@@ -467,6 +467,10 @@ dependencies = [
 [[package]]
 name = "hartex_discord_commands_manager"
 version = "0.1.0"
+dependencies = [
+ "hartex_discord_core",
+ "hartex_discord_eyre",
+]
 
 [[package]]
 name = "hartex_discord_commands_test"

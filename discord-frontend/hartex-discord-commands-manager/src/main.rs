@@ -19,3 +19,16 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use hartex_discord_core::dotenvy;
+use hartex_discord_core::log;
+
+pub fn main() -> hartex_discord_eyre::Result<()> {
+    hartex_discord_eyre::initialize()?;
+    log::initialize();
+
+    log::trace!("loading environment variables");
+    dotenvy::dotenv()?;
+
+    Ok(())
+}
