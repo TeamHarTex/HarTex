@@ -15,6 +15,9 @@
                   <Item>
                     <option name="path" value="discord-frontend/hartex-discord-commands/cmdmgr-spec/general-plugin/ping.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="discord-frontend/hartex-discord-commands-spec/general-plugin/ping.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
