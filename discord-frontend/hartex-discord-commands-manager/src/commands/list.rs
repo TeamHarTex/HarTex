@@ -25,8 +25,8 @@ use std::io::Read;
 
 use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::log;
-use walkdir::WalkDir;
 use hartex_discord_eyre::eyre::Report;
+use walkdir::WalkDir;
 
 pub fn list_command() -> hartex_discord_eyre::Result<()> {
     log::trace!("reading specification directory");
@@ -52,7 +52,10 @@ pub fn list_command() -> hartex_discord_eyre::Result<()> {
 
         let result = serde_json::from_str::<Command>(&buffer);
         if let Err(error) = result {
-            log::warn!("deserialization failed for file: {}", entry.path().to_str().unwrap());
+            log::warn!(
+                "deserialization failed for file: {}",
+                entry.path().to_str().unwrap()
+            );
             println!("{:?}", Report::new(error));
             log::warn!("skipping file due to above error");
         }
