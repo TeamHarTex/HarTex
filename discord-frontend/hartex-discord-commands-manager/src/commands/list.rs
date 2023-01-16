@@ -20,6 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fs;
+
+use hartex_discord_core::log;
+
 pub fn list_command() -> hartex_discord_eyre::Result<()> {
+    log::trace!("reading specification directory");
+    log::warn!(
+        "an error will occur if this command is not ran within the discord-frontend directory"
+    );
+    let _ = fs::read_dir("hartex-discord-commands-spec")?;
+
     Ok(())
 }
