@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fs;
+
 pub fn list_command() -> hartex_discord_eyre::Result<()> {
+    let _ = fs::read_dir("hartex-discord-commands-spec")?;
+
     Ok(())
 }
