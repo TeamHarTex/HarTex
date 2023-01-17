@@ -37,6 +37,7 @@
       <button>Learn More</button>
     </div>
   </Section>
+  <Section></Section>
 </template>
 
 <style lang="postcss" scoped>
