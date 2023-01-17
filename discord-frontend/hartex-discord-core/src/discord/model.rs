@@ -126,7 +126,16 @@ impl Display for CommandManagerCommand {
             "{}{}",
             "Command Enabled By Default (deprecated): ".yellow().bold(),
             self.default_permissions
-                .map_or("Yes", |permission| if permission { "yes " } else { "No" })
+                .map_or("Yes", |permission| if permission { "Yes" } else { "No" })
+                .bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}{}",
+            "Command Age Restricted: ".bold(),
+            self.nsfw
+                .map_or("Unspecified", |nsfw| if nsfw { "Yes" } else { "No" })
                 .bright_cyan()
         )?;
 
