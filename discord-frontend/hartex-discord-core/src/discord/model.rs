@@ -120,6 +120,16 @@ impl Display for CommandManagerCommand {
                 .bright_cyan()
         )?;
 
+        #[allow(deprecated)]
+        writeln!(
+            f,
+            "{}{}",
+            "Command Enabled By Default (deprecated): ".yellow().bold(),
+            self.default_permissions
+                .map_or("Yes", |permission| if permission { "yes " } else { "No" })
+                .bright_cyan()
+        )?;
+
         Ok(())
     }
 }
