@@ -107,6 +107,16 @@ impl Display for CommandManagerCommand {
             self.kind.name().bright_cyan()
         )?;
 
+        writeln!(
+            f,
+            "{}{}",
+            "Command Visibility in Direct Messages: ".bold(),
+            self.dm_permission
+                .map(|permission| if permission { "Visible" } else { "Invisible" })
+                .unwrap_or("Visible")
+                .bright_cyan()
+        )?;
+
         Ok(())
     }
 }
