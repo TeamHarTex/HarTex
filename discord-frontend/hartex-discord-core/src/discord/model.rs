@@ -132,7 +132,11 @@ impl Display for CommandManagerCommand {
 
         write!(f, "{}", "Command Age Restricted: ".bold())?;
         if self.nsfw.is_some() {
-            writeln!(f, "{}", if self.nsfw.unwrap() { "Yes" } else { "No" }.bright_cyan())?;
+            writeln!(
+                f,
+                "{}",
+                if self.nsfw.unwrap() { "Yes" } else { "No" }.bright_cyan()
+            )?;
         } else {
             writeln!(f, "{}", "Unspecified".truecolor(107, 107, 107))?;
         }
