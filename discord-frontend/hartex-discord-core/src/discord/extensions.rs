@@ -36,4 +36,3 @@ impl CommandTypeExt for CommandType {
         }
     }
 }
-
