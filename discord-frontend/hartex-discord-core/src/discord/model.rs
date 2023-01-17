@@ -69,7 +69,7 @@ impl Display for CommandManagerCommand {
                 writeln!(f)?;
                 writeln!(
                     f,
-                    "    - {} localization: {}",
+                    "    - {} Localization: {}",
                     locale.bright_cyan(),
                     localization.bright_cyan()
                 )?;
@@ -130,14 +130,24 @@ impl Display for CommandManagerCommand {
                 .bright_cyan()
         )?;
 
-        writeln!(
-            f,
-            "{}{}",
-            "Command Age Restricted: ".bold(),
-            self.nsfw
-                .map_or("Unspecified", |nsfw| if nsfw { "Yes" } else { "No" })
-                .bright_cyan()
-        )?;
+        write!(f, "{}", "Command Age Restricted: ".bold())?;
+        if self.nsfw.is_some() {
+            writeln!(f, "{}", if self.nsfw.unwrap() { "Yes" } else { "No" }.bright_cyan())?;
+        } else {
+            writeln!(f, "{}", "Unspecified".truecolor(107, 107, 107))?;
+        }
+
+        write!(f, "{}", "Command Default Member Permissions: ".bold())?;
+        if self.default_member_permissions.is_some() {
+            let permissions_string = format!("{:?}", self.default_member_permissions.unwrap());
+            writeln!(f)?;
+
+            for permission in permissions_string.split(" | ") {
+                writeln!(f, "    - {}", permission.bright_cyan())?;
+            }
+        } else {
+            writeln!(f, "{}", "Unspecified".truecolor(107, 107, 107))?;
+        }
 
         Ok(())
     }
