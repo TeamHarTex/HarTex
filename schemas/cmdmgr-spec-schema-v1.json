@@ -1079,11 +1079,11 @@
       }
     },
     "type": {
-      "type": "string",
+      "type": "integer",
       "enum": [
-        "CHAT_INPUT",
-        "USER",
-        "MESSAGE"
+        1,
+        2,
+        3
       ]
     }
   }
