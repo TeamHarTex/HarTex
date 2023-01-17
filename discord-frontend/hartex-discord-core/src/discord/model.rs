@@ -21,6 +21,9 @@
  */
 
 use std::collections::HashMap;
+use std::fmt;
+use std::fmt::Display;
+use std::fmt::Formatter;
 
 use serde::Deserialize;
 use serde::Serialize;
@@ -48,4 +51,12 @@ pub struct CommandManagerCommand {
     pub nsfw: Option<bool>,
     #[serde(default)]
     pub options: Vec<CommandOption>,
+}
+
+impl Display for CommandManagerCommand {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        writeln!(f)?;
+
+        Ok(())
+    }
 }

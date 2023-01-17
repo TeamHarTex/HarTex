@@ -60,12 +60,12 @@ pub fn list_command() -> hartex_discord_eyre::Result<()> {
                 );
                 println!("{:?}", Report::new(error));
                 log::warn!("skipping file due to above error");
-                
+
                 continue;
             }
         };
-        
-        log::debug!("{command:?}");
+
+        println!("{command}");
     }
 
     Ok(())
