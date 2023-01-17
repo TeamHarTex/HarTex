@@ -20,8 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(feature = "discord-gateway")]
-pub use twilight_gateway as gateway;
-pub mod extensions;
-#[cfg(feature = "discord-model")]
-pub mod model;
+use super::model::application::command::CommandType;
+
+pub trait CommandTypeExt {
+    fn name(&self) -> &'static str;
+}
+
+impl CommandTypeExt for CommandType {
+    fn name(&self) -> &'static str {
+        match self {
+            Self::ChatInput => "CHAT_INPUT",
+            Self::Message => "MESSAGE",
+            Self::User => "USER",
+            _ => "UNKNOWN",
+        }
+    }
+}

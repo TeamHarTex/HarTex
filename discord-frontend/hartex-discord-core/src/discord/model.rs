@@ -21,7 +21,11 @@
  */
 
 use std::collections::HashMap;
+use std::fmt;
+use std::fmt::Display;
+use std::fmt::Formatter;
 
+use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 use twilight_model::application::command::CommandOption;
@@ -29,14 +33,18 @@ use twilight_model::application::command::CommandType;
 use twilight_model::guild::Permissions;
 pub use twilight_model::*;
 
-#[derive(Deserialize, Serialize)]
+use super::extensions::CommandTypeExt;
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommand {
     pub default_member_permissions: Option<Permissions>,
+    #[deprecated(note = "use default_member_permissions instead")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_permissions: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dm_permission: Option<bool>,
-    pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description_localizations: Option<HashMap<String, String>>,
     #[serde(rename = "type")]
@@ -48,4 +56,70 @@ pub struct CommandManagerCommand {
     pub nsfw: Option<bool>,
     #[serde(default)]
     pub options: Vec<CommandOption>,
+}
+
+impl Display for CommandManagerCommand {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        writeln!(f)?;
+        writeln!(f, "{}{}", "Command Name: ".bold(), self.name.bright_cyan())?;
+
+        write!(f, "{}", "Command Name Localizations: ".bold())?;
+        if self.name_localizations.is_some() {
+            for (locale, localization) in self.name_localizations.as_ref().unwrap() {
+                writeln!(f)?;
+                writeln!(
+                    f,
+                    "    - {} localization: {}",
+                    locale.bright_cyan(),
+                    localization.bright_cyan()
+                )?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        write!(f, "{}", "Command Description: ".bold())?;
+        if self.description.is_some() {
+            writeln!(f, "{}", self.description.as_ref().unwrap().bright_cyan())?;
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        write!(f, "{}", "Command Description Localizations: ".bold())?;
+        if self.description_localizations.is_some() {
+            for (locale, localization) in self.description_localizations.as_ref().unwrap() {
+                writeln!(f)?;
+                writeln!(
+                    f,
+                    "    - {} localization: {}",
+                    locale.bright_cyan(),
+                    localization.bright_cyan()
+                )?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        writeln!(
+            f,
+            "{}{}",
+            "Command Type: ".bold(),
+            self.kind.name().bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}{}",
+            "Command Visibility in Direct Messages: ".bold(),
+            self.dm_permission
+                .map_or("Visible", |permission| if permission {
+                    "Visible"
+                } else {
+                    "Invisible"
+                })
+                .bright_cyan()
+        )?;
+
+        Ok(())
+    }
 }
