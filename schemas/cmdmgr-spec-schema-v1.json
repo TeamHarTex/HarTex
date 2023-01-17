@@ -1086,5 +1086,15 @@
         3
       ]
     }
+  },
+  "if": {
+    "properties": {
+      "type": {
+        "const": 1
+      }
+    }
+  },
+  "then": {
+    "required": ["description"]
   }
 }
