@@ -33,9 +33,12 @@ use twilight_model::application::command::CommandType;
 use twilight_model::guild::Permissions;
 pub use twilight_model::*;
 
+use super::extensions::CommandTypeExt;
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommand {
     pub default_member_permissions: Option<Permissions>,
+    #[deprecated(note = "use default_member_permissions instead")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_permissions: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -96,6 +99,8 @@ impl Display for CommandManagerCommand {
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
+
+        writeln!(f, "{}{}", "Command Type: ".bold(), self.kind.name().bright_cyan())?;
 
         Ok(())
     }
