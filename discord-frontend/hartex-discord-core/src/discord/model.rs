@@ -63,7 +63,12 @@ impl Display for CommandManagerCommand {
         if self.name_localizations.is_some() {
             for (locale, localization) in self.name_localizations.as_ref().unwrap() {
                 writeln!(f)?;
-                writeln!(f, "    - {} localization: {}", locale.bright_cyan(), localization.bright_cyan())?;
+                writeln!(
+                    f,
+                    "    - {} localization: {}",
+                    locale.bright_cyan(),
+                    localization.bright_cyan()
+                )?;
             }
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
