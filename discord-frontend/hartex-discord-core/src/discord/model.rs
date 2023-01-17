@@ -25,6 +25,7 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 use twilight_model::application::command::CommandOption;
@@ -56,6 +57,17 @@ pub struct CommandManagerCommand {
 impl Display for CommandManagerCommand {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         writeln!(f)?;
+        writeln!(f, "{}{}", "Command Name: ".bold(), self.name.bright_cyan())?;
+
+        write!(f, "{}", "Command Name Localizations: ".bold())?;
+        if self.name_localizations.is_some() {
+            for (locale, localization) in self.name_localizations.as_ref().unwrap() {
+                writeln!(f)?;
+                writeln!(f, "    - {} localization: {}", locale.bright_cyan(), localization.bright_cyan())?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
 
         Ok(())
     }
