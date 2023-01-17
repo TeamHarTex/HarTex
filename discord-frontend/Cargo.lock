@@ -537,6 +537,7 @@ dependencies = [
  "log4rs",
  "num_enum",
  "num_enum_derive",
+ "serde",
  "tokio",
  "twilight-gateway",
  "twilight-model",
