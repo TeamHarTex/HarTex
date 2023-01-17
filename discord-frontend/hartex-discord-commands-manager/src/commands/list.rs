@@ -51,14 +51,21 @@ pub fn list_command() -> hartex_discord_eyre::Result<()> {
         File::open(entry.path())?.read_to_string(&mut buffer)?;
 
         let result = serde_json::from_str::<CommandManagerCommand>(&buffer);
-        if let Err(error) = result {
-            log::warn!(
-                "deserialization failed for file: {}",
-                entry.path().to_str().unwrap()
-            );
-            println!("{:?}", Report::new(error));
-            log::warn!("skipping file due to above error");
-        }
+        let command = match result {
+            Ok(command) => command,
+            Err(error) => {
+                log::warn!(
+                    "deserialization failed for file: {}",
+                    entry.path().to_str().unwrap()
+                );
+                println!("{:?}", Report::new(error));
+                log::warn!("skipping file due to above error");
+                
+                continue;
+            }
+        };
+        
+        log::debug!("{command:?}");
     }
 
     Ok(())
