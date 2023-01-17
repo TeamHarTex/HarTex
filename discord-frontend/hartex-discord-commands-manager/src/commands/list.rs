@@ -23,7 +23,7 @@
 use std::fs::File;
 use std::io::Read;
 
-use hartex_discord_core::discord::model::application::command::Command;
+use hartex_discord_core::discord::model::CommandManagerCommand;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
 use walkdir::WalkDir;
@@ -50,7 +50,7 @@ pub fn list_command() -> hartex_discord_eyre::Result<()> {
         let mut buffer = String::new();
         File::open(entry.path())?.read_to_string(&mut buffer)?;
 
-        let result = serde_json::from_str::<Command>(&buffer);
+        let result = serde_json::from_str::<CommandManagerCommand>(&buffer);
         if let Err(error) = result {
             log::warn!(
                 "deserialization failed for file: {}",
