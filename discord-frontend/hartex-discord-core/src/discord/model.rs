@@ -40,7 +40,8 @@ pub struct CommandManagerCommand {
     pub default_permissions: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dm_permission: Option<bool>,
-    pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description_localizations: Option<HashMap<String, String>>,
     #[serde(rename = "type")]
@@ -62,6 +63,28 @@ impl Display for CommandManagerCommand {
         write!(f, "{}", "Command Name Localizations: ".bold())?;
         if self.name_localizations.is_some() {
             for (locale, localization) in self.name_localizations.as_ref().unwrap() {
+                writeln!(f)?;
+                writeln!(
+                    f,
+                    "    - {} localization: {}",
+                    locale.bright_cyan(),
+                    localization.bright_cyan()
+                )?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        write!(f, "{}", "Command Description: ".bold())?;
+        if self.description.is_some() {
+            writeln!(f, "{}", self.description.as_ref().unwrap().bright_cyan())?;
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        write!(f, "{}", "Command Description Localizations: ".bold())?;
+        if self.description_localizations.is_some() {
+            for (locale, localization) in self.description_localizations.as_ref().unwrap() {
                 writeln!(f)?;
                 writeln!(
                     f,
