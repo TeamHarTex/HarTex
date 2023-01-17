@@ -1,5 +1,5 @@
 {
   "description": "Obtain latency information",
-  "name": "ping",
+  "name": "latency",
   "type": 1
 }
