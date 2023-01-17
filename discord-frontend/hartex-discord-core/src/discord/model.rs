@@ -29,7 +29,7 @@ use twilight_model::application::command::CommandType;
 use twilight_model::guild::Permissions;
 pub use twilight_model::*;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommand {
     pub default_member_permissions: Option<Permissions>,
     #[serde(skip_serializing_if = "Option::is_none")]
