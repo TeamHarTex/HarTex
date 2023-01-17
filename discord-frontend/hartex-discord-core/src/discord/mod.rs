@@ -24,3 +24,4 @@
 pub use twilight_gateway as gateway;
 #[cfg(feature = "discord-model")]
 pub mod model;
+pub mod extensions;
