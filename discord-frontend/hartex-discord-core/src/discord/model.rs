@@ -100,7 +100,12 @@ impl Display for CommandManagerCommand {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
 
-        writeln!(f, "{}{}", "Command Type: ".bold(), self.kind.name().bright_cyan())?;
+        writeln!(
+            f,
+            "{}{}",
+            "Command Type: ".bold(),
+            self.kind.name().bright_cyan()
+        )?;
 
         Ok(())
     }
