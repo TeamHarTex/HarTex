@@ -48,6 +48,7 @@
 .navbar {
   @apply flex flex-row pt-16;
   @apply items-center justify-between;
+  @apply mx-12 sm:mx-24 lg:mx-36 xl:mx-80;
 }
 
 .brand {
