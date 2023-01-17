@@ -35,8 +35,7 @@ a {
 }
 
 body {
-  @apply mx-12 sm:mx-24 lg:mx-36 xl:mx-80;
-  @apply bg-primary text-secondary mb-40;
+  @apply bg-primary text-secondary mb-52;
 
   font-family: "Inter", sans-serif;
 }
@@ -47,10 +46,10 @@ br {
 
 button {
   @apply px-12 py-3 cursor-pointer;
-  @apply bg-blue-700 font-semibold;
-  @apply border border-blue-700 rounded-3xl;
+  @apply bg-blue-800 font-semibold;
+  @apply border border-blue-800 rounded-3xl;
 
-  @apply transition hover:bg-blue-800 hover:border-blue-800;
+  @apply transition hover:bg-blue-900 hover:border-blue-900;
 }
 
 svg {

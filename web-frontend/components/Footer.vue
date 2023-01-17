@@ -22,12 +22,13 @@
 
 <template>
   <footer>
-    <p>Footer</p>
+    <h2>Copyright (c) 2022-2023 Team HarTex</h2>
   </footer>
 </template>
 
 <style lang="postcss" scoped>
 footer {
-  @apply fixed bottom-0 bg-red-700 h-40 w-40;
+  @apply fixed bottom-0 bg-blue-900 h-52 w-full;
+  @apply py-24 text-center;
 }
 </style>

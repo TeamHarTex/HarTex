@@ -30,7 +30,7 @@
 
 <style lang="postcss" scoped>
 main {
-  @apply relative z-10;
-  @apply bg-primary;
+  @apply relative z-10 bg-primary;
+  @apply px-12 sm:px-24 lg:px-36 xl:px-80;
 }
 </style>
