@@ -159,7 +159,7 @@ impl Display for CommandManagerCommand {
         } else {
             writeln!(f)?;
 
-            for option in self.options.iter() {
+            for option in &self.options {
                 writeln!(f, "{option}")?;
             }
         }
