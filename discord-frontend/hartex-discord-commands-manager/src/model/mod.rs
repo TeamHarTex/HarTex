@@ -24,21 +24,41 @@ use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
 
+use hartex_discord_core::discord::model::application::command::CommandOptionType;
 use hartex_discord_core::discord::model::application::command::CommandType;
 use owo_colors::OwoColorize;
 
 pub mod command;
 pub mod option;
 
-pub trait CommandTypeExt {
+pub trait TypeEnumExt {
     fn name(&self) -> &'static str;
 }
 
-impl CommandTypeExt for CommandType {
+impl TypeEnumExt for CommandType {
     fn name(&self) -> &'static str {
         match self {
             Self::ChatInput => "CHAT_INPUT",
             Self::Message => "MESSAGE",
+            Self::User => "USER",
+            _ => "UNKNOWN",
+        }
+    }
+}
+
+impl TypeEnumExt for CommandOptionType {
+    fn name(&self) -> &'static str {
+        match self {
+            Self::Attachment => "ATTACHMENT",
+            Self::Boolean => "BOOLEAN",
+            Self::Channel => "CHANNEL",
+            Self::Integer => "INTEGER",
+            Self::Mentionable => "MENTIONABLE",
+            Self::Number => "NUMBER",
+            Self::Role => "ROLE",
+            Self::String => "STRING",
+            Self::SubCommand => "SUB_COMMAND",
+            Self::SubCommandGroup => "SUB_COMMAND_GROUP",
             Self::User => "USER",
             _ => "UNKNOWN",
         }

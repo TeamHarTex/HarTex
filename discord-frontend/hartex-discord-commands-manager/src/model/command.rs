@@ -32,7 +32,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 use super::option::CommandManagerCommandOption;
-use super::CommandTypeExt;
+use super::TypeEnumExt;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
