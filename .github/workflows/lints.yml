@@ -1,12 +1,9 @@
 name: Lints
 
 on:
-  push:
+  pull_request:
     branches:
       - nightly
-      - stable
-      - staging
-      - trying
 
 env:
   CARGO_TERM_COLOR: always
