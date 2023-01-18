@@ -153,6 +153,16 @@ impl Display for CommandManagerCommand {
             writeln!(f, "{}", "Unspecified".truecolor(107, 107, 107))?;
         }
 
+        write!(f, "{}", "Command Options: ".bold())?;
+        if self.options.is_empty() {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        } else {
+            writeln!(f)?;
+
+            for _ in self.options.iter() {
+            }
+        }
+
         Ok(())
     }
 }
