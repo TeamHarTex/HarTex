@@ -27,6 +27,7 @@ use std::fmt::Formatter;
 use serde::Deserialize;
 use serde::Serialize;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommandOption;
 
