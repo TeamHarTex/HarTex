@@ -7,3 +7,5 @@ status = [
     "Test (discord-frontend)",
     "Full Release Build (rust-utilities)"
 ]
+
+commit_title = "Auto merge of ${PR_REFS}"
