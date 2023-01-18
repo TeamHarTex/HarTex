@@ -513,6 +513,8 @@ dependencies = [
  "clap",
  "hartex_discord_core",
  "hartex_discord_eyre",
+ "owo-colors",
+ "serde",
  "serde_json",
  "walkdir",
 ]
@@ -537,8 +539,6 @@ dependencies = [
  "log4rs",
  "num_enum",
  "num_enum_derive",
- "owo-colors",
- "serde",
  "tokio",
  "twilight-gateway",
  "twilight-model",
