@@ -113,8 +113,17 @@ impl CommandManagerCommandOption {
             f,
             "{}  {}{}",
             "    ".repeat(depth),
-            "Command Type: ".bold(),
+            "Command Option Type: ".bold(),
             self.kind.name().bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Required: ".bold(),
+            self.required
+                .map_or("No", |required| if required { "Yes" } else { "No" })
         )?;
 
         Ok(())
