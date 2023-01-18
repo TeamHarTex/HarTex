@@ -159,8 +159,9 @@ impl Display for CommandManagerCommand {
         } else {
             writeln!(f)?;
 
+            let depth = 1;
             for option in &self.options {
-                writeln!(f, "{option}")?;
+                option.display(f, depth)?;
             }
         }
 

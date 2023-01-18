@@ -21,7 +21,6 @@
  */
 
 use std::fmt;
-use std::fmt::Display;
 use std::fmt::Formatter;
 
 use serde::Deserialize;
@@ -31,8 +30,8 @@ use serde::Serialize;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommandOption;
 
-impl Display for CommandManagerCommandOption {
-    fn fmt(&self, _: &mut Formatter<'_>) -> fmt::Result {
+impl CommandManagerCommandOption {
+    pub fn display(&self, f: &mut Formatter<'_>, depth: u32) -> fmt::Result {
         todo!()
     }
 }
