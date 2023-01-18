@@ -83,6 +83,14 @@ impl CommandManagerCommandOption {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
 
+        writeln!(
+            f,
+            "{}- {}{}",
+            "    ".repeat(depth),
+            "Command Option Description: ".bold(),
+            self.description.bright_cyan()
+        )?;
+
         Ok(())
     }
 }
