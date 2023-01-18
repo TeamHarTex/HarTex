@@ -1,0 +1,9 @@
+status = [
+    "Clippy (discord-frontend)",
+    "Rustfmt (discord-frontend)",
+    "Clippy (rust-utilities)",
+    "Rustfmt (rust-utilities)",
+    "Full Release Build (discord-frontend)",
+    "Test (discord-frontend)",
+    "Full Release Build (rust-utilities)"
+]
