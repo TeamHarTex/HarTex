@@ -20,18 +20,57 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
 
+use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
+use twilight_model::application::command::CommandOptionChoice;
+use twilight_model::application::command::CommandOptionType;
+use twilight_model::application::command::CommandOptionValue;
+use twilight_model::channel::ChannelType;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
-pub struct CommandManagerCommandOption;
+pub struct CommandManagerCommandOption {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub autocomplete: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub channel_types: Option<Vec<ChannelType>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub choices: Option<Vec<CommandOptionChoice>>,
+    pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description_localizations: Option<HashMap<String, String>>,
+    #[serde(rename = "type")]
+    pub kind: CommandOptionType,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_length: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_value: Option<CommandOptionValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min_value: Option<CommandOptionValue>,
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name_localizations: Option<HashMap<String, String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub options: Option<Vec<CommandManagerCommandOption>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub required: Option<bool>,
+}
 
 impl CommandManagerCommandOption {
-    pub fn display(&self, f: &mut Formatter<'_>, depth: u32) -> fmt::Result {
-        todo!()
+    pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
+        writeln!(
+            f,
+            "{}- {}{}",
+            "    ".repeat(depth),
+            "Command Option Name: ".bold(),
+            self.name.bright_cyan()
+        )?;
+
+        Ok(())
     }
 }
