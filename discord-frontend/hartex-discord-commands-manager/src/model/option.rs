@@ -91,6 +91,22 @@ impl CommandManagerCommandOption {
             self.description.bright_cyan()
         )?;
 
+        write!(
+            f,
+            "{}- {}",
+            "    ".repeat(depth),
+            "Command Option Description Localizations: ".bold(),
+        )?;
+        if self.description_localizations.is_some() {
+            super::print_localizations(
+                f,
+                self.description_localizations.as_ref().unwrap(),
+                depth + 1,
+            )?;
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
         Ok(())
     }
 }
