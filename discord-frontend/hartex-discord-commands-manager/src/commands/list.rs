@@ -23,10 +23,11 @@
 use std::fs::File;
 use std::io::Read;
 
-use hartex_discord_core::discord::model::command::CommandManagerCommand;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
 use walkdir::WalkDir;
+
+use crate::model::command::CommandManagerCommand;
 
 pub fn list_command() -> hartex_discord_eyre::Result<()> {
     log::trace!("reading specification directory");
