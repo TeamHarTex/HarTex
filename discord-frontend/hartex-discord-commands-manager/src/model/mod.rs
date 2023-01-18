@@ -20,7 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use twilight_model::*;
+use hartex_discord_core::discord::model::application::command::CommandType;
 
 pub mod command;
 pub mod option;
+
+pub trait CommandTypeExt {
+    fn name(&self) -> &'static str;
+}
+
+impl CommandTypeExt for CommandType {
+    fn name(&self) -> &'static str {
+        match self {
+            Self::ChatInput => "CHAT_INPUT",
+            Self::Message => "MESSAGE",
+            Self::User => "USER",
+            _ => "UNKNOWN",
+        }
+    }
+}

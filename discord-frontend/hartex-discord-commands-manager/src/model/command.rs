@@ -25,14 +25,14 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+use hartex_discord_core::discord::model::application::command::CommandType;
+use hartex_discord_core::discord::model::guild::Permissions;
 use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
-use twilight_model::application::command::CommandType;
-use twilight_model::guild::Permissions;
 
 use super::option::CommandManagerCommandOption;
-use crate::discord::extensions::CommandTypeExt;
+use super::CommandTypeExt;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
