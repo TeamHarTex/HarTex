@@ -23,7 +23,7 @@
 use std::fs::File;
 use std::io::Read;
 
-use hartex_discord_core::discord::model::CommandManagerCommand;
+use hartex_discord_core::discord::model::command::CommandManagerCommand;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
 use walkdir::WalkDir;
