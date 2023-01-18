@@ -124,6 +124,17 @@ impl CommandManagerCommandOption {
             "Command Option Required: ".bold(),
             self.required
                 .map_or("No", |required| if required { "Yes" } else { "No" })
+                .bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Autocomplete Enabled: ".bold(),
+            self.autocomplete
+                .map_or("No", |required| if required { "Yes" } else { "No" })
+                .bright_cyan()
         )?;
 
         Ok(())
