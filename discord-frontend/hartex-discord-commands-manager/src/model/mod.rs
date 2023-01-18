@@ -20,7 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+use std::fmt;
+use std::fmt::Formatter;
+
 use hartex_discord_core::discord::model::application::command::CommandType;
+use owo_colors::OwoColorize;
 
 pub mod command;
 pub mod option;
@@ -38,4 +43,24 @@ impl CommandTypeExt for CommandType {
             _ => "UNKNOWN",
         }
     }
+}
+
+pub fn print_localizations(
+    f: &mut Formatter<'_>,
+    localizations: &HashMap<String, String>,
+    depth: usize,
+) -> fmt::Result {
+    writeln!(f)?;
+
+    for (locale, localization) in localizations {
+        writeln!(
+            f,
+            "{}- {} Localization: {}",
+            "    ".repeat(depth),
+            locale.bright_cyan(),
+            localization.bright_cyan()
+        )?;
+    }
+
+    Ok(())
 }

@@ -70,12 +70,18 @@ impl CommandManagerCommandOption {
             "Command Option Name: ".bold(),
             self.name.bright_cyan()
         )?;
+
         write!(
             f,
             "{}- {}",
             "    ".repeat(depth),
             "Command Option Name Localizations: ".bold(),
         )?;
+        if self.name_localizations.is_some() {
+            super::print_localizations(f, self.name_localizations.as_ref().unwrap(), depth + 1)?;
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
 
         Ok(())
     }
