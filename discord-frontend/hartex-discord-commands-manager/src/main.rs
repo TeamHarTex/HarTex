@@ -27,6 +27,7 @@ use hartex_discord_core::tokio;
 
 mod cmdline;
 mod commands;
+mod model;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_discord_eyre::Result<()> {

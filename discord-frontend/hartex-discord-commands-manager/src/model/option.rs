@@ -24,13 +24,13 @@ use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
 
+use hartex_discord_core::discord::model::application::command::CommandOptionChoice;
+use hartex_discord_core::discord::model::application::command::CommandOptionType;
+use hartex_discord_core::discord::model::application::command::CommandOptionValue;
+use hartex_discord_core::discord::model::channel::ChannelType;
 use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
-use twilight_model::application::command::CommandOptionChoice;
-use twilight_model::application::command::CommandOptionType;
-use twilight_model::application::command::CommandOptionValue;
-use twilight_model::channel::ChannelType;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
@@ -69,6 +69,12 @@ impl CommandManagerCommandOption {
             "    ".repeat(depth),
             "Command Option Name: ".bold(),
             self.name.bright_cyan()
+        )?;
+        write!(
+            f,
+            "{}- {}",
+            "    ".repeat(depth),
+            "Command Option Name Localizations: ".bold(),
         )?;
 
         Ok(())
