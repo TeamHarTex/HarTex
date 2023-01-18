@@ -65,15 +65,7 @@ impl Display for CommandManagerCommand {
 
         write!(f, "{}", "Command Name Localizations: ".bold())?;
         if self.name_localizations.is_some() {
-            for (locale, localization) in self.name_localizations.as_ref().unwrap() {
-                writeln!(f)?;
-                writeln!(
-                    f,
-                    "    - {} Localization: {}",
-                    locale.bright_cyan(),
-                    localization.bright_cyan()
-                )?;
-            }
+            super::print_localizations(f, self.name_localizations.as_ref().unwrap(), 1)?;
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
@@ -87,15 +79,7 @@ impl Display for CommandManagerCommand {
 
         write!(f, "{}", "Command Description Localizations: ".bold())?;
         if self.description_localizations.is_some() {
-            for (locale, localization) in self.description_localizations.as_ref().unwrap() {
-                writeln!(f)?;
-                writeln!(
-                    f,
-                    "    - {} localization: {}",
-                    locale.bright_cyan(),
-                    localization.bright_cyan()
-                )?;
-            }
+            super::print_localizations(f, self.description_localizations.as_ref().unwrap(), 1)?;
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
