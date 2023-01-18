@@ -28,13 +28,13 @@ use std::fmt::Formatter;
 use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
-use twilight_model::application::command::CommandOption;
 use twilight_model::application::command::CommandType;
 use twilight_model::guild::Permissions;
-pub use twilight_model::*;
 
-use super::extensions::CommandTypeExt;
+use super::option::CommandManagerCommandOption;
+use crate::discord::extensions::CommandTypeExt;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommand {
     pub default_member_permissions: Option<Permissions>,
@@ -55,7 +55,7 @@ pub struct CommandManagerCommand {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nsfw: Option<bool>,
     #[serde(default)]
-    pub options: Vec<CommandOption>,
+    pub options: Vec<CommandManagerCommandOption>,
 }
 
 impl Display for CommandManagerCommand {
@@ -151,6 +151,17 @@ impl Display for CommandManagerCommand {
             }
         } else {
             writeln!(f, "{}", "Unspecified".truecolor(107, 107, 107))?;
+        }
+
+        write!(f, "{}", "Command Options: ".bold())?;
+        if self.options.is_empty() {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        } else {
+            writeln!(f)?;
+
+            for option in &self.options {
+                writeln!(f, "{option}")?;
+            }
         }
 
         Ok(())
