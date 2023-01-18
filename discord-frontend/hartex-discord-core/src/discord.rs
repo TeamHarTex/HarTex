@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use twilight_model::*;
-
-pub mod command;
-pub mod option;
+#[cfg(feature = "discord-gateway")]
+pub use twilight_gateway as gateway;
+#[cfg(feature = "discord-model")]
+pub use twilight_model as model;
