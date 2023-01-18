@@ -21,15 +21,15 @@
  */
 
 use std::collections::HashMap;
+use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
-use std::fmt;
 
 use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
-use twilight_model::guild::Permissions;
 use twilight_model::application::command::CommandType;
+use twilight_model::guild::Permissions;
 
 use super::option::CommandManagerCommandOption;
 use crate::discord::extensions::CommandTypeExt;
