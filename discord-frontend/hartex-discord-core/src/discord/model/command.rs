@@ -34,6 +34,7 @@ use twilight_model::guild::Permissions;
 use super::option::CommandManagerCommandOption;
 use crate::discord::extensions::CommandTypeExt;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommand {
     pub default_member_permissions: Option<Permissions>,
