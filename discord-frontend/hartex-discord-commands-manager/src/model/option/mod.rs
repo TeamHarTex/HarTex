@@ -91,7 +91,7 @@ impl CommandManagerCommandOption {
 
         writeln!(
             f,
-            "{}- {}{}",
+            "{}  {}{}",
             "    ".repeat(depth),
             "Command Option Description: ".bold(),
             self.description.bright_cyan()
@@ -215,6 +215,22 @@ impl CommandManagerCommandOption {
 
             for choice in self.choices.as_ref().unwrap() {
                 choice.display(f, depth + 1)?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
+            "Command Option Options: ".bold(),
+        )?;
+        if self.options.is_some() {
+            writeln!(f)?;
+
+            for option in self.options.as_ref().unwrap() {
+                option.display(f, depth + 1)?;
             }
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
