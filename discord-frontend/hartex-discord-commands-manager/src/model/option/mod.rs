@@ -144,6 +144,18 @@ impl CommandManagerCommandOption {
             "    ".repeat(depth),
             "Command Option Channel Types: ".bold()
         )?;
+        if self.channel_types.is_some() {
+            for channel_type in self.channel_types.as_ref().unwrap() {
+                writeln!(
+                    f,
+                    "{}- {}",
+                    "    ".repeat(depth + 1),
+                    channel_type.name().bright_cyan()
+                )?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
 
         write!(
             f,
