@@ -49,7 +49,7 @@ impl CommandManagerCommandOptionChoice {
 
         write!(
             f,
-            "{}- {}",
+            "{}  {}",
             "    ".repeat(depth),
             "Command Option Choice Name Localizations: ".bold()
         )?;
@@ -63,7 +63,7 @@ impl CommandManagerCommandOptionChoice {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
 
-        Ok(())
+        self.value.display(f, depth)
     }
 }
 
@@ -74,4 +74,21 @@ pub enum CommandManagerCommandOptionChoiceValue {
     String(String),
     Integer(i64),
     Number(f64),
+}
+
+impl CommandManagerCommandOptionChoiceValue {
+    pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
+            "Comamnd Option Choice Value: ".bold()
+        )?;
+
+        match self {
+            Self::String(string) => writeln!(f, "{}", string.bright_cyan()),
+            Self::Integer(integer) => writeln!(f, "{}", integer.to_string().bright_cyan()),
+            Self::Number(number) => writeln!(f, "{}", number.to_string().bright_cyan()),
+        }
+    }
 }
