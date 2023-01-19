@@ -444,7 +444,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["name"],
+              "required": ["name", "value"],
               "properties": {
                 "name": {
                   "type": "string",
@@ -1060,19 +1060,19 @@
             "type": "boolean"
           },
           "type": {
-            "type": "string",
+            "type": "integer",
             "enum": [
-              "SUB_COMMAND",
-              "SUB_COMMAND_GROUP",
-              "STRING",
-              "INTEGER",
-              "BOOLEAN",
-              "USER",
-              "CHANNEL",
-              "ROLE",
-              "MENTIONABLE",
-              "NUMBER",
-              "ATTACHMENT"
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
             ]
           }
         }
