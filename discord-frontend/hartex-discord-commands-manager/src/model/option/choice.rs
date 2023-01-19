@@ -21,7 +21,10 @@
  */
 
 use std::collections::HashMap;
+use std::fmt;
+use std::fmt::Formatter;
 
+use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -32,6 +35,27 @@ pub struct CommandManagerCommandOptionChoice {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name_localizations: Option<HashMap<String, String>>,
     pub value: CommandManagerCommandOptionChoiceValue,
+}
+
+impl CommandManagerCommandOptionChoice {
+    pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
+        writeln!(
+            f,
+            "{}- {}{}",
+            "    ".repeat(depth),
+            "Command Option Choice Name: ".bold(),
+            self.name.bright_cyan()
+        )?;
+
+        write!(
+            f,
+            "{}- {}",
+            "    ".repeat(depth),
+            "Command Option Choice Name Localizations: ".bold()
+        )?;
+
+        Ok(())
+    }
 }
 
 #[allow(clippy::module_name_repetitions)]

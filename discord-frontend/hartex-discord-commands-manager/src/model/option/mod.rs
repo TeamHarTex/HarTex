@@ -148,7 +148,7 @@ impl CommandManagerCommandOption {
             writeln!(f)?;
 
             for choice in self.choices.as_ref().unwrap() {
-                todo!()
+                choice.display(f, depth + 1)?;
             }
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
