@@ -142,6 +142,13 @@ impl CommandManagerCommandOption {
             f,
             "{}  {}",
             "    ".repeat(depth),
+            "Command Option Channel Types: ".bold()
+        )?;
+
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
             "Command Option Choices: ".bold(),
         )?;
         if self.choices.is_some() {
