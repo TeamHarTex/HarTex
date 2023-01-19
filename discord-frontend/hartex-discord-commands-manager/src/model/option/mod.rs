@@ -145,6 +145,8 @@ impl CommandManagerCommandOption {
             "Command Option Channel Types: ".bold()
         )?;
         if self.channel_types.is_some() {
+            writeln!(f)?;
+
             for channel_type in self.channel_types.as_ref().unwrap() {
                 writeln!(
                     f,
