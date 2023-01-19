@@ -24,7 +24,6 @@ use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
 
-use hartex_discord_core::discord::model::application::command::CommandOptionChoice;
 use hartex_discord_core::discord::model::application::command::CommandOptionType;
 use hartex_discord_core::discord::model::application::command::CommandOptionValue;
 use hartex_discord_core::discord::model::channel::ChannelType;
@@ -34,6 +33,8 @@ use serde::Serialize;
 
 use super::TypeEnumExt;
 
+pub mod choice;
+
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommandOption {
@@ -42,7 +43,7 @@ pub struct CommandManagerCommandOption {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub channel_types: Option<Vec<ChannelType>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub choices: Option<Vec<CommandOptionChoice>>,
+    pub choices: Option<Vec<choice::CommandManagerCommandOptionChoice>>,
     pub description: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description_localizations: Option<HashMap<String, String>>,
@@ -136,6 +137,22 @@ impl CommandManagerCommandOption {
                 .map_or("No", |required| if required { "Yes" } else { "No" })
                 .bright_cyan()
         )?;
+
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
+            "Command Option Choices: ".bold(),
+        )?;
+        if self.choices.is_some() {
+            writeln!(f)?;
+
+            for choice in self.choices.as_ref().unwrap() {
+                choice.display(f, depth + 1)?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
 
         Ok(())
     }

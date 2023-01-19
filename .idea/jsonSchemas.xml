@@ -18,6 +18,12 @@
                   <Item>
                     <option name="path" value="discord-frontend/hartex-discord-commands-spec/general-plugin/ping.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="discord-frontend/hartex-discord-commands-spec/general-plugin/test.json" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="discord-frontend/hartex-discord-commands-spec/smoke-test.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
