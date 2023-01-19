@@ -31,6 +31,7 @@ use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 
+use super::DisplayExt;
 use super::TypeEnumExt;
 
 pub mod choice;
@@ -51,6 +52,8 @@ pub struct CommandManagerCommandOption {
     pub kind: CommandOptionType,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_length: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min_length: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_value: Option<CommandOptionValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -88,7 +91,7 @@ impl CommandManagerCommandOption {
 
         writeln!(
             f,
-            "{}- {}{}",
+            "{}  {}{}",
             "    ".repeat(depth),
             "Command Option Description: ".bold(),
             self.description.bright_cyan()
@@ -142,6 +145,69 @@ impl CommandManagerCommandOption {
             f,
             "{}  {}",
             "    ".repeat(depth),
+            "Command Option Channel Types: ".bold()
+        )?;
+        if self.channel_types.is_some() {
+            writeln!(f)?;
+
+            for channel_type in self.channel_types.as_ref().unwrap() {
+                writeln!(
+                    f,
+                    "{}- {}",
+                    "    ".repeat(depth + 1),
+                    channel_type.name().bright_cyan()
+                )?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Minimum Allowed Length: ".bold(),
+            self.min_length
+                .map_or(String::from("Unspecified"), |min_length| min_length
+                    .to_string())
+                .bright_cyan()
+        )?;
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Maximum Allowed Length: ".bold(),
+            self.max_length
+                .map_or(String::from("Unspecified"), |max_length| max_length
+                    .to_string())
+                .bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Minimum Allowed Value: ".bold(),
+            self.min_value
+                .map_or(String::from("Unspecified"), |min_length| min_length
+                    .display())
+                .bright_cyan()
+        )?;
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Maximum Allowed Value: ".bold(),
+            self.max_value
+                .map_or(String::from("Unspecified"), |max_length| max_length
+                    .display())
+                .bright_cyan()
+        )?;
+
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
             "Command Option Choices: ".bold(),
         )?;
         if self.choices.is_some() {
@@ -149,6 +215,22 @@ impl CommandManagerCommandOption {
 
             for choice in self.choices.as_ref().unwrap() {
                 choice.display(f, depth + 1)?;
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
+            "Command Option Options: ".bold(),
+        )?;
+        if self.options.is_some() {
+            writeln!(f)?;
+
+            for option in self.options.as_ref().unwrap() {
+                option.display(f, depth + 1)?;
             }
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;

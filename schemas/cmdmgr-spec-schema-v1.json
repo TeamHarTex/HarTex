@@ -423,20 +423,20 @@
           "channel_types": {
             "type": "array",
             "items": {
-              "type": "string",
+              "type": "integer",
               "enum": [
-                "GUILD_TEXT",
-                "DM",
-                "GUILD_VOICE",
-                "GROUP_DM",
-                "GUILD_CATEGORY",
-                "GUILD_ANNOUNCEMENT",
-                "ANNOUNCEMENT_THREAD",
-                "PUBLIC_THREAD",
-                "PRIVATE_THREAD",
-                "GUILD_STAGE_VOICE",
-                "GUILD_DIRECTORY",
-                "GUILD_FORUM"
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
               ]
             }
           },

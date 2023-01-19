@@ -25,14 +25,49 @@ use std::fmt;
 use std::fmt::Formatter;
 
 use hartex_discord_core::discord::model::application::command::CommandOptionType;
+use hartex_discord_core::discord::model::application::command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::command::CommandType;
+use hartex_discord_core::discord::model::channel::ChannelType;
 use owo_colors::OwoColorize;
 
 pub mod command;
 pub mod option;
 
+pub trait DisplayExt {
+    fn display(&self) -> String;
+}
+
+impl DisplayExt for CommandOptionValue {
+    fn display(&self) -> String {
+        match self {
+            Self::Integer(integer) => integer.to_string(),
+            Self::Number(number) => number.to_string(),
+        }
+    }
+}
+
 pub trait TypeEnumExt {
     fn name(&self) -> &'static str;
+}
+
+impl TypeEnumExt for ChannelType {
+    fn name(&self) -> &'static str {
+        match self {
+            Self::AnnouncementThread => "ANNOUNCEMENT_THREAD",
+            Self::Group => "GROUP",
+            Self::GuildAnnouncement => "GUILD_ANNOUNCEMENT",
+            Self::GuildCategory => "GUILD_CATEGORY",
+            Self::GuildDirectory => "GUILD_DIRECTORY",
+            Self::GuildForum => "GUILD_FORUM",
+            Self::GuildStageVoice => "GUILD_STAGE_VOICE",
+            Self::GuildText => "GUILD_TEXT",
+            Self::GuildVoice => "GUILD_VOICE",
+            Self::PublicThread => "PUBLIC_THREAD",
+            Self::Private => "DM",
+            Self::PrivateThread => "PRIVATE_THREAD",
+            _ => "UNKNOWN",
+        }
+    }
 }
 
 impl TypeEnumExt for CommandType {
