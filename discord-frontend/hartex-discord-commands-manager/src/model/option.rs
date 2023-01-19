@@ -137,6 +137,22 @@ impl CommandManagerCommandOption {
                 .bright_cyan()
         )?;
 
+        write!(
+            f,
+            "{}  {}",
+            "    ".repeat(depth),
+            "Command Option Choices: ".bold(),
+        )?;
+        if self.choices.is_some() {
+            writeln!(f)?;
+
+            for choice in self.choices.as_ref().unwrap() {
+                todo!()
+            }
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
+
         Ok(())
     }
 }
