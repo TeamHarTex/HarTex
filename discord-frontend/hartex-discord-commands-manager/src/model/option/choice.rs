@@ -53,6 +53,15 @@ impl CommandManagerCommandOptionChoice {
             "    ".repeat(depth),
             "Command Option Choice Name Localizations: ".bold()
         )?;
+        if self.name_localizations.is_some() {
+            super::super::print_localizations(
+                f,
+                self.name_localizations.as_ref().unwrap(),
+                depth + 1,
+            )?;
+        } else {
+            writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
+        }
 
         Ok(())
     }
