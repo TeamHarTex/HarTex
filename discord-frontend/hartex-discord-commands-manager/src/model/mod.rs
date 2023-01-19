@@ -25,12 +25,26 @@ use std::fmt;
 use std::fmt::Formatter;
 
 use hartex_discord_core::discord::model::application::command::CommandOptionType;
+use hartex_discord_core::discord::model::application::command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::command::CommandType;
 use hartex_discord_core::discord::model::channel::ChannelType;
 use owo_colors::OwoColorize;
 
 pub mod command;
 pub mod option;
+
+pub trait DisplayExt {
+    fn display(&self) -> String;
+}
+
+impl DisplayExt for CommandOptionValue {
+    fn display(&self) -> String {
+        match self {
+            Self::Integer(integer) => integer.to_string(),
+            Self::Number(number) => number.to_string(),
+        }
+    }
+}
 
 pub trait TypeEnumExt {
     fn name(&self) -> &'static str;

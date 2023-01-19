@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::cmp::min;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
@@ -32,6 +31,7 @@ use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 
+use super::DisplayExt;
 use super::TypeEnumExt;
 
 pub mod choice;
@@ -180,6 +180,27 @@ impl CommandManagerCommandOption {
             self.max_length
                 .map_or(String::from("Unspecified"), |max_length| max_length
                     .to_string())
+                .bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Minimum Allowed Value: ".bold(),
+            self.min_value
+                .map_or(String::from("Unspecified"), |min_length| min_length
+                    .display())
+                .bright_cyan()
+        )?;
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Maximum Allowed Value: ".bold(),
+            self.max_value
+                .map_or(String::from("Unspecified"), |max_length| max_length
+                    .display())
                 .bright_cyan()
         )?;
 
