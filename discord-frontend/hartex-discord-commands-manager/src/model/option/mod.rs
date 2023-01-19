@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::cmp::min;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
@@ -51,6 +52,8 @@ pub struct CommandManagerCommandOption {
     pub kind: CommandOptionType,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_length: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min_length: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_value: Option<CommandOptionValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -158,6 +161,27 @@ impl CommandManagerCommandOption {
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Minimum Allowed Length: ".bold(),
+            self.min_length
+                .map_or(String::from("Unspecified"), |min_length| min_length
+                    .to_string())
+                .bright_cyan()
+        )?;
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Maximum Allowed Length: ".bold(),
+            self.max_length
+                .map_or(String::from("Unspecified"), |max_length| max_length
+                    .to_string())
+                .bright_cyan()
+        )?;
 
         write!(
             f,

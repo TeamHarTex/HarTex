@@ -87,7 +87,7 @@ impl CommandManagerCommandOptionChoiceValue {
 
         match self {
             Self::String(string) => writeln!(f, "{}", string.bright_cyan()),
-            Self::Integer(integer) => writeln!(f, "{}", integer.to_string().bright_cyan()),
+            Self::Integer(integer) => writeln!(f, "{}", integer.bright_cyan()),
             Self::Number(number) => writeln!(f, "{}", number.to_string().bright_cyan()),
         }
     }
