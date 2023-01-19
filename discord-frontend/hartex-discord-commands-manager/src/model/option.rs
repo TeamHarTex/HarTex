@@ -32,6 +32,8 @@ use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 
+use super::TypeEnumExt;
+
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommandOption {
@@ -73,7 +75,7 @@ impl CommandManagerCommandOption {
 
         write!(
             f,
-            "{}- {}",
+            "{}  {}",
             "    ".repeat(depth),
             "Command Option Name Localizations: ".bold(),
         )?;
@@ -93,7 +95,7 @@ impl CommandManagerCommandOption {
 
         write!(
             f,
-            "{}- {}",
+            "{}  {}",
             "    ".repeat(depth),
             "Command Option Description Localizations: ".bold(),
         )?;
@@ -106,6 +108,34 @@ impl CommandManagerCommandOption {
         } else {
             writeln!(f, "{}", "None".truecolor(107, 107, 107))?;
         }
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Type: ".bold(),
+            self.kind.name().bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Required: ".bold(),
+            self.required
+                .map_or("No", |required| if required { "Yes" } else { "No" })
+                .bright_cyan()
+        )?;
+
+        writeln!(
+            f,
+            "{}  {}{}",
+            "    ".repeat(depth),
+            "Command Option Autocomplete Enabled: ".bold(),
+            self.autocomplete
+                .map_or("No", |required| if required { "Yes" } else { "No" })
+                .bright_cyan()
+        )?;
 
         Ok(())
     }
