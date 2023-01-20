@@ -30,7 +30,7 @@ pub async fn register_command(_: ArgMatches) -> hartex_discord_eyre::Result<()> 
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
-    log::trace!("reading specification directory");
+    log::trace!("searching for the command specification");
     log::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
