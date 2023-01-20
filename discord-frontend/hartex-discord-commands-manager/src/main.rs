@@ -49,16 +49,11 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 )
                 .arg(
                     Arg::new("command")
+                        .short('c')
+                        .long("command")
                         .required(true)
                         .action(ArgAction::Set),
                 )
-                .arg(
-                    Arg::new("update")
-                        .short('u')
-                        .long("update")
-                        .action(ArgAction::Set)
-                        .num_args(0),
-                ),
         );
 
     let matches = command.get_matches();
