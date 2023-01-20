@@ -40,16 +40,15 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
 
-    let mut command = matches
-        .get_one::<String>("command")
-        .expect("unreachable code: this should never be none at all")
-        .clone();
+    let mut command = matches.get_one::<String>("command").unwrap().clone();
 
     if !command.to_ascii_lowercase().ends_with(".json") {
         command.push_str(".json");
     }
 
-    let mut iterator = WalkDir::new("hartex-discord-commands-spec").same_file_system(true).into_iter();
+    let mut iterator = WalkDir::new("hartex-discord-commands-spec")
+        .same_file_system(true)
+        .into_iter();
     let entry_option = loop {
         let option = iterator.next();
         if option.is_none() {
@@ -67,7 +66,9 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     };
 
     if entry_option.is_none() {
-        return Err(Report::msg(format!("command file {command} cannot be found")));
+        return Err(Report::msg(format!(
+            "command file {command} cannot be found"
+        )));
     }
 
     let mut file = File::open(entry_option.unwrap().path())?;
