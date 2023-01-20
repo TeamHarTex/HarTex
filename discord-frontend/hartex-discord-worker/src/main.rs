@@ -21,6 +21,7 @@
  */
 
 #![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
 #![deny(warnings)]
 
 use std::env;
