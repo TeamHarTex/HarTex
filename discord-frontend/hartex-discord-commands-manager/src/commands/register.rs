@@ -21,6 +21,7 @@
  */
 
 use clap::ArgMatches;
+use walkdir::WalkDir;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 
@@ -43,6 +44,23 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     if !command.to_ascii_lowercase().ends_with(".json") {
         command.push_str(".json");
     }
+
+    let mut iterator = WalkDir::new("hartex-discord-commands-spec").same_file_system(true).into_iter();
+    let _ = loop {
+        let option = iterator.next();
+        if option.is_none() {
+            break None;
+        }
+
+        let entry = option.unwrap()?;
+        if entry.metadata()?.is_dir() {
+            continue;
+        }
+
+        if entry.path().ends_with(&command) {
+            break Some(entry);
+        }
+    };
 
     Ok(())
 }
