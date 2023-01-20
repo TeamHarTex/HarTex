@@ -23,6 +23,7 @@
 use std::fs::File;
 use std::io::Read;
 
+use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
 use walkdir::WalkDir;
@@ -30,6 +31,9 @@ use walkdir::WalkDir;
 use crate::model::command::CommandManagerCommand;
 
 pub fn list_command() -> hartex_discord_eyre::Result<()> {
+    log::trace!("loading environment variables");
+    dotenvy::dotenv()?;
+
     log::trace!("reading specification directory");
     log::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
