@@ -20,7 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use clap::ArgMatches;
+
 #[allow(clippy::unused_async)]
-pub async fn register_command() -> hartex_discord_eyre::Result<()> {
+pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
     Ok(())
 }
