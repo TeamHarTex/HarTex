@@ -21,6 +21,7 @@
  */
 
 #![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(drain_filter)]
 #![feature(let_chains)]
