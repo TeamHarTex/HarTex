@@ -49,8 +49,6 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 )
                 .arg(
                     Arg::new("command")
-                        .short('c')
-                        .long("command")
                         .required(true)
                         .action(ArgAction::Set),
                 )
