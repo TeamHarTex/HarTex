@@ -24,7 +24,9 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use clap::{Arg, ArgAction, Command};
+use clap::Arg;
+use clap::ArgAction;
+use clap::Command;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 
