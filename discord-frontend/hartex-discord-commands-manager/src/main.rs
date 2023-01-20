@@ -48,17 +48,16 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                     "Use the -u/--update flag to specify specifically to patch the command.",
                 )
                 .arg(
+                    Arg::new("command")
+                        .required(true)
+                        .action(ArgAction::Set),
+                )
+                .arg(
                     Arg::new("update")
                         .short('u')
                         .long("update")
                         .action(ArgAction::Set)
                         .num_args(0),
-                )
-                .arg(
-                    Arg::new("command")
-                        .required(true)
-                        .action(ArgAction::Set)
-                        .num_args(1),
                 ),
         );
 
