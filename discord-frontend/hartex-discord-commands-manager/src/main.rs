@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 use clap::Command;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
