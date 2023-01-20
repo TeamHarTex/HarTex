@@ -35,9 +35,14 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
 
-    let _ = matches
+    let mut command = matches
         .get_one::<String>("command")
-        .expect("unreachable code: this should never be none at all");
+        .expect("unreachable code: this should never be none at all")
+        .to_owned();
+
+    if !command.ends_with(".json") {
+        command.push_str(".json");
+    }
 
     Ok(())
 }
