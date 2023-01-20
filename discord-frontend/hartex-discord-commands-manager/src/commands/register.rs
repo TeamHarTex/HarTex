@@ -23,6 +23,6 @@
 use clap::ArgMatches;
 
 #[allow(clippy::unused_async)]
-pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
+pub async fn register_command(_: ArgMatches) -> hartex_discord_eyre::Result<()> {
     Ok(())
 }
