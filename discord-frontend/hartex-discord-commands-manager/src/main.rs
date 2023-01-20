@@ -52,7 +52,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                         .action(ArgAction::Set)
                         .num_args(0),
                 )
-                .arg(Arg::new("command").num_args(1).required(true)),
+                .arg(Arg::new("command").required(true).num_args(1)),
         );
 
     let matches = command.get_matches();
