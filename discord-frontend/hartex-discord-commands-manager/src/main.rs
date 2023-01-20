@@ -35,7 +35,12 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     let command = Command::new("cmdmgr")
         .subcommand(Command::new("list").about("Lists commands registered with Discord."))
-        .subcommand(Command::new("register").about("Registers a command with Discord"));
+        .subcommand(
+            Command::new("register")
+                .about("Registers a command with Discord")
+                .short_flag('u')
+                .long_flag("update"),
+        );
 
     let matches = command.get_matches();
 
