@@ -68,6 +68,7 @@ pub struct CommandManagerCommandOption {
 }
 
 impl CommandManagerCommandOption {
+    #[allow(clippy::too_many_lines)]
     pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         writeln!(
             f,
