@@ -23,7 +23,7 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
-use clap::Command;
+use clap::{Arg, ArgAction, Command};
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 
@@ -41,9 +41,16 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         .subcommand(
             Command::new("register")
                 .about("Registers a command with Discord.")
-                .long_about("Use the -u/--update flag to specify specifically to patch the command.")
-                .short_flag('u')
-                .long_flag("update"),
+                .long_about(
+                    "Use the -u/--update flag to specify specifically to patch the command.",
+                )
+                .arg(
+                    Arg::new("update")
+                        .short('u')
+                        .long("update")
+                        .action(ArgAction::Set)
+                        .num_args(0),
+                ),
         );
 
     let matches = command.get_matches();
