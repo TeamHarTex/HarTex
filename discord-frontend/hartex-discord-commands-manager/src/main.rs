@@ -37,7 +37,8 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
         .subcommand(Command::new("list").about("Lists commands registered with Discord."))
         .subcommand(
             Command::new("register")
-                .about("Registers a command with Discord")
+                .about("Registers a command with Discord.")
+                .long_about("Use the -u/--update flag to specify specifically to patch the command.")
                 .short_flag('u')
                 .long_flag("update"),
         );
