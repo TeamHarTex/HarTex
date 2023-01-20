@@ -50,6 +50,11 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                         .long("update")
                         .action(ArgAction::Set)
                         .num_args(0),
+                )
+                .arg(
+                    Arg::new("command")
+                        .num_args(1)
+                        .required(true)
                 ),
         );
 
