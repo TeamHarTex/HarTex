@@ -22,6 +22,7 @@
 
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
