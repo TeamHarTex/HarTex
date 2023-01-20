@@ -38,9 +38,9 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     let mut command = matches
         .get_one::<String>("command")
         .expect("unreachable code: this should never be none at all")
-        .to_owned();
+        .clone();
 
-    if !command.ends_with(".json") {
+    if !command.to_ascii_lowercase().ends_with(".json") {
         command.push_str(".json");
     }
 
