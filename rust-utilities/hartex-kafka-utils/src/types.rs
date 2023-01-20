@@ -28,14 +28,14 @@ pub enum CompressionType {
     Zstd,
 }
 
-impl Into<String> for CompressionType {
-    fn into(self) -> String {
-        String::from(match self {
-            Self::Gzip => "gzip",
-            Self::Lz4 => "lz4",
-            Self::None => "none",
-            Self::Snappy => "snappy",
-            Self::Zstd => "Zstd",
+impl From<CompressionType> for String {
+    fn from(compression: CompressionType) -> String {
+        String::from(match compression {
+            CompressionType::Gzip => "gzip",
+            CompressionType::Lz4 => "lz4",
+            CompressionType::None => "none",
+            CompressionType::Snappy => "snappy",
+            CompressionType::Zstd => "Zstd",
         })
     }
 }
