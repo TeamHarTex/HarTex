@@ -24,7 +24,9 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use clap::{Arg, ArgAction, Command};
+use clap::Arg;
+use clap::ArgAction;
+use clap::Command;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 
@@ -45,14 +47,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 .long_about(
                     "Use the -u/--update flag to specify specifically to patch the command.",
                 )
-                .arg(
-                    Arg::new("update")
-                        .short('u')
-                        .long("update")
-                        .action(ArgAction::Set)
-                        .num_args(0),
-                )
-                .arg(Arg::new("command").num_args(1).required(true)),
+                .arg(Arg::new("command").required(true).action(ArgAction::Set)),
         );
 
     let matches = command.get_matches();

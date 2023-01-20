@@ -20,9 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fs::File;
+use std::io::Read;
+
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
+use hartex_discord_eyre::eyre::Report;
+use walkdir::WalkDir;
 
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_async)]
@@ -35,14 +40,40 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
 
-    let mut command = matches
-        .get_one::<String>("command")
-        .expect("unreachable code: this should never be none at all")
-        .clone();
+    let mut command = matches.get_one::<String>("command").unwrap().clone();
 
     if !command.to_ascii_lowercase().ends_with(".json") {
         command.push_str(".json");
     }
+
+    let mut iterator = WalkDir::new("hartex-discord-commands-spec")
+        .same_file_system(true)
+        .into_iter();
+    let entry_option = loop {
+        let option = iterator.next();
+        if option.is_none() {
+            break None;
+        }
+
+        let entry = option.unwrap()?;
+        if entry.metadata()?.is_dir() {
+            continue;
+        }
+
+        if entry.path().ends_with(&command) {
+            break Some(entry);
+        }
+    };
+
+    if entry_option.is_none() {
+        return Err(Report::msg(format!(
+            "command file {command} cannot be found"
+        )));
+    }
+
+    let mut file = File::open(entry_option.unwrap().path())?;
+    let mut json = String::new();
+    file.read_to_string(&mut json)?;
 
     Ok(())
 }
