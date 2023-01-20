@@ -47,11 +47,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 .long_about(
                     "Use the -u/--update flag to specify specifically to patch the command.",
                 )
-                .arg(
-                    Arg::new("command")
-                        .required(true)
-                        .action(ArgAction::Set),
-                )
+                .arg(Arg::new("command").required(true).action(ArgAction::Set)),
         );
 
     let matches = command.get_matches();
