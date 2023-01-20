@@ -26,7 +26,7 @@ use hartex_discord_core::log;
 
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_async)]
-pub async fn register_command(_: ArgMatches) -> hartex_discord_eyre::Result<()> {
+pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
@@ -34,6 +34,10 @@ pub async fn register_command(_: ArgMatches) -> hartex_discord_eyre::Result<()> 
     log::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
+
+    let _ = matches
+        .get_one::<String>("command")
+        .expect("unreachable code: this should never be none at all");
 
     Ok(())
 }
