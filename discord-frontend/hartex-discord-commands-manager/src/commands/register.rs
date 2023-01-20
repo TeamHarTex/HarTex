@@ -21,13 +21,19 @@
  */
 
 use clap::ArgMatches;
+use hartex_discord_core::dotenvy;
+use hartex_discord_core::log;
 
-use crate::commands;
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::unused_async)]
+pub async fn register_command(_: ArgMatches) -> hartex_discord_eyre::Result<()> {
+    log::trace!("loading environment variables");
+    dotenvy::dotenv()?;
 
-pub async fn handle(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
-    match matches.subcommand_name() {
-        Some("list") => commands::list::list_command(),
-        Some("register") => commands::register::register_command(matches).await,
-        _ => Ok(()),
-    }
+    log::trace!("reading specification directory");
+    log::warn!(
+        "an error will occur if this command is not ran within the discord-frontend directory"
+    );
+
+    Ok(())
 }
