@@ -39,7 +39,7 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     log::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
-    
+
     let mut command = matches.get_one::<String>("command").unwrap().clone();
 
     if !command.to_ascii_lowercase().ends_with(".json") {
