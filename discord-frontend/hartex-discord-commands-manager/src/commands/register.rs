@@ -24,6 +24,7 @@ use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 
+#[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_async)]
 pub async fn register_command(_: ArgMatches) -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
