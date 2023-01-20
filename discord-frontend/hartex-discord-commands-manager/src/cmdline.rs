@@ -24,10 +24,10 @@ use clap::ArgMatches;
 
 use crate::commands;
 
-#[allow(clippy::unused_async)]
 pub async fn handle(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
     match matches.subcommand_name() {
         Some("list") => commands::list::list_command(),
+        Some("register") => commands::register::register_command().await,
         _ => Ok(()),
     }
 }

@@ -21,7 +21,6 @@
  */
 
 use clap::Command;
-use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 
@@ -34,9 +33,6 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     hartex_discord_eyre::initialize()?;
     log::initialize();
 
-    log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
-
     let command = Command::new("cmdmgr")
         .subcommand(
             Command::new("list")
@@ -44,9 +40,14 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 .long_about(
                     "Lists commands registered with Discord. Use the -a/--all option to show all regardless its registration status."
                 )
+        )
+        .subcommand(
+            Command::new("register")
+                .about("Registers a command with Discord")
         );
 
     let matches = command.get_matches();
+
     cmdline::handle(matches).await?;
 
     Ok(())
