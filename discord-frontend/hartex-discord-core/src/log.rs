@@ -42,6 +42,8 @@ pub fn initialize() {
                 ),
             ),
         )
+        .logger(Logger::builder().build("h2", LevelFilter::Off))
+        .logger(Logger::builder().build("hyper", LevelFilter::Off))
         .logger(Logger::builder().build("mio", LevelFilter::Off))
         .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
@@ -49,6 +51,7 @@ pub fn initialize() {
         .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_gateway", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_model", LevelFilter::Off))
+        .logger(Logger::builder().build("want", LevelFilter::Off))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))
         .expect("failed to build log4rs configuration");
 

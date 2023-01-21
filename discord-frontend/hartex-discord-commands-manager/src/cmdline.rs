@@ -25,9 +25,11 @@ use clap::ArgMatches;
 use crate::commands;
 
 pub async fn handle(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
-    match matches.subcommand_name() {
-        Some("list") => commands::list::list_command(),
-        Some("register") => commands::register::register_command(matches).await,
+    match matches.subcommand() {
+        Some(("list", _)) => commands::list::list_command(),
+        Some(("register", subcommand_matches)) => {
+            commands::register::register_command(subcommand_matches.clone()).await
+        }
         _ => Ok(()),
     }
 }
