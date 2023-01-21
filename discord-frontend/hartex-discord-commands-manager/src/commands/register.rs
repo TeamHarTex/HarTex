@@ -95,14 +95,14 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     if !token.starts_with("Bot ") {
         token.insert_str(0, "Bot ");
     }
-    
+
     let request = Request::builder()
         .uri(format!(
             "https://discord.com/api/v10/applications/{application_id}/commands"
         ))
         .method(Method::POST)
         .header(ACCEPT, "application/json")
-        .header(AUTHORIZATION, )
+        .header(AUTHORIZATION, token)
         .header(CONTENT_TYPE, "application/json")
         .header(
             USER_AGENT,
