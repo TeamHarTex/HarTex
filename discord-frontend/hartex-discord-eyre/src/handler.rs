@@ -42,7 +42,7 @@ impl eyre::EyreHandler for HookHandler {
         write!(f, "\r\x1B[2K")?;
         writeln!(
             f,
-            "\x1B[0;31mError occurred in thread {:?}: {error:?}",
+            "\x1B[0;91mError occurred in thread {:?}: {error:?}",
             thread::current().name().unwrap_or("<unknown>")
         )?;
 
