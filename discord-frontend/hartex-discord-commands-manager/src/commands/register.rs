@@ -30,7 +30,7 @@ use hartex_discord_core::log;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task;
 use hartex_discord_eyre::eyre::Report;
-use hyper::client::conn::http2;
+use hyper::client::conn::http1;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_TYPE;
@@ -85,8 +85,8 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     let mut json = String::new();
     file.read_to_string(&mut json)?;
 
-    let stream = TcpStream::connect("https://discord.com:443").await?;
-    let (mut sender, connection) = http2::handshake(stream).await?;
+    let stream = TcpStream::connect("discord.com:443").await?;
+    let (mut sender, connection) = http1::handshake(stream).await?;
     task::spawn(async move {
         if let Err(error) = connection.await {
             println!("{:?}", Report::new(error));
@@ -117,6 +117,8 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
             ))
         );
     }
+
+    log::info!("request succeeded");
 
     Ok(())
 }
