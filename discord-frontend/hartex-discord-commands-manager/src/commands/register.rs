@@ -108,7 +108,7 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         )
         .body(json)?;
     let response = sender.send_request(request).await?;
-    if response.status().is_success() {
+    if !response.status().is_success() {
         println!(
             "{:?}",
             Report::msg(format!(
@@ -118,7 +118,7 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         );
     }
 
-    log::info!("request succeeded");
+    log::info!("request succeeded: {}", response.status());
 
     Ok(())
 }
