@@ -42,7 +42,12 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::initialize();
 
     let command = Command::new("cmdmgr")
-        .subcommand(Command::new("list").about("Lists commands registered with Discord."))
+        .subcommand(
+            Command::new("list-from-discord").about("Lists commands registered with Discord."),
+        )
+        .subcommand(
+            Command::new("list-from-fs").about("Lists commands declared in the filesystem."),
+        )
         .subcommand(
             Command::new("register")
                 .about("Registers a command with Discord.")

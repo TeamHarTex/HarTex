@@ -31,7 +31,7 @@ use walkdir::WalkDir;
 use crate::model::command::CommandManagerCommand;
 
 #[allow(clippy::module_name_repetitions)]
-pub fn list_command() -> hartex_discord_eyre::Result<()> {
+pub fn list_from_fs_command() -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 
