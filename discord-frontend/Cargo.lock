@@ -513,6 +513,7 @@ dependencies = [
  "clap",
  "hartex_discord_core",
  "hartex_discord_eyre",
+ "hyper 1.0.0-rc.2",
  "owo-colors",
  "serde",
  "serde_json",
@@ -693,6 +694,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "http-body"
+version = "1.0.0-rc.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "951dfc2e32ac02d67c90c0d65bd27009a635dc9b381a2cc7d284ab01e3a0150d"
+dependencies = [
+ "bytes",
+ "http",
+]
+
+[[package]]
 name = "httparse"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -716,7 +727,7 @@ dependencies = [
  "futures-util",
  "h2",
  "http",
- "http-body",
+ "http-body 0.4.5",
  "httparse",
  "httpdate",
  "itoa",
@@ -724,6 +735,28 @@ dependencies = [
  "socket2",
  "tokio",
  "tower-service",
+ "tracing",
+ "want",
+]
+
+[[package]]
+name = "hyper"
+version = "1.0.0-rc.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "289cfdbf735dea222b0ec6a10224b4d9552c7662bb451d4589cbfda3d407d1a3"
+dependencies = [
+ "bytes",
+ "futures-channel",
+ "futures-core",
+ "futures-util",
+ "h2",
+ "http",
+ "http-body 1.0.0-rc.2",
+ "httparse",
+ "httpdate",
+ "itoa",
+ "pin-project-lite",
+ "tokio",
  "tracing",
  "want",
 ]
@@ -1725,7 +1758,7 @@ name = "twilight-http"
 version = "0.15.0-rc.1"
 source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
 dependencies = [
- "hyper",
+ "hyper 0.14.23",
  "percent-encoding",
  "rand",
  "serde",
