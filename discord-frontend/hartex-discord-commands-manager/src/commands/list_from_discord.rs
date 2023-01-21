@@ -24,6 +24,7 @@ use std::env;
 use std::str;
 
 use clap::ArgMatches;
+use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
@@ -79,7 +80,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_ey
         )));
     }
 
-    log::debug!("{full}");
+    let _ = serde_json::from_str::<Vec<Command>>(&full)?;
 
     Ok(())
 }
