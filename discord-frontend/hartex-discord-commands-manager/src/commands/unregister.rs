@@ -20,20 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::ArgMatches;
-
-use crate::commands;
-
-pub async fn handle(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
-    match matches.subcommand() {
-        Some(("list-from-discord", subcommand_matches)) => {
-            commands::list_from_discord::list_from_discord_command(subcommand_matches.clone()).await
-        }
-        Some(("list-from-fs", _)) => commands::list_from_fs::list_from_fs_command(),
-        Some(("register", subcommand_matches)) => {
-            commands::register::register_command(subcommand_matches.clone()).await
-        }
-        Some(("unregister", _)) => commands::unregister::unregister_command().await,
-        _ => Ok(()),
-    }
+#[allow(clippy::module_name_repetitions)]
+pub async fn unregister_command() -> hartex_discord_eyre::Result<()> {
+    Ok(())
 }
