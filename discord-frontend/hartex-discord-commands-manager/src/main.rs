@@ -23,6 +23,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(let_chains)]
 
 extern crate core;
 
@@ -42,13 +43,23 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
     log::initialize();
 
     let command = Command::new("cmdmgr")
-        .subcommand(Command::new("list").about("Lists commands registered with Discord."))
+        .subcommand(
+            Command::new("list-from-discord")
+                .about("Lists commands registered with Discord.")
+                .arg(
+                    Arg::new("with-localizations")
+                        .long("with-localizations")
+                        .short('w')
+                        .num_args(0)
+                        .action(ArgAction::Set),
+                ),
+        )
+        .subcommand(
+            Command::new("list-from-fs").about("Lists commands declared in the filesystem."),
+        )
         .subcommand(
             Command::new("register")
                 .about("Registers a command with Discord.")
-                .long_about(
-                    "Use the -u/--update flag to specify specifically to patch the command.",
-                )
                 .arg(Arg::new("command").required(true).action(ArgAction::Set)),
         );
 
