@@ -28,17 +28,16 @@ use std::str;
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
-use hartex_discord_core::tokio::net::TcpStream;
-use hartex_discord_core::tokio::task;
 use hartex_discord_eyre::eyre::Report;
-use http_body_util::BodyExt;
-use hyper::client::conn::http1;
+use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_TYPE;
 use hyper::header::USER_AGENT;
+use hyper::Client;
 use hyper::Method;
 use hyper::Request;
+use hyper_trust_dns::TrustDnsResolver;
 use walkdir::WalkDir;
 
 #[allow(clippy::module_name_repetitions)]
@@ -87,36 +86,34 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     let mut json = String::new();
     file.read_to_string(&mut json)?;
 
-    let stream = TcpStream::connect("discord.com:443").await?;
-    let (mut sender, connection) = http1::handshake(stream).await?;
-    task::spawn(async move {
-        if let Err(error) = connection.await {
-            println!("{:?}", Report::new(error));
-        }
-    });
+    let client =
+        Client::builder().build(TrustDnsResolver::default().into_native_tls_https_connector());
 
     let application_id = env::var("APPLICATION_ID")?;
+
+    let mut token = env::var("BOT_TOKEN")?;
+    if !token.starts_with("Bot ") {
+        token.insert_str(0, "Bot ");
+    }
+
     let request = Request::builder()
         .uri(format!(
             "https://discord.com/api/v10/applications/{application_id}/commands"
         ))
         .method(Method::POST)
         .header(ACCEPT, "application/json")
-        .header(AUTHORIZATION, env::var("BOT_TOKEN")?)
+        .header(AUTHORIZATION, token)
         .header(CONTENT_TYPE, "application/json")
         .header(
             USER_AGENT,
             "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
         )
         .body(json)?;
-    let mut response = sender.send_request(request).await?;
+    let mut response = client.request(request).await?;
     if !response.status().is_success() {
         let mut full = String::new();
-        while let Some(result) = response.frame().await {
-            let frame = result?;
-            if let Some(chunk) = frame.data_ref() {
-                full.push_str(str::from_utf8(chunk)?);
-            }
+        while let Some(result) = response.body_mut().data().await {
+            full.push_str(str::from_utf8(&result?)?);
         }
         log::error!("unsuccessful HTTP request, response: {full}");
 
