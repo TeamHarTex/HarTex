@@ -120,12 +120,10 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         }
         log::error!("unsuccessful HTTP request, response: {full}");
 
-        return Err(
-            Report::msg(format!(
-                "unsuccessful HTTP request, with status code {}",
-                response.status()
-            ))
-        );
+        return Err(Report::msg(format!(
+            "unsuccessful HTTP request, with status code {}",
+            response.status()
+        )));
     }
 
     log::info!("request succeeded: {}", response.status());
