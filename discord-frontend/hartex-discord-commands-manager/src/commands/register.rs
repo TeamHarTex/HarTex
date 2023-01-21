@@ -26,10 +26,10 @@ use std::io::Read;
 use std::str;
 
 use clap::ArgMatches;
-use hyper::body::HttpBody;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_eyre::eyre::Report;
+use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_TYPE;
@@ -86,8 +86,8 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
     let mut json = String::new();
     file.read_to_string(&mut json)?;
 
-    let client = Client::builder()
-        .build(TrustDnsResolver::default().into_native_tls_https_connector());
+    let client =
+        Client::builder().build(TrustDnsResolver::default().into_native_tls_https_connector());
 
     let application_id = env::var("APPLICATION_ID")?;
 
