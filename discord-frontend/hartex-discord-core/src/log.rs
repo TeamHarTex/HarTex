@@ -48,6 +48,8 @@ pub fn initialize() {
         .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
+        .logger(Logger::builder().build("trust_dns_proto", LevelFilter::Off))
+        .logger(Logger::builder().build("trust_dns_resolver", LevelFilter::Off))
         .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_gateway", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_model", LevelFilter::Off))
