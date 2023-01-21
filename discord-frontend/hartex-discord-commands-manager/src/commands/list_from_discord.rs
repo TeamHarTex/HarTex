@@ -21,8 +21,6 @@
  */
 
 use std::env;
-use std::fs::File;
-use std::io::Read;
 use std::str;
 
 use clap::ArgMatches;
@@ -32,58 +30,15 @@ use hartex_discord_eyre::eyre::Report;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
-use hyper::header::CONTENT_TYPE;
 use hyper::header::USER_AGENT;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
-use walkdir::WalkDir;
 
-#[allow(clippy::module_name_repetitions)]
-pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
+pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
-
-    log::trace!("searching for the command specification");
-    log::warn!(
-        "an error will occur if this command is not ran within the discord-frontend directory"
-    );
-
-    let mut command = matches.get_one::<String>("command").unwrap().clone();
-
-    if !command.to_ascii_lowercase().ends_with(".json") {
-        command.push_str(".json");
-    }
-
-    let mut iterator = WalkDir::new("hartex-discord-commands-spec")
-        .same_file_system(true)
-        .into_iter();
-    let entry_option = loop {
-        let option = iterator.next();
-        if option.is_none() {
-            break None;
-        }
-
-        let entry = option.unwrap()?;
-        if entry.metadata()?.is_dir() {
-            continue;
-        }
-
-        if entry.path().ends_with(&command) {
-            break Some(entry);
-        }
-    };
-
-    if entry_option.is_none() {
-        return Err(Report::msg(format!(
-            "command file {command} cannot be found"
-        )));
-    }
-
-    let mut file = File::open(entry_option.unwrap().path())?;
-    let mut json = String::new();
-    file.read_to_string(&mut json)?;
 
     let client =
         Client::builder().build(TrustDnsResolver::default().into_native_tls_https_connector());
@@ -95,25 +50,27 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         token.insert_str(0, "Bot ");
     }
 
+    let mut uri = format!("https://discord.com/api/v10/applications/{application_id}/commands");
+    if let Some(flag) = matches.get_one::<bool>("with-localizations") && *flag {
+        uri.push_str("?with_localizations=true");
+    }
+
     let request = Request::builder()
-        .uri(format!(
-            "https://discord.com/api/v10/applications/{application_id}/commands"
-        ))
-        .method(Method::POST)
+        .uri(uri)
+        .method(Method::GET)
         .header(ACCEPT, "application/json")
         .header(AUTHORIZATION, token)
-        .header(CONTENT_TYPE, "application/json")
         .header(
             USER_AGENT,
             "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
         )
-        .body(json)?;
+        .body(String::new())?;
     let mut response = client.request(request).await?;
+    let mut full = String::new();
+    while let Some(result) = response.body_mut().data().await {
+        full.push_str(str::from_utf8(&result?)?);
+    }
     if !response.status().is_success() {
-        let mut full = String::new();
-        while let Some(result) = response.body_mut().data().await {
-            full.push_str(str::from_utf8(&result?)?);
-        }
         log::error!("unsuccessful HTTP request, response: {full}");
 
         return Err(Report::msg(format!(
@@ -122,7 +79,7 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         )));
     }
 
-    log::info!("request succeeded: {}", response.status());
+    log::debug!("{full}");
 
     Ok(())
 }

@@ -20,5 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+pub mod list_from_discord;
 pub mod list_from_fs;
 pub mod register;
