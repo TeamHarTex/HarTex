@@ -67,7 +67,7 @@ impl Display for PanicReport<'_> {
 
         writeln!(
             f,
-            "\x1B[0;31mPanic occurred in thread {:?}: {}",
+            "\x1B[0;91mPanic occurred in thread {:?}: {}",
             thread::current().name().unwrap_or("<unknown>"),
             self.panic_info
                 .payload()
