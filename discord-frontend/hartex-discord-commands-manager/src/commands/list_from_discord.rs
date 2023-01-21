@@ -38,6 +38,7 @@ use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
 use owo_colors::OwoColorize;
 
+#[allow(clippy::module_name_repetitions)]
 pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
