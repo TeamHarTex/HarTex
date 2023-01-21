@@ -20,5 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod list;
+pub mod list_from_fs;
 pub mod register;
