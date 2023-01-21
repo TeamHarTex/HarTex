@@ -36,6 +36,7 @@ use hyper::Client;
 use hyper::Method;
 use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
+use owo_colors::OwoColorize;
 
 pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
     log::trace!("loading environment variables");
@@ -80,7 +81,11 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_ey
         )));
     }
 
-    let _ = serde_json::from_str::<Vec<Command>>(&full)?;
+    let commands = serde_json::from_str::<Vec<Command>>(&full)?;
+    for command in commands {
+        println!();
+        println!("{}{}", "Command Name: ".bold(), command.name.bright_cyan());
+    }
 
     Ok(())
 }
