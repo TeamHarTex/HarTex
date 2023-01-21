@@ -24,6 +24,8 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+extern crate core;
+
 use clap::Arg;
 use clap::ArgAction;
 use clap::Command;

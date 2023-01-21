@@ -23,6 +23,7 @@
 use std::env;
 use std::fs::File;
 use std::io::Read;
+use std::str;
 
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
@@ -30,6 +31,7 @@ use hartex_discord_core::log;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task;
 use hartex_discord_eyre::eyre::Report;
+use http_body_util::BodyExt;
 use hyper::client::conn::http1;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
@@ -107,8 +109,17 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
             "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
         )
         .body(json)?;
-    let response = sender.send_request(request).await?;
+    let mut response = sender.send_request(request).await?;
     if !response.status().is_success() {
+        let mut full = String::new();
+        while let Some(result) = response.frame().await {
+            let frame = result?;
+            if let Some(chunk) = frame.data_ref() {
+                full.push_str(str::from_utf8(chunk)?);
+            }
+        }
+        log::error!("unsuccessful HTTP request, response: {full}");
+
         return Err(
             Report::msg(format!(
                 "unsuccessful HTTP request, with status code {}",

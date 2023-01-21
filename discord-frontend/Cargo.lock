@@ -513,6 +513,7 @@ dependencies = [
  "clap",
  "hartex_discord_core",
  "hartex_discord_eyre",
+ "http-body-util",
  "hyper 1.0.0-rc.2",
  "owo-colors",
  "serde",
@@ -701,6 +702,19 @@ checksum = "951dfc2e32ac02d67c90c0d65bd27009a635dc9b381a2cc7d284ab01e3a0150d"
 dependencies = [
  "bytes",
  "http",
+]
+
+[[package]]
+name = "http-body-util"
+version = "0.1.0-rc.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "92445bc9cc14bfa0a3ce56817dc3b5bcc227a168781a356b702410789cec0d10"
+dependencies = [
+ "bytes",
+ "futures-util",
+ "http",
+ "http-body 1.0.0-rc.2",
+ "pin-project-lite",
 ]
 
 [[package]]
