@@ -109,8 +109,7 @@ pub async fn register_command(matches: ArgMatches) -> hartex_discord_eyre::Resul
         .body(json)?;
     let response = sender.send_request(request).await?;
     if !response.status().is_success() {
-        println!(
-            "{:?}",
+        return Err(
             Report::msg(format!(
                 "unsuccessful HTTP request, with status code {}",
                 response.status()
