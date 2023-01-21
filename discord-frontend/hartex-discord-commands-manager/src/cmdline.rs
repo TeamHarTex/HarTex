@@ -33,6 +33,9 @@ pub async fn handle(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
         Some(("register", subcommand_matches)) => {
             commands::register::register_command(subcommand_matches.clone()).await
         }
+        Some(("unregister", subcommand_matches)) => {
+            commands::unregister::unregister_command(subcommand_matches.clone()).await
+        }
         _ => Ok(()),
     }
 }
