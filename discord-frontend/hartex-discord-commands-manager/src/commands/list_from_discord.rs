@@ -84,7 +84,9 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_ey
     let commands = serde_json::from_str::<Vec<Command>>(&full)?;
     for command in commands {
         println!();
+        println!("{}{}", "Command ID: ".bold(), command.id.unwrap().bright_cyan());
         println!("{}{}", "Command Name: ".bold(), command.name.bright_cyan());
+        println!("{}{}", "Command Description: ".bold(), command.description.bright_cyan());
     }
 
     Ok(())
