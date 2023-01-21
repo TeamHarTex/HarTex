@@ -21,6 +21,7 @@ twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch 
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 
 [features]
+async-net = ["dep:tokio", "tokio?/net"]
 async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thread"]
 async-signal = ["tokio?/signal"]
 discord-gateway = ["dep:twilight-gateway"]
