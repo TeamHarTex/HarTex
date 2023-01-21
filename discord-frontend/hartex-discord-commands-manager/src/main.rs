@@ -61,6 +61,11 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
             Command::new("register")
                 .about("Registers a command with Discord.")
                 .arg(Arg::new("command").required(true).action(ArgAction::Set)),
+        )
+        .subcommand(
+            Command::new("unregister")
+                .about("Unregisters a command from Discord")
+                .arg(Arg::new("command-id").required(true).action(ArgAction::Set)),
         );
 
     let matches = command.get_matches();
