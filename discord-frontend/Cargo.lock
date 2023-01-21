@@ -749,7 +749,6 @@ dependencies = [
  "futures-channel",
  "futures-core",
  "futures-util",
- "h2",
  "http",
  "http-body 1.0.0-rc.2",
  "httparse",
