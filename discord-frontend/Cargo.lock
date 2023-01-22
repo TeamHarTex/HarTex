@@ -677,6 +677,8 @@ name = "hartex_discord_worker"
 version = "0.1.0"
 dependencies = [
  "futures-util",
+ "hartex_discord_commands",
+ "hartex_discord_commands_core",
  "hartex_discord_core",
  "hartex_discord_entitycache_cacheupdaters",
  "hartex_discord_entitycache_core",
