@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_commands::general::ping::Ping;
+use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::model::application::interaction::InteractionData;
+use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::log;
@@ -29,6 +33,18 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_discord_eyre::Resu
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
+            DispatchEvent::InteractionCreate(interaction_create)
+                if interaction_create.kind == InteractionType::ApplicationCommand =>
+            {
+                let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap() else {
+                    unreachable!("this should not be possible")
+                };
+
+                match command.name.as_str() {
+                    "latency" => Ping.execute(interaction_create.0).await,
+                    _ => Ok(()),
+                }
+            }
             DispatchEvent::Ready(ready) => {
                 log::info!(
                     "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
