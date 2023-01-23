@@ -21,13 +21,14 @@
  */
 
 use std::env;
+use std::ops::Deref;
 
 use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
 
 pub static CLIENT: Lazy<Client> = Lazy::new(|| {
     Client::builder()
-        .token(*TOKEN)
+        .token(TOKEN.deref().to_owned())
         .proxy(String::from("localhost:3000"), true)
         .ratelimiter(None)
         .build()

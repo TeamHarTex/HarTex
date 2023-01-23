@@ -630,6 +630,7 @@ dependencies = [
  "twilight-gateway",
  "twilight-http",
  "twilight-model",
+ "twilight-util",
 ]
 
 [[package]]
@@ -2138,6 +2139,15 @@ dependencies = [
  "serde_repr",
  "time",
  "tracing",
+]
+
+[[package]]
+name = "twilight-util"
+version = "0.15.0-rc.1"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c0bdf9d80c21fce96a36ce6799c59515887010"
+dependencies = [
+ "twilight-model",
+ "twilight-validate",
 ]
 
 [[package]]
