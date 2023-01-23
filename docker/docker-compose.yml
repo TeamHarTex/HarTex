@@ -1,5 +1,12 @@
 version: '3.7'
 services:
+  proxy:
+    image: twilightrs/http-proxy:metrics
+    container_name: proxy-1
+    environment:
+      DISCORD_TOKEN: "irrelevant"
+    ports:
+      - "3000:80"
   redis:
     image: redis/redis-stack:latest
     container_name: redis-1
