@@ -732,6 +732,7 @@ dependencies = [
  "hartex_discord_eyre",
  "hartex_discord_utils",
  "hartex_kafka_utils",
+ "once_cell",
  "rdkafka",
  "serde",
  "serde_json",
