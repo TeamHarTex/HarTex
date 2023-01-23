@@ -36,13 +36,21 @@ pub struct Latency;
 
 impl Command for Latency {
     async fn execute(&self, interaction: Interaction) -> hartex_discord_eyre::Result<()> {
-        CLIENT.interaction(interaction.application_id)
-            .create_response(interaction.id, &interaction.token, &InteractionResponse {
-                kind: InteractionResponseType::ChannelMessageWithSource,
-                data: Some(InteractionResponseDataBuilder::new()
-                    .content("Did you need anything?")
-                    .build()),
-            }).await?;
+        CLIENT
+            .interaction(interaction.application_id)
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content("Did you need anything?")
+                            .build(),
+                    ),
+                },
+            )
+            .await?;
 
         Ok(())
     }
