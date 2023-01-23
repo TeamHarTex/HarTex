@@ -52,6 +52,7 @@ pub fn initialize() {
         .logger(Logger::builder().build("trust_dns_resolver", LevelFilter::Off))
         .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_gateway", LevelFilter::Off))
+        .logger(Logger::builder().build("twilight_http", LevelFilter::Off))
         .logger(Logger::builder().build("twilight_model", LevelFilter::Off))
         .logger(Logger::builder().build("want", LevelFilter::Off))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))

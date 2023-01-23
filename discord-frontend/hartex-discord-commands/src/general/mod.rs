@@ -20,4 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod ping;
+pub mod latency;

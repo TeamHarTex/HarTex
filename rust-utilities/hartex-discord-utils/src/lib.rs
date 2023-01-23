@@ -20,19 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands_core::traits::Command;
-use hartex_discord_commands_macros::CommandMetadata;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
+use std::env;
+use std::ops::Deref;
 
-#[derive(CommandMetadata)]
-#[metadata(command_type = 1)]
-#[metadata(interaction_only = true)]
-#[metadata(name = "ping")]
-pub struct Ping;
+use hartex_discord_core::discord::http::Client;
+use once_cell::sync::Lazy;
 
-impl Command for Ping {
-    #[allow(clippy::unused_async)]
-    async fn execute(&self, _: Interaction) -> hartex_discord_eyre::Result<()> {
-        todo!()
-    }
-}
+pub static CLIENT: Lazy<Client> = Lazy::new(|| {
+    Client::builder()
+        .token(TOKEN.deref().to_owned())
+        .proxy(String::from("localhost:3000"), true)
+        .ratelimiter(None)
+        .build()
+});
+pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());
