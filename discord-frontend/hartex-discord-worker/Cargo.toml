@@ -18,6 +18,7 @@ hartex_discord_eyre = { path = "../hartex-discord-eyre" }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 
+hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 
 futures-util = "0.3.25"
