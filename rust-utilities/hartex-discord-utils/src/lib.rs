@@ -20,9 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(feature = "discord-gateway")]
-pub use twilight_gateway as gateway;
-#[cfg(feature = "discord-http")]
-pub use twilight_http as http;
-#[cfg(feature = "discord-model")]
-pub use twilight_model as model;
+use std::env;
+
+use hartex_discord_core::discord::http::Client;
+use once_cell::sync::Lazy;
+
+pub static CLIENT: Lazy<Client> = Lazy::new(|| {
+    Client::builder()
+        .token(*TOKEN)
+        .proxy(String::from("localhost:3000"), true)
+        .ratelimiter(None)
+        .build()
+});
+pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());

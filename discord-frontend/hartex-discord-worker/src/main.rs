@@ -28,12 +28,15 @@ use std::env;
 use std::str;
 
 use futures_util::StreamExt;
+use once_cell::sync::Lazy;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_eyre::eyre::Report;
+use hartex_discord_utils::CLIENT;
+use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use rdkafka::consumer::Consumer;
@@ -57,6 +60,9 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
+
+    Lazy::force(&TOKEN);
+    Lazy::force(&CLIENT);
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
         .split(';')
