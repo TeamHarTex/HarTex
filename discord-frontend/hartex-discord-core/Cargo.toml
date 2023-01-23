@@ -20,6 +20,7 @@ tokio = { version = "1.24.2", optional = true }
 twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-http = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
+twilight-util = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 
 [features]
 async-net = ["dep:tokio", "tokio?/net"]
@@ -28,5 +29,7 @@ async-signal = ["tokio?/signal"]
 discord-gateway = ["dep:twilight-gateway"]
 discord-http = ["dep:twilight-http"]
 discord-model = ["dep:twilight-model"]
+discord-util = ["dep:twilight-util"]
+discord-util-builder = ["twilight-util?/builder"]
 environment = ["dep:dotenvy"]
 logging-facilities = ["dep:log", "dep:log4rs", "log4rs?/console_appender"]
