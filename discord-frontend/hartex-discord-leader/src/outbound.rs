@@ -22,6 +22,7 @@
 
 use std::env;
 
+use hartex_discord_core::discord::gateway::Shard;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use rdkafka::consumer::Consumer;
@@ -29,7 +30,7 @@ use rdkafka::consumer::StreamConsumer;
 use rdkafka::ClientConfig;
 
 #[allow(clippy::unused_async)]
-pub async fn listen() -> hartex_discord_eyre::Result<()> {
+pub async fn listen(_: Vec<Shard>) -> hartex_discord_eyre::Result<()> {
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
         .split(';')
         .map(String::from)
