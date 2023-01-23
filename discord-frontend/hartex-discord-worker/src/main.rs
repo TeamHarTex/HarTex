@@ -38,6 +38,7 @@ use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
+use once_cell::sync::Lazy;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::message::Message;
