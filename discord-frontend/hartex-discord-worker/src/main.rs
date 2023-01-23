@@ -28,7 +28,6 @@ use std::env;
 use std::str;
 
 use futures_util::StreamExt;
-use once_cell::sync::Lazy;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
