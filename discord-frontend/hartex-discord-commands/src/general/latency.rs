@@ -35,7 +35,6 @@ use hartex_discord_utils::CLIENT;
 pub struct Latency;
 
 impl Command for Latency {
-    #[allow(clippy::unused_async)]
     async fn execute(&self, interaction: Interaction) -> hartex_discord_eyre::Result<()> {
         CLIENT.interaction(interaction.application_id)
             .create_response(interaction.id, &interaction.token, &InteractionResponse {
