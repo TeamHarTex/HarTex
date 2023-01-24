@@ -35,12 +35,12 @@ pub async fn listen(_: Vec<Shard>) -> hartex_discord_eyre::Result<()> {
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
-    let topic = env::var("KAFKA_LEADER_TOPIC_DISCORD_GATEWAY_COMMAND")?;
+    let topic = env::var("KAFKA_TOPIC_DISCORD_GATEWAY_COMMAND")?;
 
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
         .compression_type(CompressionType::Lz4)
-        .group_id("com.github.teamhartex.hartex.inbound.gateway.payload.consumer")
+        .group_id("com.github.teamhartex.hartex.inbound.gateway.command.consumer")
         .create::<StreamConsumer>()?;
 
     consumer.subscribe(&[&topic])?;
