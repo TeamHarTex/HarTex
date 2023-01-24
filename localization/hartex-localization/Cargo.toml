@@ -11,6 +11,8 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+
 fluent-bundle = "0.15.2"
 unic-langid = { version = "0.9.1", features = ["macros"] }
 

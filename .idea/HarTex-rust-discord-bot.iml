@@ -48,7 +48,6 @@
       <sourceFolder url="file://$MODULE_DIR$/buildsystem/hartex-buildsystem-driver/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-leader/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-eyre/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-worker/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-macros/src" isTestSource="false" />
@@ -69,6 +68,8 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-manager/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-extensions/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-discord-utils/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-eyre/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
@@ -78,6 +79,7 @@
       <excludeFolder url="file://$MODULE_DIR$/buildsystem/target" />
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
       <excludeFolder url="file://$MODULE_DIR$/hartex-kafka/target" />
+      <excludeFolder url="file://$MODULE_DIR$/localization/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

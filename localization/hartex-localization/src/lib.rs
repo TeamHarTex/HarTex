@@ -31,9 +31,10 @@ use std::path::PathBuf;
 use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
 
+pub mod error;
 pub mod types;
 
-pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) -> types::LocalizationBundle {
+pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) -> hartex_eyre::Result<types::LocalizationBundle> {
     let fallback = langid!("en-US");
     let is_fallback = requested.as_ref() == Some(&fallback);
 
@@ -44,6 +45,10 @@ pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) 
     if !is_fallback && let Some(ident) = requested {
         localizations_root.push(ident.to_string());
         modules.iter().for_each(|module| localizations_root.push(module));
+    }
+
+    if !localizations_root.try_exists()? {
+        // return Err();
     }
 
     todo!()
