@@ -20,4 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use unic_langid::LanguageIdentifier;
+
 pub mod types;
+
+pub fn new_bundle(_: Vec<LanguageIdentifier>) {
+    todo!()
+}
