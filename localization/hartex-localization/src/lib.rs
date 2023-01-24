@@ -24,6 +24,6 @@ use unic_langid::LanguageIdentifier;
 
 pub mod types;
 
-pub fn new_bundle(_: Vec<LanguageIdentifier>) {
+pub fn new_bundle(_: Vec<LanguageIdentifier>) -> types::LocalizationBundle {
     todo!()
 }

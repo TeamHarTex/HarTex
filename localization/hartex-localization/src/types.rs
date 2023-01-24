@@ -20,4 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use fluent_bundle::FluentBundle as LocalizationBundle;
+use fluent_bundle::FluentBundle;
+use fluent_bundle::FluentResource;
+
+pub type LocalizationBundle = FluentBundle<FluentResource>;
