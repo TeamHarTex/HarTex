@@ -38,7 +38,7 @@ pub async fn handle(
     producer: FutureProducer,
 ) -> hartex_discord_eyre::Result<()> {
     let mut stream = ShardMessageStream::new(shards);
-    let topic = env::var("KAFKA_LEADER_TOPIC_DISCORD_GATEWAY_PAYLOAD")?;
+    let topic = env::var("KAFKA_TOPIC_DISCORD_GATEWAY_PAYLOAD")?;
 
     while let Some((shard, result)) = stream.next().await {
         match result {
