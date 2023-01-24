@@ -43,6 +43,7 @@ use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
 mod inbound;
+mod outbound;
 mod queue;
 mod shards;
 
@@ -72,7 +73,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
 
     let (tx, rx) = watch::channel(false);
 
-    log::trace!("launching {num_shards} shard(s)",);
+    log::trace!("launching {num_shards} shard(s)");
     let mut rx = rx.clone();
 
     tokio::spawn(async move {
@@ -82,7 +83,7 @@ pub async fn main() -> hartex_discord_eyre::Result<()> {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
                     shard.close(CloseFrame::RESUME).await
                 })).await;
-            }
+            },
         }
     });
 
