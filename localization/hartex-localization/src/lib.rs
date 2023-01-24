@@ -40,7 +40,7 @@ pub mod types;
 pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) -> hartex_eyre::Result<types::LocalizationBundle> {
     let fallback = langid!("en-US");
     let locale = requested.clone().unwrap_or(fallback);
-    let mut bundle = types::LocalizationBundle::new(vec![locale]);
+    let mut bundle = types::LocalizationBundle::new(vec![locale.clone()]);
 
     let mut localizations_root = PathBuf::from("../localization/locales");
     localizations_root.push(locale.to_string());
