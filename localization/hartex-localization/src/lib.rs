@@ -24,15 +24,27 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(let_chains)]
+
+use std::path::PathBuf;
 
 use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
 
 pub mod types;
 
-pub fn get_bundle(requested: Option<LanguageIdentifier>) -> types::LocalizationBundle {
-    let locale = requested.unwrap_or(langid!("en-GB"));
+pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) -> types::LocalizationBundle {
+    let fallback = langid!("en-US");
+    let is_fallback = requested.as_ref() == Some(&fallback);
+
+    let locale = requested.clone().unwrap_or(fallback);
     let _ = types::LocalizationBundle::new(vec![locale]);
+
+    let mut localizations_root = PathBuf::from("../localization/locales");
+    if !is_fallback && let Some(ident) = requested {
+        localizations_root.push(ident.to_string());
+        modules.iter().for_each(|module| localizations_root.push(module));
+    }
 
     todo!()
 }
