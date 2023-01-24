@@ -56,9 +56,7 @@ impl Command for Latency {
             )
             .await?;
 
-        let final_t = Instant::now() - initial_t;
-        let milliseconds = final_t.as_millis();
-
+        let milliseconds = initial_t.elapsed().as_millis();
         interaction_client
             .update_response(&interaction.token)
             .content(Some(&format!(
