@@ -1,5 +1,13 @@
 {
-  "description": "Obtain latency information",
   "name": "latency",
+  "description": "Obtain latency information",
+  "name_localizations": {
+    "zh-TW": "延遲",
+    "zh-CN": "延迟"
+  },
+  "description_localizations": {
+    "zh-TW": "取得延遲資訊",
+    "zh-CN": "获取延迟资讯"
+  },
   "type": 1
 }
