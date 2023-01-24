@@ -28,7 +28,7 @@ use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::log;
-use hartex_discord_eyre::eyre::Report;
+use hartex_eyre::eyre::Report;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
@@ -36,7 +36,7 @@ use rdkafka::util::Timeout;
 pub async fn handle(
     shards: impl Iterator<Item = &mut Shard>,
     producer: FutureProducer,
-) -> hartex_discord_eyre::Result<()> {
+) -> hartex_eyre::Result<()> {
     let mut stream = ShardMessageStream::new(shards);
     let topic = env::var("KAFKA_TOPIC_DISCORD_GATEWAY_PAYLOAD")?;
 

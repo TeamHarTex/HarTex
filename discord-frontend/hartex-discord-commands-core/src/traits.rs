@@ -31,5 +31,5 @@ pub trait CommandMetadata {
 }
 
 pub trait Command: CommandMetadata {
-    async fn execute(&self, interaction: Interaction) -> hartex_discord_eyre::Result<()>;
+    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()>;
 }
