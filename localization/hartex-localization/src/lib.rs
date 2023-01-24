@@ -20,10 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(incomplete_features)]
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
+use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
 
 pub mod types;
 
-pub fn new_bundle(_: Vec<LanguageIdentifier>) -> types::LocalizationBundle {
+pub fn get_bundle(requested: Option<LanguageIdentifier>) -> types::LocalizationBundle {
+    let locale = requested.unwrap_or(langid!("en-GB"));
+    let _ = types::LocalizationBundle::new(vec![locale]);
+
     todo!()
 }
