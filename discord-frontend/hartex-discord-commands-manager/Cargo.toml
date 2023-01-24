@@ -12,7 +12,7 @@ rust-version = "1.69.0"
 
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment", "logging-facilities"] }
-hartex_discord_eyre = { path = "../hartex-discord-eyre" }
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
 clap = "4.1.3"
 hyper = { version = "0.14.23", features = ["client", "http2"] }

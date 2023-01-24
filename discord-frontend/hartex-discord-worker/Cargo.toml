@@ -14,7 +14,7 @@ rust-version = "1.69.0"
 hartex_discord_commands = { path = "../hartex-discord-commands" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment", "logging-facilities"] }
-hartex_discord_eyre = { path = "../hartex-discord-eyre" }
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 

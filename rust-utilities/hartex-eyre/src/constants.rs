@@ -35,7 +35,7 @@ pub const IGNORED_CRATES: [&str; 6] = [
     "core",
     "eyre",
     "backtrace",
-    "hartex_discord_eyre",
+    "hartex_eyre",
     // workaround for lines like:
     // <core::result::Result<T,F> as ...
     "<core",

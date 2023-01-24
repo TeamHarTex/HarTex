@@ -33,7 +33,7 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use hartex_discord_eyre::eyre::Report;
+use hartex_eyre::eyre::Report;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
@@ -54,8 +54,8 @@ mod error;
 mod eventcallback;
 
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_discord_eyre::Result<()> {
-    hartex_discord_eyre::initialize()?;
+pub async fn main() -> hartex_eyre::Result<()> {
+    hartex_eyre::initialize()?;
     log::initialize();
 
     log::trace!("loading environment variables");
