@@ -23,7 +23,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![allow(dead_code)]
 
 use std::env;
 use std::time::Duration;
