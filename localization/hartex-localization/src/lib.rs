@@ -29,29 +29,40 @@
 use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
-use fluent_bundle::FluentResource;
 
+use fluent_bundle::FluentResource;
+use hartex_eyre::eyre::Report;
 use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
-use hartex_eyre::eyre::Report;
 
 pub mod types;
 
-pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) -> hartex_eyre::Result<types::LocalizationBundle> {
+pub fn create_bundle(
+    requested: Option<LanguageIdentifier>,
+    modules: Vec<&str>,
+) -> hartex_eyre::Result<types::LocalizationBundle> {
     let fallback = langid!("en-US");
     let locale = requested.clone().unwrap_or(fallback);
     let mut bundle = types::LocalizationBundle::new(vec![locale.clone()]);
 
     let mut localizations_root = PathBuf::from("../localization/locales");
     localizations_root.push(locale.to_string());
-    modules.iter().for_each(|module| localizations_root.push(module));
+    modules
+        .iter()
+        .for_each(|module| localizations_root.push(module));
 
     if !localizations_root.try_exists()? {
-        return Err(Report::msg(format!("localization root not found: {}", localizations_root.to_string_lossy())));
+        return Err(Report::msg(format!(
+            "localization root not found: {}",
+            localizations_root.to_string_lossy()
+        )));
     }
 
     if !localizations_root.is_dir() {
-        return Err(Report::msg(format!("localization root is not a directory: {}", localizations_root.to_string_lossy())));
+        return Err(Report::msg(format!(
+            "localization root is not a directory: {}",
+            localizations_root.to_string_lossy()
+        )));
     }
 
     for result in localizations_root.read_dir()? {
@@ -62,8 +73,11 @@ pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) 
         }
 
         let resource_string = fs::read_to_string(path)?;
-        let resource = FluentResource::try_new(resource_string).map_err(|(_, errors)| errors.last().unwrap().clone())?;
-        bundle.add_resource(resource).map_err(|errors| errors.last().unwrap().clone())?;
+        let resource = FluentResource::try_new(resource_string)
+            .map_err(|(_, errors)| errors.last().unwrap().clone())?;
+        bundle
+            .add_resource(resource)
+            .map_err(|errors| errors.last().unwrap().clone())?;
     }
 
     Ok(bundle)
