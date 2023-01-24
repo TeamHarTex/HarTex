@@ -43,7 +43,6 @@ use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
 mod inbound;
-mod outbound;
 mod queue;
 mod shards;
 
