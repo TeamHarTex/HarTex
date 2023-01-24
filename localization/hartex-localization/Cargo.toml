@@ -12,5 +12,6 @@ rust-version = "1.69.0"
 
 [dependencies]
 fluent-bundle = "0.15.2"
+unic-langid = "0.9.1"
 
 [features]
