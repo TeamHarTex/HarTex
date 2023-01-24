@@ -107,7 +107,7 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
     }
 }
 
-pub fn obtain() -> hartex_discord_eyre::Result<Arc<dyn Queue>> {
+pub fn obtain() -> hartex_eyre::Result<Arc<dyn Queue>> {
     let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse::<usize>()?;
     let wait =
         Duration::from_secs(std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS")?.parse::<u64>()?);

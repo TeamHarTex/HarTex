@@ -27,7 +27,7 @@ use clap::ArgMatches;
 use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
-use hartex_discord_eyre::eyre::Report;
+use hartex_eyre::eyre::Report;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
@@ -39,7 +39,7 @@ use hyper_trust_dns::TrustDnsResolver;
 use owo_colors::OwoColorize;
 
 #[allow(clippy::module_name_repetitions)]
-pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
+pub async fn list_from_discord_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 

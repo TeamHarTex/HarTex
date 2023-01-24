@@ -25,13 +25,13 @@ use std::io::Read;
 
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
-use hartex_discord_eyre::eyre::Report;
+use hartex_eyre::eyre::Report;
 use walkdir::WalkDir;
 
 use crate::model::command::CommandManagerCommand;
 
 #[allow(clippy::module_name_repetitions)]
-pub fn list_from_fs_command() -> hartex_discord_eyre::Result<()> {
+pub fn list_from_fs_command() -> hartex_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 

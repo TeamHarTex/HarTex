@@ -37,7 +37,7 @@ use hartex_discord_utils::CLIENT;
 pub struct Latency;
 
 impl Command for Latency {
-    async fn execute(&self, interaction: Interaction) -> hartex_discord_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
 
         let initial_t = Instant::now();

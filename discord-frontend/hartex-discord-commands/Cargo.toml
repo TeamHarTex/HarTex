@@ -12,7 +12,7 @@ rust-version = "1.69.0"
 
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-http", "discord-model", "discord-util", "discord-util-builder"] }
-hartex_discord_eyre = { path = "../hartex-discord-eyre" }
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
 

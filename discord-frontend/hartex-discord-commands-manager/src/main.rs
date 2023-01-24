@@ -38,8 +38,8 @@ mod commands;
 mod model;
 
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_discord_eyre::Result<()> {
-    hartex_discord_eyre::initialize()?;
+pub async fn main() -> hartex_eyre::Result<()> {
+    hartex_eyre::initialize()?;
     log::initialize();
 
     let command = Command::new("cmdmgr")
