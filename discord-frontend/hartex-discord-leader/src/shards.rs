@@ -33,7 +33,7 @@ use hartex_discord_core::discord::model::gateway::presence::Activity;
 use hartex_discord_core::discord::model::gateway::presence::ActivityType;
 use hartex_discord_core::discord::model::gateway::presence::Status;
 
-pub fn obtain(num_shards: u64, queue: &Arc<dyn Queue>) -> hartex_discord_eyre::Result<Vec<Shard>> {
+pub fn obtain(num_shards: u64, queue: &Arc<dyn Queue>) -> hartex_eyre::Result<Vec<Shard>> {
     let bot_token = std::env::var("BOT_TOKEN")?;
 
     let shard_start_index = std::env::var("SHARDS_START_INDEX")?.parse::<u64>()?;

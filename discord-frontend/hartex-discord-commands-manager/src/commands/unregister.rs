@@ -26,7 +26,7 @@ use std::str;
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::log;
-use hartex_discord_eyre::eyre::Report;
+use hartex_eyre::eyre::Report;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
@@ -38,7 +38,7 @@ use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
 
 #[allow(clippy::module_name_repetitions)]
-pub async fn unregister_command(matches: ArgMatches) -> hartex_discord_eyre::Result<()> {
+pub async fn unregister_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 

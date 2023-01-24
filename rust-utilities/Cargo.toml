@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "hartex-discord-utils",
+    "hartex-eyre",
     "hartex-kafka-utils",
     "hartex-macro-utils",
 ]
