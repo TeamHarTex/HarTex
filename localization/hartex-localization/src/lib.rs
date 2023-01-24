@@ -51,5 +51,9 @@ pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) 
         return Err(Report::msg(format!("localization root not found: {}", localizations_root.to_string_lossy())));
     }
 
+    if !localizations_root.is_dir() {
+        return Err(Report::msg(format!("localization root is not a directory: {}", localizations_root.to_string_lossy())));
+    }
+
     todo!()
 }
