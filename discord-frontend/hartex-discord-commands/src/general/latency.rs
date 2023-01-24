@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::time::Instant;
+
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_macros::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -36,8 +38,10 @@ pub struct Latency;
 
 impl Command for Latency {
     async fn execute(&self, interaction: Interaction) -> hartex_discord_eyre::Result<()> {
-        CLIENT
-            .interaction(interaction.application_id)
+        let interaction_client = CLIENT.interaction(interaction.application_id);
+
+        let initial_t = Instant::now();
+        interaction_client
             .create_response(
                 interaction.id,
                 &interaction.token,
@@ -50,6 +54,16 @@ impl Command for Latency {
                     ),
                 },
             )
+            .await?;
+
+        let final_t = Instant::now() - initial_t;
+        let milliseconds = final_t.as_millis();
+
+        interaction_client
+            .update_response(&interaction.token)
+            .content(Some(&format!(
+                "Did you need anything? Ah, my latency: `{milliseconds}ms`."
+            )))?
             .await?;
 
         Ok(())
