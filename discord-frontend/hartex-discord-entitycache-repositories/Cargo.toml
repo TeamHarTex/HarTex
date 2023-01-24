@@ -15,6 +15,6 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-mo
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-entities" }
 
-redis = { version = "0.22.2", features = ["tokio-comp"] }
+redis = { version = "0.22.3", features = ["tokio-comp"] }
 
 [features]
