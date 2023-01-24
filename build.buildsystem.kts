@@ -1,6 +1,7 @@
 projects {
   project("buildsystem", ProjectType.JVM)
   project("discord-frontend", ProjectType.RUST)
+  project("localization", ProjectType.RUST)
   project("rust-utilities", ProjectType.RUST)
   project("web-frontend", ProjectType.TYPESCRIPT)
 }
@@ -10,6 +11,13 @@ buildConfigurationForProject("buildsystem") {
 }
 
 buildConfigurationForProject("discord-frontend") {
+  buildTool(ProjectBuildTool.CARGO)
+  cargoBuildProfile(CargoBuildProfile.RELEASE)
+  includeDebugInformation(true)
+  linker("rust-lld")
+}
+
+buildConfigurationForProject("localization") {
   buildTool(ProjectBuildTool.CARGO)
   cargoBuildProfile(CargoBuildProfile.RELEASE)
   includeDebugInformation(true)
