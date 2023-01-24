@@ -30,8 +30,8 @@ use std::path::PathBuf;
 
 use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
+use hartex_eyre::eyre::Report;
 
-pub mod error;
 pub mod types;
 
 pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) -> hartex_eyre::Result<types::LocalizationBundle> {
@@ -48,7 +48,7 @@ pub fn create_bundle(requested: Option<LanguageIdentifier>, modules: Vec<&str>) 
     }
 
     if !localizations_root.try_exists()? {
-        // return Err();
+        return Err(Report::msg(format!("localization root not found: {}", localizations_root.to_string_lossy())));
     }
 
     todo!()
