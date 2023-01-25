@@ -202,13 +202,21 @@ pub fn expand_command_metadata_derivation(
 
         if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Literal(literal) = group_tree_next.clone() else {
-                return Err(vec![group_tree_next.span().error(format!("expected literal; found `{group_tree_next}`"))]);
+                group_tree_next.span().unwrap()
+                    .error(format!("expected literal; found `{group_tree_next}`"))
+                    .emit();
+
+                return None;
             };
 
             match ident.to_string().as_str() {
                 "command_type" => {
                     let Ok(command_type) = literal.to_string().parse::<u8>() else {
-                        return Err(vec![literal.span().error(format!("expected integer literal; found literal `{literal}`"))]);
+                        literal.span().unwrap()
+                            .error(format!("expected integer literal; found literal `{literal}`"))
+                            .emit();
+
+                        return None;
                     };
 
                     if !(1..=3).contains(&command_type) {
