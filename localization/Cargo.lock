@@ -119,6 +119,7 @@ version = "0.1.0"
 dependencies = [
  "fluent-bundle",
  "hartex_eyre",
+ "intl-memoizer",
  "unic-langid",
 ]
 
