@@ -114,13 +114,19 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
             }
 
             let TokenTree::Group(group) = tree.clone().unwrap() else {
-                return Err(vec![tree.span().error("expected token group")]);
+                tree.span().unwrap()
+                    .error("expected token group")
+                    .emit();
+
+                return None;
             };
 
             if group.delimiter() != Delimiter::Parenthesis {
-                return Err(vec![group
-                    .span()
-                    .error("expected parenthesized token group")]);
+                group.span().unwrap()
+                    .error("expected parenthesized token group")
+                    .emit();
+
+                return None;
             }
 
             let mut group_iter = group.stream().into_iter();
