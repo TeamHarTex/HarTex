@@ -259,7 +259,7 @@ pub fn expand_command_metadata_derivation(
                         ident_bool.span().unwrap()
                             .error(format!("expected boolean; found `{ident_bool}`"))
                             .emit();
-                        
+
                         return None;
                     };
 
@@ -277,9 +277,11 @@ pub fn expand_command_metadata_derivation(
         };
 
         if let Some(extra) = group_iter.next() {
-            return Err(vec![extra
-                .span()
-                .error(format!("unexpected token: `{extra}`"))]);
+            extra.span().unwrap()
+                .error(format!("unexpected token: `{extra}`"))
+                .emit();
+
+            return None;
         }
 
         previous_attr_name = ident.to_string();
@@ -298,7 +300,7 @@ pub fn expand_command_metadata_derivation(
         }
     };
 
-    Ok(quote::quote! {
+    Some(quote::quote! {
        #expanded
     })
 }
