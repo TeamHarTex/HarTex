@@ -23,10 +23,12 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
 use syn::parse_macro_input;
 use syn::DeriveInput;
 
@@ -36,6 +38,6 @@ mod entity;
 pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
     entity::expand_entity_derivation(&mut input)
-        .unwrap_or_else(hartex_macro_utils::as_compiler_errors)
+        .unwrap_or(TokenStream2::new())
         .into()
 }

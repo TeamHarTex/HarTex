@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_macro_utils::traits::SpanUtils;
 use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
@@ -32,18 +31,19 @@ use syn::DataEnum;
 use syn::DataStruct;
 use syn::DataUnion;
 use syn::DeriveInput;
-use syn::Error;
 use syn::Visibility;
 
 #[allow(clippy::too_many_lines)]
-pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2, Vec<Error>> {
+pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
     match input.vis.clone() {
         Visibility::Public(_) => {}
         visibility => {
-            return Err(vec![visibility
-                .span()
-                .error("trait can only be derived on pub items")]);
+            visibility.span().unwrap()
+                .error("trait can only be derived on pub items")
+                .emit();
+
+            return None;
         }
     }
 
@@ -51,14 +51,18 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Result<TokenStream2,
     match input.data.clone() {
         Data::Struct(_) => {}
         Data::Enum(DataEnum { enum_token, .. }) => {
-            return Err(vec![enum_token
-                .span()
-                .error("trait can only be derived on structs")]);
+            enum_token.span().unwrap()
+                .error("trait can only be derived on structs")
+                .emit();
+
+            return None;
         }
         Data::Union(DataUnion { union_token, .. }) => {
-            return Err(vec![union_token
-                .span()
-                .error("trait can only be derived on structs")]);
+            union_token.span().unwrap()
+                .error("trait can only be derived on structs")
+                .emit();
+
+            return None;
         }
     }
 
