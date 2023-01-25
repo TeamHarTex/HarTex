@@ -193,7 +193,11 @@ pub fn expand_command_metadata_derivation(
         }
 
         let Some(group_tree_next) = group_iter.next() else {
-            return Err(vec![group_tree_next.span().error("unexpected end of parameter")]);
+            group_tree_next.span().unwrap()
+                .error("unexpected end of parameter")
+                .emit();
+
+            return None;
         };
 
         if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
