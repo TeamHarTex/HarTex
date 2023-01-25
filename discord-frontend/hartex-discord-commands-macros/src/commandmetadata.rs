@@ -31,7 +31,6 @@ use syn::Data;
 use syn::DataEnum;
 use syn::DataUnion;
 use syn::DeriveInput;
-use syn::Error;
 use syn::Visibility;
 
 const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
@@ -41,14 +40,18 @@ const VALID_ATTR_PARAMETER_NAMES: [&str; 3] = ["command_type", "interaction_only
 #[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(
     input: &mut DeriveInput,
-) -> Result<TokenStream2, Vec<Error>> {
+) -> Option<TokenStream2> {
     // check if item is public
     match input.vis.clone() {
         Visibility::Public(_) => {}
         visibility => {
-            return Err(vec![visibility
+            visibility
                 .span()
-                .error("trait can only be derived on pub items")]);
+                .unwrap()
+                .error("trait can only be derived on pub items")
+                .emit();
+
+            return None;
         }
     }
 
