@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_macro_utils::traits::SpanUtils;
 use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
@@ -59,9 +58,13 @@ pub fn expand_command_metadata_derivation(
     match input.data.clone() {
         Data::Struct(_) => {}
         Data::Enum(DataEnum { enum_token, .. }) => {
-            return Err(vec![enum_token
+            enum_token
                 .span()
-                .error("trait can only be derived on structs")]);
+                .unwrap()
+                .error("trait can only be derived on structs")
+                .emit();
+
+            return None;
         }
         Data::Union(DataUnion { union_token, .. }) => {
             return Err(vec![union_token
