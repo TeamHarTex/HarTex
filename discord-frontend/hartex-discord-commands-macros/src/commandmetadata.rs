@@ -128,7 +128,11 @@ pub fn expand_command_metadata_derivation(
         };
 
         if group.delimiter() != Delimiter::Parenthesis {
-            return Err(vec![group.span().error("expected parenthesized parameter")]);
+            group.span().unwrap()
+                .error("expected parenthesized parameter")
+                .emit();
+            
+            return None;
         }
 
         let mut group_iter = group.stream().into_iter().peekable();
