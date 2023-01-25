@@ -131,23 +131,33 @@ pub fn expand_command_metadata_derivation(
             group.span().unwrap()
                 .error("expected parenthesized parameter")
                 .emit();
-            
+
             return None;
         }
 
         let mut group_iter = group.stream().into_iter().peekable();
         let Some(group_tree_first) = group_iter.next() else {
-            return Err(vec![group.span().error("expected parameter; found none")]);
+            group.span().unwrap()
+                .error("expected parameter; found none")
+                .emit();
+
+            return None;
         };
 
         let TokenTree::Ident(ident) = group_tree_first.clone() else {
-            return Err(vec![group_tree_first.span().error(format!("expected identifier; found `{group_tree_first}`"))]);
+            group_tree_first.span().unwrap()
+                .error(format!("expected identifier; found `{group_tree_first}`"))
+                .emit();
+
+            return None;
         };
 
         if ident == previous_attr_name {
-            return Err(vec![ident
-                .span()
-                .error(format!("duplicate attribute: `{ident}`"))]);
+            ident.span().unwrap()
+                .error(format!("duplicate attribute: `{ident}`"))
+                .emit();
+
+            return None;
         }
 
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
