@@ -44,6 +44,11 @@ pub async fn main() -> hartex_eyre::Result<()> {
 
     let command = Command::new("cmdmgr")
         .subcommand(
+            Command::new("edit")
+                .about("Edits a command that has already been registered with Discord.")
+                .arg(Arg::new("command-id").required(true).action(ArgAction::Set))
+        )
+        .subcommand(
             Command::new("list-from-discord")
                 .about("Lists commands registered with Discord.")
                 .arg(

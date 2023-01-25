@@ -20,8 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod edit;
-pub mod list_from_discord;
-pub mod list_from_fs;
-pub mod register;
-pub mod unregister;
+
+use clap::ArgMatches;
+
+#[allow(clippy::module_name_repetitions)]
+pub async fn edit_command(_: ArgMatches) -> hartex_eyre::Result<()> {
+    Ok(())
+}
