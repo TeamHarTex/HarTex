@@ -81,7 +81,8 @@ impl Command for Latency {
         let mut errors = Vec::new();
         let mut args = LocalizationArgs::new();
         args.set("latency", milliseconds);
-        let edited_response = bundle.format_pattern(&edited.value().unwrap(), Some(&args), &mut errors);
+        let edited_response =
+            bundle.format_pattern(&edited.value().unwrap(), Some(&args), &mut errors);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
