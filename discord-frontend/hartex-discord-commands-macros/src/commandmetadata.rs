@@ -67,9 +67,13 @@ pub fn expand_command_metadata_derivation(
             return None;
         }
         Data::Union(DataUnion { union_token, .. }) => {
-            return Err(vec![union_token
+            union_token
                 .span()
-                .error("trait can only be derived on structs")]);
+                .unwrap()
+                .error("trait can only be derived on structs")
+                .emit();
+
+            return None;
         }
     }
 
