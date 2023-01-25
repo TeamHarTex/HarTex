@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 use clap::ArgMatches;
 
 #[allow(clippy::module_name_repetitions)]
