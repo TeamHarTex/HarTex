@@ -51,7 +51,7 @@ impl Command for Latency {
         )?;
         let initial = bundle.get_term("initial-response").unwrap();
         let mut errors = Vec::new();
-        let initial_response = bundle.format_pattern(&initial.value(), None, &mut errors);
+        let initial_response = bundle.format_pattern(initial.value(), None, &mut errors);
         let initial_response = initial_response.trim();
 
         log::warn!("fluent errors occurred:");
@@ -82,7 +82,7 @@ impl Command for Latency {
         let mut args = LocalizationArgs::new();
         args.set("latency", milliseconds);
         let edited_response =
-            bundle.format_pattern(&edited.value().unwrap(), Some(&args), &mut errors);
+            bundle.format_pattern(edited.value().unwrap(), Some(&args), &mut errors);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
