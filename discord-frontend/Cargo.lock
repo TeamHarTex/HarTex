@@ -629,7 +629,6 @@ dependencies = [
 name = "hartex_discord_commands_macros"
 version = "0.1.0"
 dependencies = [
- "hartex_macro_utils",
  "proc-macro2",
  "quote",
  "syn",
@@ -708,7 +707,6 @@ dependencies = [
 name = "hartex_discord_entitycache_macros"
 version = "0.1.0"
 dependencies = [
- "hartex_macro_utils",
  "proc-macro2",
  "quote",
  "syn",
@@ -799,15 +797,6 @@ dependencies = [
  "hartex_eyre",
  "intl-memoizer",
  "unic-langid",
-]
-
-[[package]]
-name = "hartex_macro_utils"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
