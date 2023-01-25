@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro::Diagnostic;
 use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
@@ -73,9 +74,11 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
     let iter = fields.into_iter();
     let mut map = iter.clone().map(|field| field.attrs);
     if !map.any(|attrs| !attrs.is_empty()) {
-        return Err(vec![
-            Span::call_site().error("no field with `entity(..)` attribute")
-        ]);
+        Span::call_site().unwrap()
+            .error("no field with `entity(..)` attribute")
+            .emit();
+
+        return None;
     }
 
     let attrs_iter = iter.map(|field| (field.clone(), field.attrs));
@@ -88,10 +91,13 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
         invalid_attrs.retain(|attr| !attr.path.is_ident("entity"));
 
         if !invalid_attrs.is_empty() {
-            return Err(invalid_attrs
+            let _ = invalid_attrs
                 .into_iter()
-                .map(|attr| attr.path.span().error("expected `entity` attribute"))
-                .collect::<Vec<_>>());
+                .map(|attr| attr.path.span().unwrap())
+                .map(|span| span.error("expected `entity` attribute"))
+                .map(Diagnostic::emit);
+
+            return None;
         }
 
         // all attributes are entity attributes
@@ -100,7 +106,11 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
 
             let tree = tree_iter.next();
             if tree.is_none() {
-                return Err(vec![attr.path.span().error("unexpected end of attribute")]);
+                attr.path.span().unwrap()
+                    .error("unexpected end of attribute")
+                    .emit();
+
+                return None;
             }
 
             let TokenTree::Group(group) = tree.clone().unwrap() else {
