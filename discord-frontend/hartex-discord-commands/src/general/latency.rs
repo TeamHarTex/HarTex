@@ -46,7 +46,7 @@ impl Command for Latency {
         let bundle = create_bundle(
             interaction
                 .locale
-                .map_or(None, |locale| locale.parse().ok()),
+                .and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
         let initial = bundle.get_term("initial-response").unwrap();
