@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro::Diagnostic;
 use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
@@ -94,11 +95,13 @@ pub fn expand_command_metadata_derivation(
         .collect::<Vec<_>>();
 
     if !wrong_paths.is_empty() {
-        return Err(wrong_paths
+        let _ = wrong_paths
             .into_iter()
-            .map(|attr| attr.path.span())
+            .map(|attr| attr.path.span().unwrap())
             .map(|span| span.error("expected `metadata` attribute"))
-            .collect());
+            .map(Diagnostic::emit);
+
+        return None;
     }
 
     let mut functions = TokenStream2::new();
