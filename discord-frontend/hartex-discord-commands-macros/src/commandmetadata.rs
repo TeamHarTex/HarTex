@@ -79,9 +79,12 @@ pub fn expand_command_metadata_derivation(
 
     // check for any attributes following derive
     if input.attrs.is_empty() {
-        return Err(vec![
-            Span::call_site().error("expected `metadata` attributes after derive")
-        ]);
+        Span::call_site()
+            .unwrap()
+            .error("expected `metadata` attributes after derive")
+            .emit();
+
+        return None;
     }
 
     // split attribute vector into two
