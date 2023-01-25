@@ -48,7 +48,8 @@ impl Command for Latency {
         )?;
         let initial = bundle.get_term("initial-response").unwrap();
         let mut errors = Vec::new();
-        let inital_message = bundle.format_pattern(&initial.value(), None, &mut errors);
+        let initial_message = bundle.format_pattern(&initial.value(), None, &mut errors);
+        let initial_message = initial_message.trim();
 
         let initial_t = Instant::now();
         interaction_client
@@ -59,7 +60,7 @@ impl Command for Latency {
                     kind: InteractionResponseType::ChannelMessageWithSource,
                     data: Some(
                         InteractionResponseDataBuilder::new()
-                            .content(&inital_message[1..inital_message.len() - 1])
+                            .content(&initial_message[1..initial_message.len() - 1])
                             .build(),
                     ),
                 },
