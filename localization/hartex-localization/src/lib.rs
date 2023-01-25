@@ -49,8 +49,7 @@ pub fn create_bundle(
 
     let mut localizations_root = PathBuf::from("../localization/locales");
     localizations_root.push(locale.to_string());
-    path
-        .iter()
+    path.iter()
         .for_each(|segment| localizations_root.push(segment));
 
     if !localizations_root.try_exists()? {

@@ -20,9 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use fluent_bundle::bundle::FluentBundle;
 use fluent_bundle::FluentArgs;
 use fluent_bundle::FluentResource;
-use fluent_bundle::bundle::FluentBundle;
 use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemozier;
 
 pub type LocalizationArgs<'args> = FluentArgs<'args>;
