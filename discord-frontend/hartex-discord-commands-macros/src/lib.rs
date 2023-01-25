@@ -25,10 +25,12 @@
 #![deny(warnings)]
 #![feature(drain_filter)]
 #![feature(let_chains)]
+#![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
 use syn::{parse_macro_input, DeriveInput};
 
 mod commandmetadata;
@@ -37,6 +39,6 @@ mod commandmetadata;
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
     commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or_else(hartex_macro_utils::as_compiler_errors)
+        .unwrap_or(TokenStream2::new())
         .into()
 }
