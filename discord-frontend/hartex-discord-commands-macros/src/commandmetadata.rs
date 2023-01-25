@@ -161,13 +161,19 @@ pub fn expand_command_metadata_derivation(
         }
 
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
-            return Err(vec![ident
-                .span()
-                .error(format!("unexpected parameter name: `{ident}`"))]);
+            ident.span().unwrap()
+                .error(format!("unexpected parameter name: `{ident}`"))
+                .emit();
+
+            return None;
         }
 
         let Some(group_tree_next) = group_iter.next() else {
-            return Err(vec![group_tree_first.span().error("unexpected end of parameter")]);
+            group_tree_first.span().unwrap()
+                .error("unexpected end of parameter")
+                .emit();
+
+            return None;
         };
 
         let TokenTree::Punct(punct) = group_tree_next.clone() else {
