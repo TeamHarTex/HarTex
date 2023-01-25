@@ -108,7 +108,11 @@ pub fn expand_command_metadata_derivation(
     let mut previous_attr_name = String::new();
     for attr in correct_attrs {
         if attr.tokens.is_empty() {
-            return Err(vec![attr.path.span().error("unexpected end of attribute")]);
+            attr.path.span().unwrap()
+                .error("unexpected end of attribute")
+                .emit();
+
+            return None;
         }
 
         let mut iter = attr.tokens.into_iter().peekable();
@@ -116,7 +120,11 @@ pub fn expand_command_metadata_derivation(
         // obtain the group
         let tree = iter.next().unwrap();
         let TokenTree::Group(group) = tree else {
-            return Err(vec![tree.span().error("expected token group")]);
+            tree.span().unwrap()
+                .error("expected token group")
+                .emit();
+
+            return None;
         };
 
         if group.delimiter() != Delimiter::Parenthesis {
