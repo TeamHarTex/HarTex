@@ -208,7 +208,7 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
         }
     };
 
-    Ok(quote::quote! {
+    Some(quote::quote! {
         #expanded
     })
 }
