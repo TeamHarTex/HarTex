@@ -152,15 +152,16 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
                 ident.span().unwrap()
                     .error(format!("expected `id`; found `{ident}`"))
                     .emit();
-                
+
                 return None;
             }
 
             if field.ident.is_none() {
-                return Err(vec![field
-                    .ty
-                    .span()
-                    .error("cannot apply id attribute on tuple structs")]);
+                field.ty.span().unwrap()
+                    .error("cannot apply id attribute on tuple structs")
+                    .emit();
+
+                return None;
             }
 
             field_names.push(field.ident.clone().unwrap());
