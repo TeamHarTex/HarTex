@@ -38,9 +38,7 @@ const LITERAL_PARAMETERS: [&str; 2] = ["command_type", "name"];
 const VALID_ATTR_PARAMETER_NAMES: [&str; 3] = ["command_type", "interaction_only", "name"];
 
 #[allow(clippy::too_many_lines)]
-pub fn expand_command_metadata_derivation(
-    input: &mut DeriveInput,
-) -> Option<TokenStream2> {
+pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
     match input.vis.clone() {
         Visibility::Public(_) => {}
@@ -108,7 +106,9 @@ pub fn expand_command_metadata_derivation(
     let mut previous_attr_name = String::new();
     for attr in correct_attrs {
         if attr.tokens.is_empty() {
-            attr.path.span().unwrap()
+            attr.path
+                .span()
+                .unwrap()
                 .error("unexpected end of attribute")
                 .emit();
 
@@ -128,7 +128,9 @@ pub fn expand_command_metadata_derivation(
         };
 
         if group.delimiter() != Delimiter::Parenthesis {
-            group.span().unwrap()
+            group
+                .span()
+                .unwrap()
                 .error("expected parenthesized parameter")
                 .emit();
 
@@ -153,7 +155,9 @@ pub fn expand_command_metadata_derivation(
         };
 
         if ident == previous_attr_name {
-            ident.span().unwrap()
+            ident
+                .span()
+                .unwrap()
                 .error(format!("duplicate attribute: `{ident}`"))
                 .emit();
 
@@ -161,7 +165,9 @@ pub fn expand_command_metadata_derivation(
         }
 
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
-            ident.span().unwrap()
+            ident
+                .span()
+                .unwrap()
                 .error(format!("unexpected parameter name: `{ident}`"))
                 .emit();
 
@@ -185,7 +191,9 @@ pub fn expand_command_metadata_derivation(
         };
 
         if punct.as_char() != '=' {
-            punct.span().unwrap()
+            punct
+                .span()
+                .unwrap()
                 .error(format!("expected `=`; found `{punct}` instead"))
                 .emit();
 
@@ -220,7 +228,9 @@ pub fn expand_command_metadata_derivation(
                     };
 
                     if !(1..=3).contains(&command_type) {
-                        literal.span().unwrap()
+                        literal
+                            .span()
+                            .unwrap()
                             .error(format!("invalid command type: `{literal}`"))
                             .emit();
 
@@ -277,7 +287,9 @@ pub fn expand_command_metadata_derivation(
         };
 
         if let Some(extra) = group_iter.next() {
-            extra.span().unwrap()
+            extra
+                .span()
+                .unwrap()
                 .error(format!("unexpected token: `{extra}`"))
                 .emit();
 
