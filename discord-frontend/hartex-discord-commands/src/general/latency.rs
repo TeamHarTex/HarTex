@@ -46,9 +46,9 @@ impl Command for Latency {
                 .map_or(None, |locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
-        let initial = bundle.get_message("initial-response").unwrap();
+        let initial = bundle.get_term("initial-response").unwrap();
         let mut errors = Vec::new();
-        let inital_message = bundle.format_pattern(&initial.value().unwrap(), None, &mut errors);
+        let inital_message = bundle.format_pattern(&initial.value(), None, &mut errors);
 
         let initial_t = Instant::now();
         interaction_client
@@ -59,7 +59,7 @@ impl Command for Latency {
                     kind: InteractionResponseType::ChannelMessageWithSource,
                     data: Some(
                         InteractionResponseDataBuilder::new()
-                            .content(inital_message)
+                            .content(&inital_message[1..inital_message.len()])
                             .build(),
                     ),
                 },
