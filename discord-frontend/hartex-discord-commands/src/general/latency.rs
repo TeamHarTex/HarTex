@@ -46,7 +46,7 @@ impl Command for Latency {
                 .map_or(None, |locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
-        let initial = bundle.get_message("-initial-response").unwrap();
+        let initial = bundle.get_message("initial-response").unwrap();
         let mut errors = Vec::new();
         let inital_message = bundle.format_pattern(&initial.value().unwrap(), None, &mut errors);
 
