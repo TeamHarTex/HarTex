@@ -20,5 +20,5 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
--initial-response = "Did you need anything?"
-edited-response = "{-initial-response} Ah, my latency: `{$latency}ms`."
+-initial-response = Did you need anything?
+edited-response = {-initial-response} Ah, my latency: `{$latency}ms`.
