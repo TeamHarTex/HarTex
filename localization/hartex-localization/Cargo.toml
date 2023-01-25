@@ -13,7 +13,8 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-fluent-bundle = "0.15.2"
+fluent-bundle = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
+intl-memoizer = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 unic-langid = { version = "0.9.1", features = ["macros"] }
 
 [features]

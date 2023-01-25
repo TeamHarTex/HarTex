@@ -68,8 +68,7 @@ dependencies = [
 [[package]]
 name = "fluent-bundle"
 version = "0.15.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e242c601dec9711505f6d5bbff5bedd4b61b2469f2e8bb8e57ee7c9747a87ffd"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#f51e30997dc5bebb85cbecc1d2ddc9b6144249e6"
 dependencies = [
  "fluent-langneg",
  "fluent-syntax",
@@ -93,8 +92,7 @@ dependencies = [
 [[package]]
 name = "fluent-syntax"
 version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c0abed97648395c902868fee9026de96483933faa54ea3b40d652f7dfe61ca78"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#f51e30997dc5bebb85cbecc1d2ddc9b6144249e6"
 dependencies = [
  "thiserror",
 ]
@@ -119,6 +117,7 @@ version = "0.1.0"
 dependencies = [
  "fluent-bundle",
  "hartex_eyre",
+ "intl-memoizer",
  "unic-langid",
 ]
 
@@ -131,8 +130,7 @@ checksum = "ce23b50ad8242c51a442f3ff322d56b02f08852c77e4c0b4d3fd684abc89c683"
 [[package]]
 name = "intl-memoizer"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c310433e4a310918d6ed9243542a6b83ec1183df95dff8f23f87bb88a264a66f"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#f51e30997dc5bebb85cbecc1d2ddc9b6144249e6"
 dependencies = [
  "type-map",
  "unic-langid",
@@ -273,9 +271,9 @@ dependencies = [
 
 [[package]]
 name = "type-map"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6d3364c5e96cb2ad1603037ab253ddd34d7fb72a58bdddf4b7350760fc69a46"
+checksum = "deb68604048ff8fa93347f02441e4487594adc20bb8a084f9e564d2b827a0a9f"
 dependencies = [
  "rustc-hash",
 ]

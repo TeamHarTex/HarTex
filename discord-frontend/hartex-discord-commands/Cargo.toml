@@ -11,10 +11,12 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-http", "discord-model", "discord-util", "discord-util-builder"] }
+hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-http", "discord-model", "discord-util", "discord-util-builder", "logging-facilities"] }
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
+
+hartex_localization = { path = "../../localization/hartex-localization" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 

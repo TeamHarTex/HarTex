@@ -28,7 +28,11 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::log;
 use hartex_discord_utils::CLIENT;
+use hartex_eyre::eyre::Report;
+use hartex_localization::create_bundle;
+use hartex_localization::types::LocalizationArgs;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -39,6 +43,19 @@ pub struct Latency;
 impl Command for Latency {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
+        let bundle = create_bundle(
+            interaction.locale.and_then(|locale| locale.parse().ok()),
+            &["discord-frontend", "commands"],
+        )?;
+        let initial = bundle.get_term("initial-response").unwrap();
+        let mut errors = Vec::new();
+        let initial_response = bundle.format_pattern(initial.value(), None, &mut errors);
+        let initial_response = initial_response.trim();
+
+        log::warn!("fluent errors occurred:");
+        for error in errors {
+            println!("{:?}", Report::new(error));
+        }
 
         let initial_t = Instant::now();
         interaction_client
@@ -49,7 +66,7 @@ impl Command for Latency {
                     kind: InteractionResponseType::ChannelMessageWithSource,
                     data: Some(
                         InteractionResponseDataBuilder::new()
-                            .content("Did you need anything?")
+                            .content(initial_response)
                             .build(),
                     ),
                 },
@@ -57,11 +74,22 @@ impl Command for Latency {
             .await?;
 
         let milliseconds = initial_t.elapsed().as_millis();
+
+        let edited = bundle.get_message("edited-response").unwrap();
+        let mut errors = Vec::new();
+        let mut args = LocalizationArgs::new();
+        args.set("latency", milliseconds);
+        let edited_response =
+            bundle.format_pattern(edited.value().unwrap(), Some(&args), &mut errors);
+
+        log::warn!("fluent errors occurred:");
+        for error in errors {
+            println!("{:?}", Report::new(error));
+        }
+
         interaction_client
             .update_response(&interaction.token)
-            .content(Some(&format!(
-                "Did you need anything? Ah, my latency: `{milliseconds}ms`."
-            )))?
+            .content(Some(&edited_response))?
             .await?;
 
         Ok(())
