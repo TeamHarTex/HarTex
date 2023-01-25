@@ -44,9 +44,7 @@ impl Command for Latency {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
-            interaction
-                .locale
-                .and_then(|locale| locale.parse().ok()),
+            interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
         let initial = bundle.get_term("initial-response").unwrap();
