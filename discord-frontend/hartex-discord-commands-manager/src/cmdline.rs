@@ -26,6 +26,9 @@ use crate::commands;
 
 pub async fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
     match matches.subcommand() {
+        Some(("edit", subcommand_matches)) => {
+            commands::edit::edit_command(subcommand_matches.clone()).await
+        }
         Some(("list-from-discord", subcommand_matches)) => {
             commands::list_from_discord::list_from_discord_command(subcommand_matches.clone()).await
         }
