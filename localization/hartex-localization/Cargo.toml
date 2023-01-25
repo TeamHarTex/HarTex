@@ -14,6 +14,7 @@ rust-version = "1.69.0"
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
 fluent-bundle = "0.15.2"
+intl-memoizer = "0.5.1"
 unic-langid = { version = "0.9.1", features = ["macros"] }
 
 [features]

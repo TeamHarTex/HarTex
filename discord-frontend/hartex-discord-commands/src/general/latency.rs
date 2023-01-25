@@ -29,6 +29,7 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
+use hartex_localization::create_bundle;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -39,6 +40,15 @@ pub struct Latency;
 impl Command for Latency {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
+        let bundle = create_bundle(
+            interaction
+                .locale
+                .map_or(None, |locale| locale.parse().ok()),
+            &["discord-frontend", "commands"],
+        )?;
+        let initial = bundle.get_message("-initial-response").unwrap();
+        let mut errors = Vec::new();
+        let inital_message = bundle.format_pattern(&initial.value().unwrap(), None, &mut errors);
 
         let initial_t = Instant::now();
         interaction_client
@@ -49,7 +59,7 @@ impl Command for Latency {
                     kind: InteractionResponseType::ChannelMessageWithSource,
                     data: Some(
                         InteractionResponseDataBuilder::new()
-                            .content("Did you need anything?")
+                            .content(inital_message)
                             .build(),
                     ),
                 },

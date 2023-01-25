@@ -41,17 +41,17 @@ pub mod types;
 #[allow(clippy::missing_panics_doc)]
 pub fn create_bundle(
     requested: Option<LanguageIdentifier>,
-    modules: &[&str],
+    path: &[&str],
 ) -> hartex_eyre::Result<types::LocalizationBundle> {
     let fallback = langid!("en-US");
     let locale = requested.unwrap_or(fallback);
-    let mut bundle = types::LocalizationBundle::new(vec![locale.clone()]);
+    let mut bundle = types::LocalizationBundle::new_concurrent(vec![locale.clone()]);
 
     let mut localizations_root = PathBuf::from("../localization/locales");
     localizations_root.push(locale.to_string());
-    modules
+    path
         .iter()
-        .for_each(|module| localizations_root.push(module));
+        .for_each(|segment| localizations_root.push(segment));
 
     if !localizations_root.try_exists()? {
         return Err(Report::msg(format!(

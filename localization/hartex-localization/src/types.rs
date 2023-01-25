@@ -20,7 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use fluent_bundle::FluentBundle;
 use fluent_bundle::FluentResource;
+use fluent_bundle::bundle::FluentBundle;
+use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemozier;
 
-pub type LocalizationBundle = FluentBundle<FluentResource>;
+pub type LocalizationBundle = FluentBundle<FluentResource, ConcurrentIntlLangMemozier>;
