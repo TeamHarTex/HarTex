@@ -220,9 +220,11 @@ pub fn expand_command_metadata_derivation(
                     };
 
                     if !(1..=3).contains(&command_type) {
-                        return Err(vec![literal
-                            .span()
-                            .error(format!("invalid command type: `{literal}`"))]);
+                        literal.span().unwrap()
+                            .error(format!("invalid command type: `{literal}`"))
+                            .emit();
+
+                        return None;
                     }
 
                     let expanded = quote::quote! {
@@ -244,13 +246,21 @@ pub fn expand_command_metadata_derivation(
             }
         } else if BOOLEAN_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Ident(ident_bool) = group_tree_next.clone() else {
-                return Err(vec![group_tree_next.span().error(format!("expected identifier; found `{group_tree_next}`"))]);
+                group_tree_next.span().unwrap()
+                    .error(format!("expected identifier; found `{group_tree_next}`"))
+                    .emit();
+
+                return None;
             };
 
             match ident.to_string().as_str() {
                 "interaction_only" => {
                     let Ok(_) = ident_bool.to_string().parse::<bool>() else {
-                        return Err(vec![ident_bool.span().error(format!("expected boolean; found `{ident_bool}`"))]);
+                        ident_bool.span().unwrap()
+                            .error(format!("expected boolean; found `{ident_bool}`"))
+                            .emit();
+                        
+                        return None;
                     };
 
                     let expanded = quote::quote! {
