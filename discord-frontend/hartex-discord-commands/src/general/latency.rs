@@ -68,7 +68,7 @@ impl Command for Latency {
                     kind: InteractionResponseType::ChannelMessageWithSource,
                     data: Some(
                         InteractionResponseDataBuilder::new()
-                            .content(&initial_response[1..initial_response.len() - 1])
+                            .content(&initial_response)
                             .build(),
                     ),
                 },
