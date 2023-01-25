@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_macro_utils::traits::SpanUtils;
+use proc_macro::Diagnostic;
 use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
@@ -31,7 +31,6 @@ use syn::Data;
 use syn::DataEnum;
 use syn::DataUnion;
 use syn::DeriveInput;
-use syn::Error;
 use syn::Visibility;
 
 const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
@@ -41,14 +40,18 @@ const VALID_ATTR_PARAMETER_NAMES: [&str; 3] = ["command_type", "interaction_only
 #[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(
     input: &mut DeriveInput,
-) -> Result<TokenStream2, Vec<Error>> {
+) -> Option<TokenStream2> {
     // check if item is public
     match input.vis.clone() {
         Visibility::Public(_) => {}
         visibility => {
-            return Err(vec![visibility
+            visibility
                 .span()
-                .error("trait can only be derived on pub items")]);
+                .unwrap()
+                .error("trait can only be derived on pub items")
+                .emit();
+
+            return None;
         }
     }
 
@@ -56,22 +59,33 @@ pub fn expand_command_metadata_derivation(
     match input.data.clone() {
         Data::Struct(_) => {}
         Data::Enum(DataEnum { enum_token, .. }) => {
-            return Err(vec![enum_token
+            enum_token
                 .span()
-                .error("trait can only be derived on structs")]);
+                .unwrap()
+                .error("trait can only be derived on structs")
+                .emit();
+
+            return None;
         }
         Data::Union(DataUnion { union_token, .. }) => {
-            return Err(vec![union_token
+            union_token
                 .span()
-                .error("trait can only be derived on structs")]);
+                .unwrap()
+                .error("trait can only be derived on structs")
+                .emit();
+
+            return None;
         }
     }
 
     // check for any attributes following derive
     if input.attrs.is_empty() {
-        return Err(vec![
-            Span::call_site().error("expected `metadata` attributes after derive")
-        ]);
+        Span::call_site()
+            .unwrap()
+            .error("expected `metadata` attributes after derive")
+            .emit();
+
+        return None;
     }
 
     // split attribute vector into two
@@ -81,18 +95,24 @@ pub fn expand_command_metadata_derivation(
         .collect::<Vec<_>>();
 
     if !wrong_paths.is_empty() {
-        return Err(wrong_paths
+        let _ = wrong_paths
             .into_iter()
-            .map(|attr| attr.path.span())
+            .map(|attr| attr.path.span().unwrap())
             .map(|span| span.error("expected `metadata` attribute"))
-            .collect());
+            .map(Diagnostic::emit);
+
+        return None;
     }
 
     let mut functions = TokenStream2::new();
     let mut previous_attr_name = String::new();
     for attr in correct_attrs {
         if attr.tokens.is_empty() {
-            return Err(vec![attr.path.span().error("unexpected end of attribute")]);
+            attr.path.span().unwrap()
+                .error("unexpected end of attribute")
+                .emit();
+
+            return None;
         }
 
         let mut iter = attr.tokens.into_iter().peekable();
@@ -100,67 +120,111 @@ pub fn expand_command_metadata_derivation(
         // obtain the group
         let tree = iter.next().unwrap();
         let TokenTree::Group(group) = tree else {
-            return Err(vec![tree.span().error("expected token group")]);
+            tree.span().unwrap()
+                .error("expected token group")
+                .emit();
+
+            return None;
         };
 
         if group.delimiter() != Delimiter::Parenthesis {
-            return Err(vec![group.span().error("expected parenthesized parameter")]);
+            group.span().unwrap()
+                .error("expected parenthesized parameter")
+                .emit();
+
+            return None;
         }
 
         let mut group_iter = group.stream().into_iter().peekable();
         let Some(group_tree_first) = group_iter.next() else {
-            return Err(vec![group.span().error("expected parameter; found none")]);
+            group.span().unwrap()
+                .error("expected parameter; found none")
+                .emit();
+
+            return None;
         };
 
         let TokenTree::Ident(ident) = group_tree_first.clone() else {
-            return Err(vec![group_tree_first.span().error(format!("expected identifier; found `{group_tree_first}`"))]);
+            group_tree_first.span().unwrap()
+                .error(format!("expected identifier; found `{group_tree_first}`"))
+                .emit();
+
+            return None;
         };
 
         if ident == previous_attr_name {
-            return Err(vec![ident
-                .span()
-                .error(format!("duplicate attribute: `{ident}`"))]);
+            ident.span().unwrap()
+                .error(format!("duplicate attribute: `{ident}`"))
+                .emit();
+
+            return None;
         }
 
         if !(VALID_ATTR_PARAMETER_NAMES.contains(&ident.to_string().as_str())) {
-            return Err(vec![ident
-                .span()
-                .error(format!("unexpected parameter name: `{ident}`"))]);
+            ident.span().unwrap()
+                .error(format!("unexpected parameter name: `{ident}`"))
+                .emit();
+
+            return None;
         }
 
         let Some(group_tree_next) = group_iter.next() else {
-            return Err(vec![group_tree_first.span().error("unexpected end of parameter")]);
+            group_tree_first.span().unwrap()
+                .error("unexpected end of parameter")
+                .emit();
+
+            return None;
         };
 
         let TokenTree::Punct(punct) = group_tree_next.clone() else {
-            return Err(vec![group_tree_next.span().error(format!("expected punctuation; found `{group_tree_next}` instead"))]);
+            group_tree_next.span().unwrap()
+                .error(format!("expected punctuation; found `{group_tree_next}` instead"))
+                .emit();
+
+            return None;
         };
 
         if punct.as_char() != '=' {
-            return Err(vec![punct
-                .span()
-                .error(format!("expected `=`; found `{punct}` instead"))]);
+            punct.span().unwrap()
+                .error(format!("expected `=`; found `{punct}` instead"))
+                .emit();
+
+            return None;
         }
 
         let Some(group_tree_next) = group_iter.next() else {
-            return Err(vec![group_tree_next.span().error("unexpected end of parameter")]);
+            group_tree_next.span().unwrap()
+                .error("unexpected end of parameter")
+                .emit();
+
+            return None;
         };
 
         if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Literal(literal) = group_tree_next.clone() else {
-                return Err(vec![group_tree_next.span().error(format!("expected literal; found `{group_tree_next}`"))]);
+                group_tree_next.span().unwrap()
+                    .error(format!("expected literal; found `{group_tree_next}`"))
+                    .emit();
+
+                return None;
             };
 
             match ident.to_string().as_str() {
                 "command_type" => {
                     let Ok(command_type) = literal.to_string().parse::<u8>() else {
-                        return Err(vec![literal.span().error(format!("expected integer literal; found literal `{literal}`"))]);
+                        literal.span().unwrap()
+                            .error(format!("expected integer literal; found literal `{literal}`"))
+                            .emit();
+
+                        return None;
                     };
 
                     if !(1..=3).contains(&command_type) {
-                        return Err(vec![literal
-                            .span()
-                            .error(format!("invalid command type: `{literal}`"))]);
+                        literal.span().unwrap()
+                            .error(format!("invalid command type: `{literal}`"))
+                            .emit();
+
+                        return None;
                     }
 
                     let expanded = quote::quote! {
@@ -182,13 +246,21 @@ pub fn expand_command_metadata_derivation(
             }
         } else if BOOLEAN_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Ident(ident_bool) = group_tree_next.clone() else {
-                return Err(vec![group_tree_next.span().error(format!("expected identifier; found `{group_tree_next}`"))]);
+                group_tree_next.span().unwrap()
+                    .error(format!("expected identifier; found `{group_tree_next}`"))
+                    .emit();
+
+                return None;
             };
 
             match ident.to_string().as_str() {
                 "interaction_only" => {
                     let Ok(_) = ident_bool.to_string().parse::<bool>() else {
-                        return Err(vec![ident_bool.span().error(format!("expected boolean; found `{ident_bool}`"))]);
+                        ident_bool.span().unwrap()
+                            .error(format!("expected boolean; found `{ident_bool}`"))
+                            .emit();
+
+                        return None;
                     };
 
                     let expanded = quote::quote! {
@@ -205,9 +277,11 @@ pub fn expand_command_metadata_derivation(
         };
 
         if let Some(extra) = group_iter.next() {
-            return Err(vec![extra
-                .span()
-                .error(format!("unexpected token: `{extra}`"))]);
+            extra.span().unwrap()
+                .error(format!("unexpected token: `{extra}`"))
+                .emit();
+
+            return None;
         }
 
         previous_attr_name = ident.to_string();
@@ -226,7 +300,7 @@ pub fn expand_command_metadata_derivation(
         }
     };
 
-    Ok(quote::quote! {
+    Some(quote::quote! {
        #expanded
     })
 }
