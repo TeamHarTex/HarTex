@@ -177,13 +177,19 @@ pub fn expand_command_metadata_derivation(
         };
 
         let TokenTree::Punct(punct) = group_tree_next.clone() else {
-            return Err(vec![group_tree_next.span().error(format!("expected punctuation; found `{group_tree_next}` instead"))]);
+            group_tree_next.span().unwrap()
+                .error(format!("expected punctuation; found `{group_tree_next}` instead"))
+                .emit();
+
+            return None;
         };
 
         if punct.as_char() != '=' {
-            return Err(vec![punct
-                .span()
-                .error(format!("expected `=`; found `{punct}` instead"))]);
+            punct.span().unwrap()
+                .error(format!("expected `=`; found `{punct}` instead"))
+                .emit();
+
+            return None;
         }
 
         let Some(group_tree_next) = group_iter.next() else {
