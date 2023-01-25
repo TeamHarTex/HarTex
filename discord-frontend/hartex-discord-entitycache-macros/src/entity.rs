@@ -133,17 +133,27 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
 
             let tree = group_iter.next();
             if tree.is_none() {
-                return Err(vec![group.span().error("unexpected end of attribute")]);
+                group.span().unwrap()
+                    .error("unexpected end of attribute")
+                    .emit();
+
+                return None;
             }
 
             let TokenTree::Ident(ident) = tree.clone().unwrap() else {
-                return Err(vec![tree.span().error("expected identifier")]);
+                tree.span().unwrap()
+                    .error("expected identifier")
+                    .emit();
+
+                return None;
             };
 
             if ident != "id" {
-                return Err(vec![ident
-                    .span()
-                    .error(format!("expected `id`; found `{ident}`"))]);
+                ident.span().unwrap()
+                    .error(format!("expected `id`; found `{ident}`"))
+                    .emit();
+                
+                return None;
             }
 
             if field.ident.is_none() {
