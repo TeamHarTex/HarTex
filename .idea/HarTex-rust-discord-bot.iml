@@ -70,6 +70,7 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-discord-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-eyre/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-macros/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
