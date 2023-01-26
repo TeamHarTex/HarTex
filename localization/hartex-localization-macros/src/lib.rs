@@ -26,6 +26,8 @@
 
 use proc_macro::TokenStream;
 
+mod types;
+
 #[proc_macro]
 pub fn term_function_macro(_: TokenStream) -> TokenStream {
     todo!()
