@@ -122,6 +122,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_localization_macros"
+version = "0.1.0"
+
+[[package]]
 name = "indenter"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
