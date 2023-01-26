@@ -27,6 +27,9 @@
                   <Item>
                     <option name="path" value="discord-frontend/hartex-discord-commands-spec/general-plugin/latency.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="discord-frontend/hartex-discord-commands-spec/general-plugin/about.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

@@ -68,7 +68,7 @@ dependencies = [
 [[package]]
 name = "fluent-bundle"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#f51e30997dc5bebb85cbecc1d2ddc9b6144249e6"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#bd339545780b5692706ef1b4cc1b8700a49ec75f"
 dependencies = [
  "fluent-langneg",
  "fluent-syntax",
@@ -92,7 +92,7 @@ dependencies = [
 [[package]]
 name = "fluent-syntax"
 version = "0.11.0"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#f51e30997dc5bebb85cbecc1d2ddc9b6144249e6"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#bd339545780b5692706ef1b4cc1b8700a49ec75f"
 dependencies = [
  "thiserror",
 ]
@@ -130,7 +130,7 @@ checksum = "ce23b50ad8242c51a442f3ff322d56b02f08852c77e4c0b4d3fd684abc89c683"
 [[package]]
 name = "intl-memoizer"
 version = "0.5.1"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#f51e30997dc5bebb85cbecc1d2ddc9b6144249e6"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#bd339545780b5692706ef1b4cc1b8700a49ec75f"
 dependencies = [
  "type-map",
  "unic-langid",
