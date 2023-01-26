@@ -40,7 +40,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
     match input.vis.clone() {
         Visibility::Public(_) => {}
         visibility => {
-            visibility.span().unwrap()
+            visibility
+                .span()
+                .unwrap()
                 .error("trait can only be derived on pub items")
                 .emit();
 
@@ -52,14 +54,18 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
     match input.data.clone() {
         Data::Struct(_) => {}
         Data::Enum(DataEnum { enum_token, .. }) => {
-            enum_token.span().unwrap()
+            enum_token
+                .span()
+                .unwrap()
                 .error("trait can only be derived on structs")
                 .emit();
 
             return None;
         }
         Data::Union(DataUnion { union_token, .. }) => {
-            union_token.span().unwrap()
+            union_token
+                .span()
+                .unwrap()
                 .error("trait can only be derived on structs")
                 .emit();
 
@@ -74,7 +80,8 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
     let iter = fields.into_iter();
     let mut map = iter.clone().map(|field| field.attrs);
     if !map.any(|attrs| !attrs.is_empty()) {
-        Span::call_site().unwrap()
+        Span::call_site()
+            .unwrap()
             .error("no field with `entity(..)` attribute")
             .emit();
 
@@ -106,7 +113,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
 
             let tree = tree_iter.next();
             if tree.is_none() {
-                attr.path.span().unwrap()
+                attr.path
+                    .span()
+                    .unwrap()
                     .error("unexpected end of attribute")
                     .emit();
 
@@ -122,7 +131,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
             };
 
             if group.delimiter() != Delimiter::Parenthesis {
-                group.span().unwrap()
+                group
+                    .span()
+                    .unwrap()
                     .error("expected parenthesized token group")
                     .emit();
 
@@ -133,7 +144,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
 
             let tree = group_iter.next();
             if tree.is_none() {
-                group.span().unwrap()
+                group
+                    .span()
+                    .unwrap()
                     .error("unexpected end of attribute")
                     .emit();
 
@@ -149,7 +162,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
             };
 
             if ident != "id" {
-                ident.span().unwrap()
+                ident
+                    .span()
+                    .unwrap()
                     .error(format!("expected `id`; found `{ident}`"))
                     .emit();
 
@@ -157,7 +172,10 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
             }
 
             if field.ident.is_none() {
-                field.ty.span().unwrap()
+                field
+                    .ty
+                    .span()
+                    .unwrap()
                     .error("cannot apply id attribute on tuple structs")
                     .emit();
 
