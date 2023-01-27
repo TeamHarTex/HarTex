@@ -41,3 +41,8 @@ pub fn bundle_get(tokens: TokenStream) -> TokenStream {
         .unwrap_or(TokenStream2::new())
         .into()
 }
+
+#[proc_macro]
+pub fn bundle_get_args(_: TokenStream) -> TokenStream {
+    todo!()
+}
