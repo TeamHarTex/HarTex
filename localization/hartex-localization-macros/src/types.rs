@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use syn::parse::Parse;
+use syn::parse::ParseStream;
 use syn::Ident;
 use syn::Lit;
 use syn::Token;
@@ -32,4 +34,17 @@ pub struct Parameters {
     comma: Token![,],
     out_ident: Ident,
     variable_name: Ident,
+}
+
+impl Parse for Parameters {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            key_ident: input.parse()?,
+            colon: input.parse()?,
+            literal: input.parse()?,
+            comma: input.parse()?,
+            out_ident: input.parse()?,
+            variable_name: input.parse()?,
+        })
+    }
 }
