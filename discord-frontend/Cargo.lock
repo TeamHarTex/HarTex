@@ -613,7 +613,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_utils",
  "hartex_eyre",
- "hartex_localization",
+ "hartex_localization_core",
  "hartex_localization_macros",
 ]
 
@@ -791,7 +791,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_localization"
+name = "hartex_localization_core"
 version = "0.1.0"
 dependencies = [
  "fluent-bundle",

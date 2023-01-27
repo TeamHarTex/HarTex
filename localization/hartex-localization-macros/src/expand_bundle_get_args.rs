@@ -20,34 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![feature(proc_macro_diagnostic)]
-
-use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
-use syn::parse_macro_input;
 
-use crate::types::Parameters;
 use crate::types::ParametersWithArgs;
 
-mod expand_bundle_get;
-mod expand_bundle_get_args;
-mod types;
+pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStream2> {
+    if parameters.parameters.out_ident != "out" {
+        parameters
+            .parameters
+            .out_ident
+            .span()
+            .unwrap()
+            .error(format!(
+                "expected identifier `out`; found {}",
+                parameters.parameters.out_ident
+            ))
+            .emit();
 
-#[proc_macro]
-pub fn bundle_get(tokens: TokenStream) -> TokenStream {
-    let parameters = parse_macro_input!(tokens as Parameters);
-    expand_bundle_get::expand_bundle_get(parameters)
-        .unwrap_or(TokenStream2::new())
-        .into()
-}
+        return None;
+    }
 
-#[proc_macro]
-pub fn bundle_get_args(tokens: TokenStream) -> TokenStream {
-    let parameters = parse_macro_input!(tokens as ParametersWithArgs);
-    expand_bundle_get_args::expand_bundle_get_args(parameters)
-        .unwrap_or(TokenStream2::new())
-        .into()
+    todo!()
 }
