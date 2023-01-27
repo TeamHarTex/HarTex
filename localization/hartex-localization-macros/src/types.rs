@@ -31,9 +31,11 @@ pub struct Parameters {
     pub bundle_variable_name: Ident,
     pub dot: Token![.],
     pub key_name_lit: Lit,
-    pub comma: Token![,],
-    pub out_ident: Ident,
-    pub out_variable_name: Ident,
+    pub comma1: Token![,],
+    pub out_ident1: Ident,
+    pub out_value_ident: Ident,
+    pub comma2: Token![,],
+    pub out_errors_ident: Ident,
 }
 
 impl Parse for Parameters {
@@ -42,9 +44,11 @@ impl Parse for Parameters {
             bundle_variable_name: input.parse()?,
             dot: input.parse()?,
             key_name_lit: input.parse()?,
-            comma: input.parse()?,
-            out_ident: input.parse()?,
-            out_variable_name: input.parse()?,
+            comma1: input.parse()?,
+            out_ident1: input.parse()?,
+            out_value_ident: input.parse()?,
+            comma2: input.parse()?,
+            out_errors_ident: input.parse()?,
         })
     }
 }

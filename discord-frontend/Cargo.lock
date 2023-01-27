@@ -614,6 +614,7 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_eyre",
  "hartex_localization",
+ "hartex_localization_macros",
 ]
 
 [[package]]
@@ -797,6 +798,15 @@ dependencies = [
  "hartex_eyre",
  "intl-memoizer",
  "unic-langid",
+]
+
+[[package]]
+name = "hartex_localization_macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

@@ -33,6 +33,7 @@ use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
 use hartex_localization::create_bundle;
 use hartex_localization::types::LocalizationArgs;
+use hartex_localization_macros::term;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -47,10 +48,8 @@ impl Command for Latency {
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
-        let initial = bundle.get_term("initial-response").unwrap();
-        let mut errors = Vec::new();
-        let initial_response = bundle.format_pattern(initial.value(), None, &mut errors);
-        let initial_response = initial_response.trim();
+
+        term!(bundle."initial-response", out initial_response, errors);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
