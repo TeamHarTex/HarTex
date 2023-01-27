@@ -61,3 +61,15 @@ impl Parse for Parameters {
         })
     }
 }
+
+pub struct ParametersWithArgs {
+    pub parameters: Parameters,
+}
+
+impl Parse for ParametersWithArgs {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            parameters: input.parse()?,
+        })
+    }
+}
