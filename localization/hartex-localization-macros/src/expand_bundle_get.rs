@@ -21,10 +21,11 @@
  */
 
 use proc_macro2::TokenStream as TokenStream2;
+use quote::format_ident;
 
 use crate::types::Parameters;
 
-pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
+pub fn expand_bundle_get(parameters: Parameters) -> Option<TokenStream2> {
     if parameters.out_ident1 != "out" {
         parameters.out_ident1.span()
             .unwrap()
@@ -38,11 +39,18 @@ pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
     let key = parameters.key_name_lit;
     let errors = parameters.out_errors_ident;
     let value = parameters.out_value_ident;
+    let ident_type = parameters.ident_type;
+    let function_name = format_ident!("get_{}", ident_type);
+    let format_pattern_param1 = if ident_type == "term" {
+        quote::quote!(irrelevant.value())
+    } else {
+        quote::quote!(irrelevant.value().unwrap())
+    };
 
     Some(quote::quote! {
-        let irrelevant = #bundle.get_term(#key).unwrap();
+        let irrelevant = #bundle.#function_name(#key).unwrap();
         let mut #errors = Vec::new();
-        let #value = #bundle.format_pattern(irrelevant.value(), None, &mut errors);
+        let #value = #bundle.format_pattern(#format_pattern_param1, None, &mut errors);
         let #value = #value.trim();
     })
 }
