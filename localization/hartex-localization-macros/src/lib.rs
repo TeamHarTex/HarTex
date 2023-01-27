@@ -25,10 +25,15 @@
 #![deny(warnings)]
 
 use proc_macro::TokenStream;
+use syn::parse_macro_input;
+
+use crate::types::Parameters;
 
 mod types;
 
 #[proc_macro]
-pub fn term_function_macro(_: TokenStream) -> TokenStream {
+pub fn term_function_macro(tokens: TokenStream) -> TokenStream {
+    let _ = parse_macro_input!(tokens as Parameters);
+
     todo!()
 }
