@@ -31,8 +31,8 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::log;
 use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
-use hartex_localization::create_bundle;
-use hartex_localization::types::LocalizationArgs;
+use hartex_localization_core::create_bundle;
+use hartex_localization_core::types::LocalizationArgs;
 use hartex_localization_macros::bundle_get;
 
 #[derive(CommandMetadata)]
