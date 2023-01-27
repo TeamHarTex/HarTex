@@ -68,9 +68,9 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-manager/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-extensions/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-discord-utils/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-eyre/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-core/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />

@@ -112,7 +112,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_localization"
+name = "hartex_localization_core"
 version = "0.1.0"
 dependencies = [
  "fluent-bundle",
