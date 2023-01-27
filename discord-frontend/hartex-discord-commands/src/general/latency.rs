@@ -49,7 +49,7 @@ impl Command for Latency {
             &["discord-frontend", "commands"],
         )?;
 
-        bundle_get!(bundle."initial-response": term, out initial_response, errors);
+        bundle_get!(bundle."initial-response": term, out [initial_response, errors]);
 
         log::warn!("fluent errors occurred:");
         for error in errors {

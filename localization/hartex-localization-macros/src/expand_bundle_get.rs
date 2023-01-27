@@ -26,14 +26,14 @@ use quote::format_ident;
 use crate::types::Parameters;
 
 pub fn expand_bundle_get(parameters: Parameters) -> Option<TokenStream2> {
-    if parameters.out_ident1 != "out" {
+    if parameters.out_ident != "out" {
         parameters
-            .out_ident1
+            .out_ident
             .span()
             .unwrap()
             .error(format!(
                 "expected identifier `out`; found {}",
-                parameters.out_ident1
+                parameters.out_ident
             ))
             .emit();
 

@@ -22,6 +22,8 @@
 
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::bracketed;
+use syn::token;
 use syn::Ident;
 use syn::Lit;
 use syn::Token;
@@ -33,7 +35,8 @@ pub struct Parameters {
     pub colon: Token![:],
     pub ident_type: Ident,
     pub comma1: Token![,],
-    pub out_ident1: Ident,
+    pub out_ident: Ident,
+    pub brackets: token::Bracket,
     pub out_value_ident: Ident,
     pub comma2: Token![,],
     pub out_errors_ident: Ident,
@@ -41,6 +44,8 @@ pub struct Parameters {
 
 impl Parse for Parameters {
     fn parse(input: ParseStream) -> syn::Result<Self> {
+        let content;
+
         Ok(Self {
             bundle_variable_name: input.parse()?,
             dot: input.parse()?,
@@ -48,10 +53,11 @@ impl Parse for Parameters {
             colon: input.parse()?,
             ident_type: input.parse()?,
             comma1: input.parse()?,
-            out_ident1: input.parse()?,
-            out_value_ident: input.parse()?,
-            comma2: input.parse()?,
-            out_errors_ident: input.parse()?,
+            out_ident: input.parse()?,
+            brackets: bracketed!(content in input),
+            out_value_ident: content.parse()?,
+            comma2: content.parse()?,
+            out_errors_ident: content.parse()?,
         })
     }
 }
