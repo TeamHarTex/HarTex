@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro2::TokenStream as TokenStream2;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::bracketed;
@@ -64,12 +65,20 @@ impl Parse for Parameters {
 
 pub struct ParametersWithArgs {
     pub parameters: Parameters,
+    pub args_ident: Ident,
+    pub brackets: token::Bracket,
+    pub remaining: TokenStream2,
 }
 
 impl Parse for ParametersWithArgs {
     fn parse(input: ParseStream) -> syn::Result<Self> {
+        let content;
+
         Ok(Self {
             parameters: input.parse()?,
+            args_ident: input.parse()?,
+            brackets: bracketed!(content in input),
+            remaining: content.parse()?,
         })
     }
 }
