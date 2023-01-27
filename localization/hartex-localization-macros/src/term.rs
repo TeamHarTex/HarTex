@@ -25,10 +25,10 @@ use proc_macro2::TokenStream as TokenStream2;
 use crate::types::Parameters;
 
 pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
-    if parameters.out_ident != "out" {
-        parameters.out_ident.span()
+    if parameters.out_ident1 != "out" {
+        parameters.out_ident1.span()
             .unwrap()
-            .error(format!("expected identifier `out`; found {}", parameters.out_ident))
+            .error(format!("expected identifier `out`; found {}", parameters.out_ident1))
             .emit();
 
         return None;
@@ -36,11 +36,13 @@ pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
 
     let bundle = parameters.bundle_variable_name;
     let key = parameters.key_name_lit;
-    let out = parameters.out_variable_name;
+    let errors = parameters.out_errors_ident;
+    let value = parameters.out_value_ident;
 
     Some(quote::quote! {
         let irrelevant = #bundle.get_term(#key).unwrap();
-        let mut errors = Vec::new();
-        let #out = #bundle.format_pattern(irrelevant.value(), None, &mut errors).trim();
+        let mut #errors = Vec::new();
+        let #value = #bundle.format_pattern(irrelevant.value(), None, &mut errors);
+        let #value = #value.trim();
     })
 }
