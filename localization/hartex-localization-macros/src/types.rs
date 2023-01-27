@@ -26,7 +26,6 @@ use syn::Ident;
 use syn::Lit;
 use syn::Token;
 
-#[allow(dead_code)]
 pub struct Parameters {
     pub bundle_variable_name: Ident,
     pub dot: Token![.],

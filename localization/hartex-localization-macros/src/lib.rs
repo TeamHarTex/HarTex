@@ -43,6 +43,6 @@ pub fn bundle_get(tokens: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
-pub fn bundle_get_args(_: TokenStream) -> TokenStream {
+pub fn bundle_get_args(tokens: TokenStream) -> TokenStream {
     todo!()
 }
