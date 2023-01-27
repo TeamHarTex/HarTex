@@ -16,7 +16,7 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros" }
 
-hartex_localization = { path = "../../localization/hartex-localization" }
+hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 hartex_localization_macros = { path = "../../localization/hartex-localization-macros" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }

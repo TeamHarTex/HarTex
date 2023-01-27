@@ -24,6 +24,21 @@ use proc_macro2::TokenStream as TokenStream2;
 
 use crate::types::ParametersWithArgs;
 
-pub fn expand_bundle_get_args(_: ParametersWithArgs) -> Option<TokenStream2> {
+pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStream2> {
+    if parameters.parameters.out_ident != "out" {
+        parameters
+            .parameters
+            .out_ident
+            .span()
+            .unwrap()
+            .error(format!(
+                "expected identifier `out`; found {}",
+                parameters.parameters.out_ident
+            ))
+            .emit();
+
+        return None;
+    }
+
     todo!()
 }
