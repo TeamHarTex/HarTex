@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta10")
+    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta11")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.8.0")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:1.8.0")
     implementation(kotlin("reflect"))
