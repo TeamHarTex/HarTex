@@ -34,5 +34,13 @@ pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
         return None;
     }
 
-    todo!()
+    let bundle = parameters.bundle_variable_name;
+    let key = parameters.key_name_lit;
+    let out = parameters.out_variable_name;
+
+    Some(quote::quote! {
+        let irrelevant = #bundle.get_term(#key).unwrap();
+        let mut errors = Vec::new();
+        let #out = #bundle.format_pattern(irrelevant.value(), None, &mut errors).trim();
+    })
 }
