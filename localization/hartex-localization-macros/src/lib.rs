@@ -31,13 +31,13 @@ use syn::parse_macro_input;
 
 use crate::types::Parameters;
 
-mod term;
+mod expand_bundle_get;
 mod types;
 
 #[proc_macro]
-pub fn term(tokens: TokenStream) -> TokenStream {
+pub fn bundle_get(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as Parameters);
-    term::expand_term(parameters)
+    expand_bundle_get::expand_bundle_get(parameters)
         .unwrap_or(TokenStream2::new())
         .into()
 }

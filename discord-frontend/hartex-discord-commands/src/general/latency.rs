@@ -33,7 +33,7 @@ use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
 use hartex_localization::create_bundle;
 use hartex_localization::types::LocalizationArgs;
-use hartex_localization_macros::term;
+use hartex_localization_macros::bundle_get;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -49,7 +49,7 @@ impl Command for Latency {
             &["discord-frontend", "commands"],
         )?;
 
-        term!(bundle."initial-response", out initial_response, errors);
+        bundle_get!(bundle."initial-response": term, out initial_response, errors);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
