@@ -74,6 +74,7 @@ impl Command for Latency {
 
         let milliseconds = initial_t.elapsed().as_millis();
 
+        // bundle_get_args!(bundle."edited-response": message, out [edited_response, errrors], args ["latency" to milliseconds]);
         let edited = bundle.get_message("edited-response").unwrap();
         let mut errors = Vec::new();
         let mut args = LocalizationArgs::new();
