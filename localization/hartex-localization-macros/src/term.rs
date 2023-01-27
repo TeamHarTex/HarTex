@@ -25,10 +25,10 @@ use proc_macro2::TokenStream as TokenStream2;
 use crate::types::Parameters;
 
 pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
-    if parameters.key_ident != "key" {
-        parameters.key_ident.span()
+    if parameters.out_ident != "out" {
+        parameters.out_ident.span()
             .unwrap()
-            .error(format!("expected identifier `key`; found {}", parameters.key_ident))
+            .error(format!("expected identifier `out`; found {}", parameters.out_ident))
             .emit();
 
         return None;

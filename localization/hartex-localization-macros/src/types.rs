@@ -28,23 +28,23 @@ use syn::Token;
 
 #[allow(dead_code)]
 pub struct Parameters {
-    pub key_ident: Ident,
-    pub colon: Token![:],
-    pub literal: Lit,
+    pub bundle_variable_name: Ident,
+    pub dot: Token![.],
+    pub key_name_lit: Lit,
     pub comma: Token![,],
     pub out_ident: Ident,
-    pub variable_name: Ident,
+    pub out_variable_name: Ident,
 }
 
 impl Parse for Parameters {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            key_ident: input.parse()?,
-            colon: input.parse()?,
-            literal: input.parse()?,
+            bundle_variable_name: input.parse()?,
+            dot: input.parse()?,
+            key_name_lit: input.parse()?,
             comma: input.parse()?,
             out_ident: input.parse()?,
-            variable_name: input.parse()?,
+            out_variable_name: input.parse()?,
         })
     }
 }
