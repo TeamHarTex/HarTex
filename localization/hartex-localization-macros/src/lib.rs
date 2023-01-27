@@ -23,12 +23,21 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(proc_macro_diagnostic)]
 
 use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
+use syn::parse_macro_input;
 
+use crate::types::Parameters;
+
+mod expand_bundle_get;
 mod types;
 
 #[proc_macro]
-pub fn term_function_macro(_: TokenStream) -> TokenStream {
-    todo!()
+pub fn bundle_get(tokens: TokenStream) -> TokenStream {
+    let parameters = parse_macro_input!(tokens as Parameters);
+    expand_bundle_get::expand_bundle_get(parameters)
+        .unwrap_or(TokenStream2::new())
+        .into()
 }
