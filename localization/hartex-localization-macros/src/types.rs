@@ -28,12 +28,12 @@ use syn::Token;
 
 #[allow(dead_code)]
 pub struct Parameters {
-    key_ident: Ident,
-    colon: Token![:],
-    literal: Lit,
-    comma: Token![,],
-    out_ident: Ident,
-    variable_name: Ident,
+    pub key_ident: Ident,
+    pub colon: Token![:],
+    pub literal: Lit,
+    pub comma: Token![,],
+    pub out_ident: Ident,
+    pub variable_name: Ident,
 }
 
 impl Parse for Parameters {
