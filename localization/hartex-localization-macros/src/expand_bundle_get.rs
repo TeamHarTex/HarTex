@@ -27,9 +27,14 @@ use crate::types::Parameters;
 
 pub fn expand_bundle_get(parameters: Parameters) -> Option<TokenStream2> {
     if parameters.out_ident1 != "out" {
-        parameters.out_ident1.span()
+        parameters
+            .out_ident1
+            .span()
             .unwrap()
-            .error(format!("expected identifier `out`; found {}", parameters.out_ident1))
+            .error(format!(
+                "expected identifier `out`; found {}",
+                parameters.out_ident1
+            ))
             .emit();
 
         return None;
