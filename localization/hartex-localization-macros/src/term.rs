@@ -20,24 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![feature(proc_macro_diagnostic)]
-
-use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
-use syn::parse_macro_input;
 
 use crate::types::Parameters;
 
-mod term;
-mod types;
+pub fn expand_term(parameters: Parameters) -> Option<TokenStream2> {
+    if parameters.key_ident != "key" {
+        parameters.key_ident.span()
+            .unwrap()
+            .error(format!("expected identifier `key`; found {}", parameters.key_ident))
+            .emit();
 
-#[proc_macro]
-pub fn term(tokens: TokenStream) -> TokenStream {
-    let parameters = parse_macro_input!(tokens as Parameters);
-    term::expand_term(parameters)
-        .unwrap_or(TokenStream2::new())
-        .into()
+        return None;
+    }
+
+    todo!()
 }
