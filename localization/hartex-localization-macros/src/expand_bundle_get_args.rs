@@ -63,7 +63,7 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
 
             return None;
         };
-        let Lit::Str(str) = Lit::new(lit) else {
+        let Lit::Str(str) = Lit::new(lit.clone()) else {
             lit.span()
                 .unwrap()
                 .error("expected string literal")
@@ -71,6 +71,8 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
 
             return None;
         };
+
+        keys.push(str);
     }
 
     todo!()

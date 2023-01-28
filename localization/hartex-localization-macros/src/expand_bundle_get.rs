@@ -22,6 +22,7 @@
 
 use proc_macro2::TokenStream as TokenStream2;
 use quote::format_ident;
+use syn::Lit;
 
 use crate::types::Parameters;
 
@@ -42,6 +43,15 @@ pub fn expand_bundle_get(parameters: Parameters) -> Option<TokenStream2> {
 
     let bundle = parameters.bundle_variable_name;
     let key = parameters.key_name_lit;
+    let Lit::Str(_) = key else {
+        key.span()
+            .unwrap()
+            .error("expected string literal")
+            .emit();
+
+        return None;
+    };
+
     let errors = parameters.out_errors_ident;
     let value = parameters.out_value_ident;
     let ident_type = parameters.ident_type;
