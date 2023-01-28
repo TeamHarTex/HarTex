@@ -21,6 +21,7 @@
  */
 
 use proc_macro2::TokenStream as TokenStream2;
+use quote::format_ident;
 use syn::Lit;
 
 use crate::types::ParametersWithArgs;
@@ -42,13 +43,43 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
     }
 
     if parameters.args_ident != "args" {
-        parameters.args_ident.span()
+        parameters
+            .args_ident
+            .span()
             .unwrap()
-            .error(format!("expected identifier `args`; found {}", parameters.args_ident))
+            .error(format!(
+                "expected identifier `args`; found {}",
+                parameters.args_ident
+            ))
             .emit();
 
         return None;
     }
+
+    let bundle = parameters.parameters.bundle_variable_name;
+    let key = parameters.parameters.key_name_lit;
+    let Lit::Str(_) = key else {
+        key.span()
+            .unwrap()
+            .error("expected string literal")
+            .emit();
+
+        return None;
+    };
+
+    let errors = parameters.parameters.out_errors_ident;
+    let value = parameters.parameters.out_value_ident;
+    let ident_type = parameters.parameters.ident_type;
+    let function_name = format_ident!("get_{}", ident_type);
+    let format_pattern_param1 = if ident_type == "term" {
+        quote::quote!(irrelevant.value())
+    } else {
+        quote::quote!(irrelevant.value().unwrap())
+    };
+
+    let mut args = quote::quote! {
+        let mut args = hartex_localization_core::types::LocalizationArgs::new();
+    };
 
     for arg in parameters.args {
         let Lit::Str(_) = arg.key_lit else {
@@ -61,14 +92,27 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         };
 
         if arg.to_ident != "to" {
-            arg.to_ident.span()
+            arg.to_ident
+                .span()
                 .unwrap()
                 .error(format!("expected identifier `to`; found {}", arg.to_ident))
                 .emit();
 
             return None;
         }
+
+        let key_lit = arg.key_lit;
+        let value_ident = arg.value_var_ident;
+        args.extend(quote::quote! {
+            args.set(#key_lit, #value_ident);
+        });
     }
 
-    todo!()
+    Some(quote::quote! {
+        let irrelevant = #bundle.#function_name(#key).unwrap();
+        let mut #errors = Vec::new();
+        #args
+        let #value = #bundle.format_pattern(#format_pattern_param1, Some(&args), &mut errors);
+        let #value = #value.trim();
+    })
 }
