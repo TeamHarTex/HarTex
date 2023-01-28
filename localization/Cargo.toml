@@ -1,5 +1,6 @@
 [workspace]
 members = [
     "hartex-localization-core",
-    "hartex-localization-macros"
+    "hartex-localization-macros",
+    "hartex-localization-test",
 ]
