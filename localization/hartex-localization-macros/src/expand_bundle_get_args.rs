@@ -40,5 +40,14 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         return None;
     }
 
+    if parameters.args_ident != "args" {
+        parameters.args_ident.span()
+            .unwrap()
+            .error(format!("expected identifier `args`; found {}", parameters.args_ident))
+            .emit();
+
+        return None;
+    }
+
     todo!()
 }
