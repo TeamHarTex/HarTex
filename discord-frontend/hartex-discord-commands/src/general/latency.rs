@@ -83,7 +83,7 @@ impl Command for Latency {
 
         interaction_client
             .update_response(&interaction.token)
-            .content(Some(&edited_response))?
+            .content(Some(edited_response))?
             .await?;
 
         Ok(())
