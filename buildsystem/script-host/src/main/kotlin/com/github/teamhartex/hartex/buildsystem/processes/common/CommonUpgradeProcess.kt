@@ -39,7 +39,7 @@ class CommonUpgradeProcess {
       when (projectToBuild.projectType to projectToBuild.buildTool) {
         ProjectType.RUST to ProjectBuildTool.CARGO -> {
           terminal.println("${bold(green("Running"))} cargo upgrade")
-          processBuilder.command("cargo", "upgrade")
+          processBuilder.command("cargo", "upgrade", "--to-lockfile")
         }
         ProjectType.TYPESCRIPT to ProjectBuildTool.YARN -> {
           terminal.println("${bold(green("Running"))} yarn upgrade")
