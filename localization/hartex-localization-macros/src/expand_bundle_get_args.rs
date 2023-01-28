@@ -22,6 +22,7 @@
 
 use proc_macro2::TokenTree;
 use proc_macro2::TokenStream as TokenStream2;
+use syn::Lit;
 
 use crate::types::ParametersWithArgs;
 
@@ -58,6 +59,14 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
             tree.span()
                 .unwrap()
                 .error("expected literal")
+                .emit();
+
+            return None;
+        };
+        let Lit::Str(str) = Lit::new(lit) else {
+            lit.span()
+                .unwrap()
+                .error("expected string literal")
                 .emit();
 
             return None;
