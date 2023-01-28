@@ -49,7 +49,15 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         return None;
     }
 
-    let _ = parameters.remaining.into_iter();
+    let mut iter = parameters.remaining.into_iter();
+    let Some(_) = iter.next() else {
+        parameters.brackets.span
+            .unwrap()
+            .error("expected argument list; found none")
+            .emit();
+
+        return None;
+    };
 
     todo!()
 }
