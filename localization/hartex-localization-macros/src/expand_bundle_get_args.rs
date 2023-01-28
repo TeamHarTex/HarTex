@@ -73,6 +73,34 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         };
 
         keys.push(str);
+
+        let next = iter.next();
+        if next.is_none() {
+            lit.span()
+                .unwrap()
+                .error("unexpected end of argument")
+                .emit();
+
+            return None;
+        }
+
+        let TokenTree::Ident(ident) = next.clone().unwrap() else {
+            next.unwrap()
+                .span()
+                .unwrap()
+                .error("expected identifier")
+                .emit();
+
+            return None;
+        };
+        if ident != "to" {
+            ident.span()
+                .unwrap()
+                .error(format!("expected identifier `to`; found {ident}"))
+                .emit();
+
+            return None;
+        }
     }
 
     todo!()
