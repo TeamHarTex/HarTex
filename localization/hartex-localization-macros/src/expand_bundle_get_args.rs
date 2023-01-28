@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro2::TokenTree;
 use proc_macro2::TokenStream as TokenStream2;
 
 use crate::types::ParametersWithArgs;
@@ -49,15 +50,19 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         return None;
     }
 
+    let mut keys = Vec::new();
     let mut iter = parameters.remaining.into_iter();
-    let Some(_) = iter.next() else {
-        parameters.brackets.span
-            .unwrap()
-            .error("expected argument list; found none")
-            .emit();
 
-        return None;
-    };
+    while let Some(tree) = iter.next() {
+        let TokenTree::Literal(lit) = tree else {
+            tree.span()
+                .unwrap()
+                .error("expected literal")
+                .emit();
+
+            return None;
+        };
+    }
 
     todo!()
 }
