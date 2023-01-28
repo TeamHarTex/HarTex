@@ -51,20 +51,9 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         return None;
     }
 
-    let mut keys = Vec::new();
-    let mut iter = parameters.remaining.into_iter();
-
-    while let Some(tree) = iter.next() {
-        let TokenTree::Literal(lit) = tree else {
-            tree.span()
-                .unwrap()
-                .error("expected literal")
-                .emit();
-
-            return None;
-        };
-        let Lit::Str(str) = Lit::new(lit.clone()) else {
-            lit.span()
+    for arg in parameters.args {
+        let Lit::Str(_) = arg.key_lit else {
+            arg.key_lit.span()
                 .unwrap()
                 .error("expected string literal")
                 .emit();
@@ -72,31 +61,10 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
             return None;
         };
 
-        keys.push(str);
-
-        let next = iter.next();
-        if next.is_none() {
-            lit.span()
+        if arg.to_ident != "to" {
+            arg.to_ident.span()
                 .unwrap()
-                .error("unexpected end of argument")
-                .emit();
-
-            return None;
-        }
-
-        let TokenTree::Ident(ident) = next.clone().unwrap() else {
-            next.unwrap()
-                .span()
-                .unwrap()
-                .error("expected identifier")
-                .emit();
-
-            return None;
-        };
-        if ident != "to" {
-            ident.span()
-                .unwrap()
-                .error(format!("expected identifier `to`; found {ident}"))
+                .error(format!("expected identifier `to`; found {}", arg.to_ident))
                 .emit();
 
             return None;
