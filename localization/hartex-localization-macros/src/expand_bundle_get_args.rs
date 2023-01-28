@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::TokenTree;
 use proc_macro2::TokenStream as TokenStream2;
 use syn::Lit;
 
