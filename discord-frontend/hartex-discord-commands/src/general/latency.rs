@@ -49,7 +49,7 @@ impl Command for Latency {
             &["discord-frontend", "commands"],
         )?;
 
-        bundle_get!(bundle."initial-response": term, out [initial_response, errors]);
+        bundle_get!(bundle."latency-initial-response": term, out [initial_response, errors]);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
@@ -74,7 +74,7 @@ impl Command for Latency {
 
         let milliseconds = initial_t.elapsed().as_millis();
 
-        bundle_get_args!(bundle."edited-response": message, out [edited_response, errors], args ["latency" to milliseconds]);
+        bundle_get_args!(bundle."latency-edited-response": message, out [edited_response, errors], args ["latency" to milliseconds]);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
