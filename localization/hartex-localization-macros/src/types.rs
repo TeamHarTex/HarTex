@@ -79,7 +79,7 @@ impl Parse for ParametersWithArgs {
             parameters: input.parse()?,
             args_ident: input.parse()?,
             brackets: bracketed!(content in input),
-            args: Punctuated::<Arg, Token![,]>::parse_terminated(input)?,
+            args: Punctuated::<Arg, Token![,]>::parse_terminated(&content)?,
         })
     }
 }
