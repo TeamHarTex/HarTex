@@ -27,6 +27,7 @@ use syn::bracketed;
 use syn::token;
 use syn::Ident;
 use syn::Lit;
+use syn::punctuated::Punctuated;
 use syn::Token;
 
 pub struct Parameters {
@@ -67,7 +68,7 @@ pub struct ParametersWithArgs {
     pub parameters: Parameters,
     pub args_ident: Ident,
     pub brackets: token::Bracket,
-    pub remaining: TokenStream2,
+    pub args: Punctuated<Arg, Token![,]>,
 }
 
 impl Parse for ParametersWithArgs {
@@ -78,7 +79,23 @@ impl Parse for ParametersWithArgs {
             parameters: input.parse()?,
             args_ident: input.parse()?,
             brackets: bracketed!(content in input),
-            remaining: content.parse()?,
+            args: Punctuated::<Arg, Token![,]>::parse_terminated(input)?,
+        })
+    }
+}
+
+pub struct Arg {
+    pub key_lit: Lit,
+    pub to_ident: Ident,
+    pub value_var_ident: Ident,
+}
+
+impl Parse for Arg {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            key_lit: input.parse()?,
+            to_ident: input.parse()?,
+            value_var_ident: input.parse()?,
         })
     }
 }
