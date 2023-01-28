@@ -49,5 +49,7 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
         return None;
     }
 
+    let _ = parameters.remaining.into_iter();
+
     todo!()
 }
