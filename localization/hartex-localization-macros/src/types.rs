@@ -20,14 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::TokenStream as TokenStream2;
+use syn::bracketed;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
-use syn::bracketed;
+use syn::punctuated::Punctuated;
 use syn::token;
 use syn::Ident;
 use syn::Lit;
-use syn::punctuated::Punctuated;
 use syn::Token;
 
 pub struct Parameters {
@@ -66,6 +65,7 @@ impl Parse for Parameters {
 
 pub struct ParametersWithArgs {
     pub parameters: Parameters,
+    pub comma: Token![,],
     pub args_ident: Ident,
     pub brackets: token::Bracket,
     pub args: Punctuated<Arg, Token![,]>,
@@ -77,6 +77,7 @@ impl Parse for ParametersWithArgs {
 
         Ok(Self {
             parameters: input.parse()?,
+            comma: input.parse()?,
             args_ident: input.parse()?,
             brackets: bracketed!(content in input),
             args: Punctuated::<Arg, Token![,]>::parse_terminated(&content)?,

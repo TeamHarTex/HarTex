@@ -32,8 +32,8 @@ use hartex_discord_core::log;
 use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
 use hartex_localization_core::create_bundle;
-use hartex_localization_core::types::LocalizationArgs;
 use hartex_localization_macros::bundle_get;
+use hartex_localization_macros::bundle_get_args;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -74,13 +74,7 @@ impl Command for Latency {
 
         let milliseconds = initial_t.elapsed().as_millis();
 
-        // bundle_get_args!(bundle."edited-response": message, out [edited_response, errrors], args ["latency" to milliseconds]);
-        let edited = bundle.get_message("edited-response").unwrap();
-        let mut errors = Vec::new();
-        let mut args = LocalizationArgs::new();
-        args.set("latency", milliseconds);
-        let edited_response =
-            bundle.format_pattern(edited.value().unwrap(), Some(&args), &mut errors);
+        bundle_get_args!(bundle."edited-response": message, out [edited_response, errors], args ["latency" to milliseconds]);
 
         log::warn!("fluent errors occurred:");
         for error in errors {
