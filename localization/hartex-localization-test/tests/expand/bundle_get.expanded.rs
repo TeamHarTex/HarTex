@@ -5,4 +5,8 @@ fn main() {
     let irrelevant = bundle
         .format_pattern(irrelevant.value().unwrap(), None, &mut errors);
     let irrelevant = irrelevant.trim();
+    let irrelevant = bundle.get_term("bundle-get-test-term").unwrap();
+    let mut irrelevant2 = Vec::new();
+    let irrelevant = bundle.format_pattern(irrelevant.value(), None, &mut errors);
+    let irrelevant = irrelevant.trim();
 }
