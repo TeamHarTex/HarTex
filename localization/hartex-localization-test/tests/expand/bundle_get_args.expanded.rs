@@ -1,3 +1,4 @@
+use hartex_localization_macros::bundle_get_args;
 fn main() {
     let irrelevant = 1;
     let irrelevant = bundle.get_message("bundle-get-args-message").unwrap();
