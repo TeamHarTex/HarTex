@@ -1,0 +1,5 @@
+error: expected identifier `out`; found expected_out
+  --> tests/ui/expected_out.rs:26:60
+   |
+26 |     bundle_get!(bundle."bundle-get-test-message": message, expected_out [irrelevant, irrelevant2]);
+   |                                                            ^^^^^^^^^^^^
