@@ -23,5 +23,5 @@
 use hartex_localization_macros::bundle_get;
 
 fn main() {
-    bundle_get!(bundle."bundle-get-test-message": message, expected_out [irrelevant, irrelevant2]);
+    bundle_get!(bundle.5077: message, out [irrelevant, irrelevant2]);
 }
