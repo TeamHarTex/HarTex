@@ -1,0 +1,5 @@
+error: expected identifier `args`; found expected_args
+  --> tests/ui/expected_args.rs:27:101
+   |
+27 |     bundle_get_args!(bundle."bundle-get-args-test-message": message, out [irrelevant, irrelevant2], expected_args ["irrelevant3" to irrel...
+   |                                                                                                     ^^^^^^^^^^^^^
