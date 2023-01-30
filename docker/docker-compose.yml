@@ -48,5 +48,9 @@ services:
     container_name: surreal-1
     command:
       - start
+      - --log
+      - full
+      - --pass
+      - "${SURREALDB_MASTERPASS}"
     ports:
       - "8000:8000"
