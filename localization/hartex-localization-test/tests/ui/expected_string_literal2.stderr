@@ -1,0 +1,5 @@
+error: expected string literal
+  --> tests/ui/expected_string_literal2.rs:27:29
+   |
+27 |     bundle_get_args!(bundle.5077: message, out [irrelevant, irrelevant2], args ["irrelevant3" to irrelevant4]);
+   |                             ^^^^

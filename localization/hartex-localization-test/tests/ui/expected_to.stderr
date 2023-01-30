@@ -1,0 +1,5 @@
+error: expected identifier `to`; found expected_to
+  --> tests/ui/expected_to.rs:27:121
+   |
+27 |     bundle_get_args!(bundle."bundle-get-args-test-message": message, out [irrelevant, irrelevant2], args ["irrelevant3" expected_to irrel...
+   |                                                                                                                         ^^^^^^^^^^^
