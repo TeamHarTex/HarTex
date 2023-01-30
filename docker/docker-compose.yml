@@ -50,6 +50,7 @@ services:
       - start
       - --log
       - full
+      - --strict
       - --pass
       - "${SURREALDB_MASTERPASS}"
     ports:
