@@ -1,5 +1,5 @@
 error: expected string literal
-  --> tests/ui/expected_string_literal.rs:26:24
+  --> tests/ui/expected_string_literal1.rs:26:24
    |
 26 |     bundle_get!(bundle.5077: message, out [irrelevant, irrelevant2]);
    |                        ^^^^
