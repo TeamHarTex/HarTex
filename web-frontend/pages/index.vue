@@ -37,13 +37,28 @@
       <button>Learn More</button>
     </div>
   </Section>
-  <Section></Section>
+  <Section class="why">
+    <h3>Why HarTex?</h3>
+    <div class="whitespace" />
+    <p>HarTex caters...</p>
+    <hr>
+  </Section>
 </template>
 
 <style lang="postcss" scoped>
+button {
+  @apply text-lg;
+}
+
+hr {
+  @apply text-gray-600 opacity-50;
+  @apply w-[100%];
+}
+
 .hero {
   @apply flex flex-col;
   @apply text-center justify-center items-center;
+  @apply h-[95vh];
 }
 
 .hero h2 {
@@ -51,6 +66,20 @@
 }
 
 .hero p {
-  @apply text-sm sm:text-lg text-tertiary;
+  @apply text-lg sm:text-xl text-tertiary;
+}
+
+.why {
+  @apply flex flex-col;
+  @apply text-center items-center;
+}
+
+.why h3 {
+  @apply text-2xl sm:text-3xl xl:text-4xl font-bold tracking-tight;
+}
+
+.why p {
+    @apply text-lg sm:text-xl text-tertiary;
+    @apply pb-4 mb-4;
 }
 </style>
