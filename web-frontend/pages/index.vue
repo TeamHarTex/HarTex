@@ -32,12 +32,12 @@
     </p>
     <div class="whitespace" />
     <div>
-      <button class="sm:mr-4">Get Started</button>
+      <button class="sm:mr-4" onclick="window.location.href='#why-hartex'">Get Started</button>
       <div class="whitespace block sm:hidden" />
       <button>Learn More</button>
     </div>
   </Section>
-  <Section class="why">
+  <Section class="why" id="why-hartex">
     <h3>Why HarTex?</h3>
     <div class="whitespace" />
     <p>HarTex caters...</p>
