@@ -32,9 +32,9 @@
     </p>
     <div class="whitespace" />
     <div>
-      <button class="sm:mr-4" onclick="window.location.href='#why-hartex'">Get Started</button>
+      <button>Get Started</button>
       <div class="whitespace block sm:hidden" />
-      <button>Learn More</button>
+      <button onclick="window.location.href='#why-hartex'">Learn More</button>
     </div>
   </Section>
   <Section class="why" id="why-hartex">
@@ -48,6 +48,7 @@
 <style lang="postcss" scoped>
 button {
   @apply text-lg;
+  @apply sm:mr-4;
 }
 
 hr {
