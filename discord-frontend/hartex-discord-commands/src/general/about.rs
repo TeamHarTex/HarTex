@@ -44,6 +44,7 @@ impl Command for About {
         )?;
 
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
+        let _ = about_embed_title;
 
         log::warn!("fluent errors occurred:");
         for error in errors {
