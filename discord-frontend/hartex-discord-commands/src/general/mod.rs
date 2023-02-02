@@ -20,4 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+pub mod about;
 pub mod latency;

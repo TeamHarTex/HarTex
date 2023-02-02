@@ -20,5 +20,6 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
+about-embed-title=About HarTex
 -latency-initial-response = Did you need anything?
 latency-edited-response = {-latency-initial-response} Ah, my latency: `{$latency}ms`.
