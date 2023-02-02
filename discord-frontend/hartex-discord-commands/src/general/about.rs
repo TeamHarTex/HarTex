@@ -21,10 +21,13 @@
  */
 
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::log;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_utils::CLIENT;
+use hartex_eyre::eyre::Report;
 use hartex_localization_core::create_bundle;
+use hartex_localization_macros::bundle_get;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -35,10 +38,17 @@ pub struct About;
 impl Command for About {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let _ = CLIENT.interaction(interaction.application_id);
-        let _ = create_bundle(
+        let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"]
-        );
+        )?;
+
+        bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
+
+        log::warn!("fluent errors occurred:");
+        for error in errors {
+            println!("{:?}", Report::new(error));
+        }
 
         Ok(())
     }
