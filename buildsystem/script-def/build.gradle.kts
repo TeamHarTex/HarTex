@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
 }
 
 group = "com.github.teamhartex"
@@ -10,5 +10,5 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.8.0")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:1.8.10")
 }
