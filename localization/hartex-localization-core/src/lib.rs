@@ -87,6 +87,7 @@ pub fn create_bundle(
 
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::missing_panics_doc)]
+#[allow(clippy::needless_pass_by_value)]
 pub fn handle_errors(errors: Vec<FluentError>) -> hartex_eyre::Result<()> {
     if errors.is_empty() {
         return Ok(());
