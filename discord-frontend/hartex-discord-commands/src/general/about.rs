@@ -29,10 +29,9 @@ use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_core::log;
 use hartex_discord_utils::CLIENT;
-use hartex_eyre::eyre::Report;
 use hartex_localization_core::create_bundle;
+use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 
 #[derive(CommandMetadata)]
@@ -51,10 +50,7 @@ impl Command for About {
         )?;
 
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
-        log::warn!("fluent errors occurred:");
-        for error in errors {
-            println!("{:?}", Report::new(error));
-        }
+        handle_errors(errors)?;
 
         let embed = EmbedBuilder::new()
             .author(
