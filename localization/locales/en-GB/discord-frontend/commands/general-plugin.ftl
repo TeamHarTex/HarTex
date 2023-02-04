@@ -20,8 +20,8 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
+about-embed-description=HarTex is the open-source speed-of-thought server management bot for Discord. It is designed for servers that have complicated requirements and require fine bot configuration.
+about-embed-github-repo-field-name=GitHub Repository
 about-embed-title=About HarTex
-about-embed-description=
-    HarTex is the speed-of-thought server management bot for Discord. It is designed for servers that have complicated needs and require fine bot configuration. The bot is maintained and run by Team HarTex and its community; the bot is also open-source, licensed under the terms of the GNU Affero General Public License, version 3.
 -latency-initial-response = Did you need anything?
 latency-edited-response = {-latency-initial-response} Ah, my latency: `{$latency}ms`.

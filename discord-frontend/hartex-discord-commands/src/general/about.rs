@@ -27,6 +27,7 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
@@ -49,9 +50,11 @@ impl Command for About {
             &["discord-frontend", "commands"],
         )?;
 
-        bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
-        handle_errors(errors)?;
         bundle_get!(bundle."about-embed-description": message, out [about_embed_description, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."about-embed-github-repo-field-name": message, out [about_embed_github_repo_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
         handle_errors(errors)?;
 
         let embed = EmbedBuilder::new()
@@ -62,6 +65,7 @@ impl Command for About {
             )
             .color(0x41_A0_DE)
             .description(about_embed_description)
+            .field(EmbedFieldBuilder::new(about_embed_github_repo_field_name, "https://github.com/TeamHarTex/HarTex").build())
             .validate()?
             .build();
 
