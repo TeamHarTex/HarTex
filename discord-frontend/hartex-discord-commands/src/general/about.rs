@@ -25,6 +25,7 @@ use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
@@ -52,7 +53,11 @@ impl Command for About {
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
         let _ = about_embed_title;
         let embed = EmbedBuilder::new()
-            .image(ImageSource::attachment("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png?size=256")?)
+            .author(
+                EmbedAuthorBuilder::new("About HarTex")
+                    .icon_url(ImageSource::attachment("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png")?)
+                    .build()
+            )
             .build();
 
         log::warn!("fluent errors occurred:");
