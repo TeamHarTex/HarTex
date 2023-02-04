@@ -29,10 +29,9 @@ use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_core::log;
 use hartex_discord_utils::CLIENT;
-use hartex_eyre::eyre::Report;
 use hartex_localization_core::create_bundle;
+use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 
 #[derive(CommandMetadata)]
@@ -51,20 +50,20 @@ impl Command for About {
         )?;
 
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
-        let _ = about_embed_title;
+        handle_errors(errors)?;
+        bundle_get!(bundle."about-embed-description": message, out [about_embed_description, errors]);
+        handle_errors(errors)?;
+
         let embed = EmbedBuilder::new()
             .author(
-                EmbedAuthorBuilder::new("About HarTex")
+                EmbedAuthorBuilder::new(about_embed_title)
                     .icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png")?)
                     .build()
             )
             .color(0x41_A0_DE)
+            .description(about_embed_description)
+            .validate()?
             .build();
-
-        log::warn!("fluent errors occurred:");
-        for error in errors {
-            println!("{:?}", Report::new(error));
-        }
 
         interaction_client
             .create_response(

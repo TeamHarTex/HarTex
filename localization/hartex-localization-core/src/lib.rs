@@ -30,6 +30,7 @@ use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
+use fluent_bundle::FluentError;
 use fluent_bundle::FluentResource;
 use hartex_eyre::eyre::Report;
 use unic_langid::langid;
@@ -82,4 +83,15 @@ pub fn create_bundle(
     }
 
     Ok(bundle)
+}
+
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::needless_pass_by_value)]
+pub fn handle_errors(errors: Vec<FluentError>) -> hartex_eyre::Result<()> {
+    if errors.is_empty() {
+        return Ok(());
+    }
+
+    Err(Report::new(errors[0].clone()))
 }
