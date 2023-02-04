@@ -57,7 +57,6 @@ impl Command for About {
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
         handle_errors(errors)?;
 
-
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
