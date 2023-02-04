@@ -51,6 +51,8 @@ impl Command for About {
 
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."about-embed-description": message, out [about_embed_description, errors]);
+        handle_errors(errors)?;
 
         let embed = EmbedBuilder::new()
             .author(
@@ -59,6 +61,8 @@ impl Command for About {
                     .build()
             )
             .color(0x41_A0_DE)
+            .description(about_embed_description)
+            .validate()?
             .build();
 
         interaction_client
