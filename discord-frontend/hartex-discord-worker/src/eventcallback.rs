@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::latency::Latency;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
@@ -41,6 +42,7 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                 };
 
                 match command.name.as_str() {
+                    "about" => About.execute(interaction_create.0).await,
                     "latency" => Latency.execute(interaction_create.0).await,
                     _ => Ok(()),
                 }
