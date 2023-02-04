@@ -51,6 +51,11 @@ impl Command for About {
         )?;
 
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
+        log::warn!("fluent errors occurred:");
+        for error in errors {
+            println!("{:?}", Report::new(error));
+        }
+
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
@@ -59,11 +64,6 @@ impl Command for About {
             )
             .color(0x41_A0_DE)
             .build();
-
-        log::warn!("fluent errors occurred:");
-        for error in errors {
-            println!("{:?}", Report::new(error));
-        }
 
         interaction_client
             .create_response(
