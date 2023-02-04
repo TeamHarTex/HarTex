@@ -51,10 +51,9 @@ impl Command for About {
         )?;
 
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
-        let _ = about_embed_title;
         let embed = EmbedBuilder::new()
             .author(
-                EmbedAuthorBuilder::new("About HarTex")
+                    EmbedAuthorBuilder::new(about_embed_title)
                     .icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png")?)
                     .build()
             )
