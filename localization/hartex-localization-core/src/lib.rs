@@ -30,8 +30,8 @@ use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
-use fluent_bundle::FluentResource;
 use fluent_bundle::FluentError;
+use fluent_bundle::FluentResource;
 use hartex_eyre::eyre::Report;
 use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
