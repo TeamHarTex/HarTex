@@ -23,15 +23,14 @@
 use std::time::Instant;
 
 use hartex_discord_commands_core::traits::Command;
-use hartex_discord_commands_macros::CommandMetadata;
+use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_core::log;
 use hartex_discord_utils::CLIENT;
-use hartex_eyre::eyre::Report;
 use hartex_localization_core::create_bundle;
+use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
 
@@ -50,11 +49,7 @@ impl Command for Latency {
         )?;
 
         bundle_get!(bundle."latency-initial-response": term, out [initial_response, errors]);
-
-        log::warn!("fluent errors occurred:");
-        for error in errors {
-            println!("{:?}", Report::new(error));
-        }
+        handle_errors(errors)?;
 
         let initial_t = Instant::now();
         interaction_client
@@ -75,11 +70,7 @@ impl Command for Latency {
         let milliseconds = initial_t.elapsed().as_millis();
 
         bundle_get_args!(bundle."latency-edited-response": message, out [edited_response, errors], args ["latency" to milliseconds]);
-
-        log::warn!("fluent errors occurred:");
-        for error in errors {
-            println!("{:?}", Report::new(error));
-        }
+        handle_errors(errors)?;
 
         interaction_client
             .update_response(&interaction.token)
