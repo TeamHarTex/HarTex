@@ -20,8 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use futures_util::StreamExt;
+use hartex_eyre::eyre::Report;
 use rdkafka::consumer::StreamConsumer;
+use rdkafka::Message;
 
-pub async fn consume(_: StreamConsumer) -> hartex_eyre::Result<()> {
+pub async fn consume(consumer: StreamConsumer) -> hartex_eyre::Result<()> {
+    while let Some(result) = consumer.stream().next().await {
+        let Ok(message) = result else {
+            let error = result.unwrap_err();
+            println!("{:?}", Report::new(error));
+
+            continue;
+        };
+
+        let _ = message.payload().unwrap();
+    }
+    
     Ok(())
 }
