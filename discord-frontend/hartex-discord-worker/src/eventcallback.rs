@@ -20,10 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands::general::about::About;
-use hartex_discord_commands::general::latency::Latency;
-use hartex_discord_commands_core::traits::Command;
-use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
@@ -37,15 +33,7 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>
             {
-                let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap() else {
-                    unreachable!("this should not be possible")
-                };
-
-                match command.name.as_str() {
-                    "about" => About.execute(interaction_create.0).await,
-                    "latency" => Latency.execute(interaction_create.0).await,
-                    _ => Ok(()),
-                }
+                crate::interaction::application_command(interaction_create).await
             }
             DispatchEvent::Ready(ready) => {
                 log::info!(
