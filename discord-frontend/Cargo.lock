@@ -839,6 +839,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hermit-abi"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "856b5cb0902c2b6d65d5fd97dfa30f9b70c7538e770b98eab5ed52d8db923e01"
+
+[[package]]
 name = "http"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1043,14 +1049,14 @@ checksum = "30e22bd8629359895450b59ea7a776c850561b96a3b1d31321c1949d9e6c9146"
 
 [[package]]
 name = "is-terminal"
-version = "0.4.2"
+version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28dfb6c8100ccc63462345b67d1bbc3679177c75ee4bf59bf29c8b1d110b8189"
+checksum = "22e18b0a45d56fe973d6db23972bf5bc46f988a4a2385deac9cc29572f09daef"
 dependencies = [
- "hermit-abi",
+ "hermit-abi 0.3.0",
  "io-lifetimes",
  "rustix",
- "windows-sys 0.42.0",
+ "windows-sys 0.45.0",
 ]
 
 [[package]]
@@ -1273,7 +1279,7 @@ version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fac9e2da13b5eb447a6ce3d392f23a29d8694bff781bf03a16cd9ac8697593b"
 dependencies = [
- "hermit-abi",
+ "hermit-abi 0.2.6",
  "libc",
 ]
 
@@ -1604,16 +1610,16 @@ checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
 name = "rustix"
-version = "0.36.7"
+version = "0.36.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4fdebc4b395b7fbb9ab11e462e20ed9051e7b16e42d24042c776eca0ac81b03"
+checksum = "f43abb88211988493c1abb44a70efa56ff0ce98f233b7b276146f1f3f7ba9644"
 dependencies = [
  "bitflags",
  "errno",
  "io-lifetimes",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.42.0",
+ "windows-sys 0.45.0",
 ]
 
 [[package]]
@@ -1792,10 +1798,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "sha-1"
-version = "0.10.1"
+name = "sha1"
+version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5058ada175748e33390e40e872bd0fe59a19f265d0158daa551c5a88a76009c"
+checksum = "f04293dc80c3993519f2d7f6f511707ee7094fe0c6d3406feb330cdb3540eba3"
 dependencies = [
  "cfg-if",
  "cpufeatures",
@@ -2022,9 +2028,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-tungstenite"
-version = "0.17.2"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f714dd15bead90401d77e04243611caec13726c2408afd5b31901dfcdcb3b181"
+checksum = "54319c93411147bced34cb5609a80e0a8e44c5999c93903a81cd866630ec0bfd"
 dependencies = [
  "futures-util",
  "log",
@@ -2181,9 +2187,9 @@ dependencies = [
 
 [[package]]
 name = "tungstenite"
-version = "0.17.3"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e27992fd6a8c29ee7eef28fc78349aa244134e10ad447ce3b9f0ac0ed0fa4ce0"
+checksum = "30ee6ab729cd4cf0fd55218530c4522ed30b7b6081752839b68fcec8d0960788"
 dependencies = [
  "base64 0.13.1",
  "byteorder",
@@ -2193,7 +2199,7 @@ dependencies = [
  "log",
  "rand",
  "rustls",
- "sha-1",
+ "sha1",
  "thiserror",
  "url",
  "utf-8",
@@ -2203,7 +2209,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.15.0-rc.2"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "bitflags",
  "flate2",
@@ -2224,7 +2230,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "tokio",
  "tracing",
@@ -2233,7 +2239,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "brotli",
  "hyper",
@@ -2252,7 +2258,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "futures-util",
  "http",
@@ -2263,7 +2269,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "bitflags",
  "serde",
@@ -2276,7 +2282,7 @@ dependencies = [
 [[package]]
 name = "twilight-util"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "twilight-model",
  "twilight-validate",
@@ -2285,7 +2291,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "twilight-model",
 ]
