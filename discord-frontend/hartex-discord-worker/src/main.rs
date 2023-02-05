@@ -69,7 +69,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
-    let topic = env::var("KAFKA_TOPIC_DISCORD_GATEWAY_PAYLOAD")?;
+    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD")?;
 
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
