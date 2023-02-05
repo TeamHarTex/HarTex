@@ -36,6 +36,6 @@ pub async fn consume(consumer: StreamConsumer) -> hartex_eyre::Result<()> {
 
         let _ = message.payload().unwrap();
     }
-    
+
     Ok(())
 }
