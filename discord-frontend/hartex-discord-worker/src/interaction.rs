@@ -22,6 +22,7 @@
 
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::latency::Latency;
+use hartex_discord_commands::general::uptime::Uptime;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
@@ -37,6 +38,7 @@ pub async fn application_command(
     match command.name {
         name if name == About.name() => About.execute(interaction_create.0).await,
         name if name == Latency.name() => Latency.execute(interaction_create.0).await,
+        name if name == Uptime.name() => Uptime.execute(interaction_create.0).await,
         _ => Ok(()),
     }
 }
