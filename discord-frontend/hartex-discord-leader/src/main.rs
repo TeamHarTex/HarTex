@@ -61,13 +61,13 @@ pub async fn main() -> hartex_eyre::Result<()> {
         .map(String::from)
         .collect::<Vec<_>>();
     let topic = env::var("KAFKA_TOPIC_OUTBOUND_DISCORD_GATEWAY_PAYLOAD")?;
-    
+
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.clone().into_iter())
         .compression_type(CompressionType::Lz4)
         .group_id("com.github.teamhartex.hartex.outbound.gateway.payload.consumer")
         .create::<StreamConsumer>()?;
-    
+
     consumer.subscribe(&[&topic])?;
 
     let producer = ClientConfig::new()
