@@ -21,6 +21,7 @@
 #
 
 about-embed-description=HarTex is the open-source speed-of-thought server management bot for Discord. It is designed for servers that have complicated requirements and require fine bot configuration.
+about-embed-footer=Any questions? Join and ask in our community server at {$inviteLink}.
 about-embed-github-repo-field-name=GitHub Repository:
 about-embed-title=About HarTex
 -latency-initial-response = Did you need anything?
