@@ -10,7 +10,7 @@ env:
 
 jobs:
   ClippyDiscordFrontend:
-    name: Clippy (discord-frontend)
+    name: discord-frontend - Clippy
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh clippy discord-frontend
 
   RustfmtDiscordFrontend:
-    name: Rustfmt (discord-frontend)
+    name: discord-frontend - Rustfmt
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh formatck discord-frontend
 
   ClippyRustUtilities:
-    name: Clippy (rust-utilities)
+    name: rust-utilities - Clippy
     runs-on: ubuntu-latest
 
     steps:
@@ -79,7 +79,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh clippy rust-utilities
 
   RustfmtRustUtilities:
-    name: Rustfmt (rust-utilities)
+    name: rust-utilities - Rustfmt
     runs-on: ubuntu-latest
 
     steps:
@@ -102,7 +102,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh formatck rust-utilities
 
   ClippyLocalization:
-    name: Clippy (localization)
+    name: localization - Clippy
     runs-on: ubuntu-latest
 
     steps:
@@ -125,7 +125,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh clippy localization
 
   RustfmtLocalization:
-    name: Rustfmt (localization)
+    name: localization - Rustfmt
     runs-on: ubuntu-latest
 
     steps:

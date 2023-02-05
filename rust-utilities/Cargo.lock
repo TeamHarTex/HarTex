@@ -530,9 +530,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.50"
+version = "1.0.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ef7d57beacfaf2d8aee5937dab7b7f28de3cb8b1828479bb5de2a7106f2bae2"
+checksum = "5d727cae5b39d21da60fa540906919ad737832fe0b1c165da3a34d6548c849d6"
 dependencies = [
  "unicode-ident",
 ]
@@ -927,7 +927,7 @@ checksum = "3528ecfd12c466c6f163363caf2d02a71161dd5e1cc6ae7b34207ea2d42d81ed"
 [[package]]
 name = "twilight-http"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "brotli",
  "hyper",
@@ -946,7 +946,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "futures-util",
  "http",
@@ -957,7 +957,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "bitflags",
  "serde",
@@ -970,7 +970,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.0-rc.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#1299073b363049cb0435d2b16a7ec3de5544b07d"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#46dd32201ad1ab08800e00f8dec40caa9ba0885b"
 dependencies = [
  "twilight-model",
 ]
