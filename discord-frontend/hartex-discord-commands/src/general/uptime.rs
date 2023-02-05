@@ -20,9 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
+use rdkafka::ClientConfig;
+use rdkafka::producer::FutureProducer;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_kafka_utils::traits::ClientConfigUtils;
+use hartex_kafka_utils::types::CompressionType;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -32,6 +38,16 @@ pub struct Uptime;
 
 impl Command for Uptime {
     async fn execute(&self, _: Interaction) -> hartex_eyre::Result<()> {
+        let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
+            .split(';')
+            .map(String::from)
+            .collect::<Vec<_>>();
+        let _ = ClientConfig::new()
+            .bootstrap_servers(bootstrap_servers.into_iter())
+            .compression_type(CompressionType::Lz4)
+            .delivery_timeout_ms(30000)
+            .create::<FutureProducer>()?;
+
         todo!()
     }
 }
