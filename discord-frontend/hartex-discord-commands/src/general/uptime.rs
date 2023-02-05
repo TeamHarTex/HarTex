@@ -23,16 +23,16 @@
 use std::env;
 use std::time::Duration;
 
-use rdkafka::ClientConfig;
-use rdkafka::producer::FutureProducer;
-use rdkafka::producer::FutureRecord;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_eyre::eyre::Report;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
-use hartex_eyre::eyre::Report;
+use rdkafka::producer::FutureProducer;
+use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
+use rdkafka::ClientConfig;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -52,7 +52,7 @@ impl Command for Uptime {
             .delivery_timeout_ms(30000)
             .create::<FutureProducer>()?;
         let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION")?;
-        
+
         let bytes = b"uptime";
 
         if let Err((error, _)) = producer
