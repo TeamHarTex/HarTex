@@ -52,6 +52,7 @@ use crate::error::ConsumerErrorKind;
 mod entitycache;
 mod error;
 mod eventcallback;
+mod interaction;
 
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
