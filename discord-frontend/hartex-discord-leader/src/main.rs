@@ -38,10 +38,13 @@ use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::time;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
+use rdkafka::consumer::Consumer;
+use rdkafka::consumer::StreamConsumer;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
 mod inbound;
+mod outbound;
 mod queue;
 mod shards;
 
@@ -57,6 +60,15 @@ pub async fn main() -> hartex_eyre::Result<()> {
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
+    let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION")?;
+
+    let consumer = ClientConfig::new()
+        .bootstrap_servers(bootstrap_servers.clone().into_iter())
+        .compression_type(CompressionType::Lz4)
+        .group_id("com.github.teamhartex.hartex.outbound.communication.consumer")
+        .create::<StreamConsumer>()?;
+
+    consumer.subscribe(&[&topic])?;
 
     let producer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
@@ -77,6 +89,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
     tokio::spawn(async move {
         tokio::select! {
             _ = inbound::handle(shards.iter_mut(), producer) => {},
+            _ = outbound::consume(consumer) => {},
             _ = rx.changed() => {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
                     shard.close(CloseFrame::RESUME).await
