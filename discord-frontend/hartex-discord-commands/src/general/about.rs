@@ -28,12 +28,14 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
+use hartex_localization_macros::bundle_get_args;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -57,6 +59,9 @@ impl Command for About {
         bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
         handle_errors(errors)?;
 
+        let invite_link = "https://discord.gg/Xu8453VBAv";
+        bundle_get_args!(bundle."about-embed-footer": message, out [about_embed_footer, errors], args ["inviteLink" to invite_link]);
+
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
@@ -66,6 +71,7 @@ impl Command for About {
             .color(0x41_A0_DE)
             .description(about_embed_description)
             .field(EmbedFieldBuilder::new(about_embed_github_repo_field_name, "https://github.com/TeamHarTex/HarTex").build())
+            .footer(EmbedFooterBuilder::new(about_embed_footer).build())
             .validate()?
             .build();
 
