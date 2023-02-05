@@ -13,7 +13,7 @@ env:
 
 jobs:
   BuildDiscordFrontend:
-    name: Full Release Build (discord-frontend)
+    name: discord-frontend - Full Release Build
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh build discord-frontend
 
   TestDiscordFrontend:
-    name: Test (discord-frontend)
+    name: discord-frontend - Test
     needs:
       - BuildDiscordFrontend
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh test discord-frontend
 
   BuildRustUtilities:
-    name: Full Release Build (rust-utilities)
+    name: rust-utilities - Full Release Build
     runs-on: ubuntu-latest
 
     steps:
@@ -87,7 +87,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh build rust-utilities
 
   BuildLocalizations:
-    name: Full Release Build (localization)
+    name: localization - Full Release Build
     runs-on: ubuntu-latest
 
     steps:
@@ -109,7 +109,7 @@ jobs:
         run: chmod +x ./buildsystem.sh && ./buildsystem.sh build localization
 
   TestLocalizations:
-    name: Test (localization)
+    name: localization - Test
     needs:
       - BuildLocalizations
     runs-on: ubuntu-latest
