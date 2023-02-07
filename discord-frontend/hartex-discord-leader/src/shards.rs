@@ -37,10 +37,15 @@ pub fn obtain(num_shards: u64, queue: &Arc<dyn Queue>) -> hartex_eyre::Result<Ve
     let bot_token = std::env::var("BOT_TOKEN")?;
 
     let shard_start_index = std::env::var("SHARDS_START_INDEX")?.parse::<u64>()?;
+    let config = Config::new(bot_token, Intents::all());
 
-    Ok(
-        stream::create_bucket(shard_start_index, 1, num_shards, |shard_id| {
-            Config::builder(bot_token.clone(), Intents::all())
+    Ok(stream::create_bucket(
+        shard_start_index,
+        1,
+        num_shards,
+        config,
+        |shard_id, builder| {
+            builder
                 .event_types(EventTypeFlags::all())
                 .presence(UpdatePresencePayload {
                     activities: vec![Activity {
@@ -67,7 +72,7 @@ pub fn obtain(num_shards: u64, queue: &Arc<dyn Queue>) -> hartex_eyre::Result<Ve
                 })
                 .queue(queue.clone())
                 .build()
-        })
-        .collect::<Vec<_>>(),
+        },
     )
+    .collect::<Vec<_>>())
 }
