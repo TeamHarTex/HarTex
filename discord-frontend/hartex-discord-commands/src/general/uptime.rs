@@ -26,6 +26,10 @@ use std::time::Duration;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
@@ -41,7 +45,8 @@ use rdkafka::ClientConfig;
 pub struct Uptime;
 
 impl Command for Uptime {
-    async fn execute(&self, _: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+        let interaction_client = CLIENT.interaction(interaction.application_id);
         let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
             .split(';')
             .map(String::from)
@@ -67,6 +72,21 @@ impl Command for Uptime {
             return Err(Report::new(error));
         }
 
-        todo!()
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content("This command is currently a work in progress.")
+                            .build(),
+                    ),
+                },
+            )
+            .await?;
+
+        Ok(())
     }
 }
