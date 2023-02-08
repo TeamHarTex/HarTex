@@ -72,18 +72,20 @@ impl Command for Uptime {
             return Err(Report::new(error));
         }
 
-        interaction_client.create_response(
-            interaction.id,
-            &interaction.token,
-            &InteractionResponse {
-                kind: InteractionResponseType::ChannelMessageWithSource,
-                data: Some(
-                    InteractionResponseDataBuilder::new()
-                        .content("This command is currently a work in progress.")
-                        .build(),
-                ),
-            }
-        ).await?;
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content("This command is currently a work in progress.")
+                            .build(),
+                    ),
+                },
+            )
+            .await?;
 
         Ok(())
     }
