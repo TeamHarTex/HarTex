@@ -621,10 +621,8 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_utils",
  "hartex_eyre",
- "hartex_kafka_utils",
  "hartex_localization_core",
  "hartex_localization_macros",
- "rdkafka",
 ]
 
 [[package]]
