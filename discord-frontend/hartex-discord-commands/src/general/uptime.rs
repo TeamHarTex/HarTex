@@ -20,9 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::time::Duration;
-
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -30,13 +27,6 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
-use hartex_eyre::eyre::Report;
-use hartex_kafka_utils::traits::ClientConfigUtils;
-use hartex_kafka_utils::types::CompressionType;
-use rdkafka::producer::FutureProducer;
-use rdkafka::producer::FutureRecord;
-use rdkafka::util::Timeout;
-use rdkafka::ClientConfig;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -47,30 +37,6 @@ pub struct Uptime;
 impl Command for Uptime {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
-        let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
-            .split(';')
-            .map(String::from)
-            .collect::<Vec<_>>();
-        let producer = ClientConfig::new()
-            .bootstrap_servers(bootstrap_servers.into_iter())
-            .compression_type(CompressionType::Lz4)
-            .delivery_timeout_ms(30000)
-            .create::<FutureProducer>()?;
-        let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION")?;
-
-        let bytes = b"uptime";
-
-        if let Err((error, _)) = producer
-            .send(
-                FutureRecord::to(&topic)
-                    .key("OUTBOUND_COMMUNICATION")
-                    .payload(bytes),
-                Timeout::After(Duration::from_secs(0)),
-            )
-            .await
-        {
-            return Err(Report::new(error));
-        }
 
         interaction_client
             .create_response(
