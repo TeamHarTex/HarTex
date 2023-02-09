@@ -19,8 +19,5 @@ hartex_localization_core = { path = "../../localization/hartex-localization-core
 hartex_localization_macros = { path = "../../localization/hartex-localization-macros" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
-hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
-
-rdkafka = { version = "0.29.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
 
 [features]
