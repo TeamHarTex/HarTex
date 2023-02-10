@@ -1,0 +1,20 @@
+[package]
+name = "hartexbuild-main"
+version = "0.1.0"
+edition = "2021"
+description = """
+HarTex buildsystem binary
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.69.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+
+[features]
+
+[[bin]]
+name = "hartexbuild"
+path = "src/main.rs"
