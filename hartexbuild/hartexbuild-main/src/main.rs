@@ -20,6 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
+use clap::Command;
+
 pub fn main() -> hartex_eyre::Result<()> {
+    hartex_eyre::initialize()?;
+
+    let _ = Command::new("hartexbuild");
+
     Ok(())
 }
