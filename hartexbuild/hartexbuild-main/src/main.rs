@@ -24,12 +24,19 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use clap::Arg;
+use clap::ArgAction;
 use clap::Command;
 
 pub fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
 
-    let _ = Command::new("hartexbuild");
+    let _ = Command::new("hartexbuild")
+        .subcommand(
+            Command::new("build")
+                .about("Builds a specified project.")
+                .arg(Arg::new("project").required(true).action(ArgAction::Set))
+        );
 
     Ok(())
 }
