@@ -72,6 +72,7 @@
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-macros/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-test/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/hartexbuild/hartexbuild-main/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
@@ -82,6 +83,7 @@
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
       <excludeFolder url="file://$MODULE_DIR$/hartex-kafka/target" />
       <excludeFolder url="file://$MODULE_DIR$/localization/target" />
+      <excludeFolder url="file://$MODULE_DIR$/hartexbuild/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
