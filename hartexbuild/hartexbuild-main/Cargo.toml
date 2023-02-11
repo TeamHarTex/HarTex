@@ -13,6 +13,9 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
+clap = "4.1.4"
+hcl-rs = "0.12.3"
+
 [features]
 
 [[bin]]
