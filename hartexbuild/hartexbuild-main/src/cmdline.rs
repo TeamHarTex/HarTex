@@ -20,29 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+use clap::ArgMatches;
 
-use clap::Arg;
-use clap::ArgAction;
-use clap::Command;
-
-mod cmdline;
-
-pub fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
-
-    let command = Command::new("hartexbuild")
-        .subcommand(
-            Command::new("build")
-                .about("Builds a specified project.")
-                .arg(Arg::new("project").required(true).action(ArgAction::Set))
-        );
-
-    let matches = command.get_matches();
-
-    cmdline::handle(matches)?;
-
+pub fn handle(_: ArgMatches) -> hartex_eyre::Result<()> {
     Ok(())
 }
+
