@@ -26,7 +26,7 @@ use serde::Deserialize;
 
 pub mod project;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct HarTexFile {
     pub projects: BTreeMap<String, project::Project>,
 }

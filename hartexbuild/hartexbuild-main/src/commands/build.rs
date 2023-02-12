@@ -23,6 +23,7 @@
 use clap::ArgMatches;
 
 pub fn build_command(_: ArgMatches) -> hartex_eyre::Result<()> {
-    hartexbuild_hartexfile::from_manifest()?;
+    let file = hartexbuild_hartexfile::from_manifest()?;
+    println!("{file:?}");
     Ok(())
 }

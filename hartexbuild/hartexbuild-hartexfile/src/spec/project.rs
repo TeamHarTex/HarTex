@@ -22,7 +22,7 @@
 
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Project {
     pub r#type: String,
     pub tool: String,
