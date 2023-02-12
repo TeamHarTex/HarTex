@@ -1,9 +1,9 @@
 [package]
-name = "hartexbuild-main"
+name = "hartexbuild-hartexfile"
 version = "0.1.0"
 edition = "2021"
 description = """
-HarTex buildsystem binary
+HarTexfile specification for HarTex buildsystem
 """
 license = "AGPL-3.0-only"
 rust-version = "1.69.0"
@@ -11,14 +11,9 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartexbuild-hartexfile = { path = "../hartexbuild-hartexfile" }
-
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-clap = "4.1.4"
+serde = { version = "1.0.152", features = ["derive"] }
+hcl-rs = "0.12.3"
 
 [features]
-
-[[bin]]
-name = "hartexbuild"
-path = "src/main.rs"

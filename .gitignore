@@ -31,3 +31,4 @@ buildconf.toml
 **/build
 
 buildsystem.jar
+hartexbuild.exe

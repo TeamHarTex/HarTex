@@ -20,13 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::ArgMatches;
+use std::collections::BTreeMap;
 
-use crate::commands;
+use serde::Deserialize;
 
-pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
-    match matches.subcommand() {
-        Some(("build", subcommand_matches)) => commands::build::build_command(subcommand_matches.clone()),
-        _ => Ok(())
-    }
+pub mod project;
+
+#[derive(Deserialize)]
+pub struct HarTexFile {
+    pub projects: BTreeMap<String, project::Project>,
 }
