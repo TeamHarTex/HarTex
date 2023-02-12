@@ -29,6 +29,7 @@ use clap::ArgAction;
 use clap::Command;
 
 mod cmdline;
+mod commands;
 
 pub fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;

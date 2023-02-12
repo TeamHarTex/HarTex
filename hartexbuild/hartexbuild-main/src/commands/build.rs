@@ -22,11 +22,6 @@
 
 use clap::ArgMatches;
 
-use crate::commands;
-
-pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
-    match matches.subcommand() {
-        Some(("build", subcommand_matches)) => commands::build::build_command(subcommand_matches.clone()),
-        _ => Ok(())
-    }
+pub fn build_command(_: ArgMatches) -> hartex_eyre::Result<()> {
+    Ok(())
 }
