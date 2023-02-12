@@ -177,6 +177,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_eyre",
  "hcl-rs",
+ "serde",
 ]
 
 [[package]]
