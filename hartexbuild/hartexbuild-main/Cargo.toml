@@ -11,6 +11,8 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartexbuild-hartexfile = { path = "../hartexbuild-hartexfile" }
+
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
 clap = "4.1.4"

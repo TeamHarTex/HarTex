@@ -22,6 +22,8 @@
 
 use std::fs;
 
-pub fn from_manifest(path: &str) -> hartex_eyre::Result<()> {
-    let _ = fs::read_to_string(path)?;
+pub fn from_manifest() -> hartex_eyre::Result<()> {
+    let _ = fs::read_to_string("HarTexfile")?;
+
+    Ok(())
 }
