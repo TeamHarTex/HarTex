@@ -21,7 +21,12 @@
  */
 
 use serde::Deserialize;
-use serde::Serialize;
 
-#[derive(Deserialize, Serialize)]
-pub struct Project;
+#[derive(Deserialize)]
+pub struct Project {
+    pub r#type: String,
+    pub tool: String,
+    pub profile: Option<String>,
+    #[serde(rename = "include-debug-info")]
+    pub include_debug_info: Option<bool>,
+}

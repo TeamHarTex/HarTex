@@ -23,11 +23,10 @@
 use std::collections::BTreeMap;
 
 use serde::Deserialize;
-use serde::Serialize;
 
 pub mod project;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 pub struct HarTexFile {
     pub projects: BTreeMap<String, project::Project>,
 }
