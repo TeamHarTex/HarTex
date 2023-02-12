@@ -3,7 +3,7 @@ name = "hartexbuild-hartexfile"
 version = "0.1.0"
 edition = "2021"
 description = """
-Hartexfile specification for HarTex buildsystem
+HarTexfile specification for HarTex buildsystem
 """
 license = "AGPL-3.0-only"
 rust-version = "1.69.0"

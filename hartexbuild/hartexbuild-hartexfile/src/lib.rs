@@ -20,4 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct Irrelevant;
+pub struct HarTexFile;
