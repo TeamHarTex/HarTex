@@ -20,14 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-
 use serde::Deserialize;
 use serde::Serialize;
 
-pub mod project;
-
 #[derive(Deserialize, Serialize)]
-pub struct HarTexFile {
-    pub projects: BTreeMap<String, project::Project>,
-}
+pub struct Project;
