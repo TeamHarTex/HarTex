@@ -1,4 +1,8 @@
 [workspace]
 members = [
+    "hartexbuild-hartexfile",
     "hartexbuild-main"
 ]
+
+[profile.release]
+debug = true

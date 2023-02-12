@@ -20,13 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::ArgMatches;
+use serde::Deserialize;
 
-use crate::commands;
-
-pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
-    match matches.subcommand() {
-        Some(("build", subcommand_matches)) => commands::build::build_command(subcommand_matches.clone()),
-        _ => Ok(())
-    }
+#[derive(Deserialize)]
+pub struct Project {
+    pub r#type: String,
+    pub tool: String,
+    pub profile: Option<String>,
+    #[serde(rename = "include-debug-info")]
+    pub include_debug_info: Option<bool>,
 }

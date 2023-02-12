@@ -20,13 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::ArgMatches;
+use std::fs;
 
-use crate::commands;
+use hcl::eval;
+use hcl::eval::Context;
 
-pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
-    match matches.subcommand() {
-        Some(("build", subcommand_matches)) => commands::build::build_command(subcommand_matches.clone()),
-        _ => Ok(())
-    }
+use crate::spec::HarTexFile;
+
+pub mod spec;
+
+pub fn from_manifest() -> hartex_eyre::Result<HarTexFile> {
+    let file = fs::read_to_string("HarTexfile")?;
+
+    let hartexfile = eval::from_str::<spec::HarTexFile>(&file, &Context::new())?;
+    Ok(hartexfile)
 }

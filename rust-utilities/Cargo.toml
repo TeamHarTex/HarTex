@@ -4,3 +4,6 @@ members = [
     "hartex-eyre",
     "hartex-kafka-utils",
 ]
+
+[profile.release]
+debug = true
