@@ -25,11 +25,9 @@ use std::fs;
 use hcl::eval;
 use hcl::eval::Context;
 
-use crate::spec::HarTexFile;
-
 pub mod spec;
 
-pub fn from_manifest() -> hartex_eyre::Result<HarTexFile> {
+pub fn from_manifest() -> hartex_eyre::Result<spec::HarTexFile> {
     let file = fs::read_to_string("HarTexfile")?;
 
     let hartexfile = eval::from_str::<spec::HarTexFile>(&file, &Context::new())?;

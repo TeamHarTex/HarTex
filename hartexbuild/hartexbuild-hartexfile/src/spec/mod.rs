@@ -28,5 +28,6 @@ pub mod project;
 
 #[derive(Debug, Deserialize)]
 pub struct HarTexFile {
+    #[serde(rename = "project")]
     pub projects: BTreeMap<String, project::Project>,
 }
