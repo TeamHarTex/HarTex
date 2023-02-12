@@ -20,4 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct HarTexFile;
+use std::fs;
+
+pub fn from_manifest(path: &str) -> hartex_eyre::Result<()> {
+    let _ = fs::read_to_string(path)?;
+}
