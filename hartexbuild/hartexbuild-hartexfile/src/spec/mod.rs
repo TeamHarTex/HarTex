@@ -20,18 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fs;
+use serde::{Deserialize, Serialize};
 
-use hcl::eval;
-use hcl::eval::Context;
-
-use crate::spec::HarTexFile;
-
-pub mod spec;
-
-pub fn from_manifest() -> hartex_eyre::Result<HarTexFile> {
-    let file = fs::read_to_string("HarTexfile")?;
-
-    let hartexfile = eval::from_str::<spec::HarTexFile>(&file, &Context::new())?;
-    Ok(hartexfile)
-}
+#[derive(Deserialize, Serialize)]
+pub struct HarTexFile;
