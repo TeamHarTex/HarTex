@@ -443,7 +443,7 @@ dependencies = [
 [[package]]
 name = "fluent-bundle"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#bd339545780b5692706ef1b4cc1b8700a49ec75f"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#cd0fce24d266f610572debc5f4bf00a9cabe5100"
 dependencies = [
  "fluent-langneg",
  "fluent-syntax",
@@ -467,7 +467,7 @@ dependencies = [
 [[package]]
 name = "fluent-syntax"
 version = "0.11.0"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#bd339545780b5692706ef1b4cc1b8700a49ec75f"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#cd0fce24d266f610572debc5f4bf00a9cabe5100"
 dependencies = [
  "thiserror",
 ]
@@ -1016,7 +1016,7 @@ dependencies = [
 [[package]]
 name = "intl-memoizer"
 version = "0.5.1"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#bd339545780b5692706ef1b4cc1b8700a49ec75f"
+source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#cd0fce24d266f610572debc5f4bf00a9cabe5100"
 dependencies = [
  "type-map",
  "unic-langid",
@@ -2044,9 +2044,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-util"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc6a3b08b64e6dfad376fa2432c7b1f01522e37a623c3050bc95db2d3ff21583"
+checksum = "5427d89453009325de0d8f342c9490009f76e999cb7672d77e46267448f7e6b2"
 dependencies = [
  "bytes",
  "futures-core",
