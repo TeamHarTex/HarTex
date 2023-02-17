@@ -14,7 +14,7 @@ rust-version = "1.69.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment", "logging-facilities"] }
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-clap = "4.1.4"
+clap = "4.1.6"
 hyper = { version = "0.14.24", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 owo-colors = "3.5.0"
