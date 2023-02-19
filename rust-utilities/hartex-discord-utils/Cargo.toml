@@ -13,6 +13,6 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", features = ["discord-http"] }
 
-once_cell = "1.17.0"
+once_cell = "1.17.1"
 
 [features]
