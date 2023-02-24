@@ -20,9 +20,9 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
-about-embed-description=HarTex是開源的即時Discord伺服器管理機器人。它設計用於具有複雜要求並需要精細機器人配置的伺服器。
+about-embed-description=HarTex 是開源的即時 Discord 伺服器管理機器人。它設計用於具有複雜要求並需要精細機器人配置的伺服器。
 about-embed-footer=有任何問題嗎？請加入我們的社群伺服器 {$inviteLink} 並詢問。
 about-embed-github-repo-field-name=GitHub 存儲庫：
-about-embed-title=關於HarTex
+about-embed-title=關於 HarTex
 -latency-initial-response = 你需要什麼嗎？
 latency-edited-response = {-latency-initial-response} 嗯，我的延遲是：`{$latency}毫秒`。
