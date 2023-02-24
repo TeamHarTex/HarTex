@@ -1,5 +1,11 @@
 {
-  "description": "Obtain uptime information",
   "name": "uptime",
+  "description": "Obtain uptime information",
+  "name_localizations": {
+    "zh-TW": "正常運行時間"
+  },
+  "description_localizations": {
+    "zh-TW": "獲取正常運行時間資訊"
+  },
   "type": 1
 }
