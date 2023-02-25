@@ -2,10 +2,12 @@
   "name": "about",
   "description": "About HarTex",
   "name_localizations": {
-    "zh-TW": "關於"
+    "zh-TW": "關於",
+    "zh-CN": "关于"
   },
   "description_localizations": {
-    "zh-TW": "關於 HarTex"
+    "zh-TW": "關於 HarTex",
+    "zh-CN": "关于 HarTex"
   },
   "type": 1
 }
