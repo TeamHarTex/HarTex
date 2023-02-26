@@ -21,13 +21,15 @@
  */
 
 use clap::ArgMatches;
+use hartex_eyre::eyre::Report;
 
 pub fn build_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
-    println!("{file:?}");
 
     let project_name = matches.get_one::<String>("project").unwrap();
-    let _ = file.projects.get(project_name).unwrap();
+    let Some(_) = file.projects.get(project_name) else {
+        return Err(Report::msg(format!("project not found: {project_name}")))
+    };
 
     Ok(())
 }
