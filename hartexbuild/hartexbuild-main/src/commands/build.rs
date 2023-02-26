@@ -24,8 +24,10 @@ use clap::ArgMatches;
 
 pub fn build_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
-    let project_name = matches.get_one::<&str>("project").unwrap();
-    let _ = file.projects.get(&project_name.to_string()).unwrap();
+    println!("{file:?}");
+
+    let project_name = matches.get_one::<String>("project").unwrap();
+    let _ = file.projects.get(project_name).unwrap();
 
     Ok(())
 }
