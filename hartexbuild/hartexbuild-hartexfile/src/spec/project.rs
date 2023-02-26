@@ -31,6 +31,12 @@ pub struct Project {
     pub include_debug_info: Option<bool>,
 }
 
+impl Project {
+    pub fn build(&self) -> hartex_eyre::Result<()> {
+        Ok(())
+    }
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ProjectType {
