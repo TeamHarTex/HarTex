@@ -9,6 +9,7 @@
     </scriptDefinition>
     <scriptDefinition className="org.jetbrains.kotlin.scripting.resolve.KotlinScriptDefinitionFromAnnotatedTemplate" definitionName="KotlinBuildScript">
       <order>2</order>
+      <autoReloadConfigurations>true</autoReloadConfigurations>
     </scriptDefinition>
     <scriptDefinition className="circlet.pipelines.config.dsl.scriptdefinition.ProjectScriptDefinition" definitionName="ProjectScriptDefinition">
       <order>3</order>

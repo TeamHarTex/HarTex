@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    runtimeClasspath(project(":script-def"))
+    runtimeOnly(project(":script-def"))
 }
 
 tasks.withType<Jar> {

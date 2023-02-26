@@ -448,9 +448,9 @@ dependencies = [
 
 [[package]]
 name = "num_enum_derive"
-version = "0.5.10"
+version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0629cbd6b897944899b1f10496d9c4a7ac5878d45fd61bc22e9e79bfbbc29597"
+checksum = "dcbff9bc912032c62bf65ef1d5aea88983b420f4f839db1e9b0c281a25c9c799"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -787,9 +787,9 @@ checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 
 [[package]]
 name = "syn"
-version = "1.0.107"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f4064b5b16e03ae50984a5a8ed5d4f8803e6bc1fd170a3cda91a1be4b18e3f5"
+checksum = "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -798,9 +798,9 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.19"
+version = "0.3.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "53250a3b3fed8ff8fd988587d8925d26a83ac3845d9e03b220b37f34c2b8d6c2"
+checksum = "cd0cbfecb4d19b5ea75bb31ad904eb5b9fa13f21079c3b92017ebdf4999a5890"
 dependencies = [
  "serde",
  "time-core",
@@ -815,9 +815,9 @@ checksum = "2e153e1f1acaef8acc537e68b44906d2db6436e2b35ac2c6b42640fff91f00fd"
 
 [[package]]
 name = "time-macros"
-version = "0.2.7"
+version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a460aeb8de6dcb0f381e1ee05f1cd56fcf5a5f6eb8187ff3d8f0b11078d38b7c"
+checksum = "fd80a657e71da814b8e5d60d3374fc6d35045062245d80224748ae522dd76f36"
 dependencies = [
  "time-core",
 ]
@@ -927,7 +927,7 @@ checksum = "3528ecfd12c466c6f163363caf2d02a71161dd5e1cc6ae7b34207ea2d42d81ed"
 [[package]]
 name = "twilight-http"
 version = "0.15.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c43a39c0ea2069f4a5c4eec887830964457145"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#18fad87c37e03d924335d075c32b35f9509e0419"
 dependencies = [
  "brotli",
  "hyper",
@@ -946,7 +946,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c43a39c0ea2069f4a5c4eec887830964457145"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#18fad87c37e03d924335d075c32b35f9509e0419"
 dependencies = [
  "futures-util",
  "http",
@@ -957,7 +957,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.15.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c43a39c0ea2069f4a5c4eec887830964457145"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#18fad87c37e03d924335d075c32b35f9509e0419"
 dependencies = [
  "bitflags",
  "serde",
@@ -970,7 +970,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#73c43a39c0ea2069f4a5c4eec887830964457145"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#18fad87c37e03d924335d075c32b35f9509e0419"
 dependencies = [
  "twilight-model",
 ]
