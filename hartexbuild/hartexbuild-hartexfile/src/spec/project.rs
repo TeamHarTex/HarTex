@@ -23,17 +23,18 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[serde(rename = "kebab-case")]
 pub struct Project {
     pub r#type: ProjectType,
     pub profile: Option<RustBuildProfile>,
-    #[serde(rename = "include-debug-info")]
     pub include_debug_info: Option<bool>,
 }
 
 impl Project {
     pub fn build(&self) -> hartex_eyre::Result<()> {
         match self.r#type {
-            ProjectType::Rust => {}
+            ProjectType::Rust => {
+            }
         }
 
         Ok(())
