@@ -1,7 +1,6 @@
 project discord-frontend {
     type = "rust"
 
-    tool = "cargo"
     profile = "release"
     include-debug-info = true
 }
