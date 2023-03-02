@@ -23,16 +23,20 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[serde(rename = "kebab-case")]
 pub struct Project {
     pub r#type: ProjectType,
-    pub tool: String,
-    pub profile: Option<String>,
-    #[serde(rename = "include-debug-info")]
+    pub profile: Option<RustBuildProfile>,
     pub include_debug_info: Option<bool>,
 }
 
 impl Project {
     pub fn build(&self) -> hartex_eyre::Result<()> {
+        match self.r#type {
+            ProjectType::Rust => {
+            }
+        }
+
         Ok(())
     }
 }
@@ -41,4 +45,10 @@ impl Project {
 #[serde(rename_all = "snake_case")]
 pub enum ProjectType {
     Rust,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RustBuildProfile {
+    Release,
 }
