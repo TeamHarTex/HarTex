@@ -24,7 +24,6 @@ use std::env;
 use std::process::Command;
 
 use serde::Deserialize;
-use hartex_eyre::eyre::Report;
 
 #[derive(Debug, Deserialize)]
 #[serde(rename = "kebab-case")]
@@ -63,7 +62,7 @@ pub enum ProjectType {
     Rust,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum RustBuildProfile {
     Release,
