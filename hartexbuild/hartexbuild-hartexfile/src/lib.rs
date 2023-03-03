@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(exit_status_error)]
+#![feature(let_chains)]
+
 use std::fs;
 
 use hcl::eval;
