@@ -4,3 +4,24 @@ project discord-frontend {
     profile = "release"
     include-debug-info = true
 }
+
+project hartexbuild {
+    type = "rust"
+
+    profile = "release"
+    include-debug-info = true
+}
+
+project localization {
+    type = "rust"
+
+    profile = "release"
+    include-debug-info = true
+}
+
+project rust-utilities {
+    type = "rust"
+
+    profile = "release"
+    include-debug-info = true
+}
