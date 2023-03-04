@@ -92,8 +92,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
         .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path.is_ident("metadata"))
         .collect::<Vec<_>>();
 
+    #[allow(unused_must_use)]
     if !wrong_paths.is_empty() {
-        let _ = wrong_paths
+        wrong_paths
             .into_iter()
             .map(|attr| attr.path.span().unwrap())
             .map(|span| span.error("expected `metadata` attribute"))
