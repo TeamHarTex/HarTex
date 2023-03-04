@@ -58,7 +58,8 @@ impl Queue for LocalQueue {
                 return;
             }
 
-            let _ = rx.await;
+            #[allow(unused_must_use)]
+            rx.await;
         })
     }
 }
@@ -92,7 +93,8 @@ impl Queue for LargeBotQueue {
                 return;
             }
 
-            let _ = rx.await;
+            #[allow(unused_must_use)]
+            rx.await;
         })
     }
 }
