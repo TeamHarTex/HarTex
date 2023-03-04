@@ -32,11 +32,15 @@ pub struct Project {
     pub r#type: ProjectType,
     pub profile: Option<RustBuildProfile>,
     pub include_debug_info: Option<bool>,
+    pub package_manager: Option<JsTsPackageManager>,
 }
 
 impl Project {
     pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
         match self.r#type {
+            ProjectType::JsTs => {
+                todo!()
+            }
             ProjectType::Rust => {
                 let mut pwd = env::current_dir()?;
                 pwd.push(name);
@@ -66,7 +70,15 @@ impl Project {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ProjectType {
+    JsTs,
     Rust,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum JsTsPackageManager {
+    Npm,
+    Yarn,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
