@@ -97,8 +97,9 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
         // look for non-entity attributes
         invalid_attrs.retain(|attr| !attr.path.is_ident("entity"));
 
+        #[allow(unused_must_use)]
         if !invalid_attrs.is_empty() {
-            let _ = invalid_attrs
+            invalid_attrs
                 .into_iter()
                 .map(|attr| attr.path.span().unwrap())
                 .map(|span| span.error("expected `entity` attribute"))

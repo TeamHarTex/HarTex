@@ -34,12 +34,11 @@ mod commands;
 pub fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
 
-    let command = Command::new("hartexbuild")
-        .subcommand(
-            Command::new("build")
-                .about("Builds a specified project.")
-                .arg(Arg::new("project").required(true).action(ArgAction::Set))
-        );
+    let command = Command::new("hartexbuild").subcommand(
+        Command::new("build")
+            .about("Builds a specified project.")
+            .arg(Arg::new("project").required(true).action(ArgAction::Set)),
+    );
 
     let matches = command.get_matches();
 

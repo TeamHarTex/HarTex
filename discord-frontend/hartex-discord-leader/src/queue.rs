@@ -49,6 +49,7 @@ impl LocalQueue {
 }
 
 impl Queue for LocalQueue {
+    #[allow(unused_must_use)]
     fn request(&'_ self, [_, _]: [u64; 2]) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
         Box::pin(async move {
             let (tx, rx) = oneshot::channel::<()>();
@@ -58,7 +59,7 @@ impl Queue for LocalQueue {
                 return;
             }
 
-            let _ = rx.await;
+            rx.await;
         })
     }
 }
@@ -81,6 +82,7 @@ impl LargeBotQueue {
 }
 
 impl Queue for LargeBotQueue {
+    #[allow(unused_must_use)]
     fn request(&'_ self, shard_id: [u64; 2]) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
         #[allow(clippy::cast_possible_truncation)]
         let bucket = (shard_id[0] % (self.0.len() as u64)) as usize;
@@ -92,7 +94,7 @@ impl Queue for LargeBotQueue {
                 return;
             }
 
-            let _ = rx.await;
+            rx.await;
         })
     }
 }

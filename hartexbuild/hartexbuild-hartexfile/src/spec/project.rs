@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+use std::process::Command;
+
+use hartex_eyre::eyre::Report;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -31,9 +35,23 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn build(&self) -> hartex_eyre::Result<()> {
+    pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
         match self.r#type {
             ProjectType::Rust => {
+                let mut pwd = env::current_dir()?;
+                pwd.push(name);
+
+                let mut command = Command::new("cargo");
+                command.arg("build").current_dir(pwd);
+
+                if let Some(profile) = self.profile.clone() && profile == RustBuildProfile::Release {
+                    command.arg("--release");
+                }
+
+                command
+                    .status()?
+                    .exit_ok()
+                    .map_err(|error| Report::msg(format!("abnormal termination: {error}")))?;
             }
         }
 
@@ -47,7 +65,7 @@ pub enum ProjectType {
     Rust,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum RustBuildProfile {
     Release,
