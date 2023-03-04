@@ -25,3 +25,9 @@ project rust-utilities {
     profile = "release"
     include-debug-info = true
 }
+
+project web-frontend {
+    type = "jsts"
+
+    package-manager = "yarn"
+}
