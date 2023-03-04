@@ -26,7 +26,9 @@ use crate::commands;
 
 pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
     match matches.subcommand() {
-        Some(("build", subcommand_matches)) => commands::build::build_command(subcommand_matches.clone()),
-        _ => Ok(())
+        Some(("build", subcommand_matches)) => {
+            commands::build::build_command(subcommand_matches.clone())
+        }
+        _ => Ok(()),
     }
 }

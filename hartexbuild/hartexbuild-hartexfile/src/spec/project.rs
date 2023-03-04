@@ -23,6 +23,7 @@
 use std::env;
 use std::process::Command;
 
+use hartex_eyre::eyre::Report;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -47,7 +48,10 @@ impl Project {
                     command.arg("--release");
                 }
 
-                command.status()?.exit_ok()?;
+                command
+                    .status()?
+                    .exit_ok()
+                    .map_err(|error| Report::msg(format!("abnormal termination: {error}")))?;
             }
         }
 
