@@ -232,6 +232,7 @@ version = "0.1.0"
 dependencies = [
  "num_enum",
  "num_enum_derive",
+ "socket2 0.4.9",
  "twilight-http",
 ]
 
@@ -315,7 +316,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2",
+ "socket2 0.4.8",
  "tokio",
  "tower-service",
  "tracing",
@@ -771,6 +772,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "socket2"
+version = "0.4.9"
+source = "git+https://github.com/rust-lang/socket2.git?branch=v0.4.x#25613f54764114ab188570d7f13276b99919546f"
+dependencies = [
+ "libc",
+ "winapi",
+]
+
+[[package]]
 name = "spin"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -825,7 +835,7 @@ dependencies = [
  "memchr",
  "mio",
  "pin-project-lite",
- "socket2",
+ "socket2 0.4.8",
  "windows-sys 0.45.0",
 ]
 
