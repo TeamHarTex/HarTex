@@ -40,9 +40,8 @@ impl Project {
                 let mut pwd = env::current_dir()?;
                 pwd.push(name);
 
-                let command = Command::new("cargo")
-                    .arg("build")
-                    .current_dir(pwd);
+                let mut command = Command::new("cargo");
+                command.arg("build").current_dir(pwd);
 
                 if let Some(profile) = self.profile.clone() && profile == RustBuildProfile::Release {
                     command.arg("--release");

@@ -31,7 +31,7 @@ pub fn build_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
         return Err(Report::msg(format!("project not found: {project_name}")))
     };
 
-    project.build()?;
+    project.build(project_name.clone())?;
 
     Ok(())
 }
