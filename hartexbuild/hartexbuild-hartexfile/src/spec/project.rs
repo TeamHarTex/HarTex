@@ -48,6 +48,10 @@ impl Project {
                     command.arg("--release");
                 }
 
+                if let Some(include_debug_info) = self.include_debug_info && include_debug_info {
+                    command.env("RUSTFLAGS", "-g");
+                }
+
                 command
                     .status()?
                     .exit_ok()
