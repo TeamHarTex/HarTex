@@ -39,7 +39,9 @@ impl Project {
     pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
         let result = match self.r#type {
             ProjectType::JsTs => {
-                let package_manager = self.package_manager.clone().ok_or(Report::msg("package manager not specified for jsts project"))?;
+                let package_manager = self.package_manager.clone().ok_or(Report::msg(
+                    "package manager not specified for jsts project",
+                ))?;
                 let mut command = package_manager.into_command();
                 command.arg("build").status()?.exit_ok()
             }
@@ -58,9 +60,7 @@ impl Project {
                     command.env("RUSTFLAGS", "-g");
                 }
 
-                command
-                    .status()?
-                    .exit_ok()
+                command.status()?.exit_ok()
             }
         };
 
