@@ -37,9 +37,11 @@ pub struct Project {
 
 impl Project {
     pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
-        match self.r#type {
+        let result = match self.r#type {
             ProjectType::JsTs => {
-                todo!()
+                let package_manager = self.package_manager.clone().ok_or(Report::msg("package manager not specified for jsts project"))?;
+                let mut command = package_manager.into_command();
+                command.arg("build").status()?.exit_ok()
             }
             ProjectType::Rust => {
                 let mut pwd = env::current_dir()?;
@@ -59,11 +61,10 @@ impl Project {
                 command
                     .status()?
                     .exit_ok()
-                    .map_err(|error| Report::msg(format!("abnormal termination: {error}")))?;
             }
-        }
+        };
 
-        Ok(())
+        result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
 }
 
@@ -74,11 +75,22 @@ pub enum ProjectType {
     Rust,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum JsTsPackageManager {
     Npm,
     Yarn,
+}
+
+impl JsTsPackageManager {
+    pub fn into_command(self) -> Command {
+        let program = match self {
+            Self::Npm => "npm",
+            Self::Yarn => "yarn",
+        };
+
+        Command::new(program)
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
