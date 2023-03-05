@@ -21,17 +21,17 @@
  */
 
 use clap::ArgMatches;
+use hartex_eyre::eyre::Report;
 
-use crate::commands;
+pub fn lint_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
+    let file = hartexbuild_hartexfile::from_manifest()?;
 
-pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
-    match matches.subcommand() {
-        Some(("build", subcommand_matches)) => {
-            commands::build::build_command(subcommand_matches.clone())
-        }
-        Some(("lint", subcommand_matches)) => {
-            commands::lint::lint_command(subcommand_matches.clone())
-        }
-        _ => Ok(()),
-    }
+    let project_name = matches.get_one::<String>("project").unwrap();
+    let Some(project) = file.projects.get(project_name) else {
+        return Err(Report::msg(format!("project not found: {project_name}")))
+    };
+
+    project.lint(project_name.clone())?;
+
+    Ok(())
 }
