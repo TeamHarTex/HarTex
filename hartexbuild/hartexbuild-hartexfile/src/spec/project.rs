@@ -32,7 +32,6 @@ pub struct Project {
     pub r#type: ProjectType,
     pub profile: Option<RustBuildProfile>,
     pub include_debug_info: Option<bool>,
-    pub package_manager: Option<JsTsPackageManager>,
 }
 
 impl Project {
@@ -42,10 +41,7 @@ impl Project {
 
         let result = match self.r#type {
             ProjectType::JsTs => {
-                let package_manager = self.package_manager.clone().ok_or(Report::msg(
-                    "package manager not specified for jsts project",
-                ))?;
-                let mut command = package_manager.into_command();
+                let mut command = Command::new("yarn");
                 command.current_dir(pwd).arg("build");
                 command.status()?.exit_ok()
             }
@@ -74,10 +70,7 @@ impl Project {
 
         let result = match self.r#type {
             ProjectType::JsTs => {
-                let package_manager = self.package_manager.clone().ok_or(Report::msg(
-                    "package manager not specified for jsts project",
-                ))?;
-                let mut command = package_manager.into_command();
+                let mut command = Command::new("yarn");
                 command.arg("eslint").current_dir(pwd);
                 command.status()?.exit_ok()
             }
@@ -101,24 +94,6 @@ impl Project {
 pub enum ProjectType {
     JsTs,
     Rust,
-}
-
-#[derive(Clone, Debug, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum JsTsPackageManager {
-    Npm,
-    Yarn,
-}
-
-impl JsTsPackageManager {
-    pub fn into_command(self) -> Command {
-        let program = match self {
-            Self::Npm => "npm",
-            Self::Yarn => "yarn",
-        };
-
-        Command::new(program)
-    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]

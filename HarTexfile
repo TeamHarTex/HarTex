@@ -28,6 +28,4 @@ project rust-utilities {
 
 project web-frontend {
     type = "jsts"
-
-    package-manager = "yarn"
 }
