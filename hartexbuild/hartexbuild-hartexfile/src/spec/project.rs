@@ -37,18 +37,18 @@ pub struct Project {
 
 impl Project {
     pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
+        let mut pwd = env::current_dir()?;
+        pwd.push(name);
+
         let result = match self.r#type {
             ProjectType::JsTs => {
                 let package_manager = self.package_manager.clone().ok_or(Report::msg(
                     "package manager not specified for jsts project",
                 ))?;
-                let mut command = package_manager.into_command();
+                let mut command = package_manager.into_command().current_dir(pwd);
                 command.arg("build").status()?.exit_ok()
             }
             ProjectType::Rust => {
-                let mut pwd = env::current_dir()?;
-                pwd.push(name);
-
                 let mut command = Command::new("cargo");
                 command.arg("build").current_dir(pwd);
 
@@ -67,8 +67,30 @@ impl Project {
         result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
 
-    pub fn lint(&self, _: String) -> hartex_eyre::Result<()> {
-        Ok(())
+    pub fn lint(&self, name: String) -> hartex_eyre::Result<()> {
+        let mut pwd = env::current_dir()?;
+        pwd.push(name);
+
+        let result = match self.r#type {
+            ProjectType::JsTs => {
+                let package_manager = self.package_manager.clone().ok_or(Report::msg(
+                    "package manager not specified for jsts project",
+                ))?;
+                let mut command = package_manager.into_command().current_dir(pwd);
+                command.arg("eslint").status()?.exit_ok()
+            }
+            ProjectType::Rust => {
+                let mut command = Command::new("cargo");
+                command.arg("clippy").current_dir(pwd.clone());
+                command.status()?.exit_ok()?;
+
+                let mut command = Command::new("cargo");
+                command.arg("fmt").current_dir(pwd);
+                command.status()?.exit_ok()
+            }
+        };
+
+        result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
 }
 
