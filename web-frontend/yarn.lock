@@ -1305,32 +1305,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/kit@npm:@nuxt/kit-edge@latest":
-  version: 3.3.0-27965718.b73ca9143
-  resolution: "@nuxt/kit-edge@npm:3.3.0-27965718.b73ca9143"
-  dependencies:
-    "@nuxt/schema": "npm:@nuxt/schema-edge@3.3.0-27965718.b73ca9143"
-    c12: ^1.1.2
-    consola: ^2.15.3
-    defu: ^6.1.2
-    globby: ^13.1.3
-    hash-sum: ^2.0.0
-    ignore: ^5.2.4
-    jiti: ^1.17.1
-    knitwork: ^1.0.0
-    lodash.template: ^4.5.0
-    mlly: ^1.1.1
-    pathe: ^1.1.0
-    pkg-types: ^1.0.2
-    scule: ^1.0.0
-    semver: ^7.3.8
-    unctx: ^2.1.2
-    unimport: ^3.0.2
-    untyped: ^1.2.2
-  checksum: 94e75d8088a9679d72a961aabb335ada2ff965b5dd485c8c03d8a4904fd9612505c3bc7a706d0336412192607c25b15e3bce2c183655bae032767f91e15c2ae6
-  languageName: node
-  linkType: hard
-
 "@nuxt/postcss8@npm:^1.1.3":
   version: 1.1.3
   resolution: "@nuxt/postcss8@npm:1.1.3"
@@ -1365,27 +1339,6 @@ __metadata:
     unimport: ^2.2.4
     untyped: ^1.2.2
   checksum: 3cf137a0038af5b185ea3af2594f21798b7c821e24bd42f51da972d6ffb73ebde6b9fd44febc3b833aa669f535031e26d6a459ffcf211a6ba9ba9504bfefee5d
-  languageName: node
-  linkType: hard
-
-"@nuxt/schema@npm:@nuxt/schema-edge@3.3.0-27965718.b73ca9143":
-  version: 3.3.0-27965718.b73ca9143
-  resolution: "@nuxt/schema-edge@npm:3.3.0-27965718.b73ca9143"
-  dependencies:
-    c12: ^1.1.2
-    create-require: ^1.1.1
-    defu: ^6.1.2
-    hookable: ^5.4.2
-    jiti: ^1.17.1
-    pathe: ^1.1.0
-    pkg-types: ^1.0.2
-    postcss-import-resolver: ^2.0.0
-    scule: ^1.0.0
-    std-env: ^3.3.2
-    ufo: ^1.1.1
-    unimport: ^3.0.2
-    untyped: ^1.2.2
-  checksum: b826fce33f965d36309aca2e4f2b91bdd7e8ddb48f560ad67bd583b14fab932bc9b103456f5689b26c7fd314eeb0ded2ba2aacbbbf19f9855a6a3bf9a320bc78
   languageName: node
   linkType: hard
 
@@ -8633,7 +8586,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@nuxt/kit": "npm:@nuxt/kit-edge@latest"
     "@nuxtjs/eslint-config-typescript": ^12.0.0
     "@nuxtjs/google-fonts": ^3.0.0-1
     "@nuxtjs/tailwindcss": ^6.4.1
@@ -9709,25 +9661,6 @@ __metadata:
     strip-literal: ^1.0.0
     unplugin: ^1.0.1
   checksum: a5bc5379989279ed56b59ddad8e0b78bcad8da8c8d0b11f4e6841779e3a45b00712442462fbfcbd08c7558f99aa50d05660715ba25c5b750e9bebf212db979e3
-  languageName: node
-  linkType: hard
-
-"unimport@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "unimport@npm:3.0.2"
-  dependencies:
-    "@rollup/pluginutils": ^5.0.2
-    escape-string-regexp: ^5.0.0
-    fast-glob: ^3.2.12
-    local-pkg: ^0.4.3
-    magic-string: ^0.30.0
-    mlly: ^1.1.1
-    pathe: ^1.1.0
-    pkg-types: ^1.0.2
-    scule: ^1.0.0
-    strip-literal: ^1.0.1
-    unplugin: ^1.1.0
-  checksum: 5ecd379af5f975f87a1d3e341c0310e1bf406c49287a665ce2d961bc29d575b571128ffb2158b8ba27709ef61477ee27c1ef233df7646570c932655b735d185c
   languageName: node
   linkType: hard
 
