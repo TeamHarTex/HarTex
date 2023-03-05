@@ -45,8 +45,9 @@ impl Project {
                 let package_manager = self.package_manager.clone().ok_or(Report::msg(
                     "package manager not specified for jsts project",
                 ))?;
-                let mut command = package_manager.into_command().current_dir(pwd);
-                command.arg("build").status()?.exit_ok()
+                let mut command = package_manager.into_command();
+                command.current_dir(pwd).arg("build");
+                command.status()?.exit_ok()
             }
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
@@ -76,8 +77,9 @@ impl Project {
                 let package_manager = self.package_manager.clone().ok_or(Report::msg(
                     "package manager not specified for jsts project",
                 ))?;
-                let mut command = package_manager.into_command().current_dir(pwd);
-                command.arg("eslint").status()?.exit_ok()
+                let mut command = package_manager.into_command();
+                command.arg("eslint").current_dir(pwd);
+                command.status()?.exit_ok()
             }
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
