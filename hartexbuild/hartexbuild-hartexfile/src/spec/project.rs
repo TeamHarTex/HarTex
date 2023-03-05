@@ -66,6 +66,10 @@ impl Project {
 
         result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
+
+    pub fn lint(&self, _: String) -> hartex_eyre::Result<()> {
+        Ok(())
+    }
 }
 
 #[derive(Debug, Deserialize)]
