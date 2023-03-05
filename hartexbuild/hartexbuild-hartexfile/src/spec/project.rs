@@ -97,14 +97,14 @@ impl Project {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "lowercase")]
 pub enum ProjectType {
     JsTs,
     Rust,
 }
 
 #[derive(Clone, Debug, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "lowercase")]
 pub enum JsTsPackageManager {
     Npm,
     Yarn,
