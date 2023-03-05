@@ -41,8 +41,8 @@ impl Project {
 
         let result = match self.r#type {
             ProjectType::JsTs => {
-                let mut command = Command::new("yarn");
-                command.current_dir(pwd).arg("build");
+                let mut command = Command::new("pwsh");
+                command.current_dir(pwd).arg("-c").arg("yarn build");
                 command.status()?.exit_ok()
             }
             ProjectType::Rust => {
@@ -70,8 +70,8 @@ impl Project {
 
         let result = match self.r#type {
             ProjectType::JsTs => {
-                let mut command = Command::new("yarn");
-                command.arg("eslint").current_dir(pwd);
+                let mut command = Command::new("pwsh");
+                command.current_dir(pwd).arg("-c").arg("yarn eslint");
                 command.status()?.exit_ok()
             }
             ProjectType::Rust => {
