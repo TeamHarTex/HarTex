@@ -18,5 +18,5 @@ hartex_localization_core = { path = "../hartex-localization-core" }
 hartex_localization_macros = { path = "../hartex-localization-macros" }
 
 macrotest = { git = "https://github.com/TeamHarTex/macrotest.git", branch = "master" }
-rustversion = "1.0.11"
+rustversion = "1.0.12"
 trybuild = "1.0.79"
