@@ -21,3 +21,4 @@ jobs:
         with:
           files: ./target/release/hartexbuild
           tag: buildsystem-2023-03-07
+          name: Buildsystem (7 March 2023)
