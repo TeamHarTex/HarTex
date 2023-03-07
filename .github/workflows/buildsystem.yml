@@ -16,11 +16,9 @@ jobs:
           toolchain: nightly
       - name: Build buildsystem
         run: cd hartexbuild && cargo build --release
-      - name: List Files
-        run: ls target/release
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: target/release/hartexbuild
+          files: hartexbuild/target/release/hartexbuild
           tag_name: buildsystem-2023-03-07
           name: Buildsystem (7 March 2023)
