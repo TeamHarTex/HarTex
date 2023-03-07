@@ -23,9 +23,9 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild build discord-frontend
+        run: ./buildsystem build discord-frontend
 
   TestDiscordFrontend:
     name: discord-frontend - Test
@@ -46,9 +46,9 @@ jobs:
       - name: Install cargo-expand
         uses: dtolnay/install@cargo-expand
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild test discord-frontend
+        run: ./buildsystem test discord-frontend
 
   BuildRustUtilities:
     name: rust-utilities - Full Release Build
@@ -61,9 +61,9 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild build rust-utilities
+        run: ./buildsystem build rust-utilities
 
   BuildLocalizations:
     name: localization - Full Release Build
@@ -76,9 +76,9 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild build localization
+        run: ./buildsystem build localization
 
   TestLocalizations:
     name: localization - Test
@@ -99,6 +99,6 @@ jobs:
       - name: Install cargo-expand
         uses: dtolnay/install@cargo-expand
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild test localization
+        run: ./buildsystem test localization
