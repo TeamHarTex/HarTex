@@ -25,7 +25,7 @@ jobs:
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: chmod +x ./hartxexbuild && ./hartexbuild build discord-frontend
+        run: chmod +x ./hartexbuild && ./hartexbuild build discord-frontend
 
   TestDiscordFrontend:
     name: discord-frontend - Test
@@ -48,7 +48,7 @@ jobs:
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: chmod +x ./hartxexbuild && ./hartexbuild test discord-frontend
+        run: chmod +x ./hartexbuild && ./hartexbuild test discord-frontend
 
   BuildRustUtilities:
     name: rust-utilities - Full Release Build
@@ -63,7 +63,7 @@ jobs:
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: chmod +x ./hartxexbuild && ./hartexbuild build rust-utilities
+        run: chmod +x ./hartexbuild && ./hartexbuild build rust-utilities
 
   BuildLocalizations:
     name: localization - Full Release Build
@@ -78,7 +78,7 @@ jobs:
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: chmod +x ./hartxexbuild && ./hartexbuild build localization
+        run: chmod +x ./hartexbuild && ./hartexbuild build localization
 
   TestLocalizations:
     name: localization - Test
@@ -101,4 +101,4 @@ jobs:
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: chmod +x ./hartxexbuild && ./hartexbuild test localization
+        run: chmod +x ./hartexbuild && ./hartexbuild test localization
