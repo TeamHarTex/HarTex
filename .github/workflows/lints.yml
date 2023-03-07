@@ -21,9 +21,9 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/buildsystem
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: ./buildsystem clippy discord-frontend
+        run: ./hartexbuild clippy discord-frontend
 
   RustfmtDiscordFrontend:
     name: discord-frontend - Rustfmt
@@ -37,9 +37,9 @@ jobs:
           components: rustfmt
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/buildsystem
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: ./buildsystem formatck discord-frontend
+        run: ./hartexbuild formatck discord-frontend
 
   ClippyRustUtilities:
     name: rust-utilities - Clippy
@@ -53,9 +53,9 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/buildsystem
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: ./buildsystem clippy rust-utilities
+        run: ./hartexbuild clippy rust-utilities
 
   RustfmtRustUtilities:
     name: rust-utilities - Rustfmt
@@ -69,9 +69,9 @@ jobs:
           components: rustfmt
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/buildsystem
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: ./buildsystem formatck rust-utilities
+        run: ./hartexbuild formatck rust-utilities
 
   ClippyLocalization:
     name: localization - Clippy
@@ -85,9 +85,9 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/buildsystem
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: ./buildsystem clippy localization
+        run: ./hartexbuild clippy localization
 
   RustfmtLocalization:
     name: localization - Rustfmt
@@ -101,6 +101,6 @@ jobs:
           components: rustfmt
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/buildsystem
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
       - name: Run Buildsystem
-        run: ./buildsystem formatck localization
+        run: ./hartexbuild formatck localization
