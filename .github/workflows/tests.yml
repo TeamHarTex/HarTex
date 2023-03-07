@@ -23,7 +23,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
         run: ./buildsystem build discord-frontend
 
@@ -46,7 +46,7 @@ jobs:
       - name: Install cargo-expand
         uses: dtolnay/install@cargo-expand
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
         run: ./buildsystem test discord-frontend
 
@@ -61,7 +61,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
         run: ./buildsystem build rust-utilities
 
@@ -76,7 +76,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
         run: ./buildsystem build localization
 
@@ -99,6 +99,6 @@ jobs:
       - name: Install cargo-expand
         uses: dtolnay/install@cargo-expand
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
         run: ./buildsystem test localization
