@@ -1,11 +1,11 @@
-project discord-frontend {
+project buildsystem {
     type = "rust"
 
     profile = "release"
     include-debug-info = true
 }
 
-project hartexbuild {
+project discord-frontend {
     type = "rust"
 
     profile = "release"
