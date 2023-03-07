@@ -10,7 +10,7 @@ env:
 
 jobs:
   ClippyDiscordFrontend:
-    name: discord-frontend - Clippy
+    name: discord-frontend - Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -21,28 +21,12 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild clippy discord-frontend
-
-  RustfmtDiscordFrontend:
-    name: discord-frontend - Rustfmt
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install latest nightly Rust toolchain
-        uses: dtolnay/rust-toolchain@v1
-        with:
-          components: rustfmt
-          toolchain: nightly
-      - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
-      - name: Run Buildsystem
-        run: ./hartexbuild formatck discord-frontend
+        run: ./hartexbuild lint discord-frontend
 
   ClippyRustUtilities:
-    name: rust-utilities - Clippy
+    name: rust-utilities - Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -53,28 +37,12 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild clippy rust-utilities
-
-  RustfmtRustUtilities:
-    name: rust-utilities - Rustfmt
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install latest nightly Rust toolchain
-        uses: dtolnay/rust-toolchain@v1
-        with:
-          components: rustfmt
-          toolchain: nightly
-      - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
-      - name: Run Buildsystem
-        run: ./hartexbuild formatck rust-utilities
+        run: ./buildsystem lint rust-utilities
 
   ClippyLocalization:
-    name: localization - Clippy
+    name: localization - Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -85,22 +53,6 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild -o buildsystem
       - name: Run Buildsystem
-        run: ./hartexbuild clippy localization
-
-  RustfmtLocalization:
-    name: localization - Rustfmt
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install latest nightly Rust toolchain
-        uses: dtolnay/rust-toolchain@v1
-        with:
-          components: rustfmt
-          toolchain: nightly
-      - name: Download Buildsystem
-        run: wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
-      - name: Run Buildsystem
-        run: ./hartexbuild formatck localization
+        run: ./buildsystem lint localization
