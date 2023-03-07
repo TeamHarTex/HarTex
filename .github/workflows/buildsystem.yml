@@ -1,0 +1,18 @@
+name: Buildsystem
+
+on: workflow_dispatch
+
+jobs:
+  BuildAndRelease:
+    name: Build and Release Buildsystem
+    runs-on: ubuntu-latest
+
+  steps:
+    - uses: actions/checkout@v3
+    - name: Install latest nightly Rust toolchain
+      uses: dtolnay/rust-toolchain@v1
+      with:
+        components: clippy
+        toolchain: nightly
+    - name: Build buildsystem
+      run: cd hartexbuild && cargo build --release
