@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
   steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Install latest nightly Rust toolchain
       uses: dtolnay/rust-toolchain@v1
       with:
