@@ -16,3 +16,7 @@ jobs:
         toolchain: nightly
     - name: Build buildsystem
       run: cd hartexbuild && cargo build --release
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./target/release/hartexbuild
