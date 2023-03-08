@@ -21,7 +21,7 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild lint discord-frontend
 
@@ -37,7 +37,7 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild lint rust-utilities
 
@@ -53,6 +53,6 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild lint localization
