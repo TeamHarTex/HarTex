@@ -23,7 +23,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild build discord-frontend
 
@@ -46,7 +46,7 @@ jobs:
       - name: Install cargo-expand
         uses: dtolnay/install@cargo-expand
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild test discord-frontend
 
@@ -61,7 +61,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild build rust-utilities
 
@@ -76,7 +76,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild build localization
 
@@ -99,6 +99,6 @@ jobs:
       - name: Install cargo-expand
         uses: dtolnay/install@cargo-expand
       - name: Download Buildsystem
-        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-07/hartexbuild
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild test localization
