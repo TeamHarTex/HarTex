@@ -18,7 +18,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
+          components: clippy, rustfmt
           toolchain: nightly
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
@@ -34,7 +34,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
+          components: clippy, rustfmt
           toolchain: nightly
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
@@ -50,7 +50,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
+          components: clippy, rustfmt
           toolchain: nightly
       - name: Download Buildsystem
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-03-08/hartexbuild
