@@ -3,6 +3,14 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
       <module name="buildsystem" target="17" />
+      <module name="buildsystem.main" target="17" />
+      <module name="buildsystem.script-def" target="17" />
+      <module name="buildsystem.script-def.main" target="17" />
+      <module name="buildsystem.script-def.test" target="17" />
+      <module name="buildsystem.script-host" target="17" />
+      <module name="buildsystem.script-host.main" target="17" />
+      <module name="buildsystem.script-host.test" target="17" />
+      <module name="buildsystem.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
