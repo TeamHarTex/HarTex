@@ -87,6 +87,24 @@ impl Project {
 
         result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
+
+    pub fn test(&self, name: String) -> hartex_eyre::Result<()> {
+        let mut pwd = env::current_dir()?;
+        pwd.push(name);
+
+        let result = match self.r#type {
+            ProjectType::JsTs => {
+                return Err(Report::msg("testing currently not supported for jsts projects"));
+            }
+            ProjectType::Rust => {
+                let mut command = Command::new("cargo");
+                command.arg("nextest").arg("run").current_dir(pwd.clone());
+                command.status()?.exit_ok()
+            }
+        };
+
+        result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
+    }
 }
 
 #[derive(Debug, Deserialize)]

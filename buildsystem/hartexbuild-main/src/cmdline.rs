@@ -32,6 +32,9 @@ pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
         Some(("lint", subcommand_matches)) => {
             commands::lint::lint_command(subcommand_matches.clone())
         }
+        Some(("test", subcommand_matches)) => {
+            commands::test::test_command(subcommand_matches.clone())
+        }
         _ => Ok(()),
     }
 }
