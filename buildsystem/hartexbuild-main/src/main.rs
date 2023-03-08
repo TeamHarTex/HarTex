@@ -44,6 +44,11 @@ pub fn main() -> hartex_eyre::Result<()> {
             Command::new("lint")
                 .about("Lints a specified project.")
                 .arg(Arg::new("project").required(true).action(ArgAction::Set)),
+        )
+        .subcommand(
+            Command::new("test")
+                .about("Tests a specified project.")
+                .arg(Arg::new("project").required(true).action(ArgAction::Set)),
         );
 
     let matches = command.get_matches();
