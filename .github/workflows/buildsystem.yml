@@ -19,6 +19,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: hartexbuild/target/release/hartexbuild
+          files: buildsystem/target/release/hartexbuild
           tag_name: buildsystem-2023-03-08
           name: Buildsystem (8 March 2023)
