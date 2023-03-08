@@ -15,7 +15,7 @@ jobs:
           components: clippy
           toolchain: nightly
       - name: Build buildsystem
-        run: cd hartexbuild && cargo build --release
+        run: cd buildsystem && cargo build --release
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
