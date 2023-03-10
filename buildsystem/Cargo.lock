@@ -196,18 +196,30 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 
 [[package]]
-name = "hcl-rs"
-version = "0.13.2"
+name = "hcl-primitives"
+version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "927849a0084a69a2c094e7b1d3ab60be84f2c9b876cc0b0a0ca4ca48b8a2fddf"
+checksum = "e7c4d4e9b8dc1f479a8f20e0bb4628f8f14222eae189975fc300ca860542c272"
 dependencies = [
+ "itoa",
+ "kstring",
+ "ryu",
+ "serde",
+ "unicode-ident",
+]
+
+[[package]]
+name = "hcl-rs"
+version = "0.13.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f31decdef303eb59ac5fb157bae6993da34b6c5f5a13734bc15a998ceb62d8f1"
+dependencies = [
+ "hcl-primitives",
  "indexmap",
  "itoa",
  "pest",
  "pest_derive",
- "ryu",
  "serde",
- "unicode-ident",
  "vecmap-rs",
 ]
 
@@ -261,6 +273,16 @@ name = "itoa"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "453ad9f582a441959e5f0d088b02ce04cfe8d51a8eaf077f12ac6d3e94164ca6"
+
+[[package]]
+name = "kstring"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec3066350882a1cd6d950d055997f379ac37fd39f81cd4d8ed186032eb3c5747"
+dependencies = [
+ "serde",
+ "static_assertions",
+]
 
 [[package]]
 name = "libc"
@@ -428,6 +450,12 @@ dependencies = [
  "cpufeatures",
  "digest",
 ]
+
+[[package]]
+name = "static_assertions"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "strsim"
