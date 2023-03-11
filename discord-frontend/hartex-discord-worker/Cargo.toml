@@ -21,7 +21,7 @@ hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycac
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 
-futures-util = "0.3.26"
+futures-util = "0.3.27"
 once_cell = "1.17.1"
 rdkafka = { version = "0.29.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
 serde = "1.0.154"
