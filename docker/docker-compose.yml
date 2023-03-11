@@ -47,3 +47,5 @@ services:
   scylla:
     image: scylladb/scylla:latest
     container_name: scylla-1
+    ports:
+      - "9042:9042"
