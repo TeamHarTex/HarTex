@@ -3,7 +3,6 @@
 **/venv
 **/out
 **/target
-buildconf.toml
 **/env.vars
 **/.env
 **/.netlify

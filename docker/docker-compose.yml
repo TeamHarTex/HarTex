@@ -43,15 +43,11 @@ services:
       - "9092:9092"
       - "28082:28082"
       - "29092:29092"
-  surreal:
-    image: surrealdb/surrealdb:latest
-    container_name: surreal-1
-    command:
-      - start
-      - --log
-      - full
-      - --strict
-      - --pass
-      - "${SURREALDB_MASTERPASS}"
+
+  scylla:
+    image: scylladb/scylla:latest
+    container_name: scylla-1
     ports:
-      - "8000:8000"
+      - "9042:9042"
+    volumes:
+      - ../configuration/scylla.yaml:/etc/scylla/scylla.yaml
