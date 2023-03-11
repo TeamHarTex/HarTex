@@ -246,7 +246,7 @@ authenticator: PasswordAuthenticator
 # - com.scylladb.auth.TransitionalAuthorizer wraps around the CassandraAuthorizer, using it for
 #   authorizing permission management. Otherwise, it allows all. Use for upgrading
 #   clusters' auth.
-# authorizer: AllowAllAuthorizer
+authorizer: CassandraAuthorizer
 
 # initial_token allows you to specify tokens manually.  While you can use # it with
 # vnodes (num_tokens > 1, above) -- in which case you should provide a
