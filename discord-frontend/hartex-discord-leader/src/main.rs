@@ -78,9 +78,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         tokio::select! {
             _ = inbound::handle(shards.iter_mut(), producer) => {},
             _ = rx.changed() => {
-                future::join_all(shards.iter_mut().map(|shard: &mut Shard| async move {
-                    shard.close(CloseFrame::RESUME).await
-                })).await;
+                future::join_all(shards.iter_mut().map(|shard: &mut Shard|shard.close(CloseFrame::RESUME))).await;
             },
         }
     });
