@@ -49,3 +49,5 @@ services:
     container_name: scylla-1
     ports:
       - "9042:9042"
+    volumes:
+      - ../configuration/scylla.yaml:/etc/scylla/scylla.yaml
