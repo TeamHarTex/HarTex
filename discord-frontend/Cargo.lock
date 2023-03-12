@@ -845,6 +845,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_scan",
+ "time 0.3.20",
  "tracing",
 ]
 

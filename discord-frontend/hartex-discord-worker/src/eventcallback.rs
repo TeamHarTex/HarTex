@@ -28,6 +28,7 @@ use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::log;
 use hartex_discord_core::scylla::SessionBuilder;
 use hartex_discord_core::scylla::transport::Compression;
+use time::OffsetDateTime;
 
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
     #[allow(clippy::collapsible_match)]
@@ -48,12 +49,20 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
 
                 let username = env::var("HARTEX_NIGHTLY_SCYLLADB_USERNAME")?;
                 let passwd = env::var("HARTEX_NIGHTLY_SCYLLADB_PASSWORD")?;
-                let _ = SessionBuilder::new()
+                let session = SessionBuilder::new()
                     .known_node("localhost:9042")
                     .compression(Some(Compression::Lz4))
                     .user(username, passwd)
                     .build()
                     .await?;
+                let statement = session.prepare(
+                    "INSERT INTO main.start_timestamp (bot_name, current_time) VALUES (?, ?)"
+                ).await?;
+
+                session.execute(
+                    &statement,
+                    ("HarTex Nightly", OffsetDateTime::now_utc().unix_timestamp())
+                ).await?;
 
                 Ok(())
             }
