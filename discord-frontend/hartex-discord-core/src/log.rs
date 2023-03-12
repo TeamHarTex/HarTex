@@ -47,6 +47,7 @@ pub fn initialize() {
         .logger(Logger::builder().build("mio", LevelFilter::Off))
         .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
+        .logger(Logger::builder().build("scylla", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("trust_dns_proto", LevelFilter::Off))
         .logger(Logger::builder().build("trust_dns_resolver", LevelFilter::Off))
