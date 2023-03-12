@@ -26,7 +26,6 @@ use hartex_discord_core::discord::model::application::interaction::InteractionTy
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::log;
-use hartex_discord_core::scylla::frame::value::Timestamp;
 use hartex_discord_core::scylla::SessionBuilder;
 use hartex_discord_core::scylla::transport::Compression;
 use time::OffsetDateTime;
