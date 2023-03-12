@@ -12,7 +12,7 @@ rust-version = "1.69.0"
 
 [dependencies]
 proc-macro2 = "1.0.51"
-quote = "1.0.23"
+quote = "1.0.24"
 syn = "1.0.109"
 
 [lib]
