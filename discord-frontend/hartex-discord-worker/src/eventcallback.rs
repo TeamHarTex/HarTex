@@ -22,13 +22,13 @@
 
 use std::env;
 
+use chrono::Utc;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::log;
 use hartex_discord_core::scylla::SessionBuilder;
 use hartex_discord_core::scylla::transport::Compression;
-use time::OffsetDateTime;
 
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
     #[allow(clippy::collapsible_match)]
@@ -61,7 +61,7 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
 
                 session.execute(
                     &statement,
-                    ("HarTex Nightly", OffsetDateTime::now_utc().unix_timestamp())
+                    ("HarTex Nightly", Utc::now().timestamp_millis())
                 ).await?;
 
                 Ok(())
