@@ -831,6 +831,7 @@ dependencies = [
 name = "hartex_discord_worker"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "futures-util",
  "hartex_discord_commands",
  "hartex_discord_commands_core",
