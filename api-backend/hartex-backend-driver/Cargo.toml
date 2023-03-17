@@ -13,4 +13,6 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
+rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
+
 [features]
