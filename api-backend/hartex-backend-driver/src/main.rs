@@ -20,4 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+#[rocket::main]
+pub async fn main() -> hartex_eyre::Result<()> {
+    let _ = rocket::build().launch().await?;
+    Ok(())
+}
