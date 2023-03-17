@@ -14,12 +14,12 @@ rust-version = "1.69.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment", "logging-facilities"] }
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-clap = "4.1.8"
+clap = "4.1.9"
 hyper = { version = "0.14.25", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 owo-colors = "3.5.0"
 serde = { version = "1.0.156", features = ["derive"] }
 serde_json = "1.0.94"
-walkdir = "2.3.2"
+walkdir = "2.3.3"
 
 [features]
