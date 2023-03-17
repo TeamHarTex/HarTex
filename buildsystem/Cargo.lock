@@ -67,9 +67,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "clap"
-version = "4.1.8"
+version = "4.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3d7ae14b20b94cb02149ed21a86c423859cbe18dc7ed69845cace50e52b40a5"
+checksum = "9a9d6ada83c1edcce028902ea27dd929069c70df4c7600b131b4d9a1ad2879cc"
 dependencies = [
  "bitflags",
  "clap_lex",
@@ -197,9 +197,9 @@ checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 
 [[package]]
 name = "hcl-primitives"
-version = "0.0.1"
+version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7c4d4e9b8dc1f479a8f20e0bb4628f8f14222eae189975fc300ca860542c272"
+checksum = "dbb22e917a64f4fe757f5d6c4df205d1d8867360f63c25545e462258b17493e0"
 dependencies = [
  "itoa",
  "kstring",
@@ -210,9 +210,9 @@ dependencies = [
 
 [[package]]
 name = "hcl-rs"
-version = "0.13.3"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f31decdef303eb59ac5fb157bae6993da34b6c5f5a13734bc15a998ceb62d8f1"
+checksum = "1c2d9dbf868230ca62a12d3adf77930077a37f926af29a468521ac1bac77c58d"
 dependencies = [
  "hcl-primitives",
  "indexmap",
