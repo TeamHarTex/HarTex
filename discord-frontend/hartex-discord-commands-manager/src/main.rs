@@ -31,7 +31,6 @@ use clap::Arg;
 use clap::ArgAction;
 use clap::Command;
 use hartex_discord_core::tokio;
-use hartex_log::log;
 
 mod cmdline;
 mod commands;

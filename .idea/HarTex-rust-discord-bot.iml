@@ -70,6 +70,7 @@
       <sourceFolder url="file://$MODULE_DIR$/buildsystem/hartexbuild-hartexfile/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/buildsystem/hartexbuild-main/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-driver/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-log/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
