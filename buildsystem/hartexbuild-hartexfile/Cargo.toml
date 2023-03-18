@@ -1,5 +1,5 @@
 [package]
-name = "hartexbuild-hartexfile"
+name = "hartexbuild_hartexfile"
 version = "0.1.0"
 edition = "2021"
 description = """
