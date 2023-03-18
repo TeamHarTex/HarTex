@@ -20,21 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_backend_routes_v1::uptime::post_uptime;
-use hartex_log::log;
-use rocket::routes;
+use rocket::post;
 
-#[rocket::main]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_log::initialize();
-
-    log::debug!("igniting rocket");
-    let rocket = rocket::build()
-        .mount("/v1", routes![post_uptime])
-        .ignite().await?;
-
-    log::debug!("launching rocket");
-    rocket.launch().await?;
-
-    Ok(())
+#[post("/v1/uptime")]
+pub async fn post_uptime() {
 }

@@ -172,7 +172,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartexbuild-hartexfile"
+name = "hartexbuild_hartexfile"
 version = "0.1.0"
 dependencies = [
  "hartex_eyre",
@@ -181,12 +181,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartexbuild-main"
+name = "hartexbuild_main"
 version = "0.1.0"
 dependencies = [
  "clap",
  "hartex_eyre",
- "hartexbuild-hartexfile",
+ "hartexbuild_hartexfile",
 ]
 
 [[package]]
