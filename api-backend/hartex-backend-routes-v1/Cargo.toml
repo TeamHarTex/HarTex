@@ -14,7 +14,7 @@ rust-version = "1.69.0"
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-serde = "1.0.156"
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master", features = ["json"] }
+serde = "1.0.156"
 
 [features]
