@@ -539,21 +539,32 @@ version = "0.1.0"
 dependencies = [
  "dotenvy",
  "hartex_backend_routes_v1",
+ "hartex_backend_status_util",
  "hartex_eyre",
  "hartex_log",
  "rocket",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
 name = "hartex_backend_routes_v1"
 version = "0.1.0"
 dependencies = [
+ "hartex_backend_status_util",
  "hartex_eyre",
  "hartex_log",
  "rocket",
  "scylla",
  "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "hartex_backend_status_util"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
 ]
 
 [[package]]
