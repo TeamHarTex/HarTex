@@ -35,6 +35,6 @@ impl<'a> UptimeBody<'a> {
     }
 }
 
-#[post("/v1/uptime", data = "<_data>")]
-pub async fn v1_post_uptime(_data: Json<UptimeBody<'_>>) {
+#[post("/v1/uptime", data = "<data>")]
+pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>) {
 }

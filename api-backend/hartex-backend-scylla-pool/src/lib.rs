@@ -20,32 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
 
-use hartex_backend_routes_v1::uptime::v1_post_uptime;
-use hartex_log::log;
-use rocket::catchers;
-use rocket::routes;
-
-mod catchers;
-
-#[rocket::main]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_log::initialize();
-
-    log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
-
-    log::debug!("igniting rocket");
-    let rocket = rocket::build()
-        .mount("/api/v1", routes![v1_post_uptime])
-        .register("/", catchers![catchers::not_found_404])
-        .ignite().await?;
-
-    log::debug!("launching rocket");
-    rocket.launch().await?;
-
-    Ok(())
-}

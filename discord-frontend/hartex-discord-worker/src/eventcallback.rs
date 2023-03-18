@@ -42,11 +42,11 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                 }
                 DispatchEvent::Ready(ready) => {
                     log::info!(
-                    "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
-                    ready.user.name,
-                    ready.user.discriminator,
-                    ready.version
-                );
+                        "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
+                        ready.user.name,
+                        ready.user.discriminator,
+                        ready.version
+                    );
 
                     let username = env::var("HARTEX_NIGHTLY_SCYLLADB_USERNAME")?;
                     let passwd = env::var("HARTEX_NIGHTLY_SCYLLADB_PASSWORD")?;
@@ -57,8 +57,8 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                         .build()
                         .await?;
                     let statement = session.prepare(
-                    "INSERT INTO main.start_timestamp (bot_name, current_time) VALUES (?, ?)"
-                ).await?;
+                        "INSERT INTO main.start_timestamp (bot_name, current_time) VALUES (?, ?)"
+                    ).await?;
 
                     session
                         .execute(
