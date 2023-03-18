@@ -1,0 +1,16 @@
+[package]
+name = "hartex_backend_status_util"
+version = "0.1.0"
+edition = "2021"
+description = """
+Status utils
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.69.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde_json = "1.0.94"
+
+[features]
