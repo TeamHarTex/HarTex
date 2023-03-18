@@ -24,11 +24,4 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-#[cfg(feature = "environment")]
-pub use dotenvy;
-#[cfg(feature = "database")]
-pub use scylla;
-#[cfg(feature = "async-runtime")]
-pub use tokio;
-
-pub mod discord;
+pub mod uptime;

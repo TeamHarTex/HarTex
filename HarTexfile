@@ -5,6 +5,13 @@ project buildsystem {
     include-debug-info = true
 }
 
+project api-backend {
+    type = "rust"
+
+    profile = "release"
+    include-debug-info = true
+}
+
 project discord-frontend {
     type = "rust"
 

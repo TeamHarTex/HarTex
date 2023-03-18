@@ -3,6 +3,7 @@ members = [
     "hartex-discord-utils",
     "hartex-eyre",
     "hartex-kafka-utils",
+    "hartex-log",
 ]
 
 [profile.release]

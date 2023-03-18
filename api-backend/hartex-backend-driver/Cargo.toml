@@ -1,9 +1,9 @@
 [package]
-name = "hartexbuild_main"
+name = "hartex_backend_driver"
 version = "0.1.0"
 edition = "2021"
 description = """
-HarTex buildsystem binary
+Backend server driver
 """
 license = "AGPL-3.0-only"
 rust-version = "1.69.0"
@@ -11,14 +11,11 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartexbuild_hartexfile = { path = "../hartexbuild-hartexfile" }
+hartex_backend_routes_v1 = { path = "../hartex-backend-routes-v1" }
 
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-clap = "4.1.9"
+rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 
 [features]
-
-[[bin]]
-name = "hartexbuild"
-path = "src/main.rs"
