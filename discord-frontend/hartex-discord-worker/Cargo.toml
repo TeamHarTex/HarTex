@@ -13,13 +13,14 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_discord_commands = { path = "../hartex-discord-commands" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
-hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment", "logging-facilities"] }
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment"] }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 chrono = { version = "0.4.24", features = ["clock"], default-features = false }
 futures-util = "0.3.27"

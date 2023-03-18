@@ -686,6 +686,7 @@ dependencies = [
  "hartex_eyre",
  "hartex_localization_core",
  "hartex_localization_macros",
+ "hartex_log",
 ]
 
 [[package]]
@@ -713,6 +714,7 @@ dependencies = [
  "clap",
  "hartex_discord_core",
  "hartex_eyre",
+ "hartex_log",
  "hyper",
  "hyper-trust-dns",
  "owo-colors",
@@ -737,8 +739,6 @@ name = "hartex_discord_core"
 version = "0.1.0"
 dependencies = [
  "dotenvy",
- "log",
- "log4rs",
  "num_enum",
  "num_enum_derive",
  "scylla",
@@ -815,6 +815,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_eyre",
  "hartex_kafka_utils",
+ "hartex_log",
  "rdkafka",
  "tracing",
 ]
@@ -841,6 +842,7 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_eyre",
  "hartex_kafka_utils",
+ "hartex_log",
  "once_cell",
  "rdkafka",
  "serde",
@@ -882,6 +884,14 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "hartex_log"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "log4rs",
 ]
 
 [[package]]

@@ -26,11 +26,9 @@
 
 #[cfg(feature = "environment")]
 pub use dotenvy;
-#[cfg(feature = "async-runtime")]
-pub use tokio;
 #[cfg(feature = "database")]
 pub use scylla;
+#[cfg(feature = "async-runtime")]
+pub use tokio;
 
 pub mod discord;
-#[cfg(feature = "logging-facilities")]
-pub mod log;

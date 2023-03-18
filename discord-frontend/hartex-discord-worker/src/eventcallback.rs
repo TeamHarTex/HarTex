@@ -26,48 +26,52 @@ use chrono::Utc;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
-use hartex_discord_core::log;
-use hartex_discord_core::scylla::SessionBuilder;
 use hartex_discord_core::scylla::transport::Compression;
+use hartex_discord_core::scylla::SessionBuilder;
+use hartex_log::log;
 
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
     #[allow(clippy::collapsible_match)]
     match event {
-        GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
-            DispatchEvent::InteractionCreate(interaction_create)
-                if interaction_create.kind == InteractionType::ApplicationCommand =>
-            {
-                crate::interaction::application_command(interaction_create).await
-            }
-            DispatchEvent::Ready(ready) => {
-                log::info!(
+        GatewayEvent::Dispatch(seq, dispatch) => {
+            match dispatch {
+                DispatchEvent::InteractionCreate(interaction_create)
+                    if interaction_create.kind == InteractionType::ApplicationCommand =>
+                {
+                    crate::interaction::application_command(interaction_create).await
+                }
+                DispatchEvent::Ready(ready) => {
+                    log::info!(
                     "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
                     ready.user.name,
                     ready.user.discriminator,
                     ready.version
                 );
 
-                let username = env::var("HARTEX_NIGHTLY_SCYLLADB_USERNAME")?;
-                let passwd = env::var("HARTEX_NIGHTLY_SCYLLADB_PASSWORD")?;
-                let session = SessionBuilder::new()
-                    .known_node("localhost:9042")
-                    .compression(Some(Compression::Lz4))
-                    .user(username, passwd)
-                    .build()
-                    .await?;
-                let statement = session.prepare(
+                    let username = env::var("HARTEX_NIGHTLY_SCYLLADB_USERNAME")?;
+                    let passwd = env::var("HARTEX_NIGHTLY_SCYLLADB_PASSWORD")?;
+                    let session = SessionBuilder::new()
+                        .known_node("localhost:9042")
+                        .compression(Some(Compression::Lz4))
+                        .user(username, passwd)
+                        .build()
+                        .await?;
+                    let statement = session.prepare(
                     "INSERT INTO main.start_timestamp (bot_name, current_time) VALUES (?, ?)"
                 ).await?;
 
-                session.execute(
-                    &statement,
-                    ("HarTex Nightly", Utc::now().timestamp_millis())
-                ).await?;
+                    session
+                        .execute(
+                            &statement,
+                            ("HarTex Nightly", Utc::now().timestamp_millis()),
+                        )
+                        .await?;
 
-                Ok(())
+                    Ok(())
+                }
+                _ => Ok(()),
             }
-            _ => Ok(()),
-        },
+        }
         _ => Ok(()),
     }
 }

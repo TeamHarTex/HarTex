@@ -24,8 +24,8 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_discord_core::dotenvy;
-use hartex_discord_core::log;
 use hartex_eyre::eyre::Report;
+use hartex_log::log;
 use walkdir::WalkDir;
 
 use crate::model::command::CommandManagerCommand;
