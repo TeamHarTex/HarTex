@@ -20,15 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+use rocket::post;
+use rocket::serde::json::Json;
+use serde::Deserialize;
 
-#[cfg(feature = "environment")]
-pub use dotenvy;
-#[cfg(feature = "database")]
-pub use scylla;
-#[cfg(feature = "async-runtime")]
-pub use tokio;
+#[derive(Deserialize)]
+pub struct UptimeBody<'a> {
+    component_name: &'a str,
+}
 
-pub mod discord;
+impl<'a> UptimeBody<'a> {
+    pub fn component_name(&self) -> &'a str {
+        self.component_name
+    }
+}
+
+#[post("/v1/uptime", data = "<_data>")]
+pub async fn post_uptime(_data: Json<UptimeBody<'_>>) {
+}

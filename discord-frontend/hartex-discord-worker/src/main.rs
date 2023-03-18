@@ -30,7 +30,6 @@ use std::str;
 use futures_util::StreamExt;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
-use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_utils::CLIENT;
@@ -38,6 +37,7 @@ use hartex_discord_utils::TOKEN;
 use hartex_eyre::eyre::Report;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
+use hartex_log::log;
 use once_cell::sync::Lazy;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
@@ -57,7 +57,7 @@ mod interaction;
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
-    log::initialize();
+    hartex_log::initialize();
 
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;

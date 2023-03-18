@@ -30,7 +30,6 @@ extern crate core;
 use clap::Arg;
 use clap::ArgAction;
 use clap::Command;
-use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 
 mod cmdline;
@@ -40,7 +39,7 @@ mod model;
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
-    log::initialize();
+    hartex_log::initialize();
 
     let command = Command::new("cmdmgr")
         .subcommand(

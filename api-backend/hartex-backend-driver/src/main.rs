@@ -24,11 +24,21 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-#[cfg(feature = "environment")]
-pub use dotenvy;
-#[cfg(feature = "database")]
-pub use scylla;
-#[cfg(feature = "async-runtime")]
-pub use tokio;
+use hartex_backend_routes_v1::uptime::post_uptime;
+use hartex_log::log;
+use rocket::routes;
 
-pub mod discord;
+#[rocket::main]
+pub async fn main() -> hartex_eyre::Result<()> {
+    hartex_log::initialize();
+
+    log::debug!("igniting rocket");
+    let rocket = rocket::build()
+        .mount("/v1", routes![post_uptime])
+        .ignite().await?;
+
+    log::debug!("launching rocket");
+    rocket.launch().await?;
+
+    Ok(())
+}

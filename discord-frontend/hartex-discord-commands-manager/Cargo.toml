@@ -11,10 +11,12 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment", "logging-facilities"] }
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment"] }
 
-clap = "4.1.9"
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
+
+clap = "4.1.10"
 hyper = { version = "0.14.25", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 owo-colors = "3.5.0"
