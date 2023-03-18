@@ -21,7 +21,20 @@
  */
 
 use rocket::post;
+use rocket::serde::json::Json;
+use serde::Deserialize;
 
-#[post("/v1/uptime")]
-pub async fn post_uptime() {
+#[derive(Deserialize)]
+pub struct UptimeBody<'a> {
+    component_name: &'a str,
+}
+
+impl<'a> UptimeBody<'a> {
+    pub fn component_name(&self) -> &'a str {
+        self.component_name
+    }
+}
+
+#[post("/v1/uptime", data = "<_data>")]
+pub async fn post_uptime(_data: Json<UptimeBody<'_>>) {
 }
