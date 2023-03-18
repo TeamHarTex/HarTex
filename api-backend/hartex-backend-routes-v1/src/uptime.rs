@@ -22,15 +22,17 @@
 
 use std::env;
 
+use chrono::Duration;
+use chrono::Utc;
 use hartex_backend_status_util::StatusFns;
 use rocket::post;
 use rocket::serde::json::Json;
-use scylla::frame::Compression;
 use rocket::http::Status;
-use scylla::frame::response::result::CqlValue;
+use scylla::cql_to_rust::FromCqlVal;
+use scylla::frame::Compression;
 use scylla::SessionBuilder;
 use serde::Deserialize;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 #[derive(Deserialize)]
 pub struct UptimeBody<'a> {
@@ -75,9 +77,18 @@ pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>) -> (Status, Value) {
 
     let row = rows.get(0).unwrap();
     let value = row.columns.get(0).unwrap().as_ref().unwrap();
-    let CqlValue::Timestamp(_) = value.clone() else {
+    let duration = Duration::from_cql(value.clone());
+    if duration.is_err() {
         return (Status::InternalServerError, StatusFns::internal_server_error());
-    };
+    }
 
-    todo!()
+    let millis = Utc::now().timestamp_millis() - duration.unwrap().num_milliseconds();
+
+    (Status::Ok, json!({
+        "code": 200,
+        "message": "ok",
+        "data": {
+            "elapsed_millis": millis,
+        }
+    }))
 }
