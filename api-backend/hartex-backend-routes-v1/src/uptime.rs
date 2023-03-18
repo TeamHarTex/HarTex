@@ -20,21 +20,75 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
+use chrono::Duration;
+use chrono::Utc;
+use hartex_backend_status_util::StatusFns;
 use rocket::post;
 use rocket::serde::json::Json;
+use rocket::http::Status;
+use scylla::cql_to_rust::FromCqlVal;
+use scylla::frame::Compression;
+use scylla::SessionBuilder;
 use serde::Deserialize;
+use serde_json::{json, Value};
 
 #[derive(Deserialize)]
 pub struct UptimeBody<'a> {
     component_name: &'a str,
 }
 
-impl<'a> UptimeBody<'a> {
-    pub fn component_name(&self) -> &'a str {
-        self.component_name
+#[post("/v1/uptime", data = "<data>")]
+pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>) -> (Status, Value) {
+    let username = env::var("API_SCYLLADB_USERNAME");
+    let passwd = env::var("API_SCYLLADB_PASSWORD");
+    if username.is_err() || passwd.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
     }
-}
 
-#[post("/v1/uptime", data = "<_data>")]
-pub async fn post_uptime(_data: Json<UptimeBody<'_>>) {
+    let session = SessionBuilder::new()
+        .known_node("localhost:9042")
+        .compression(Some(Compression::Lz4))
+        .user(username.unwrap(), passwd.unwrap())
+        .build()
+        .await;
+    if session.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
+
+    let session = session.unwrap();
+    let statement = session.prepare("SELECT current_time FROM main.start_timestamp WHERE bot_name = ?").await;
+    if statement.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
+
+    let statement = statement.unwrap();
+    let result = session.execute(&statement, (data.component_name.to_string(),)).await;
+    if result.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
+
+    let result = result.unwrap();
+    let rows = result.rows.unwrap();
+    if rows.is_empty() {
+        return (Status::NotFound, StatusFns::not_found());
+    }
+
+    let row = rows.get(0).unwrap();
+    let value = row.columns.get(0).unwrap().as_ref().unwrap();
+    let duration = Duration::from_cql(value.clone());
+    if duration.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
+
+    let millis = Utc::now().timestamp_millis() - duration.unwrap().num_milliseconds();
+
+    (Status::Ok, json!({
+        "code": 200,
+        "message": "ok",
+        "data": {
+            "elapsed_millis": millis,
+        }
+    }))
 }
