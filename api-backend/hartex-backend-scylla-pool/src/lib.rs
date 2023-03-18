@@ -24,14 +24,20 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use rocket::Config;
+use std::env;
+
 use rocket::figment::Figment;
+use rocket_db_pools::Config;
 use rocket_db_pools::Error;
 use rocket_db_pools::Pool;
+use scylla::frame::Compression;
 use scylla::Session;
+use scylla::SessionBuilder;
 use scylla::transport::errors::NewSessionError;
 
-pub struct ScyllaPool;
+pub struct ScyllaPool {
+    url: String,
+}
 
 #[rocket::async_trait]
 impl Pool for ScyllaPool {
@@ -39,16 +45,25 @@ impl Pool for ScyllaPool {
     type Error = Error<NewSessionError>;
 
     async fn init(figment: &Figment) -> Result<Self, Self::Error> {
-        let _ = figment.extract::<Config>()?;
+        let config = figment.extract::<Config>()?;
 
-        todo!()
+        Ok(Self {
+            url: config.url
+        })
     }
 
     async fn get(&self) -> Result<Self::Connection, Self::Error> {
-        todo!()
+        let username = env::var("API_SCYLLADB_USERNAME").unwrap_or(String::new());
+        let passwd = env::var("API_SCYLLADB_PASSWORD").unwrap_or(String::new());
+
+        SessionBuilder::new()
+            .known_node(&self.url)
+            .compression(Some(Compression::Lz4))
+            .user(username, passwd)
+            .build()
+            .await
+            .map_err(Error::Get)
     }
 
-    async fn close(&self) {
-        todo!()
-    }
+    async fn close(&self) {}
 }
