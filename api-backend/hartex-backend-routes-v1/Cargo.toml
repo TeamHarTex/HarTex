@@ -11,11 +11,14 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_backend_status_util = { path = "../hartex-backend-status-util" }
+
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master", features = ["json"] }
 scylla = "0.7.0"
 serde = "1.0.156"
+serde_json = "1.0.94"
 
 [features]
