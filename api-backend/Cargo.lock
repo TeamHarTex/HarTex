@@ -560,6 +560,7 @@ name = "hartex_backend_scylla_pool"
 version = "0.1.0"
 dependencies = [
  "rocket",
+ "rocket_db_pools",
  "scylla",
 ]
 
@@ -1266,6 +1267,25 @@ dependencies = [
  "rocket_http",
  "syn 1.0.109",
  "unicode-xid",
+]
+
+[[package]]
+name = "rocket_db_pools"
+version = "0.1.0-rc.2"
+source = "git+https://github.com/SergioBenitez/Rocket.git?branch=master#0c84af2ea757575f202636b6efd9e847c51ea9d9"
+dependencies = [
+ "rocket",
+ "rocket_db_pools_codegen",
+ "version_check",
+]
+
+[[package]]
+name = "rocket_db_pools_codegen"
+version = "0.1.0-rc.2"
+source = "git+https://github.com/SergioBenitez/Rocket.git?branch=master#0c84af2ea757575f202636b6efd9e847c51ea9d9"
+dependencies = [
+ "devise",
+ "quote",
 ]
 
 [[package]]
