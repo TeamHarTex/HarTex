@@ -31,13 +31,13 @@ use futures_util::future;
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
-use hartex_discord_core::log;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::time;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
+use hartex_log::log;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
@@ -48,7 +48,7 @@ mod shards;
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
-    log::initialize();
+    hartex_log::initialize();
 
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
