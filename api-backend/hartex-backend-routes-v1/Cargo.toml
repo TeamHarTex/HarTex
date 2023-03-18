@@ -15,6 +15,7 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master", features = ["json"] }
+scylla = "0.7.0"
 serde = "1.0.156"
 
 [features]
