@@ -20,4 +20,35 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 
+use rocket::Config;
+use rocket::figment::Figment;
+use rocket_db_pools::Error;
+use rocket_db_pools::Pool;
+use scylla::Session;
+use scylla::transport::errors::NewSessionError;
+
+pub struct ScyllaPool;
+
+#[rocket::async_trait]
+impl Pool for ScyllaPool {
+    type Connection = Session;
+    type Error = Error<NewSessionError>;
+
+    async fn init(figment: &Figment) -> Result<Self, Self::Error> {
+        let _ = figment.extract::<Config>()?;
+
+        todo!()
+    }
+
+    async fn get(&self) -> Result<Self::Connection, Self::Error> {
+        todo!()
+    }
+
+    async fn close(&self) {
+        todo!()
+    }
+}

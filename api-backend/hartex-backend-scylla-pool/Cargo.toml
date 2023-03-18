@@ -12,6 +12,7 @@ rust-version = "1.69.0"
 
 [dependencies]
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
+rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 scylla = "0.7.0"
 
 [features]
