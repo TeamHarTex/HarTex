@@ -487,6 +487,7 @@ dependencies = [
  "hartex_eyre",
  "hartex_log",
  "rocket",
+ "serde",
 ]
 
 [[package]]
@@ -1092,6 +1093,7 @@ dependencies = [
  "rocket_codegen",
  "rocket_http",
  "serde",
+ "serde_json",
  "state",
  "tempfile",
  "time",

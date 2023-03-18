@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use hartex_backend_routes_v1::uptime::post_uptime;
 use hartex_log::log;
 use rocket::routes;
