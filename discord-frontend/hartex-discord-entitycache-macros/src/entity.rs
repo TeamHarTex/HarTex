@@ -123,37 +123,6 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
                 return None;
             }
 
-            let TokenTree::Group(group) = tree.clone().unwrap() else {
-                tree.span().unwrap()
-                    .error("expected token group")
-                    .emit();
-
-                return None;
-            };
-
-            if group.delimiter() != Delimiter::Parenthesis {
-                group
-                    .span()
-                    .unwrap()
-                    .error("expected parenthesized token group")
-                    .emit();
-
-                return None;
-            }
-
-            let mut group_iter = group.stream().into_iter();
-
-            let tree = group_iter.next();
-            if tree.is_none() {
-                group
-                    .span()
-                    .unwrap()
-                    .error("unexpected end of attribute")
-                    .emit();
-
-                return None;
-            }
-
             let TokenTree::Ident(ident) = tree.clone().unwrap() else {
                 tree.span().unwrap()
                     .error("expected identifier")
