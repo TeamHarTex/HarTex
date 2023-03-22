@@ -21,7 +21,6 @@
  */
 
 use proc_macro::Diagnostic;
-use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
 use proc_macro2::TokenTree;
@@ -95,13 +94,13 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
         let mut invalid_attrs = attrs.clone();
 
         // look for non-entity attributes
-        invalid_attrs.retain(|attr| !attr.path.is_ident("entity"));
+        invalid_attrs.retain(|attr| !attr.path().is_ident("entity"));
 
         #[allow(unused_must_use)]
         if !invalid_attrs.is_empty() {
             invalid_attrs
                 .into_iter()
-                .map(|attr| attr.path.span().unwrap())
+                .map(|attr| attr.path().span().unwrap())
                 .map(|span| span.error("expected `entity` attribute"))
                 .map(Diagnostic::emit);
 
@@ -110,42 +109,11 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
 
         // all attributes are entity attributes
         for attr in attrs {
-            let mut tree_iter = attr.tokens.into_iter();
+            let mut tree_iter = attr.parse_args::<TokenStream2>().unwrap().into_iter();
 
             let tree = tree_iter.next();
             if tree.is_none() {
-                attr.path
-                    .span()
-                    .unwrap()
-                    .error("unexpected end of attribute")
-                    .emit();
-
-                return None;
-            }
-
-            let TokenTree::Group(group) = tree.clone().unwrap() else {
-                tree.span().unwrap()
-                    .error("expected token group")
-                    .emit();
-
-                return None;
-            };
-
-            if group.delimiter() != Delimiter::Parenthesis {
-                group
-                    .span()
-                    .unwrap()
-                    .error("expected parenthesized token group")
-                    .emit();
-
-                return None;
-            }
-
-            let mut group_iter = group.stream().into_iter();
-
-            let tree = group_iter.next();
-            if tree.is_none() {
-                group
+                attr.path()
                     .span()
                     .unwrap()
                     .error("unexpected end of attribute")
