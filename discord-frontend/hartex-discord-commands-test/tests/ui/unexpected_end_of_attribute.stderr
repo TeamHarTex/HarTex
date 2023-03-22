@@ -1,5 +1,0 @@
-error: unexpected end of attribute
-  --> tests/ui/unexpected_end_of_attribute.rs:26:3
-   |
-26 | #[metadata]
-   |   ^^^^^^^^
