@@ -110,7 +110,7 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
 
         // all attributes are entity attributes
         for attr in attrs {
-            let mut tree_iter = attr.tokens().into_iter();
+            let mut tree_iter = attr.parse_args::<TokenStream2>().unwrap().into_iter();
 
             let tree = tree_iter.next();
             if tree.is_none() {

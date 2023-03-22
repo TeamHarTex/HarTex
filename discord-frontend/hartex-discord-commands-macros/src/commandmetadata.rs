@@ -106,7 +106,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
     let mut functions = TokenStream2::new();
     let mut previous_attr_name = String::new();
     for attr in correct_attrs {
-        if attr.tokens().is_empty() {
+        if attr.parse_args::<TokenStream2>().unwrap().is_empty() {
             attr.path()
                 .span()
                 .unwrap()
@@ -116,7 +116,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             return None;
         }
 
-        let mut iter = attr.tokens().into_iter().peekable();
+        let mut iter = attr.parse_args::<TokenStream2>().unwrap().into_iter().peekable();
 
         // obtain the group
         let tree = iter.next().unwrap();
