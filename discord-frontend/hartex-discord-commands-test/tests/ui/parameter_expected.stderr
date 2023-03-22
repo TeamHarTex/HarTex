@@ -1,5 +1,0 @@
-error: expected parameter; found none
-  --> tests/ui/parameter_expected.rs:26:11
-   |
-26 | #[metadata()]
-   |           ^^
