@@ -21,7 +21,6 @@
  */
 
 use proc_macro::Diagnostic;
-use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
 use proc_macro2::TokenTree;
@@ -118,38 +117,17 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
 
         let mut iter = attr.parse_args::<TokenStream2>().unwrap().into_iter().peekable();
 
-        // obtain the group
-        let tree = iter.next().unwrap();
-        let TokenTree::Group(group) = tree else {
-            tree.span().unwrap()
-                .error("expected token group")
-                .emit();
-
-            return None;
-        };
-
-        if group.delimiter() != Delimiter::Parenthesis {
-            group
-                .span()
-                .unwrap()
-                .error("expected parenthesized parameter")
-                .emit();
-
-            return None;
-        }
-
-        let mut group_iter = group.stream().into_iter().peekable();
-        let Some(group_tree_first) = group_iter.next() else {
-            group.span().unwrap()
+        let Some(tree_first) = iter.next() else {
+            attr.span().unwrap()
                 .error("expected parameter; found none")
                 .emit();
 
             return None;
         };
 
-        let TokenTree::Ident(ident) = group_tree_first.clone() else {
-            group_tree_first.span().unwrap()
-                .error(format!("expected identifier; found `{group_tree_first}`"))
+        let TokenTree::Ident(ident) = tree_first.clone() else {
+            tree_first.span().unwrap()
+                .error(format!("expected identifier; found `{tree_first}`"))
                 .emit();
 
             return None;
@@ -175,17 +153,17 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             return None;
         }
 
-        let Some(group_tree_next) = group_iter.next() else {
-            group_tree_first.span().unwrap()
+        let Some(tree_next) = iter.next() else {
+            tree_first.span().unwrap()
                 .error("unexpected end of parameter")
                 .emit();
 
             return None;
         };
 
-        let TokenTree::Punct(punct) = group_tree_next.clone() else {
-            group_tree_next.span().unwrap()
-                .error(format!("expected punctuation; found `{group_tree_next}` instead"))
+        let TokenTree::Punct(punct) = tree_next.clone() else {
+            tree_next.span().unwrap()
+                .error(format!("expected punctuation; found `{tree_next}` instead"))
                 .emit();
 
             return None;
@@ -201,8 +179,8 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             return None;
         }
 
-        let Some(group_tree_next) = group_iter.next() else {
-            group_tree_next.span().unwrap()
+        let Some(tree_next) = iter.next() else {
+            tree_next.span().unwrap()
                 .error("unexpected end of parameter")
                 .emit();
 
@@ -210,9 +188,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
         };
 
         if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
-            let TokenTree::Literal(literal) = group_tree_next.clone() else {
-                group_tree_next.span().unwrap()
-                    .error(format!("expected literal; found `{group_tree_next}`"))
+            let TokenTree::Literal(literal) = tree_next.clone() else {
+                tree_next.span().unwrap()
+                    .error(format!("expected literal; found `{tree_next}`"))
                     .emit();
 
                 return None;
@@ -240,7 +218,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
 
                     let expanded = quote::quote! {
                         fn command_type(&self) -> u8 {
-                            #group_tree_next
+                            #tree_next
                         }
                     };
                     functions.extend(expanded);
@@ -248,7 +226,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
                 "name" => {
                     let expanded = quote::quote! {
                         fn name(&self) -> String {
-                            String::from(#group_tree_next)
+                            String::from(#tree_next)
                         }
                     };
                     functions.extend(expanded);
@@ -256,9 +234,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
                 _ => unreachable!(),
             }
         } else if BOOLEAN_PARAMETERS.contains(&ident.to_string().as_str()) {
-            let TokenTree::Ident(ident_bool) = group_tree_next.clone() else {
-                group_tree_next.span().unwrap()
-                    .error(format!("expected identifier; found `{group_tree_next}`"))
+            let TokenTree::Ident(ident_bool) = tree_next.clone() else {
+                tree_next.span().unwrap()
+                    .error(format!("expected identifier; found `{tree_next}`"))
                     .emit();
 
                 return None;
@@ -276,7 +254,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
 
                     let expanded = quote::quote! {
                         fn interaction_only(&self) -> bool {
-                            #group_tree_next
+                            #tree_next
                         }
                     };
                     functions.extend(expanded);
@@ -287,7 +265,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             unreachable!()
         };
 
-        if let Some(extra) = group_iter.next() {
+        if let Some(extra) = iter.next() {
             extra
                 .span()
                 .unwrap()
