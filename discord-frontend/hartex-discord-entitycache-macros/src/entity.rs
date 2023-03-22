@@ -21,7 +21,6 @@
  */
 
 use proc_macro::Diagnostic;
-use proc_macro2::Delimiter;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
 use proc_macro2::TokenTree;
