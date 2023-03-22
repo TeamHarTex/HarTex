@@ -1632,6 +1632,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand_pcg"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59cad018caf63deb318e5a4586d99a24424a364f40f1e5778c29aca23f4fc73e"
+dependencies = [
+ "rand_core",
+]
+
+[[package]]
 name = "rdkafka"
 version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1819,9 +1828,9 @@ dependencies = [
 
 [[package]]
 name = "scylla"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b9d4ef7fb24d95d30c4a8da782bb2afead3a8b66f32c805bb82a03722d7be33"
+checksum = "92a55b3dbfdc77829a3b6b060e01b2a5c5e509b3d24c84324af332081c5f60b2"
 dependencies = [
  "arc-swap",
  "async-trait",
@@ -1837,6 +1846,7 @@ dependencies = [
  "num-bigint",
  "num_enum",
  "rand",
+ "rand_pcg",
  "scylla-cql",
  "scylla-macros",
  "smallvec",
@@ -1851,9 +1861,9 @@ dependencies = [
 
 [[package]]
 name = "scylla-cql"
-version = "0.0.3"
+version = "0.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6972061cbcc83754b4243d007ae51c1a1345a950b368cbdaad0186eac8799203"
+checksum = "c7815e5574cf3b9569e222f5265cdad027d15ca07555b8743518c26839de55c3"
 dependencies = [
  "async-trait",
  "bigdecimal",
@@ -1872,10 +1882,11 @@ dependencies = [
 
 [[package]]
 name = "scylla-macros"
-version = "0.1.2"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e03b3a19daa79085439113c746d2946e5e6effd2d9039bf092bb08df915487b2"
+checksum = "32d777dadbf7163d1524ea4f5a095146298d263a686febb96d022cf46d06df32"
 dependencies = [
+ "proc-macro2",
  "quote",
  "syn 1.0.109",
 ]
@@ -2658,6 +2669,9 @@ name = "uuid"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1674845326ee10d37ca60470760d4288a6f80f304007d92e5c53bab78c9cfd79"
+dependencies = [
+ "getrandom",
+]
 
 [[package]]
 name = "vcpkg"
