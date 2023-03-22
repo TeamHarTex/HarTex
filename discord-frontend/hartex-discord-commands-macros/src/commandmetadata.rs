@@ -89,14 +89,14 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
     // split attribute vector into two
     let mut wrong_paths = input.attrs.clone();
     let correct_attrs = wrong_paths
-        .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path.is_ident("metadata"))
+        .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path().is_ident("metadata"))
         .collect::<Vec<_>>();
 
     #[allow(unused_must_use)]
     if !wrong_paths.is_empty() {
         wrong_paths
             .into_iter()
-            .map(|attr| attr.path.span().unwrap())
+            .map(|attr| attr.path().span().unwrap())
             .map(|span| span.error("expected `metadata` attribute"))
             .map(Diagnostic::emit);
 
@@ -106,8 +106,8 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
     let mut functions = TokenStream2::new();
     let mut previous_attr_name = String::new();
     for attr in correct_attrs {
-        if attr.tokens.is_empty() {
-            attr.path
+        if attr.tokens().is_empty() {
+            attr.path()
                 .span()
                 .unwrap()
                 .error("unexpected end of attribute")
@@ -116,7 +116,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             return None;
         }
 
-        let mut iter = attr.tokens.into_iter().peekable();
+        let mut iter = attr.tokens().into_iter().peekable();
 
         // obtain the group
         let tree = iter.next().unwrap();
