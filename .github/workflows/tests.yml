@@ -40,7 +40,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Install cargo-nextest
-        uses: baptiste0928/cargo-install@v1
+        uses: baptiste0928/cargo-install@v2
         with:
           crate: cargo-nextest
       - name: Install cargo-expand
@@ -93,7 +93,7 @@ jobs:
         with:
           toolchain: nightly
       - name: Install cargo-nextest
-        uses: baptiste0928/cargo-install@v1
+        uses: baptiste0928/cargo-install@v2
         with:
           crate: cargo-nextest
       - name: Install cargo-expand
