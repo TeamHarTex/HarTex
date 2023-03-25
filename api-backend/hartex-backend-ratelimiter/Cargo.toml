@@ -1,0 +1,18 @@
+[package]
+name = "hartex_backend_ratelimiter"
+version = "0.1.0"
+edition = "2021"
+description = """
+Ratelimiting implementation for the backend.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.69.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.66"
+governor = { git = "https://github.com/antifuchs/governor.git" }
+rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
+
+[features]
