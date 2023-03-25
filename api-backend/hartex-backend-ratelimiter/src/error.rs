@@ -21,10 +21,41 @@
  */
 
 use governor::Quota;
+use rocket::http::ContentType;
+use rocket::http::Status;
+use rocket::Request;
+use rocket::Response;
+use rocket::response::Responder;
 
 pub enum LimitError {
     ClientIpNotSpecified,
     RequestRateLimited(u128, Quota),
     RouteNameNotSpecified,
     RouteNotSpecified,
+}
+
+impl<'r, 'o: 'r> Responder<'r, 'o> for &LimitError {
+    fn respond_to(self, request: &'r Request<'_>) -> rocket::response::Result<'o> {
+        let mut response = Response::build()
+            .header(ContentType::JSON)
+            .finalize();
+
+        // todo: finish this
+        match self {
+            LimitError::ClientIpNotSpecified => {
+                response.set_status(Status::InternalServerError);
+            }
+            LimitError::RequestRateLimited(_, _) => {
+                response.set_status(Status::TooManyRequests);
+            }
+            LimitError::RouteNameNotSpecified => {
+                response.set_status(Status::InternalServerError);
+            }
+            LimitError::RouteNotSpecified => {
+                response.set_status(Status::InternalServerError);
+            }
+        }
+
+        Ok(response)
+    }
 }
