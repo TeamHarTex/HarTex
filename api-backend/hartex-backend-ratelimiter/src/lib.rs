@@ -27,8 +27,11 @@ use rocket::request::FromRequest;
 use rocket::request::Outcome;
 use rocket::Request;
 
+use crate::error::LimitError;
 use crate::limitable::Limitable;
+use crate::registry::Registry;
 
+pub mod error;
 pub mod limitable;
 pub(crate) mod registry;
 
@@ -41,8 +44,22 @@ where
 impl<'r, L> RateLimiter<'r, L>
 where
     L: Limitable<'r>, {
-    pub fn handle_from_request(_: &'r Request) -> Outcome<Self, ()> {
-        todo!()
+    pub fn handle_from_request(request: &'r Request) -> Outcome<Self, LimitError> {
+        let result = request.local_cache(|| {
+            if let Some(route) = request.route() {
+                if let Some(route_name) = &route.name {
+                    let limiter = Registry::get_or_insert::<L>(
+                        route.method,
+                        route_name,
+                        L::evaluate_limit(route.method, route_name)
+                    );
+
+                    if let Some(client_ip) = request.client_ip() {
+                        let limit_check_result = limiter.check_key(&client_ip);
+                    }
+                }
+            }
+        });
     }
 }
 
@@ -50,7 +67,7 @@ where
 impl<'r, L> FromRequest<'r> for RateLimiter<'r, L>
 where
     L: Limitable<'r>, {
-    type Error = ();
+    type Error = LimitError;
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         Self::handle_from_request(request)
