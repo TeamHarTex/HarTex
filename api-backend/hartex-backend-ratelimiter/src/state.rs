@@ -22,9 +22,25 @@
 
 use governor::Quota;
 
-pub enum LimitError {
-    ClientIpNotSpecified,
-    RequestRateLimited(u128, Quota),
-    RouteNameNotSpecified,
-    RouteNotSpecified,
+#[derive(Debug)]
+pub struct RequestState {
+    pub(crate) quota: Quota,
+    pub(crate) request_capacity: u32
+}
+
+impl RequestState {
+    pub(crate) fn new(quota: Quota, request_capacity: u32) -> Self {
+        Self {
+            quota,
+            request_capacity,
+        }
+    }
+
+    pub fn quota(&self) -> &Quota {
+        &self.quota
+    }
+
+    pub fn request_capacity(&self) -> u32 {
+        self.request_capacity
+    }
 }
