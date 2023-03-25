@@ -30,6 +30,7 @@ use rocket::Request;
 use crate::limitable::Limitable;
 
 pub mod limitable;
+pub(crate) mod registry;
 
 pub struct RateLimiter<'r, L>
 where
