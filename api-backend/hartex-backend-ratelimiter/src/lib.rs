@@ -23,6 +23,10 @@
 use std::marker::PhantomData;
 
 use async_trait::async_trait;
+use governor::clock::Clock;
+use governor::clock::DefaultClock;
+use lazy_static::lazy_static;
+use rocket::http::Status;
 use rocket::request::FromRequest;
 use rocket::request::Outcome;
 use rocket::Request;
@@ -30,10 +34,12 @@ use rocket::Request;
 use crate::error::LimitError;
 use crate::limitable::Limitable;
 use crate::registry::Registry;
+use crate::state::RequestState;
 
 pub mod error;
 pub mod limitable;
 pub(crate) mod registry;
+pub mod state;
 
 pub struct RateLimiter<'r, L>
 where
@@ -56,10 +62,56 @@ where
 
                     if let Some(client_ip) = request.client_ip() {
                         let limit_check_result = limiter.check_key(&client_ip);
+
+                        match limit_check_result {
+                            Ok(state) => {
+                                let request_capacity = state.remaining_burst_capacity();
+                                let request_state = RequestState::new(state.quota(), request_capacity);
+
+                                let _ = request.local_cache(|| request_state);
+
+                                Ok(())
+                            }
+                            Err(not_until) => {
+                                let wait_time = not_until.wait_time_from(CLOCK.now()).as_millis();
+                                Err(LimitError::RequestRateLimited(wait_time, not_until.quota()))
+                            }
+                        }
+                    } else {
+                        Err(LimitError::ClientIpNotSpecified)
                     }
+                } else {
+                    Err(LimitError::RouteNameNotSpecified)
                 }
+            } else {
+                Err(LimitError::RouteNotSpecified)
             }
         });
+
+        match result {
+            Ok(_) => Outcome::Success(Self::default()),
+            Err(error) => {
+                let error = error.clone();
+
+                match error {
+                    LimitError::RequestRateLimited(_, _) => {
+                        Outcome::Failure((Status::TooManyRequests, error))
+                    }
+                    _ => Outcome::Failure((Status::BadRequest, error))
+                }
+            }
+        }
+    }
+}
+
+impl<'r, T> Default for RateLimiter<'r, T>
+    where
+        T: Limitable<'r>,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData,
+        }
     }
 }
 
@@ -72,4 +124,8 @@ where
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         Self::handle_from_request(request)
     }
+}
+
+lazy_static! {
+    static ref CLOCK: DefaultClock = DefaultClock::default();
 }
