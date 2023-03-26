@@ -565,6 +565,7 @@ name = "hartex_backend_driver"
 version = "0.1.0"
 dependencies = [
  "dotenvy",
+ "hartex_backend_ratelimiter",
  "hartex_backend_routes_v1",
  "hartex_backend_status_util",
  "hartex_eyre",
