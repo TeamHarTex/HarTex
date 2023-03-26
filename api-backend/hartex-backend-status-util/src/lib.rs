@@ -33,6 +33,13 @@ impl StatusFns {
         })
     }
 
+    pub fn method_not_allowed() -> Value {
+        json!({
+            "code": 405,
+            "message": "method not allowed"
+        })
+    }
+
     pub fn too_many_requests() -> Value {
         json!({
             "code": 429,

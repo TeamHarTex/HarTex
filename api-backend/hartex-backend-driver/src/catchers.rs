@@ -30,3 +30,8 @@ use hartex_backend_status_util::StatusFns;
 pub fn not_found(_: &Request) -> (Status, Value) {
     (Status::NotFound, StatusFns::not_found())
 }
+
+#[catch(405)]
+pub fn method_not_allowed(_: &Request) -> (Status, Value) {
+    (Status::MethodNotAllowed, StatusFns::method_not_allowed())
+}
