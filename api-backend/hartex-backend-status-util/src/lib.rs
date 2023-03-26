@@ -33,6 +33,13 @@ impl StatusFns {
         })
     }
 
+    pub fn too_many_requests() -> Value {
+        json!({
+            "code": 429,
+            "message": "too many requests"
+        })
+    }
+
     pub fn internal_server_error() -> Value {
         json!({
             "code": 500,

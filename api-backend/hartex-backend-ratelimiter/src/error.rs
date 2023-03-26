@@ -27,6 +27,7 @@ use rocket::Request;
 use rocket::Response;
 use rocket::response::Responder;
 use hartex_backend_status_util::StatusFns;
+use crate::state::RequestState;
 
 pub enum LimitError {
     ClientIpNotSpecified,
@@ -48,9 +49,18 @@ impl<'r, 'o: 'r> Responder<'r, 'o> for &LimitError {
                 let body = StatusFns::internal_server_error().to_string();
                 response.set_sized_body(body.len(), body);
             }
-            LimitError::RequestRateLimited(_, _) => {
-                // todo: finish this
+            LimitError::RequestRateLimited(wait_time, quota) => {
                 response.set_status(Status::TooManyRequests);
+
+                let state = request.local_cache(|| RequestState::new(quota.clone(), 0));
+
+                response.set_raw_header("Retry-After", wait_time);
+                response.set_raw_header("X-RateLimit-Limit", quota.burst_size().to_string());
+                response.set_raw_header("X-RateLimit-Remaining", state.request_capacity.to_string());
+                response.set_raw_header("X-RateLimit-Reset-After", quota.burst_size_replenished_in().as_secs());
+
+                let body = StatusFns::too_many_requests().to_string();
+                response.set_sized_body(body.len(), body);
             }
             LimitError::RouteNameNotSpecified => {
                 response.set_status(Status::InternalServerError);
