@@ -11,6 +11,7 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_backend_ratelimiter = { path = "../hartex-backend-ratelimiter" }
 hartex_backend_routes_v1 = { path = "../hartex-backend-routes-v1" }
 hartex_backend_status_util = { path = "../hartex-backend-status-util" }
 
