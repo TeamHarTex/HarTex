@@ -30,7 +30,7 @@ use governor::Quota;
 use governor::clock::DefaultClock;
 use governor::middleware::StateInformationMiddleware;
 use governor::state::keyed::DefaultKeyedStateStore;
-use governor::state::keyed::RateLimiter;
+use governor::state::RateLimiter;
 use lazy_static::lazy_static;
 use rocket::http::Method;
 

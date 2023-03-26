@@ -26,6 +26,7 @@
 
 use hartex_backend_routes_v1::uptime::v1_post_uptime;
 use hartex_log::log;
+use rocket::catchers;
 use rocket::routes;
 
 mod catchers;
@@ -40,6 +41,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
     log::debug!("igniting rocket");
     let rocket = rocket::build()
         .mount("/api/v1", routes![v1_post_uptime])
+        .register("/", catchers![catchers::not_found])
         .ignite().await?;
 
     log::debug!("launching rocket");

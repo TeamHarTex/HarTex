@@ -1,11 +1,11 @@
-project buildsystem {
+project api-backend {
     type = "rust"
 
     profile = "release"
     include-debug-info = true
 }
 
-project api-backend {
+project buildsystem {
     type = "rust"
 
     profile = "release"
