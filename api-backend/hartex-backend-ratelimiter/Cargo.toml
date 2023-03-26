@@ -13,7 +13,7 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_backend_status_util = { path = "../hartex-backend-status-util" }
 
-async-trait = "0.1.66"
+async-trait = "0.1.68"
 governor = { git = "https://github.com/antifuchs/governor.git" }
 lazy_static = "1.4.0"
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
