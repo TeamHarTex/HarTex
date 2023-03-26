@@ -65,7 +65,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         .create::<FutureProducer>()?;
 
     log::trace!("building clusters");
-    let num_shards = env::var("NUM_SHARDS")?.parse::<u64>()?;
+    let num_shards = env::var("NUM_SHARDS")?.parse::<u32>()?;
     let queue = queue::obtain()?;
     let mut shards = shards::obtain(num_shards, &queue)?;
 
