@@ -39,7 +39,7 @@ impl<'r> Limitable<'r> for RateLimitGuard {
             (Method::Post, hmm) => {
                 log::debug!("{hmm}");
 
-                Quota::per_second(Self::non_zero(5))
+                Quota::per_second(Self::non_zero(1))
             },
             _ => Quota::per_second(Self::non_zero(1))
         }
