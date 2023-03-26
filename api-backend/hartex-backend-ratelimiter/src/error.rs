@@ -26,6 +26,7 @@ use rocket::http::Status;
 use rocket::Request;
 use rocket::Response;
 use rocket::response::Responder;
+use hartex_backend_status_util::StatusFns;
 
 pub enum LimitError {
     ClientIpNotSpecified,
@@ -40,19 +41,28 @@ impl<'r, 'o: 'r> Responder<'r, 'o> for &LimitError {
             .header(ContentType::JSON)
             .finalize();
 
-        // todo: finish this
         match self {
             LimitError::ClientIpNotSpecified => {
                 response.set_status(Status::InternalServerError);
+
+                let body = StatusFns::internal_server_error().to_string();
+                response.set_sized_body(body.len(), body);
             }
             LimitError::RequestRateLimited(_, _) => {
+                // todo: finish this
                 response.set_status(Status::TooManyRequests);
             }
             LimitError::RouteNameNotSpecified => {
                 response.set_status(Status::InternalServerError);
+
+                let body = StatusFns::internal_server_error().to_string();
+                response.set_sized_body(body.len(), body);
             }
             LimitError::RouteNotSpecified => {
                 response.set_status(Status::InternalServerError);
+
+                let body = StatusFns::internal_server_error().to_string();
+                response.set_sized_body(body.len(), body);
             }
         }
 
