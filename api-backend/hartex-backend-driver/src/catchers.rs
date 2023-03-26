@@ -21,10 +21,12 @@
  */
 
 use rocket::http::Status;
+use rocket::catch;
 use rocket::Request;
 use serde_json::Value;
 use hartex_backend_status_util::StatusFns;
 
+#[catch(404)]
 pub fn not_found(_: &Request) -> (Status, Value) {
     (Status::NotFound, StatusFns::not_found())
 }

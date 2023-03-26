@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(core_intrinsics)]
+
 use std::marker::PhantomData;
 
 use async_trait::async_trait;

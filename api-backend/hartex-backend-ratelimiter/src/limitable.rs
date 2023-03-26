@@ -31,6 +31,6 @@ pub trait Limitable<'r> {
 
     #[inline(always)]
     fn non_zero(i: u32) -> NonZeroU32 {
-        NonZeroU32::new(i).unwrap_or_else(NonZeroU32::new(1))
+        NonZeroU32::new(i).unwrap_or(NonZeroU32::new(1).unwrap())
     }
 }
