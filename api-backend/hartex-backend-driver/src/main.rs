@@ -41,7 +41,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
     log::debug!("igniting rocket");
     let rocket = rocket::build()
         .mount("/api/v1", routes![v1_post_uptime])
-        .register("/", catchers![catchers::not_found])
+        .register("/", catchers![catchers::not_found, catchers::method_not_allowed])
         .ignite().await?;
 
     log::debug!("launching rocket");

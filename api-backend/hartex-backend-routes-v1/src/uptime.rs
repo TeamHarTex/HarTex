@@ -32,15 +32,19 @@ use scylla::cql_to_rust::FromCqlVal;
 use scylla::frame::Compression;
 use scylla::SessionBuilder;
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::json;
+use serde_json::Value;
+use hartex_backend_ratelimiter::RateLimiter;
+
+use crate::RateLimitGuard;
 
 #[derive(Deserialize)]
 pub struct UptimeBody<'a> {
     component_name: &'a str,
 }
 
-#[post("/v1/uptime", data = "<data>")]
-pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>) -> (Status, Value) {
+#[post("/uptime", data = "<data>")]
+pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>, _guard: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
     let username = env::var("API_SCYLLADB_USERNAME");
     let passwd = env::var("API_SCYLLADB_PASSWORD");
     if username.is_err() || passwd.is_err() {
