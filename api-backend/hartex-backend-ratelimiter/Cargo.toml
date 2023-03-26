@@ -11,6 +11,8 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_backend_status_util = { path = "../hartex-backend-status-util" }
+
 async-trait = "0.1.66"
 governor = { git = "https://github.com/antifuchs/governor.git" }
 lazy_static = "1.4.0"
