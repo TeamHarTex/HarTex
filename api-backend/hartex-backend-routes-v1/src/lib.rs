@@ -24,4 +24,24 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use hartex_backend_ratelimiter::limitable::Limitable;
+use governor::Quota;
+use rocket::http::Method;
+use hartex_log::log;
+
 pub mod uptime;
+
+pub struct RateLimitGuard;
+
+impl<'r> Limitable<'r> for RateLimitGuard {
+    fn evaluate_limit(method: Method, route: &str) -> Quota {
+        match (method, route) {
+            (Method::Post, hmm) => {
+                log::debug!("{hmm}");
+
+                Quota::per_second(Self::non_zero(5))
+            },
+            _ => Quota::per_second(Self::non_zero(1))
+        }
+    }
+}
