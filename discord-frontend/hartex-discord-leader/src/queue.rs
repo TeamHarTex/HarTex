@@ -85,7 +85,7 @@ impl Queue for LargeBotQueue {
     #[allow(unused_must_use)]
     fn request(&'_ self, shard_id: [u32; 2]) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
         #[allow(clippy::cast_possible_truncation)]
-        let bucket = (shard_id[0] % (self.0.len() as u64)) as usize;
+        let bucket = (shard_id[0] % (self.0.len() as u32)) as usize;
         let (tx, rx) = oneshot::channel();
 
         Box::pin(async move {
