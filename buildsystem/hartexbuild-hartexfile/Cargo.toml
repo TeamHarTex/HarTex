@@ -13,7 +13,7 @@ rust-version = "1.69.0"
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-serde = { version = "1.0.158", features = ["derive"] }
+serde = { version = "1.0.159", features = ["derive"] }
 hcl-rs = "0.14.0"
 
 [features]
