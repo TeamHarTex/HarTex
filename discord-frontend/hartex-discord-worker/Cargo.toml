@@ -23,7 +23,7 @@ hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 chrono = { version = "0.4.24", features = ["clock"], default-features = false }
-futures-util = "0.3.27"
+futures-util = "0.3.28"
 once_cell = "1.17.1"
 rdkafka = { version = "0.29.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
 serde = "1.0.159"
