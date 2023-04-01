@@ -75,6 +75,7 @@
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-scylla-pool/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-status-util/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-ratelimiter/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-authenticator/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
