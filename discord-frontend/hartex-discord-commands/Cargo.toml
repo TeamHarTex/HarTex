@@ -22,4 +22,6 @@ hartex_localization_macros = { path = "../../localization/hartex-localization-ma
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
+hyper = { version = "0.14.25", features = ["client", "http2"] }
+
 [features]
