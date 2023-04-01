@@ -24,6 +24,7 @@ use std::env;
 
 use chrono::Duration;
 use chrono::Utc;
+use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
 use rocket::post;
 use rocket::serde::json::Json;
@@ -34,7 +35,6 @@ use scylla::SessionBuilder;
 use serde::Deserialize;
 use serde_json::json;
 use serde_json::Value;
-use hartex_backend_ratelimiter::RateLimiter;
 
 use crate::RateLimitGuard;
 
@@ -44,7 +44,7 @@ pub struct UptimeBody<'a> {
 }
 
 #[post("/uptime", data = "<data>")]
-pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>, _guard: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
+pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>, _ratelimit: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
     let username = env::var("API_SCYLLADB_USERNAME");
     let passwd = env::var("API_SCYLLADB_PASSWORD");
     if username.is_err() || passwd.is_err() {
