@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "hartex-backend-authenticator",
     "hartex-backend-driver",
     "hartex-backend-ratelimiter",
     "hartex-backend-routes-v1",
