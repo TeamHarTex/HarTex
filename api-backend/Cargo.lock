@@ -561,6 +561,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_backend_authenticator"
+version = "0.1.0"
+dependencies = [
+ "rocket",
+]
+
+[[package]]
 name = "hartex_backend_driver"
 version = "0.1.0"
 dependencies = [
