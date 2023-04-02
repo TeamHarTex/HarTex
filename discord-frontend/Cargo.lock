@@ -748,6 +748,7 @@ dependencies = [
  "hartex_localization_core",
  "hartex_localization_macros",
  "hartex_log",
+ "hyper",
 ]
 
 [[package]]
