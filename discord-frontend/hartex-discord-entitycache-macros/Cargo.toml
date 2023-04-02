@@ -11,9 +11,9 @@ rust-version = "1.70.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-proc-macro2 = "1.0.54"
+proc-macro2 = "1.0.55"
 quote = "1.0.26"
-syn = { version = "2.0.12", features = ["extra-traits", "full"] }
+syn = { version = "2.0.13", features = ["extra-traits", "full"] }
 
 [features]
 
