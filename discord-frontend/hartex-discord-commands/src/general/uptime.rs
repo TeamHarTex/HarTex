@@ -47,7 +47,6 @@ impl Command for Uptime {
         let api_domain = env::var("API_DOMAIN")?;
         let uri = format!("http://{api_domain}/api/v1/uptime");
 
-        // todo JSON
         let request = Request::builder()
             .uri(uri)
             .method(Method::POST)
@@ -56,7 +55,7 @@ impl Command for Uptime {
                 USER_AGENT,
                 "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend"
             )
-            .body(String::new())?;
+            .body(String::from(r#"{"component_name": "HarTex Nightly"}"#))?;
 
         let mut response = client.request(request).await?;
         let mut full = String::new();
