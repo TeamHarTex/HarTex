@@ -36,6 +36,7 @@
           <option value="http://tiles.apache.org/" />
           <option value="http://{ip}" />
           <option value="http://{}" />
+          <option value="http://{api_domain}" />
         </list>
       </option>
     </inspection_tool>
