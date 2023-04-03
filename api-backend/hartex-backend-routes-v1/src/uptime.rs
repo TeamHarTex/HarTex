@@ -24,6 +24,7 @@ use std::env;
 
 use chrono::Duration;
 use chrono::Utc;
+use hartex_backend_models_v1::uptime::UptimeQuery;
 use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
 use rocket::post;
@@ -32,19 +33,13 @@ use rocket::http::Status;
 use scylla::cql_to_rust::FromCqlVal;
 use scylla::frame::Compression;
 use scylla::SessionBuilder;
-use serde::Deserialize;
 use serde_json::json;
 use serde_json::Value;
 
 use crate::RateLimitGuard;
 
-#[derive(Deserialize)]
-pub struct UptimeBody<'a> {
-    component_name: &'a str,
-}
-
 #[post("/uptime", data = "<data>")]
-pub async fn v1_post_uptime(data: Json<UptimeBody<'_>>, _ratelimit: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
+pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
     let username = env::var("API_SCYLLADB_USERNAME");
     let passwd = env::var("API_SCYLLADB_PASSWORD");
     if username.is_err() || passwd.is_err() {
