@@ -738,9 +738,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_backend_models_v1"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "hartex_discord_commands"
 version = "0.1.0"
 dependencies = [
+ "hartex_backend_models_v1",
  "hartex_discord_commands_core",
  "hartex_discord_core",
  "hartex_discord_utils",
@@ -749,6 +757,7 @@ dependencies = [
  "hartex_localization_macros",
  "hartex_log",
  "hyper",
+ "serde_json",
 ]
 
 [[package]]
