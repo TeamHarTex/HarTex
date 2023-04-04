@@ -63,7 +63,7 @@ pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter
     }
 
     let statement = statement.unwrap();
-    let result = session.execute(&statement, (data.component_name.to_string(),)).await;
+    let result = session.execute(&statement, (data.0.component_name().to_string(),)).await;
     if result.is_err() {
         return (Status::InternalServerError, StatusFns::internal_server_error());
     }

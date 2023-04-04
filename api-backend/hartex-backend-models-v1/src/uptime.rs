@@ -34,5 +34,9 @@ impl<'a> UptimeQuery<'a> {
             component_name
         }
     }
+
+    pub fn component_name(&self) -> &'a str {
+        self.component_name
+    }
 }
 
