@@ -23,6 +23,7 @@
 use std::env;
 use std::str;
 
+use hartex_backend_models_v1::uptime::UptimeQuery;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -47,6 +48,8 @@ impl Command for Uptime {
         let api_domain = env::var("API_DOMAIN")?;
         let uri = format!("http://{api_domain}/api/v1/uptime");
 
+        log::debug!("sending a request to {}", &uri);
+
         let request = Request::builder()
             .uri(uri)
             .method(Method::POST)
@@ -55,7 +58,7 @@ impl Command for Uptime {
                 USER_AGENT,
                 "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend"
             )
-            .body(String::from(r#"{"component_name": "HarTex Nightly"}"#))?;
+            .body(serde_json::to_string(&UptimeQuery::new("HarTex Nightly"))?)?;
 
         let mut response = client.request(request).await?;
         let mut full = String::new();

@@ -11,17 +11,19 @@ rust-version = "1.70.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_backend_models_v1 = { path = "../../api-backend/hartex-backend-models-v1" }
+
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-http", "discord-model", "discord-util", "discord-util-builder"] }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core", features = ["derive"] }
-
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 hartex_localization_macros = { path = "../../localization/hartex-localization-macros" }
 
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
 hyper = { version = "0.14.25", features = ["client", "http2"] }
+serde_json = "1.0.95"
 
 [features]
