@@ -48,6 +48,8 @@ impl Command for Uptime {
         let api_domain = env::var("API_DOMAIN")?;
         let uri = format!("http://{api_domain}/api/v1/uptime");
 
+        log::debug!("sending a request to {}", &uri);
+
         let request = Request::builder()
             .uri(uri)
             .method(Method::POST)
