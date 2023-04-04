@@ -811,7 +811,7 @@ version = "0.1.0"
 dependencies = [
  "dotenvy",
  "num_enum 0.6.0",
- "num_enum_derive 0.5.11",
+ "num_enum_derive 0.6.0",
  "scylla",
  "socket2 0.4.9 (git+https://github.com/rust-lang/socket2.git?branch=v0.4.x)",
  "tokio",
