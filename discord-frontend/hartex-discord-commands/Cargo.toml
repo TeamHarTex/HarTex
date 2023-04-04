@@ -11,6 +11,7 @@ rust-version = "1.70.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_backend_models = { path = "../../api-backend/hartex-backend-models" }
 hartex_backend_models_v1 = { path = "../../api-backend/hartex-backend-models-v1" }
 
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-http", "discord-model", "discord-util", "discord-util-builder"] }

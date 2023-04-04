@@ -40,3 +40,13 @@ impl<'a> UptimeQuery<'a> {
     }
 }
 
+#[derive(Deserialize)]
+pub struct UptimeResponse {
+    elapsed_millis: u128,
+}
+
+impl UptimeResponse {
+    pub fn elapsed_millis(&self) -> u128 {
+        self.elapsed_millis
+    }
+}

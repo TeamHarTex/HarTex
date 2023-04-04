@@ -23,6 +23,7 @@
 use std::env;
 use std::str;
 
+use hartex_backend_models::Response;
 use hartex_backend_models_v1::uptime::UptimeQuery;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
@@ -73,6 +74,8 @@ impl Command for Uptime {
                 response.status()
             )));
         }
+
+        let _ = serde_json::from_str::<Response<UptimeQuery>>(&full)?;
 
         Ok(())
     }
