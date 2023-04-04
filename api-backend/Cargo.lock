@@ -576,6 +576,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_backend_models"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "hartex_backend_models_v1"
 version = "0.1.0"
 dependencies = [
