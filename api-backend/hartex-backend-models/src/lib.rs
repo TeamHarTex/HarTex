@@ -21,32 +21,26 @@
  */
 
 use serde::Deserialize;
-use serde::Serialize;
-
-#[derive(Deserialize, Serialize)]
-pub struct UptimeQuery<'a> {
-    component_name: &'a str,
-}
-
-impl<'a> UptimeQuery<'a> {
-    pub fn new(component_name: &'a str) -> Self {
-        Self {
-            component_name
-        }
-    }
-
-    pub fn component_name(&self) -> &'a str {
-        self.component_name
-    }
-}
 
 #[derive(Deserialize)]
-pub struct UptimeResponse {
-    elapsed_millis: u128,
+pub struct Response<'a, T> {
+    code: u16,
+    message: &'a str,
+    data: T
 }
 
-impl UptimeResponse {
-    pub fn elapsed_millis(&self) -> u128 {
-        self.elapsed_millis
+impl<'a, T> Response<'a, T>
+where
+    T: Clone + Deserialize<'a> {
+    pub fn code(&self) -> u16 {
+        self.code
+    }
+
+    pub fn message(&self) -> &'a str {
+        self.message
+    }
+
+    pub fn data(&self) -> T {
+        self.data.clone()
     }
 }
