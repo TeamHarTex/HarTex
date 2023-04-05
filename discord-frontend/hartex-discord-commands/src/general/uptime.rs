@@ -84,7 +84,7 @@ impl Command for Uptime {
         let data = response.data();
         let timestamp = data.start_timestamp();
 
-        let interaction_client = CLIENT.interaction(interaction.application_id);
+        let _ = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
