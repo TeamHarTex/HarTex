@@ -604,7 +604,6 @@ dependencies = [
 name = "hartex_backend_routes_v1"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "governor",
  "hartex_backend_models_v1",
  "hartex_backend_ratelimiter",
