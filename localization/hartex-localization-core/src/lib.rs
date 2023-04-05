@@ -47,6 +47,8 @@ pub fn create_bundle(
     let fallback = langid!("en-US");
     let locale = requested.unwrap_or(fallback);
     let mut bundle = types::LocalizationBundle::new_concurrent(vec![locale.clone()]);
+    // fix Discord timestamp formatting
+    bundle.set_use_isolating(false);
 
     let mut localizations_root = PathBuf::from("../localization/locales");
     localizations_root.push(locale.to_string());

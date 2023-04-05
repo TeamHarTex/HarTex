@@ -25,10 +25,17 @@ use std::str;
 
 use hartex_backend_models::Response;
 use hartex_backend_models_v1::uptime::UptimeQuery;
+use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
+use hartex_localization_core::{create_bundle, handle_errors};
+use hartex_localization_macros::bundle_get_args;
 use hartex_log::log;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
@@ -44,22 +51,23 @@ use hyper::Request;
 pub struct Uptime;
 
 impl Command for Uptime {
-    async fn execute(&self, _: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let client = Client::builder().build_http::<String>();
         let api_domain = env::var("API_DOMAIN")?;
         let uri = format!("http://{api_domain}/api/v1/uptime");
 
         log::debug!("sending a request to {}", &uri);
 
+        let query = UptimeQuery::new("HarTex Nightly");
         let request = Request::builder()
             .uri(uri)
             .method(Method::POST)
             .header(ACCEPT, "application/json")
             .header(
                 USER_AGENT,
-                "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend"
+                "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend",
             )
-            .body(serde_json::to_string(&UptimeQuery::new("HarTex Nightly"))?)?;
+            .body(serde_json::to_string(&query)?)?;
 
         let mut response = client.request(request).await?;
         let mut full = String::new();
@@ -75,7 +83,35 @@ impl Command for Uptime {
             )));
         }
 
-        let _ = serde_json::from_str::<Response<UptimeQuery>>(&full)?;
+        let response = serde_json::from_str::<Response<UptimeResponse>>(&full)?;
+        let data = response.data();
+        let timestamp = data.start_timestamp();
+
+        let interaction_client = CLIENT.interaction(interaction.application_id);
+        let bundle = create_bundle(
+            interaction.locale.and_then(|locale| locale.parse().ok()),
+            &["discord-frontend", "commands"],
+        )?;
+        let component = query.component_name();
+        bundle_get_args!(bundle."uptime-response": message, out [uptime_response, errors], args ["component" to component, "timestamp" to timestamp]);
+        handle_errors(errors)?;
+
+        log::debug!("{:?}", uptime_response.as_bytes());
+
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content(uptime_response)
+                            .build(),
+                    ),
+                },
+            )
+            .await?;
 
         Ok(())
     }
