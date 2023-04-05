@@ -25,6 +25,7 @@ use std::str;
 
 use hartex_backend_models::Response;
 use hartex_backend_models_v1::uptime::UptimeQuery;
+use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -75,7 +76,9 @@ impl Command for Uptime {
             )));
         }
 
-        let _ = serde_json::from_str::<Response<UptimeQuery>>(&full)?;
+        let response = serde_json::from_str::<Response<UptimeResponse>>(&full)?;
+        let data = response.data();
+        let _ = data.elapsed_millis();
 
         Ok(())
     }

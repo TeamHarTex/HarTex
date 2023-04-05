@@ -77,6 +77,7 @@
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-ratelimiter/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-authenticator/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models-v1/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
