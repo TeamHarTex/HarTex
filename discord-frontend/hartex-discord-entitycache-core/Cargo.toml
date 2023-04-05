@@ -14,7 +14,7 @@ rust-version = "1.70.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros", optional = true }
 
-redis = { version = "0.22.3", features = ["tokio-comp"] }
+redis = { version = "0.23.0", features = ["tokio-comp"] }
 
 [features]
 derive = ["dep:hartex_discord_entitycache_macros"]
