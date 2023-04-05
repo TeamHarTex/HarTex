@@ -115,7 +115,11 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             return None;
         }
 
-        let mut iter = attr.parse_args::<TokenStream2>().unwrap().into_iter().peekable();
+        let mut iter = attr
+            .parse_args::<TokenStream2>()
+            .unwrap()
+            .into_iter()
+            .peekable();
 
         let Some(tree_first) = iter.next() else {
             attr.span().unwrap()

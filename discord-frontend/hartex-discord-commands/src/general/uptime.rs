@@ -29,6 +29,9 @@ use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_eyre::eyre::Report;
 use hartex_localization_core::{create_bundle, handle_errors};
@@ -62,7 +65,7 @@ impl Command for Uptime {
             .header(ACCEPT, "application/json")
             .header(
                 USER_AGENT,
-                "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend"
+                "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend",
             )
             .body(serde_json::to_string(&query)?)?;
 
@@ -84,14 +87,31 @@ impl Command for Uptime {
         let data = response.data();
         let timestamp = data.start_timestamp();
 
-        let _ = CLIENT.interaction(interaction.application_id);
+        let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
         let component = query.component_name();
-        bundle_get_args!(bundle."uptime-response": message, out [_uptime_response, errors], args ["component" to component, "timestamp" to timestamp]);
+        bundle_get_args!(bundle."uptime-response": message, out [uptime_response, errors], args ["component" to component, "timestamp" to timestamp]);
         handle_errors(errors)?;
+
+        log::debug!("{:?}", uptime_response.as_bytes());
+
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content(uptime_response)
+                            .build(),
+                    ),
+                },
+            )
+            .await?;
 
         Ok(())
     }
