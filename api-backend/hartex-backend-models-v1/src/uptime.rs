@@ -40,7 +40,7 @@ impl<'a> UptimeQuery<'a> {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct UptimeResponse {
     elapsed_millis: u128,
 }
