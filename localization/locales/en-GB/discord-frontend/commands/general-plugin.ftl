@@ -26,3 +26,4 @@ about-embed-github-repo-field-name=GitHub Repository:
 about-embed-title=About HarTex
 -latency-initial-response = Did you need anything?
 latency-edited-response = {-latency-initial-response} Ah, my latency: `{$latency}ms`.
+uptime-response={$component} was started <t:{$timestamp}:R>.
