@@ -42,11 +42,11 @@ impl<'a> UptimeQuery<'a> {
 
 #[derive(Clone, Deserialize)]
 pub struct UptimeResponse {
-    elapsed_millis: u128,
+    start_timestamp: u128,
 }
 
 impl UptimeResponse {
-    pub fn elapsed_millis(&self) -> u128 {
-        self.elapsed_millis
+    pub fn start_timestamp(&self) -> u128 {
+        self.start_timestamp
     }
 }

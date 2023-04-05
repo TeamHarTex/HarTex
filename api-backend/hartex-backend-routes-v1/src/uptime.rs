@@ -81,13 +81,13 @@ pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter
         return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let millis = Utc::now().timestamp_millis() - duration.unwrap().num_milliseconds();
+    let millis = duration.unwrap().num_milliseconds();
 
     (Status::Ok, json!({
         "code": 200,
         "message": "ok",
         "data": {
-            "elapsed_millis": millis,
+            "start_timestamp": millis,
         }
     }))
 }
