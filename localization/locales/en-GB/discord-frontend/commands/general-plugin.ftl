@@ -24,6 +24,7 @@ about-embed-description=HarTex is the open-source speed-of-thought server manage
 about-embed-footer=Any questions? Join and ask in our community server at {$inviteLink}.
 about-embed-github-repo-field-name=GitHub Repository:
 about-embed-title=About HarTex
+contributors-embed-title=Amazing Contributors
 -latency-initial-response = Did you need anything?
 latency-edited-response = {-latency-initial-response} Ah, my latency: `{$latency}ms`.
 uptime-response={$component} was started <t:{$timestamp}:R>.
