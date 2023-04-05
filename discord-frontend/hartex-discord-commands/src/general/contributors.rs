@@ -23,8 +23,12 @@
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
+use hartex_localization_core::handle_errors;
+use hartex_localization_macros::bundle_get;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -35,10 +39,17 @@ pub struct Contributors;
 impl Command for Contributors {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
         let _ = CLIENT.interaction(interaction.application_id);
-        let _ = create_bundle(
+        let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
+
+        bundle_get!(bundle."contributors-embed-title": message, out [contributors_embed_title, errors]);
+        handle_errors(errors)?;
+
+        let _ = EmbedBuilder::new()
+            .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
+            .build();
 
         todo!()
     }
