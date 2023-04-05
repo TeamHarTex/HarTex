@@ -1,5 +1,11 @@
 {
   "name": "contributors",
   "description": "Awesome people who contribute to HarTex",
+  "name_localizations": {
+    "zh-CN": "贡献者"
+  },
+  "description_localizations": {
+    "zh-CN": "为 HarTex 做出杰出贡献的人"
+  },
   "type": 1
 }
