@@ -25,3 +25,4 @@ about-embed-github-repo-field-name=GitHub 项目地址：
 about-embed-title=关于 HarTex
 -latency-initial-response = 您需要什么吗？
 latency-edited-response = {-latency-initial-response} 哦，我的延迟为：`{$latency}毫秒`.
+uptime-response={$component} 在 <t:{$timestamp}:R> 启动.
