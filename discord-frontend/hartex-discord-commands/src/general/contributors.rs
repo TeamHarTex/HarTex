@@ -20,7 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod about;
-pub mod contributors;
-pub mod latency;
-pub mod uptime;
+use hartex_discord_commands_core::CommandMetadata;
+
+#[derive(CommandMetadata)]
+#[metadata(command_type = 1)]
+#[metadata(interaction_only = true)]
+#[metadata(name = "about")]
+pub struct Contributors;
