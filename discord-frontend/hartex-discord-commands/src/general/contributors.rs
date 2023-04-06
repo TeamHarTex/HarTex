@@ -52,6 +52,10 @@ impl Command for Contributors {
         handle_errors(errors)?;
         bundle_get!(bundle."contributors-embed-global-admin-field-name": message, out [contributors_embed_global_admin_field_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-front-dev-field-name": message, out [contributors_embed_front_dev_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-translation-team-field-name": message, out [contributors_embed_translation_team_field_name, errors]);
+        handle_errors(errors)?;
         bundle_get!(bundle."contributors-embed-footer": message, out [contributors_embed_footer, errors]);
         handle_errors(errors)?;
 
@@ -62,6 +66,17 @@ impl Command for Contributors {
                 EmbedFieldBuilder::new(
                     contributors_embed_global_admin_field_name,
                     "HTGAzureX1212.#4937",
+                )
+                .build(),
+            )
+            .field(
+                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "Ariz#0288")
+                    .build(),
+            )
+            .field(
+                EmbedFieldBuilder::new(
+                    contributors_embed_translation_team_field_name,
+                    "teddy#6071 (Locale: `zh-CN`)\n星曌#4316 (Locale: `zh-TW`)",
                 )
                 .build(),
             )
