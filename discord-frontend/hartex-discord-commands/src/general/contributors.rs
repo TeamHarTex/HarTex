@@ -64,6 +64,7 @@ impl Command for Contributors {
 
         let embed = EmbedBuilder::new()
             .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
+            .color(0x41_A0_DE)
             .description(contributors_embed_description)
             .field(
                 EmbedFieldBuilder::new(
