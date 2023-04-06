@@ -20,12 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
@@ -34,12 +38,12 @@ use hartex_localization_macros::bundle_get;
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
-#[metadata(name = "about")]
+#[metadata(name = "contributors")]
 pub struct Contributors;
 
 impl Command for Contributors {
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
-        let _ = CLIENT.interaction(interaction.application_id);
+        let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
@@ -49,15 +53,56 @@ impl Command for Contributors {
         handle_errors(errors)?;
         bundle_get!(bundle."contributors-embed-description": message, out [contributors_embed_description, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-global-admin-field-name": message, out [contributors_embed_global_admin_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-front-dev-field-name": message, out [contributors_embed_front_dev_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-translation-team-field-name": message, out [contributors_embed_translation_team_field_name, errors]);
+        handle_errors(errors)?;
         bundle_get!(bundle."contributors-embed-footer": message, out [contributors_embed_footer, errors]);
         handle_errors(errors)?;
 
-        let _ = EmbedBuilder::new()
+        let embed = EmbedBuilder::new()
             .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
+            .color(0x41_A0_DE)
             .description(contributors_embed_description)
+            .field(
+                EmbedFieldBuilder::new(
+                    contributors_embed_global_admin_field_name,
+                    "HTGAzureX1212.#4937",
+                )
+                .build(),
+            )
+            .field(
+                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "Ariz#0288")
+                    .build(),
+            )
+            .field(
+                EmbedFieldBuilder::new(
+                    contributors_embed_translation_team_field_name,
+                    "teddy#6071 (Locale: `zh-CN`)\n星曌#4316 (Locale: `zh-TW`)",
+                )
+                .build(),
+            )
             .footer(EmbedFooterBuilder::new(contributors_embed_footer))
+            .validate()?
             .build();
 
-        todo!()
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .embeds(vec![embed])
+                            .build(),
+                    ),
+                },
+            )
+            .await?;
+
+        Ok(())
     }
 }
