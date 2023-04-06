@@ -25,6 +25,7 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
@@ -46,9 +47,15 @@ impl Command for Contributors {
 
         bundle_get!(bundle."contributors-embed-title": message, out [contributors_embed_title, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-description": message, out [contributors_embed_description, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."contributors-embed-footer": message, out [contributors_embed_footer, errors]);
+        handle_errors(errors)?;
 
         let _ = EmbedBuilder::new()
             .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
+            .description(contributors_embed_description)
+            .footer(EmbedFooterBuilder::new(contributors_embed_footer))
             .build();
 
         todo!()
