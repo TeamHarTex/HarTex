@@ -38,7 +38,7 @@ use hartex_localization_macros::bundle_get;
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
-#[metadata(name = "about")]
+#[metadata(name = "contributors")]
 pub struct Contributors;
 
 impl Command for Contributors {
