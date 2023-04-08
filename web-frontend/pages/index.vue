@@ -34,7 +34,7 @@
     <div>
       <button>Get Started</button>
       <div class="whitespace block sm:hidden" />
-      <button onclick="window.location.href='#why-hartex'">Learn More</button>
+      <button @click="toWhyHarTex()">Learn More</button>
     </div>
   </Section>
   <Section class="why" id="why-hartex">
@@ -44,6 +44,16 @@
     <hr>
   </Section>
 </template>
+
+<script lang="ts">
+export default {
+  methods: {
+    toWhyHarTex() {
+        document.querySelector("#why-hartex")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+}
+</script>
 
 <style lang="postcss" scoped>
 button {
