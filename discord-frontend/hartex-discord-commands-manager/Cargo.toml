@@ -17,7 +17,7 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 clap = "4.2.1"
-hyper = { version = "0.14.25", features = ["client", "http2"] }
+hyper = { version = "0.14.26", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 owo-colors = "3.5.0"
 serde = { version = "1.0.160", features = ["derive"] }
