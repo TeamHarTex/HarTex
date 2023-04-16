@@ -12,7 +12,7 @@ rust-version = "1.70.0"
 
 [dependencies]
 dotenvy = { version = "0.15.7", optional = true }
-num_enum = "0.6.0"
+num_enum = "0.6.1"
 num_enum_derive = "0.6.1"
 scylla = { version = "0.8.0", optional = true }
 socket2 = { git = "https://github.com/rust-lang/socket2.git", branch = "v0.4.x" }
