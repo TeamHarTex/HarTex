@@ -16,7 +16,7 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net"
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-clap = "4.2.3"
+clap = "4.2.4"
 hyper = { version = "0.14.26", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 owo-colors = "3.5.0"
