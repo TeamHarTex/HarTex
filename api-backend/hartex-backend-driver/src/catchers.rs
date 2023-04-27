@@ -20,6 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Error Catchers
+//!
+//! This module defines certain error catchers for the API backend to return JSON payloads.
+//!
+//! These catchers are invoked by the main backend process when a certain error has occurred and
+//! the status code of that error has an error catcher registered.
+
 use rocket::http::Status;
 use rocket::catch;
 use rocket::Request;
@@ -27,11 +34,33 @@ use serde_json::Value;
 use hartex_backend_ratelimiter::error::LimitError;
 use hartex_backend_status_util::StatusFns;
 
+/// # 404 Catcher
+///
+/// This catcher catches the Not Found error.
+///
+/// An example of the JSON payload:
+/// ```json
+/// {
+///     "code": 404,
+///     "message": "the requested resource does not exist"
+/// }
+/// ```
 #[catch(404)]
 pub fn not_found(_: &Request) -> (Status, Value) {
     (Status::NotFound, StatusFns::not_found())
 }
 
+/// # 429 Catcher
+///
+/// This catcher catches the Too Many Requests error.
+///
+/// An example of the JSON payload:
+/// ```json
+/// {
+///     "code": 429,
+///     "message": "too many requests"
+/// }
+/// ```
 #[catch(429)]
 pub fn too_many_requests<'r>(request: &'r Request) -> &'r LimitError {
     let result: &Result<(), LimitError> = request.local_cache(|| Err(LimitError::UnknownError));
