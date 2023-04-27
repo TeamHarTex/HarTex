@@ -20,6 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Backend Driver
+//!
+//! This is the driver crate of the API backend for HarTex, uniting all components of the backend
+//! and contains the core routing logic that routes requests to the corresponding request handlers.
+//!
+//! The driver also registers certain useful error catchers that return custom JSON payloads.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -31,6 +38,10 @@ use rocket::routes;
 
 mod catchers;
 
+/// # Entry Point
+///
+/// This is the entry point of the API backend for HarTex. This does the heavy lifting of building
+/// a Rocket server, igniting, and launching it.
 #[rocket::main]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_log::initialize();
