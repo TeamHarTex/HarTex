@@ -20,8 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Backend General Models
+//!
+//! The general models crate provides general models regarding the API backend.
+
 use serde::Deserialize;
 
+/// An API response object.
+///
+/// This is the object returned by a certain API endpoint.
 #[derive(Deserialize)]
 pub struct Response<'a, T> {
     code: u16,
@@ -32,14 +39,17 @@ pub struct Response<'a, T> {
 impl<'a, T> Response<'a, T>
 where
     T: Clone + Deserialize<'a> {
+    /// The status code of the response.
     pub fn code(&self) -> u16 {
         self.code
     }
 
+    /// The message of the response.
     pub fn message(&self) -> &'a str {
         self.message
     }
 
+    /// The data of the reponse.
     pub fn data(&self) -> T {
         self.data.clone()
     }
