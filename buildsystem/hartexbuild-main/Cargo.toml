@@ -15,7 +15,7 @@ hartexbuild_hartexfile = { path = "../hartexbuild-hartexfile" }
 
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-clap = "4.2.4"
+clap = "4.2.5"
 
 [features]
 
