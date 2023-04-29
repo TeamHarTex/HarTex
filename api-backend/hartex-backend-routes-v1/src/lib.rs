@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// # Backend API Routes V1
+///
+/// Routes v1 for the backend API.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -31,6 +35,7 @@ use hartex_log::log;
 
 pub mod uptime;
 
+/// A ratelimit guard for ratelimiting requests.
 pub struct RateLimitGuard;
 
 impl<'r> Limitable<'r> for RateLimitGuard {
