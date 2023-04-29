@@ -6,6 +6,6 @@
 
 <style>
 * {
-    @apply p-0 m-0 font-satoshi;
+    @apply p-0 m-0 font-sans;
 }
 </style>
