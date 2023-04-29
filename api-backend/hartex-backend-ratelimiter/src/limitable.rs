@@ -29,7 +29,7 @@ use std::num::NonZeroU32;
 use governor::Quota;
 use rocket::http::Method;
 
-/// Trait for routes that can be ratelimited to implement.
+/// Trait for ratelimiters that can be ratelimited to implement.
 pub trait Limitable<'r> {
     /// Evaluate the limit for a specific route.
     #[must_use]
