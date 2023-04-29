@@ -12,8 +12,10 @@
     "@nuxt/content": "^2.6.0",
     "@nuxt/image": "^0.7.1",
     "@types/node": "^18",
+    "unocss": "^0.51.8",
     "@unocss/nuxt": "^0.51.8",
     "@unocss/preset-web-fonts": "^0.51.8",
+    "@unocss/transformer-directives": "^0.51.8",
     "nuxt": "^3.4.3"
   }
 }

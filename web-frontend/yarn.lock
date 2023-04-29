@@ -1122,7 +1122,7 @@
   dependencies:
     "@unocss/core" "0.51.8"
 
-"@unocss/transformer-directives@0.51.8":
+"@unocss/transformer-directives@0.51.8", "@unocss/transformer-directives@^0.51.8":
   version "0.51.8"
   resolved "https://registry.yarnpkg.com/@unocss/transformer-directives/-/transformer-directives-0.51.8.tgz#4fee9fa3fb97dbacc744a21f88b45eff5e835698"
   integrity sha512-Q1vG0dZYaxbdz0pVnvpuFreGoSqmrk7TgKUHNuJP/XzTi04sriQoDSpC2QMIAuOyU7FyGpSjUORiaBm0/VNURw==
@@ -5742,7 +5742,7 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
-unocss@0.51.8:
+unocss@0.51.8, unocss@^0.51.8:
   version "0.51.8"
   resolved "https://registry.yarnpkg.com/unocss/-/unocss-0.51.8.tgz#1f09bc16be63e2d4545694bdc6afbe88f284a639"
   integrity sha512-uty78ilhQ/HxvjIDLRZ0J6Kb6fSfTKv0afyP7iWQmqoG/qTBR33ambnuTmi2Dt5GzCxAY6tyCaWjK/FZ7mfEYg==
