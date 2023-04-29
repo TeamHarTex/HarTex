@@ -20,8 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// # Ratelimited Request State
+
 use governor::Quota;
 
+/// A cached state for requests coming into the API backend.
 #[derive(Debug)]
 pub struct RequestState {
     pub(crate) quota: Quota,
@@ -36,10 +39,12 @@ impl RequestState {
         }
     }
 
+    /// The remaining quota.
     pub fn quota(&self) -> &Quota {
         &self.quota
     }
 
+    /// The request capacity.
     pub fn request_capacity(&self) -> u32 {
         self.request_capacity
     }

@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// # Ratelimit Errors
+///
+/// Ratelimit errors that may be returned by the ratelimiter.
+
 use std::io::Cursor;
 use governor::Quota;
 use rocket::http::ContentType;
@@ -30,12 +34,18 @@ use rocket::response::Responder;
 use rocket::response::Result;
 use hartex_backend_status_util::StatusFns;
 
+/// A ratelimit error.
 #[derive(Clone, Debug)]
 pub enum LimitError {
+    /// The Client IP of the request is not specified.
     ClientIpNotSpecified,
+    /// The request is ratelimited.
     RequestRateLimited(u128, Quota),
+    /// The route name of the request is not specified.
     RouteNameNotSpecified,
+    /// The route of the request is not specified.
     RouteNotSpecified,
+    /// An unknown error has occured.
     UnknownError,
 }
 

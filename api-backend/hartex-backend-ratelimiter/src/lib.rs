@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// # API Backend Ralelimiter
+///
+/// A ratelimiter for the API backend, with reliance on the `governor` crate.
+
 #![feature(core_intrinsics)]
 
 use std::marker::PhantomData;
@@ -43,6 +47,7 @@ pub mod limitable;
 pub(crate) mod registry;
 pub mod state;
 
+/// A ratelimiter.
 pub struct RateLimiter<'r, L>
 where
     L: Limitable<'r>, {
@@ -52,6 +57,7 @@ where
 impl<'r, L> RateLimiter<'r, L>
 where
     L: Limitable<'r>, {
+    /// Handle a request, responding with ratelimit errors when appropriate.
     pub fn handle_from_request(request: &'r Request) -> Outcome<Self, LimitError> {
         let result = request.local_cache(|| {
             if let Some(route) = request.route() {
