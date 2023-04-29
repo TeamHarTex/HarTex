@@ -1,3 +1,3 @@
 <template>
-	<p>Docs</p>
+    <p>Docs</p>
 </template>

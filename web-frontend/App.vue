@@ -1,11 +1,11 @@
 <template>
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+    <NuxtLayout>
+        <NuxtPage />
+    </NuxtLayout>
 </template>
 
-<style lang="postcss">
-	* {
-		@apply p-0 m-0 font-satoshi;
-	}
+<style>
+* {
+    @apply p-0 m-0 font-satoshi;
+}
 </style>
