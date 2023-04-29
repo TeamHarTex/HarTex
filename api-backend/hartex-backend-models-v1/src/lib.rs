@@ -20,4 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Backend Models V1
+//!
+//! The models in the API specification V1 for the backend.
+
 pub mod uptime;

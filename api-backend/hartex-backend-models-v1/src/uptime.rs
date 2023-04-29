@@ -20,32 +20,41 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Uptime Models V1
+//!
+//! Models for the uptime API specifcation V1 of the backend.
+
 use serde::Deserialize;
 use serde::Serialize;
 
+/// An uptime query.
 #[derive(Deserialize, Serialize)]
 pub struct UptimeQuery<'a> {
     component_name: &'a str,
 }
 
 impl<'a> UptimeQuery<'a> {
+    /// Create a new uptime query with the component name to search for.
     pub fn new(component_name: &'a str) -> Self {
         Self {
             component_name
         }
     }
 
+    /// The component name to search for in this uptime query.
     pub fn component_name(&self) -> &'a str {
         self.component_name
     }
 }
 
+/// A response to an uptime query.
 #[derive(Clone, Deserialize)]
 pub struct UptimeResponse {
     start_timestamp: u128,
 }
 
 impl UptimeResponse {
+    /// The start timestamp of the uptime entry.
     pub fn start_timestamp(&self) -> u128 {
         self.start_timestamp
     }
