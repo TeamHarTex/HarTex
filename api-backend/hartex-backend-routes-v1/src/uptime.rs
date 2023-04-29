@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// # Uptime Routes
+///
+/// Routes interacting with the uptime API.
+
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
@@ -36,6 +40,9 @@ use serde_json::Value;
 
 use crate::RateLimitGuard;
 
+/// # `POST /uptime`
+///
+/// Obtain the uptime of a certain component.
 #[post("/uptime", data = "<data>")]
 pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
     let username = env::var("API_SCYLLADB_USERNAME");
