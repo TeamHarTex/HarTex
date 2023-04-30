@@ -20,21 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Project Models
+
 use std::env;
 use std::process::Command;
 
 use hartex_eyre::eyre::Report;
 use serde::Deserialize;
 
+/// A project.
 #[derive(Debug, Deserialize)]
 #[serde(rename = "kebab-case")]
 pub struct Project {
+    /// The type of the project.
     pub r#type: ProjectType,
+    /// The build profile for the project.
     pub profile: Option<RustBuildProfile>,
+    /// Whether to include debug information when building the project.
     pub include_debug_info: Option<bool>,
 }
 
 impl Project {
+    /// Build a project with its name.
     pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
         let mut pwd = env::current_dir()?;
         pwd.push(name);
@@ -64,6 +71,7 @@ impl Project {
         result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
 
+    /// Runs linting on a project with its name.
     pub fn lint(&self, name: String) -> hartex_eyre::Result<()> {
         let mut pwd = env::current_dir()?;
         pwd.push(name);
@@ -88,6 +96,7 @@ impl Project {
         result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
     }
 
+    /// Runs a test suite on a project with its name.
     pub fn test(&self, name: String) -> hartex_eyre::Result<()> {
         let mut pwd = env::current_dir()?;
         pwd.push(name);
@@ -107,15 +116,20 @@ impl Project {
     }
 }
 
+/// The project type.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ProjectType {
+    /// JavaScript / TypeScript project.
     JsTs,
+    /// Rust project.
     Rust,
 }
 
+/// The Rust build profile for a Rust project.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum RustBuildProfile {
+    /// Release profile.
     Release,
 }

@@ -20,14 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Hartexfile Specification
+//!
+//! This is where the models of the specification for HarTexfile are defined.
+
 use std::collections::BTreeMap;
 
 use serde::Deserialize;
 
 pub mod project;
 
+/// The root of the tree.
 #[derive(Debug, Deserialize)]
 pub struct HarTexFile {
+    /// A map of projects with the name as its key and the project object as its value.
     #[serde(rename = "project")]
     pub projects: BTreeMap<String, project::Project>,
 }

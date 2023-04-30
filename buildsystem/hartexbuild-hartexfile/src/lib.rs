@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Hartexbuild Manifest Models
+//! 
+//! This crate contains the models a "Hartexfile" build manifest file deserialize into.
+
 #![feature(exit_status_error)]
 #![feature(let_chains)]
 
@@ -30,6 +34,7 @@ use hcl::eval::Context;
 
 pub mod spec;
 
+/// Deserialize a manifest file.
 pub fn from_manifest() -> hartex_eyre::Result<spec::HarTexFile> {
     let file = fs::read_to_string("HarTexfile")?;
 
