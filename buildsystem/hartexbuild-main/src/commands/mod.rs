@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Commands
+
 pub mod build;
 pub mod lint;
 pub mod test;

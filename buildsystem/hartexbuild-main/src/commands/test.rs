@@ -20,9 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Test Command
+
 use clap::ArgMatches;
 use hartex_eyre::eyre::Report;
 
+/// Runs the test command.
 pub fn test_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
 
