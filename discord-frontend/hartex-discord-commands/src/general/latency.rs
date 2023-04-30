@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Latency Command
+
 use std::time::Instant;
 
 use hartex_discord_commands_core::traits::Command;
@@ -34,6 +36,7 @@ use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
 
+/// The latency command structure.
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]

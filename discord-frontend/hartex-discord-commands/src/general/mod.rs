@@ -20,6 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The General Plugin
+//!
+//! Command list:
+//! - about
+//! - contributors
+//! - latency
+//! - uptime
+
 pub mod about;
 pub mod contributors;
 pub mod latency;
