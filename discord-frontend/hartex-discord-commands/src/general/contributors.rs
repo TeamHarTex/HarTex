@@ -37,7 +37,6 @@ use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 
-/// The contributors command structure.
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
