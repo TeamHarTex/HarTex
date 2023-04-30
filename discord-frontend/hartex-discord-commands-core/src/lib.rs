@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Command System Core
+//!
+//! This crate provides core traits for the command system and reexports useful macros.
+
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
