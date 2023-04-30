@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The About Command
+
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -37,6 +39,7 @@ use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
 
+/// The about command structure.
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
