@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Hartexbuild Binary Executable
+//!
+//! The main binary for the hartexbuild buildsystem.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -31,6 +35,7 @@ use clap::Command;
 mod cmdline;
 mod commands;
 
+/// Main entry point.
 pub fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
 
