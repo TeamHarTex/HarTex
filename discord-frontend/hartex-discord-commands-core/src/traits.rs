@@ -22,14 +22,20 @@
 
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
+/// The command metadata trait, specifying the various information about the command.
 pub trait CommandMetadata {
+    /// The type of the command.
     fn command_type(&self) -> u8;
 
+    /// Whether the command is only available in the form of an interaction.
     fn interaction_only(&self) -> bool;
 
+    /// The name of the command.
     fn name(&self) -> String;
 }
 
+/// The command trait.
 pub trait Command: CommandMetadata {
+    /// Executes the command.
     async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()>;
 }

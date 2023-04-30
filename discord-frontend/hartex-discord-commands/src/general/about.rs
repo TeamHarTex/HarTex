@@ -39,7 +39,6 @@ use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
 
-/// The about command structure.
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]

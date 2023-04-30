@@ -46,7 +46,6 @@ use hyper::Client;
 use hyper::Method;
 use hyper::Request;
 
-/// The uptime command structure.
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
