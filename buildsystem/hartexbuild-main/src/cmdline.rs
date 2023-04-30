@@ -20,10 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Command Line Handling
+
 use clap::ArgMatches;
 
 use crate::commands;
 
+/// Handle a command line command with the matches.
 pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
     match matches.subcommand() {
         Some(("build", subcommand_matches)) => {
