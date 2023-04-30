@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Discord Frontend Commands
+//!
+//! This crate contains implementations of the commands for HarTex. These are also categozied
+//! in modules in terms of the corresponding "plugin" they belong to.
+
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]

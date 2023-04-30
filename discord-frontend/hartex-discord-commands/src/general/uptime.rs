@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Uptime Command
+
 use std::env;
 use std::str;
 
@@ -44,6 +46,7 @@ use hyper::Client;
 use hyper::Method;
 use hyper::Request;
 
+/// The uptime command structure.
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
