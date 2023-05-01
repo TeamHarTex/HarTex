@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Entity Cache Macros
+//!
+//! Useful macros for the entity cache.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -34,6 +38,7 @@ use syn::DeriveInput;
 
 mod entity;
 
+/// Macro to derive the `Entity` trait.
 #[proc_macro_derive(Entity, attributes(entity))]
 pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
