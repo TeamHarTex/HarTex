@@ -37,6 +37,7 @@ use hyper::Method;
 use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
 
+/// Unregistering a command.
 #[allow(clippy::module_name_repetitions)]
 pub async fn unregister_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     log::trace!("loading environment variables");

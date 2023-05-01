@@ -33,7 +33,9 @@ use owo_colors::OwoColorize;
 pub mod command;
 pub mod option;
 
+/// Display extensions.
 pub trait DisplayExt {
+    /// Display as a string.
     fn display(&self) -> String;
 }
 
@@ -46,7 +48,9 @@ impl DisplayExt for CommandOptionValue {
     }
 }
 
+/// Enum type extensions.
 pub trait TypeEnumExt {
+    /// The name of the enum variant.
     fn name(&self) -> &'static str;
 }
 
@@ -100,6 +104,7 @@ impl TypeEnumExt for CommandOptionType {
     }
 }
 
+/// Print localizations dictionary.
 pub fn print_localizations(
     f: &mut Formatter<'_>,
     localizations: &HashMap<String, String>,

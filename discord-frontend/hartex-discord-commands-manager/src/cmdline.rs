@@ -20,19 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Command Line Handler
+
 use clap::ArgMatches;
 
 use crate::commands;
 
+/// Handle the command line with argument matches.
 pub async fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
     match matches.subcommand() {
-        Some(("edit", subcommand_matches)) => {
-            commands::edit::edit_command(subcommand_matches.clone()).await
-        }
         Some(("list-from-discord", subcommand_matches)) => {
             commands::list_from_discord::list_from_discord_command(subcommand_matches.clone()).await
         }
         Some(("list-from-fs", _)) => commands::list_from_fs::list_from_fs_command(),
+        Some(("patch", subcommand_matches)) => {
+            commands::patch::patch_command(subcommand_matches.clone()).await
+        }
         Some(("register", subcommand_matches)) => {
             commands::register::register_command(subcommand_matches.clone()).await
         }

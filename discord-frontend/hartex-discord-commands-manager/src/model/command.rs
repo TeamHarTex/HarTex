@@ -34,6 +34,9 @@ use serde::Serialize;
 use super::option::CommandManagerCommandOption;
 use super::TypeEnumExt;
 
+/// Command.
+///
+/// Refer to the corresponding API documentation on discord official website.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommand {
