@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Guild Repository
+
 use std::env;
 
 use hartex_discord_core::discord::model::id::Id;
@@ -30,6 +32,7 @@ use hartex_discord_entitycache_entities::guild::GuildEntity;
 use redis::AsyncCommands;
 use redis::Client;
 
+/// Repository for guild entities.
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
