@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Cache Updaters
+//!
+//! Callbacks that are invoked when a certain event is received to update the cache accordingly.
+
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
@@ -30,6 +34,8 @@ use hartex_discord_entitycache_core::error::CacheResult;
 
 pub mod guild_create;
 
+/// A trait for all cache updaters to implement.
 pub trait CacheUpdater {
+    /// Update the cache.
     async fn update(&self) -> CacheResult<()>;
 }
