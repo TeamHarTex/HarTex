@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Command System Macros
+//!
+//! This ctrate provides certain macros for the command system that may otherwise be useful.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -35,6 +39,7 @@ use syn::{parse_macro_input, DeriveInput};
 
 mod commandmetadata;
 
+/// Macro to derive the `CommandMetadata` trait.
 #[proc_macro_derive(CommandMetadata, attributes(metadata))]
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
