@@ -25,9 +25,11 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+/// Consumer error.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub struct ConsumerError {
+    /// The error type.
     pub kind: ConsumerErrorKind,
 }
 
@@ -41,6 +43,7 @@ impl Display for ConsumerError {
 
 impl Error for ConsumerError {}
 
+/// The type of consumer error that has occured.
 #[derive(Clone, Debug)]
 pub enum ConsumerErrorKind {
     InvalidGatewayPayload,

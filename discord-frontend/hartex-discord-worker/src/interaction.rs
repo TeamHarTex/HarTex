@@ -29,6 +29,7 @@ use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 
+/// Handle an application command interaction
 pub async fn application_command(
     interaction_create: Box<InteractionCreate>,
 ) -> hartex_eyre::Result<()> {
