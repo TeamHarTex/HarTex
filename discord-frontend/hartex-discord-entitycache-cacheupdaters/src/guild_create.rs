@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Guild Create Cache Updater
+//!
+//! An implementation of a cache updater for the guild create event.
+
 use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Repository;
