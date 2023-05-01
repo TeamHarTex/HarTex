@@ -20,16 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Entity Cache Traits
+
 use crate::error::CacheResult;
 
+/// A cache entity.
 pub trait Entity {
+    /// The identifier of the entity.
     type Id;
 
+    /// Returns the entity identifer.
     fn id(&self) -> Self::Id;
 }
 
+/// A cache repository holding entities.
 pub trait Repository<T: Entity> {
+    /// Retrieves an entity from the repository.
     async fn get(&self, entity_id: T::Id) -> CacheResult<T>;
 
+    /// Upserts an entity into the repository.
     async fn upsert(&self, entity: T) -> CacheResult<()>;
 }

@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Entity Cache Core
+//!
+//! The core library of the entity cache.
+
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]

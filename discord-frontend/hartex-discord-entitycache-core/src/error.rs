@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Entity Cache Errors
+
 use std::env::VarError;
 use std::error::Error;
 use std::fmt;
@@ -28,10 +30,13 @@ use std::fmt::Formatter;
 
 use redis::RedisError;
 
+/// A cache error..
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum CacheError {
+    /// Error related to environment variables.
     Env(VarError),
+    /// A redis error occurred.
     Redis(RedisError),
 }
 
