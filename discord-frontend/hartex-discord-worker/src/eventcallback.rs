@@ -30,6 +30,7 @@ use hartex_discord_core::scylla::transport::Compression;
 use hartex_discord_core::scylla::SessionBuilder;
 use hartex_log::log;
 
+/// Invoke a corresponding event callback for an event,
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
     #[allow(clippy::collapsible_match)]
     match event {

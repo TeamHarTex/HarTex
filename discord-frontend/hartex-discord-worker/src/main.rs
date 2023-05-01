@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Worker Process
+//!
+//! The worker process is the process thatr receives messages from the leader.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -54,6 +58,7 @@ mod error;
 mod eventcallback;
 mod interaction;
 
+/// Entry point.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
