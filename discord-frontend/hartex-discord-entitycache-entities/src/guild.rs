@@ -20,13 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Guild Entities
+
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::Entity;
 
+/// A guild entity.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Entity)]
 pub struct GuildEntity {
+    /// The id of the guild.
     #[entity(id)]
     pub id: Id<GuildMarker>,
 }
