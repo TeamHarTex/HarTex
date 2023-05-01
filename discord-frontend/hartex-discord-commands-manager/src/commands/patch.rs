@@ -40,8 +40,9 @@ use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
 use walkdir::WalkDir;
 
+/// Patch a command.
 #[allow(clippy::module_name_repetitions)]
-pub async fn edit_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
+pub async fn patch_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv()?;
 

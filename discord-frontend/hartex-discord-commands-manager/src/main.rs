@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Command System Manager Executable
+//! 
+//! This is the executable for the command system manager, which managers the commands specified
+//! and registered with Discord.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -36,18 +41,13 @@ mod cmdline;
 mod commands;
 mod model;
 
+/// Maneger entry point.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
     hartex_log::initialize();
 
     let command = Command::new("cmdmgr")
-        .subcommand(
-            Command::new("edit")
-                .about("Edits a command that has already been registered with Discord.")
-                .arg(Arg::new("command").required(true).action(ArgAction::Set))
-                .arg(Arg::new("command-id").required(true).action(ArgAction::Set)),
-        )
         .subcommand(
             Command::new("list-from-discord")
                 .about("Lists commands registered with Discord.")
@@ -61,6 +61,12 @@ pub async fn main() -> hartex_eyre::Result<()> {
         )
         .subcommand(
             Command::new("list-from-fs").about("Lists commands declared in the filesystem."),
+        )
+        .subcommand(
+            Command::new("patch")
+                .about("Patcjes a command that has already been registered with Discord.")
+                .arg(Arg::new("command").required(true).action(ArgAction::Set))
+                .arg(Arg::new("command-id").required(true).action(ArgAction::Set)),
         )
         .subcommand(
             Command::new("register")

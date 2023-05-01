@@ -30,6 +30,7 @@ use walkdir::WalkDir;
 
 use crate::model::command::CommandManagerCommand;
 
+/// List commands from filesystem.
 #[allow(clippy::module_name_repetitions)]
 pub fn list_from_fs_command() -> hartex_eyre::Result<()> {
     log::trace!("loading environment variables");

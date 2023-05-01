@@ -20,8 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod edit;
+/// # Commands
+/// 
+/// - patch
+/// - list from discord
+/// - list from filesystem
+/// - register
+/// - unregister
+
 pub mod list_from_discord;
 pub mod list_from_fs;
+pub mod patch;
 pub mod register;
 pub mod unregister;
