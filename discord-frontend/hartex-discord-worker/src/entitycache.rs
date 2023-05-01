@@ -26,6 +26,7 @@ use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_entitycache_cacheupdaters::CacheUpdater;
 
+/// Update entity cache.
 #[allow(clippy::unused_async)]
 pub async fn update(event: GatewayEvent) -> hartex_eyre::Result<()> {
     let GatewayEvent::Dispatch(_, dispatch) = event else {
