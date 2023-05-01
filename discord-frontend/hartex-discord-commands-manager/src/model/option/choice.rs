@@ -28,6 +28,9 @@ use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 
+/// Command option choice,
+///
+/// Refer to the corresponding API documentation on discord official website.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommandOptionChoice {
@@ -38,6 +41,7 @@ pub struct CommandManagerCommandOptionChoice {
 }
 
 impl CommandManagerCommandOptionChoice {
+    /// Display command option choice.
     pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         writeln!(
             f,
@@ -67,6 +71,7 @@ impl CommandManagerCommandOptionChoice {
     }
 }
 
+/// Command option choice value.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
@@ -77,6 +82,7 @@ pub enum CommandManagerCommandOptionChoiceValue {
 }
 
 impl CommandManagerCommandOptionChoiceValue {
+    /// Display command option choice value.
     pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         write!(
             f,

@@ -36,6 +36,9 @@ use super::TypeEnumExt;
 
 pub mod choice;
 
+/// Command option.
+/// 
+/// Refer to the corresponding API documentation on discord official website.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandManagerCommandOption {
@@ -68,6 +71,7 @@ pub struct CommandManagerCommandOption {
 }
 
 impl CommandManagerCommandOption {
+    /// Display a command option.
     #[allow(clippy::too_many_lines)]
     pub fn display(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         writeln!(
