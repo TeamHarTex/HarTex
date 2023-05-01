@@ -22,7 +22,7 @@
 
 //! # Discord Frontend Commands
 //!
-//! This crate contains implementations of the commands for HarTex. These are also categozied
+//! This crate contains implementations of the commands. These are also categozied
 //! in modules in terms of the corresponding "plugin" they belong to.
 
 #![allow(incomplete_features)]
