@@ -36,6 +36,7 @@ const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
 const LITERAL_PARAMETERS: [&str; 2] = ["command_type", "name"];
 const VALID_ATTR_PARAMETER_NAMES: [&str; 3] = ["command_type", "interaction_only", "name"];
 
+/// Expand a `#[derive(CommandMetadata)]` macro.
 #[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
