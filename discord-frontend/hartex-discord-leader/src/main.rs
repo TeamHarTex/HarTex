@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Leader Process
+//!
+//! The leader process is the process that connects to the Discord API, receives events and
+//! forwards to the workers.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -45,6 +50,7 @@ mod inbound;
 mod queue;
 mod shards;
 
+/// Entry point.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;

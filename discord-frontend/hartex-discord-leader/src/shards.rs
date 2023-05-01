@@ -33,6 +33,7 @@ use hartex_discord_core::discord::model::gateway::presence::Activity;
 use hartex_discord_core::discord::model::gateway::presence::ActivityType;
 use hartex_discord_core::discord::model::gateway::presence::Status;
 
+/// Obtain a list of shards.
 pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue>) -> hartex_eyre::Result<Vec<Shard>> {
     let bot_token = std::env::var("BOT_TOKEN")?;
 
