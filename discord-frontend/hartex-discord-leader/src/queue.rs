@@ -35,11 +35,13 @@ use hartex_discord_core::tokio::sync::oneshot::Sender;
 use hartex_discord_core::tokio::time::sleep;
 use hartex_log::log;
 
+/// A local queue.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub struct LocalQueue(UnboundedSender<Sender<()>>);
 
 impl LocalQueue {
+    /// Create a new local queue.
     pub fn new(duration: Duration) -> Self {
         let (tx, rx) = unbounded_channel();
         tokio::spawn(wait_for_while(rx, duration));
@@ -64,11 +66,13 @@ impl Queue for LocalQueue {
     }
 }
 
+/// A queue for large bots.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub struct LargeBotQueue(Vec<UnboundedSender<Sender<()>>>);
 
 impl LargeBotQueue {
+    /// Create a large bot queue.
     pub fn new(buckets: usize, duration: Duration) -> Self {
         let mut queues = Vec::with_capacity(buckets);
         for _ in 0..buckets {
@@ -109,6 +113,7 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
     }
 }
 
+/// Obtain a queue to use for the startup of the bot.
 pub fn obtain() -> hartex_eyre::Result<Arc<dyn Queue>> {
     let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse::<usize>()?;
     let wait =

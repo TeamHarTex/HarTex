@@ -33,6 +33,7 @@ use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
 
+/// Handle inbound messages.
 pub async fn handle(
     shards: impl Iterator<Item = &mut Shard>,
     producer: FutureProducer,
