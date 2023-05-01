@@ -29,7 +29,6 @@ use hartex_discord_entitycache_core::Entity;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Entity)]
 pub struct GuildEntity {
-    /// The id of the guild.
     #[entity(id)]
     pub id: Id<GuildMarker>,
 }
