@@ -1,6 +1,7 @@
 name: Tests
 
 on:
+  merge_queue:
   push:
     branches:
       - nightly
