@@ -20,12 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Discord Utilities
+//!
+//! Various useful Discord utilities.
+
 use std::env;
 use std::ops::Deref;
 
 use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
 
+/// A proxied Discord HTTP cliemt.
 pub static CLIENT: Lazy<Client> = Lazy::new(|| {
     Client::builder()
         .token(TOKEN.deref().to_owned())
@@ -33,4 +38,6 @@ pub static CLIENT: Lazy<Client> = Lazy::new(|| {
         .ratelimiter(None)
         .build()
 });
+
+/// The bot token.
 pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());

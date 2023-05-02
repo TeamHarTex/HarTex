@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Logging Facilities
+
 pub use log;
 
 use log::LevelFilter;
@@ -30,6 +32,7 @@ use log4rs::config::Logger;
 use log4rs::config::Root;
 use log4rs::encode::pattern::PatternEncoder;
 
+/// Initialize logging factilities.
 pub fn initialize() {
     let conf = Config::builder()
         .appender(
