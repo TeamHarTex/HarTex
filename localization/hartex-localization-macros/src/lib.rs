@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Localization Macros
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -36,6 +38,7 @@ mod expand_bundle_get;
 mod expand_bundle_get_args;
 mod types;
 
+/// Obtain a value from a bundle using its key.
 #[proc_macro]
 pub fn bundle_get(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as Parameters);
@@ -44,6 +47,7 @@ pub fn bundle_get(tokens: TokenStream) -> TokenStream {
         .into()
 }
 
+/// Obtain a value from a bundle using its key, with arguments.
 #[proc_macro]
 pub fn bundle_get_args(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as ParametersWithArgs);
