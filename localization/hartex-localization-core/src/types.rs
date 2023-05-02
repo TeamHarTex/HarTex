@@ -25,5 +25,8 @@ use fluent_bundle::FluentArgs;
 use fluent_bundle::FluentResource;
 use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemozier;
 
+/// Localization arguments.
 pub type LocalizationArgs<'args> = FluentArgs<'args>;
+
+/// A localization bundle.
 pub type LocalizationBundle = FluentBundle<FluentResource, ConcurrentIntlLangMemozier>;

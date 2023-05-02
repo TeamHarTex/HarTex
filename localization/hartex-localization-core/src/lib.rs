@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Localization Infrastructure Core
+//!
+//! The localization-core crate provides core infrastructure for the implementation of
+//! localization.
+
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
@@ -38,6 +43,7 @@ use unic_langid::LanguageIdentifier;
 
 pub mod types;
 
+/// Create a localization bundle from its path.
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::missing_panics_doc)]
 pub fn create_bundle(
@@ -87,6 +93,7 @@ pub fn create_bundle(
     Ok(bundle)
 }
 
+/// Handle errors returned from fluent.
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::needless_pass_by_value)]
