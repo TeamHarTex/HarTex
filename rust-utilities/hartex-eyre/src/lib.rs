@@ -20,19 +20,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Eyre Error Handling
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-pub mod constants;
-pub mod handler;
-pub mod hook;
+mod constants;
+mod handler;
+mod hook;
 
 pub use eyre;
 
+/// Initialize the eyre error handlers.
 #[allow(clippy::missing_errors_doc)]
 pub fn initialize() -> Result<()> {
     hook::HookBuilder::new().install_hooks()
 }
 
+/// A convenience typealias for a Result with an eyre Report as its error type.
 pub type Result<T, E = eyre::Report> = eyre::Result<T, E>;

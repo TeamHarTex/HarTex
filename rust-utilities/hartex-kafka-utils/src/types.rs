@@ -20,11 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// The compression type to use.
 pub enum CompressionType {
+    /// GZIP compression
     Gzip,
+    /// LZ4 compression
     Lz4,
+    /// No compression whatsoever
     None,
+    /// Snappy compression
     Snappy,
+    /// ZSTD compression
     Zstd,
 }
 
