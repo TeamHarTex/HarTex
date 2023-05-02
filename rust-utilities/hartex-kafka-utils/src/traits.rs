@@ -24,13 +24,18 @@ use rdkafka::ClientConfig;
 
 use crate::types::CompressionType;
 
+/// Extension functions for Kafka client configuration.
 pub trait ClientConfigUtils {
+    /// Configure bootstrap servers.
     fn bootstrap_servers(&mut self, servers: impl Iterator<Item = String>) -> &mut Self;
 
+    /// Configure compression type.
     fn compression_type(&mut self, compression: CompressionType) -> &mut Self;
 
+    /// Configure the duration for delibery timeout.
     fn delivery_timeout_ms(&mut self, timeout: u32) -> &mut Self;
 
+    /// Configure group id.
     fn group_id(&mut self, group_id: &str) -> &mut Self;
 }
 
