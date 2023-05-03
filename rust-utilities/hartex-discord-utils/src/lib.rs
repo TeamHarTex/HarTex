@@ -39,5 +39,5 @@ pub static CLIENT: Lazy<Client> = Lazy::new(|| {
         .build()
 });
 
-/// The bot token.
+/// The bot token used for logging in to the Discord gateway and sending HTTP requests.
 pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());
