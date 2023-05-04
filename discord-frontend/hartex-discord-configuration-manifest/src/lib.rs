@@ -20,3 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Configuration Manifest
+//!
+//! Specifies the configuration manifest in models that can be serialized from and deserialized
+//! into.
+
+/// The root of everything.
+pub struct Configuration;
