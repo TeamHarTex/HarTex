@@ -1,0 +1,15 @@
+[package]
+name = "hartex_discord_configuration_manifest"
+version = "0.1.0"
+edition = "2021"
+description = """
+The configuration manifest structure of the bot.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.70.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[features]
