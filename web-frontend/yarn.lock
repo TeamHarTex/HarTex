@@ -975,6 +975,11 @@
     "@unocss/core" "0.51.8"
     unconfig "^0.3.7"
 
+"@unocss/core@0.51.11":
+  version "0.51.11"
+  resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.51.11.tgz#985e0688e93bc491dae57a81f3d82d8e30e6d8a8"
+  integrity sha512-CfwP5M68+0VggQRY6tY5+dyNM7Oq456iWm5p3SyLKoY9FAGrFEWqLJ8Og+tf7ckA1YTWY8gBTKVNzjTCO8+Q3w==
+
 "@unocss/core@0.51.8":
   version "0.51.8"
   resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.51.8.tgz#f44ff566efd0f109f580d8acad069ff1a70eb859"
@@ -1075,12 +1080,20 @@
     "@unocss/preset-mini" "0.51.8"
     "@unocss/preset-wind" "0.51.8"
 
-"@unocss/preset-web-fonts@0.51.8", "@unocss/preset-web-fonts@^0.51.8":
+"@unocss/preset-web-fonts@0.51.8":
   version "0.51.8"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.51.8.tgz#8b0ba5a8638376116391a0524a94f36a3eed6a51"
   integrity sha512-s9kKEiV21qYTdrfb3uZRc+Eos1e1/UN6lCC4KPqzD5LfdsZgel5a0xD9RpKUoKOnPgzDkvg22yn8rfsC5NBafg==
   dependencies:
     "@unocss/core" "0.51.8"
+    ofetch "^1.0.1"
+
+"@unocss/preset-web-fonts@^0.51.8":
+  version "0.51.11"
+  resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.51.11.tgz#0c3d450726a9b343d01cc53c06197a6236902028"
+  integrity sha512-9nWb+1kRNXHoaW2dqmcDCt962HNbG75J0jjdG69dyRRu7dAaxfR7p0pd1YL8Rq3I2HOH7Q6OEsAU//JgzFZ8KQ==
+  dependencies:
+    "@unocss/core" "0.51.11"
     ofetch "^1.0.1"
 
 "@unocss/preset-wind@0.51.8":
@@ -5601,10 +5614,15 @@ ufo@^0.8.4, ufo@^0.8.5, ufo@^0.8.6:
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-0.8.6.tgz#c0ec89bc0e0c9fa59a683680feb0f28b55ec323b"
   integrity sha512-fk6CmUgwKCfX79EzcDQQpSCMxrHstvbLswFChHS0Vump+kFkw7nJBfTZoC1j0bOGoY9I7R3n2DGek5ajbcYnOw==
 
-ufo@^1.0.0, ufo@^1.1.0, ufo@^1.1.1:
+ufo@^1.0.0, ufo@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.1.1.tgz#e70265e7152f3aba425bd013d150b2cdf4056d7c"
   integrity sha512-MvlCc4GHrmZdAllBc0iUDowff36Q9Ndw/UzqmEKyrfSzokTd9ZCy1i+IIk5hrYKkjoYVQyNbrw7/F8XJ2rEwTg==
+
+ufo@^1.1.0:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.1.2.tgz#d0d9e0fa09dece0c31ffd57bd363f030a35cfe76"
+  integrity sha512-TrY6DsjTQQgyS3E3dBaOXf0TpPD8u9FVrVYmKVegJuFw51n/YB9XPt+U6ydzFG5ZIN7+DIjPbNmXoBj9esYhgQ==
 
 unconfig@^0.3.7:
   version "0.3.7"
