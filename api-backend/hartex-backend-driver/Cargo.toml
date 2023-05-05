@@ -20,7 +20,7 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 dotenvy = "0.15.7"
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
-serde = "1.0.160"
+serde = "1.0.162"
 serde_json = "1.0.96"
 
 [features]
