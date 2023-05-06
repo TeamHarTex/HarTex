@@ -20,20 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Configuration Manifest
-//!
-//! Specifies the configuration manifest in models that can be serialized from and deserialized
-//! into.
-
 use serde::{Deserialize, Serialize};
 
-pub mod dashboard;
-
-/// The root of everything.
+/// Dashboard access configurations.
 #[derive(Deserialize, Serialize)]
-pub struct Configuration {
-    /// Version of the configuration schema.
-    pub version: u8,
-    /// Dashboard access configurations.
-    pub dashboard: dashboard::Dashboard,
-}
+pub struct Dashboard;
