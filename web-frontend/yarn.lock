@@ -1037,11 +1037,6 @@
     "@unocss/core" "0.51.8"
     unconfig "^0.3.7"
 
-"@unocss/core@0.51.11":
-  version "0.51.11"
-  resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.51.11.tgz#985e0688e93bc491dae57a81f3d82d8e30e6d8a8"
-  integrity sha512-CfwP5M68+0VggQRY6tY5+dyNM7Oq456iWm5p3SyLKoY9FAGrFEWqLJ8Og+tf7ckA1YTWY8gBTKVNzjTCO8+Q3w==
-
 "@unocss/core@0.51.12":
   version "0.51.12"
   resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.51.12.tgz#4090deafb62787a7d46429616a9f3fd03905042a"
@@ -1222,7 +1217,7 @@
     "@unocss/preset-mini" "0.51.8"
     "@unocss/preset-wind" "0.51.8"
 
-"@unocss/preset-web-fonts@0.51.12":
+"@unocss/preset-web-fonts@0.51.12", "@unocss/preset-web-fonts@^0.51.8":
   version "0.51.12"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.51.12.tgz#9e44396a461616361667c405af5b4f3f6a9ade90"
   integrity sha512-brkQ9gWCqZMrCPvz/LhzSW/VHxZMwXVqXy2bn10HSlmbhpj5X8K4h4PpOZnqioZnMG0hUkXhrcCBf2++iKdiIA==
@@ -1236,14 +1231,6 @@
   integrity sha512-s9kKEiV21qYTdrfb3uZRc+Eos1e1/UN6lCC4KPqzD5LfdsZgel5a0xD9RpKUoKOnPgzDkvg22yn8rfsC5NBafg==
   dependencies:
     "@unocss/core" "0.51.8"
-    ofetch "^1.0.1"
-
-"@unocss/preset-web-fonts@^0.51.8":
-  version "0.51.11"
-  resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.51.11.tgz#0c3d450726a9b343d01cc53c06197a6236902028"
-  integrity sha512-9nWb+1kRNXHoaW2dqmcDCt962HNbG75J0jjdG69dyRRu7dAaxfR7p0pd1YL8Rq3I2HOH7Q6OEsAU//JgzFZ8KQ==
-  dependencies:
-    "@unocss/core" "0.51.11"
     ofetch "^1.0.1"
 
 "@unocss/preset-wind@0.51.12":
