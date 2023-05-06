@@ -20,17 +20,29 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hcl::eval::FuncArgs;
+use hcl::Number;
+use hcl::Value;
 use serde::Deserialize;
 use serde::Serialize;
 
-/// Dashboard access configurations.
+/// Appearance of HarTex in the server.
 #[derive(Deserialize, Serialize)]
-pub struct Dashboard {
-    /// Admins of the server, they can add people to the configuration editor.
-    pub admins: Vec<String>,
-    /// Editors of the server, they can edit the configuration but not add people to the
-    /// configuration editor.
-    pub editors: Option<Vec<String>>,
-    /// Viewers of the server, they can only view the configuration.
-    pub viewers: Option<Vec<String>>,
+pub struct Appearance {
+    /// Nickname of the bot user in the server.
+    pub nickname: Option<String>,
+    /// The role colour of the bot's integration role.
+    pub role_colour: Option<u32>,
+}
+
+pub(crate) fn hcl_rgb_function(args: FuncArgs) -> Result<Value, String> {
+    let r = args[0].as_number().unwrap();
+    let g = args[1].as_number().unwrap();
+    let b = args[2].as_number().unwrap();
+
+    Ok(Value::Number(Number::from(u32::from_be_bytes([
+        r.as_u64().unwrap() as u8,
+        g.as_u64().unwrap(),
+        b.as_u64().unwrap(),
+    ]))))
 }

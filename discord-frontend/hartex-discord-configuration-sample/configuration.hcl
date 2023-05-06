@@ -29,7 +29,7 @@ version = "1"
 
 // Dashboard access configurations.
 dashboard {
-    // Admins of the server, they can add people to the configuration editor
+    // Admins of the server, they can add people to the configuration editor.
     // Array of user IDs as strings.
     admins = ["1000000000000000", "1000000000000001"]
     // Editors of the server, they can edit the configuration but not add people to the configuration editor.
@@ -46,6 +46,6 @@ appearance {
     // A string.
     nickname = "HarTex Nightly"
     // The role colour of the bot's integration role.
-    // A colour object instantiated using the `hex_colour` function.
-    role_colour = hex_colour(195, 218, 32)
+    // A colour object instantiated using the `rgb` function.
+    role_colour = rgb(195, 218, 32)
 }
