@@ -816,6 +816,9 @@ dependencies = [
 [[package]]
 name = "hartex_discord_configuration_manifest"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "hartex_discord_core"
