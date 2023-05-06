@@ -45,4 +45,7 @@ appearance {
     // Nickname of the bot user in the server.
     // A string.
     nickname = "HarTex Nightly"
+    // The role colour of the bot's integration role.
+    // A colour object instantiated using the `hex_colour` function.
+    role_colour = hex_colour(195, 218, 32)
 }
