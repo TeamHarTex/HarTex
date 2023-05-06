@@ -25,7 +25,7 @@
 
 // Version of manifest, automatically generated.
 // DO NOT EDIT: will break functionality in some form or another!
-version = "1"
+version = 2
 
 // Dashboard access configurations.
 dashboard {
