@@ -6,6 +6,6 @@
 
 <style>
 * {
-    @apply p-0 m-0 font-sans;
+    @apply p-0 m-0 bg-main font-sans;
 }
 </style>
