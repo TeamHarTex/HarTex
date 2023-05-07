@@ -20,7 +20,9 @@ export default defineConfig({
   theme: {
     colors: {
       mainBackground: '#0F1020',
+      mainBackgroundSecondary: '#252852',
       mainPrimary: '#29658A',
+      mainSecondary: '#474866',
       mainText: '#DDDDDD',
     }
   },
