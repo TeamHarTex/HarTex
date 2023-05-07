@@ -19,7 +19,9 @@ export default defineConfig({
   ],
   theme: {
     colors: {
-      main: '#0F1020'
+      mainBackground: '#0F1020',
+      mainPrimary: '#29658A',
+      mainText: '#DDDDDD',
     }
   },
 })
