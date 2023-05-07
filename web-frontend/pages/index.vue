@@ -15,7 +15,9 @@
                 Makes use of the latest cutting-edge features on Discord.
             </p>
         </div>
-        <div class="buttons"></div>
+        <div class="buttons">
+            
+        </div>
     </div>
 </template>
 
