@@ -59,7 +59,7 @@
 
 .brief-description-text {
     @apply pt-[16px];
-    @apply font-semibold text-[1.25vw];
+    @apply font-[550] text-[1.25vw];
 }
 
 .buttons {
