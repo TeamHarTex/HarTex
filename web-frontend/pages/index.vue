@@ -21,7 +21,7 @@
 
 <style scoped>
 .main-title {
-    @apply pt-[13vh] pd-[5vh] px-[8rem];
+    @apply pt-[13vh] pd-[5vh] px-[13rem];
 }
 
 .title-text {
