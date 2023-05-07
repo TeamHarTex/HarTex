@@ -81,7 +81,7 @@
 }
 
 .content {
-    @apply h-[720px];
+    @apply h-[719px];
     @apply bg-main-background-secondary
 }
 </style>
