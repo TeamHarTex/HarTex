@@ -49,3 +49,21 @@ appearance {
     // A colour object instantiated using the `rgb` function.
     role_colour = rgb(195, 218, 32)
 }
+
+// Permission ranks for HarTex usage (roles).
+ranks roles {
+    // Permissions for the role with ID 1234567890987654
+    role "1234567890987654" {
+        // Permission level
+        level = 100
+    }
+}
+
+// Permission ranks for HarTex usage (users).
+ranks users {
+    // Permissions for the user with ID 1000000000000000
+    user "1000000000000000" {
+        // Permission level
+        level = 100
+    }
+}
