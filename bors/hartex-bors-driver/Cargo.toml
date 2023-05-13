@@ -11,6 +11,8 @@ rust-version = "1.71.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+
 tokio = { version = "1.27.0", features = ["macros", "rt-multi-thread"] }
 
 [features]
