@@ -6,11 +6,12 @@ description = """
 HarTex bors binary
 """
 license = "AGPL-3.0-only"
-rust-version = "1.70.0"
+rust-version = "1.71.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tokio = { version = "1.27.0", features = ["macros", "rt-multi-thread"] }
 
 [features]
 

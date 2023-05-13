@@ -24,4 +24,6 @@
 //!
 //! A reimplementation of Bors in Rust for usage in the HarTex repository.
 
-pub fn main() {}
+/// Entry point.
+#[tokio::main(flavor = "multi_thread")]
+pub async fn main() {}
