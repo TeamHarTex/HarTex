@@ -22,7 +22,6 @@
 
 //! # Bors GitHub API Interaction
 
-
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -43,6 +42,7 @@ pub struct GithubBorsState {
 }
 
 impl GithubBorsState {
+    /// Load the Github application state for bors.
     pub async fn load(
         application_id: AppId,
         private_key: SecretVec<u8>,
@@ -51,9 +51,7 @@ impl GithubBorsState {
         let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref())?;
 
         log::trace!("building github client");
-        let client = Octocrab::builder()
-            .app(application_id, key)
-            .build()?;
+        let client = Octocrab::builder().app(application_id, key).build()?;
 
         log::trace!("obtaining github application");
         let application = client.current().app().await?;
