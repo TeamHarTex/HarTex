@@ -34,7 +34,7 @@ pub fn bors_process(_: GithubBorsState) -> (Sender<()>, impl Future<Output = ()>
     let (tx, mut rx) = mpsc::channel(1024);
     let service = async move {
         while let Some(event) = rx.recv().await {
-            log::trace!("Received event: {event:#?}");
+            log::trace!("received event: {event:#?}");
         }
     };
 
