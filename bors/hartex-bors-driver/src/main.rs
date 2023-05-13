@@ -36,6 +36,8 @@ use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
 use tokio::runtime::Builder;
 
+mod process;
+
 /// Entry point.
 pub fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
@@ -60,10 +62,12 @@ fn actual_main() -> hartex_eyre::Result<()> {
     let mut private_key = String::new();
     private_key_file.read_to_string(&mut private_key)?;
 
-    let _ = runtime.block_on(GithubBorsState::load(
+    let state = runtime.block_on(GithubBorsState::load(
         app_id.into(),
         private_key.into_bytes().into(),
     ))?;
+
+    let (_, _) = process::bors_process(state);
 
     Ok(())
 }

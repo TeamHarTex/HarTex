@@ -42,6 +42,7 @@ pub struct GithubBorsState {
 }
 
 impl GithubBorsState {
+    /// Load the Github application state for bors.
     pub async fn load(
         application_id: AppId,
         private_key: SecretVec<u8>,
