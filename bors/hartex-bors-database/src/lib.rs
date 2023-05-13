@@ -22,3 +22,6 @@
 
 //! # Database for Bors
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
