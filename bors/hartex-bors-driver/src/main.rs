@@ -24,10 +24,25 @@
 //!
 //! A reimplementation of Bors in Rust for usage in the HarTex repository.
 
+use hartex_log::log;
+use tokio::runtime::Builder;
+
 /// Entry point.
-#[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::Result<()> {
+pub fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
+    hartex_log::initialize();
+
+    actual_main()?;
+
+    Ok(())
+}
+
+/// Actual entry point, building the runtime and other stuff.
+fn actual_main() -> hartex_eyre::Result<()> {
+    log::trace!("constructing runtime");
+    let _ = Builder::new_multi_thread()
+        .enable_all()
+        .build()?;
 
     Ok(())
 }
