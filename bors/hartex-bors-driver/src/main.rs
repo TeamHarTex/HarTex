@@ -28,8 +28,15 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::env;
+use std::fs::File;
+use std::io::Read;
+
+use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
 use tokio::runtime::Builder;
+
+mod process;
 
 /// Entry point.
 pub fn main() -> hartex_eyre::Result<()> {
@@ -43,12 +50,24 @@ pub fn main() -> hartex_eyre::Result<()> {
 
 /// Actual entry point, building the runtime and other stuff.
 fn actual_main() -> hartex_eyre::Result<()> {
+    dotenvy::dotenv()?;
+
     log::trace!("constructing runtime");
-    let _ = Builder::new_multi_thread()
-        .enable_all()
-        .build()?;
+    let runtime = Builder::new_multi_thread().enable_all().build()?;
 
     log::trace!("loading github application state");
+    let app_id = env::var("APP_ID")?.parse::<u64>()?;
+
+    let mut private_key_file = File::open("../bors-private-key.pem")?;
+    let mut private_key = String::new();
+    private_key_file.read_to_string(&mut private_key)?;
+
+    let state = runtime.block_on(GithubBorsState::load(
+        app_id.into(),
+        private_key.into_bytes().into(),
+    ))?;
+
+    let (_, _) = process::bors_process(state);
 
     Ok(())
 }
