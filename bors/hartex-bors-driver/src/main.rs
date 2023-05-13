@@ -26,4 +26,8 @@
 
 /// Entry point.
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() {}
+pub async fn main() -> hartex_eyre::Result<()> {
+    hartex_eyre::initialize()?;
+
+    Ok(())
+}
