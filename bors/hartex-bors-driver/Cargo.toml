@@ -11,10 +11,13 @@ rust-version = "1.71.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_bors_github = { path = "../hartex-bors-github" }
+
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-tokio = { version = "1.27.0", features = ["rt-multi-thread"] }
+dotenvy = "0.15.7"
+tokio = { version = "1.27.0", features = ["rt-multi-thread", "sync"] }
 
 [features]
 
