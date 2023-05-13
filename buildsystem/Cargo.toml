@@ -1,7 +1,7 @@
 [workspace]
 members = [
+    "hartexbuild-driver",
     "hartexbuild-hartexfile",
-    "hartexbuild-main",
 ]
 
 [profile.release]
