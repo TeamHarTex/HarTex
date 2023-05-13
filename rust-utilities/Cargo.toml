@@ -4,7 +4,6 @@ members = [
     "hartex-eyre",
     "hartex-kafka-utils",
     "hartex-log",
-    "hartex-smee-client",
 ]
 
 [profile.release]

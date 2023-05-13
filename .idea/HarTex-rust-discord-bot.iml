@@ -79,6 +79,7 @@
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models-v1/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-manifest/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-smee-client/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
