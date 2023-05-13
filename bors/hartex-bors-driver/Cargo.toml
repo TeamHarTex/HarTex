@@ -1,24 +1,22 @@
 [package]
-name = "hartexbuild_main"
+name = "hartex_bors_driver"
 version = "0.1.0"
 edition = "2021"
 description = """
-HarTex buildsystem binary
+HarTex bors binary
 """
 license = "AGPL-3.0-only"
-rust-version = "1.70.0"
+rust-version = "1.71.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartexbuild_hartexfile = { path = "../hartexbuild-hartexfile" }
-
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
-clap = "4.2.7"
+tokio = { version = "1.27.0", features = ["macros", "rt-multi-thread"] }
 
 [features]
 
 [[bin]]
-name = "hartexbuild"
+name = "bors"
 path = "src/main.rs"

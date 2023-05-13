@@ -5,6 +5,13 @@ project api-backend {
     include-debug-info = true
 }
 
+project bors {
+    type = "rust"
+
+    profile = "release"
+    include-debug-info = true
+}
+
 project buildsystem {
     type = "rust"
 

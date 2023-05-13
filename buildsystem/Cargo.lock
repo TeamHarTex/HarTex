@@ -233,21 +233,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartexbuild_driver"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "hartex_eyre",
+ "hartexbuild_hartexfile",
+]
+
+[[package]]
 name = "hartexbuild_hartexfile"
 version = "0.1.0"
 dependencies = [
  "hartex_eyre",
  "hcl-rs",
  "serde",
-]
-
-[[package]]
-name = "hartexbuild_main"
-version = "0.1.0"
-dependencies = [
- "clap",
- "hartex_eyre",
- "hartexbuild_hartexfile",
 ]
 
 [[package]]

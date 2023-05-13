@@ -1,9 +1,0 @@
-status = [
-    "discord-frontend - Full Release Build",
-    "discord-frontend - Test",
-    "rust-utilities - Full Release Build",
-    "localization - Full Release Build",
-    "localization - Test"
-]
-
-commit_title = "Auto merge of ${PR_REFS}"
