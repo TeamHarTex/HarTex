@@ -1,5 +1,5 @@
 [package]
-name = "hartex_bors_driver"
+name = "hartex_bors_database"
 version = "0.1.0"
 edition = "2021"
 description = """
@@ -12,12 +12,7 @@ rust-version = "1.71.0"
 
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-tokio = { version = "1.27.0", features = ["rt-multi-thread"] }
+sqlx = { version = "0.6.3", features = ["sqlite", "runtime-tokio-native-tls"] }
 
 [features]
-
-[[bin]]
-name = "bors"
-path = "src/main.rs"

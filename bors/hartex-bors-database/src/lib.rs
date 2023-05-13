@@ -20,35 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Bors for HarTex
-//!
-//! A reimplementation of Bors in Rust for usage in the HarTex repository.
+//! # Database for Bors
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-
-use hartex_log::log;
-use tokio::runtime::Builder;
-
-/// Entry point.
-pub fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
-    hartex_log::initialize();
-
-    actual_main()?;
-
-    Ok(())
-}
-
-/// Actual entry point, building the runtime and other stuff.
-fn actual_main() -> hartex_eyre::Result<()> {
-    log::trace!("constructing runtime");
-    let _ = Builder::new_multi_thread()
-        .enable_all()
-        .build()?;
-
-    log::trace!("loading github application state");
-
-    Ok(())
-}

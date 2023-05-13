@@ -1,5 +1,5 @@
 [package]
-name = "hartex_bors_driver"
+name = "hartex_bors_github"
 version = "0.1.0"
 edition = "2021"
 description = """
@@ -14,10 +14,8 @@ rust-version = "1.71.0"
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-tokio = { version = "1.27.0", features = ["rt-multi-thread"] }
+jsonwebtoken = "8.3.0"
+octocrab = "0.21.0"
+secrecy = "0.8.0"
 
 [features]
-
-[[bin]]
-name = "bors"
-path = "src/main.rs"
