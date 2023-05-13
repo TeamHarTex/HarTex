@@ -1,4 +1,6 @@
 [workspace]
 members = [
+    "hartex-bors-database",
     "hartex-bors-driver",
+    "hartex-bors-github",
 ]
