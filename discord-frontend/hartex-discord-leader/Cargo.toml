@@ -18,7 +18,7 @@ hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 futures-util = "0.3.28"
-rdkafka = { version = "0.29.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
+rdkafka = { version = "0.30.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
 tracing = { version = "0.1.38", features = ["log-always" ]}
 
 [features]
