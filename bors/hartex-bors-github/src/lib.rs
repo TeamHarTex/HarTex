@@ -22,5 +22,45 @@
 
 //! # Bors GitHub API Interaction
 
-/// State of the bors application
-pub struct BorsState;
+
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
+use hartex_log::log;
+use jsonwebtoken::EncodingKey;
+use octocrab::models::App;
+use octocrab::models::AppId;
+use octocrab::Octocrab;
+use secrecy::ExposeSecret;
+use secrecy::SecretVec;
+
+/// State of the bors Github application
+#[allow(dead_code)]
+pub struct GithubBorsState {
+    application: App,
+    client: Octocrab,
+}
+
+impl GithubBorsState {
+    pub async fn load(
+        application_id: AppId,
+        private_key: SecretVec<u8>,
+    ) -> hartex_eyre::Result<Self> {
+        log::trace!("obtaining private key");
+        let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref())?;
+
+        log::trace!("building github client");
+        let client = Octocrab::builder()
+            .app(application_id, key)
+            .build()?;
+
+        log::trace!("obtaining github application");
+        let application = client.current().app().await?;
+
+        Ok(Self {
+            application,
+            client,
+        })
+    }
+}

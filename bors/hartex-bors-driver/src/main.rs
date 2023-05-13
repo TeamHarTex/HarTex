@@ -24,6 +24,10 @@
 //!
 //! A reimplementation of Bors in Rust for usage in the HarTex repository.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use hartex_log::log;
 use tokio::runtime::Builder;
 
@@ -43,6 +47,8 @@ fn actual_main() -> hartex_eyre::Result<()> {
     let _ = Builder::new_multi_thread()
         .enable_all()
         .build()?;
+
+    log::trace!("loading github application state");
 
     Ok(())
 }
