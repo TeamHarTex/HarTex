@@ -20,34 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # Backend API Routes V1
+use rocket::get;
+use rocket::http::Status;
+use serde_json::Value;
+
+/// # Bors Routes
 ///
-/// Routes v1 for the backend API.
+/// Routes interacting with the bors API.
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
-use hartex_backend_ratelimiter::limitable::Limitable;
-use governor::Quota;
-use rocket::http::Method;
-use hartex_log::log;
-
-pub mod bors;
-pub mod uptime;
-
-/// A ratelimit guard for ratelimiting requests.
-pub struct RateLimitGuard;
-
-impl<'r> Limitable<'r> for RateLimitGuard {
-    fn evaluate_limit(method: Method, route: &str) -> Quota {
-        match (method, route) {
-            (Method::Post, hmm) => {
-                log::debug!("{hmm}");
-
-                Quota::per_second(Self::non_zero(1))
-            },
-            _ => Quota::per_second(Self::non_zero(1))
-        }
-    }
+/// # `GET /bors/users/<user>/permissions?repository=<repository>`
+///
+/// Obtain the uptime of a certain component.
+#[get("/bors/users/<user>/permissions?<repository>")]
+pub async fn v1_get_bors_user_permission_in_repository(
+    user: String,
+    repository: String
+) -> (Status, Value) {
+    todo!()
 }
