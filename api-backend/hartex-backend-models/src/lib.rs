@@ -24,6 +24,10 @@
 //!
 //! The general models crate provides general models regarding the API backend.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use serde::Deserialize;
 
 /// An API response object.

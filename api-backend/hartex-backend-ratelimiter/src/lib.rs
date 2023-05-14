@@ -24,6 +24,9 @@
 //!
 //! A ratelimiter for the API backend, with reliance on the `governor` crate.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(core_intrinsics)]
 
 use std::marker::PhantomData;
