@@ -17,7 +17,7 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 dotenvy = "0.15.7"
-tokio = { version = "1.27.0", features = ["rt-multi-thread", "sync"] }
+tokio = { version = "1.28.1", features = ["rt-multi-thread", "sync"] }
 
 [features]
 
