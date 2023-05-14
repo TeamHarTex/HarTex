@@ -1,9 +1,9 @@
 [package]
-name = "hartex_bors_github"
+name = "hartex_bors_permissions"
 version = "0.1.0"
 edition = "2021"
 description = """
-HarTex bors Github things
+HarTex bors permission resolver
 """
 license = "AGPL-3.0-only"
 rust-version = "1.71.0"
@@ -11,11 +11,5 @@ rust-version = "1.71.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
-
-jsonwebtoken = "8.3.0"
-octocrab = "0.21.0"
-secrecy = "0.8.0"
 
 [features]

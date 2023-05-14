@@ -23,15 +23,14 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
-
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
 use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
+use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
-use rocket::http::Status;
 use scylla::cql_to_rust::FromCqlVal;
 use scylla::frame::Compression;
 use scylla::SessionBuilder;
@@ -44,11 +43,17 @@ use crate::RateLimitGuard;
 ///
 /// Obtain the uptime of a certain component.
 #[post("/uptime", data = "<data>")]
-pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter<'_, RateLimitGuard>) -> (Status, Value) {
+pub async fn v1_post_uptime(
+    data: Json<UptimeQuery<'_>>,
+    _ratelimit: RateLimiter<'_, RateLimitGuard>,
+) -> (Status, Value) {
     let username = env::var("API_SCYLLADB_USERNAME");
     let passwd = env::var("API_SCYLLADB_PASSWORD");
     if username.is_err() || passwd.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let session = SessionBuilder::new()
@@ -58,19 +63,32 @@ pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter
         .build()
         .await;
     if session.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let session = session.unwrap();
-    let statement = session.prepare("SELECT current_time FROM main.start_timestamp WHERE bot_name = ?").await;
+    let statement = session
+        .prepare("SELECT current_time FROM main.start_timestamp WHERE bot_name = ?")
+        .await;
     if statement.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let statement = statement.unwrap();
-    let result = session.execute(&statement, (data.0.component_name().to_string(),)).await;
+    let result = session
+        .execute(&statement, (data.0.component_name().to_string(),))
+        .await;
     if result.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let result = result.unwrap();
@@ -83,16 +101,22 @@ pub async fn v1_post_uptime(data: Json<UptimeQuery<'_>>, _ratelimit: RateLimiter
     let value = row.columns.get(0).unwrap().as_ref().unwrap();
     let duration = i64::from_cql(value.clone());
     if duration.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let millis = duration.unwrap() / 1000;
 
-    (Status::Ok, json!({
-        "code": 200,
-        "message": "ok",
-        "data": {
-            "start_timestamp": millis,
-        }
-    }))
+    (
+        Status::Ok,
+        json!({
+            "code": 200,
+            "message": "ok",
+            "data": {
+                "start_timestamp": millis,
+            }
+        }),
+    )
 }

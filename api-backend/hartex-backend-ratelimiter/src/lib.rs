@@ -20,10 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # API Backend Ralelimiter
-///
-/// A ratelimiter for the API backend, with reliance on the `governor` crate.
+//! # API Backend Ralelimiter
+//!
+//! A ratelimiter for the API backend, with reliance on the `governor` crate.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(core_intrinsics)]
 
 use std::marker::PhantomData;
@@ -50,13 +53,15 @@ pub mod state;
 /// A ratelimiter.
 pub struct RateLimiter<'r, L>
 where
-    L: Limitable<'r>, {
+    L: Limitable<'r>,
+{
     phantom: PhantomData<&'r L>,
 }
 
 impl<'r, L> RateLimiter<'r, L>
 where
-    L: Limitable<'r>, {
+    L: Limitable<'r>,
+{
     /// Handle a request, responding with ratelimit errors when appropriate.
     pub fn handle_from_request(request: &'r Request) -> Outcome<Self, LimitError> {
         let result = request.local_cache(|| {
@@ -65,7 +70,7 @@ where
                     let limiter = Registry::get_or_insert::<L>(
                         route.method,
                         route_name,
-                        L::evaluate_limit(route.method, route_name)
+                        L::evaluate_limit(route.method, route_name),
                     );
 
                     if let Some(client_ip) = request.client_ip() {
@@ -74,7 +79,8 @@ where
                         match limit_check_result {
                             Ok(state) => {
                                 let request_capacity = state.remaining_burst_capacity();
-                                let request_state = RequestState::new(state.quota(), request_capacity);
+                                let request_state =
+                                    RequestState::new(state.quota(), request_capacity);
 
                                 let _ = request.local_cache(|| request_state);
 
@@ -105,7 +111,7 @@ where
                     LimitError::RequestRateLimited(_, _) => {
                         Outcome::Failure((Status::TooManyRequests, error))
                     }
-                    _ => Outcome::Failure((Status::BadRequest, error))
+                    _ => Outcome::Failure((Status::BadRequest, error)),
                 }
             }
         }
@@ -113,8 +119,8 @@ where
 }
 
 impl<'r, T> Default for RateLimiter<'r, T>
-    where
-        T: Limitable<'r>,
+where
+    T: Limitable<'r>,
 {
     fn default() -> Self {
         Self {
@@ -126,7 +132,8 @@ impl<'r, T> Default for RateLimiter<'r, T>
 #[async_trait]
 impl<'r, L> FromRequest<'r> for RateLimiter<'r, L>
 where
-    L: Limitable<'r>, {
+    L: Limitable<'r>,
+{
     type Error = LimitError;
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {

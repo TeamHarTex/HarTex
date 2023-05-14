@@ -83,6 +83,7 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-smee-client/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-database/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-github/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-permissions/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />

@@ -36,9 +36,7 @@ pub struct UptimeQuery<'a> {
 impl<'a> UptimeQuery<'a> {
     /// Create a new uptime query with the component name to search for.
     pub fn new(component_name: &'a str) -> Self {
-        Self {
-            component_name
-        }
+        Self { component_name }
     }
 
     /// The component name to search for in this uptime query.

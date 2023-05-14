@@ -24,4 +24,9 @@
 //!
 //! The models in the API specification V1 for the backend.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
+pub mod bors;
 pub mod uptime;

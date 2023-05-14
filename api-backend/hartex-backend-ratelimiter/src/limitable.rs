@@ -23,7 +23,6 @@
 /// # Limitables
 ///
 /// A limitable is a route that can be ratelimited.
-
 use std::num::NonZeroU32;
 
 use governor::Quota;

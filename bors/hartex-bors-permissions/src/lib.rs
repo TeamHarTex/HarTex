@@ -20,34 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Backend API Routes V1
-//!
-//! Routes v1 for the backend API.
+//! # Bors Permission Resolver
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+#![feature(async_fn_in_trait)]
 
-use governor::Quota;
-use hartex_backend_ratelimiter::limitable::Limitable;
-use hartex_log::log;
-use rocket::http::Method;
+/// The type of permission.
+pub enum Permission {}
 
-pub mod bors;
-pub mod uptime;
-
-/// A ratelimit guard for ratelimiting requests.
-pub struct RateLimitGuard;
-
-impl<'r> Limitable<'r> for RateLimitGuard {
-    fn evaluate_limit(method: Method, route: &str) -> Quota {
-        match (method, route) {
-            (Method::Post, hmm) => {
-                log::debug!("{hmm}");
-
-                Quota::per_second(Self::non_zero(1))
-            }
-            _ => Quota::per_second(Self::non_zero(1)),
-        }
-    }
+/// A base permission resolver.
+pub trait PermissionResolver {
+    /// Resolves permissions for a user and returns whether that user has the specified permission.
+    async fn resolve_user(&self, username: &str, permission: Permission) -> bool;
 }
