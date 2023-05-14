@@ -27,12 +27,12 @@
 //! These catchers are invoked by the main backend process when a certain error has occurred and
 //! the status code of that error has an error catcher registered.
 
-use rocket::http::Status;
-use rocket::catch;
-use rocket::Request;
-use serde_json::Value;
 use hartex_backend_ratelimiter::error::LimitError;
 use hartex_backend_status_util::StatusFns;
+use rocket::catch;
+use rocket::http::Status;
+use rocket::Request;
+use serde_json::Value;
 
 /// # 404 Catcher
 ///

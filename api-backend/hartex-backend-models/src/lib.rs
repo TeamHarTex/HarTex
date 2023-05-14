@@ -24,6 +24,10 @@
 //!
 //! The general models crate provides general models regarding the API backend.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use serde::Deserialize;
 
 /// An API response object.
@@ -33,12 +37,13 @@ use serde::Deserialize;
 pub struct Response<'a, T> {
     code: u16,
     message: &'a str,
-    data: T
+    data: T,
 }
 
 impl<'a, T> Response<'a, T>
 where
-    T: Clone + Deserialize<'a> {
+    T: Clone + Deserialize<'a>,
+{
     /// The status code of the response.
     pub fn code(&self) -> u16 {
         self.code

@@ -21,14 +21,13 @@
  */
 
 /// # Ratelimited Request State
-
 use governor::Quota;
 
 /// A cached state for requests coming into the API backend.
 #[derive(Debug)]
 pub struct RequestState {
     pub(crate) quota: Quota,
-    pub(crate) request_capacity: u32
+    pub(crate) request_capacity: u32,
 }
 
 impl RequestState {
