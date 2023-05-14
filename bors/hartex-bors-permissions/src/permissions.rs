@@ -21,8 +21,15 @@
  */
 
 use std::collections::HashSet;
+use std::env;
 
 use hartex_bors_github::models::GithubRepositoryName;
+use hartex_log::log;
+use hyper::Client;
+use hyper::Method;
+use hyper::Request;
+use hyper::header::ACCEPT;
+use hyper::header::USER_AGENT;
 
 use crate::Permission;
 
@@ -44,9 +51,26 @@ impl UserPermissions {
 async fn load(repository: &GithubRepositoryName) -> hartex_eyre::Result<UserPermissions> {
     let try_build_users = load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
 
-    todo!()
+    Ok(UserPermissions {
+        try_build_users,
+    })
 }
 
-async fn load_permissions_from_api(repository_name: &str, permission: Permission) -> hartex_eyre::Result<HashSet<String>> {
+async fn load_permissions_from_api(
+    repository_name: &str,
+    permission: Permission
+) -> hartex_eyre::Result<HashSet<String>> {
+    let client = Client::builder().build_http::<String>();
+    let api_domain = env::var("API_DOMAIN")?;
+    let uri = format!("http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}");
+
+    log::debug!("sending a request to {}", &uri);
+
+    let request = Request::builder()
+        .uri(uri)
+        .method(Method::GET)
+        .header(ACCEPT, "application/json")
+        .body(String::new())?;
+
     todo!()
 }
