@@ -42,6 +42,8 @@ impl UserPermissions {
 }
 
 async fn load(repository: &GithubRepositoryName) -> hartex_eyre::Result<UserPermissions> {
+    let try_build_users = load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
+
     todo!()
 }
 

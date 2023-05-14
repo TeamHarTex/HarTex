@@ -27,3 +27,9 @@ pub struct GithubRepositoryName {
     owner: String,
     repository: String,
 }
+
+impl GithubRepositoryName {
+    pub fn repository(&self) -> &str {
+        self.repository.as_str()
+    }
+}
