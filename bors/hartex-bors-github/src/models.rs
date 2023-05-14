@@ -20,36 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Bors Permission Resolver
+//! # Utility Models
 
-#![feature(async_fn_in_trait)]
-
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as FmtResult;
-
-pub mod permissions;
-
-/// The type of permission.
-#[non_exhaustive]
-pub enum Permission {
-    /// Permission to try builds.
-    ///
-    /// @bors try
-    TryBuild,
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct GithubRepositoryName {
+    owner: String,
+    repository: String,
 }
 
-impl Display for Permission {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        match self {
-            Self::TryBuild => write!(f, "trybuild"),
-            _ => write!(f, "unknown"),
-        }
+impl GithubRepositoryName {
+    pub fn repository(&self) -> &str {
+        self.repository.as_str()
     }
-}
-
-/// A base permission resolver.
-pub trait PermissionResolver {
-    /// Resolves permissions for a user and returns whether that user has the specified permission.
-    async fn resolve_user(&self, username: &str, permission: Permission) -> bool;
 }

@@ -27,11 +27,11 @@
 use std::fs::File;
 use std::io::Read;
 
+use hartex_backend_status_util::StatusFns;
 use rocket::get;
 use rocket::http::Status;
 use serde_json::json;
 use serde_json::Value;
-use hartex_backend_status_util::StatusFns;
 
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
@@ -54,7 +54,10 @@ pub async fn v1_get_bors_user_list_with_permissions_in_repository(
     let mut file = result.unwrap();
     let mut buffer = String::new();
     if let Err(_) = file.read_to_string(&mut buffer) {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let users = buffer.lines().collect::<Vec<_>>();
@@ -67,6 +70,6 @@ pub async fn v1_get_bors_user_list_with_permissions_in_repository(
             "data": {
                 "github_users": users
             }
-        })
+        }),
     )
 }
