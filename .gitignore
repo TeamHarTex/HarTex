@@ -29,5 +29,6 @@
 **/.gradle
 **/build
 
+backend-data
 hartexbuild.exe
 bors-private-key.pem

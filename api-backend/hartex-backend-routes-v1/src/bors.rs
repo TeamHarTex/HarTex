@@ -28,13 +28,13 @@ use serde_json::Value;
 ///
 /// Routes interacting with the bors API.
 
-/// # `GET /bors/users/<user>/permissions?repository=<repository>`
+/// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
-/// Obtain the uptime of a certain component.
-#[get("/bors/users/<user>/permissions?<repository>")]
-pub async fn v1_get_bors_user_permission_in_repository(
-    user: String,
-    repository: String
+/// Obtain the list of users having the specified permission in a repository.
+#[get("/bors/repository/<repository>/permissions/<permission>")]
+pub async fn v1_get_bors_user_list_with_permissions_in_repository(
+    repository: String,
+    permission: String,
 ) -> (Status, Value) {
     todo!()
 }
