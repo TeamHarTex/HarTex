@@ -20,13 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Bors Routes
+//!
+//! Routes interacting with the bors API.
+
+use std::fs::File;
+use std::io::Read;
+
 use rocket::get;
 use rocket::http::Status;
 use serde_json::Value;
-
-/// # Bors Routes
-///
-/// Routes interacting with the bors API.
+use hartex_backend_status_util::StatusFns;
 
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
@@ -36,5 +40,21 @@ pub async fn v1_get_bors_user_list_with_permissions_in_repository(
     repository: String,
     permission: String,
 ) -> (Status, Value) {
+    let result = File::open(format!(
+        "../backend-data/bors.{}.permissions.{}.json",
+        repository.to_lowercase(),
+        permission.to_lowercase()
+    ));
+
+    if result.is_err() {
+        return (Status::NotFound, StatusFns::not_found());
+    }
+
+    let mut file = result.unwrap();
+    let mut buffer = String::new();
+    if let Err(_) = file.read_to_string(&mut buffer) {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
+
     todo!()
 }
