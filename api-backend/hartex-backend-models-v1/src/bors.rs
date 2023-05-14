@@ -20,13 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Backend Models V1
+//! # Bors Models V1
 //!
-//! The models in the API specification V1 for the backend.
+//! Models for the bors API specifcation V1 of the backend.
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+use serde::Deserialize;
 
-pub mod bors;
-pub mod uptime;
+/// A response to an uptime query.
+#[derive(Clone, Deserialize)]
+pub struct RepositoryPermissionUserListResponse {
+    github_users: Vec<String>,
+}
+
+impl RepositoryPermissionUserListResponse {
+    /// The start timestamp of the uptime entry.
+    pub fn github_users(&self) -> &[String] {
+        self.github_users.as_ref()
+    }
+}

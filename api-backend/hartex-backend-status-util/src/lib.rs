@@ -20,9 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # Backend API Status Functions
-///
-/// Functions for returning JSON payloads for error statuses.
+//! # Backend API Status Functions
+//!
+//! Functions for returning JSON payloads for error statuses.
+
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use serde_json::json;
 use serde_json::Value;
 

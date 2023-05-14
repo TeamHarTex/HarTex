@@ -29,6 +29,7 @@ use std::io::Read;
 
 use rocket::get;
 use rocket::http::Status;
+use serde_json::json;
 use serde_json::Value;
 use hartex_backend_status_util::StatusFns;
 
@@ -41,7 +42,7 @@ pub async fn v1_get_bors_user_list_with_permissions_in_repository(
     permission: String,
 ) -> (Status, Value) {
     let result = File::open(format!(
-        "../backend-data/bors.{}.permissions.{}.json",
+        "../backend-data/bors.{}.permissions.{}",
         repository.to_lowercase(),
         permission.to_lowercase()
     ));
@@ -56,5 +57,16 @@ pub async fn v1_get_bors_user_list_with_permissions_in_repository(
         return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    todo!()
+    let users = buffer.lines().collect::<Vec<_>>();
+
+    (
+        Status::Ok,
+        json!({
+            "code": 200,
+            "message": "ok",
+            "data": {
+                "github_users": users
+            }
+        })
+    )
 }
