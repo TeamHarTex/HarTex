@@ -11,5 +11,10 @@ rust-version = "1.71.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_bors_github = { path = "../hartex-bors-github" }
 
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
+
+hyper = { version = "0.14.26", features = ["client", "http2"] }
 [features]

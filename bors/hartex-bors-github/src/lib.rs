@@ -26,6 +26,8 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+pub mod models;
+
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::App;
