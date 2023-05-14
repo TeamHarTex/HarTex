@@ -23,7 +23,6 @@
 /// # Backend API Status Functions
 ///
 /// Functions for returning JSON payloads for error statuses.
-
 use serde_json::json;
 use serde_json::Value;
 

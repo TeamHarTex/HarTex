@@ -20,18 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # Backend API Routes V1
-///
-/// Routes v1 for the backend API.
+//! # Backend API Routes V1
+//!
+//! Routes v1 for the backend API.
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use hartex_backend_ratelimiter::limitable::Limitable;
 use governor::Quota;
-use rocket::http::Method;
+use hartex_backend_ratelimiter::limitable::Limitable;
 use hartex_log::log;
+use rocket::http::Method;
 
 pub mod bors;
 pub mod uptime;
@@ -46,8 +46,8 @@ impl<'r> Limitable<'r> for RateLimitGuard {
                 log::debug!("{hmm}");
 
                 Quota::per_second(Self::non_zero(1))
-            },
-            _ => Quota::per_second(Self::non_zero(1))
+            }
+            _ => Quota::per_second(Self::non_zero(1)),
         }
     }
 }

@@ -26,11 +26,11 @@ use std::net::IpAddr;
 use std::sync::Arc;
 use std::sync::RwLock;
 
-use governor::Quota;
 use governor::clock::DefaultClock;
 use governor::middleware::StateInformationMiddleware;
 use governor::state::keyed::DefaultKeyedStateStore;
 use governor::state::RateLimiter;
+use governor::Quota;
 use lazy_static::lazy_static;
 use rocket::http::Method;
 
@@ -45,14 +45,18 @@ impl Registry {
         }
     }
 
-    pub(crate) fn get_or_insert<T>(method: Method, route: &str, quota: Quota) -> RegisteredRateLimiter {
+    pub(crate) fn get_or_insert<T>(
+        method: Method,
+        route: &str,
+        quota: Quota,
+    ) -> RegisteredRateLimiter {
         let route_name = type_name::<T>().to_string() + "::" + route;
 
         let option_limiter = if let Ok(readlock) = REGISTRY.limiter_map.read() {
             if let Some(found_method) = readlock.get(&method) {
-                found_method.get(&route_name).map(|limiter| {
-                    Arc::clone(limiter)
-                })
+                found_method
+                    .get(&route_name)
+                    .map(|limiter| Arc::clone(limiter))
             } else {
                 None
             }
@@ -69,14 +73,18 @@ impl Registry {
                 if let Some(limiter) = found_method.get(&route_name) {
                     Arc::clone(limiter)
                 } else {
-                    let limiter = Arc::new(RateLimiter::keyed(quota).with_middleware::<StateInformationMiddleware>());
+                    let limiter = Arc::new(
+                        RateLimiter::keyed(quota).with_middleware::<StateInformationMiddleware>(),
+                    );
                     found_method.insert(route_name, Arc::clone(&limiter));
 
                     limiter
                 }
             } else {
                 let mut limiter_map = HashMap::new();
-                let limiter = Arc::new(RateLimiter::keyed(quota).with_middleware::<StateInformationMiddleware>());
+                let limiter = Arc::new(
+                    RateLimiter::keyed(quota).with_middleware::<StateInformationMiddleware>(),
+                );
                 limiter_map.insert(route_name, Arc::clone(&limiter));
                 writelock.insert(method, limiter_map);
 
@@ -91,7 +99,9 @@ impl Registry {
     }
 }
 
-pub(crate) type RegisteredRateLimiter = Arc<RateLimiter<IpAddr, DefaultKeyedStateStore<IpAddr>, DefaultClock, StateInformationMiddleware>>;
+pub(crate) type RegisteredRateLimiter = Arc<
+    RateLimiter<IpAddr, DefaultKeyedStateStore<IpAddr>, DefaultClock, StateInformationMiddleware>,
+>;
 
 lazy_static! {
     static ref REGISTRY: Registry = Registry::new();

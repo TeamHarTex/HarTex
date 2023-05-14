@@ -20,19 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use governor::Quota;
+use hartex_backend_status_util::StatusFns;
+use rocket::http::ContentType;
+use rocket::http::Status;
+use rocket::response::Responder;
+use rocket::response::Result;
+use rocket::Request;
+use rocket::Response;
 /// # Ratelimit Errors
 ///
 /// Ratelimit errors that may be returned by the ratelimiter.
-
 use std::io::Cursor;
-use governor::Quota;
-use rocket::http::ContentType;
-use rocket::http::Status;
-use rocket::Request;
-use rocket::Response;
-use rocket::response::Responder;
-use rocket::response::Result;
-use hartex_backend_status_util::StatusFns;
 
 /// A ratelimit error.
 #[derive(Clone, Debug)]
@@ -51,9 +50,7 @@ pub enum LimitError {
 
 impl<'r, 'o: 'r> Responder<'r, 'o> for &LimitError {
     fn respond_to(self, _: &'r Request<'_>) -> Result<'o> {
-        let mut response = Response::build()
-            .header(ContentType::JSON)
-            .finalize();
+        let mut response = Response::build().header(ContentType::JSON).finalize();
 
         match self {
             LimitError::ClientIpNotSpecified => {
@@ -67,7 +64,10 @@ impl<'r, 'o: 'r> Responder<'r, 'o> for &LimitError {
 
                 response.set_raw_header("Retry-After", wait_time.to_string());
                 response.set_raw_header("X-RateLimit-Limit", quota.burst_size().to_string());
-                response.set_raw_header("X-RateLimit-Reset-After", quota.burst_size_replenished_in().as_secs().to_string());
+                response.set_raw_header(
+                    "X-RateLimit-Reset-After",
+                    quota.burst_size_replenished_in().as_secs().to_string(),
+                );
 
                 let body = StatusFns::too_many_requests().to_string();
                 response.set_sized_body(body.len(), Cursor::new(body));
