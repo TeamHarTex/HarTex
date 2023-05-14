@@ -516,6 +516,10 @@ dependencies = [
 [[package]]
 name = "hartex_bors_permissions"
 version = "0.1.0"
+dependencies = [
+ "hartex_bors_github",
+ "hartex_eyre",
+]
 
 [[package]]
 name = "hartex_eyre"

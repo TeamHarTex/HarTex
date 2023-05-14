@@ -20,36 +20,31 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Bors Permission Resolver
+use std::collections::HashSet;
 
-#![feature(async_fn_in_trait)]
+use hartex_bors_github::models::GithubRepositoryName;
 
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as FmtResult;
+use crate::Permission;
 
-pub mod permissions;
-
-/// The type of permission.
-#[non_exhaustive]
-pub enum Permission {
-    /// Permission to try builds.
-    ///
-    /// @bors try
-    TryBuild,
+/// User permissions data structure.
+pub struct UserPermissions {
+    try_build_users: HashSet<String>,
 }
 
-impl Display for Permission {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        match self {
-            Self::TryBuild => write!(f, "trybuild"),
-            _ => write!(f, "unknown"),
+impl UserPermissions {
+    /// Checks whether a user has a certain permission.
+    pub fn user_has_permission(&self, username: &str, permission: Permission) -> bool {
+        match permission {
+            Permission::TryBuild => self.try_build_users.contains(username),
+            _ => false,
         }
     }
 }
 
-/// A base permission resolver.
-pub trait PermissionResolver {
-    /// Resolves permissions for a user and returns whether that user has the specified permission.
-    async fn resolve_user(&self, username: &str, permission: Permission) -> bool;
+async fn load(repository: &GithubRepositoryName) -> hartex_eyre::Result<UserPermissions> {
+    todo!()
+}
+
+async fn load_permissions_from_api(repository_name: &str, permission: Permission) -> hartex_eyre::Result<HashSet<String>> {
+    todo!()
 }
