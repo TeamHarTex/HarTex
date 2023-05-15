@@ -1022,9 +1022,7 @@
     sirv "^2.0.3"
 
 "@unocss/nuxt@^0.51.8":
-  version "0.51.12"
-  resolved "https://registry.yarnpkg.com/@unocss/nuxt/-/nuxt-0.51.12.tgz#122a1189dadd2a60425232df2cd5848454cd9a20"
-  integrity sha512-8K+pqB5wg5DcfcnVglAYIxW3nnkRF4bau8q0knqKHKQBMLgQHclRNFR+S5Xos3JZf/Fj9BLVlY2DEtWUD7cc6g==
+  version "0.51.13"
   dependencies:
     "@nuxt/kit" "^3.4.3"
     "@unocss/config" "0.51.12"
