@@ -503,6 +503,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_backend_models"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "hartex_backend_models_v1"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "hartex_bors_database"
 version = "0.1.0"
 dependencies = [
@@ -536,10 +550,13 @@ dependencies = [
 name = "hartex_bors_permissions"
 version = "0.1.0"
 dependencies = [
+ "hartex_backend_models",
+ "hartex_backend_models_v1",
  "hartex_bors_github",
  "hartex_eyre",
  "hartex_log",
  "hyper",
+ "serde_json",
 ]
 
 [[package]]
