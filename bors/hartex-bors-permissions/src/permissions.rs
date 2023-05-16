@@ -22,14 +22,16 @@
 
 use std::collections::HashSet;
 use std::env;
+use std::str;
 
 use hartex_bors_github::models::GithubRepositoryName;
+use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
+use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
-use hyper::header::USER_AGENT;
 
 use crate::Permission;
 
@@ -71,6 +73,20 @@ async fn load_permissions_from_api(
         .method(Method::GET)
         .header(ACCEPT, "application/json")
         .body(String::new())?;
+
+    let mut response = client.request(request).await?;
+    let mut full = String::new();
+    while let Some(result) = response.body_mut().data().await {
+        full.push_str(str::from_utf8(&result?)?);
+    }
+    if !response.status().is_success() {
+        log::error!("unsuccessful HTTP request, response: {full}");
+
+        return Err(Report::msg(format!(
+            "unsuccessful HTTP request, with status code {}",
+            response.status()
+        )));
+    }
 
     todo!()
 }

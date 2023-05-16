@@ -31,7 +31,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use hartex_backend_routes_v1::bors::v1_get_bors_user_list_with_permissions_in_repository;
+use hartex_backend_routes_v1::bors::v1_repository_repository_permissions_permissions;
 use hartex_backend_routes_v1::uptime::v1_post_uptime;
 use hartex_log::log;
 use rocket::catchers;
@@ -56,7 +56,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
             "/api/v1",
             routes![
                 v1_post_uptime,
-                v1_get_bors_user_list_with_permissions_in_repository
+                v1_repository_repository_permissions_permissions,
             ],
         )
         .register(
