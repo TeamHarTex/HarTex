@@ -24,6 +24,8 @@ use std::collections::HashSet;
 use std::env;
 use std::str;
 
+use hartex_backend_models::Response;
+use hartex_backend_models_v1::bors::RepositoryPermissionsResponse;
 use hartex_bors_github::models::GithubRepositoryName;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
@@ -87,6 +89,9 @@ async fn load_permissions_from_api(
             response.status()
         )));
     }
+
+    let response = serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full)?;
+    let data = response.data();
 
     todo!()
 }
