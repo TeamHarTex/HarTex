@@ -15,7 +15,7 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 jsonwebtoken = "8.3.0"
-octocrab = "0.21.0"
+octocrab = "0.22.0"
 secrecy = "0.8.0"
 
 [features]
