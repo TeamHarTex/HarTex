@@ -540,6 +540,7 @@ dependencies = [
  "hartex_eyre",
  "hartex_log",
  "hyper",
+ "serde_json",
 ]
 
 [[package]]

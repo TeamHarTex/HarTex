@@ -26,14 +26,14 @@
 
 use serde::Deserialize;
 
-/// A response to an uptime query.
+/// A response to a repository permissions query.
 #[derive(Clone, Deserialize)]
-pub struct RepositoryPermissionUserListResponse {
+pub struct RepositoryPermissionsResponse {
     github_users: Vec<String>,
 }
 
-impl RepositoryPermissionUserListResponse {
-    /// The start timestamp of the uptime entry.
+impl RepositoryPermissionsResponse {
+    /// The Github users having this specific permission.
     pub fn github_users(&self) -> &[String] {
         self.github_users.as_ref()
     }
