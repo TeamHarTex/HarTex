@@ -557,6 +557,7 @@ dependencies = [
  "hartex_log",
  "hyper",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
