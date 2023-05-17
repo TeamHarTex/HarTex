@@ -36,9 +36,9 @@ use crate::event::BorsEvent;
 /// Create a bors process.
 pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
     let service = async move {
-        let mut event_source = EventSource::new("https://smee.io/0hxbLZ8FapSmKi1E");
+        let mut event_source = EventSource::new("https://smee.io/0hxbLZ8FapSmKi1E")?;
         while let Some(event) = event_source.next().await {
-
+            // todo: add event handler
         }
     };
 
