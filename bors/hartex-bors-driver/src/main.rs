@@ -68,7 +68,9 @@ fn actual_main() -> hartex_eyre::Result<()> {
         private_key.into_bytes().into(),
     ))?;
 
-    let (_, _) = process::bors_process(state);
+    let future = process::bors_process(state);
+
+    runtime.block_on(future);
 
     Ok(())
 }
