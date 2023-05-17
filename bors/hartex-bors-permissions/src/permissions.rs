@@ -93,5 +93,5 @@ async fn load_permissions_from_api(
     let response = serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full)?;
     let data = response.data();
 
-    todo!()
+    Ok(HashSet::from_iter(data.github_users()))
 }
