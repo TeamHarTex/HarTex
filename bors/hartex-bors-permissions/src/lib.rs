@@ -62,22 +62,39 @@ pub struct BackendApiPermissionResolver {
 
 impl BackendApiPermissionResolver {
     pub async fn load(repository: GithubRepositoryName) -> hartex_eyre::Result<Self> {
-        let permissions = crate::permissions::load(&repository).await?;
+        let permissions = permissions::load(&repository).await?;
 
         Ok(Self {
             repository,
-            permissions: Mutex::new(CachedUserPermissions::new(permissions))
+            permissions: Mutex::new(CachedUserPermissions::new(permissions)),
         })
     }
 
     async fn reload(&self) {
-        let result = crate::permissions::load(&self.repository).await;
+        let result = permissions::load(&self.repository).await;
         match result {
             Ok(perms) => *self.permissions.lock().await = CachedUserPermissions::new(perms),
             Err(error) => {
-                log::error!("Cannot reload permissions for {}: {error:?}", self.repository);
+                log::error!(
+                    "Cannot reload permissions for {}: {error:?}",
+                    self.repository
+                );
             }
         }
+    }
+}
+
+impl PermissionResolver for BackendApiPermissionResolver {
+    async fn resolve_user(&self, username: &str, permission: Permission) -> bool {
+        if self.permissions.lock().await.is_invalidated() {
+            self.reload().await;
+        }
+
+        self.permissions
+            .lock()
+            .await
+            .permissions
+            .user_has_permission(username, permission)
     }
 }
 

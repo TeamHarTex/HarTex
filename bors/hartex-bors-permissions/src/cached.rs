@@ -29,7 +29,7 @@ const CACHED_DURATION: Duration = Duration::from_secs(60);
 
 pub(crate) struct CachedUserPermissions {
     created_at: SystemTime,
-    permissions: UserPermissions,
+    pub(crate) permissions: UserPermissions,
 }
 
 impl CachedUserPermissions {
@@ -39,7 +39,7 @@ impl CachedUserPermissions {
             permissions,
         }
     }
-    
+
     pub(crate) fn is_invalidated(&self) -> bool {
         self.created_at
             .elapsed()
