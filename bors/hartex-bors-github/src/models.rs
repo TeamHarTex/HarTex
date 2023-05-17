@@ -26,6 +26,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
 
+/// Name of a Github repository
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GithubRepositoryName {
     owner: String,
@@ -33,6 +34,7 @@ pub struct GithubRepositoryName {
 }
 
 impl GithubRepositoryName {
+    /// Obtain repository name
     pub fn repository(&self) -> &str {
         self.repository.as_str()
     }
