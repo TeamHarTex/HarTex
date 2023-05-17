@@ -27,6 +27,7 @@ use std::future::Future;
 use futures_util::StreamExt;
 use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
+use reqwest_eventsource::Event;
 use reqwest_eventsource::EventSource;
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::Sender;
@@ -38,7 +39,10 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
     let service = async move {
         let mut event_source = EventSource::new("https://smee.io/0hxbLZ8FapSmKi1E")?;
         while let Some(event) = event_source.next().await {
-            // todo: add event handler
+            match event {
+                Ok(Event::Open) => log::trace!("eventsource connection opened"),
+
+            }
         }
     };
 
