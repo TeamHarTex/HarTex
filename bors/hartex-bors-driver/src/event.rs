@@ -22,4 +22,10 @@
 
 //! # Bors Event Model
 
+/// Bors event
 pub enum BorsEvent {}
+
+/// Handle an event.
+pub async fn handle_event() -> hartex_eyre::Result<()> {
+    todo!()
+}

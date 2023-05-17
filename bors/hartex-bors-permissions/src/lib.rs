@@ -55,12 +55,14 @@ impl Display for Permission {
     }
 }
 
+/// Backend API permission resolver
 pub struct BackendApiPermissionResolver {
     repository: GithubRepositoryName,
     permissions: Mutex<CachedUserPermissions>,
 }
 
 impl BackendApiPermissionResolver {
+    /// Load the permission resolver
     pub async fn load(repository: GithubRepositoryName) -> hartex_eyre::Result<Self> {
         let permissions = permissions::load(&repository).await?;
 
