@@ -52,7 +52,7 @@ impl UserPermissions {
     }
 }
 
-async fn load(repository: &GithubRepositoryName) -> hartex_eyre::Result<UserPermissions> {
+pub(crate) async fn load(repository: &GithubRepositoryName) -> hartex_eyre::Result<UserPermissions> {
     let try_build_users = load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
 
     Ok(UserPermissions {
@@ -93,5 +93,5 @@ async fn load_permissions_from_api(
     let response = serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full)?;
     let data = response.data();
 
-    todo!()
+    Ok(HashSet::from_iter(data.github_users()))
 }
