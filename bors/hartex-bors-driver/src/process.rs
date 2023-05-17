@@ -41,7 +41,11 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
         while let Some(event) = event_source.next().await {
             match event {
                 Ok(Event::Open) => log::trace!("eventsource connection opened"),
-
+                Ok(Event::Message(message)) => {
+                    log::trace!("received event of type {}", message.event);
+                    // todo: deserialize and handle
+                },
+                Err(error) => log::error!("an error occurred"),
             }
         }
     };
