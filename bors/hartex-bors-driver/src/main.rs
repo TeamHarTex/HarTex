@@ -36,6 +36,7 @@ use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
 use tokio::runtime::Builder;
 
+mod event;
 mod process;
 
 /// Entry point.
