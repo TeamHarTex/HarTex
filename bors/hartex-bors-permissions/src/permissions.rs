@@ -29,11 +29,11 @@ use hartex_backend_models_v1::bors::RepositoryPermissionsResponse;
 use hartex_bors_github::models::GithubRepositoryName;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use hyper::body::HttpBody;
+use hyper::header::ACCEPT;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
-use hyper::body::HttpBody;
-use hyper::header::ACCEPT;
 
 use crate::Permission;
 
@@ -52,21 +52,24 @@ impl UserPermissions {
     }
 }
 
-pub(crate) async fn load(repository: &GithubRepositoryName) -> hartex_eyre::Result<UserPermissions> {
-    let try_build_users = load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
+pub(crate) async fn load(
+    repository: &GithubRepositoryName,
+) -> hartex_eyre::Result<UserPermissions> {
+    let try_build_users =
+        load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
 
-    Ok(UserPermissions {
-        try_build_users,
-    })
+    Ok(UserPermissions { try_build_users })
 }
 
 async fn load_permissions_from_api(
     repository_name: &str,
-    permission: Permission
+    permission: Permission,
 ) -> hartex_eyre::Result<HashSet<String>> {
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN")?;
-    let uri = format!("http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}");
+    let uri = format!(
+        "http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}"
+    );
 
     log::debug!("sending a request to {}", &uri);
 
