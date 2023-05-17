@@ -20,26 +20,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Utility Models
+use std::time::Duration;
+use std::time::SystemTime;
 
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as FmtResult;
+use crate::permissions::UserPermissions;
 
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
-pub struct GithubRepositoryName {
-    owner: String,
-    repository: String,
+const CACHED_DURATION: Duration = Duration::from_secs(60);
+
+pub(crate) struct CachedUserPermissions {
+    created_at: SystemTime,
+    permissions: UserPermissions,
 }
 
-impl GithubRepositoryName {
-    pub fn repository(&self) -> &str {
-        self.repository.as_str()
+impl CachedUserPermissions {
+    pub(crate) fn new(permissions: UserPermissions) -> Self {
+        Self {
+            created_at: SystemTime::now(),
+            permissions,
+        }
     }
-}
-
-impl Display for GithubRepositoryName {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        write!(f, "{}/{}", self.owner, self.repository)
+    
+    pub(crate) fn is_invalidated(&self) -> bool {
+        self.created_at
+            .elapsed()
+            .map(|duration| duration > CACHED_DURATION)
+            .unwrap_or(true)
     }
 }

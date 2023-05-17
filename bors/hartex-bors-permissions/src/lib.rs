@@ -28,6 +28,13 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
 
+use hartex_bors_github::models::GithubRepositoryName;
+use hartex_log::log;
+use tokio::sync::Mutex;
+
+use crate::cached::CachedUserPermissions;
+
+pub mod cached;
 pub mod permissions;
 
 /// The type of permission.
@@ -44,6 +51,32 @@ impl Display for Permission {
         match self {
             Self::TryBuild => write!(f, "trybuild"),
             _ => write!(f, "unknown"),
+        }
+    }
+}
+
+pub struct BackendApiPermissionResolver {
+    repository: GithubRepositoryName,
+    permissions: Mutex<CachedUserPermissions>,
+}
+
+impl BackendApiPermissionResolver {
+    pub async fn load(repository: GithubRepositoryName) -> hartex_eyre::Result<Self> {
+        let permissions = crate::permissions::load(&repository).await?;
+
+        Ok(Self {
+            repository,
+            permissions: Mutex::new(CachedUserPermissions::new(permissions))
+        })
+    }
+
+    async fn reload(&self) {
+        let result = crate::permissions::load(&self.repository).await;
+        match result {
+            Ok(perms) => *self.permissions.lock().await = CachedUserPermissions::new(perms),
+            Err(error) => {
+                log::error!("Cannot reload permissions for {}: {error:?}", self.repository);
+            }
         }
     }
 }
