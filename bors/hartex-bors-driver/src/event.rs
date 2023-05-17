@@ -23,9 +23,11 @@
 //! # Bors Event Model
 
 /// Bors event
+#[allow(dead_code)]
 pub enum BorsEvent {}
 
 /// Handle an event.
+#[allow(dead_code)]
 pub async fn handle_event() -> hartex_eyre::Result<()> {
     todo!()
 }
