@@ -22,6 +22,7 @@
 
 //! # Bors Event Model
 
+use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
 use octocrab::models::events::payload::IssueCommentEventPayload;
 use serde_json::Value;
@@ -48,6 +49,6 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 
 /// Handke an event.
 #[allow(dead_code)]
-pub async fn handle_event() -> hartex_eyre::Result<()> {
+pub async fn handle_event(_: GithubBorsState, _: BorsEvent) -> hartex_eyre::Result<()> {
     todo!()
 }
