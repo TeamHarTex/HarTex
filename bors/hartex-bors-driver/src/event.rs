@@ -22,12 +22,17 @@
 
 //! # Bors Event Model
 
+use octocrab::models::events::payload::IssueCommentEventPayload;
+use serde_json::Value;
+
 /// Bors event
 #[allow(dead_code)]
-pub enum BorsEvent {}
+pub enum BorsEvent {
+    IssueComment(IssueCommentEventPayload),
+}
 
 /// Handle an event.
 #[allow(dead_code)]
-pub async fn handle_event() -> hartex_eyre::Result<()> {
+pub async fn deserialize_event(event_json: Value) -> hartex_eyre::Result<BorsEvent> {
     todo!()
 }

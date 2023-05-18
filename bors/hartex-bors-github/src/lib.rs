@@ -27,7 +27,6 @@
 #![deny(warnings)]
 
 pub mod models;
-pub mod webhook;
 
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
