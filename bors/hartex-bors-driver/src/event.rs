@@ -42,7 +42,8 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
                 return Err(Report::msg("comments on non-pull requests are ignored"));
             }
 
-            todo!()
+            Ok(BorsEvent::IssueComment(deserialized))
         }
+        _ => Err(Report::msg("unsupported events are ignored"))
     }
 }

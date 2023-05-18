@@ -43,7 +43,12 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
                     let value = serde_json::from_str::<Value>(&message.data).unwrap();
                     if let Value::String(event_type) = value["x-github-event"] {
                         let body = value["body"];
-                        let _ = crate::event::deserialize_event(event_type, body);
+                        let result = crate::event::deserialize_event(event_type, body);
+                        if result.is_err() {
+                            continue;
+                        }
+
+                        let _ = result.unwrap();
                     }
                 },
                 Err(error) => log::error!("an error occurred: {error:?}"),
