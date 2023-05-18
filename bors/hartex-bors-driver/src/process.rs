@@ -29,6 +29,7 @@ use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
 use reqwest_eventsource::Event;
 use reqwest_eventsource::EventSource;
+use serde_json::Value;
 
 /// Create a bors process.
 pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
@@ -38,8 +39,8 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
             match event {
                 Ok(Event::Open) => log::trace!("eventsource connection opened"),
                 Ok(Event::Message(message)) => {
-                    log::trace!("received event of type {}", message.event);
-                    // todo: deserialize and handle
+                    log::trace!("received event from smee");
+                    let value = serde_json::from_str::<Value>(&message.data);
                 },
                 Err(error) => log::error!("an error occurred: {error:?}"),
             }
