@@ -39,8 +39,10 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
             match event {
                 Ok(Event::Open) => log::trace!("eventsource connection opened"),
                 Ok(Event::Message(message)) => {
-                    log::trace!("received event from smee");
-                    let value = serde_json::from_str::<Value>(&message.data);
+                    log::trace!("received event from smee: {}", &message.data);
+                    let value = serde_json::from_str::<Value>(&message.data).unwrap();
+                    let _ = value["x-github-event"];
+                    let _ = value["body"];
                 },
                 Err(error) => log::error!("an error occurred: {error:?}"),
             }
