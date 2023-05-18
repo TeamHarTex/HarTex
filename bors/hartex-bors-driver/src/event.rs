@@ -22,12 +22,27 @@
 
 //! # Bors Event Model
 
+use hartex_eyre::eyre::Report;
+use octocrab::models::events::payload::IssueCommentEventPayload;
+use serde_json::Value;
+
 /// Bors event
 #[allow(dead_code)]
-pub enum BorsEvent {}
+pub enum BorsEvent {
+    IssueComment(IssueCommentEventPayload),
+}
 
 /// Handle an event.
 #[allow(dead_code)]
-pub async fn handle_event() -> hartex_eyre::Result<()> {
-    todo!()
+pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::Result<BorsEvent> {
+    match &*event_type {
+        "issue_comment" => {
+            let deserialized = serde_json::from_value::<IssueCommentEventPayload>(event_json)?;
+            if deserialized.issue.pull_request.is_none() {
+                return Err(Report::msg("comments on non-pull requests are ignored"));
+            }
+
+            todo!()
+        }
+    }
 }

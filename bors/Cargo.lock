@@ -559,7 +559,9 @@ dependencies = [
  "hartex_bors_github",
  "hartex_eyre",
  "hartex_log",
+ "octocrab",
  "reqwest-eventsource",
+ "serde_json",
  "tokio",
 ]
 
