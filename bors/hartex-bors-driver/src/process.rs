@@ -44,7 +44,8 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
                     if let Value::String(event_type) = value["x-github-event"] {
                         let body = value["body"];
                         let result = crate::event::deserialize_event(event_type, body);
-                        if result.is_err() {
+                        if let Err(error) = &result {
+                            log::error!("an error occurred: {error}");
                             continue;
                         }
 
