@@ -32,7 +32,7 @@ use reqwest_eventsource::EventSource;
 use serde_json::Value;
 
 /// Create a bors process.
-pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
+pub fn bors_process(state: GithubBorsState) -> impl Future<Output = ()> {
     let service = async move {
         let mut event_source = EventSource::get("https://smee.io/0hxbLZ8FapSmKi1E");
         while let Some(event) = event_source.next().await {
@@ -45,11 +45,14 @@ pub fn bors_process(_: GithubBorsState) -> impl Future<Output = ()> {
                         let body = value["body"];
                         let result = crate::event::deserialize_event(event_type, body);
                         if let Err(error) = &result {
-                            log::error!("an error occurred: {error}");
+                            println!("{error}");
                             continue;
                         }
 
-                        let _ = result.unwrap();
+                        let event = result.unwrap();
+                        if let Err(error) = crate::event::handle_event(state, event) {
+                            println!("{error}");
+                        }
                     }
                 },
                 Err(error) => log::error!("an error occurred: {error:?}"),
