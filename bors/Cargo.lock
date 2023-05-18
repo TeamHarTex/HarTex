@@ -543,6 +543,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_bors_commands"
+version = "0.1.0"
+
+[[package]]
 name = "hartex_bors_database"
 version = "0.1.0"
 dependencies = [
