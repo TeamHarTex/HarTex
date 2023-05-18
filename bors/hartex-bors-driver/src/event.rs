@@ -27,13 +27,11 @@ use octocrab::models::events::payload::IssueCommentEventPayload;
 use serde_json::Value;
 
 /// Bors event
-#[allow(dead_code)]
 pub enum BorsEvent {
     IssueComment(IssueCommentEventPayload),
 }
 
-/// Handle an event.
-#[allow(dead_code)]
+/// Deserialize an event.
 pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::Result<BorsEvent> {
     match &*event_type {
         "issue_comment" => {
@@ -46,4 +44,10 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
         }
         _ => Err(Report::msg("unsupported events are ignored"))
     }
+}
+
+/// Handke an event.
+#[allow(dead_code)]
+pub async fn handle_event() -> hartex_eyre::Result<()> {
+    todo!()
 }
