@@ -49,6 +49,6 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 
 /// Handke an event.
 #[allow(dead_code)]
-pub async fn handle_event(_: GithubBorsState, _: BorsEvent) -> hartex_eyre::Result<()> {
+pub async fn handle_event(_: &mut GithubBorsState, _: BorsEvent) -> hartex_eyre::Result<()> {
     todo!()
 }
