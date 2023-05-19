@@ -25,3 +25,12 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+
+/// Represents a command.
+#[derive(Debug)]
+pub enum BorsCommand {
+    /// Ping command.
+    ///
+    /// `bors ping`
+    Ping,
+}

@@ -42,7 +42,7 @@ pub mod permissions;
 pub enum Permission {
     /// Permission to try builds.
     ///
-    /// @bors try
+    /// bors try
     TryBuild,
 }
 
