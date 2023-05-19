@@ -26,10 +26,12 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::App;
 use octocrab::models::AppId;
+use octocrab::models::Repository;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
@@ -60,5 +62,22 @@ impl GithubBorsState {
             application,
             client,
         })
+    }
+}
+
+/// A Github repository client.
+pub struct GithubRepositoryClient {
+    /// Octocrab client.
+    pub client: Octocrab,
+    /// The name of the repository.
+    pub repository_name: GithubRepositoryName,
+    /// The repository.
+    pub repository: Repository,
+}
+
+impl GithubBorsState {
+    /// Returns the Octocrab client.
+    pub fn client(&self) -> &Octocrab {
+        &self.client
     }
 }
