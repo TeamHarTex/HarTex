@@ -27,4 +27,7 @@
 #![deny(warnings)]
 
 /// A state of bors.
-pub trait BorsState {}
+pub trait BorsState<C: RepositoryClient> {}
+
+/// A repository client.
+pub trait RepositoryClient {}
