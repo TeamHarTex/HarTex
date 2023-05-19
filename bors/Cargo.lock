@@ -549,6 +549,10 @@ version = "0.1.0"
 [[package]]
 name = "hartex_bors_core"
 version = "0.1.0"
+dependencies = [
+ "hartex_bors_github",
+ "hartex_eyre",
+]
 
 [[package]]
 name = "hartex_bors_database"
