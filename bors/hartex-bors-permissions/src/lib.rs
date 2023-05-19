@@ -28,7 +28,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
 
-use hartex_bors_github::models::GithubRepositoryName;
+use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
 use tokio::sync::Mutex;
 

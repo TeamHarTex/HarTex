@@ -27,13 +27,15 @@
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
+pub mod models;
+
 /// A state of bors.
 pub trait BorsState<C: RepositoryClient> {}
 
 /// A repository client.
 pub trait RepositoryClient {
     /// The name of the repository this client is for.
-    fn repository_name(&self) -> hartex_bors_github::models::GithubRepositoryName;
+    fn repository_name(&self) -> models::GithubRepositoryName;
 
     /// Post a comment on a specific pull request.
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<()>;
