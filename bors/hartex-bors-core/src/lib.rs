@@ -25,3 +25,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+
+/// A state of bors.
+pub trait BorsState {}
