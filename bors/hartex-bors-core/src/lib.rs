@@ -20,17 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Commands for Bors
+//! # Bors Core Library
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-/// Represents a command.
-#[derive(Debug)]
-pub enum BorsCommand {
-    /// Ping command.
-    ///
-    /// `bors ping`
-    Ping,
-}
+/// A state of bors.
+pub trait BorsState<C: RepositoryClient> {}
+
+/// A repository client.
+pub trait RepositoryClient {}
