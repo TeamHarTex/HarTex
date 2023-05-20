@@ -30,21 +30,26 @@
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_permissions::PermissionResolver;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
+use octocrab::models::issues::Comment;
 use octocrab::models::App;
 use octocrab::models::AppId;
-use octocrab::models::issues::Comment;
 use octocrab::models::Repository;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
+use std::collections::HashMap;
+
+mod repositories;
 
 /// State of the bors Github application
 #[allow(dead_code)]
 pub struct GithubBorsState {
     application: App,
     client: Octocrab,
+    repositories: RepositoryMap,
 }
 
 impl GithubBorsState {
@@ -62,9 +67,11 @@ impl GithubBorsState {
         log::trace!("obtaining github application");
         let application = client.current().app().await?;
 
+        let repositories = repositories::load_repositories(&client).await?;
         Ok(Self {
             application,
             client,
+            repositories,
         })
     }
 }
@@ -72,6 +79,13 @@ impl GithubBorsState {
 impl BorsState<GithubRepositoryClient> for GithubBorsState {
     fn comment_posted_by_bors(&self, _: Comment) -> bool {
         todo!()
+    }
+
+    fn get_repository_state_mut(
+        &mut self,
+        repository: &GithubRepositoryName,
+    ) -> Option<&mut GithubRepositoryState<GithubRepositoryClient>> {
+        self.repositories.get_mut(repository)
     }
 }
 
@@ -104,10 +118,26 @@ impl RepositoryClient for GithubRepositoryClient {
 
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<()> {
         self.client
-            .issues(self.repository_name.owner(), self.repository_name.repository())
+            .issues(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+            )
             .create_comment(pr, text)
             .await?;
 
         Ok(())
     }
 }
+
+/// A repository state.
+pub struct GithubRepositoryState<C: RepositoryClient> {
+    /// The repository name.
+    pub repository: GithubRepositoryName,
+    /// The client for this repository.
+    pub client: C,
+    /// The permission resolver for this repository.
+    pub permission_resolver: Box<dyn PermissionResolver>,
+}
+
+type RepositoryMap = HashMap<GithubRepositoryName, RepositoryState>;
+type RepositoryState = GithubRepositoryState<GithubRepositoryClient>;
