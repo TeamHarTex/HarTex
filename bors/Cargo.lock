@@ -551,6 +551,7 @@ name = "hartex_bors_core"
 version = "0.1.0"
 dependencies = [
  "hartex_eyre",
+ "octocrab",
 ]
 
 [[package]]

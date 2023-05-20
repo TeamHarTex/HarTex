@@ -33,6 +33,7 @@ use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::App;
 use octocrab::models::AppId;
+use octocrab::models::issues::Comment;
 use octocrab::models::Repository;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
@@ -67,7 +68,11 @@ impl GithubBorsState {
     }
 }
 
-impl BorsState<GithubRepositoryClient> for GithubBorsState {}
+impl BorsState<GithubRepositoryClient> for GithubBorsState {
+    fn comment_posted_by_bors(&self, _: Comment) -> bool {
+        todo!()
+    }
+}
 
 /// A Github repository client.
 pub struct GithubRepositoryClient {

@@ -13,4 +13,6 @@ rust-version = "1.71.0"
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
+octocrab = "0.22.0"
+
 [features]
