@@ -26,12 +26,13 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-pub mod models;
-
+use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::RepositoryClient;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::App;
 use octocrab::models::AppId;
+use octocrab::models::Repository;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
@@ -62,5 +63,37 @@ impl GithubBorsState {
             application,
             client,
         })
+    }
+}
+
+/// A Github repository client.
+pub struct GithubRepositoryClient {
+    /// Octocrab client.
+    client: Octocrab,
+    /// The name of the repository.
+    repository_name: GithubRepositoryName,
+    /// The repository.
+    repository: Repository,
+}
+
+impl GithubRepositoryClient {
+    /// Returns a reference to the Octocrab client.
+    pub fn client(&self) -> &Octocrab {
+        &self.client
+    }
+
+    /// Returns a reference to the repository.
+    pub fn repository(&self) -> &Repository {
+        &self.repository
+    }
+}
+
+impl RepositoryClient for GithubRepositoryClient {
+    fn repository_name(&self) -> &GithubRepositoryName {
+        &self.repository_name
+    }
+
+    async fn post_comment(&mut self, _: u64, _: &str) -> hartex_eyre::Result<()> {
+        todo!()
     }
 }

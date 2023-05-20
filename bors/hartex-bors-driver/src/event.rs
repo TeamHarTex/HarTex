@@ -43,7 +43,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 
             Ok(BorsEvent::IssueComment(deserialized))
         }
-        _ => Err(Report::msg("unsupported events are ignored"))
+        _ => Err(Report::msg("unsupported events are ignored")),
     }
 }
 
