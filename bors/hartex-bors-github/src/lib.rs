@@ -25,6 +25,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(async_fn_in_trait)]
 
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::BorsState;
