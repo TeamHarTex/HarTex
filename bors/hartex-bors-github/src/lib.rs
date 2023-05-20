@@ -27,6 +27,7 @@
 #![deny(warnings)]
 
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
@@ -66,6 +67,8 @@ impl GithubBorsState {
     }
 }
 
+impl BorsState<GithubRepositoryClient> for GithubBorsState {}
+
 /// A Github repository client.
 pub struct GithubRepositoryClient {
     /// Octocrab client.
@@ -93,7 +96,12 @@ impl RepositoryClient for GithubRepositoryClient {
         &self.repository_name
     }
 
-    async fn post_comment(&mut self, _: u64, _: &str) -> hartex_eyre::Result<()> {
-        todo!()
+    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<()> {
+        self.client
+            .issues(self.repository_name.owner(), self.repository_name.repository())
+            .create_comment(pr, text)
+            .await?;
+
+        Ok(())
     }
 }
