@@ -49,8 +49,8 @@ async fn create_repository_state(
 
     let permission_resolver = BackendApiPermissionResolver::load(name.clone()).await?;
     let client = GithubRepositoryClient {
-        client,
-        repository_name,
+        client: repository_client,
+        repository_name: name,
         repository,
     };
 
