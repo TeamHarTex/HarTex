@@ -43,7 +43,8 @@ pub fn bors_process(mut state: GithubBorsState) -> impl Future<Output = ()> {
                     let value = serde_json::from_str::<Value>(&message.data).unwrap();
                     if let Value::String(event_type) = &value["x-github-event"] {
                         let body = &value["body"];
-                        let result = crate::event::deserialize_event(event_type.to_string(), body.clone());
+                        let result =
+                            crate::event::deserialize_event(event_type.to_string(), body.clone());
                         if let Err(error) = &result {
                             println!("{error}");
                             continue;
@@ -54,7 +55,7 @@ pub fn bors_process(mut state: GithubBorsState) -> impl Future<Output = ()> {
                             println!("{error}");
                         }
                     }
-                },
+                }
                 Err(error) => log::error!("an error occurred: {error:?}"),
             }
         }
