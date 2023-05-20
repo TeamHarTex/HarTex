@@ -549,6 +549,9 @@ version = "0.1.0"
 [[package]]
 name = "hartex_bors_core"
 version = "0.1.0"
+dependencies = [
+ "hartex_eyre",
+]
 
 [[package]]
 name = "hartex_bors_database"
@@ -577,6 +580,7 @@ dependencies = [
 name = "hartex_bors_github"
 version = "0.1.0"
 dependencies = [
+ "hartex_bors_core",
  "hartex_eyre",
  "hartex_log",
  "jsonwebtoken",
@@ -590,7 +594,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_backend_models",
  "hartex_backend_models_v1",
- "hartex_bors_github",
+ "hartex_bors_core",
  "hartex_eyre",
  "hartex_log",
  "hyper",
