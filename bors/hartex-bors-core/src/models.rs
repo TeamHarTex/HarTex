@@ -34,6 +34,11 @@ pub struct GithubRepositoryName {
 }
 
 impl GithubRepositoryName {
+    /// Obtain repository owner
+    pub fn owner(&self) -> &str {
+        self.owner.as_str()
+    }
+
     /// Obtain repository name
     pub fn repository(&self) -> &str {
         self.repository.as_str()
