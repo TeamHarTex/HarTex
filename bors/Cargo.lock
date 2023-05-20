@@ -582,6 +582,7 @@ name = "hartex_bors_github"
 version = "0.1.0"
 dependencies = [
  "hartex_bors_core",
+ "hartex_bors_permissions",
  "hartex_eyre",
  "hartex_log",
  "jsonwebtoken",

@@ -53,9 +53,9 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 pub async fn handle_event(_: &mut GithubBorsState, event: BorsEvent) -> hartex_eyre::Result<()> {
     match event {
         BorsEvent::IssueComment(payload) => {
-            log::debug!("{:?}", payload.comment.user)
+            log::debug!("{:?}", payload.comment.user);
         }
     }
 
-    todo!()
+    Ok(())
 }
