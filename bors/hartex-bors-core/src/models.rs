@@ -34,6 +34,14 @@ pub struct GithubRepositoryName {
 }
 
 impl GithubRepositoryName {
+    /// Constrct a new repository name.
+    pub fn new(owner: &str, repository: &str) -> Self {
+        Self {
+            owner: owner.to_lowercase(),
+            repository: repository.to_lowercase(),
+        }
+    }
+
     /// Obtain repository owner
     pub fn owner(&self) -> &str {
         self.owner.as_str()

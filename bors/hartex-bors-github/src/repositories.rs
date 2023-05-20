@@ -29,7 +29,10 @@ use hartex_log::log;
 use octocrab::models::InstallationRepositories;
 use octocrab::models::Repository;
 use octocrab::Octocrab;
+use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_permissions::BackendApiPermissionResolver;
 
+use crate::GithubRepositoryClient;
 use crate::RepositoryMap;
 use crate::RepositoryState;
 
@@ -37,7 +40,25 @@ async fn create_repository_state(
     repository_client: Octocrab,
     repository: Repository,
 ) -> hartex_eyre::Result<RepositoryState> {
-    todo!()
+    let Some(owner) = repository.owner else {
+        return Err(Report::msg(format!("repository {} has no owner", repository.name)));
+    };
+
+    let name = GithubRepositoryName::new(&owner.login, &repository.name);
+    log::info!("found repository {name}");
+
+    let permission_resolver = BackendApiPermissionResolver::load(name.clone()).await?;
+    let client = GithubRepositoryClient {
+        client,
+        repository_name,
+        repository,
+    };
+
+    Ok(RepositoryState {
+        repository: name,
+        client,
+        permission_resolver: Box::new(permission_resolver),
+    })
 }
 
 pub(crate) async fn load_repositories(client: &Octocrab) -> hartex_eyre::Result<RepositoryMap> {
