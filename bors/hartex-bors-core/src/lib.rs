@@ -27,10 +27,14 @@
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
+use octocrab::models::issues::Comment;
+
 pub mod models;
 
 /// A state of bors.
-pub trait BorsState<C: RepositoryClient> {}
+pub trait BorsState<C: RepositoryClient> {
+    fn comment_posted_by_bors(&self, comment: Comment) -> bool;
+}
 
 /// A repository client.
 pub trait RepositoryClient {
