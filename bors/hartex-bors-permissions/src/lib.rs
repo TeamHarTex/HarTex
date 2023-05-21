@@ -27,6 +27,8 @@
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
+use std::future::Future;
+use std::pin::Pin;
 
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
@@ -87,21 +89,23 @@ impl BackendApiPermissionResolver {
 }
 
 impl PermissionResolver for BackendApiPermissionResolver {
-    async fn resolve_user(&self, username: &str, permission: Permission) -> bool {
-        if self.permissions.lock().await.is_invalidated() {
-            self.reload().await;
-        }
+    fn resolve_user(&self, username: &str, permission: Permission) -> Pin<Box<dyn Future<Output = bool> + Send + '_>> {
+        Box::pin(async move {
+            if self.permissions.lock().await.is_invalidated() {
+                self.reload().await;
+            }
 
-        self.permissions
-            .lock()
-            .await
-            .permissions
-            .user_has_permission(username, permission)
+            self.permissions
+                .lock()
+                .await
+                .permissions
+                .user_has_permission(username, permission)
+        })
     }
 }
 
 /// A base permission resolver.
 pub trait PermissionResolver {
     /// Resolves permissions for a user and returns whether that user has the specified permission.
-    async fn resolve_user(&self, username: &str, permission: Permission) -> bool;
+    fn resolve_user(&self, username: &str, permission: Permission) -> Pin<Box<dyn Future<Output = bool> + Send + '_>>;
 }
