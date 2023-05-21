@@ -78,8 +78,8 @@ impl GithubBorsState {
 }
 
 impl BorsState<GithubRepositoryClient> for GithubBorsState {
-    fn comment_posted_by_bors(&self, _: Comment) -> bool {
-        todo!()
+    fn comment_posted_by_bors(&self, comment: Comment) -> bool {
+        comment.user.login == "bors-for-hartex[bot]"
     }
 
     fn get_repository_state_mut(

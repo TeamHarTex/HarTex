@@ -79,6 +79,11 @@ pub async fn handle_event(
 ) -> hartex_eyre::Result<()> {
     match event.kind {
         BorsEventKind::IssueComment(payload) => {
+            if state.comment_posted_by_bors(payload.comment.clone()) {
+                log::trace!("ignoring comment posted by myself");
+                return Ok(());
+            }
+
             if let Some(repository) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
@@ -114,9 +119,10 @@ async fn handle_comment<C: RepositoryClient>(
     for command in commands {
         match command {
             Ok(command) => match command {
-                BorsCommand::Ping =>
+                BorsCommand::Ping => {
                     hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
-            }
+                }
+            },
             Err(error) => {
                 let error_msg = match error {
                     ParserError::MissingCommand => "Missing command.".to_string(),
