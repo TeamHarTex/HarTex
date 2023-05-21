@@ -22,11 +22,11 @@
 
 //! # Utility Models
 
+use hartex_eyre::eyre::Report;
+use octocrab::models::Repository;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
-use octocrab::models::Repository;
-use hartex_eyre::eyre::Report;
 
 use crate::PermissionResolver;
 use crate::RepositoryClient;

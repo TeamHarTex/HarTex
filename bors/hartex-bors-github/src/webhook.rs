@@ -22,8 +22,8 @@
 
 //! # Webhook-related Models
 
-use serde::Deserialize;
 use octocrab::models::Repository;
+use serde::Deserialize;
 
 /// A repository sent from a webhook.
 ///
