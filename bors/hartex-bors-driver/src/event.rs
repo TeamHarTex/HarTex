@@ -22,6 +22,10 @@
 
 //! # Bors Event Model
 
+use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::BorsState;
+use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
@@ -58,4 +62,12 @@ pub async fn handle_event(_: &mut GithubBorsState, event: BorsEvent) -> hartex_e
     }
 
     Ok(())
+}
+
+#[allow(dead_code)]
+fn retrieve_repository_state<'a, C: RepositoryClient>(
+    _: &'a mut dyn BorsState<C>,
+    _: &GithubRepositoryName,
+) -> Option<&'a mut GithubRepositoryState<C>> {
+    todo!()
 }
