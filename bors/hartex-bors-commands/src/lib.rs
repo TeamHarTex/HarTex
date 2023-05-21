@@ -39,7 +39,7 @@ pub enum BorsCommand {
 
 /// Parses bors commands from an input string.
 pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
-    let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![];
+    let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![parser::parse_ping];
 
     input
         .lines()
@@ -53,7 +53,7 @@ pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserErro
                     }
                 }
 
-                todo!()
+                parser::parse_remaining(parser::Parser::new(command))
             }
             None => None,
         })

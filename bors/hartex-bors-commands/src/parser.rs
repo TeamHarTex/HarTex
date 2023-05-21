@@ -22,25 +22,55 @@
 
 //! # Command Parser
 
-use crate::BorsCommand;
 use std::iter::Peekable;
 use std::str::SplitWhitespace;
+
+use crate::BorsCommand;
 
 pub(crate) const PREFIX: &str = "bors";
 
 /// An error occurred during parsing.
-pub enum ParserError {}
+pub enum ParserError<'a> {
+    /// Command is missing.
+    MissingCommand,
+    /// Unknown command.
+    UnknownCommand(&'a str),
+}
 
-pub struct Parser<'a> {
+pub(crate) struct Parser<'a> {
     iterator: Peekable<SplitWhitespace<'a>>,
 }
 
 impl<'a> Parser<'a> {
-    pub fn new(input: &'a str) -> Self {
+    pub(crate) fn new(input: &'a str) -> Self {
         Self {
             iterator: input.split_whitespace().peekable(),
         }
     }
+
+    fn peek(&mut self) -> Option<&'a str> {
+        self.iterator.peek().copied()
+    }
 }
 
-pub type ParserResult = Option<Result<BorsCommand, ParserError>>;
+pub(crate) type ParserResult<'a> = Option<Result<BorsCommand, ParserError<'a>>>;
+
+pub(crate) fn parse_ping(parser: Parser) -> ParserResult {
+    parse_exact("ping", BorsCommand::Ping, parser)
+}
+
+fn parse_exact(exact: &'static str, expected: BorsCommand, mut parser: Parser) -> ParserResult {
+    match parser.peek() {
+        Some(word) if word == exact => Some(Ok(expected)),
+        _ => None,
+    }
+}
+
+pub(crate) fn parse_remaining(mut parser: Parser) -> ParserResult {
+    let result = match parser.peek() {
+        Some(arg) => Err(ParserError::UnknownCommand(arg)),
+        None => Err(ParserError::MissingCommand),
+    };
+
+    Some(result)
+}
