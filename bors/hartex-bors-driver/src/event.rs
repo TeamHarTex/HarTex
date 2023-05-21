@@ -27,13 +27,23 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubBorsState;
+use hartex_bors_github::webhook::WebhookRepository;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::events::payload::IssueCommentEventPayload;
 use serde_json::Value;
 
 /// Bors event
-pub enum BorsEvent {
+pub struct BorsEvent {
+    /// The kind of event.
+    pub kind: BorsEventKind,
+    /// The repository the event is sent from.
+    pub repository: WebhookRepository,
+}
+
+/// The kind of event.
+pub enum BorsEventKind {
+    /// An issue comment.
     IssueComment(IssueCommentEventPayload),
 }
 
@@ -41,12 +51,17 @@ pub enum BorsEvent {
 pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::Result<BorsEvent> {
     match &*event_type {
         "issue_comment" => {
-            let deserialized = serde_json::from_value::<IssueCommentEventPayload>(event_json)?;
+            let deserialized = serde_json::from_value::<IssueCommentEventPayload>(event_json.clone())?;
             if deserialized.issue.pull_request.is_none() {
                 return Err(Report::msg("comments on non-pull requests are ignored"));
             }
 
-            Ok(BorsEvent::IssueComment(deserialized))
+            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+
+            Ok(BorsEvent {
+                kind: BorsEventKind::IssueComment(deserialized),
+                repository,
+            })
         }
         _ => Err(Report::msg("unsupported events are ignored")),
     }
@@ -55,8 +70,8 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 /// Handke an event.
 #[allow(dead_code)]
 pub async fn handle_event(_: &mut GithubBorsState, event: BorsEvent) -> hartex_eyre::Result<()> {
-    match event {
-        BorsEvent::IssueComment(payload) => {
+    match event.kind {
+        BorsEventKind::IssueComment(payload) => {
             log::debug!("{:?}", payload.comment.user);
         }
     }
