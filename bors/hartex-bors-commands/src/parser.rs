@@ -30,6 +30,7 @@ use crate::BorsCommand;
 pub(crate) const PREFIX: &str = "bors";
 
 /// An error occurred during parsing.
+#[derive(Debug)]
 pub enum ParserError<'a> {
     /// Command is missing.
     MissingCommand,
@@ -59,7 +60,11 @@ pub(crate) fn parse_ping(parser: Parser) -> ParserResult {
     parse_exact("ping", BorsCommand::Ping, parser)
 }
 
-fn parse_exact(exact: &'static str, expected: BorsCommand, mut parser: Parser) -> ParserResult {
+fn parse_exact<'a>(
+    exact: &'static str,
+    expected: BorsCommand,
+    mut parser: Parser<'a>,
+) -> ParserResult<'a> {
     match parser.peek() {
         Some(word) if word == exact => Some(Ok(expected)),
         _ => None,

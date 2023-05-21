@@ -26,6 +26,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+pub mod commands;
 pub mod parser;
 
 /// Represents a command.
@@ -47,7 +48,7 @@ pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserErro
             Some(position) => {
                 let command = &line[position + parser::PREFIX.len()..];
 
-                for callback in parsers {
+                for callback in &parsers {
                     if let Some(result) = callback(parser::Parser::new(command)) {
                         return Some(result);
                     }

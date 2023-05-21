@@ -546,6 +546,7 @@ dependencies = [
 name = "hartex_bors_commands"
 version = "0.1.0"
 dependencies = [
+ "hartex_bors_core",
  "hartex_eyre",
 ]
 
@@ -571,6 +572,7 @@ version = "0.1.0"
 dependencies = [
  "dotenvy",
  "futures-util",
+ "hartex_bors_commands",
  "hartex_bors_core",
  "hartex_bors_github",
  "hartex_eyre",
