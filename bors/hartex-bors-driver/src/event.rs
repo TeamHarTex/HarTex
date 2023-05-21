@@ -79,6 +79,11 @@ pub async fn handle_event(
 ) -> hartex_eyre::Result<()> {
     match event.kind {
         BorsEventKind::IssueComment(payload) => {
+            if state.comment_posted_by_bors(payload.comment.clone()) {
+                log::trace!("ignoring comment posted by myself");
+                return Ok(());
+            }
+
             if let Some(repository) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
