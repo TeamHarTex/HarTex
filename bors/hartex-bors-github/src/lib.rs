@@ -28,9 +28,9 @@
 #![feature(async_fn_in_trait)]
 
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
-use hartex_bors_permissions::PermissionResolver;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
@@ -127,16 +127,6 @@ impl RepositoryClient for GithubRepositoryClient {
 
         Ok(())
     }
-}
-
-/// A repository state.
-pub struct GithubRepositoryState<C: RepositoryClient> {
-    /// The repository name.
-    pub repository: GithubRepositoryName,
-    /// The client for this repository.
-    pub client: C,
-    /// The permission resolver for this repository.
-    pub permission_resolver: Box<dyn PermissionResolver>,
 }
 
 type RepositoryMap = HashMap<GithubRepositoryName, RepositoryState>;

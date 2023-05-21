@@ -22,15 +22,17 @@
 
 //! # Bors Permission Resolver
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as FmtResult;
 use std::future::Future;
 use std::pin::Pin;
 
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::models::Permission;
+use hartex_bors_core::PermissionResolver;
 use hartex_log::log;
 use tokio::sync::Mutex;
 
@@ -38,24 +40,6 @@ use crate::cached::CachedUserPermissions;
 
 pub mod cached;
 pub mod permissions;
-
-/// The type of permission.
-#[non_exhaustive]
-pub enum Permission {
-    /// Permission to try builds.
-    ///
-    /// bors try
-    TryBuild,
-}
-
-impl Display for Permission {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        match self {
-            Self::TryBuild => write!(f, "trybuild"),
-            _ => write!(f, "unknown"),
-        }
-    }
-}
 
 /// Backend API permission resolver
 pub struct BackendApiPermissionResolver {
@@ -89,7 +73,11 @@ impl BackendApiPermissionResolver {
 }
 
 impl PermissionResolver for BackendApiPermissionResolver {
-    fn resolve_user(&self, username: &str, permission: Permission) -> Pin<Box<dyn Future<Output = bool> + Send + '_>> {
+    fn resolve_user<'a>(
+        &'a self,
+        username: &'a str,
+        permission: Permission,
+    ) -> Pin<Box<dyn Future<Output = bool> + Send + '_>> {
         Box::pin(async move {
             if self.permissions.lock().await.is_invalidated() {
                 self.reload().await;
@@ -102,10 +90,4 @@ impl PermissionResolver for BackendApiPermissionResolver {
                 .user_has_permission(username, permission)
         })
     }
-}
-
-/// A base permission resolver.
-pub trait PermissionResolver {
-    /// Resolves permissions for a user and returns whether that user has the specified permission.
-    fn resolve_user(&self, username: &str, permission: Permission) -> Pin<Box<dyn Future<Output = bool> + Send + '_>>;
 }
