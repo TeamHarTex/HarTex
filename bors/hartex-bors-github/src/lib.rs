@@ -31,6 +31,7 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
+use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
@@ -117,16 +118,15 @@ impl RepositoryClient for GithubRepositoryClient {
         &self.repository_name
     }
 
-    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<()> {
+    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment> {
         self.client
             .issues(
                 self.repository_name.owner(),
                 self.repository_name.repository(),
             )
             .create_comment(pr, text)
-            .await?;
-
-        Ok(())
+            .await
+            .map_err(Report::new)
     }
 }
 

@@ -66,5 +66,5 @@ pub trait RepositoryClient {
     fn repository_name(&self) -> &GithubRepositoryName;
 
     /// Post a comment on a specific pull request.
-    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<()>;
+    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
 }

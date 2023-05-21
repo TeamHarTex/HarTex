@@ -22,6 +22,7 @@
 
 //! # Ping command
 
+use std::time::SystemTime;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::RepositoryClient;
 
@@ -30,7 +31,10 @@ pub async fn ping_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     pr: u64,
 ) -> hartex_eyre::Result<()> {
-    repository.client.post_comment(pr, "Pong 🏓!").await?;
+    let now = SystemTime::now();
+    let comment = repository.client.post_comment(pr, "🏓 Pong!").await?;
+
+    let latencty = now.elapsed()?;
 
     Ok(())
 }
