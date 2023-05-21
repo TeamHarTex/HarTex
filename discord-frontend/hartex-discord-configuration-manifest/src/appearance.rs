@@ -44,5 +44,6 @@ pub(crate) fn hcl_rgb_function(args: FuncArgs) -> Result<Value, String> {
         r.as_u64().unwrap() as u8,
         g.as_u64().unwrap() as u8,
         b.as_u64().unwrap() as u8,
+        0,
     ]))))
 }
