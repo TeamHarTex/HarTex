@@ -31,6 +31,7 @@ use std::future::Future;
 use std::pin::Pin;
 
 use octocrab::models::issues::Comment;
+use octocrab::models::CommentId;
 
 use crate::models::GithubRepositoryName;
 use crate::models::GithubRepositoryState;
@@ -65,6 +66,13 @@ pub trait RepositoryClient {
     /// The name of the repository this client is for.
     fn repository_name(&self) -> &GithubRepositoryName;
 
+    /// Edit a speific comment.
+    async fn edit_comment(
+        &mut self,
+        comment_id: CommentId,
+        text: &str,
+    ) -> hartex_eyre::Result<Comment>;
+
     /// Post a comment on a specific pull request.
-    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<()>;
+    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
 }
