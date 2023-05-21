@@ -20,7 +20,7 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 dotenvy = "0.15.7"
 futures-util = "0.3.28"
-octocrab = "0.22.0"
+octocrab = "0.23.0"
 reqwest-eventsource = { git = "https://github.com/TeamHarTex/reqwest-eventsource.git" }
 serde_json = "1.0.96"
 tokio = { version = "1.28.1", features = ["rt-multi-thread", "sync"] }
