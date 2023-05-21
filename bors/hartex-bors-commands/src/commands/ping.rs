@@ -38,7 +38,8 @@ pub async fn ping_command<C: RepositoryClient>(
     let millis = latency.as_millis();
     repository
         .client
-        .edit_comment(comment.id, &format!("🏓 Pong! My latency is `{millis}ms`."));
+        .edit_comment(comment.id, &format!("🏓 Pong! My latency is `{millis}ms`."))
+        .await?;
 
     Ok(())
 }
