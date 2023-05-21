@@ -21,6 +21,8 @@
  */
 
 //! # Ping command
+//!
+//! bors ping
 
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::RepositoryClient;
