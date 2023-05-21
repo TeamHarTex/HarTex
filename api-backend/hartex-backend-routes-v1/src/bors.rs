@@ -28,6 +28,7 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_backend_status_util::StatusFns;
+use hartex_log::log;
 use rocket::get;
 use rocket::http::Status;
 use serde_json::json;
@@ -36,13 +37,14 @@ use serde_json::Value;
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
 /// Obtain the list of users having the specified permission in a repository.
-#[get("/bors/repository/<repository>/permissions/<permission>")]
-pub async fn v1_repository_repository_permissions_permissions(
+#[get("/bors/repositories/<repository>/permissions/<permission>")]
+pub async fn v1_repositories_repository_permissions_permissions(
     repository: String,
     permission: String,
 ) -> (Status, Value) {
+    log::trace!("attempting to retrieve permissions data");
     let result = File::open(format!(
-        "../backend-data/bors.{}.permissions.{}",
+        "./backend-data/bors.{}.permissions.{}",
         repository.to_lowercase(),
         permission.to_lowercase()
     ));

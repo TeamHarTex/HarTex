@@ -20,5 +20,6 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 jsonwebtoken = "8.3.0"
 octocrab = "0.22.0"
 secrecy = "0.8.0"
+serde = { version = "1.0.163", features = ["derive"] }
 
 [features]

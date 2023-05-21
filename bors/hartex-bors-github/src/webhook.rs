@@ -20,39 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use self::eyre::EyreHook;
-use crate::hook::panic::PanicHook;
+//! # Webhook-related Models
 
-mod eyre;
-mod panic;
+use octocrab::models::Repository;
+use serde::Deserialize;
 
-#[allow(clippy::module_name_repetitions)]
-pub struct HookBuilder;
-
-impl HookBuilder {
-    #[must_use = "a hook builder must be used"]
-    pub fn new() -> Self {
-        Self
-    }
-
-    #[allow(clippy::missing_errors_doc)]
-    pub fn install_hooks(self) -> Result<(), ::eyre::Report> {
-        let (eyre_hook, panic_hook) = self.try_into_hooks();
-        eyre_hook.install_hook()?;
-        panic_hook.install_hook();
-
-        Ok(())
-    }
-
-    #[must_use = "hooks built must be used"]
-    #[allow(clippy::unused_self)]
-    pub fn try_into_hooks(self) -> (EyreHook, PanicHook) {
-        (EyreHook, PanicHook)
-    }
-}
-
-impl Default for HookBuilder {
-    fn default() -> Self {
-        Self::new()
-    }
+/// A repository sent from a webhook.
+///
+/// This is for some reason not returned by Octocrab the crate.
+#[derive(Deserialize)]
+pub struct WebhookRepository {
+    /// The repository field.
+    pub repository: Repository,
 }

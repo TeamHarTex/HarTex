@@ -22,18 +22,32 @@
 
 //! # Bors Event Model
 
+use hartex_bors_commands::parser::ParserError;
+use hartex_bors_commands::BorsCommand;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::events::payload::IssueCommentEventPayload;
+use octocrab::models::issues::Comment;
+use octocrab::models::issues::Issue;
 use serde_json::Value;
 
 /// Bors event
-pub enum BorsEvent {
+pub struct BorsEvent {
+    /// The kind of event.
+    pub kind: BorsEventKind,
+    /// The repository the event is sent from.
+    pub repository: WebhookRepository,
+}
+
+/// The kind of event.
+pub enum BorsEventKind {
+    /// An issue comment.
     IssueComment(IssueCommentEventPayload),
 }
 
@@ -41,33 +55,93 @@ pub enum BorsEvent {
 pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::Result<BorsEvent> {
     match &*event_type {
         "issue_comment" => {
-            let deserialized = serde_json::from_value::<IssueCommentEventPayload>(event_json)?;
+            let deserialized =
+                serde_json::from_value::<IssueCommentEventPayload>(event_json.clone())?;
             if deserialized.issue.pull_request.is_none() {
                 return Err(Report::msg("comments on non-pull requests are ignored"));
             }
 
-            Ok(BorsEvent::IssueComment(deserialized))
+            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+
+            Ok(BorsEvent {
+                kind: BorsEventKind::IssueComment(deserialized),
+                repository,
+            })
         }
         _ => Err(Report::msg("unsupported events are ignored")),
     }
 }
 
 /// Handke an event.
-#[allow(dead_code)]
-pub async fn handle_event(_: &mut GithubBorsState, event: BorsEvent) -> hartex_eyre::Result<()> {
-    match event {
-        BorsEvent::IssueComment(payload) => {
-            log::debug!("{:?}", payload.comment.user);
+pub async fn handle_event(
+    state: &mut GithubBorsState,
+    event: BorsEvent,
+) -> hartex_eyre::Result<()> {
+    match event.kind {
+        BorsEventKind::IssueComment(payload) => {
+            if let Some(repository) = retrieve_repository_state(
+                state,
+                &GithubRepositoryName::new_from_repository(event.repository.repository)?,
+            ) {
+                if let Err(error) = handle_comment(repository, payload.comment, payload.issue).await
+                {
+                    println!("{error}");
+                }
+            }
         }
     }
 
     Ok(())
 }
 
-#[allow(dead_code)]
+async fn handle_comment<C: RepositoryClient>(
+    repository: &mut GithubRepositoryState<C>,
+    comment: Comment,
+    issue: Issue,
+) -> hartex_eyre::Result<()> {
+    let pr = issue.number;
+    let body = comment.body.unwrap();
+    let commands = hartex_bors_commands::parse_commands(&body);
+
+    log::info!(
+        "received comment at https://github.com/{}/{}/issues/{}, commands: {:?}",
+        repository.repository.owner(),
+        repository.repository.repository(),
+        pr,
+        commands,
+    );
+
+    for command in commands {
+        match command {
+            Ok(command) => match command {
+                BorsCommand::Ping =>
+                    hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
+            }
+            Err(error) => {
+                let error_msg = match error {
+                    ParserError::MissingCommand => "Missing command.".to_string(),
+                    ParserError::UnknownCommand(command) => {
+                        format!(r#"Unknown command "{command}"."#)
+                    }
+                };
+
+                repository.client.post_comment(pr, &error_msg).await?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
 fn retrieve_repository_state<'a, C: RepositoryClient>(
-    _: &'a mut dyn BorsState<C>,
-    _: &GithubRepositoryName,
+    state: &'a mut dyn BorsState<C>,
+    repository: &GithubRepositoryName,
 ) -> Option<&'a mut GithubRepositoryState<C>> {
-    todo!()
+    match state.get_repository_state_mut(repository) {
+        Some(result) => Some(result),
+        None => {
+            log::warn!("repository {repository} not found");
+            None
+        }
+    }
 }

@@ -26,6 +26,9 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+pub mod commands;
+pub mod parser;
+
 /// Represents a command.
 #[derive(Debug)]
 pub enum BorsCommand {
@@ -33,4 +36,27 @@ pub enum BorsCommand {
     ///
     /// `bors ping`
     Ping,
+}
+
+/// Parses bors commands from an input string.
+pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
+    let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![parser::parse_ping];
+
+    input
+        .lines()
+        .filter_map(|line| match line.find(parser::PREFIX) {
+            Some(position) => {
+                let command = &line[position + parser::PREFIX.len()..];
+
+                for callback in &parsers {
+                    if let Some(result) = callback(parser::Parser::new(command)) {
+                        return Some(result);
+                    }
+                }
+
+                parser::parse_remaining(parser::Parser::new(command))
+            }
+            None => None,
+        })
+        .collect()
 }
