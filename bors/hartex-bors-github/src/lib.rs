@@ -35,9 +35,9 @@ use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
-use octocrab::models::App;
 use octocrab::models::AppId;
 use octocrab::models::Repository;
+use octocrab::models::{App, CommentId};
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
@@ -116,6 +116,21 @@ impl GithubRepositoryClient {
 impl RepositoryClient for GithubRepositoryClient {
     fn repository_name(&self) -> &GithubRepositoryName {
         &self.repository_name
+    }
+
+    async fn edit_comment(
+        &mut self,
+        comment_id: CommentId,
+        text: &str,
+    ) -> hartex_eyre::Result<Comment> {
+        self.client
+            .issues(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+            )
+            .update_comment(comment_id, text)
+            .await
+            .map_err(Report::new)
     }
 
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment> {
