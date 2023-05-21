@@ -24,13 +24,13 @@
 
 use std::collections::HashMap;
 
+use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_permissions::BackendApiPermissionResolver;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::InstallationRepositories;
 use octocrab::models::Repository;
 use octocrab::Octocrab;
-use hartex_bors_core::models::GithubRepositoryName;
-use hartex_bors_permissions::BackendApiPermissionResolver;
 
 use crate::GithubRepositoryClient;
 use crate::RepositoryMap;
@@ -40,8 +40,8 @@ async fn create_repository_state(
     repository_client: Octocrab,
     repository: Repository,
 ) -> hartex_eyre::Result<RepositoryState> {
-    let Some(owner) = repository.owner else {
-        return Err(Report::msg(format!("repository {} has no owner", repository.name)));
+    let Some(owner) = &repository.owner else {
+        return Err(Report::msg(format!("repository {} has no owner", &repository.name)));
     };
 
     let name = GithubRepositoryName::new(&owner.login, &repository.name);
@@ -50,7 +50,7 @@ async fn create_repository_state(
     let permission_resolver = BackendApiPermissionResolver::load(name.clone()).await?;
     let client = GithubRepositoryClient {
         client: repository_client,
-        repository_name: name,
+        repository_name: name.clone(),
         repository,
     };
 
@@ -76,7 +76,8 @@ pub(crate) async fn load_repositories(client: &Octocrab) -> hartex_eyre::Result<
                 Ok(repositories) => {
                     for repository in repositories.repositories {
                         let state =
-                            create_repository_state(installation_client, repository).await?;
+                            create_repository_state(installation_client.clone(), repository)
+                                .await?;
                         log::info!("repository loaded: {}", state.repository);
 
                         if let Some(existing_repository) =
@@ -84,7 +85,7 @@ pub(crate) async fn load_repositories(client: &Octocrab) -> hartex_eyre::Result<
                         {
                             return Err(Report::msg(format!(
                                 "repository {} found in multiple installations",
-                                state.repository
+                                existing_repository.repository,
                             )));
                         }
                     }
