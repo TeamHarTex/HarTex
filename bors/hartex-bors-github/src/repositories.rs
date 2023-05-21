@@ -67,7 +67,7 @@ pub(crate) async fn load_repositories(client: &Octocrab) -> hartex_eyre::Result<
     let mut hashmap = HashMap::new();
     for installation in installations {
         if let Some(ref url) = installation.repositories_url {
-            let installation_client = client.installation(installation.id);
+            let (installation_client, _) = client.installation_and_token(installation.id).await?;
 
             match installation_client
                 .get::<InstallationRepositories, _, ()>(url, None)
