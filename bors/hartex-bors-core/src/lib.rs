@@ -27,9 +27,14 @@
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
 
+use std::future::Future;
+use std::pin::Pin;
+
 use octocrab::models::issues::Comment;
 
 use crate::models::GithubRepositoryName;
+use crate::models::GithubRepositoryState;
+use crate::models::Permission;
 
 pub mod models;
 
@@ -39,7 +44,20 @@ pub trait BorsState<C: RepositoryClient> {
     fn comment_posted_by_bors(&self, comment: Comment) -> bool;
 
     /// Returns a mutable reference to the repository state by its name.
-    fn get_repository_state_mut(&mut self, repository: &GithubRepositoryName) -> Option<C>;
+    fn get_repository_state_mut(
+        &mut self,
+        repository: &GithubRepositoryName,
+    ) -> Option<&mut GithubRepositoryState<C>>;
+}
+
+/// A base permission resolver.
+pub trait PermissionResolver {
+    /// Resolves permissions for a user and returns whether that user has the specified permission.
+    fn resolve_user<'a>(
+        &'a self,
+        username: &'a str,
+        permission: Permission,
+    ) -> Pin<Box<dyn Future<Output = bool> + Send + '_>>;
 }
 
 /// A repository client.
