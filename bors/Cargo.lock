@@ -545,6 +545,9 @@ dependencies = [
 [[package]]
 name = "hartex_bors_commands"
 version = "0.1.0"
+dependencies = [
+ "hartex_eyre",
+]
 
 [[package]]
 name = "hartex_bors_core"
