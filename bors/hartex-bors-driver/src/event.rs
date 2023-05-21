@@ -22,6 +22,8 @@
 
 //! # Bors Event Model
 
+use hartex_bors_commands::parser::ParserError;
+use hartex_bors_commands::BorsCommand;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
@@ -31,6 +33,8 @@ use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::events::payload::IssueCommentEventPayload;
+use octocrab::models::issues::Comment;
+use octocrab::models::issues::Issue;
 use serde_json::Value;
 
 /// Bors event
@@ -69,18 +73,59 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 }
 
 /// Handke an event.
-#[allow(dead_code)]
 pub async fn handle_event(
     state: &mut GithubBorsState,
     event: BorsEvent,
 ) -> hartex_eyre::Result<()> {
     match event.kind {
-        BorsEventKind::IssueComment(_) => {
-            if let Some(_) = retrieve_repository_state(
+        BorsEventKind::IssueComment(payload) => {
+            if let Some(repository) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
-                todo!()
+                if let Err(error) = handle_comment(repository, payload.comment, payload.issue).await
+                {
+                    println!("{error}");
+                }
+            }
+        }
+    }
+
+    Ok(())
+}
+
+async fn handle_comment<C: RepositoryClient>(
+    repository: &mut GithubRepositoryState<C>,
+    comment: Comment,
+    issue: Issue,
+) -> hartex_eyre::Result<()> {
+    let pr = issue.number;
+    let body = comment.body.unwrap();
+    let commands = hartex_bors_commands::parse_commands(&body);
+
+    log::info!(
+        "received comment at https://github.com/{}/{}/issues/{}, commands: {:?}",
+        repository.repository.owner(),
+        repository.repository.repository(),
+        pr,
+        commands,
+    );
+
+    for command in commands {
+        match command {
+            Ok(command) => match command {
+                BorsCommand::Ping =>
+                    hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
+            }
+            Err(error) => {
+                let error_msg = match error {
+                    ParserError::MissingCommand => "Missing command.".to_string(),
+                    ParserError::UnknownCommand(command) => {
+                        format!(r#"Unknown command "{command}"."#)
+                    }
+                };
+
+                repository.client.post_comment(pr, &error_msg).await?;
             }
         }
     }
