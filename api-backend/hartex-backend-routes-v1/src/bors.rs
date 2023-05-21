@@ -36,8 +36,8 @@ use serde_json::Value;
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
 /// Obtain the list of users having the specified permission in a repository.
-#[get("/bors/repository/<repository>/permissions/<permission>")]
-pub async fn v1_repository_repository_permissions_permissions(
+#[get("/bors/repositories/<repository>/permissions/<permission>")]
+pub async fn v1_repositories_repository_permissions_permissions(
     repository: String,
     permission: String,
 ) -> (Status, Value) {
