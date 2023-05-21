@@ -119,9 +119,10 @@ async fn handle_comment<C: RepositoryClient>(
     for command in commands {
         match command {
             Ok(command) => match command {
-                BorsCommand::Ping =>
+                BorsCommand::Ping => {
                     hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
-            }
+                }
+            },
             Err(error) => {
                 let error_msg = match error {
                     ParserError::MissingCommand => "Missing command.".to_string(),
