@@ -22,6 +22,8 @@
 
 //! # Utility Models
 
+use hartex_eyre::eyre::Report;
+use octocrab::models::Repository;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
@@ -43,6 +45,17 @@ impl GithubRepositoryName {
             owner: owner.to_lowercase(),
             repository: repository.to_lowercase(),
         }
+    }
+
+    pub fn new_from_repository(repository: Repository) -> hartex_eyre::Result<Self> {
+        let name = &repository.name;
+        let Some(owner) = repository.owner
+            .as_ref()
+            .map(|author| &author.login) else {
+            return Err(Report::msg(format!("repository {name} seemingly has no owner")));
+        };
+
+        Ok(Self::new(owner, name))
     }
 
     /// Obtain repository owner
