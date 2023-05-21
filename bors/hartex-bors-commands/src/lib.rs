@@ -26,6 +26,8 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+pub mod parser;
+
 /// Represents a command.
 #[derive(Debug)]
 pub enum BorsCommand {
@@ -35,6 +37,25 @@ pub enum BorsCommand {
     Ping,
 }
 
-pub fn parse_command(_: &str) -> hartex_eyre::Result<Option<BorsCommand>> {
-    todo!()
+/// Parses bors commands from an input string.
+pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
+    let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![];
+
+    input
+        .lines()
+        .filter_map(|line| match line.find(parser::PREFIX) {
+            Some(position) => {
+                let command = &line[position + parser::PREFIX.len()..];
+
+                for callback in parsers {
+                    if let Some(result) = callback(parser::Parser::new(command)) {
+                        return Some(result);
+                    }
+                }
+
+                todo!()
+            }
+            None => None,
+        })
+        .collect()
 }
