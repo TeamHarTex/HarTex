@@ -28,6 +28,7 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_backend_status_util::StatusFns;
+use hartex_log::log;
 use rocket::get;
 use rocket::http::Status;
 use serde_json::json;
@@ -41,8 +42,9 @@ pub async fn v1_repositories_repository_permissions_permissions(
     repository: String,
     permission: String,
 ) -> (Status, Value) {
+    log::trace!("attempting to retrieve permissions data");
     let result = File::open(format!(
-        "../backend-data/bors.{}.permissions.{}",
+        "./backend-data/bors.{}.permissions.{}",
         repository.to_lowercase(),
         permission.to_lowercase()
     ));
