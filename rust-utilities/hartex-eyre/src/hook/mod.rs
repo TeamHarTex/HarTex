@@ -36,6 +36,7 @@ impl HookBuilder {
     }
 
     #[allow(clippy::missing_errors_doc)]
+    #[allow(clippy::unused_self)]
     pub fn install_hooks(self) -> Result<(), ::eyre::Report> {
         let (eyre_hook, panic_hook) = self.try_into_hooks();
         eyre_hook.install_hook()?;
