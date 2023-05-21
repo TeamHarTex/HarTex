@@ -43,6 +43,7 @@ use secrecy::SecretVec;
 use std::collections::HashMap;
 
 mod repositories;
+pub mod webhook;
 
 /// State of the bors Github application
 #[allow(dead_code)]
