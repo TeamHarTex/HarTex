@@ -42,7 +42,7 @@ pub(crate) fn hcl_rgb_function(args: FuncArgs) -> Result<Value, String> {
 
     Ok(Value::Number(Number::from(u32::from_be_bytes([
         r.as_u64().unwrap() as u8,
-        g.as_u64().unwrap(),
-        b.as_u64().unwrap(),
+        g.as_u64().unwrap() as u8,
+        b.as_u64().unwrap() as u8,
     ]))))
 }
