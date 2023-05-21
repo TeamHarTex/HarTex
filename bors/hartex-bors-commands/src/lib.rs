@@ -35,6 +35,6 @@ pub enum BorsCommand {
     Ping,
 }
 
-pub fn parse_command(input: &str) -> hartex_eyre::Result<Option<BorsCommand>> {
-
+pub fn parse_command(_: &str) -> hartex_eyre::Result<Option<BorsCommand>> {
+    todo!()
 }
