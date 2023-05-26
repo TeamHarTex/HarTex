@@ -40,14 +40,15 @@ pub async fn try_command<C: RepositoryClient>(
 async fn check_try_permissions<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     pr: u64,
-    author: &str
+    author: &str,
 ) -> hartex_eyre::Result<bool> {
     log::trace!("checking try permissions");
 
     let result = if !repository
         .permission_resolver
         .resolve_user(author, Permission::TryBuild)
-        .await {
+        .await
+    {
         log::warn!("user does not have try permisisons");
 
         repository
