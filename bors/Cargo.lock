@@ -548,6 +548,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_bors_core",
  "hartex_eyre",
+ "hartex_log",
 ]
 
 [[package]]
