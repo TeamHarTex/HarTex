@@ -30,7 +30,7 @@ pub async fn try_command<C: RepositoryClient>(
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
-    if !check_try_permissions(repository, pr, author).await {
+    if !check_try_permissions(repository, pr, author).await? {
         return Ok(());
     }
 
