@@ -23,3 +23,4 @@
 //! # Commands
 
 pub mod ping;
+pub mod r#try;

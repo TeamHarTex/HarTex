@@ -60,6 +60,10 @@ pub(crate) fn parse_ping(parser: Parser) -> ParserResult {
     parse_exact("ping", BorsCommand::Ping, parser)
 }
 
+pub(crate) fn parse_try(parser: Parser) -> ParserResult {
+    parse_exact("try", BorsCommand::Try, parser)
+}
+
 fn parse_exact<'a>(
     exact: &'static str,
     expected: BorsCommand,

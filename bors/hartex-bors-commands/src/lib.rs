@@ -36,11 +36,16 @@ pub enum BorsCommand {
     ///
     /// `bors ping`
     Ping,
+    /// Try command.
+    ///
+    /// `bors try`
+    Try,
 }
 
 /// Parses bors commands from an input string.
 pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
-    let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![parser::parse_ping];
+    let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> =
+        vec![parser::parse_ping, parser::parse_try];
 
     input
         .lines()
