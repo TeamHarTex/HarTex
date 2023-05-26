@@ -122,6 +122,14 @@ async fn handle_comment<C: RepositoryClient>(
                 BorsCommand::Ping => {
                     hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
                 }
+                BorsCommand::Try => {
+                    hartex_bors_commands::commands::r#try::try_command(
+                        repository,
+                        pr,
+                        &issue.user.login,
+                    )
+                    .await?
+                }
             },
             Err(error) => {
                 let error_msg = match error {
