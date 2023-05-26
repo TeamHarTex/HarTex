@@ -22,5 +22,4 @@
 
 //! # Commands
 
-pub mod approve;
 pub mod ping;
