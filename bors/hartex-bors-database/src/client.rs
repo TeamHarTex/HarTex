@@ -102,7 +102,7 @@ fn build_from_database(model: entity::build::Model) -> BorsBuild {
         id: model.id,
         repository: model.repository,
         branch: model.branch,
-        commit_hash: model.commit_sha,
+        commit_hash: model.commit_hash,
         status: build_status_from_database(model.status),
         created_at: datetime_from_database(model.created_at),
     }
