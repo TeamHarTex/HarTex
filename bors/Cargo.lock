@@ -675,6 +675,7 @@ dependencies = [
  "futures-util",
  "hartex_bors_commands",
  "hartex_bors_core",
+ "hartex_bors_database",
  "hartex_bors_github",
  "hartex_eyre",
  "hartex_log",
