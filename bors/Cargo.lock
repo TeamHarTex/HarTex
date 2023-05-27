@@ -736,6 +736,7 @@ dependencies = [
  "octocrab",
  "reqwest-eventsource",
  "sea-orm",
+ "sea-orm-migration",
  "serde_json",
  "tokio",
 ]
