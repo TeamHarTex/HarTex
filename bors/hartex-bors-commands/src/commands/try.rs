@@ -27,6 +27,8 @@ use hartex_bors_database::models::BorsBuildStatus;
 use hartex_bors_database::DatabaseClient;
 use hartex_log::log;
 
+const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
+
 pub async fn try_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     database: &mut dyn DatabaseClient,
@@ -49,6 +51,10 @@ pub async fn try_command<C: RepositoryClient>(
 
         return Ok(());
     };
+
+    repository
+        .client
+        .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, &pr_model.)
 
     Ok(())
 }

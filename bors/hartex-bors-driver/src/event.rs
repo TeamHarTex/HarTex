@@ -28,6 +28,7 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_database::DatabaseClient;
 use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
@@ -101,6 +102,7 @@ pub async fn handle_event(
 
 async fn handle_comment<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
+    database: &mut dyn DatabaseClient,
     comment: Comment,
     issue: Issue,
 ) -> hartex_eyre::Result<()> {
@@ -125,6 +127,7 @@ async fn handle_comment<C: RepositoryClient>(
                 BorsCommand::Try => {
                     hartex_bors_commands::commands::r#try::try_command(
                         repository,
+                        database,
                         pr,
                         &issue.user.login,
                     )
