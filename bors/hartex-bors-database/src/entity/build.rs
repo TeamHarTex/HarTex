@@ -29,7 +29,7 @@ pub struct Model {
     pub id: i32,
     pub repository: String,
     pub branch: String,
-    pub commit_sha: String,
+    pub commit_hash: String,
     pub status: String,
     pub created_at: DateTime,
 }
