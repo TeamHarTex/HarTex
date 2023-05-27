@@ -655,6 +655,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_eyre",
  "octocrab",
+ "sea-orm",
 ]
 
 [[package]]

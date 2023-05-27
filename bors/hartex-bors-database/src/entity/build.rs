@@ -20,14 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use sea_orm::prelude::DateTime;
-use sea_orm::ActiveModelBehavior;
-use sea_orm::DeriveEntityModel;
-use sea_orm::DeriveRelation;
-use sea_orm::EnumIter;
-use sea_orm::Related;
-use sea_orm::RelationDef;
-use sea_orm::RelationTrait;
+use sea_orm::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
 #[sea_orm(table_name = "build")]

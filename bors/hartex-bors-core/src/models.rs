@@ -22,14 +22,61 @@
 
 //! # Utility Models
 
-use hartex_eyre::eyre::Report;
-use octocrab::models::Repository;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
 
+use hartex_eyre::eyre::Report;
+use octocrab::models::Repository;
+use sea_orm::prelude::DateTimeUtc;
+
 use crate::PermissionResolver;
 use crate::RepositoryClient;
+
+type PrimaryKey = i32;
+
+/// The status of a certain bors build.
+#[derive(Debug, Eq, PartialEq)]
+pub enum BorsBuildStatus {
+    /// The build is pending.
+    Pending,
+    /// The build succeeded.
+    Success,
+    /// The build failed.
+    Failure,
+    /// The build was cancelled manually by a user.
+    Cancelled,
+}
+
+/// A bors build.
+pub struct BorsBuild {
+    /// The identifier for this build.
+    pub id: PrimaryKey,
+    /// The repository.
+    pub repository: String,
+    /// The branch.
+    pub branch: String,
+    /// The hash of the commit.
+    pub commit_hash: String,
+    /// The build status of the build.
+    pub status: BorsBuildStatus,
+    /// The time when this build was created.
+    pub created_at: DateTimeUtc,
+}
+
+/// A pull request that has been "indexed" by bors through approve and try commands.
+pub struct BorsPullRequest {
+    /// The identifier for this pull request.
+    pub id: PrimaryKey,
+    /// The repository.
+    pub repository: String,
+    /// The PR number.
+    pub number: u64,
+    /// The try build of this pull request, if any.
+    pub try_build: Option<BorsBuild>,
+    /// The time when this pull request was created.
+    pub created_at: DateTimeUtc,
+}
 
 /// Name of a Github repository
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]

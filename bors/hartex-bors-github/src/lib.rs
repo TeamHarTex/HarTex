@@ -26,10 +26,13 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
+#![feature(if_let_guard)]
+#![feature(let_chains)]
 
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
+use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_eyre::eyre::Report;
@@ -54,7 +57,7 @@ pub mod webhook;
 pub struct GithubBorsState {
     application: App,
     client: Octocrab,
-    database: SeaORMDatabaseClient,
+    pub database: SeaORMDatabaseClient,
     repositories: RepositoryMap,
 }
 
@@ -82,10 +85,6 @@ impl GithubBorsState {
             repositories,
         })
     }
-
-    pub fn database_mut(&mut self) -> &mut SeaORMDatabaseClient {
-        &mut self.database
-    }
 }
 
 impl BorsState<GithubRepositoryClient> for GithubBorsState {
@@ -96,8 +95,13 @@ impl BorsState<GithubRepositoryClient> for GithubBorsState {
     fn get_repository_state_mut(
         &mut self,
         repository: &GithubRepositoryName,
-    ) -> Option<&mut GithubRepositoryState<GithubRepositoryClient>> {
-        self.repositories.get_mut(repository)
+    ) -> Option<(
+        &mut GithubRepositoryState<GithubRepositoryClient>,
+        &mut dyn DatabaseClient,
+    )> {
+        self.repositories
+            .get_mut(repository)
+            .map(|repo| (repo, (&mut self.database) as &mut dyn DatabaseClient))
     }
 }
 

@@ -27,8 +27,8 @@ use hartex_bors_commands::BorsCommand;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
+use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
-use hartex_bors_database::DatabaseClient;
 use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
@@ -85,17 +85,12 @@ pub async fn handle_event(
                 return Ok(());
             }
 
-            if let Some(repository) = retrieve_repository_state(
+            if let Some((repository, database)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
-                if let Err(error) = handle_comment(
-                    repository,
-                    state.database_mut(),
-                    payload.comment,
-                    payload.issue,
-                )
-                .await
+                if let Err(error) =
+                    handle_comment(repository, database, payload.comment, payload.issue).await
                 {
                     println!("{error}");
                 }
@@ -159,7 +154,7 @@ async fn handle_comment<C: RepositoryClient>(
 fn retrieve_repository_state<'a, C: RepositoryClient>(
     state: &'a mut dyn BorsState<C>,
     repository: &GithubRepositoryName,
-) -> Option<&'a mut GithubRepositoryState<C>> {
+) -> Option<(&'a mut GithubRepositoryState<C>, &'a mut dyn DatabaseClient)> {
     match state.get_repository_state_mut(repository) {
         Some(result) => Some(result),
         None => {
