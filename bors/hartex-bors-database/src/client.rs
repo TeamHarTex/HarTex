@@ -27,13 +27,13 @@ use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_eyre::eyre::Report;
+use sea_orm::prelude::DateTime;
+use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
 use sea_orm::ActiveValue::Set;
 use sea_orm::DatabaseConnection;
 use sea_orm::DbErr;
 use sea_orm::EntityTrait;
-use sea_orm::prelude::DateTime;
-use sea_orm::prelude::DateTimeUtc;
 use sea_orm::QueryFilter;
 
 use crate::entity;
