@@ -52,6 +52,12 @@ pub async fn try_command<C: RepositoryClient>(
         return Ok(());
     };
 
+    let github_pr = repository.client.get_pull_request(pr).await?;
+    repository
+        .client
+        .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, github_pr.base.sha)
+        .await?;
+
     Ok(())
 }
 
