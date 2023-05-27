@@ -692,10 +692,12 @@ dependencies = [
  "hartex_bors_permissions",
  "hartex_eyre",
  "hartex_log",
+ "http",
  "jsonwebtoken",
  "octocrab",
  "secrecy",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

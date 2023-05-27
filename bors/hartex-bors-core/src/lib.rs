@@ -75,4 +75,11 @@ pub trait RepositoryClient {
 
     /// Post a comment on a specific pull request.
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
+
+    /// Set a branch to a specific revision.
+    async fn set_branch_to_revision(
+        &mut self,
+        branch: &str,
+        revision: String,
+    ) -> hartex_eyre::Result<()>;
 }
