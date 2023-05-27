@@ -36,6 +36,7 @@ use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
+use octocrab::models::pulls::PullRequest;
 use octocrab::models::AppId;
 use octocrab::models::Repository;
 use octocrab::models::{App, CommentId};
@@ -138,6 +139,17 @@ impl RepositoryClient for GithubRepositoryClient {
                 self.repository_name.repository(),
             )
             .update_comment(comment_id, text)
+            .await
+            .map_err(Report::new)
+    }
+
+    async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest> {
+        self.client
+            .pulls(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+            )
+            .get(pr)
             .await
             .map_err(Report::new)
     }
