@@ -655,6 +655,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_eyre",
  "octocrab",
+ "sea-orm",
 ]
 
 [[package]]
@@ -681,6 +682,7 @@ dependencies = [
  "hartex_log",
  "octocrab",
  "reqwest-eventsource",
+ "sea-orm",
  "serde_json",
  "tokio",
 ]
@@ -690,6 +692,7 @@ name = "hartex_bors_github"
 version = "0.1.0"
 dependencies = [
  "hartex_bors_core",
+ "hartex_bors_database",
  "hartex_bors_permissions",
  "hartex_eyre",
  "hartex_log",

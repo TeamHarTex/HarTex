@@ -32,8 +32,12 @@ use std::env;
 use std::fs::File;
 use std::io::Read;
 
+use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_github::GithubBorsState;
+use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use sea_orm::Database;
+use sea_orm::DatabaseConnection;
 use tokio::runtime::Builder;
 
 mod event;
@@ -59,12 +63,16 @@ fn actual_main() -> hartex_eyre::Result<()> {
     log::trace!("loading github application state");
     let app_id = env::var("APP_ID")?.parse::<u64>()?;
 
+    log::trace!("initializing sqlite database");
+    let database = runtime.block_on(initialize_database())?;
+
     let mut private_key_file = File::open("../bors-private-key.pem")?;
     let mut private_key = String::new();
     private_key_file.read_to_string(&mut private_key)?;
 
     let state = runtime.block_on(GithubBorsState::load(
         app_id.into(),
+        SeaORMDatabaseClient::new(database),
         private_key.into_bytes().into(),
     ))?;
 
@@ -73,4 +81,11 @@ fn actual_main() -> hartex_eyre::Result<()> {
     runtime.block_on(future);
 
     Ok(())
+}
+
+async fn initialize_database() -> hartex_eyre::Result<DatabaseConnection> {
+    // todo: change this to a file
+    Database::connect("sqlite::memory:")
+        .await
+        .map_err(Report::new)
 }
