@@ -144,6 +144,14 @@ impl RepositoryClient for GithubRepositoryClient {
             .await
             .map_err(Report::new)
     }
+
+    async fn set_branch_to_revision(
+        &mut self,
+        branch: &str,
+        revision: &str,
+    ) -> hartex_eyre::Result<()> {
+        operations::set_branch_to_revision(self, branch.to_string(), revision.to_string()).await
+    }
 }
 
 type RepositoryMap = HashMap<GithubRepositoryName, RepositoryState>;
