@@ -12,6 +12,7 @@ rust-version = "1.71.0"
 
 [dependencies]
 hartex_bors_core = { path = "../hartex-bors-core" }
+hartex_bors_database = { path = "../hartex-bors-database" }
 hartex_bors_permissions = { path = "../hartex-bors-permissions" }
 
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }

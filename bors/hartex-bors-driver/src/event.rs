@@ -89,7 +89,13 @@ pub async fn handle_event(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
-                if let Err(error) = handle_comment(repository, payload.comment, payload.issue).await
+                if let Err(error) = handle_comment(
+                    repository,
+                    state.database_mut(),
+                    payload.comment,
+                    payload.issue,
+                )
+                .await
                 {
                     println!("{error}");
                 }

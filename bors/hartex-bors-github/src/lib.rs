@@ -31,6 +31,7 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
@@ -52,6 +53,7 @@ pub mod webhook;
 pub struct GithubBorsState {
     application: App,
     client: Octocrab,
+    database: SeaORMDatabaseClient,
     repositories: RepositoryMap,
 }
 
@@ -59,6 +61,7 @@ impl GithubBorsState {
     /// Load the Github application state for bors.
     pub async fn load(
         application_id: AppId,
+        database: SeaORMDatabaseClient,
         private_key: SecretVec<u8>,
     ) -> hartex_eyre::Result<Self> {
         log::trace!("obtaining private key");
@@ -74,8 +77,13 @@ impl GithubBorsState {
         Ok(Self {
             application,
             client,
+            database,
             repositories,
         })
+    }
+
+    pub fn database_mut(&mut self) -> &mut SeaORMDatabaseClient {
+        &mut self.database
     }
 }
 
