@@ -20,11 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
+use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
-use hartex_bors_database::models::BorsBuildStatus;
-use hartex_bors_database::DatabaseClient;
 use hartex_log::log;
 
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
@@ -55,7 +55,7 @@ pub async fn try_command<C: RepositoryClient>(
     let github_pr = repository.client.get_pull_request(pr).await?;
     repository
         .client
-        .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, github_pr.base.sha)
+        .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, &github_pr.base.sha)
         .await?;
 
     Ok(())

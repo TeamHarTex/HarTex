@@ -22,6 +22,10 @@
 
 //! Utility Operations
 
+use std::error::Error;
+use std::fmt::Display;
+use std::fmt::Formatter;
+use std::fmt::Result as FmtResult;
 use std::str::FromStr;
 
 use hartex_eyre::eyre::Report;
@@ -36,7 +40,29 @@ use crate::GithubRepositoryClient;
 pub enum UpdateBranchError {
     /// The branch to update does not exist.
     BranchNotFound(String),
+    Unknown,
 }
+
+impl UpdateBranchError {
+    pub fn is_branch_not_found(&self) -> bool {
+        let Self::BranchNotFound(_) = self else {
+            return false;
+        };
+
+        true
+    }
+}
+
+impl Display for UpdateBranchError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match self {
+            Self::BranchNotFound(branch) => write!(f, "branch {branch} is not found"),
+            _ => write!(f, "unknown error"),
+        }
+    }
+}
+
+impl Error for UpdateBranchError {}
 
 /// Set a branch to a specific commit revision.
 pub async fn set_branch_to_revision(
@@ -46,13 +72,14 @@ pub async fn set_branch_to_revision(
 ) -> hartex_eyre::Result<()> {
     match update_branch(repository, name.clone(), commit_hash.clone()).await {
         Ok(_) => Ok(()),
-        Err(UpdateBranchError::BranchNotFound(_)) => {
+        Err(error) if let Some(error) = error.downcast_ref::<UpdateBranchError>()
+            && error.is_branch_not_found() => {
             match create_branch(repository, name.clone(), commit_hash).await {
                 Ok(_) => Ok(()),
-                Err(error) => Err(error),
+                error => error,
             }
-        }
-        Err(error) => Err(error),
+        },
+        error => error,
     }
 }
 
@@ -90,7 +117,7 @@ async fn update_branch(
         ._patch(
             uri,
             Some(&serde_json::json!({
-                "sha": commit_hash.as_ref(),
+                "sha": commit_hash.clone(),
                 "force": true
             })),
         )

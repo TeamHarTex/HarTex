@@ -25,22 +25,24 @@ use std::pin::Pin;
 
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
+
+use hartex_bors_core::models::BorsBuild;
+use hartex_bors_core::models::BorsBuildStatus;
+use hartex_bors_core::models::BorsPullRequest;
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
 use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
 use sea_orm::ActiveValue::Set;
+use sea_orm::ColumnTrait;
 use sea_orm::DatabaseConnection;
 use sea_orm::DbErr;
 use sea_orm::EntityTrait;
 use sea_orm::QueryFilter;
 
 use crate::entity;
-use crate::models::BorsBuild;
-use crate::models::BorsBuildStatus;
-use crate::models::BorsPullRequest;
-use crate::DatabaseClient;
 
 /// A SeaORM database client.
 pub struct SeaORMDatabaseClient {
@@ -55,11 +57,11 @@ impl SeaORMDatabaseClient {
 }
 
 impl DatabaseClient for SeaORMDatabaseClient {
-    fn get_or_create_pull_request(
-        &self,
-        name: &GithubRepositoryName,
+    fn get_or_create_pull_request<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
         pr_number: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>>>> {
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>> {
         Box::pin(async move {
             let pr = entity::pull_request::ActiveModel {
                 repository: Set(format!("{name}")),
@@ -88,7 +90,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .find_also_related(entity::build::Entity)
                 .one(&self.connection)
                 .await?
-                .ok_or_else(Report::new)?;
+                .ok_or_else(|| Report::msg("cannot execute query"))?;
 
             Ok(pr_from_database(pr, build))
         })
