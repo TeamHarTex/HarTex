@@ -26,15 +26,20 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(async_fn_in_trait)]
+#![feature(if_let_guard)]
+#![feature(let_chains)]
 
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
+use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
+use octocrab::models::pulls::PullRequest;
 use octocrab::models::AppId;
 use octocrab::models::Repository;
 use octocrab::models::{App, CommentId};
@@ -52,6 +57,7 @@ pub mod webhook;
 pub struct GithubBorsState {
     application: App,
     client: Octocrab,
+    pub database: SeaORMDatabaseClient,
     repositories: RepositoryMap,
 }
 
@@ -59,6 +65,7 @@ impl GithubBorsState {
     /// Load the Github application state for bors.
     pub async fn load(
         application_id: AppId,
+        database: SeaORMDatabaseClient,
         private_key: SecretVec<u8>,
     ) -> hartex_eyre::Result<Self> {
         log::trace!("obtaining private key");
@@ -74,6 +81,7 @@ impl GithubBorsState {
         Ok(Self {
             application,
             client,
+            database,
             repositories,
         })
     }
@@ -87,8 +95,13 @@ impl BorsState<GithubRepositoryClient> for GithubBorsState {
     fn get_repository_state_mut(
         &mut self,
         repository: &GithubRepositoryName,
-    ) -> Option<&mut GithubRepositoryState<GithubRepositoryClient>> {
-        self.repositories.get_mut(repository)
+    ) -> Option<(
+        &mut GithubRepositoryState<GithubRepositoryClient>,
+        &mut dyn DatabaseClient,
+    )> {
+        self.repositories
+            .get_mut(repository)
+            .map(|repo| (repo, (&mut self.database) as &mut dyn DatabaseClient))
     }
 }
 
@@ -130,6 +143,17 @@ impl RepositoryClient for GithubRepositoryClient {
                 self.repository_name.repository(),
             )
             .update_comment(comment_id, text)
+            .await
+            .map_err(Report::new)
+    }
+
+    async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest> {
+        self.client
+            .pulls(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+            )
+            .get(pr)
             .await
             .map_err(Report::new)
     }

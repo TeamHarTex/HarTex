@@ -26,21 +26,5 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use hartex_bors_core::models::GithubRepositoryName;
-use std::future::Future;
-use std::pin::Pin;
-
 pub mod client;
 mod entity;
-pub mod models;
-
-/// A database client.
-pub trait DatabaseClient {
-    /// Gets a bors pull request in the bors database, or creates before returning if the pull
-    /// request is not present yet.
-    fn get_or_create_pull_request(
-        &self,
-        name: &GithubRepositoryName,
-        pr: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<models::BorsPullRequest>>>>;
-}

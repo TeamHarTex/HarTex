@@ -31,6 +31,7 @@ use std::future::Future;
 use std::pin::Pin;
 
 use octocrab::models::issues::Comment;
+use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
 
 use crate::models::GithubRepositoryName;
@@ -48,7 +49,18 @@ pub trait BorsState<C: RepositoryClient> {
     fn get_repository_state_mut(
         &mut self,
         repository: &GithubRepositoryName,
-    ) -> Option<&mut GithubRepositoryState<C>>;
+    ) -> Option<(&mut GithubRepositoryState<C>, &mut dyn DatabaseClient)>;
+}
+
+/// A database client.
+pub trait DatabaseClient {
+    /// Gets a bors pull request in the bors database, or creates before returning if the pull
+    /// request is not present yet.
+    fn get_or_create_pull_request<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+        pr: u64,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<models::BorsPullRequest>> + '_>>;
 }
 
 /// A base permission resolver.
@@ -73,6 +85,9 @@ pub trait RepositoryClient {
         text: &str,
     ) -> hartex_eyre::Result<Comment>;
 
+    /// Gets a pull request by its number.
+    async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
+
     /// Post a comment on a specific pull request.
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
 
@@ -80,6 +95,6 @@ pub trait RepositoryClient {
     async fn set_branch_to_revision(
         &mut self,
         branch: &str,
-        revision: String,
+        revision: &str,
     ) -> hartex_eyre::Result<()>;
 }
