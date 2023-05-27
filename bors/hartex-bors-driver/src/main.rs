@@ -33,11 +33,12 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_bors_database::client::SeaORMDatabaseClient;
+use hartex_bors_database::migration::Migrator;
 use hartex_bors_github::GithubBorsState;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
+use sea_orm_migration::prelude::MigratorTrait;
 use tokio::runtime::Builder;
 
 mod event;
@@ -85,7 +86,8 @@ fn actual_main() -> hartex_eyre::Result<()> {
 
 async fn initialize_database() -> hartex_eyre::Result<DatabaseConnection> {
     // todo: change this to a file
-    Database::connect("sqlite::memory:")
-        .await
-        .map_err(Report::new)
+    let database = Database::connect("sqlite::memory:").await?;
+    Migrator::up(&database, None).await?;
+
+    Ok(database)
 }
