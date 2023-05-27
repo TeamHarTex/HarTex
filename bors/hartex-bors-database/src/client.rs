@@ -47,6 +47,13 @@ pub struct SeaORMDatabaseClient {
     connection: DatabaseConnection,
 }
 
+impl SeaORMDatabaseClient {
+    /// Construct a new database client.
+    pub fn new(connection: DatabaseConnection) -> Self {
+        Self { connection }
+    }
+}
+
 impl DatabaseClient for SeaORMDatabaseClient {
     fn get_or_create_pull_request(
         &self,
