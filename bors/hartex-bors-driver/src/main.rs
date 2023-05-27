@@ -33,12 +33,13 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_bors_database::client::SeaORMDatabaseClient;
+use hartex_bors_database::migration::Migrator;
 use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
+use sea_orm_migration::prelude::MigratorTrait;
 use tokio::runtime::Builder;
-use hartex_bors_database::migration::Migrator;
 
 mod event;
 mod process;
