@@ -660,6 +660,7 @@ dependencies = [
 name = "hartex_bors_database"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "hartex_bors_core",
  "hartex_eyre",
  "sea-orm",
