@@ -23,16 +23,32 @@
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_database::models::BorsBuildStatus;
+use hartex_bors_database::DatabaseClient;
 use hartex_log::log;
 
 pub async fn try_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
+    database: &mut dyn DatabaseClient,
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
     if !check_try_permissions(repository, pr, author).await? {
         return Ok(());
     }
+
+    let pr_model = database
+        .get_or_create_pull_request(repository.client.repository_name(), pr)
+        .await?;
+
+    if let Some(ref build) = pr_model.try_build && build.status == BorsBuildStatus::Pending {
+        repository
+            .client
+            .post_comment(pr, ":warning: A try build is currently in progress. You can cancel the build using `bors try-`")
+            .await?;
+
+        return Ok(());
+    };
 
     Ok(())
 }
