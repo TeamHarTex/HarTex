@@ -43,6 +43,7 @@ use secrecy::ExposeSecret;
 use secrecy::SecretVec;
 use std::collections::HashMap;
 
+pub mod operations;
 mod repositories;
 pub mod webhook;
 
