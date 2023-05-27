@@ -34,7 +34,6 @@ use std::io::Read;
 
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_github::GithubBorsState;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use sea_orm::Database;
 use sea_orm::DatabaseConnection;
