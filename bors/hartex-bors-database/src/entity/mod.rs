@@ -23,3 +23,4 @@
 pub mod build;
 pub mod prelude;
 pub mod pull_request;
+pub mod workflow;
