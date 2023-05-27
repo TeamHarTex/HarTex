@@ -25,6 +25,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(let_chains)]
 
 pub mod commands;
 pub mod parser;
