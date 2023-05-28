@@ -35,7 +35,6 @@ use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
-use octocrab::models::events::payload::WorkflowRunEventAction;
 use octocrab::models::events::payload::WorkflowRunEventPayload;
 use octocrab::models::issues::Comment;
 use octocrab::models::issues::Issue;
