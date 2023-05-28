@@ -20,14 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_bors_commands::commands::try::TRY_BRANCH_NAME;
+use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::DatabaseClient;
-use octocrab::models::workflows::Run;
 use hartex_log::log;
+use octocrab::models::workflows::Run;
 
 pub(crate) fn workflow_started(
     database: &mut dyn DatabaseClient,
-    run: Run
+    run: Run,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&run.head_branch) {
         return Ok(());
