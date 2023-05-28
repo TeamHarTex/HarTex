@@ -28,6 +28,7 @@ use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::messages::auto_merge_commit_message;
 use hartex_log::log;
 
+const TRY_BRANCH_NAME: &str = "automation/bors/try";
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
 
 pub async fn try_command<C: RepositoryClient>(
@@ -59,8 +60,7 @@ pub async fn try_command<C: RepositoryClient>(
         .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, &github_pr.base.sha)
         .await?;
 
-    // todo: match on this result
-    repository
+    let merge_hash = repository
         .client
         .merge_branches(
             TRY_MERGE_BRANCH_NAME,
@@ -68,6 +68,10 @@ pub async fn try_command<C: RepositoryClient>(
             &auto_merge_commit_message(&github_pr, "<try>"),
         )
         .await?;
+
+    repository
+        .client
+        .set_branch_to_revision()
 
     Ok(())
 }
