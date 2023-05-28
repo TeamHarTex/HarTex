@@ -35,6 +35,7 @@ use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
+use octocrab::models::events::payload::WorkflowRunEventAction;
 use octocrab::models::events::payload::WorkflowRunEventPayload;
 use octocrab::models::issues::Comment;
 use octocrab::models::issues::Issue;
@@ -115,7 +116,18 @@ pub async fn handle_event(
                 }
             }
         }
-        BorsEventKind::WorkflowRun(_) => todo!(),
+        BorsEventKind::WorkflowRun(payload) if payload.action == WorkflowRunEventAction::InProgress => {
+            if let Some((_, database)) = retrieve_repository_state(
+                state,
+                &GithubRepositoryName::new_from_repository(event.repository.repository)?,
+            ) {
+                crate::workflows::workflow_started(database, payload.workflow_run)
+            }
+        }
+        BorsEventKind::WorkflowRun(payload) if payload.action == WorkflowRunEventAction::Completed => {
+
+        }
+        _ => return Err(Report::msg("unsupported event payloads are ignored")),
     }
 
     Ok(())
