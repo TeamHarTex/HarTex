@@ -35,12 +35,15 @@ use hartex_eyre::eyre::Report;
 use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
+use sea_orm::ActiveModelTrait;
 use sea_orm::ActiveValue::Set;
+use sea_orm::ActiveValue::Unchanged;
 use sea_orm::ColumnTrait;
 use sea_orm::DatabaseConnection;
 use sea_orm::DbErr;
 use sea_orm::EntityTrait;
 use sea_orm::QueryFilter;
+use sea_orm::TransactionTrait;
 
 use crate::entity;
 
@@ -57,6 +60,38 @@ impl SeaORMDatabaseClient {
 }
 
 impl DatabaseClient for SeaORMDatabaseClient {
+    fn associate_try_build<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
+        branch: String,
+        commit_hash: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let build = entity::build::ActiveModel {
+                repository: Set(pr.repository.clone()),
+                branch: Set(branch),
+                commit_hash: Set(commit_hash),
+                status: Set(build_status_to_database(BorsBuildStatus::Pending).to_string()),
+                ..Default::default()
+            };
+
+            let tx = self.connection.begin().await?;
+            let build = entity::build::Entity::insert(build)
+                .exec_with_returning(&tx)
+                .await?;
+
+            let pr_model = entity::pull_request::ActiveModel {
+                id: Unchanged(pr.id),
+                try_build: Set(Some(build.id)),
+                ..Default::default()
+            };
+            pr_model.update(&tx).await?;
+            tx.commit().await?;
+
+            Ok(())
+        })
+    }
+
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
@@ -108,13 +143,22 @@ fn build_from_database(model: entity::build::Model) -> BorsBuild {
     }
 }
 
+fn build_status_to_database(status: BorsBuildStatus) -> &'static str {
+    match status {
+        BorsBuildStatus::Pending => "pending",
+        BorsBuildStatus::Success => "success",
+        BorsBuildStatus::Failure => "failure",
+        BorsBuildStatus::Cancelled => "cancelled",
+    }
+}
+
 fn build_status_from_database(status: String) -> BorsBuildStatus {
     match status.as_str() {
         "pending" => BorsBuildStatus::Pending,
         "success" => BorsBuildStatus::Success,
         "failure" => BorsBuildStatus::Failure,
         "cancelled" => BorsBuildStatus::Cancelled,
-        _ => BorsBuildStatus::Pending,
+        _ => unreachable!(),
     }
 }
 

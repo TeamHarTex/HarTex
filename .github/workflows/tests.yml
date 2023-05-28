@@ -1,13 +1,11 @@
 name: Tests
 
 on:
-  merge_queue:
   push:
     branches:
       - nightly
       - stable
-      - staging
-      - trying
+      - automation/bors/try
 
 env:
   CARGO_TERM_COLOR: always
