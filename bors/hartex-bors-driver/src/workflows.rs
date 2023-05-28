@@ -24,8 +24,12 @@ use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::DatabaseClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
+use hartex_bors_core::models::BorsBuildStatus;
+use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_github::GithubRepositoryClient;
 
-pub(crate) fn workflow_started(
+pub(crate) async fn workflow_started(
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
@@ -40,6 +44,14 @@ pub(crate) fn workflow_started(
         run.head_branch,
         run.head_sha,
     );
+
+    let Some(build) = database.find_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
+        return Ok(());
+    };
+
+    if build.status != BorsBuildStatus::Pending {
+        return Ok(());
+    }
 
     todo!()
 }
