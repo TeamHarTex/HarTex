@@ -87,6 +87,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
             };
             pr_model.update(&tx).await?;
             tx.commit().await?;
+
+            Ok(())
         })
     }
 
