@@ -33,7 +33,9 @@ use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
+use octocrab::models::events::payload::WorkflowRunEventPayload;
 use octocrab::models::issues::Comment;
 use octocrab::models::issues::Issue;
 use serde_json::Value;
@@ -50,6 +52,8 @@ pub struct BorsEvent {
 pub enum BorsEventKind {
     /// An issue comment.
     IssueComment(IssueCommentEventPayload),
+    /// A workflow run.
+    WorkflowRun(WorkflowRunEventPayload),
 }
 
 /// Deserialize an event.
@@ -58,6 +62,11 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
         "issue_comment" => {
             let deserialized =
                 serde_json::from_value::<IssueCommentEventPayload>(event_json.clone())?;
+
+            if deserialized.action != IssueCommentEventAction::Created {
+                return Err(Report::msg("non created issue comments are ignored"));
+            }
+
             if deserialized.issue.pull_request.is_none() {
                 return Err(Report::msg("comments on non-pull requests are ignored"));
             }
@@ -69,6 +78,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
                 repository,
             })
         }
+        "workflow_run" => todo!(),
         _ => Err(Report::msg("unsupported events are ignored")),
     }
 }
