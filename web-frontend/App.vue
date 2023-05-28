@@ -28,6 +28,19 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <style>
 * {
-    @apply p-0 m-0 font-sans text-main-text;
+    @apply p-0 m-0 outline-none;
+    @apply font-sans text-main-text;
+}
+
+button {
+    @apply bg-transparent cursor-pointer;
+    @apply border-1 border-solid border-rd;
+    @apply text-xl underline;
+}
+
+input {
+    @apply bg-transparent p-4;
+    @apply border-1 border-solid border-rd;
+    @apply text-xl;
 }
 </style>

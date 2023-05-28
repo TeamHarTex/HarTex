@@ -21,5 +21,41 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-    <p>Docs</p>
+    <div class="flex">
+        <div class="half menu">
+            <h1 class="title">HarTex Interactive Docs</h1>
+            <input class="searchbar" placeholder="Type to search..." />
+            <p class="browse">or <button>browse through a list</button>.</p>
+        </div>
+        <div class="half content">
+            <p>markdown content stuff...</p>
+        </div>
+    </div>
 </template>
+
+<style scoped lang="postcss">
+.half {
+    @apply flex flex-1 flex-col;
+    @apply h-screen justify-center items-center;
+}
+
+.menu {
+    @apply bg-main-background;
+}
+
+.title {
+    @apply text-4xl mb-8;
+}
+
+.searchbar {
+    @apply w-[60%];
+}
+
+.browse {
+    @apply text-xl mt-8;
+}
+
+.content {
+    @apply bg-gray-950;
+}
+</style>
