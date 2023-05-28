@@ -92,6 +92,31 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn find_build<'a>(
+        &'a self,
+        repository: &'a GithubRepositoryName,
+        branch: String,
+        commit_sha: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsBuild>>> + '_>> {
+        Box::pin(async move {
+            let build = entity::build::Entity::find()
+                .filter(
+                    entity::build::Column::Repository
+                        .eq(&format!(
+                            "{}/{}",
+                            repository.owner(),
+                            repository.repository()
+                        ))
+                        .and(entity::build::Column::Branch.eq(branch))
+                        .and(entity::build::Column::CommitHash.eq(commit_sha)),
+                )
+                .one(&self.connection)
+                .await?;
+
+            Ok(build.map(build_from_database))
+        })
+    }
+
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,

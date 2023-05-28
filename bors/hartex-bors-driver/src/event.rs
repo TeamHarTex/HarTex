@@ -33,7 +33,10 @@ use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
+use octocrab::models::events::payload::WorkflowRunEventAction;
+use octocrab::models::events::payload::WorkflowRunEventPayload;
 use octocrab::models::issues::Comment;
 use octocrab::models::issues::Issue;
 use serde_json::Value;
@@ -50,6 +53,8 @@ pub struct BorsEvent {
 pub enum BorsEventKind {
     /// An issue comment.
     IssueComment(IssueCommentEventPayload),
+    /// A workflow run.
+    WorkflowRun(WorkflowRunEventPayload),
 }
 
 /// Deserialize an event.
@@ -58,6 +63,11 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
         "issue_comment" => {
             let deserialized =
                 serde_json::from_value::<IssueCommentEventPayload>(event_json.clone())?;
+
+            if deserialized.action != IssueCommentEventAction::Created {
+                return Err(Report::msg("non created issue comments are ignored"));
+            }
+
             if deserialized.issue.pull_request.is_none() {
                 return Err(Report::msg("comments on non-pull requests are ignored"));
             }
@@ -66,6 +76,16 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 
             Ok(BorsEvent {
                 kind: BorsEventKind::IssueComment(deserialized),
+                repository,
+            })
+        }
+        "workflow_run" => {
+            let deserialized =
+                serde_json::from_value::<WorkflowRunEventPayload>(event_json.clone())?;
+            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+
+            Ok(BorsEvent {
+                kind: BorsEventKind::WorkflowRun(deserialized),
                 repository,
             })
         }
@@ -96,6 +116,19 @@ pub async fn handle_event(
                 }
             }
         }
+        BorsEventKind::WorkflowRun(payload)
+            if payload.action == WorkflowRunEventAction::InProgress =>
+        {
+            if let Some((repository, database)) = retrieve_repository_state(
+                state,
+                &GithubRepositoryName::new_from_repository(event.repository.repository)?,
+            ) {
+                crate::workflows::workflow_started(repository, database, payload.workflow_run)
+            }
+        }
+        BorsEventKind::WorkflowRun(payload)
+            if payload.action == WorkflowRunEventAction::Completed => {}
+        _ => return Err(Report::msg("unsupported event payloads are ignored")),
     }
 
     Ok(())

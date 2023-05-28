@@ -28,7 +28,7 @@ use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::messages::auto_merge_commit_message;
 use hartex_log::log;
 
-const TRY_BRANCH_NAME: &str = "automation/bors/try";
+pub const TRY_BRANCH_NAME: &str = "automation/bors/try";
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
 
 pub async fn try_command<C: RepositoryClient>(

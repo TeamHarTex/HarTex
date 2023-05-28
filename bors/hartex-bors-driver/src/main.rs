@@ -43,6 +43,7 @@ use tokio::runtime::Builder;
 
 mod event;
 mod process;
+mod workflows;
 
 /// Entry point.
 pub fn main() -> hartex_eyre::Result<()> {
