@@ -134,6 +134,7 @@ async fn handle_comment<C: RepositoryClient>(
                     )
                     .await?
                 }
+                _ => todo!(),
             },
             Err(error) => {
                 let error_msg = match error {
