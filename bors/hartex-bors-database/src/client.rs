@@ -36,8 +36,8 @@ use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
 use sea_orm::ActiveModelTrait;
-use sea_orm::ActiveValue::Unchanged;
 use sea_orm::ActiveValue::Set;
+use sea_orm::ActiveValue::Unchanged;
 use sea_orm::ColumnTrait;
 use sea_orm::DatabaseConnection;
 use sea_orm::DbErr;
@@ -64,8 +64,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &'a self,
         pr: &'a BorsPullRequest,
         branch: String,
-        commit_hash: String
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        commit_hash: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let build = entity::build::ActiveModel {
                 repository: Set(pr.repository.clone()),

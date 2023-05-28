@@ -76,7 +76,13 @@ pub async fn try_command<C: RepositoryClient>(
 
     repository
         .client
-        .post_comment(pr, &format!(":hourglass: Trying commit `{}` with merge `{merge_hash}`...", github_pr.head.sha))
+        .post_comment(
+            pr,
+            &format!(
+                ":hourglass: Trying commit `{}` with merge `{merge_hash}`...",
+                github_pr.head.sha
+            ),
+        )
         .await?;
 
     Ok(())
