@@ -64,7 +64,7 @@ pub async fn try_command<C: RepositoryClient>(
         .client
         .merge_branches(
             TRY_MERGE_BRANCH_NAME,
-            &github_pr.base.sha,
+            &github_pr.head.sha,
             &auto_merge_commit_message(&github_pr, "<try>"),
         )
         .await?;
