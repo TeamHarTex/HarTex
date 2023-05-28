@@ -64,6 +64,10 @@ pub(crate) fn parse_try(parser: Parser) -> ParserResult {
     parse_exact("try", BorsCommand::Try, parser)
 }
 
+pub(crate) fn parse_try_cancel(parser: Parser) -> ParserResult {
+    parse_exact("try-", BorsCommand::TryCancel, parser)
+}
+
 fn parse_exact<'a>(
     exact: &'static str,
     expected: BorsCommand,
