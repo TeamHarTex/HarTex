@@ -34,6 +34,7 @@ use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
 
+use crate::models::BorsPullRequest;
 use crate::models::GithubRepositoryName;
 use crate::models::GithubRepositoryState;
 use crate::models::Permission;
@@ -54,13 +55,21 @@ pub trait BorsState<C: RepositoryClient> {
 
 /// A database client.
 pub trait DatabaseClient {
+    /// Associate a try build to a pull request.
+    async fn associate_try_build(
+        &self,
+        pr: &BorsPullRequest,
+        branch: String,
+        commit_hash: String,
+    ) -> hartex_eyre::Result<()>;
+
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
         pr: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<models::BorsPullRequest>> + '_>>;
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
 }
 
 /// A base permission resolver.

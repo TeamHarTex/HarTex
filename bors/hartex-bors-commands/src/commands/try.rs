@@ -71,7 +71,8 @@ pub async fn try_command<C: RepositoryClient>(
 
     repository
         .client
-        .set_branch_to_revision()
+        .set_branch_to_revision(TRY_BRANCH_NAME, &merge_hash)
+        .await?;
 
     Ok(())
 }
