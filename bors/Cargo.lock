@@ -697,6 +697,7 @@ version = "0.1.0"
 dependencies = [
  "hartex_bors_core",
  "hartex_bors_database",
+ "hartex_bors_github",
  "hartex_eyre",
  "hartex_log",
 ]
@@ -751,6 +752,7 @@ dependencies = [
  "hartex_eyre",
  "hartex_log",
  "http",
+ "http-body",
  "jsonwebtoken",
  "octocrab",
  "secrecy",

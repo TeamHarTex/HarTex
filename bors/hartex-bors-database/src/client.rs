@@ -65,7 +65,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         Box::pin(async move {
             let pr = entity::pull_request::ActiveModel {
                 repository: Set(format!("{name}")),
-                number: Default::default(),
+                number: Set(pr_number as i32),
                 ..Default::default()
             };
 

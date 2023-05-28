@@ -20,21 +20,38 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use sea_orm_migration::async_trait::async_trait;
-use sea_orm_migration::MigrationTrait;
-use sea_orm_migration::MigratorTrait;
+use sea_orm::prelude::*;
 
-mod m_20230527_2254_create_build;
-mod m_20230527_2258_create_pr;
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
+#[sea_orm(table_name = "workflow")]
+pub struct Model {
+    #[sea_orm(primary_key)]
+    pub id: i32,
+    pub build: i32,
+    pub name: String,
+    pub run_id: i64,
+    pub url: String,
+    pub status: String,
+    pub r#type: String,
+    pub created_at: DateTime,
+}
 
-pub struct Migrator;
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+pub enum Relation {
+    #[sea_orm(
+        belongs_to = "super::build::Entity",
+        from = "Column::Build",
+        to = "super::build::Column::Id",
+        on_update = "NoAction",
+        on_delete = "NoAction"
+    )]
+    Build,
+}
 
-#[async_trait]
-impl MigratorTrait for Migrator {
-    fn migrations() -> Vec<Box<dyn MigrationTrait>> {
-        vec![
-            Box::new(m_20230527_2254_create_build::Migration),
-            Box::new(m_20230527_2258_create_pr::Migration),
-        ]
+impl Related<super::build::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Build.def()
     }
 }
+
+impl ActiveModelBehavior for ActiveModel {}
