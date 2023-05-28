@@ -32,12 +32,14 @@ use std::str::FromStr;
 use hartex_eyre::eyre::Report;
 use http::StatusCode;
 use http::Uri;
+use http_body::Body;
 use octocrab::params::repos::Reference;
 use serde_json::Value;
 
 use crate::GithubRepositoryClient;
 
 /// Errors when updating a branch.
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum UpdateBranchError {
     /// The branch to update does not exist.
