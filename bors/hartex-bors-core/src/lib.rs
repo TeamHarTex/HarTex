@@ -56,12 +56,12 @@ pub trait BorsState<C: RepositoryClient> {
 /// A database client.
 pub trait DatabaseClient {
     /// Associate a try build to a pull request.
-    async fn associate_try_build(
-        &self,
-        pr: &BorsPullRequest,
+    fn associate_try_build<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
         branch: String,
         commit_hash: String,
-    ) -> hartex_eyre::Result<()>;
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
