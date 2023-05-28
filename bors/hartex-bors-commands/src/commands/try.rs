@@ -25,6 +25,7 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_github::messages::auto_merge_commit_message;
 use hartex_log::log;
 
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
@@ -56,6 +57,16 @@ pub async fn try_command<C: RepositoryClient>(
     repository
         .client
         .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, &github_pr.base.sha)
+        .await?;
+
+    // todo: match on this result
+    repository
+        .client
+        .merge_branches(
+            TRY_MERGE_BRANCH_NAME,
+            &github_pr.base.sha,
+            &auto_merge_commit_message(&github_pr, "<try>"),
+        )
         .await?;
 
     Ok(())
