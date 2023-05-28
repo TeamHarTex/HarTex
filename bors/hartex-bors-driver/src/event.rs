@@ -88,7 +88,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
                 kind: BorsEventKind::WorkflowRun(deserialized),
                 repository,
             })
-        },
+        }
         _ => Err(Report::msg("unsupported events are ignored")),
     }
 }
@@ -116,7 +116,9 @@ pub async fn handle_event(
                 }
             }
         }
-        BorsEventKind::WorkflowRun(payload) if payload.action == WorkflowRunEventAction::InProgress => {
+        BorsEventKind::WorkflowRun(payload)
+            if payload.action == WorkflowRunEventAction::InProgress =>
+        {
             if let Some((_, database)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
@@ -124,9 +126,8 @@ pub async fn handle_event(
                 crate::workflows::workflow_started(database, payload.workflow_run)
             }
         }
-        BorsEventKind::WorkflowRun(payload) if payload.action == WorkflowRunEventAction::Completed => {
-
-        }
+        BorsEventKind::WorkflowRun(payload)
+            if payload.action == WorkflowRunEventAction::Completed => {}
         _ => return Err(Report::msg("unsupported event payloads are ignored")),
     }
 

@@ -34,6 +34,7 @@ use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
 
+use crate::models::BorsBuild;
 use crate::models::BorsPullRequest;
 use crate::models::GithubRepositoryName;
 use crate::models::GithubRepositoryState;
@@ -62,6 +63,14 @@ pub trait DatabaseClient {
         branch: String,
         commit_hash: String,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
+    /// Finds a build.
+    fn find_build<'a>(
+        &'a self,
+        repo: &'a GithubRepositoryName,
+        branch: String,
+        commit_sha: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsBuild>>> + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
