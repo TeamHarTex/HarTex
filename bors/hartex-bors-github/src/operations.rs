@@ -26,16 +26,20 @@ use std::error::Error;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
+use std::str;
 use std::str::FromStr;
 
 use hartex_eyre::eyre::Report;
 use http::StatusCode;
 use http::Uri;
+use http_body::Body;
 use octocrab::params::repos::Reference;
+use serde_json::Value;
 
 use crate::GithubRepositoryClient;
 
 /// Errors when updating a branch.
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum UpdateBranchError {
     /// The branch to update does not exist.
@@ -98,6 +102,59 @@ async fn create_branch(
         .await?;
 
     Ok(())
+}
+
+pub async fn merge_branches(
+    repository: &GithubRepositoryClient,
+    base: &str,
+    head: &str,
+    commit_message: &str,
+) -> hartex_eyre::Result<String> {
+    let url = repository
+        .repository
+        .merges_url
+        .as_ref()
+        .map(|url| url.to_string())
+        .unwrap_or_else(|| {
+            format!(
+                "https://api.github.com/repos/{}/{}/merges",
+                repository.repository_name.owner(),
+                repository.repository_name.repository()
+            )
+        });
+
+    let mut response = repository
+        .client
+        ._post(
+            &url,
+            Some(&serde_json::json!({
+                "base": base,
+                "head": head,
+                "commit_message": commit_message
+            })),
+        )
+        .await?;
+
+    let status = response.status();
+    let mut full = String::new();
+    while let Some(result) = response.body_mut().data().await {
+        full.push_str(str::from_utf8(&result?)?);
+    }
+
+    match status {
+        StatusCode::CREATED => {
+            let value = serde_json::from_str::<Value>(&full)?;
+            let Value::String(sha) = value["sha"].clone() else {
+                unreachable!()
+            };
+
+            Ok(sha)
+        }
+        StatusCode::NOT_FOUND => Err(Report::msg("branch not found")),
+        StatusCode::CONFLICT => Err(Report::msg("merge conflict occurred")),
+        StatusCode::NO_CONTENT => Err(Report::msg("branches have already been merged")),
+        _ => Err(Report::msg("unknown error")),
+    }
 }
 
 async fn update_branch(

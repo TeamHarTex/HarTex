@@ -48,7 +48,8 @@ use secrecy::ExposeSecret;
 use secrecy::SecretVec;
 use std::collections::HashMap;
 
-pub mod operations;
+pub mod messages;
+mod operations;
 mod repositories;
 pub mod webhook;
 
@@ -156,6 +157,15 @@ impl RepositoryClient for GithubRepositoryClient {
             .get(pr)
             .await
             .map_err(Report::new)
+    }
+
+    async fn merge_branches(
+        &mut self,
+        base: &str,
+        head: &str,
+        commit_message: &str,
+    ) -> hartex_eyre::Result<String> {
+        operations::merge_branches(self, base, head, commit_message).await
     }
 
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment> {

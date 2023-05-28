@@ -88,6 +88,14 @@ pub trait RepositoryClient {
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
 
+    /// Merges two branches together.
+    async fn merge_branches(
+        &mut self,
+        base: &str,
+        head: &str,
+        commit_message: &str,
+    ) -> hartex_eyre::Result<String>;
+
     /// Post a comment on a specific pull request.
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
 
