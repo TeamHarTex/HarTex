@@ -20,9 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use sea_orm_migration::async_trait::async_trait;
 use sea_orm_migration::MigrationTrait;
 use sea_orm_migration::MigratorTrait;
-use sea_orm_migration::async_trait::async_trait;
 
 mod m_20230527_2254_create_build;
 mod m_20230527_2258_create_pr;
