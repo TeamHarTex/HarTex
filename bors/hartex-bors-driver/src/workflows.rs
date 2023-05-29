@@ -24,10 +24,26 @@ use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::DatabaseClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
-use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflowStatus};
+use hartex_bors_core::models::BorsBuildStatus;
+use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
+use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_github::GithubRepositoryClient;
+
+struct CheckSuiteCompleted {
+    repository: GithubRepositoryName,
+    branch: String,
+    commit_hash: String,
+}
+
+pub(crate) async fn workflow_completed(
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &mut dyn DatabaseClient,
+    payload: CheckSuiteCompleted,
+) -> hartex_eyre::Result<()> {
+    todo!()
+}
 
 pub(crate) async fn workflow_started(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
