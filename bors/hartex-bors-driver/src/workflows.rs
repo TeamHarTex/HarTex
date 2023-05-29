@@ -42,6 +42,12 @@ pub(crate) async fn workflow_completed(
     database: &mut dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
+    log::trace!(r#"updating status of workflow of {} to "{}""#, run.url, run.status);
+    database.update_workflow_status(
+        run.id.0 as u64,
+        string_to_workflow_status(run.conclusion.unwrap_or_default().as_str())
+    ).await?;
+
     todo!()
 }
 
@@ -85,4 +91,11 @@ pub(crate) async fn workflow_started(
 
 fn is_relevant_branch(branch: &str) -> bool {
     [TRY_BRANCH_NAME].contains(&branch)
+}
+
+fn string_to_workflow_status(string: &str) -> BorsWorkflowStatus {
+    match string {
+        "completed" => BorsWorkflowStatus::Success,
+        _ => BorsWorkflowStatus::Failure,
+    }
 }
