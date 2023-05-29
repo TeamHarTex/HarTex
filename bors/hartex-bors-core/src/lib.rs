@@ -33,9 +33,12 @@ use std::pin::Pin;
 use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
+use octocrab::models::RunId;
 
 use crate::models::BorsBuild;
 use crate::models::BorsPullRequest;
+use crate::models::BorsWorkflowStatus;
+use crate::models::BorsWorkflowType;
 use crate::models::GithubRepositoryName;
 use crate::models::GithubRepositoryState;
 use crate::models::Permission;
@@ -62,6 +65,17 @@ pub trait DatabaseClient {
         pr: &'a BorsPullRequest,
         branch: String,
         commit_hash: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
+    /// Creates a workflow.
+    fn create_workflow<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+        name: String,
+        url: String,
+        run_id: RunId,
+        workflow_type: BorsWorkflowType,
+        workflow_status: BorsWorkflowStatus,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
     /// Finds a build.

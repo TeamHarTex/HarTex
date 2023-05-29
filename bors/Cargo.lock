@@ -724,6 +724,7 @@ dependencies = [
  "chrono",
  "hartex_bors_core",
  "hartex_eyre",
+ "octocrab",
  "sea-orm",
  "sea-orm-migration",
 ]

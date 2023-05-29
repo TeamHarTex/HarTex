@@ -78,6 +78,27 @@ pub struct BorsPullRequest {
     pub created_at: DateTimeUtc,
 }
 
+/// The bors workflow status.
+#[derive(Debug, Eq, PartialEq)]
+pub enum BorsWorkflowStatus {
+    /// The workflow is running.
+    Pending,
+    /// The workflow has succeeded.
+    Success,
+    /// The workflow has failed.
+    Failure,
+}
+
+
+/// The bors workflow type.
+#[derive(Debug, Eq, PartialEq)]
+pub enum BorsWorkflowType {
+    /// A GitHub actions workflow.
+    GitHubActions,
+    /// An external workflow.
+    External,
+}
+
 /// Name of a Github repository
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GithubRepositoryName {
