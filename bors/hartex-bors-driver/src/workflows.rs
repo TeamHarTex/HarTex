@@ -98,6 +98,25 @@ async fn complete_build(
     database: &mut dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
+    if !is_relevant_branch(&event.branch) {
+        return Ok(());
+    }
+
+    let Some(build) = database
+        .find_build(
+            &event.repository,
+            event.branch.clone(),
+            event.commit_hash.clone(),
+        ).await? else {
+        log::warn!("received workflow completed for nonexistent workflow...?");
+
+        return Ok(());
+    };
+
+    if build.status != BorsBuildStatus::Pending {
+        return Ok(());
+    }
+
     todo!()
 }
 
