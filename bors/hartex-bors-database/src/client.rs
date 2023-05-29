@@ -102,7 +102,21 @@ impl DatabaseClient for SeaORMDatabaseClient {
         workflow_type: BorsWorkflowType,
         workflow_status: BorsWorkflowStatus
     ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
-        todo!()
+        Box::pin(async move {
+            let workflow = entity::workflow::ActiveModel {
+                build: Set(build.id),
+                name: Set(name),
+                url: Set(url),
+                run_id: Set(run_id.0 as i64),
+                r#type: Set(workflow_type_to_database(workflow_type).to_string()),
+                status: Set(workflow_status_to_database(workflow_status).to_string()),
+                ..Default::default()
+            };
+
+            workflow.insert(&self.connection).await?;
+
+            Ok(())
+        })
     }
 
     fn find_build<'a>(
@@ -214,5 +228,20 @@ fn pr_from_database(
         number: pr.number as u64,
         try_build: build.map(build_from_database),
         created_at: datetime_from_database(pr.created_at),
+    }
+}
+
+fn workflow_status_to_database(workflow_status: BorsWorkflowStatus) -> &'static str {
+    match workflow_status {
+        BorsWorkflowStatus::Pending => "pending",
+        BorsWorkflowStatus::Failure => "failure",
+        BorsWorkflowStatus::Success => "success",
+    }
+}
+
+fn workflow_type_to_database(workflow_type: BorsWorkflowType) -> &'static str {
+    match workflow_type {
+        BorsWorkflowType::External => "external",
+        BorsWorkflowType::GitHubActions => "github_actions",
     }
 }
