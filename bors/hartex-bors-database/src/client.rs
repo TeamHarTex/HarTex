@@ -108,8 +108,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 name: Set(name),
                 url: Set(url),
                 run_id: Set(run_id.0 as i64),
-                r#type: Set(workflow_type_to_database(workflow_type).to_string()),
-                status: Set(workflow_status_to_database(workflow_status).to_string()),
+                r#type: Set(workflow_type_to_database(&workflow_type).to_string()),
+                status: Set(workflow_status_to_database(&workflow_status).to_string()),
                 ..Default::default()
             };
 
@@ -180,6 +180,27 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .ok_or_else(|| Report::msg("cannot execute query"))?;
 
             Ok(pr_from_database(pr, build))
+        })
+    }
+
+    fn update_workflow_status(
+        &self,
+        run_id: u64,
+        status: BorsWorkflowStatus
+    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let workflow = entity::workflow::ActiveModel {
+                status: Set(workflow_status_to_database(status).to_string()),
+                ..Default::default()
+            };
+
+            entity::workflow::Entity::update_many()
+                .set(workflow)
+                .filter(entity::workflow::Column::RunId.eq(run_id))
+                .exec(&self.connection)
+                .await?;
+
+            Ok(())
         })
     }
 }

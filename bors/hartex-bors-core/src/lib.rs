@@ -93,6 +93,13 @@ pub trait DatabaseClient {
         name: &'a GithubRepositoryName,
         pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
+
+    /// Update the status of a workflow.
+    fn update_workflow_status(
+        &self,
+        run_id: u64,
+        status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 }
 
 /// A base permission resolver.
