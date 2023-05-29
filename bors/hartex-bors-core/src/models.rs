@@ -28,6 +28,7 @@ use std::fmt::Result as FmtResult;
 
 use hartex_eyre::eyre::Report;
 use octocrab::models::Repository;
+use octocrab::models::RunId;
 use sea_orm::prelude::DateTimeUtc;
 
 use crate::PermissionResolver;
@@ -76,6 +77,46 @@ pub struct BorsPullRequest {
     pub try_build: Option<BorsBuild>,
     /// The time when this pull request was created.
     pub created_at: DateTimeUtc,
+}
+
+/// A bors workflow.
+pub struct BorsWorkflow {
+    /// The identifier for this workflow.
+    pub id: PrimaryKey,
+    /// The build this workflow is associated to.
+    pub build: BorsBuild,
+    /// The name of the workflow.
+    pub name: String,
+    /// The url of the workflow.
+    pub url: String,
+    /// The run id of the workflow.
+    pub run_id: RunId,
+    /// The type of the workflow.
+    pub workflow_type: BorsWorkflowType,
+    /// The status of the workflow.
+    pub workflow_status: BorsWorkflowStatus,
+    /// The time when this workflow was created.
+    pub created_at: DateTimeUtc,
+}
+
+/// The bors workflow status.
+#[derive(Debug, Eq, PartialEq)]
+pub enum BorsWorkflowStatus {
+    /// The workflow is running.
+    Pending,
+    /// The workflow has succeeded.
+    Success,
+    /// The workflow has failed.
+    Failure,
+}
+
+/// The bors workflow type.
+#[derive(Debug, Eq, PartialEq)]
+pub enum BorsWorkflowType {
+    /// A GitHub workflow.
+    GitHub,
+    /// An external workflow.
+    External,
 }
 
 /// Name of a Github repository
