@@ -113,8 +113,8 @@ pub enum BorsWorkflowStatus {
 /// The bors workflow type.
 #[derive(Debug, Eq, PartialEq)]
 pub enum BorsWorkflowType {
-    /// A GitHub actions workflow.
-    GitHubActions,
+    /// A GitHub workflow.
+    GitHub,
     /// An external workflow.
     External,
 }

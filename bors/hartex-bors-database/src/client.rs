@@ -242,6 +242,6 @@ fn workflow_status_to_database(workflow_status: BorsWorkflowStatus) -> &'static 
 fn workflow_type_to_database(workflow_type: BorsWorkflowType) -> &'static str {
     match workflow_type {
         BorsWorkflowType::External => "external",
-        BorsWorkflowType::GitHubActions => "github_actions",
+        BorsWorkflowType::GitHub => "github",
     }
 }
