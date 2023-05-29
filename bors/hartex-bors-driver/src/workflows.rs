@@ -48,7 +48,11 @@ pub(crate) async fn workflow_completed(
         string_to_workflow_status(run.conclusion.unwrap_or_default().as_str())
     ).await?;
 
-    todo!()
+    complete_build(repository, database, CheckSuiteCompleted {
+        repository: GithubRepositoryName::new_from_repository(run.repository)?,
+        branch: run.head_branch,
+        commit_hash: run.head_sha,
+    }).await
 }
 
 pub(crate) async fn workflow_started(
@@ -87,6 +91,14 @@ pub(crate) async fn workflow_started(
     ).await?;
 
     Ok(())
+}
+
+async fn complete_build(
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &mut dyn DatabaseClient,
+    event: CheckSuiteCompleted,
+) -> hartex_eyre::Result<()> {
+    todo!()
 }
 
 fn is_relevant_branch(branch: &str) -> bool {
