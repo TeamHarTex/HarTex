@@ -24,7 +24,8 @@ use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::DatabaseClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
-use hartex_bors_core::models::BorsBuildStatus;
+use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflowStatus};
+use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_github::GithubRepositoryClient;
 
@@ -53,7 +54,17 @@ pub(crate) async fn workflow_started(
         return Ok(());
     }
 
-    todo!()
+    log::trace!("creating workflow in database");
+    database.create_workflow(
+        &build,
+        run.name,
+        run.url.to_string(),
+        run.id,
+        BorsWorkflowType::GitHub,
+        BorsWorkflowStatus::Pending,
+    ).await?;
+
+    Ok(())
 }
 
 fn is_relevant_branch(branch: &str) -> bool {
