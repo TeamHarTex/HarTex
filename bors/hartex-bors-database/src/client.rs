@@ -26,12 +26,13 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
-use hartex_bors_core::models::BorsBuild;
+use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsPullRequest;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
+use octocrab::models::RunId;
 use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
@@ -90,6 +91,18 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
             Ok(())
         })
+    }
+
+    fn create_workflow<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+        name: String,
+        url: String,
+        run_id: RunId,
+        workflow_type: BorsWorkflowType,
+        workflow_status: BorsWorkflowStatus
+    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        todo!()
     }
 
     fn find_build<'a>(
