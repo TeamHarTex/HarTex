@@ -40,7 +40,7 @@ struct CheckSuiteCompleted {
 pub(crate) async fn workflow_completed(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
-    payload: CheckSuiteCompleted,
+    run: Run,
 ) -> hartex_eyre::Result<()> {
     todo!()
 }
