@@ -108,8 +108,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 name: Set(name),
                 url: Set(url),
                 run_id: Set(run_id.0 as i64),
-                r#type: Set(workflow_type_to_database(&workflow_type).to_string()),
-                status: Set(workflow_status_to_database(&workflow_status).to_string()),
+                r#type: Set(workflow_type_to_database(workflow_type).to_string()),
+                status: Set(workflow_status_to_database(workflow_status).to_string()),
                 ..Default::default()
             };
 
@@ -141,6 +141,21 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .await?;
 
             Ok(build.map(build_from_database))
+        })
+    }
+
+    fn find_pull_request_by_build<'a>(
+        &'a self,
+        build: &'a BorsBuild
+    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
+        Box::pin(async move {
+            let result = entity::pull_request::Entity::find()
+                .filter(entity::pull_request::Column::TryBuild.eq(build.id))
+                .find_also_related(entity::build::Entity)
+                .one(&self.connection)
+                .await?;
+
+            Ok(result.map(|(pr, build)| pr_from_database(pr, build)))
         })
     }
 
