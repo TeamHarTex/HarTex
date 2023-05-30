@@ -127,7 +127,8 @@ pub async fn handle_event(
             }
         }
         BorsEventKind::WorkflowRun(payload)
-            if payload.action == WorkflowRunEventAction::Completed => {
+            if payload.action == WorkflowRunEventAction::Completed =>
+        {
             if let Some((repository, database)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,

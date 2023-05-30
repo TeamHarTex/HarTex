@@ -26,10 +26,10 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
-use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsPullRequest;
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
 use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
 use octocrab::models::RunId;
@@ -100,8 +100,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
         url: String,
         run_id: RunId,
         workflow_type: BorsWorkflowType,
-        workflow_status: BorsWorkflowStatus
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        workflow_status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 build: Set(build.id),
@@ -146,8 +146,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
     fn find_pull_request_by_build<'a>(
         &'a self,
-        build: &'a BorsBuild
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
+        build: &'a BorsBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
         Box::pin(async move {
             let result = entity::pull_request::Entity::find()
                 .filter(entity::pull_request::Column::TryBuild.eq(build.id))
@@ -201,8 +201,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn update_workflow_status(
         &self,
         run_id: u64,
-        status: BorsWorkflowStatus
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 status: Set(workflow_status_to_database(status).to_string()),

@@ -21,15 +21,15 @@
  */
 
 use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
-use hartex_bors_core::DatabaseClient;
-use hartex_log::log;
-use octocrab::models::workflows::Run;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::DatabaseClient;
 use hartex_bors_github::GithubRepositoryClient;
+use hartex_log::log;
+use octocrab::models::workflows::Run;
 
 struct CheckSuiteCompleted {
     repository: GithubRepositoryName,
@@ -42,17 +42,28 @@ pub(crate) async fn workflow_completed(
     database: &mut dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
-    log::trace!(r#"updating status of workflow of {} to "{}""#, run.url, run.status);
-    database.update_workflow_status(
-        run.id.0 as u64,
-        string_to_workflow_status(run.conclusion.unwrap_or_default().as_str())
-    ).await?;
+    log::trace!(
+        r#"updating status of workflow of {} to "{}""#,
+        run.url,
+        run.status
+    );
+    database
+        .update_workflow_status(
+            run.id.0 as u64,
+            string_to_workflow_status(run.conclusion.unwrap_or_default().as_str()),
+        )
+        .await?;
 
-    complete_build(repository, database, CheckSuiteCompleted {
-        repository: GithubRepositoryName::new_from_repository(run.repository)?,
-        branch: run.head_branch,
-        commit_hash: run.head_sha,
-    }).await
+    complete_build(
+        repository,
+        database,
+        CheckSuiteCompleted {
+            repository: GithubRepositoryName::new_from_repository(run.repository)?,
+            branch: run.head_branch,
+            commit_hash: run.head_sha,
+        },
+    )
+    .await
 }
 
 pub(crate) async fn workflow_started(
@@ -81,14 +92,16 @@ pub(crate) async fn workflow_started(
     }
 
     log::trace!("creating workflow in database");
-    database.create_workflow(
-        &build,
-        run.name,
-        run.url.to_string(),
-        run.id,
-        BorsWorkflowType::GitHub,
-        BorsWorkflowStatus::Pending,
-    ).await?;
+    database
+        .create_workflow(
+            &build,
+            run.name,
+            run.url.to_string(),
+            run.id,
+            BorsWorkflowType::GitHub,
+            BorsWorkflowStatus::Pending,
+        )
+        .await?;
 
     Ok(())
 }
