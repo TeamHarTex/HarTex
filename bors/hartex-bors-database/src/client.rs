@@ -26,7 +26,7 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
-use hartex_bors_core::models::BorsBuildStatus;
+use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflow};
 use hartex_bors_core::models::BorsPullRequest;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
@@ -198,6 +198,24 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn get_workflows_for_build(
+        &mut self,
+        build: &BorsBuild
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
+        Box::pin(async move {
+            let workflows = entity::workflow::Entity::find()
+                .filter(entity::workflow::Column::Build.eq(build.id))
+                .find_also_related(entity::build::Entity)
+                .all(&self.connection)
+                .await?;
+
+            Ok(workflows
+                .into_iter()
+                .map(|(workflow, build)| workflow_from_database(workflow, build))
+                .collect())
+        })
+    }
+
     fn update_workflow_status(
         &self,
         run_id: u64,
@@ -267,11 +285,46 @@ fn pr_from_database(
     }
 }
 
+fn workflow_from_database(
+    workflow: entity::workflow::Model,
+    build: Option<entity::build::Model>
+) -> BorsWorkflow {
+    BorsWorkflow {
+        id: workflow.id,
+        build: build
+            .map(build_from_database)
+            .expect("Workflow without attached build"),
+        name: workflow.name,
+        url: workflow.url,
+        run_id: RunId(workflow.run_id as u64),
+        workflow_type: workflow_type_from_database(&workflow.r#type),
+        workflow_status: workflow_status_from_database(&workflow.status),
+        created_at: datetime_from_database(workflow.created_at),
+    }
+}
+
+fn workflow_status_from_database(workflow_status: &str) -> BorsWorkflowStatus {
+    match workflow_status {
+        "pending" => BorsWorkflowStatus::Pending,
+        "failure" => BorsWorkflowStatus::Failure,
+        "success" => BorsWorkflowStatus::Success,
+        _ => BorsWorkflowStatus::Pending,
+    }
+}
+
 fn workflow_status_to_database(workflow_status: BorsWorkflowStatus) -> &'static str {
     match workflow_status {
         BorsWorkflowStatus::Pending => "pending",
         BorsWorkflowStatus::Failure => "failure",
         BorsWorkflowStatus::Success => "success",
+    }
+}
+
+fn workflow_type_from_database(workflow_type: &str) -> BorsWorkflowType {
+    match workflow_type {
+        "external" => BorsWorkflowType::External,
+        "github" => BorsWorkflowType::GitHub,
+        _ => unreachable!(),
     }
 }
 
