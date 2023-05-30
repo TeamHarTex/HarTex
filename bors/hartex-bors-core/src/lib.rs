@@ -36,6 +36,7 @@ use octocrab::models::CommentId;
 use octocrab::models::RunId;
 
 use crate::models::BorsBuild;
+use crate::models::BorsBuildStatus;
 use crate::models::BorsPullRequest;
 use crate::models::BorsWorkflow;
 use crate::models::BorsWorkflowStatus;
@@ -103,10 +104,17 @@ pub trait DatabaseClient {
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
 
     /// Gets the workflows for a certain build.
-    fn get_workflows_for_build(
-        &mut self,
-        build: &BorsBuild
+    fn get_workflows_for_build<'a>(
+        &'a mut self,
+        build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>>;
+
+    /// Update the status of a build.
+    fn update_build_status<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+        status: BorsBuildStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
     /// Update the status of a workflow.
     fn update_workflow_status(

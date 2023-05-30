@@ -190,7 +190,10 @@ Build commit: {hash} (`{hash}`)"#
 {workflow_list}"#
         )
     };
-    repository.client.post_comment(pull_request.number, &message).await?;
+    repository
+        .client
+        .post_comment(pull_request.number, &message)
+        .await?;
 
     let status = if has_failure {
         BorsBuildStatus::Failure

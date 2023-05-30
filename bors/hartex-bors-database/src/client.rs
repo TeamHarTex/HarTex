@@ -26,10 +26,10 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
-use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflow};
 use hartex_bors_core::models::BorsPullRequest;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
+use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflow};
 use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
 use octocrab::models::RunId;
@@ -198,9 +198,9 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
-    fn get_workflows_for_build(
-        &mut self,
-        build: &BorsBuild
+    fn get_workflows_for_build<'a>(
+        &'a mut self,
+        build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
         Box::pin(async move {
             let workflows = entity::workflow::Entity::find()
@@ -213,6 +213,24 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .into_iter()
                 .map(|(workflow, build)| workflow_from_database(workflow, build))
                 .collect())
+        })
+    }
+
+    fn update_build_status<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+        status: BorsBuildStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let model = entity::build::ActiveModel {
+                id: Unchanged(build.id),
+                status: Set(build_status_to_database(status).to_string()),
+                ..Default::default()
+            };
+
+            model.update(&self.connection).await?;
+
+            Ok(())
         })
     }
 
@@ -287,7 +305,7 @@ fn pr_from_database(
 
 fn workflow_from_database(
     workflow: entity::workflow::Model,
-    build: Option<entity::build::Model>
+    build: Option<entity::build::Model>,
 ) -> BorsWorkflow {
     BorsWorkflow {
         id: workflow.id,
