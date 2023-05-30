@@ -117,6 +117,12 @@ async fn complete_build(
         return Ok(());
     }
 
+    let Some(_) = database.find_pull_request_by_build(&build).await? else {
+        log::warn!("no pull request is found for the build {}", build.commit_hash);
+
+        return Ok(());
+    };
+
     todo!()
 }
 
