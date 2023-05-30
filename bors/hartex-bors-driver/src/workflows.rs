@@ -132,7 +132,7 @@ async fn complete_build(
         return Ok(());
     }
 
-    let Some(_) = database.find_pull_request_by_build(&build).await? else {
+    let Some(pull_request) = database.find_pull_request_by_build(&build).await? else {
         log::warn!("no pull request is found for the build {}", build.commit_hash);
 
         return Ok(());
@@ -150,14 +150,57 @@ async fn complete_build(
         return Ok(());
     }
 
-    let _ = checks
+    let has_failure = checks
         .iter()
         .any(|check| matches!(check.status, CheckStatus::Failure));
 
     let mut workflows = database.get_workflows_for_build(&build).await?;
     workflows.sort_by(|a, b| a.name.cmp(&b.name));
 
-    todo!()
+    let workflow_list = workflows
+        .into_iter()
+        .map(|w| {
+            format!(
+                "- [{}]({}) {}",
+                w.name,
+                w.url,
+                if w.workflow_status == BorsWorkflowStatus::Success {
+                    ":white_check_mark:"
+                } else {
+                    ":x:"
+                }
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let message = if !has_failure {
+        log::info!("Workflow succeeded");
+
+        let hash = &event.commit_hash;
+        format!(
+            r#":sunny: Try build successful
+{workflow_list}
+Build commit: {hash} (`{hash}`)"#
+        )
+    } else {
+        log::info!("Workflow failed");
+        format!(
+            r#":broken_heart: Test failed
+{workflow_list}"#
+        )
+    };
+    repository.client.post_comment(pull_request.number, &message).await?;
+
+    let status = if has_failure {
+        BorsBuildStatus::Failure
+    } else {
+        BorsBuildStatus::Success
+    };
+
+    database.update_build_status(&build, status).await?;
+
+    Ok(())
 }
 
 fn is_relevant_branch(branch: &str) -> bool {
