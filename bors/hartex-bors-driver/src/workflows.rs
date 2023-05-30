@@ -24,9 +24,11 @@ use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
+use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::DatabaseClient;
+use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubRepositoryClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
@@ -38,7 +40,7 @@ struct CheckSuiteCompleted {
 }
 
 pub(crate) async fn workflow_completed(
-    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
@@ -107,7 +109,7 @@ pub(crate) async fn workflow_started(
 }
 
 async fn complete_build(
-    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
@@ -135,6 +137,18 @@ async fn complete_build(
 
         return Ok(());
     };
+
+    let checks = repository
+        .client
+        .get_checks_for_commit(&event.branch, &event.commit_hash)
+        .await?;
+
+    if checks
+        .iter()
+        .any(|check| matches!(check.status, CheckStatus::Pending))
+    {
+        return Ok(());
+    }
 
     todo!()
 }
