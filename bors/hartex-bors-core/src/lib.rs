@@ -102,6 +102,12 @@ pub trait DatabaseClient {
         pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
 
+    /// Gets the workflows for a certain build.
+    fn get_workflows_for_build(
+        &mut self,
+        build: &BorsBuild
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>>;
+
     /// Update the status of a workflow.
     fn update_workflow_status(
         &self,
@@ -140,12 +146,6 @@ pub trait RepositoryClient {
 
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
-
-    /// Gets the workflows for a certain build.
-    async fn get_workflows_for_build(
-        &mut self,
-        build: &BorsBuild
-    ) -> hartex_eyre::Result<Vec<BorsWorkflow>>;
 
     /// Merges two branches together.
     async fn merge_branches(
