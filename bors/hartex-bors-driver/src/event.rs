@@ -123,16 +123,18 @@ pub async fn handle_event(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
-                crate::workflows::workflow_started(repository, database, payload.workflow_run)
+                crate::workflows::workflow_started(repository, database, payload.workflow_run).await?;
             }
         }
         BorsEventKind::WorkflowRun(payload)
-            if payload.action == WorkflowRunEventAction::Completed => {
+            if payload.action == WorkflowRunEventAction::Completed =>
+        {
             if let Some((repository, database)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
                 crate::workflows::workflow_completed(repository, database, payload.workflow_run)
+                    .await?;
             }
         }
         _ => return Err(Report::msg("unsupported event payloads are ignored")),
