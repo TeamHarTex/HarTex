@@ -39,6 +39,7 @@ use crate::models::BorsBuild;
 use crate::models::BorsPullRequest;
 use crate::models::BorsWorkflowStatus;
 use crate::models::BorsWorkflowType;
+use crate::models::Check;
 use crate::models::GithubRepositoryName;
 use crate::models::GithubRepositoryState;
 use crate::models::Permission;
@@ -89,7 +90,7 @@ pub trait DatabaseClient {
     /// Find a pull request from a build.
     fn find_pull_request_by_build<'a>(
         &'a self,
-        build: &'a BorsBuild
+        build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
@@ -129,6 +130,12 @@ pub trait RepositoryClient {
         comment_id: CommentId,
         text: &str,
     ) -> hartex_eyre::Result<Comment>;
+
+    async fn get_checks_for_commit(
+        &mut self,
+        branch: &str,
+        commit_hash: &str,
+    ) -> hartex_eyre::Result<Vec<Check>>;
 
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
