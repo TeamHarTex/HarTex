@@ -150,6 +150,13 @@ async fn complete_build(
         return Ok(());
     }
 
+    let _ = checks
+        .iter()
+        .any(|check| matches!(check.status, CheckStatus::Failure));
+
+    let mut workflows = database.get_workflows_for_build(&build).await?;
+    workflows.sort_by(|a, b| a.name.cmp(&b.name));
+
     todo!()
 }
 
