@@ -159,21 +159,20 @@ impl RepositoryClient for GithubRepositoryClient {
         branch: &str,
         commit_hash: &str,
     ) -> hartex_eyre::Result<Vec<Check>> {
-        let mut response = self.client
-            ._get(
-                format!(
-                    "https://api.github.com/repos/{}/{}/commits/{}/check-suites",
-                    self.repository_name.owner(),
-                    self.repository_name.repository(),
-                    commit_hash
-                )
-            )
+        let mut response = self
+            .client
+            ._get(format!(
+                "https://api.github.com/repos/{}/{}/commits/{}/check-suites",
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+                commit_hash
+            ))
             .await?;
 
         #[derive(Deserialize)]
         struct CheckSuitePayload<'a> {
             conclusion: Option<&'a str>,
-            head_branch: &'a str
+            head_branch: &'a str,
         }
 
         #[derive(Deserialize)]
@@ -197,9 +196,7 @@ impl RepositoryClient for GithubRepositoryClient {
                     Some(status) => match status {
                         "success" => CheckStatus::Success,
                         "failure" | "neutral" | "cancelled" | "skipped" | "timed_out"
-                        | "action_required" | "startup_failure" | "stale" => {
-                            CheckStatus::Failure
-                        }
+                        | "action_required" | "startup_failure" | "stale" => CheckStatus::Failure,
                         _ => {
                             log::warn!(
                                 "Received unknown check suite status for {}/{}: {status}",
