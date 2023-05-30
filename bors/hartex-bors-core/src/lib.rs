@@ -37,6 +37,7 @@ use octocrab::models::RunId;
 
 use crate::models::BorsBuild;
 use crate::models::BorsPullRequest;
+use crate::models::BorsWorkflow;
 use crate::models::BorsWorkflowStatus;
 use crate::models::BorsWorkflowType;
 use crate::models::Check;
@@ -139,6 +140,12 @@ pub trait RepositoryClient {
 
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
+
+    /// Gets the workflows for a certain build.
+    async fn get_workflows_for_build(
+        &mut self,
+        build: &BorsBuild
+    ) -> hartex_eyre::Result<Vec<BorsWorkflow>>;
 
     /// Merges two branches together.
     async fn merge_branches(
