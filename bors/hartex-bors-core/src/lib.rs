@@ -36,9 +36,12 @@ use octocrab::models::CommentId;
 use octocrab::models::RunId;
 
 use crate::models::BorsBuild;
+use crate::models::BorsBuildStatus;
 use crate::models::BorsPullRequest;
+use crate::models::BorsWorkflow;
 use crate::models::BorsWorkflowStatus;
 use crate::models::BorsWorkflowType;
+use crate::models::Check;
 use crate::models::GithubRepositoryName;
 use crate::models::GithubRepositoryState;
 use crate::models::Permission;
@@ -86,6 +89,12 @@ pub trait DatabaseClient {
         commit_sha: String,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsBuild>>> + '_>>;
 
+    /// Find a pull request from a build.
+    fn find_pull_request_by_build<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>>;
+
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
     fn get_or_create_pull_request<'a>(
@@ -93,6 +102,19 @@ pub trait DatabaseClient {
         name: &'a GithubRepositoryName,
         pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
+
+    /// Gets the workflows for a certain build.
+    fn get_workflows_for_build<'a>(
+        &'a mut self,
+        build: &'a BorsBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>>;
+
+    /// Update the status of a build.
+    fn update_build_status<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+        status: BorsBuildStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
     /// Update the status of a workflow.
     fn update_workflow_status(
@@ -123,6 +145,12 @@ pub trait RepositoryClient {
         comment_id: CommentId,
         text: &str,
     ) -> hartex_eyre::Result<Comment>;
+
+    async fn get_checks_for_commit(
+        &mut self,
+        branch: &str,
+        commit_hash: &str,
+    ) -> hartex_eyre::Result<Vec<Check>>;
 
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;

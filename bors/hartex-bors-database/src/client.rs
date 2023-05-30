@@ -26,10 +26,10 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
-use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
-use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsPullRequest;
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
+use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflow};
 use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
 use octocrab::models::RunId;
@@ -100,16 +100,16 @@ impl DatabaseClient for SeaORMDatabaseClient {
         url: String,
         run_id: RunId,
         workflow_type: BorsWorkflowType,
-        workflow_status: BorsWorkflowStatus
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        workflow_status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 build: Set(build.id),
                 name: Set(name),
                 url: Set(url),
                 run_id: Set(run_id.0 as i64),
-                r#type: Set(workflow_type_to_database(&workflow_type).to_string()),
-                status: Set(workflow_status_to_database(&workflow_status).to_string()),
+                r#type: Set(workflow_type_to_database(workflow_type).to_string()),
+                status: Set(workflow_status_to_database(workflow_status).to_string()),
                 ..Default::default()
             };
 
@@ -141,6 +141,21 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .await?;
 
             Ok(build.map(build_from_database))
+        })
+    }
+
+    fn find_pull_request_by_build<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
+        Box::pin(async move {
+            let result = entity::pull_request::Entity::find()
+                .filter(entity::pull_request::Column::TryBuild.eq(build.id))
+                .find_also_related(entity::build::Entity)
+                .one(&self.connection)
+                .await?;
+
+            Ok(result.map(|(pr, build)| pr_from_database(pr, build)))
         })
     }
 
@@ -183,11 +198,47 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn get_workflows_for_build<'a>(
+        &'a mut self,
+        build: &'a BorsBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
+        Box::pin(async move {
+            let workflows = entity::workflow::Entity::find()
+                .filter(entity::workflow::Column::Build.eq(build.id))
+                .find_also_related(entity::build::Entity)
+                .all(&self.connection)
+                .await?;
+
+            Ok(workflows
+                .into_iter()
+                .map(|(workflow, build)| workflow_from_database(workflow, build))
+                .collect())
+        })
+    }
+
+    fn update_build_status<'a>(
+        &'a self,
+        build: &'a BorsBuild,
+        status: BorsBuildStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let model = entity::build::ActiveModel {
+                id: Unchanged(build.id),
+                status: Set(build_status_to_database(status).to_string()),
+                ..Default::default()
+            };
+
+            model.update(&self.connection).await?;
+
+            Ok(())
+        })
+    }
+
     fn update_workflow_status(
         &self,
         run_id: u64,
-        status: BorsWorkflowStatus
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<()>> + '_>> {
+        status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 status: Set(workflow_status_to_database(status).to_string()),
@@ -252,11 +303,46 @@ fn pr_from_database(
     }
 }
 
+fn workflow_from_database(
+    workflow: entity::workflow::Model,
+    build: Option<entity::build::Model>,
+) -> BorsWorkflow {
+    BorsWorkflow {
+        id: workflow.id,
+        build: build
+            .map(build_from_database)
+            .expect("Workflow without attached build"),
+        name: workflow.name,
+        url: workflow.url,
+        run_id: RunId(workflow.run_id as u64),
+        workflow_type: workflow_type_from_database(&workflow.r#type),
+        workflow_status: workflow_status_from_database(&workflow.status),
+        created_at: datetime_from_database(workflow.created_at),
+    }
+}
+
+fn workflow_status_from_database(workflow_status: &str) -> BorsWorkflowStatus {
+    match workflow_status {
+        "pending" => BorsWorkflowStatus::Pending,
+        "failure" => BorsWorkflowStatus::Failure,
+        "success" => BorsWorkflowStatus::Success,
+        _ => BorsWorkflowStatus::Pending,
+    }
+}
+
 fn workflow_status_to_database(workflow_status: BorsWorkflowStatus) -> &'static str {
     match workflow_status {
         BorsWorkflowStatus::Pending => "pending",
         BorsWorkflowStatus::Failure => "failure",
         BorsWorkflowStatus::Success => "success",
+    }
+}
+
+fn workflow_type_from_database(workflow_type: &str) -> BorsWorkflowType {
+    match workflow_type {
+        "external" => BorsWorkflowType::External,
+        "github" => BorsWorkflowType::GitHub,
+        _ => unreachable!(),
     }
 }
 

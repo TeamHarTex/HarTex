@@ -21,15 +21,17 @@
  */
 
 use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
-use hartex_bors_core::DatabaseClient;
-use hartex_log::log;
-use octocrab::models::workflows::Run;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
+use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::DatabaseClient;
+use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubRepositoryClient;
+use hartex_log::log;
+use octocrab::models::workflows::Run;
 
 struct CheckSuiteCompleted {
     repository: GithubRepositoryName,
@@ -38,21 +40,32 @@ struct CheckSuiteCompleted {
 }
 
 pub(crate) async fn workflow_completed(
-    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
-    log::trace!(r#"updating status of workflow of {} to "{}""#, run.url, run.status);
-    database.update_workflow_status(
-        run.id.0 as u64,
-        string_to_workflow_status(run.conclusion.unwrap_or_default().as_str())
-    ).await?;
+    log::trace!(
+        r#"updating status of workflow of {} to "{}""#,
+        run.url,
+        run.status
+    );
+    database
+        .update_workflow_status(
+            run.id.0 as u64,
+            string_to_workflow_status(run.conclusion.unwrap_or_default().as_str()),
+        )
+        .await?;
 
-    complete_build(repository, database, CheckSuiteCompleted {
-        repository: GithubRepositoryName::new_from_repository(run.repository)?,
-        branch: run.head_branch,
-        commit_hash: run.head_sha,
-    }).await
+    complete_build(
+        repository,
+        database,
+        CheckSuiteCompleted {
+            repository: GithubRepositoryName::new_from_repository(run.repository)?,
+            branch: run.head_branch,
+            commit_hash: run.head_sha,
+        },
+    )
+    .await
 }
 
 pub(crate) async fn workflow_started(
@@ -81,20 +94,22 @@ pub(crate) async fn workflow_started(
     }
 
     log::trace!("creating workflow in database");
-    database.create_workflow(
-        &build,
-        run.name,
-        run.url.to_string(),
-        run.id,
-        BorsWorkflowType::GitHub,
-        BorsWorkflowStatus::Pending,
-    ).await?;
+    database
+        .create_workflow(
+            &build,
+            run.name,
+            run.url.to_string(),
+            run.id,
+            BorsWorkflowType::GitHub,
+            BorsWorkflowStatus::Pending,
+        )
+        .await?;
 
     Ok(())
 }
 
 async fn complete_build(
-    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
@@ -117,7 +132,78 @@ async fn complete_build(
         return Ok(());
     }
 
-    todo!()
+    let Some(pull_request) = database.find_pull_request_by_build(&build).await? else {
+        log::warn!("no pull request is found for the build {}", build.commit_hash);
+
+        return Ok(());
+    };
+
+    let checks = repository
+        .client
+        .get_checks_for_commit(&event.branch, &event.commit_hash)
+        .await?;
+
+    if checks
+        .iter()
+        .any(|check| matches!(check.status, CheckStatus::Pending))
+    {
+        return Ok(());
+    }
+
+    let has_failure = checks
+        .iter()
+        .any(|check| matches!(check.status, CheckStatus::Failure));
+
+    let mut workflows = database.get_workflows_for_build(&build).await?;
+    workflows.sort_by(|a, b| a.name.cmp(&b.name));
+
+    let workflow_list = workflows
+        .into_iter()
+        .map(|w| {
+            format!(
+                "- [{}]({}) {}",
+                w.name,
+                w.url,
+                if w.workflow_status == BorsWorkflowStatus::Success {
+                    ":white_check_mark:"
+                } else {
+                    ":x:"
+                }
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let message = if !has_failure {
+        log::info!("Workflow succeeded");
+
+        let hash = &event.commit_hash;
+        format!(
+            r#":sunny: Try build successful
+{workflow_list}
+Build commit: {hash} (`{hash}`)"#
+        )
+    } else {
+        log::info!("Workflow failed");
+        format!(
+            r#":broken_heart: Test failed
+{workflow_list}"#
+        )
+    };
+    repository
+        .client
+        .post_comment(pull_request.number, &message)
+        .await?;
+
+    let status = if has_failure {
+        BorsBuildStatus::Failure
+    } else {
+        BorsBuildStatus::Success
+    };
+
+    database.update_build_status(&build, status).await?;
+
+    Ok(())
 }
 
 fn is_relevant_branch(branch: &str) -> bool {

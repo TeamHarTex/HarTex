@@ -119,6 +119,24 @@ pub enum BorsWorkflowType {
     External,
 }
 
+/// The status of a check suite.
+#[derive(Clone)]
+pub enum CheckStatus {
+    /// The check suite is pending.
+    Pending,
+    /// The check suite has succeeded.
+    Success,
+    /// The check suite has failed.
+    Failure,
+}
+
+/// A check suite ran.
+#[derive(Clone)]
+pub struct Check {
+    /// The status of the check suite.
+    pub status: CheckStatus,
+}
+
 /// Name of a Github repository
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GithubRepositoryName {
