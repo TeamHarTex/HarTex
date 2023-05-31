@@ -123,7 +123,8 @@ pub async fn handle_event(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
-                crate::workflows::workflow_started(repository, database, payload.workflow_run).await?;
+                crate::workflows::workflow_started(repository, database, payload.workflow_run)
+                    .await?;
             }
         }
         BorsEventKind::WorkflowRun(payload)
