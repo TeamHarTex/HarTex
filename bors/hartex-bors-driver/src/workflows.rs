@@ -212,7 +212,7 @@ fn is_relevant_branch(branch: &str) -> bool {
 
 fn string_to_workflow_status(string: &str) -> BorsWorkflowStatus {
     match string {
-        "completed" => BorsWorkflowStatus::Success,
+        "success" => BorsWorkflowStatus::Success,
         _ => BorsWorkflowStatus::Failure,
     }
 }
