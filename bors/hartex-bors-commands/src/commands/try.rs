@@ -69,6 +69,10 @@ pub async fn try_command<C: RepositoryClient>(
         )
         .await?;
 
+    database
+        .associate_try_build(&pr_model, TRY_BRANCH_NAME.to_string(), merge_hash.clone())
+        .await?;
+
     repository
         .client
         .set_branch_to_revision(TRY_BRANCH_NAME, &merge_hash)
