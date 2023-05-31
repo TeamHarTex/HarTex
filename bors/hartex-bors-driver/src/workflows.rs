@@ -181,6 +181,7 @@ async fn complete_build(
         format!(
             r#":sunny: Try build successful
 {workflow_list}
+
 Build commit: {hash} (`{hash}`)"#
         )
     } else {
