@@ -20,8 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Commands
+//! # Try cancel command
+//!
+//! bors try-
 
-pub mod ping;
-pub mod r#try;
-pub mod try_cancel;
+use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::DatabaseClient;
+use hartex_bors_core::RepositoryClient;
+
+/// Executes the try cancel command.
+pub async fn try_cancel_command<C: RepositoryClient>(
+    _: &mut GithubRepositoryState<C>,
+    _: &mut dyn DatabaseClient,
+    _: u64,
+) -> hartex_eyre::Result<()> {
+    Ok(())
+}
