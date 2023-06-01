@@ -182,8 +182,9 @@ async fn handle_comment<C: RepositoryClient>(
                         repository,
                         database,
                         pr,
-                        &issue.user.login
-                    ).await?
+                        &issue.user.login,
+                    )
+                    .await?
                 }
             },
             Err(error) => {

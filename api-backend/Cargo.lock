@@ -476,7 +476,7 @@ checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 [[package]]
 name = "governor"
 version = "0.5.1"
-source = "git+https://github.com/antifuchs/governor.git#590197ffe718e75fa1452160c131b0f71b68295b"
+source = "git+https://github.com/antifuchs/governor.git#9991cc31510ba7e57bfb47dc18522b9404001fd6"
 dependencies = [
  "cfg-if",
  "dashmap",
