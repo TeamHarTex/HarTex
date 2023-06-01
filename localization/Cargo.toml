@@ -5,5 +5,7 @@ members = [
     "hartex-localization-test",
 ]
 
+resolver = "2"
+
 [profile.release]
 debug = true

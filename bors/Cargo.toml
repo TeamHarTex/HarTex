@@ -7,3 +7,5 @@ members = [
     "hartex-bors-github",
     "hartex-bors-permissions",
 ]
+
+resolver = "2"

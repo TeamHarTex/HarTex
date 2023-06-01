@@ -389,9 +389,9 @@ dependencies = [
 
 [[package]]
 name = "hyper-rustls"
-version = "0.23.2"
+version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1788965e61b367cd03a62950836d5cd41560c3577d90e40e0819373194d1661c"
+checksum = "0646026eb1b3eea4cd9ba47912ea5ce9cc07713d105b1a14698f4e6433d348b7"
 dependencies = [
  "http",
  "hyper",
@@ -759,13 +759,13 @@ checksum = "d626bb9dae77e28219937af045c257c28bfd3f69333c512553507f5f9798cb76"
 
 [[package]]
 name = "rustls"
-version = "0.20.8"
+version = "0.21.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fff78fc74d175294f4e83b28343315ffcfb114b156f0185e9741cb5570f50e2f"
+checksum = "c911ba11bc8433e811ce56fde130ccf32f5127cab0e0194e9c68c5a5b671791e"
 dependencies = [
  "ring",
+ "rustls-webpki",
  "sct",
- "webpki",
 ]
 
 [[package]]
@@ -787,6 +787,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d194b56d58803a43635bdc398cd17e383d6f71f9182b9a192c127ca42494a59b"
 dependencies = [
  "base64",
+]
+
+[[package]]
+name = "rustls-webpki"
+version = "0.100.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d6207cd5ed3d8dca7816f8f3725513a34609c0c765bf652b8c3cb4cfd87db46b"
+dependencies = [
+ "ring",
+ "untrusted",
 ]
 
 [[package]]
@@ -1019,13 +1029,12 @@ dependencies = [
 
 [[package]]
 name = "tokio-rustls"
-version = "0.23.4"
+version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c43ee83903113e03984cb9e5cebe6c04a5116269e900e3ddba8f068a62adda59"
+checksum = "e0d409377ff5b1e3ca6437aa86c1eb7d40c134bfec254e44c830defa92669db5"
 dependencies = [
  "rustls",
  "tokio",
- "webpki",
 ]
 
 [[package]]
@@ -1105,8 +1114,8 @@ checksum = "3528ecfd12c466c6f163363caf2d02a71161dd5e1cc6ae7b34207ea2d42d81ed"
 
 [[package]]
 name = "twilight-http"
-version = "0.15.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#3378617ac69b270a5da1980f46f64e41a15b9b10"
+version = "0.15.2"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#fc1a1d21dd5ebf5a653905b7ae0083b22c8beeee"
 dependencies = [
  "brotli",
  "hyper",
@@ -1125,7 +1134,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#3378617ac69b270a5da1980f46f64e41a15b9b10"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#fc1a1d21dd5ebf5a653905b7ae0083b22c8beeee"
 dependencies = [
  "futures-util",
  "tokio",
@@ -1134,8 +1143,8 @@ dependencies = [
 
 [[package]]
 name = "twilight-model"
-version = "0.15.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#3378617ac69b270a5da1980f46f64e41a15b9b10"
+version = "0.15.2"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#fc1a1d21dd5ebf5a653905b7ae0083b22c8beeee"
 dependencies = [
  "bitflags 2.3.1",
  "serde",
@@ -1148,7 +1157,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#3378617ac69b270a5da1980f46f64e41a15b9b10"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#fc1a1d21dd5ebf5a653905b7ae0083b22c8beeee"
 dependencies = [
  "twilight-model",
 ]
@@ -1243,16 +1252,6 @@ checksum = "3bdd9ef4e984da1187bf8110c5cf5b845fbc87a23602cdf912386a76fcd3a7c2"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "webpki"
-version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f095d78192e208183081cc07bc5515ef55216397af48b873e5edcd72637fa1bd"
-dependencies = [
- "ring",
- "untrusted",
 ]
 
 [[package]]
