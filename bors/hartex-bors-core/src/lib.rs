@@ -139,6 +139,9 @@ pub trait RepositoryClient {
     /// The name of the repository this client is for.
     fn repository_name(&self) -> &GithubRepositoryName;
 
+    /// Cancel workflows.
+    async fn cancel_workflows(&mut self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()>;
+
     /// Edit a speific comment.
     async fn edit_comment(
         &mut self,
