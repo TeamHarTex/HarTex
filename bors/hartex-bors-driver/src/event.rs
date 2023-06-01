@@ -177,7 +177,14 @@ async fn handle_comment<C: RepositoryClient>(
                     )
                     .await?
                 }
-                _ => todo!(),
+                BorsCommand::TryCancel => {
+                    hartex_bors_commands::commands::try_cancel::try_cancel_command(
+                        repository,
+                        database,
+                        pr,
+                        &issue.user.login
+                    ).await?
+                }
             },
             Err(error) => {
                 let error_msg = match error {
