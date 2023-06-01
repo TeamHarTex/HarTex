@@ -187,7 +187,7 @@ Build commit: {hash} (`{hash}`)"#
     } else {
         log::info!("Workflow failed");
         format!(
-            r#":broken_heart: Test failed
+            r#":broken_heart: Try build failed
 {workflow_list}"#
         )
     };

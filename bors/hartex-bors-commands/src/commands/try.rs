@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Try command
+//!
+//! bors try
+
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
@@ -31,6 +35,7 @@ use hartex_log::log;
 pub const TRY_BRANCH_NAME: &str = "automation/bors/try";
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
 
+/// Executes the try command.
 pub async fn try_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     database: &mut dyn DatabaseClient,
