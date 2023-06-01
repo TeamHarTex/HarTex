@@ -28,11 +28,18 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 
+use crate::commands::try::check_try_permissions;
+
 /// Executes the try cancel command.
 pub async fn try_cancel_command<C: RepositoryClient>(
-    _: &mut GithubRepositoryState<C>,
+    repository: &mut GithubRepositoryState<C>,
     _: &mut dyn DatabaseClient,
-    _: u64,
+    pr: u64,
+    author: &str,
 ) -> hartex_eyre::Result<()> {
+    if !check_try_permissions(repository, pr, author).await? {
+        return Ok(());
+    }
+
     Ok(())
 }

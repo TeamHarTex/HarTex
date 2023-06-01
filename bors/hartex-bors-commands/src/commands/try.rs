@@ -97,7 +97,7 @@ pub async fn try_command<C: RepositoryClient>(
     Ok(())
 }
 
-async fn check_try_permissions<C: RepositoryClient>(
+pub(crate) async fn check_try_permissions<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     pr: u64,
     author: &str,
