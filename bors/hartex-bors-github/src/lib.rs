@@ -32,6 +32,7 @@
 use std::collections::HashMap;
 use std::str;
 
+use futures::future;
 use hartex_bors_core::models::Check;
 use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
@@ -46,9 +47,11 @@ use http_body::Body;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
+use octocrab::models::App;
 use octocrab::models::AppId;
+use octocrab::models::CommentId;
 use octocrab::models::Repository;
-use octocrab::models::{App, CommentId};
+use octocrab::models::RunId;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
@@ -137,6 +140,23 @@ impl GithubRepositoryClient {
 impl RepositoryClient for GithubRepositoryClient {
     fn repository_name(&self) -> &GithubRepositoryName {
         &self.repository_name
+    }
+
+    async fn cancel_workflows(&mut self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()> {
+        let actions = self.client.actions();
+
+        future::join_all(run_ids.into_iter().map(|id| {
+            actions.cancel_workflow_run(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+                id,
+            )
+        }))
+        .await
+        .into_iter()
+        .collect::<Result<Vec<_>, octocrab::Error>>()?;
+
+        Ok(())
     }
 
     async fn edit_comment(
