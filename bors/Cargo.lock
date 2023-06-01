@@ -753,6 +753,7 @@ dependencies = [
 name = "hartex_bors_github"
 version = "0.1.0"
 dependencies = [
+ "futures",
  "hartex_bors_core",
  "hartex_bors_database",
  "hartex_bors_permissions",
