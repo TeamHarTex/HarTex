@@ -24,6 +24,7 @@
 //!
 //! bors try-
 
+use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
@@ -33,13 +34,25 @@ use crate::commands::try::check_try_permissions;
 /// Executes the try cancel command.
 pub async fn try_cancel_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
-    _: &mut dyn DatabaseClient,
+    database: &mut dyn DatabaseClient,
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
     if !check_try_permissions(repository, pr, author).await? {
         return Ok(());
     }
+
+    let pull_request = database
+        .get_or_create_pull_request(repository.client.repository_name(), pr)
+        .await?;
+    let Some(_) = pull_request
+        .try_build
+        .and_then(|build| (build.status == BorsBuildStatus::Pending).then_some(build)) else {
+        repository.client.post_comment(pr, ":warning: There is currently no try build in progress.").await?;
+
+        return Ok(());
+    };
+
 
     Ok(())
 }
