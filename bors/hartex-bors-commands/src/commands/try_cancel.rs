@@ -61,10 +61,15 @@ pub async fn try_cancel_command<C: RepositoryClient>(
         println!("{error}");
     }
 
-    database.update_build_status(&build, BorsBuildStatus::Cancelled).await?;
+    database
+        .update_build_status(&build, BorsBuildStatus::Cancelled)
+        .await?;
 
     log::warn!("try build workflow cancelled");
-    repository.client.post_comment(pr, ":white_check_mark: Try build cancelled.").await?;
+    repository
+        .client
+        .post_comment(pr, ":white_check_mark: Try build cancelled.")
+        .await?;
 
     Ok(())
 }
@@ -78,7 +83,10 @@ async fn cancel_build_workflows<C: RepositoryClient>(
         .get_workflows_for_build(build)
         .await?
         .into_iter()
-        .filter(|workflow| workflow.workflow_status == BorsWorkflowStatus::Pending && workflow.workflow_type == BorsWorkflowType::GitHub)
+        .filter(|workflow| {
+            workflow.workflow_status == BorsWorkflowStatus::Pending
+                && workflow.workflow_type == BorsWorkflowType::GitHub
+        })
         .map(|workflow| workflow.run_id)
         .collect::<Vec<_>>();
 

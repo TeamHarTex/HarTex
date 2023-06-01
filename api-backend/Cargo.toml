@@ -7,3 +7,5 @@ members = [
     "hartex-backend-routes-v1",
     "hartex-backend-status-util",
 ]
+
+resolver = "2"
