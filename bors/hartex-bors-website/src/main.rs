@@ -24,11 +24,21 @@
 //!
 //! The website is home to the "bors cheatsheet" as well as the queues for certain repositories.
 
+use hartex_log::log;
+
 /// The entry point.
 #[rocket::main]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
     hartex_log::initialize();
+
+    log::debug!("igniting rocket");
+    let rocket = rocket::build()
+        .ignite()
+        .await?;
+
+    log::debug!("launching rocket");
+    rocket.launch().await?;
 
     Ok(())
 }
