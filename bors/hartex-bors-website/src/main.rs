@@ -27,5 +27,8 @@
 /// The entry point.
 #[rocket::main]
 pub async fn main() -> hartex_eyre::Result<()> {
+    hartex_eyre::initialize()?;
+    hartex_log::initialize();
+
     Ok(())
 }

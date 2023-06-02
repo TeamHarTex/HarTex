@@ -12,6 +12,7 @@ rust-version = "1.72.0"
 
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 
