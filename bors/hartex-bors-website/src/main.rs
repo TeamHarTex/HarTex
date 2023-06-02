@@ -20,4 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+//! # The website for bors.
+//!
+//! The website is home to the "bors cheatsheet" as well as the queues for certain repositories.
+
+/// The entry point.
+#[rocket::main]
+pub async fn main() -> hartex_eyre::Result<()> {
+    Ok(())
+}
