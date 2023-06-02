@@ -30,7 +30,3 @@ sqlx = { version = "0.6.3", features = ["runtime-tokio-native-tls", "sqlite"] }
 tokio = { version = "1.28.2", features = ["rt-multi-thread", "sync"] }
 
 [features]
-
-[[bin]]
-name = "bors"
-path = "src/main.rs"

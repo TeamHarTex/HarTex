@@ -11,5 +11,8 @@ rust-version = "1.72.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+
+rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 
 [features]
