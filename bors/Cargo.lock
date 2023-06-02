@@ -783,6 +783,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_bors_website"
+version = "0.1.0"
+
+[[package]]
 name = "hartex_eyre"
 version = "0.1.0"
 dependencies = [
