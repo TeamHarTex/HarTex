@@ -946,6 +946,7 @@ name = "hartex_bors_website"
 version = "0.1.0"
 dependencies = [
  "hartex_eyre",
+ "hartex_log",
  "rocket",
 ]
 
