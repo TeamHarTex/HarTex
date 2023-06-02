@@ -86,6 +86,7 @@
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-permissions/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-commands/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-website/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
