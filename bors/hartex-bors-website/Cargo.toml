@@ -12,7 +12,10 @@ rust-version = "1.72.0"
 
 [dependencies]
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_log = { path = "../../rust-utilities/hartex-log" }
 
+askama = "0.12.0"
+askama_rocket = "0.11.0"
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 
 [features]

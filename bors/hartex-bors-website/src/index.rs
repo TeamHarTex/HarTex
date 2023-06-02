@@ -20,27 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The website for bors.
-//!
-//! The website is home to the "bors cheatsheet" as well as the queues for certain repositories.
+//! # Bors Website - Index Page
 
-use hartex_log::log;
+use askama::Template;
+use rocket::get;
+use rocket::Responder;
 
-mod index;
+#[derive(Template)]
+#[template(path = "index.html")]
+pub struct IndexTemplate;
 
-/// The entry point.
-#[rocket::main]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
-    hartex_log::initialize();
+#[derive(Responder)]
+struct IndexTemplateResponder;
 
-    log::debug!("igniting rocket");
-    let rocket = rocket::build()
-        .ignite()
-        .await?;
-
-    log::debug!("launching rocket");
-    rocket.launch().await?;
-
-    Ok(())
-}
+#[get("/")]
+pub async fn index() -> IndexTemplate {}

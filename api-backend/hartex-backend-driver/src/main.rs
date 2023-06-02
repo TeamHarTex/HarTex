@@ -45,6 +45,7 @@ mod catchers;
 /// a Rocket server, igniting, and launching it.
 #[rocket::main]
 pub async fn main() -> hartex_eyre::Result<()> {
+    hartex_eyre::initialize()?;
     hartex_log::initialize();
 
     log::trace!("loading environment variables");
