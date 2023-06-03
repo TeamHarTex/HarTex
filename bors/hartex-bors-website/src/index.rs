@@ -22,16 +22,14 @@
 
 //! # Bors Website - Index Page
 
-use askama::Template;
 use rocket::get;
-use rocket::Responder;
+use rocket::response::content::RawHtml;
+use serde::Serialize;
 
-#[derive(Template)]
-#[template(path = "index.html")]
-pub struct IndexTemplate;
-
-#[derive(Responder)]
-struct IndexTemplateResponder;
+#[derive(Serialize)]
+struct IndexData;
 
 #[get("/")]
-pub async fn index() -> IndexTemplate {}
+pub async fn index() -> RawHtml<String> {
+    RawHtml(crate::HANDLEBARS.render("index", &IndexData).unwrap())
+}
