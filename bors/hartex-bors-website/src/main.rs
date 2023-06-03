@@ -24,15 +24,31 @@
 //!
 //! The website is home to the "bors cheatsheet" as well as the queues for certain repositories.
 
+#![feature(lazy_cell)]
+
+use std::sync::LazyLock;
+
+use handlebars::Handlebars;
 use hartex_log::log;
 
 mod index;
+
+pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
+    let mut handlebars = Handlebars::new();
+    handlebars.set_strict_mode(true);
+    handlebars.register_templates_directory(".hbs", "./templates").unwrap();
+
+    handlebars
+});
 
 /// The entry point.
 #[rocket::main]
 pub async fn main() -> hartex_eyre::Result<()> {
     hartex_eyre::initialize()?;
     hartex_log::initialize();
+
+    log::trace!("initializing handlebars instance");
+    LazyLock::force(&HANDLEBARS);
 
     log::debug!("igniting rocket");
     let rocket = rocket::build()
