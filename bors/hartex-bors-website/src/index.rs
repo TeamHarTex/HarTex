@@ -22,16 +22,3 @@
 
 //! # Bors Website - Index Page
 
-use askama::Template;
-use rocket::get;
-use rocket::Responder;
-
-#[derive(Template)]
-#[template(path = "index.html")]
-pub struct IndexTemplate;
-
-#[derive(Responder)]
-struct IndexTemplateResponder;
-
-#[get("/")]
-pub async fn index() -> IndexTemplate {}
