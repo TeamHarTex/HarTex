@@ -38,7 +38,9 @@ mod index;
 pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
     let mut handlebars = Handlebars::new();
     handlebars.set_strict_mode(true);
-    handlebars.register_templates_directory(".hbs", "./bors/hartex-bors-website/templates").unwrap();
+    handlebars
+        .register_templates_directory(".hbs", "./bors/hartex-bors-website/templates")
+        .unwrap();
 
     handlebars
 });

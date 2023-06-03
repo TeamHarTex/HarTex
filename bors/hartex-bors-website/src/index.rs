@@ -27,9 +27,27 @@ use rocket::response::content::RawHtml;
 use serde::Serialize;
 
 #[derive(Serialize)]
-struct IndexData;
+struct IndexData {
+    repositories: Vec<Repository>,
+}
+
+#[derive(Serialize)]
+struct Repository {
+    label: String,
+}
 
 #[get("/")]
 pub async fn index() -> RawHtml<String> {
-    RawHtml(crate::HANDLEBARS.render("index", &IndexData).unwrap())
+    RawHtml(
+        crate::HANDLEBARS
+            .render(
+                "index",
+                &IndexData {
+                    repositories: vec![Repository {
+                        label: String::from("HarTex"),
+                    }],
+                },
+            )
+            .unwrap(),
+    )
 }
