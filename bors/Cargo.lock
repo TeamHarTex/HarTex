@@ -964,6 +964,7 @@ dependencies = [
  "hartex_eyre",
  "hartex_log",
  "rocket",
+ "serde",
 ]
 
 [[package]]

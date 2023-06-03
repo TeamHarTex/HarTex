@@ -22,3 +22,14 @@
 
 //! # Bors Website - Index Page
 
+use rocket::get;
+use rocket::response::content::RawHtml;
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct IndexData;
+
+#[get("/")]
+pub async fn index() -> RawHtml<String> {
+    RawHtml(crate::HANDLEBARS.render("index", &IndexData).unwrap())
+}
