@@ -113,7 +113,7 @@ pub trait DatabaseClient {
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
 
     /// Gets pull requests stored in the database in a repository.
-    fn get_pull_requests<'a>(
+    fn get_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + '_>>;
