@@ -37,6 +37,18 @@
         h1 {
             font-size: 26px;
         }
+
+        .hide {
+            display: none;
+        }
+
+        #rollup-popup {
+            background: #C7E2FF;
+            border: #00ACF7 3px double;
+            border-radius: 5px;
+            padding: 0 1em;
+            width: 75%;
+        }
     </style>
 </head>
 <body>
@@ -44,5 +56,25 @@
 <p>
     <button type="button" id="expand-rollup">Create a Rollup</button>
 </p>
+
+<div id="rollup-popup" class="hide">
+    <p>This will create a new pull request consisting of (a number here) existing pull requests.</p>
+    <p>A rollup is especally useful for shortening the queue.</p>
+    <p>
+        <button type="button" id="confirm-rollup">Rollup</button>
+        —
+        <button type="button" id="cancel-rollup">Cancel</button>
+    </p>
+</div>
+
+<script>
+    document.getElementById('expand-rollup').onclick = function() {
+        document.getElementById('rollup-popup').className = '';
+    }
+
+    document.getElementById('cancel-rollup').onclick = function() {
+        document.getElementById('rollup-popup').className = 'hide';
+    }
+</script>
 </body>
 </html>
