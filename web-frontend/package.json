@@ -14,7 +14,7 @@
     "@types/node": "^18",
     "unocss": "^0.52.0",
     "@unocss/nuxt": "^0.53.0",
-    "@unocss/preset-web-fonts": "^0.52.0",
+    "@unocss/preset-web-fonts": "^0.53.0",
     "@unocss/transformer-directives": "^0.52.0",
     "nuxt": "^3.4.3"
   }
