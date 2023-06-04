@@ -35,6 +35,7 @@ use crate::HANDLEBARS;
 #[derive(Serialize)]
 struct QueueData {
     repository: String,
+    total: usize,
 }
 
 /// The endpoint returning the queue page.
@@ -45,7 +46,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
     let name = GithubRepositoryName::new(segments[0], segments[1]);
     let database = DATABASE.wait().await;
     log::trace!("obtaining pull requests for repository: {name}");
-    let _ = database
+    let pull_requests = database
         .get_pull_requests_for_repository(&name)
         .await
         .unwrap();
@@ -56,6 +57,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                 "queue",
                 &QueueData {
                     repository: repository_string.replace("\\", "/"),
+                    total: pull_requests.len(),
                 },
             )
             .unwrap(),
