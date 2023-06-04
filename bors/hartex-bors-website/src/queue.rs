@@ -20,11 +20,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::path::PathBuf;
+
 use rocket::get;
 use rocket::response::content::RawHtml;
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct QueueData {
+    repository: String,
+}
 
 /// The endpoint returning the queue page.
-#[get("/queue/<_repository..>")]
-pub async fn queue(_repository: String) -> RawHtml<String> {
-    RawHtml(String::new())
+#[get("/queue/<repository..>")]
+pub async fn queue(repository: PathBuf) -> RawHtml<String> {
+    let repository_string = repository.to_string_lossy().to_string();
+
+    RawHtml(
+        crate::HANDLEBARS
+            .render(
+                "queue",
+                &QueueData {
+                    repository: repository_string.replace("\\", "/"),
+                },
+            )
+            .unwrap(),
+    )
 }
