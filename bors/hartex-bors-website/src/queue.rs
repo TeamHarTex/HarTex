@@ -22,8 +22,9 @@
 
 use std::path::PathBuf;
 
-use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::DatabaseClient;
+use hartex_log::log;
 use rocket::get;
 use rocket::response::content::RawHtml;
 use serde::Serialize;
@@ -40,10 +41,14 @@ struct QueueData {
 #[get("/queue/<repository..>")]
 pub async fn queue(repository: PathBuf) -> RawHtml<String> {
     let repository_string = repository.to_string_lossy().to_string();
-    let segments = repository_string.split("/").collect::<Vec<&str>>();
+    let segments = repository_string.split("\\").collect::<Vec<&str>>();
     let name = GithubRepositoryName::new(segments[0], segments[1]);
-    let database = DATABASE.get().unwrap();
-    let _ = database.get_pull_requests_for_repository(&name).await.unwrap();
+    let database = DATABASE.wait().await;
+    log::trace!("obtaining pull requests for repository: {name}");
+    let _ = database
+        .get_pull_requests_for_repository(&name)
+        .await
+        .unwrap();
 
     RawHtml(
         HANDLEBARS

@@ -46,13 +46,13 @@ pub fn bors_process(mut state: GithubBorsState) -> impl Future<Output = ()> {
                         let result =
                             crate::event::deserialize_event(event_type.to_string(), body.clone());
                         if let Err(error) = &result {
-                            println!("{error}");
+                            println!("{error:?}");
                             continue;
                         }
 
                         let event = result.unwrap();
                         if let Err(error) = crate::event::handle_event(&mut state, event).await {
-                            println!("{error}");
+                            println!("{error:?}");
                         }
                     }
                 }
