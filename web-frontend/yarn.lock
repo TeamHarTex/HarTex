@@ -1229,7 +1229,7 @@
     "@unocss/preset-mini" "0.53.0"
     "@unocss/preset-wind" "0.53.0"
 
-"@unocss/preset-web-fonts@0.52.7", "@unocss/preset-web-fonts@^0.52.0":
+"@unocss/preset-web-fonts@0.52.7":
   version "0.52.7"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.52.7.tgz#596470f3738b5d931eed6f6769d5558c239b785a"
   integrity sha512-KnWpYPqRVqD1wu8pJMQVy+sMgrJKSqr5R0C1xMMT4u4TZk4fc2YWXox6UNw5WWWzdc1KzJ/k36wSPnq+jSjfDA==
@@ -1237,7 +1237,7 @@
     "@unocss/core" "0.52.7"
     ofetch "^1.0.1"
 
-"@unocss/preset-web-fonts@0.53.0":
+"@unocss/preset-web-fonts@0.53.0", "@unocss/preset-web-fonts@^0.53.0":
   version "0.53.0"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.53.0.tgz#b087a275eb10947cb53bd4217162ec2787ca6784"
   integrity sha512-CAZW/PSp9+VBvzE/T56v2Yb8Nk3xF9XJaQrDydF9cAPyz/gVOZBbKQSDS8OqyAqKiXbnn+NYCwEqTG8v/YOMyw==
