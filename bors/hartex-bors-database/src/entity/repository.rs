@@ -20,6 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use super::build::Entity as Build;
-pub use super::pull_request::Entity as PullRequest;
-pub use super::workflow::Entity as Workflow;
+use sea_orm::prelude::*;
+
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
+#[sea_orm(table_name = "repository")]
+pub struct Model {
+    #[sea_orm(primary_key)]
+    pub id: i32,
+    pub repository: String,
+}
+
+impl ActiveModelBehavior for ActiveModel {}

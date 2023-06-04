@@ -21,6 +21,6 @@
  */
 
 pub mod build;
-pub mod prelude;
 pub mod pull_request;
+pub mod repository;
 pub mod workflow;
