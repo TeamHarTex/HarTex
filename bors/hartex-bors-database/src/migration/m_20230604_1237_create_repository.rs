@@ -44,8 +44,6 @@
 
 use sea_orm_migration::prelude::*;
 
-use crate::migration::m_20230527_2254_create_build::Build;
-
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 

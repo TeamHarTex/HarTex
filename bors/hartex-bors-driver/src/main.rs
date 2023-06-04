@@ -31,17 +31,10 @@
 use std::env;
 use std::fs::File;
 use std::io::Read;
-use std::str::FromStr;
 
 use hartex_bors_database::client::SeaORMDatabaseClient;
-use hartex_bors_database::migration::Migrator;
 use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
-use sea_orm::DatabaseConnection;
-use sea_orm::SqlxSqliteConnector;
-use sea_orm_migration::prelude::MigratorTrait;
-use sqlx::sqlite::SqliteConnectOptions;
-use sqlx::SqlitePool;
 use tokio::runtime::Builder;
 
 mod event;
@@ -69,7 +62,7 @@ fn actual_main() -> hartex_eyre::Result<()> {
     let app_id = env::var("APP_ID")?.parse::<u64>()?;
 
     log::trace!("initializing sqlite database");
-    let database = runtime.block_on(initialize_database())?;
+    let database = runtime.block_on(hartex_bors_database::initialize_database(true))?;
 
     let mut private_key_file = File::open("../bors-private-key.pem")?;
     let mut private_key = String::new();
@@ -86,16 +79,4 @@ fn actual_main() -> hartex_eyre::Result<()> {
     runtime.block_on(future);
 
     Ok(())
-}
-
-async fn initialize_database() -> hartex_eyre::Result<DatabaseConnection> {
-    let database = SqlxSqliteConnector::from_sqlx_sqlite_pool(
-        SqlitePool::connect_with(
-            SqliteConnectOptions::from_str("sqlite:bors-data/data.db")?.create_if_missing(true),
-        )
-        .await?,
-    );
-    Migrator::up(&database, None).await?;
-
-    Ok(database)
 }

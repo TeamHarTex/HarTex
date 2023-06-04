@@ -11,9 +11,13 @@ rust-version = "1.72.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_bors_core = { path = "../hartex-bors-core" }
+hartex_bors_database = { path = "../hartex-bors-database" }
+
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
+async-lock = "2.7.0"
 handlebars = { version = "5.0.0-beta.2", features = ["dir_source"] }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 serde = { version = "1.0.163", features = ["derive"] }

@@ -25,6 +25,8 @@
 use std::collections::HashMap;
 
 use hartex_bors_core::models::GithubRepositoryName;
+use hartex_bors_core::DatabaseClient;
+use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_permissions::BackendApiPermissionResolver;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
@@ -61,7 +63,10 @@ async fn create_repository_state(
     })
 }
 
-pub(crate) async fn load_repositories(client: &Octocrab) -> hartex_eyre::Result<RepositoryMap> {
+pub(crate) async fn load_repositories(
+    client: &Octocrab,
+    database: &SeaORMDatabaseClient,
+) -> hartex_eyre::Result<RepositoryMap> {
     let installations = client.apps().installations().send().await?;
 
     let mut hashmap = HashMap::new();
@@ -78,7 +83,11 @@ pub(crate) async fn load_repositories(client: &Octocrab) -> hartex_eyre::Result<
                         let state =
                             create_repository_state(installation_client.clone(), repository)
                                 .await?;
-                        log::info!("repository loaded: {}", state.repository);
+                        log::info!(
+                            "repository loaded: {}, adding to database if doesn't exist",
+                            state.repository
+                        );
+                        database.create_repository(&state.repository).await?;
 
                         if let Some(existing_repository) =
                             hashmap.insert(state.repository.clone(), state)
