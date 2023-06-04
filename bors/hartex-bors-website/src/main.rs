@@ -39,6 +39,7 @@ use rocket::config::Config;
 use rocket::routes;
 
 mod index;
+mod queue;
 
 pub(crate) static DATABASE: OnceCell<SeaORMDatabaseClient> = OnceCell::new();
 
