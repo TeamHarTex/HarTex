@@ -22,6 +22,12 @@
 
 use rocket::get;
 use rocket::response::content::RawHtml;
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct QueueData {
+    repository: String,
+}
 
 /// The endpoint returning the queue page.
 #[get("/queue/<_repository..>")]
