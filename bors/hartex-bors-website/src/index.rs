@@ -39,6 +39,7 @@ struct Repository {
     label: String,
 }
 
+/// The endpoint returning the index page.
 #[get("/")]
 pub async fn index() -> RawHtml<String> {
     let database = DATABASE.get().unwrap();
