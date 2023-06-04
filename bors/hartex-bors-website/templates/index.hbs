@@ -24,22 +24,32 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Bors for HarTex</title>
+    <title>Bors V2</title>
     <style>
+        code {
+            background-color: #efefef;
+            border-radius: 5px;
+        }
+
         h1 {
-            font-size: 22px;
+            font-size: 26px;
         }
 
         h2 {
-            font-size: 18px;
+            font-size: 22px;
         }
 
         h3 {
-            font-size: 16px;
+            font-size: 20px;
         }
 
         h4 {
-            font-size: 14px;
+            font-size: 18px;
+        }
+
+        p, ul {
+            font-size: 19px;
+            line-height: 150%;
         }
 
         .wrapper {
@@ -47,11 +57,16 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        .repositories {
+            font-size: 20px;
+            line-height: 180%;
+        }
     </style>
 </head>
 <body>
 <div class="wrapper">
-    <h1>Bors for HarTex</h1>
+    <h1>Bors V2</h1>
 
     <h2>Repositories</h2>
 
@@ -61,6 +76,36 @@
                 <a href="queue/{{this.label}}">{{this.label}}</a>
             </li>
         {{/each}}
+    </ul>
+
+    <hr>
+
+    <h2>Bors V2 User Manual</h2>
+
+    <h3>Command List</h3>
+
+    <p>
+        Below is a list of commands Bors V2 accepts. Bors V2 commands must be in the
+        form of a comment on a pull request. Bors V2 will only answer to persons who
+        have certain permissions configured in the permissions database.
+        <strong>Note that Bors V2 only recognizes comments in OPEN pull requests.</strong>
+    </p>
+
+    <ul>
+        <li>
+            <code>try</code>: request a test of this pull request without explicitly approving it.
+        </li>
+        <li>
+            <code>try-</code>: cancel a requested test started using the <code>try</code> command.
+        </li>
+    </ul>
+
+    <h3>Example Usage</h3>
+
+    <ul>
+        <li>
+            <code>bors try</code>
+        </li>
     </ul>
 </div>
 </body>

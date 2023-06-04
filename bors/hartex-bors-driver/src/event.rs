@@ -72,6 +72,10 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
                 return Err(Report::msg("comments on non-pull requests are ignored"));
             }
 
+            if deserialized.issue.closed_at.is_some() {
+                return Err(Report::msg("comments on closed pull requests are ignored"));
+            }
+
             let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
 
             Ok(BorsEvent {
