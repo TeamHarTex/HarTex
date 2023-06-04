@@ -30,7 +30,16 @@ struct QueueData {
 }
 
 /// The endpoint returning the queue page.
-#[get("/queue/<_repository..>")]
-pub async fn queue(_repository: String) -> RawHtml<String> {
-    RawHtml(String::new())
+#[get("/queue/<repository..>")]
+pub async fn queue(repository: String) -> RawHtml<String> {
+    RawHtml(
+        crate::HANDLEBARS
+            .render(
+                "queue",
+                &QueueData {
+                    repository,
+                },
+            )
+            .unwrap(),
+    )
 }
