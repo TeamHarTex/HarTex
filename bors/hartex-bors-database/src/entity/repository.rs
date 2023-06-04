@@ -30,4 +30,7 @@ pub struct Model {
     pub repository: String,
 }
 
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+pub enum Relation {}
+
 impl ActiveModelBehavior for ActiveModel {}

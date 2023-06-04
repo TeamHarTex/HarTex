@@ -37,7 +37,6 @@ use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_log::log;
 use rocket::config::Config;
 use rocket::routes;
-use sea_orm::DatabaseConnection;
 
 mod index;
 
