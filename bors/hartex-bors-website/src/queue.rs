@@ -34,7 +34,7 @@ struct QueueData {
 /// The endpoint returning the queue page.
 #[get("/queue/<repository..>")]
 pub async fn queue(repository: PathBuf) -> RawHtml<String> {
-    let mut repository_string = repository.to_string_lossy().to_string();
+    let repository_string = repository.to_string_lossy().to_string();
 
     RawHtml(
         crate::HANDLEBARS
