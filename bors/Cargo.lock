@@ -974,7 +974,6 @@ dependencies = [
  "hartex_eyre",
  "hartex_log",
  "rocket",
- "sea-orm",
  "serde",
 ]
 

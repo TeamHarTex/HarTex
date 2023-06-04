@@ -225,7 +225,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
     fn get_repositories(
         &self,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + '_>> {
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>> {
         Box::pin(async move {
             let repositories = entity::repository::Entity::find()
                 .all(&self.connection)

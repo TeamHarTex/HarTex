@@ -106,7 +106,7 @@ pub trait DatabaseClient {
 
     fn get_repositories(
         &self,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + '_>>;
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.

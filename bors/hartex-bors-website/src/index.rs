@@ -40,11 +40,11 @@ struct Repository {
 }
 
 #[get("/")]
-pub async fn index() -> hartex_eyre::Result<RawHtml<String>> {
+pub async fn index() -> RawHtml<String> {
     let database = DATABASE.get().unwrap();
-    let repositories = database.get_repositories().await?;
+    let repositories = database.get_repositories().await.unwrap();
 
-    Ok(RawHtml(
+    RawHtml(
         crate::HANDLEBARS
             .render(
                 "index",
@@ -58,5 +58,5 @@ pub async fn index() -> hartex_eyre::Result<RawHtml<String>> {
                 },
             )
             .unwrap(),
-    ))
+    )
 }
