@@ -26,20 +26,23 @@
     <meta charset="utf-8">
     <title>Bors V2 Queue - {{repository}}</title>
     <style>
-        h1 {
-            font-size: 26px;
+        * {
+            font-family: sans-serif;
         }
 
-        .wrapper {
-            max-width: 60em;
-            margin-left: auto;
-            margin-right: auto;
+        button {
+            font-size: 15px;
+        }
+
+        h1 {
+            font-size: 26px;
         }
     </style>
 </head>
 <body>
-<div class="wrapper">
-    <h1>Bors V2 Queue - {{repository}}</h1>
-</div>
+<h1>Bors V2 Queue - {{repository}}</h1>
+<p>
+    <button type="button" id="expand-rollup">Create a Rollup</button>
+</p>
 </body>
 </html>
