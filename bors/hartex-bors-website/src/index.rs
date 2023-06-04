@@ -23,6 +23,7 @@
 //! # Bors Website - Index Page
 
 use hartex_bors_core::DatabaseClient;
+use hartex_log::log;
 use rocket::get;
 use rocket::response::content::RawHtml;
 use serde::Serialize;
@@ -43,7 +44,8 @@ struct Repository {
 /// The endpoint returning the index page.
 #[get("/")]
 pub async fn index() -> RawHtml<String> {
-    let database = DATABASE.get().unwrap();
+    let database = DATABASE.wait().await;
+    log::trace!("obtaining repositories");
     let repositories = database.get_repositories().await.unwrap();
 
     RawHtml(
