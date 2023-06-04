@@ -32,6 +32,7 @@ use hartex_log::log;
 use octocrab::models::InstallationRepositories;
 use octocrab::models::Repository;
 use octocrab::Octocrab;
+use hartex_bors_core::DatabaseClient;
 
 use crate::GithubRepositoryClient;
 use crate::RepositoryMap;
@@ -82,7 +83,8 @@ pub(crate) async fn load_repositories(
                         let state =
                             create_repository_state(installation_client.clone(), repository)
                                 .await?;
-                        log::info!("repository loaded: {}", state.repository);
+                        log::info!("repository loaded: {}, adding to database if doesn't exist", state.repository);
+                        database.create_repository(&state.repository).await?;
 
                         if let Some(existing_repository) =
                             hashmap.insert(state.repository.clone(), state)
