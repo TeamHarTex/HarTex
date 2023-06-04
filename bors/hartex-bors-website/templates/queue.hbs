@@ -38,6 +38,22 @@
             font-size: 26px;
         }
 
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border-bottom: 1px solid #DDD;
+            padding: 5px 6px;
+            font-size: 15px;
+            text-align: left;
+            vertical-align: baseline;
+        }
+
+        tr:nth-child(even) {
+            background: #EEE;
+        }
+
         .hide {
             display: none;
         }
@@ -70,6 +86,19 @@
 <p>
     Total Pull Requests: {{ total }}
 </p>
+
+<table id="queue">
+    <thead>
+        <th><input type="checkbox"></th>
+        <th>#</th>
+        <th>Status</th>
+        <th>Title</th>
+        <th>Head ref</th>
+        <th>Assignee</th>
+        <th>Approved by</th>
+        <th>Rollup</th>
+    </thead>
+</table>
 
 <script>
     document.getElementById('expand-rollup').onclick = function() {
