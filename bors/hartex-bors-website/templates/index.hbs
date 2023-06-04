@@ -42,8 +42,9 @@
             font-size: 18px;
         }
 
-        p {
+        p, ul {
             font-size: 19px;
+            line-height: 150%;
         }
 
         .wrapper {
@@ -82,6 +83,15 @@
         have certain permissions configured in the permissions database.
         <strong>Note that Bors V2 only recognizes comments in OPEN pull requests.</strong>
     </p>
+
+    <ul>
+        <li>
+            <code>try</code>: request a test of this pull request without explicitly approving it.
+        </li>
+        <li>
+            <code>try-</code>: cancel a requested test started using the <code>try</code> command.
+        </li>
+    </ul>
 </div>
 </body>
 </html>
