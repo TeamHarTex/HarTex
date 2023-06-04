@@ -54,6 +54,9 @@ pub async fn main() -> hartex_eyre::Result<()> {
     log::trace!("initializing handlebars instance");
     LazyLock::force(&HANDLEBARS);
 
+    log::trace!("initializing database");
+    let _ = hartex_bors_database::initialize_database(false).await?;
+
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 9000)))
         .mount("/", routes![index::index])

@@ -900,6 +900,7 @@ dependencies = [
  "octocrab",
  "sea-orm",
  "sea-orm-migration",
+ "sqlx",
 ]
 
 [[package]]
@@ -916,10 +917,7 @@ dependencies = [
  "hartex_log",
  "octocrab",
  "reqwest-eventsource",
- "sea-orm",
- "sea-orm-migration",
  "serde_json",
- "sqlx",
  "tokio",
 ]
 
@@ -961,6 +959,7 @@ name = "hartex_bors_website"
 version = "0.1.0"
 dependencies = [
  "handlebars",
+ "hartex_bors_database",
  "hartex_eyre",
  "hartex_log",
  "rocket",
