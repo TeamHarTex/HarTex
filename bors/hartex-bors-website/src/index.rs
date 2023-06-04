@@ -22,9 +22,12 @@
 
 //! # Bors Website - Index Page
 
+use hartex_bors_core::DatabaseClient;
 use rocket::get;
 use rocket::response::content::RawHtml;
 use serde::Serialize;
+
+use crate::DATABASE;
 
 #[derive(Serialize)]
 struct IndexData {
@@ -38,14 +41,20 @@ struct Repository {
 
 #[get("/")]
 pub async fn index() -> RawHtml<String> {
+    let database = DATABASE.get().unwrap();
+    let repositories = database.get_repositories().await.unwrap();
+
     RawHtml(
         crate::HANDLEBARS
             .render(
                 "index",
                 &IndexData {
-                    repositories: vec![Repository {
-                        label: String::from("HarTex"),
-                    }],
+                    repositories: repositories
+                        .iter()
+                        .map(|repository| Repository {
+                            label: repository.name.clone(),
+                        })
+                        .collect(),
                 },
             )
             .unwrap(),

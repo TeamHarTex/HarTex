@@ -38,6 +38,7 @@ use octocrab::models::RunId;
 use crate::models::BorsBuild;
 use crate::models::BorsBuildStatus;
 use crate::models::BorsPullRequest;
+use crate::models::BorsRepository;
 use crate::models::BorsWorkflow;
 use crate::models::BorsWorkflowStatus;
 use crate::models::BorsWorkflowType;
@@ -70,6 +71,14 @@ pub trait DatabaseClient {
         commit_hash: String,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
+    /// Creates a bors repository.
+    ///
+    /// If the repository already exists, this function does nothing.
+    fn create_repository<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
     /// Creates a workflow.
     fn create_workflow<'a>(
         &'a self,
@@ -94,6 +103,10 @@ pub trait DatabaseClient {
         &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>>;
+
+    fn get_repositories(
+        &self,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
