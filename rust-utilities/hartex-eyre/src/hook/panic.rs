@@ -69,10 +69,14 @@ impl Display for PanicReport<'_> {
             f,
             "\x1B[0;91mPanic occurred in thread {:?}: {}",
             thread::current().name().unwrap_or("<unknown>"),
-            self.panic_info
-                .payload()
-                .downcast_ref::<&str>()
-                .unwrap_or(&"Box<dyn Any>")
+            self.panic_info.payload().downcast_ref::<&str>().unwrap_or(
+                &self
+                    .panic_info
+                    .payload()
+                    .downcast_ref::<String>()
+                    .unwrap_or(&String::from("Box<dyn Any>"))
+                    .as_str()
+            )
         )?;
 
         for frame in self.backtrace.frames() {

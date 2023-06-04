@@ -225,18 +225,18 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
     fn get_pull_requests_for_repository<'a>(
         &'a self,
-        name: &'a GithubRepositoryName
-    ) -> Pin<Box<dyn Future<Output=hartex_eyre::Result<Vec<BorsPullRequest>>> + '_>> {
+        name: &'a GithubRepositoryName,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + Send + '_>> {
         Box::pin(async move {
             let pull_requests = entity::pull_request::Entity::find()
                 .filter(entity::pull_request::Column::Repository.eq(format!("{name}")))
+                .find_also_related(entity::build::Entity)
                 .all(&self.connection)
                 .await?;
 
-            // todo: get builds associated as well
             Ok(pull_requests
                 .into_iter()
-                .map(|pull_request| pr_from_database(pull_request, None))
+                .map(|(pull_request, build)| pr_from_database(pull_request, build))
                 .collect())
         })
     }
