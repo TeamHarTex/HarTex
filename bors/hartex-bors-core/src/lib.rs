@@ -116,7 +116,7 @@ pub trait DatabaseClient {
     fn get_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + '_>>;
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + Send + '_>>;
 
     /// Gets the repositories bors is installed in.
     fn get_repositories(
