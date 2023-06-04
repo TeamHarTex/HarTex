@@ -70,6 +70,14 @@ pub trait DatabaseClient {
         commit_hash: String,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
+    /// Creates a bors repository.
+    ///
+    /// If the repository already exists, this function does nothing.
+    fn create_repository<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
     /// Creates a workflow.
     fn create_workflow<'a>(
         &'a self,

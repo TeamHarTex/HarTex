@@ -93,6 +93,27 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn create_repository<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let repo = entity::repository::ActiveModel {
+                repository: Set(format!("{name}")),
+                ..Default::default()
+            };
+
+            match entity::repository::Entity::insert(repo)
+                .on_conflict(OnConflict::new().do_nothing().to_owned())
+                .exec_without_returning(&self.connection)
+                .await
+            {
+                Ok(_) | Err(DbErr::RecordNotInserted) => Ok(()),
+                Err(error) => return Err(error.into()),
+            }
+        })
+    }
+
     fn create_workflow<'a>(
         &'a self,
         build: &'a BorsBuild,

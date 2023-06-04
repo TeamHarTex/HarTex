@@ -87,7 +87,7 @@ impl GithubBorsState {
         log::trace!("obtaining github application");
         let application = client.current().app().await?;
 
-        let repositories = repositories::load_repositories(&client).await?;
+        let repositories = repositories::load_repositories(&client, &database).await?;
         Ok(Self {
             application,
             client,
