@@ -104,10 +104,6 @@ pub trait DatabaseClient {
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>>;
 
-    fn get_repositories(
-        &self,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>>;
-
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
     fn get_or_create_pull_request<'a>(
@@ -115,6 +111,17 @@ pub trait DatabaseClient {
         name: &'a GithubRepositoryName,
         pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
+
+    /// Gets pull requests stored in the database in a repository.
+    fn get_pull_requests<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + '_>>;
+
+    /// Gets the repositories bors is installed in.
+    fn get_repositories(
+        &self,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>>;
 
     /// Gets the workflows for a certain build.
     fn get_workflows_for_build<'a>(
