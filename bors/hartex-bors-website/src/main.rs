@@ -33,6 +33,7 @@ use std::sync::LazyLock;
 
 use async_lock::OnceCell;
 use handlebars::Handlebars;
+use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_log::log;
 use rocket::config::Config;
 use rocket::routes;
@@ -40,7 +41,7 @@ use sea_orm::DatabaseConnection;
 
 mod index;
 
-pub(crate) static DATABASE: OnceCell<DatabaseConnection> = OnceCell::new();
+pub(crate) static DATABASE: OnceCell<SeaORMDatabaseClient> = OnceCell::new();
 
 pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
     let mut handlebars = Handlebars::new();
@@ -62,9 +63,15 @@ pub async fn main() -> hartex_eyre::Result<()> {
     LazyLock::force(&HANDLEBARS);
 
     log::trace!("initializing database");
-    DATABASE.get_or_init(|| async {
-        hartex_bors_database::initialize_database(false).await.unwrap()
-    }).await;
+    DATABASE
+        .get_or_init(|| async {
+            SeaORMDatabaseClient::new(
+                hartex_bors_database::initialize_database(false)
+                    .await
+                    .unwrap(),
+            )
+        })
+        .await;
 
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 9000)))

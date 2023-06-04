@@ -26,10 +26,14 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
+use hartex_bors_core::models::BorsBuild;
+use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsPullRequest;
+use hartex_bors_core::models::BorsRepository;
+use hartex_bors_core::models::BorsWorkflow;
+use hartex_bors_core::models::BorsWorkflowStatus;
+use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryName;
-use hartex_bors_core::models::{BorsBuild, BorsWorkflowStatus, BorsWorkflowType};
-use hartex_bors_core::models::{BorsBuildStatus, BorsWorkflow};
 use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
 use octocrab::models::RunId;
@@ -219,6 +223,21 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn get_repositories(
+        &self,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + '_>> {
+        Box::pin(async move {
+            let repositories = entity::repository::Entity::find()
+                .all(&self.connection)
+                .await?;
+
+            Ok(repositories
+                .into_iter()
+                .map(|repository| repository_from_database(repository))
+                .collect())
+        })
+    }
+
     fn get_workflows_for_build<'a>(
         &'a mut self,
         build: &'a BorsBuild,
@@ -321,6 +340,12 @@ fn pr_from_database(
         number: pr.number as u64,
         try_build: build.map(build_from_database),
         created_at: datetime_from_database(pr.created_at),
+    }
+}
+
+fn repository_from_database(repository: entity::repository::Model) -> BorsRepository {
+    BorsRepository {
+        name: repository.repository,
     }
 }
 
