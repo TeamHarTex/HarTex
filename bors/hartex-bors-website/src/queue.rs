@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Bors Website - Queue Page
+
 use std::path::PathBuf;
 
 use hartex_bors_core::models::GithubRepositoryName;
