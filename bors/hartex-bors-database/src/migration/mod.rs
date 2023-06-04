@@ -27,6 +27,7 @@ use sea_orm_migration::MigratorTrait;
 mod m_20230527_2254_create_build;
 mod m_20230527_2258_create_pr;
 mod m_20230529_2203_create_workflow;
+mod m_20230604_1237_create_repository;
 
 pub struct Migrator;
 
@@ -37,6 +38,7 @@ impl MigratorTrait for Migrator {
             Box::new(m_20230527_2254_create_build::Migration),
             Box::new(m_20230527_2258_create_pr::Migration),
             Box::new(m_20230529_2203_create_workflow::Migration),
+            Box::new(m_20230604_1237_create_repository::Migration),
         ]
     }
 }
