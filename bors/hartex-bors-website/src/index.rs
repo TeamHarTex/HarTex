@@ -26,6 +26,8 @@ use rocket::get;
 use rocket::response::content::RawHtml;
 use serde::Serialize;
 
+use crate::DATABASE;
+
 #[derive(Serialize)]
 struct IndexData {
     repositories: Vec<Repository>,
@@ -38,6 +40,8 @@ struct Repository {
 
 #[get("/")]
 pub async fn index() -> RawHtml<String> {
+    let _ = DATABASE.get().unwrap();
+
     RawHtml(
         crate::HANDLEBARS
             .render(

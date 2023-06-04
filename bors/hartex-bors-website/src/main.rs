@@ -24,16 +24,23 @@
 //!
 //! The website is home to the "bors cheatsheet" as well as the queues for certain repositories.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(lazy_cell)]
 
 use std::sync::LazyLock;
 
+use async_lock::OnceCell;
 use handlebars::Handlebars;
 use hartex_log::log;
 use rocket::config::Config;
 use rocket::routes;
+use sea_orm::DatabaseConnection;
 
 mod index;
+
+pub(crate) static DATABASE: OnceCell<DatabaseConnection> = OnceCell::new();
 
 pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
     let mut handlebars = Handlebars::new();
@@ -55,7 +62,9 @@ pub async fn main() -> hartex_eyre::Result<()> {
     LazyLock::force(&HANDLEBARS);
 
     log::trace!("initializing database");
-    let _ = hartex_bors_database::initialize_database(false).await?;
+    DATABASE.get_or_init(|| async {
+        hartex_bors_database::initialize_database(false).await.unwrap()
+    }).await;
 
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 9000)))
