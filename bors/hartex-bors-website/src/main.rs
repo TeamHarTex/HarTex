@@ -75,7 +75,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
 
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 9000)))
-        .mount("/", routes![index::index])
+        .mount("/", routes![index::index, queue::queue])
         .ignite()
         .await?;
 
