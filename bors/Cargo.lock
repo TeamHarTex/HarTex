@@ -969,6 +969,7 @@ version = "0.1.0"
 dependencies = [
  "async-lock",
  "handlebars",
+ "hartex_bors_core",
  "hartex_bors_database",
  "hartex_eyre",
  "hartex_log",

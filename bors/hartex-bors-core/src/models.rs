@@ -79,6 +79,11 @@ pub struct BorsPullRequest {
     pub created_at: DateTimeUtc,
 }
 
+/// A repository.
+pub struct BorsRepository {
+    pub name: String,
+}
+
 /// A bors workflow.
 pub struct BorsWorkflow {
     /// The identifier for this workflow.

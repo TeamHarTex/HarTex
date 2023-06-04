@@ -38,6 +38,7 @@ use octocrab::models::RunId;
 use crate::models::BorsBuild;
 use crate::models::BorsBuildStatus;
 use crate::models::BorsPullRequest;
+use crate::models::BorsRepository;
 use crate::models::BorsWorkflow;
 use crate::models::BorsWorkflowStatus;
 use crate::models::BorsWorkflowType;
@@ -102,6 +103,10 @@ pub trait DatabaseClient {
         &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>>;
+
+    fn get_repositories(
+        &self,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.

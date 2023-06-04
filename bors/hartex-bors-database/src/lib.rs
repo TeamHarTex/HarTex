@@ -43,7 +43,7 @@ pub async fn initialize_database(migrate: bool) -> hartex_eyre::Result<DatabaseC
         SqlitePool::connect_with(
             SqliteConnectOptions::from_str("sqlite:bors-data/data.db")?.create_if_missing(true),
         )
-            .await?,
+        .await?,
     );
 
     if migrate {
