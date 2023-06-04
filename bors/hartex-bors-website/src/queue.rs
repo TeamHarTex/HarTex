@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::path::PathBuf;
+
 use rocket::get;
 use rocket::response::content::RawHtml;
 use serde::Serialize;
@@ -31,13 +33,13 @@ struct QueueData {
 
 /// The endpoint returning the queue page.
 #[get("/queue/<repository..>")]
-pub async fn queue(repository: String) -> RawHtml<String> {
+pub async fn queue(repository: PathBuf) -> RawHtml<String> {
     RawHtml(
         crate::HANDLEBARS
             .render(
                 "queue",
                 &QueueData {
-                    repository,
+                    repository: repository.to_string_lossy().to_string(),
                 },
             )
             .unwrap(),
