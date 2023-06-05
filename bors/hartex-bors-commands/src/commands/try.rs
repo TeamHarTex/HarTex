@@ -96,14 +96,6 @@ pub async fn try_command<C: RepositoryClient>(
         .set_branch_to_revision(TRY_BRANCH_NAME, &merge_hash)
         .await?;
 
-    // avoid spamming the endpoint...?
-    time::sleep(Duration::from_secs(60)).await;
-
-    repository
-        .client
-        .delete_branch(TRY_MERGE_BRANCH_NAME)
-        .await?;
-
     repository
         .client
         .post_comment(
@@ -113,6 +105,14 @@ pub async fn try_command<C: RepositoryClient>(
                 github_pr.head.sha
             ),
         )
+        .await?;
+
+    // avoid spamming the endpoint...?
+    time::sleep(Duration::from_secs(60)).await;
+
+    repository
+        .client
+        .delete_branch(TRY_MERGE_BRANCH_NAME)
         .await?;
 
     Ok(())
