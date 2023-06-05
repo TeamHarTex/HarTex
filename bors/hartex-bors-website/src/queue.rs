@@ -36,8 +36,14 @@ use crate::HANDLEBARS;
 
 #[derive(Serialize)]
 struct QueueData {
+    pull_requests: Vec<PullRequest>,
     repository: String,
     total: usize,
+}
+
+#[derive(Serialize)]
+struct PullRequest {
+    number: u64,
 }
 
 /// The endpoint returning the queue page.
@@ -58,6 +64,10 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
             .render(
                 "queue",
                 &QueueData {
+                    pull_requests: pull_requests
+                        .iter()
+                        .map(|pr| PullRequest { number: pr.number })
+                        .collect(),
                     repository: repository_string.replace("\\", "/"),
                     total: pull_requests.len(),
                 },
