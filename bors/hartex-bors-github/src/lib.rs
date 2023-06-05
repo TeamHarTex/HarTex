@@ -159,6 +159,22 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(())
     }
 
+    async fn delete_branch(&mut self, branch: &str) -> hartex_eyre::Result<()> {
+        self.client
+            ._delete::<String>(
+                format!(
+                    "https://api.github.com/repos/{}/{}/git/refs/{}",
+                    self.repository_name.owner(),
+                    self.repository_name.repository(),
+                    branch
+                ),
+                None,
+            )
+            .await?;
+
+        Ok(())
+    }
+
     async fn edit_comment(
         &mut self,
         comment_id: CommentId,

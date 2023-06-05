@@ -203,8 +203,13 @@ pub struct GithubRepositoryState<C: RepositoryClient> {
 }
 
 /// The type of permission.
+#[derive(Clone, Copy)]
 #[non_exhaustive]
 pub enum Permission {
+    /// Permission to approve builds.
+    ///
+    /// bors r+
+    Approve,
     /// Permission to try builds.
     ///
     /// bors try
@@ -214,6 +219,7 @@ pub enum Permission {
 impl Display for Permission {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         match self {
+            Self::Approve => write!(f, "approve"),
             Self::TryBuild => write!(f, "trybuild"),
         }
     }

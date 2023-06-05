@@ -29,11 +29,12 @@ use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_log::log;
 
-use crate::commands::r#try::check_try_permissions;
+use crate::permissions::check_permissions;
 
 /// Executes the try cancel command.
 pub async fn try_cancel_command<C: RepositoryClient>(
@@ -42,7 +43,7 @@ pub async fn try_cancel_command<C: RepositoryClient>(
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
-    if !check_try_permissions(repository, pr, author).await? {
+    if !check_permissions(repository, pr, author, Permission::TryBuild).await? {
         return Ok(());
     }
 
