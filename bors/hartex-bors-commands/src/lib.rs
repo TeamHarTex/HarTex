@@ -33,6 +33,10 @@ pub mod parser;
 /// Represents a command.
 #[derive(Debug)]
 pub enum BorsCommand {
+    /// Approve command.
+    ///
+    /// `bors r+`
+    Approve,
     /// Ping command.
     ///
     /// `bors ping`
@@ -50,6 +54,7 @@ pub enum BorsCommand {
 /// Parses bors commands from an input string.
 pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
     let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![
+        parser::parse_approve,
         parser::parse_ping,
         parser::parse_try,
         parser::parse_try_cancel,
