@@ -53,6 +53,7 @@ use octocrab::models::AppId;
 use octocrab::models::CommentId;
 use octocrab::models::Repository;
 use octocrab::models::RunId;
+use octocrab::params::repos::Reference;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
@@ -167,7 +168,7 @@ impl RepositoryClient for GithubRepositoryClient {
                     "https://api.github.com/repos/{}/{}/git/refs/{}",
                     self.repository_name.owner(),
                     self.repository_name.repository(),
-                    branch
+                    Reference::Branch(branch.to_string()).ref_url()
                 ),
                 None,
             )
