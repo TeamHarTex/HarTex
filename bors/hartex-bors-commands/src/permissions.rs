@@ -20,30 +20,39 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Approve command
-//!
-//! bors r+
+//! Checking Bors Permissions
 
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
-use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use hartex_log::log;
 
-use crate::permissions::check_permissions;
-
-pub const APPROVE_BRANCH_NAME: &str = "automation/bors/approve";
-const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
-
-/// Executes the approve command.
-pub async fn approve_command<C: RepositoryClient>(
+pub async fn check_permissions<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
-    _: &mut dyn DatabaseClient,
     pr: u64,
     author: &str,
-) -> hartex_eyre::Result<()> {
-    if !check_permissions(repository, pr, author, Permission::Approve).await? {
-        return Ok(());
-    }
+    permission: Permission,
+) -> hartex_eyre::Result<bool> {
+    log::trace!("checking {permission} permissions");
 
-    todo!()
+    let result = if !repository
+        .permission_resolver
+        .resolve_user(author, permission)
+        .await
+    {
+        log::warn!("user does not have {permission} permisisons");
+
+        repository
+            .client
+            .post_comment(
+                pr,
+                &format!(":lock: @{author}, you do not have the necessary privileges to run this command.")
+            ).await?;
+
+        false
+    } else {
+        true
+    };
+
+    Ok(result)
 }
