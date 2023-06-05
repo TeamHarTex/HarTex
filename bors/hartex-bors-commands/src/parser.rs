@@ -56,6 +56,10 @@ impl<'a> Parser<'a> {
 
 pub(crate) type ParserResult<'a> = Option<Result<BorsCommand, ParserError<'a>>>;
 
+pub(crate) fn parse_approve(parser: Parser) -> ParserResult {
+    parse_exact("r+", BorsCommand::Approve, parser)
+}
+
 pub(crate) fn parse_ping(parser: Parser) -> ParserResult {
     parse_exact("ping", BorsCommand::Ping, parser)
 }
