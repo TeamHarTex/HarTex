@@ -24,17 +24,19 @@
 //!
 //! bors try
 
+use std::time::Duration;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::messages::auto_merge_commit_message;
+use tokio::time;
 
 use crate::permissions::check_permissions;
 
-pub const TRY_BRANCH_NAME: &str = "automation-bors-try";
-const TRY_MERGE_BRANCH_NAME: &str = "automation-bors-try-merge";
+pub const TRY_BRANCH_NAME: &str = "automation/bors/try";
+const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
 
 /// Executes the try command.
 pub async fn try_command<C: RepositoryClient>(
@@ -93,6 +95,9 @@ pub async fn try_command<C: RepositoryClient>(
         .client
         .set_branch_to_revision(TRY_BRANCH_NAME, &merge_hash)
         .await?;
+
+    // avoid spamming the endpoint...?
+    time::sleep(Duration::from_secs(60)).await;
 
     repository
         .client
