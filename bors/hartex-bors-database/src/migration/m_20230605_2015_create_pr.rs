@@ -45,6 +45,8 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(PullRequest::Repository).string().not_null())
                     .col(ColumnDef::new(PullRequest::Number).integer().not_null())
+                    .col(ColumnDef::new(PullRequest::Title).string().not_null())
+                    .col(ColumnDef::new(PullRequest::HeadRef).string().not_null())
                     .col(ColumnDef::new(PullRequest::TryBuild).integer().null())
                     .col(ColumnDef::new(PullRequest::Url).string().not_null())
                     .foreign_key(
@@ -84,6 +86,8 @@ enum PullRequest {
     Id,
     Repository,
     Number,
+    Title,
+    HeadRef,
     TryBuild,
     Url,
     CreatedAt,

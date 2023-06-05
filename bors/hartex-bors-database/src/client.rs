@@ -187,12 +187,16 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
+        title: &'a str,
+        head_ref: &'a str,
         pr_number: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>> {
         Box::pin(async move {
             let pr = entity::pull_request::ActiveModel {
                 repository: Set(format!("{name}")),
                 number: Set(pr_number as i32),
+                title: Set(String::from(title)),
+                head_ref: Set(String::from(head_ref)),
                 url: Set(format!("https://github.com/{name}/pull/{pr_number}")),
                 ..Default::default()
             };
@@ -357,6 +361,8 @@ fn pr_from_database(
         id: pr.id,
         repository: pr.repository,
         number: pr.number as u64,
+        title: pr.title,
+        head_ref: pr.head_ref,
         try_build: build.map(build_from_database),
         url: pr.url,
         created_at: datetime_from_database(pr.created_at),
