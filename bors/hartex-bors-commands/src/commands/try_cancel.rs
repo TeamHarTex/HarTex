@@ -45,14 +45,16 @@ pub async fn try_cancel_command<C: RepositoryClient>(
     if !check_try_permissions(repository, pr, author).await? {
         return Ok(());
     }
-    
+
     let github_pr = repository.client.get_pull_request(pr).await?;
 
     let pull_request = database
-        .get_or_create_pull_request(repository.client.repository_name(),
-        &github_pr.title.unwrap(),
-        &github_pr.head.sha,
-        pr,)
+        .get_or_create_pull_request(
+            repository.client.repository_name(),
+            &github_pr.title.unwrap(),
+            &github_pr.head.sha,
+            pr,
+        )
         .await?;
     let Some(build) = pull_request
         .try_build
