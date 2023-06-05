@@ -24,5 +24,16 @@
 //!
 //! bors r+
 
+use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::DatabaseClient;
+use hartex_bors_core::RepositoryClient;
+
 /// Executes the approve command.
-pub async fn approve_command() {}
+pub async fn approve_command<C: RepositoryClient>(
+    _: &mut GithubRepositoryState<C>,
+    _: &mut dyn DatabaseClient,
+    _: u64,
+    _: &str,
+) -> hartex_eyre::Result<()> {
+    todo!()
+}
