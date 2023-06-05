@@ -44,6 +44,7 @@ struct QueueData {
 #[derive(Serialize)]
 struct PullRequest {
     number: u64,
+    url: String,
 }
 
 /// The endpoint returning the queue page.
@@ -66,7 +67,10 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                 &QueueData {
                     pull_requests: pull_requests
                         .iter()
-                        .map(|pr| PullRequest { number: pr.number })
+                        .map(|pr| PullRequest {
+                            number: pr.number,
+                            url: pr.url.clone(),
+                        })
                         .collect(),
                     repository: repository_string.replace("\\", "/"),
                     total: pull_requests.len(),
