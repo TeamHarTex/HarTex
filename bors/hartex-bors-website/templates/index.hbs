@@ -22,6 +22,7 @@
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Bors V2</title>
@@ -68,49 +69,51 @@
         }
     </style>
 </head>
+
 <body>
-<div class="wrapper">
-    <h1>Bors V2</h1>
+    <div class="wrapper">
+        <h1>Bors V2</h1>
 
-    <h2>Repositories</h2>
+        <h2>Repositories</h2>
 
-    <ul class="repositories">
-        {{#each repositories}}
+        <ul class="repositories">
+            {{#each repositories}}
             <li>
                 <a href="queue/{{this.label}}">{{this.label}}</a>
             </li>
-        {{/each}}
-    </ul>
+            {{/each}}
+        </ul>
 
-    <hr>
+        <hr>
 
-    <h2>Bors V2 User Manual</h2>
+        <h2>Bors V2 User Manual</h2>
 
-    <h3>Command List</h3>
+        <h3>Command List</h3>
 
-    <p>
-        Below is a list of commands Bors V2 accepts. Bors V2 commands must be in the
-        form of a comment on a pull request. Bors V2 will only answer to persons who
-        have certain permissions configured in the permissions database.
-        <strong>Note that Bors V2 only recognizes comments in OPEN pull requests.</strong>
-    </p>
+        <p>
+            Below is a list of commands Bors V2 accepts. Bors V2 commands must be in the
+            form of a comment on a pull request. Bors V2 will only answer to persons who
+            have certain permissions configured in the permissions database.
+            <strong>Note that Bors V2 only recognizes comments in OPEN pull requests.</strong>
+        </p>
 
-    <ul>
-        <li>
-            <code>try</code>: request a test of this pull request without explicitly approving it.
-        </li>
-        <li>
-            <code>try-</code>: cancel a requested test started using the <code>try</code> command.
-        </li>
-    </ul>
+        <ul>
+            <li>
+                <code>try</code>: request a test of this pull request without explicitly approving it.
+            </li>
+            <li>
+                <code>try-</code>: cancel a requested test started using the <code>try</code> command.
+            </li>
+        </ul>
 
-    <h3>Example Usage</h3>
+        <h3>Example Usage</h3>
 
-    <ul>
-        <li>
-            <code>bors try</code>
-        </li>
-    </ul>
-</div>
+        <ul>
+            <li>
+                <code>bors try</code>
+            </li>
+        </ul>
+    </div>
 </body>
+
 </html>
