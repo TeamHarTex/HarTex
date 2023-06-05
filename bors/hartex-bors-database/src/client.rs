@@ -357,6 +357,7 @@ fn pr_from_database(
         repository: pr.repository,
         number: pr.number as u64,
         try_build: build.map(build_from_database),
+        url: pr.url,
         created_at: datetime_from_database(pr.created_at),
     }
 }
