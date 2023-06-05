@@ -33,6 +33,7 @@ use std::collections::HashMap;
 use std::str;
 
 use futures::future;
+use http::StatusCode;
 use hartex_bors_core::models::Check;
 use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
@@ -160,7 +161,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn delete_branch(&mut self, branch: &str) -> hartex_eyre::Result<()> {
-        self.client
+        let mut response = self.client
             ._delete::<()>(
                 format!(
                     "https://api.github.com/repos/{}/{}/git/refs/{}",
@@ -171,6 +172,15 @@ impl RepositoryClient for GithubRepositoryClient {
                 None,
             )
             .await?;
+
+        if response.status() != StatusCode::NO_CONTENT {
+            let mut full = String::new();
+            while let Some(result) = response.body_mut().data().await {
+                full.push_str(str::from_utf8(&result?)?);
+            }
+
+            return Err(Report::msg(format!("failed to delete branch: {full}")));
+        }
 
         Ok(())
     }
