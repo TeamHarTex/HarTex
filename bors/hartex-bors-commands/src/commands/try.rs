@@ -33,8 +33,8 @@ use hartex_bors_github::messages::auto_merge_commit_message;
 
 use crate::permissions::check_permissions;
 
-pub const TRY_BRANCH_NAME: &str = "automation/bors/try";
-const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
+pub const TRY_BRANCH_NAME: &str = "automation-bors-try";
+const TRY_MERGE_BRANCH_NAME: &str = "automation-bors-try-merge";
 
 /// Executes the try command.
 pub async fn try_command<C: RepositoryClient>(
