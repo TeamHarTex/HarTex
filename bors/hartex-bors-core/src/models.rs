@@ -75,6 +75,8 @@ pub struct BorsPullRequest {
     pub number: u64,
     /// The try build of this pull request, if any.
     pub try_build: Option<BorsBuild>,
+    /// The URL of the pull request.
+    pub url: String,
     /// The time when this pull request was created.
     pub created_at: DateTimeUtc,
 }

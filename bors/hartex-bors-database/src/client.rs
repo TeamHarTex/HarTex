@@ -193,6 +193,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
             let pr = entity::pull_request::ActiveModel {
                 repository: Set(format!("{name}")),
                 number: Set(pr_number as i32),
+                url: Set(format!("https://github.com/{name}/pull/{pr_number}")),
                 ..Default::default()
             };
 
@@ -357,6 +358,7 @@ fn pr_from_database(
         repository: pr.repository,
         number: pr.number as u64,
         try_build: build.map(build_from_database),
+        url: pr.url,
         created_at: datetime_from_database(pr.created_at),
     }
 }
