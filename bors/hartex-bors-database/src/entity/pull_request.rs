@@ -30,6 +30,7 @@ pub struct Model {
     pub repository: String,
     pub number: i32,
     pub try_build: Option<i32>,
+    pub url: String,
     pub created_at: DateTime,
 }
 
