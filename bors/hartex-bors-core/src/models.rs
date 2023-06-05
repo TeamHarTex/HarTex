@@ -203,6 +203,7 @@ pub struct GithubRepositoryState<C: RepositoryClient> {
 }
 
 /// The type of permission.
+#[derive(Copy)]
 #[non_exhaustive]
 pub enum Permission {
     /// Permission to approve builds.

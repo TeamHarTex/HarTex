@@ -29,6 +29,7 @@
 
 pub mod commands;
 pub mod parser;
+mod permissions;
 
 /// Represents a command.
 #[derive(Debug)]
