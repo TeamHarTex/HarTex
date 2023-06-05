@@ -28,7 +28,8 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
-use hartex_log::log;
+
+use crate::permissions::check_permissions;
 
 /// Executes the approve command.
 pub async fn approve_command<C: RepositoryClient>(
@@ -37,39 +38,9 @@ pub async fn approve_command<C: RepositoryClient>(
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
-    if !check_approve_permissions(repository, pr, author).await? {
+    if !check_permissions(repository, pr, author, Permission::Approve).await? {
         return Ok(());
     }
 
     todo!()
 }
-
-async fn check_approve_permissions<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    pr: u64,
-    author: &str,
-) -> hartex_eyre::Result<bool> {
-    log::trace!("checking r+ permissions");
-
-    let result = if !repository
-        .permission_resolver
-        .resolve_user(author, Permission::Approve)
-        .await
-    {
-        log::warn!("user does not have try permisisons");
-
-        repository
-            .client
-            .post_comment(
-                pr,
-                &format!(":lock: @{author}, you do not have the necessary privileges to run this command.")
-            ).await?;
-
-        false
-    } else {
-        true
-    };
-
-    Ok(result)
-}
-

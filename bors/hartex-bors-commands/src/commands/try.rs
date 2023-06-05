@@ -30,7 +30,8 @@ use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::messages::auto_merge_commit_message;
-use hartex_log::log;
+
+use crate::permissions::check_permissions;
 
 pub const TRY_BRANCH_NAME: &str = "automation/bors/try";
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
@@ -42,7 +43,7 @@ pub async fn try_command<C: RepositoryClient>(
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
-    if !check_try_permissions(repository, pr, author).await? {
+    if !check_permissions(repository, pr, author, Permission::TryBuild).await? {
         return Ok(());
     }
 
@@ -105,33 +106,4 @@ pub async fn try_command<C: RepositoryClient>(
         .await?;
 
     Ok(())
-}
-
-pub(crate) async fn check_try_permissions<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    pr: u64,
-    author: &str,
-) -> hartex_eyre::Result<bool> {
-    log::trace!("checking try permissions");
-
-    let result = if !repository
-        .permission_resolver
-        .resolve_user(author, Permission::TryBuild)
-        .await
-    {
-        log::warn!("user does not have try permisisons");
-
-        repository
-            .client
-            .post_comment(
-                pr,
-                &format!(":lock: @{author}, you do not have the necessary privileges to run this command.")
-            ).await?;
-
-        false
-    } else {
-        true
-    };
-
-    Ok(result)
 }
