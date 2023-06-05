@@ -361,6 +361,8 @@ fn pr_from_database(
         id: pr.id,
         repository: pr.repository,
         number: pr.number as u64,
+        title: pr.title,
+        head_ref: pr.head_ref,
         try_build: build.map(build_from_database),
         url: pr.url,
         created_at: datetime_from_database(pr.created_at),

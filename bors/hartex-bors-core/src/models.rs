@@ -73,6 +73,10 @@ pub struct BorsPullRequest {
     pub repository: String,
     /// The PR number.
     pub number: u64,
+    /// The title of the PR.
+    pub title: String,
+    /// The head ref of this PR.
+    pub head_ref: String,
     /// The try build of this pull request, if any.
     pub try_build: Option<BorsBuild>,
     /// The URL of the pull request.
