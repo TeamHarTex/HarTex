@@ -173,7 +173,7 @@ impl RepositoryClient for GithubRepositoryClient {
             )
             .await?;
 
-        if response.status() != StatusCode::OK {
+        if response.status() != StatusCode::NO_CONTENT {
             let mut full = String::new();
             while let Some(result) = response.body_mut().data().await {
                 full.push_str(str::from_utf8(&result?)?);
