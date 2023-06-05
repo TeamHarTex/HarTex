@@ -31,6 +31,9 @@ use hartex_bors_core::RepositoryClient;
 
 use crate::permissions::check_permissions;
 
+pub const APPROVE_BRANCH_NAME: &str = "automation/bors/approve";
+const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
+
 /// Executes the approve command.
 pub async fn approve_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
