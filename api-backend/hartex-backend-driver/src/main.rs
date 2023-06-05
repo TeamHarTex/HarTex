@@ -53,7 +53,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
     dotenvy::dotenv()?;
 
     log::debug!("igniting rocket");
-    let rocket = rocket::custom(Config::figment().merge(("port", 9000)))
+    let rocket = rocket::custom(Config::figment().merge(("port", 8000)))
         .mount(
             "/api/v1",
             routes![
