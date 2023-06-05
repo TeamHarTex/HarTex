@@ -164,6 +164,9 @@ pub trait RepositoryClient {
     /// Cancel workflows.
     async fn cancel_workflows(&mut self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()>;
 
+    /// Deletes a branch.
+    async fn delete_branch(&mut self, branch: &str) -> hartex_eyre::Result<()>;
+
     /// Edit a speific comment.
     async fn edit_comment(
         &mut self,

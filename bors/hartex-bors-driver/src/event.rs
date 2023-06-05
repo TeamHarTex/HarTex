@@ -175,7 +175,8 @@ async fn handle_comment<C: RepositoryClient>(
                         database,
                         pr,
                         &comment.user.login,
-                    ).await?
+                    )
+                    .await?
                 }
                 BorsCommand::Ping => {
                     hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
