@@ -96,6 +96,11 @@ pub async fn try_command<C: RepositoryClient>(
 
     repository
         .client
+        .delete_branch(TRY_BRANCH_NAME)
+        .await?;
+
+    repository
+        .client
         .post_comment(
             pr,
             &format!(
