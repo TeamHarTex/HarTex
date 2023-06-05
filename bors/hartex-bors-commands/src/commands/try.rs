@@ -52,7 +52,11 @@ pub async fn try_command<C: RepositoryClient>(
         .get_or_create_pull_request(
             repository.client.repository_name(),
             &github_pr.title.clone().unwrap(),
-            &github_pr.head.sha,
+            &github_pr
+                .head
+                .label
+                .clone()
+                .unwrap_or("<unknown>".to_string()),
             pr,
         )
         .await?;
