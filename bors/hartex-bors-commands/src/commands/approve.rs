@@ -23,3 +23,6 @@
 //! # Approve command
 //!
 //! bors r+
+
+/// Executes the approve command.
+pub fn approve_command() {}
