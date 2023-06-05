@@ -22,6 +22,7 @@
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Bors V2 Queue - {{repository}}</title>
@@ -42,7 +43,8 @@
             border-collapse: collapse;
         }
 
-        td, th {
+        td,
+        th {
             border-bottom: 1px solid #DDD;
             padding: 5px 6px;
             font-size: 15px;
@@ -67,48 +69,66 @@
         }
     </style>
 </head>
+
 <body>
-<h1>Bors V2 Queue - {{repository}}</h1>
-<p>
-    <button type="button" id="expand-rollup">Create a Rollup</button>
-</p>
-
-<div id="rollup-popup" class="hide">
-    <p>This will create a new pull request consisting of (a number here) existing pull requests.</p>
-    <p>A rollup is especally useful for shortening the queue.</p>
+    <h1>Bors V2 Queue - {{repository}}</h1>
     <p>
-        <button type="button" id="confirm-rollup">Rollup</button>
-        —
-        <button type="button" id="cancel-rollup">Cancel</button>
+        <button type="button" id="expand-rollup">Create a Rollup</button>
     </p>
-</div>
 
-<p>
-    Total Pull Requests: {{ total }}
-</p>
+    <div id="rollup-popup" class="hide">
+        <p>This will create a new pull request consisting of (a number here) existing pull requests.</p>
+        <p>A rollup is especally useful for shortening the queue.</p>
+        <p>
+            <button type="button" id="confirm-rollup">Rollup</button>
+            —
+            <button type="button" id="cancel-rollup">Cancel</button>
+        </p>
+    </div>
 
-<table id="queue">
-    <thead>
-        <th><input type="checkbox"></th>
-        <th>#</th>
-        <th>Status</th>
-        <th>Status (Try)</th>
-        <th>Title</th>
-        <th>Head ref</th>
-        <th>Assignee</th>
-        <th>Approved by</th>
-        <th>Rollup</th>
-    </thead>
-</table>
+    <p>
+        Total Pull Requests: {{total}}
+    </p>
 
-<script>
-    document.getElementById('expand-rollup').onclick = function() {
-        document.getElementById('rollup-popup').className = '';
-    }
+    <table id="queue">
+        <thead>
+            <th><input type="checkbox"></th>
+            <th>#</th>
+            <th>Status</th>
+            <th>Status (Try)</th>
+            <th>Title</th>
+            <th>Head ref</th>
+            <th>Assignee</th>
+            <th>Approved by</th>
+            <th>Rollup</th>
+        </thead>
 
-    document.getElementById('cancel-rollup').onclick = function() {
-        document.getElementById('rollup-popup').className = 'hide';
-    }
-</script>
+        <tbody>
+            {{#each pull_requests}}
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>{{this.number}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('expand-rollup').onclick = function () {
+            document.getElementById('rollup-popup').className = '';
+        }
+
+        document.getElementById('cancel-rollup').onclick = function () {
+            document.getElementById('rollup-popup').className = 'hide';
+        }
+    </script>
 </body>
+
 </html>
