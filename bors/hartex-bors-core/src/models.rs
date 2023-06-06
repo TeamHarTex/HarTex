@@ -53,10 +53,10 @@ impl BorsBuildStatus {
     /// Converts the enum to a displayable string.
     pub fn as_str(&self) -> &str {
         match self {
-            Self::Pending => "Pending",
-            Self::Success => "Success",
-            Self::Failure => "Failure",
-            Self::Cancelled => "Cancelled",
+            Self::Pending => "pending",
+            Self::Success => "success",
+            Self::Failure => "failure",
+            Self::Cancelled => "cancelled",
         }
     }
 }

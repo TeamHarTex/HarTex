@@ -47,7 +47,7 @@ struct PullRequest {
     title: String,
     head_ref: String,
     url: String,
-    status: String,
+    try_status: String,
 }
 
 /// The endpoint returning the queue page.
@@ -71,7 +71,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                     pull_requests: pull_requests
                         .iter()
                         .map(|pr| {
-                            let status = if let Some(try_build) = pr.try_build {
+                            let try_status = if let Some(try_build) = &pr.try_build {
                                 try_build.status.as_str().to_string()
                             } else {
                                 String::new()
@@ -82,7 +82,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                                 title: pr.title.clone(),
                                 head_ref: pr.head_ref.clone(),
                                 url: pr.url.clone(),
-                                status,
+                                try_status,
                             };
 
                             pull_request
