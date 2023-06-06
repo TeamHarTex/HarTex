@@ -24,14 +24,12 @@
 //!
 //! bors try
 
-use std::time::Duration;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::messages::auto_merge_commit_message;
-use tokio::time;
 
 use crate::permissions::check_permissions;
 
@@ -106,9 +104,6 @@ pub async fn try_command<C: RepositoryClient>(
             ),
         )
         .await?;
-
-    // avoid spamming the endpoint...?
-    time::sleep(Duration::from_secs(60)).await;
 
     repository
         .client

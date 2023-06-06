@@ -60,6 +60,14 @@
             display: none;
         }
 
+        .cancelled {
+            background-color: #B3B3B3;
+        }
+
+        .pending {
+            background-color: #FFCC66;
+        }
+
         #rollup-popup {
             background: #C7E2FF;
             border: #00ACF7 3px double;
@@ -109,7 +117,7 @@
                 <td><input type="checkbox"></td>
                 <td><a href="{{this.url}}">{{this.number}}</a></td>
                 <td></td>
-                <td></td>
+                <td class="{{this.try_status}}">{{this.try_status}}</td>
                 <td>{{this.title}}</td>
                 <td>{{this.head_ref}}</td>
                 <td></td>
