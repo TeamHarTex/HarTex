@@ -49,6 +49,18 @@ pub enum BorsBuildStatus {
     Cancelled,
 }
 
+impl BorsBuildStatus {
+    /// Converts the enum to a displayable string.
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Pending => "pending",
+            Self::Success => "success",
+            Self::Failure => "failure",
+            Self::Cancelled => "cancelled",
+        }
+    }
+}
+
 /// A bors build.
 pub struct BorsBuild {
     /// The identifier for this build.
