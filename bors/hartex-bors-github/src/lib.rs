@@ -33,7 +33,6 @@ use std::collections::HashMap;
 use std::str;
 
 use futures::future;
-use http::StatusCode;
 use hartex_bors_core::models::Check;
 use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
@@ -44,6 +43,7 @@ use hartex_bors_core::RepositoryClient;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use http::StatusCode;
 use http_body::Body;
 use jsonwebtoken::EncodingKey;
 use octocrab::models::issues::Comment;
@@ -162,7 +162,8 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn delete_branch(&mut self, branch: &str) -> hartex_eyre::Result<()> {
-        let mut response = self.client
+        let mut response = self
+            .client
             ._delete::<()>(
                 format!(
                     "https://api.github.com/repos/{}/{}/git/refs/{}",
