@@ -87,6 +87,8 @@ pub struct BorsPullRequest {
     pub number: u64,
     /// The assignee of the PR.
     pub assignee: String,
+    /// The person that approved the PR.
+    pub approved_by: Option<String>,
     /// The title of the PR.
     pub title: String,
     /// The head ref of this PR.
