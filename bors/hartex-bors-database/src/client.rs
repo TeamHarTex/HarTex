@@ -37,6 +37,7 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
 use hartex_eyre::eyre::Report;
 use octocrab::models::RunId;
+use octocrab::models::pulls::PullRequest;
 use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
@@ -187,16 +188,22 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-        title: &'a str,
-        head_ref: &'a str,
+        github_pr: &'a PullRequest,
         pr_number: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>> {
         Box::pin(async move {
+            //&github_pr.title.clone().unwrap(),
+            //&github_pr
+            //.head
+            //.label
+            //.clone()
+            //.unwrap_or("<unknown>".to_string()),
+
             let pr = entity::pull_request::ActiveModel {
                 repository: Set(format!("{name}")),
                 number: Set(pr_number as i32),
-                title: Set(String::from(title)),
-                head_ref: Set(String::from(head_ref)),
+                title: Set(github_pr.title.clone().unwrap()),
+                head_ref: Set(github_pr.head.label.clone().unwrap_or(String::from("<unknown>"))),
                 url: Set(format!("https://github.com/{name}/pull/{pr_number}")),
                 ..Default::default()
             };
