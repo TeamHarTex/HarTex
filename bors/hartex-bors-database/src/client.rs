@@ -201,7 +201,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     .as_ref()
                     .and_then(|authors| authors.first())
                     .and_then(|author| Some(author.login.clone()))
-                    .unwrap_or(String::new())),
+                    .unwrap_or_default()),
                 approved_by: Set(approved_by),
                 title: Set(github_pr.title.clone().unwrap()),
                 head_ref: Set(github_pr
