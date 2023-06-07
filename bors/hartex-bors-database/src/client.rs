@@ -361,6 +361,7 @@ fn pr_from_database(
         id: pr.id,
         repository: pr.repository,
         number: pr.number as u64,
+        assignee: pr.assignee,
         title: pr.title,
         head_ref: pr.head_ref,
         try_build: build.map(build_from_database),
