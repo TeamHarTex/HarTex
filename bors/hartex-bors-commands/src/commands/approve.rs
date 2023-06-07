@@ -38,13 +38,35 @@ const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
 /// Executes the approve command.
 pub async fn approve_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
-    _: &mut dyn DatabaseClient,
+    database: &mut dyn DatabaseClient,
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
     if !check_permissions(repository, pr, author, Permission::Approve).await? {
         return Ok(());
     }
+
+    let github_pr = repository.client.get_pull_request(pr).await?;
+
+    repository
+        .client
+        .post_comment(
+            pr,
+            &format!(
+                ":pushpin: Commit {} has been approved by `{author}`.",
+                github_pr.head.sha
+            ),
+        )
+        .await?;
+
+    let _ = database
+        .get_or_create_pull_request(
+            repository.client.repository_name(),
+            Some(author.to_string()),
+            &github_pr,
+            pr,
+        )
+        .await?;
 
     todo!()
 }

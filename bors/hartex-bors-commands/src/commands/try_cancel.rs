@@ -52,6 +52,7 @@ pub async fn try_cancel_command<C: RepositoryClient>(
     let pull_request = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
+            None,
             &github_pr,
             pr,
         )

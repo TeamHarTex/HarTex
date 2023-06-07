@@ -188,6 +188,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
+        approved_by: Option<String>,
         github_pr: &'a PullRequest,
         pr_number: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>> {
@@ -200,7 +201,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     .as_ref()
                     .and_then(|authors| authors.first())
                     .and_then(|author| Some(author.login.clone()))
-                    .unwrap_or(String::new())),
+                    .unwrap_or_default()),
+                approved_by: Set(approved_by),
                 title: Set(github_pr.title.clone().unwrap()),
                 head_ref: Set(github_pr
                     .head
@@ -372,6 +374,7 @@ fn pr_from_database(
         repository: pr.repository,
         number: pr.number as u64,
         assignee: pr.assignee,
+        approved_by: pr.approved_by,
         title: pr.title,
         head_ref: pr.head_ref,
         try_build: build.map(build_from_database),
