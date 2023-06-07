@@ -46,5 +46,18 @@ pub async fn approve_command<C: RepositoryClient>(
         return Ok(());
     }
 
+    let github_pr = repository.client.get_pull_request(pr).await?;
+
+    repository
+        .client
+        .post_comment(
+            pr,
+            &format!(
+                ":pushpin: Commit {} has been approved by `{author}.`",
+                github_pr.head.sha
+            ),
+        )
+        .await?;
+
     todo!()
 }
