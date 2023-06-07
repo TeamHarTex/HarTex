@@ -53,7 +53,7 @@ pub async fn approve_command<C: RepositoryClient>(
         .post_comment(
             pr,
             &format!(
-                ":pushpin: Commit {} has been approved by `{author}.`",
+                ":pushpin: Commit {} has been approved by `{author}`.",
                 github_pr.head.sha
             ),
         )
