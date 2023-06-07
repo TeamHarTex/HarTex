@@ -40,12 +40,14 @@ use crate::Permission;
 /// User permissions data structure.
 pub struct UserPermissions {
     try_build_users: HashSet<String>,
+    approve_users: HashSet<String>,
 }
 
 impl UserPermissions {
     /// Checks whether a user has a certain permission.
     pub fn user_has_permission(&self, username: &str, permission: Permission) -> bool {
         match permission {
+            Permission::Approve => self.approve_users.contains(username),
             Permission::TryBuild => self.try_build_users.contains(username),
             _ => false,
         }
@@ -57,8 +59,10 @@ pub(crate) async fn load(
 ) -> hartex_eyre::Result<UserPermissions> {
     let try_build_users =
         load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
+    let approve_users =
+        load_permissions_from_api(repository.repository(), Permission::Approve).await?;
 
-    Ok(UserPermissions { try_build_users })
+    Ok(UserPermissions { try_build_users, approve_users })
 }
 
 async fn load_permissions_from_api(
