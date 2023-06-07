@@ -52,6 +52,7 @@ pub async fn try_command<C: RepositoryClient>(
     let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
+            None,
             &github_pr,
             pr,
         )
