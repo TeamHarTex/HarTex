@@ -109,6 +109,7 @@ pub trait DatabaseClient {
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
+        approved_by: Option<String>,
         github_pr: &'a PullRequest,
         pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
