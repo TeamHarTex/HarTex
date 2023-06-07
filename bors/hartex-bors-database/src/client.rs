@@ -372,6 +372,7 @@ fn pr_from_database(
         repository: pr.repository,
         number: pr.number as u64,
         assignee: pr.assignee,
+        approved_by: pr.approved_by,
         title: pr.title,
         head_ref: pr.head_ref,
         try_build: build.map(build_from_database),
