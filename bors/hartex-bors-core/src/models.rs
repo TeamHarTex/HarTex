@@ -85,6 +85,8 @@ pub struct BorsPullRequest {
     pub repository: String,
     /// The PR number.
     pub number: u64,
+    /// The assignee of the PR.
+    pub assignee: String,
     /// The title of the PR.
     pub title: String,
     /// The head ref of this PR.
