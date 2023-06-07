@@ -68,5 +68,5 @@ pub async fn approve_command<C: RepositoryClient>(
         )
         .await?;
 
-    todo!()
+    Ok(())
 }
