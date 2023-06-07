@@ -196,8 +196,9 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 repository: Set(format!("{name}")),
                 number: Set(pr_number as i32),
                 assignee: Set(github_pr
-                    .assignee
+                    .assignees
                     .as_ref()
+                    .and_then(|authors| authors.first())
                     .and_then(|author| Some(author.login.clone()))
                     .unwrap_or(String::new())),
                 title: Set(github_pr.title.clone().unwrap()),
