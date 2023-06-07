@@ -45,6 +45,7 @@ struct QueueData {
 struct PullRequest {
     number: u64,
     assignee: String,
+    approved_by: String,
     title: String,
     head_ref: String,
     url: String,
@@ -81,6 +82,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                             let pull_request = PullRequest {
                                 number: pr.number,
                                 assignee: pr.assignee.clone(),
+                                approved_by: pr.approved_by.unwrap_or_default(),
                                 title: pr.title.clone(),
                                 head_ref: pr.head_ref.clone(),
                                 url: pr.url.clone(),
