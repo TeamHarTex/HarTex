@@ -25,15 +25,18 @@ use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
 use sea_orm::sea_query::SelectExpr;
 use sea_orm::sea_query::SelectStatement;
+use sea_orm::ColumnTrait;
 use sea_orm::DatabaseConnection;
 use sea_orm::EntityTrait;
 use sea_orm::FromQueryResult;
 use sea_orm::Iden;
 use sea_orm::JoinType;
+use sea_orm::QueryFilter;
+use sea_orm::QueryResult;
 use sea_orm::QuerySelect;
 use sea_orm::QueryTrait;
 use sea_orm::RelationTrait;
-use sea_orm::{ColumnTrait, QueryFilter};
+use sea_orm::Select;
 use serde::Serialize;
 
 use crate::entity::approve_build;
@@ -43,7 +46,7 @@ use crate::entity::pull_request;
 pub(crate) struct SelectPullRequest;
 
 impl SelectPullRequest {
-    pub async fn exec_with_repo(
+    pub async fn exec_with_repo_one(
         connection: &DatabaseConnection,
         repository: String,
     ) -> hartex_eyre::Result<(
@@ -59,18 +62,41 @@ impl SelectPullRequest {
         add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
         add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
 
-        let result = select
-            .join(
-                JoinType::LeftJoin,
-                pull_request::Relation::ApproveBuild.def(),
-            )
-            .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
-            .into_model::<Response>() // Don't forget your custom model. "Response" code below
-            .one(connection)
-            .await?
-            .ok_or_else(|| Report::msg("cannot execute query"))?;
+        let result = execute_query_one(&mut select, connection).await?;
 
         Ok((result.pull_request, result.approve_build, result.build))
+    }
+
+    pub async fn exec_with_repo_many(
+        connection: &DatabaseConnection,
+        repository: String,
+    ) -> hartex_eyre::Result<
+        Vec<(
+            pull_request::Model,
+            Option<approve_build::Model>,
+            Option<build::Model>,
+        )>,
+    > {
+        let mut select = pull_request::Entity::find()
+            .select_only()
+            .filter(pull_request::Column::Repository.eq(repository));
+
+        add_columns_with_prefix::<_, pull_request::Entity>(&mut select, "pull_request");
+        add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
+        add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
+
+        let result = execute_query_many(&mut select, connection).await?;
+
+        Ok(result
+            .iter()
+            .map(|response| {
+                (
+                    response.pull_request.clone(),
+                    response.approve_build.clone(),
+                    response.build.clone(),
+                )
+            })
+            .collect())
     }
 }
 
@@ -82,10 +108,7 @@ struct Response {
 }
 
 impl FromQueryResult for Response {
-    fn from_query_result(
-        result: &sea_orm::QueryResult,
-        _pre: &str,
-    ) -> Result<Self, sea_orm::DbErr> {
+    fn from_query_result(result: &QueryResult, _pre: &str) -> Result<Self, sea_orm::DbErr> {
         let pull_request = pull_request::Model::from_query_result(result, "pull_request")?;
         let approve_build = approve_build::Model::from_query_result(result, "approve_build").ok();
         let build = build::Model::from_query_result(result, "build").ok();
@@ -110,4 +133,38 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
             window: None,
         });
     }
+}
+
+async fn execute_query_one(
+    select: &mut Select<pull_request::Entity>,
+    connection: &DatabaseConnection,
+) -> hartex_eyre::Result<Response> {
+    select
+        .clone()
+        .join(
+            JoinType::LeftJoin,
+            pull_request::Relation::ApproveBuild.def(),
+        )
+        .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
+        .into_model::<Response>()
+        .one(connection)
+        .await?
+        .ok_or_else(|| Report::msg("cannot execute query"))
+}
+
+async fn execute_query_many(
+    select: &mut Select<pull_request::Entity>,
+    connection: &DatabaseConnection,
+) -> hartex_eyre::Result<Vec<Response>> {
+    select
+        .clone()
+        .join(
+            JoinType::LeftJoin,
+            pull_request::Relation::ApproveBuild.def(),
+        )
+        .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
+        .into_model::<Response>()
+        .all(connection)
+        .await?
+        .ok_or_else(|| Report::msg("cannot execute query"))
 }
