@@ -37,6 +37,7 @@ use sqlx::SqlitePool;
 pub mod client;
 mod entity;
 mod migration;
+mod select_pr;
 
 pub async fn initialize_database(migrate: bool) -> hartex_eyre::Result<DatabaseConnection> {
     let database = SqlxSqliteConnector::from_sqlx_sqlite_pool(

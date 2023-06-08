@@ -56,16 +56,20 @@ pub(crate) async fn workflow_completed(
         )
         .await?;
 
-    complete_build(
-        repository,
-        database,
-        CheckSuiteCompleted {
-            repository: GithubRepositoryName::new_from_repository(run.repository)?,
-            branch: run.head_branch,
-            commit_hash: run.head_sha,
-        },
-    )
-    .await
+    if run.head_branch.contains("try") {
+        complete_try_build(
+            repository,
+            database,
+            CheckSuiteCompleted {
+                repository: GithubRepositoryName::new_from_repository(run.repository)?,
+                branch: run.head_branch,
+                commit_hash: run.head_sha,
+            },
+        )
+        .await?;
+    }
+
+    Ok(())
 }
 
 pub(crate) async fn workflow_started(
@@ -108,7 +112,7 @@ pub(crate) async fn workflow_started(
     Ok(())
 }
 
-async fn complete_build(
+async fn complete_try_build(
     repository: &mut GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
     event: CheckSuiteCompleted,
@@ -132,7 +136,7 @@ async fn complete_build(
         return Ok(());
     }
 
-    let Some(pull_request) = database.find_pull_request_by_build(&build).await? else {
+    let Some(pull_request) = database.find_pull_request_by_try_build(&build).await? else {
         log::warn!("no pull request is found for the build {}", build.commit_hash);
 
         return Ok(());
