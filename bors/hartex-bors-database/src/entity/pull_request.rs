@@ -21,8 +21,9 @@
  */
 
 use sea_orm::prelude::*;
+use serde::Serialize;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize)]
 #[sea_orm(table_name = "pull_request")]
 pub struct Model {
     #[sea_orm(primary_key)]
@@ -64,7 +65,6 @@ impl Related<super::approve_build::Entity> for Entity {
         Relation::ApproveBuild.def()
     }
 }
-
 
 impl Related<super::build::Entity> for Entity {
     fn to() -> RelationDef {

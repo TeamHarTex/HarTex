@@ -26,6 +26,7 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
+use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsPullRequest;
@@ -35,7 +36,6 @@ use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
-use hartex_eyre::eyre::Report;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::RunId;
 use sea_orm::prelude::DateTime;
@@ -170,18 +170,14 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
-    fn find_pull_request_by_build<'a>(
+    fn find_pull_request_by_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
         Box::pin(async move {
-            let result = entity::pull_request::Entity::find()
-                .filter(entity::pull_request::Column::TryBuild.eq(build.id))
-                .find_also_related(entity::build::Entity)
-                .one(&self.connection)
-                .await?;
+            let result = crate::select_pr::SelectPullRequest::exec_with_try_build_one(&self.connection, build).await?;
 
-            Ok(result.map(|(pr, build)| pr_from_database(pr, build)))
+            Ok(result.map(|(pr, approve_build,  build)| pr_from_database(pr, approve_build, build)))
         })
     }
 
@@ -225,18 +221,15 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 Err(error) => return Err(error.into()),
             }
 
-            let (pr, build) = entity::pull_request::Entity::find()
-                .filter(
-                    entity::pull_request::Column::Repository
-                        .eq(format!("{name}"))
-                        .and(entity::pull_request::Column::Number.eq(pr_number)),
+            let (pr, approve_build, build) =
+                crate::select_pr::SelectPullRequest::exec_with_repo_one(
+                    &self.connection,
+                    format!("{name}"),
                 )
-                .find_also_related(entity::build::Entity)
-                .one(&self.connection)
                 .await?
-                .ok_or_else(|| Report::msg("cannot execute query"))?;
+                .unwrap();
 
-            Ok(pr_from_database(pr, build))
+            Ok(pr_from_database(pr, approve_build, build))
         })
     }
 
@@ -245,15 +238,17 @@ impl DatabaseClient for SeaORMDatabaseClient {
         name: &'a GithubRepositoryName,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + Send + '_>> {
         Box::pin(async move {
-            let pull_requests = entity::pull_request::Entity::find()
-                .filter(entity::pull_request::Column::Repository.eq(format!("{name}")))
-                .find_also_related(entity::build::Entity)
-                .all(&self.connection)
-                .await?;
+            let pull_requests = crate::select_pr::SelectPullRequest::exec_with_repo_many(
+                &self.connection,
+                format!("{name}"),
+            )
+            .await?;
 
             Ok(pull_requests
                 .into_iter()
-                .map(|(pull_request, build)| pr_from_database(pull_request, build))
+                .map(|(pull_request, approve_build, build)| {
+                    pr_from_database(pull_request, approve_build, build)
+                })
                 .collect())
         })
     }
@@ -331,6 +326,17 @@ impl DatabaseClient for SeaORMDatabaseClient {
     }
 }
 
+fn approve_build_from_database(model: entity::approve_build::Model) -> BorsApproveBuild {
+    BorsApproveBuild {
+        id: model.id,
+        repository: model.repository,
+        branch: model.branch,
+        commit_hash: model.commit_hash,
+        status: build_status_from_database(model.status),
+        created_at: datetime_from_database(model.created_at),
+    }
+}
+
 fn build_from_database(model: entity::build::Model) -> BorsBuild {
     BorsBuild {
         id: model.id,
@@ -367,6 +373,7 @@ fn datetime_from_database(datetime: DateTime) -> DateTimeUtc {
 
 fn pr_from_database(
     pr: entity::pull_request::Model,
+    approve_build: Option<entity::approve_build::Model>,
     build: Option<entity::build::Model>,
 ) -> BorsPullRequest {
     BorsPullRequest {
@@ -377,7 +384,7 @@ fn pr_from_database(
         approved_by: pr.approved_by,
         title: pr.title,
         head_ref: pr.head_ref,
-        approve_build: None,  // todo
+        approve_build: approve_build.map(approve_build_from_database),
         try_build: build.map(build_from_database),
         url: pr.url,
         created_at: datetime_from_database(pr.created_at),
