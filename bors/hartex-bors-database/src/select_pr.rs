@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_bors_core::models::BorsBuild;
 use hartex_eyre::eyre::Report;
 use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
@@ -46,14 +47,35 @@ use crate::entity::pull_request;
 pub(crate) struct SelectPullRequest;
 
 impl SelectPullRequest {
-    pub async fn exec_with_repo_one(
+    pub async fn exec_with_try_build_one(
         connection: &DatabaseConnection,
-        repository: String,
-    ) -> hartex_eyre::Result<(
+        build: &BorsBuild
+    ) -> hartex_eyre::Result<Option<(
         pull_request::Model,
         Option<approve_build::Model>,
         Option<build::Model>,
-    )> {
+    )>> {
+        let mut select = pull_request::Entity::find()
+            .select_only()
+            .filter(pull_request::Column::TryBuild.eq(build.id));
+
+        add_columns_with_prefix::<_, pull_request::Entity>(&mut select, "pull_request");
+        add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
+        add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
+
+        let result = execute_query_one(&mut select, connection).await?;
+
+        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
+    }
+
+    pub async fn exec_with_repo_one(
+        connection: &DatabaseConnection,
+        repository: String,
+    ) -> hartex_eyre::Result<Option<(
+        pull_request::Model,
+        Option<approve_build::Model>,
+        Option<build::Model>,
+    )>> {
         let mut select = pull_request::Entity::find()
             .select_only()
             .filter(pull_request::Column::Repository.eq(repository));
@@ -64,7 +86,7 @@ impl SelectPullRequest {
 
         let result = execute_query_one(&mut select, connection).await?;
 
-        Ok((result.pull_request, result.approve_build, result.build))
+        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build))))
     }
 
     pub async fn exec_with_repo_many(
@@ -138,7 +160,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 async fn execute_query_one(
     select: &mut Select<pull_request::Entity>,
     connection: &DatabaseConnection,
-) -> hartex_eyre::Result<Response> {
+) -> hartex_eyre::Result<Option<Response>> {
     select
         .clone()
         .join(
@@ -148,8 +170,8 @@ async fn execute_query_one(
         .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
         .into_model::<Response>()
         .one(connection)
-        .await?
-        .ok_or_else(|| Report::msg("cannot execute query"))
+        .await
+        .map_err(Report::new)
 }
 
 async fn execute_query_many(
@@ -165,6 +187,6 @@ async fn execute_query_many(
         .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
         .into_model::<Response>()
         .all(connection)
-        .await?
-        .ok_or_else(|| Report::msg("cannot execute query"))
+        .await
+        .map_err(Report::new)
 }
