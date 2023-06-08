@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+pub mod approve_build;
 pub mod build;
 pub mod pull_request;
 pub mod repository;

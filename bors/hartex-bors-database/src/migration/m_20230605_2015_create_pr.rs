@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use crate::migration::m_20230608_2047_create_approve_build::ApproveBuild;
 use crate::migration::m_20230527_2254_create_build::Build;
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::sea_query::types::Keyword;
@@ -49,8 +50,15 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(PullRequest::ApprovedBy).string().null())
                     .col(ColumnDef::new(PullRequest::Title).string().not_null())
                     .col(ColumnDef::new(PullRequest::HeadRef).string().not_null())
+                    .col(ColumnDef::new(PullRequest::ApproveBuild).integer().null())
                     .col(ColumnDef::new(PullRequest::TryBuild).integer().null())
                     .col(ColumnDef::new(PullRequest::Url).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-pr-approve-build")
+                            .from(PullRequest::Table, PullRequest::ApproveBuild)
+                            .to(ApproveBuild::Table, ApproveBuild::Id),
+                    )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-pr-try-build")
@@ -92,6 +100,7 @@ enum PullRequest {
     ApprovedBy,
     Title,
     HeadRef,
+    ApproveBuild,
     TryBuild,
     Url,
     CreatedAt,

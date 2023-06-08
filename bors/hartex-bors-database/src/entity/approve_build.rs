@@ -23,45 +23,34 @@
 use sea_orm::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "pull_request")]
+#[sea_orm(table_name = "approve_build")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub repository: String,
-    pub number: i32,
-    pub assignee: String,
-    pub approved_by: Option<String>,
-    pub title: String,
-    pub head_ref: String,
-    pub approve_build: Option<i32>,
-    pub try_build: Option<i32>,
-    pub url: String,
+    pub branch: String,
+    pub commit_hash: String,
+    pub status: String,
     pub created_at: DateTime,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(
-        belongs_to = "super::approve_build::Entity",
-        from = "Column::ApproveBuild",
-        to = "super::approve_build::Column::Id",
-        on_update = "NoAction",
-        on_delete = "NoAction"
-    )]
-    ApproveBuild,
-    #[sea_orm(
-        belongs_to = "super::build::Entity",
-        from = "Column::TryBuild",
-        to = "super::build::Column::Id",
-        on_update = "NoAction",
-        on_delete = "NoAction"
-    )]
-    Build,
+    #[sea_orm(has_many = "super::pull_request::Entity")]
+    PullRequest,
+    #[sea_orm(has_many = "super::workflow::Entity")]
+    Workflow,
 }
 
-impl Related<super::build::Entity> for Entity {
+impl Related<super::pull_request::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Build.def()
+        Relation::PullRequest.def()
+    }
+}
+
+impl Related<super::workflow::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Workflow.def()
     }
 }
 
