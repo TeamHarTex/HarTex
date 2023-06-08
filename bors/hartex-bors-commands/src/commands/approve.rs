@@ -24,6 +24,7 @@
 //!
 //! bors r+
 
+use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
@@ -59,7 +60,7 @@ pub async fn approve_command<C: RepositoryClient>(
         )
         .await?;
 
-    let _ = database
+    let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
             Some(author.to_string()),
@@ -67,6 +68,15 @@ pub async fn approve_command<C: RepositoryClient>(
             pr,
         )
         .await?;
+
+    if let Some(ref build) = pr_model.approve_build && build.status == BorsBuildStatus::Pending {
+        repository
+            .client
+            .post_comment(pr, ":warning: A build is currently in progress. You can cancel the build using `bors r-`")
+            .await?;
+
+        return Ok(());
+    };
 
     Ok(())
 }
