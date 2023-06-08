@@ -377,6 +377,7 @@ fn pr_from_database(
         approved_by: pr.approved_by,
         title: pr.title,
         head_ref: pr.head_ref,
+        approve_build: None,  // todo
         try_build: build.map(build_from_database),
         url: pr.url,
         created_at: datetime_from_database(pr.created_at),

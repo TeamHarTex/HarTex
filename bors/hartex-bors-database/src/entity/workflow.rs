@@ -27,6 +27,7 @@ use sea_orm::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
+    pub approve_build: i32,
     pub build: i32,
     pub name: String,
     pub run_id: i64,
@@ -39,6 +40,14 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
+        belongs_to = "super::approve_build::Entity",
+        from = "Column::ApproveBuild",
+        to = "super::approve_build::Column::Id",
+        on_update = "NoAction",
+        on_delete = "NoAction"
+    )]
+    ApproveBuild,
+    #[sea_orm(
         belongs_to = "super::build::Entity",
         from = "Column::Build",
         to = "super::build::Column::Id",
@@ -46,6 +55,12 @@ pub enum Relation {
         on_delete = "NoAction"
     )]
     Build,
+}
+
+impl Related<super::approve_build::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ApproveBuild.def()
+    }
 }
 
 impl Related<super::build::Entity> for Entity {
