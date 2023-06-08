@@ -23,6 +23,7 @@
 use sea_orm_migration::prelude::*;
 
 use crate::migration::m_20230527_2254_create_build::Build;
+use crate::migration::m_20230608_2047_create_approve_build::ApproveBuild;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -42,7 +43,14 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
+                    .col(ColumnDef::new(Workflow::ApproveBuild).integer().not_null())
                     .col(ColumnDef::new(Workflow::Build).integer().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-workflow-approve-build")
+                            .from(Workflow::Table, Workflow::ApproveBuild)
+                            .to(ApproveBuild::Table, ApproveBuild::Id),
+                    )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-workflow-build")
@@ -83,6 +91,7 @@ impl MigrationTrait for Migration {
 enum Workflow {
     Table,
     Id,
+    ApproveBuild,
     Build,
     Name,
     RunId,
