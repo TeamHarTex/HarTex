@@ -61,6 +61,22 @@ impl BorsBuildStatus {
     }
 }
 
+/// A bors approve build.
+pub struct BorsApproveBuild {
+    /// The identifier for this build.
+    pub id: PrimaryKey,
+    /// The repository.
+    pub repository: String,
+    /// The branch.
+    pub branch: String,
+    /// The hash of the commit.
+    pub commit_hash: String,
+    /// The build status of the build.
+    pub status: BorsBuildStatus,
+    /// The time when this build was created.
+    pub created_at: DateTimeUtc,
+}
+
 /// A bors build.
 pub struct BorsBuild {
     /// The identifier for this build.
