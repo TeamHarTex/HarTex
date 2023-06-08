@@ -28,6 +28,7 @@ mod m_20230527_2254_create_build;
 mod m_20230529_2203_create_workflow;
 mod m_20230604_1237_create_repository;
 mod m_20230605_2015_create_pr;
+mod m_20230608_2047_create_approve_build;
 
 pub struct Migrator;
 
