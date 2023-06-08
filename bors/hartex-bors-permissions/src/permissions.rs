@@ -62,7 +62,10 @@ pub(crate) async fn load(
     let approve_users =
         load_permissions_from_api(repository.repository(), Permission::Approve).await?;
 
-    Ok(UserPermissions { try_build_users, approve_users })
+    Ok(UserPermissions {
+        try_build_users,
+        approve_users,
+    })
 }
 
 async fn load_permissions_from_api(

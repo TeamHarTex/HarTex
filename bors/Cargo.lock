@@ -910,6 +910,7 @@ dependencies = [
  "octocrab",
  "sea-orm",
  "sea-orm-migration",
+ "serde",
  "sqlx",
 ]
 

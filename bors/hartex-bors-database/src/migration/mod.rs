@@ -40,7 +40,7 @@ impl MigratorTrait for Migrator {
             Box::new(m_20230529_2203_create_workflow::Migration),
             Box::new(m_20230604_1237_create_repository::Migration),
             Box::new(m_20230605_2015_create_pr::Migration),
-            Box::new(m_20230608_2047_create_approve_build::Migration)
+            Box::new(m_20230608_2047_create_approve_build::Migration),
         ]
     }
 }
