@@ -29,11 +29,11 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_github::messages::auto_merge_commit_message;
 
 use crate::permissions::check_permissions;
 
 pub const APPROVE_BRANCH_NAME: &str = "automation/bors/approve";
-#[allow(dead_code)]
 const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
 
 /// Executes the approve command.
@@ -77,6 +77,20 @@ pub async fn approve_command<C: RepositoryClient>(
 
         return Ok(());
     };
+
+    repository
+        .client
+        .set_branch_to_revision(APPROVE_MERGE_BRANCH_NAME, &github_pr.base.sha)
+        .await?;
+
+    let _ = repository
+        .client
+        .merge_branches(
+            APPROVE_MERGE_BRANCH_NAME,
+            &github_pr.head.sha,
+            &auto_merge_commit_message(&github_pr, author),
+        )
+        .await?;
 
     Ok(())
 }
