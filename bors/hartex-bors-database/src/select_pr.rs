@@ -86,7 +86,7 @@ impl SelectPullRequest {
 
         let result = execute_query_one(&mut select, connection).await?;
 
-        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build))))
+        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
     }
 
     pub async fn exec_with_repo_many(
