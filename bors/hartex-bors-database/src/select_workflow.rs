@@ -20,37 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Database for Bors
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
-use std::str::FromStr;
-
-use sea_orm::DatabaseConnection;
-use sea_orm::SqlxSqliteConnector;
-use sea_orm_migration::prelude::MigratorTrait;
-use sqlx::sqlite::SqliteConnectOptions;
-use sqlx::SqlitePool;
-
-pub mod client;
-mod entity;
-mod migration;
-mod select_pr;
-mod select_workflow;
-
-pub async fn initialize_database(migrate: bool) -> hartex_eyre::Result<DatabaseConnection> {
-    let database = SqlxSqliteConnector::from_sqlx_sqlite_pool(
-        SqlitePool::connect_with(
-            SqliteConnectOptions::from_str("sqlite:bors-data/data.db")?.create_if_missing(true),
-        )
-        .await?,
-    );
-
-    if migrate {
-        migration::Migrator::up(&database, None).await?;
-    }
-
-    Ok(database)
-}
+pub(crate) struct SelectWorkflow;

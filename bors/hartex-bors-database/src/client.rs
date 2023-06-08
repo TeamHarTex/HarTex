@@ -397,12 +397,17 @@ fn repository_from_database(repository: entity::repository::Model) -> BorsReposi
     }
 }
 
+// FIXME: workflows are either a try build or an approve build.
 fn workflow_from_database(
     workflow: entity::workflow::Model,
+    approve_build: Option<entity::approve_build::Model>,
     build: Option<entity::build::Model>,
 ) -> BorsWorkflow {
     BorsWorkflow {
         id: workflow.id,
+        approve_build: approve_build
+            .map(approve_build_from_database)
+            .expect("Workflow without attached approve build"),
         build: build
             .map(build_from_database)
             .expect("Workflow without attached build"),
