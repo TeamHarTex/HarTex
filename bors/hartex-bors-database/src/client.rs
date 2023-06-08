@@ -36,7 +36,6 @@ use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
-use hartex_eyre::eyre::Report;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::RunId;
 use sea_orm::prelude::DateTime;
@@ -226,18 +225,11 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 Err(error) => return Err(error.into()),
             }
 
-            let (pr, build) = entity::pull_request::Entity::find()
-                .filter(
-                    entity::pull_request::Column::Repository
-                        .eq(format!("{name}"))
-                        .and(entity::pull_request::Column::Number.eq(pr_number)),
-                )
-                .find_also_related(entity::build::Entity)
-                .one(&self.connection)
-                .await?
-                .ok_or_else(|| Report::msg("cannot execute query"))?;
+            let (pr, approve_build, build) =
+                crate::select_pr::SelectPullRequest::exec_with_repo(&self.connection, format!("{name}"))
+                    .await?;
 
-            Ok(pr_from_database(pr, build))
+            Ok(pr_from_database(pr, approve_build, build))
         })
     }
 
@@ -390,7 +382,7 @@ fn pr_from_database(
         approved_by: pr.approved_by,
         title: pr.title,
         head_ref: pr.head_ref,
-        approve_build: None,  // todo
+        approve_build: None, // todo
         try_build: build.map(build_from_database),
         url: pr.url,
         created_at: datetime_from_database(pr.created_at),
