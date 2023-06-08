@@ -59,6 +59,13 @@ pub enum Relation {
     Build,
 }
 
+impl Related<super::approve_build::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ApproveBuild.def()
+    }
+}
+
+
 impl Related<super::build::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Build.def()
