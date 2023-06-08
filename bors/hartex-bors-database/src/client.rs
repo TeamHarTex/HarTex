@@ -226,8 +226,11 @@ impl DatabaseClient for SeaORMDatabaseClient {
             }
 
             let (pr, approve_build, build) =
-                crate::select_pr::SelectPullRequest::exec_with_repo(&self.connection, format!("{name}"))
-                    .await?;
+                crate::select_pr::SelectPullRequest::exec_with_repo_one(
+                    &self.connection,
+                    format!("{name}"),
+                )
+                .await?;
 
             Ok(pr_from_database(pr, approve_build, build))
         })
@@ -238,15 +241,17 @@ impl DatabaseClient for SeaORMDatabaseClient {
         name: &'a GithubRepositoryName,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + Send + '_>> {
         Box::pin(async move {
-            let pull_requests = entity::pull_request::Entity::find()
-                .filter(entity::pull_request::Column::Repository.eq(format!("{name}")))
-                .find_also_related(entity::build::Entity)
-                .all(&self.connection)
-                .await?;
+            let pull_requests = crate::select_pr::SelectPullRequest::exec_with_repo_many(
+                &self.connection,
+                format!("{name}"),
+            )
+            .await?;
 
             Ok(pull_requests
                 .into_iter()
-                .map(|(pull_request, build)| pr_from_database(pull_request, build))
+                .map(|(pull_request, approve_build, build)| {
+                    pr_from_database(pull_request, approve_build, build)
+                })
                 .collect())
         })
     }
