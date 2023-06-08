@@ -109,6 +109,8 @@ pub struct BorsPullRequest {
     pub title: String,
     /// The head ref of this PR.
     pub head_ref: String,
+    /// The approve build of this pull request, if any.
+    pub approve_build: Option<BorsApproveBuild>,
     /// The try build of this pull request, if any.
     pub try_build: Option<BorsBuild>,
     /// The URL of the pull request.
