@@ -26,6 +26,7 @@ use std::pin::Pin;
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
 
+use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsPullRequest;
@@ -331,6 +332,17 @@ impl DatabaseClient for SeaORMDatabaseClient {
     }
 }
 
+fn approve_build_from_database(model: entity::approve_build::Model) -> BorsApproveBuild {
+    BorsApproveBuild {
+        id: model.id,
+        repository: model.repository,
+        branch: model.branch,
+        commit_hash: model.commit_hash,
+        status: build_status_from_database(model.status),
+        created_at: datetime_from_database(model.created_at),
+    }
+}
+
 fn build_from_database(model: entity::build::Model) -> BorsBuild {
     BorsBuild {
         id: model.id,
@@ -367,6 +379,7 @@ fn datetime_from_database(datetime: DateTime) -> DateTimeUtc {
 
 fn pr_from_database(
     pr: entity::pull_request::Model,
+    approve_build: Option<entity::approve_build::Model>,
     build: Option<entity::build::Model>,
 ) -> BorsPullRequest {
     BorsPullRequest {
