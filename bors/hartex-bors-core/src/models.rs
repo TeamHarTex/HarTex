@@ -128,6 +128,8 @@ pub struct BorsRepository {
 pub struct BorsWorkflow {
     /// The identifier for this workflow.
     pub id: PrimaryKey,
+    /// The approve build this workflow is associated to.
+    pub approve_build: BorsApproveBuild,
     /// The build this workflow is associated to.
     pub build: BorsBuild,
     /// The name of the workflow.
