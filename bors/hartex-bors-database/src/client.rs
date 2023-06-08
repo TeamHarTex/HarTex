@@ -170,18 +170,14 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
-    fn find_pull_request_by_build<'a>(
+    fn find_pull_request_by_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
         Box::pin(async move {
-            let result = entity::pull_request::Entity::find()
-                .filter(entity::pull_request::Column::TryBuild.eq(build.id))
-                .find_also_related(entity::build::Entity)
-                .one(&self.connection)
-                .await?;
+            let result = crate::select_pr::SelectPullRequest::exec_with_try_build_one(&self.connection, build).await?;
 
-            Ok(result.map(|(pr, build)| pr_from_database(pr, build)))
+            Ok(result.map(|(pr, approve_build,  build)| pr_from_database(pr, approve_build, build)))
         })
     }
 
@@ -230,7 +226,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     &self.connection,
                     format!("{name}"),
                 )
-                .await?;
+                .await?
+                .unwrap();
 
             Ok(pr_from_database(pr, approve_build, build))
         })
@@ -387,7 +384,7 @@ fn pr_from_database(
         approved_by: pr.approved_by,
         title: pr.title,
         head_ref: pr.head_ref,
-        approve_build: None, // todo
+        approve_build: approve_build.map(approve_build_from_database),
         try_build: build.map(build_from_database),
         url: pr.url,
         created_at: datetime_from_database(pr.created_at),
