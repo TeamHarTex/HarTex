@@ -412,11 +412,9 @@ fn workflow_from_database(
     BorsWorkflow {
         id: workflow.id,
         approve_build: approve_build
-            .map(approve_build_from_database)
-            .expect("Workflow without attached approve build"),
+            .map(approve_build_from_database),
         build: build
-            .map(build_from_database)
-            .expect("Workflow without attached build"),
+            .map(build_from_database),
         name: workflow.name,
         url: workflow.url,
         run_id: RunId(workflow.run_id as u64),

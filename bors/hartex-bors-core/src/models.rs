@@ -129,9 +129,9 @@ pub struct BorsWorkflow {
     /// The identifier for this workflow.
     pub id: PrimaryKey,
     /// The approve build this workflow is associated to.
-    pub approve_build: BorsApproveBuild,
+    pub approve_build: Option<BorsApproveBuild>,
     /// The build this workflow is associated to.
-    pub build: BorsBuild,
+    pub build: Option<BorsBuild>,
     /// The name of the workflow.
     pub name: String,
     /// The url of the workflow.
