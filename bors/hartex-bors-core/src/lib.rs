@@ -88,6 +88,17 @@ pub trait DatabaseClient {
         name: &'a GithubRepositoryName,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
+    /// Creates a workflow with an approve build.
+    fn create_workflow_with_approve_build<'a>(
+        &'a self,
+        approve_build: &'a BorsApproveBuild,
+        name: String,
+        url: String,
+        run_id: RunId,
+        workflow_type: BorsWorkflowType,
+        workflow_status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
     /// Creates a workflow with a try build.
     fn create_workflow_with_try_build<'a>(
         &'a self,
