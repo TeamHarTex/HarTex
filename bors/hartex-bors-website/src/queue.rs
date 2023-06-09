@@ -49,6 +49,7 @@ struct PullRequest {
     title: String,
     head_ref: String,
     url: String,
+    approve_status: String,
     try_status: String,
 }
 
@@ -73,6 +74,12 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                     pull_requests: pull_requests
                         .iter()
                         .map(|pr| {
+                            let approve_status = if let Some(approve_build) = &pr.approve_build {
+                                approve_build.status.as_str().to_string()
+                            } else {
+                                String::new()
+                            };
+
                             let try_status = if let Some(try_build) = &pr.try_build {
                                 try_build.status.as_str().to_string()
                             } else {
@@ -86,6 +93,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                                 title: pr.title.clone(),
                                 head_ref: pr.head_ref.clone(),
                                 url: pr.url.clone(),
+                                approve_status,
                                 try_status,
                             };
 
