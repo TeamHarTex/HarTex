@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
 use hartex_eyre::eyre::Report;
 use sea_orm::sea_query::Alias;
@@ -47,6 +48,38 @@ use crate::entity::workflow;
 pub(crate) struct SelectWorkflow;
 
 impl SelectWorkflow {
+    pub async fn exec_with_approve_build_many(
+        connection: &DatabaseConnection,
+        approve_build: &BorsApproveBuild,
+    ) -> hartex_eyre::Result<
+        Vec<(
+            workflow::Model,
+            Option<approve_build::Model>,
+            Option<build::Model>,
+        )>,
+    > {
+        let mut select = workflow::Entity::find()
+            .select_only()
+            .filter(workflow::Column::ApproveBuild.eq(approve_build.id));
+
+        add_columns_with_prefix::<_, workflow::Entity>(&mut select, "workflow");
+        add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
+        add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
+
+        let result = execute_query_many(&mut select, connection).await?;
+
+        Ok(result
+            .iter()
+            .map(|response| {
+                (
+                    response.workflow.clone(),
+                    response.approve_build.clone(),
+                    response.build.clone(),
+                )
+            })
+            .collect())
+    }
+
     pub async fn exec_with_try_build_many(
         connection: &DatabaseConnection,
         build: &BorsBuild,

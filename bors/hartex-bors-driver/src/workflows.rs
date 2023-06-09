@@ -57,8 +57,21 @@ pub(crate) async fn workflow_completed(
         )
         .await?;
 
-    if run.head_branch.contains("try") {
+    if run.head_branch.clone().contains("try") {
         complete_try_build(
+            repository,
+            database,
+            CheckSuiteCompleted {
+                repository: GithubRepositoryName::new_from_repository(run.repository.clone())?,
+                branch: run.head_branch.clone(),
+                commit_hash: run.head_sha.clone(),
+            },
+        )
+        .await?;
+    }
+
+    if run.head_branch.contains("approve") {
+        complete_approve_build(
             repository,
             database,
             CheckSuiteCompleted {
@@ -66,8 +79,7 @@ pub(crate) async fn workflow_completed(
                 branch: run.head_branch,
                 commit_hash: run.head_sha,
             },
-        )
-        .await?;
+        ).await?;
     }
 
     Ok(())
@@ -182,6 +194,39 @@ async fn complete_approve_build(
     let has_failure = checks
         .iter()
         .any(|check| matches!(check.status, CheckStatus::Failure));
+
+    if has_failure {
+        let mut workflows = database.get_workflows_for_approve_build(&approve_build).await?;
+        workflows.sort_by(|a, b| a.name.cmp(&b.name));
+
+        let workflow_list = workflows
+            .into_iter()
+            .map(|w| {
+                format!(
+                    "- [{}]({}) {}",
+                    w.name,
+                    w.url,
+                    if w.workflow_status == BorsWorkflowStatus::Success {
+                        ":white_check_mark:"
+                    } else {
+                        ":x:"
+                    }
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+
+        repository
+            .client
+            .post_comment(
+                pull_request.number,
+                &format!(
+                    r#":broken_heart: Build failed
+{workflow_list}"#
+                ),
+            )
+            .await?;
+    }
 
     Ok(())
 }
