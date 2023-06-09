@@ -119,7 +119,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
-    fn create_workflow<'a>(
+    fn create_workflow_with_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
         name: String,
@@ -130,7 +130,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
-                build: Set(build.id),
+                build: Set(Some(build.id)),
                 name: Set(name),
                 url: Set(url),
                 run_id: Set(run_id.0 as i64),
