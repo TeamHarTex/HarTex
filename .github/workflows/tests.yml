@@ -5,6 +5,7 @@ on:
     branches:
       - nightly
       - stable
+      - automation/bors/approve
       - automation/bors/try
 
 env:
