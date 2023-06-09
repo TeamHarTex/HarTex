@@ -83,7 +83,7 @@ async fn cancel_build_workflows<C: RepositoryClient>(
     build: &BorsBuild,
 ) -> hartex_eyre::Result<()> {
     let pending_workflows = database
-        .get_workflows_for_build(build)
+        .get_workflows_for_try_build(build)
         .await?
         .into_iter()
         .filter(|workflow| {
