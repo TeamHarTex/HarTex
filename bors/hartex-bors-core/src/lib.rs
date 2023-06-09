@@ -171,6 +171,13 @@ pub trait DatabaseClient {
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>>;
 
+    /// Update the status of an approve build.
+    fn update_approve_build_status<'a>(
+        &'a self,
+        approve_build: &'a BorsApproveBuild,
+        status: BorsBuildStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
     /// Update the status of a build.
     fn update_build_status<'a>(
         &'a self,
@@ -233,6 +240,12 @@ pub trait RepositoryClient {
 
     /// Post a comment on a specific pull request.
     async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
+
+    /// Get the revision of a branch.
+    async fn get_revision(
+        &mut self,
+        branch: &str
+    ) -> hartex_eyre::Result<String>;
 
     /// Set a branch to a specific revision.
     async fn set_branch_to_revision(

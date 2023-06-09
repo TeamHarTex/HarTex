@@ -387,7 +387,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     workflow_from_database(workflow, approve_build, build)
                 })
                 .collect())
-        })        
+        })
     }
 
     fn get_workflows_for_try_build<'a>(
@@ -407,6 +407,24 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     workflow_from_database(workflow, approve_build, build)
                 })
                 .collect())
+        })
+    }
+
+    fn update_approve_build_status<'a>(
+        &'a self,
+        approve_build: &'a BorsApproveBuild,
+        status: BorsBuildStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let model = entity::approve_build::ActiveModel {
+                id: Unchanged(approve_build.id),
+                status: Set(build_status_to_database(status).to_string()),
+                ..Default::default()
+            };
+    
+            model.update(&self.connection).await?;
+    
+            Ok(())
         })
     }
 
