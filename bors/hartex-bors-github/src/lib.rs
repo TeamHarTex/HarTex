@@ -53,6 +53,7 @@ use octocrab::models::AppId;
 use octocrab::models::CommentId;
 use octocrab::models::Repository;
 use octocrab::models::RunId;
+use octocrab::models::repos::Object;
 use octocrab::params::repos::Reference;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
@@ -292,6 +293,19 @@ impl RepositoryClient for GithubRepositoryClient {
             .create_comment(pr, text)
             .await
             .map_err(Report::new)
+    }
+
+    async fn get_revision(&mut self, branch: &str) -> hartex_eyre::Result<String> {
+        let reference = self.client
+            .repos(self.repository_name.owner(), self.repository_name.repository())
+            .get_ref(&Reference::Branch(branch.to_string()))
+            .await?;
+
+        let Object::Commit { sha, .. } = reference.object else {
+            return Err(Report::msg("invalid reference"));
+        };
+
+        Ok(sha)
     }
 
     async fn set_branch_to_revision(
