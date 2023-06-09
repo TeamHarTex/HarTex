@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_bors_commands::commands::approve::APPROVE_BRANCH_NAME;
 use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
@@ -89,25 +90,29 @@ pub(crate) async fn workflow_started(
         run.head_sha,
     );
 
-    let Some(build) = database.find_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
-        return Ok(());
-    };
-
-    if build.status != BorsBuildStatus::Pending {
-        return Ok(());
+    if run.head_branch.contains("try") {
+        let Some(build) = database.find_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
+            return Ok(());
+        };
+    
+        if build.status != BorsBuildStatus::Pending {
+            return Ok(());
+        }
+    
+        log::trace!("creating workflow in database");
+        database
+            .create_workflow_with_try_build(
+                &build,
+                run.name,
+                run.url.to_string(),
+                run.id,
+                BorsWorkflowType::GitHub,
+                BorsWorkflowStatus::Pending,
+            )
+            .await?;
+    } else {
+        // todo: find approved build
     }
-
-    log::trace!("creating workflow in database");
-    database
-        .create_workflow_with_try_build(
-            &build,
-            run.name,
-            run.url.to_string(),
-            run.id,
-            BorsWorkflowType::GitHub,
-            BorsWorkflowStatus::Pending,
-        )
-        .await?;
 
     Ok(())
 }
@@ -212,7 +217,7 @@ Build commit: {hash} (`{hash}`)"#
 }
 
 fn is_relevant_branch(branch: &str) -> bool {
-    [TRY_BRANCH_NAME].contains(&branch)
+    [APPROVE_BRANCH_NAME, TRY_BRANCH_NAME].contains(&branch)
 }
 
 fn string_to_workflow_status(string: &str) -> BorsWorkflowStatus {
