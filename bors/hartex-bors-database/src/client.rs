@@ -177,6 +177,31 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn find_approve_build<'a>(
+        &'a self,
+        repository: &'a GithubRepositoryName,
+        branch: String,
+        commit_sha: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsApproveBuild>>> + '_>> {
+        Box::pin(async move {
+            let approve_build = entity::approve_build::Entity::find()
+                .filter(
+                    entity::approve_build::Column::Repository
+                        .eq(&format!(
+                            "{}/{}",
+                            repository.owner(),
+                            repository.repository()
+                        ))
+                        .and(entity::approve_build::Column::Branch.eq(branch))
+                        .and(entity::approve_build::Column::CommitHash.eq(commit_sha)),
+                )
+                .one(&self.connection)
+                .await?;
+
+            Ok(approve_build.map(approve_build_from_database))
+        })
+    }
+
     fn find_build<'a>(
         &'a self,
         repository: &'a GithubRepositoryName,
