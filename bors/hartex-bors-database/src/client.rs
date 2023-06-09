@@ -66,6 +66,38 @@ impl SeaORMDatabaseClient {
 }
 
 impl DatabaseClient for SeaORMDatabaseClient {
+    fn associate_approve_build<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
+        branch: String,
+        commit_hash: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let approve_build = entity::approve_build::ActiveModel {
+                repository: Set(pr.repository.clone()),
+                branch: Set(branch),
+                commit_hash: Set(commit_hash),
+                status: Set(build_status_to_database(BorsBuildStatus::Pending).to_string()),
+                ..Default::default()
+            };
+
+            let tx = self.connection.begin().await?;
+            let approve_build = entity::approve_build::Entity::insert(approve_build)
+                .exec_with_returning(&tx)
+                .await?;
+
+            let pr_model = entity::pull_request::ActiveModel {
+                id: Unchanged(pr.id),
+                approve_build: Set(Some(approve_build.id)),
+                ..Default::default()
+            };
+            pr_model.update(&tx).await?;
+            tx.commit().await?;
+
+            Ok(())
+        })
+    }
+
     fn associate_try_build<'a>(
         &'a self,
         pr: &'a BorsPullRequest,
@@ -411,10 +443,8 @@ fn workflow_from_database(
 ) -> BorsWorkflow {
     BorsWorkflow {
         id: workflow.id,
-        approve_build: approve_build
-            .map(approve_build_from_database),
-        build: build
-            .map(build_from_database),
+        approve_build: approve_build.map(approve_build_from_database),
+        build: build.map(build_from_database),
         name: workflow.name,
         url: workflow.url,
         run_id: RunId(workflow.run_id as u64),
