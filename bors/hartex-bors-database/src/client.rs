@@ -268,7 +268,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
-    fn get_workflows_for_build<'a>(
+    fn get_workflows_for_try_build<'a>(
         &'a mut self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
