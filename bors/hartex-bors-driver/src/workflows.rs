@@ -219,9 +219,11 @@ Pushing {} to {}..."#,
             )
             .await?;
 
+        let revision = repository.client.get_revision(APPROVE_BRANCH_NAME).await?;
+
         repository
             .client
-            .set_branch_to_revision(&github_pr.base.ref_field, &github_pr.head.sha)
+            .set_branch_to_revision(&github_pr.base.ref_field, &revision)
             .await?;
     } else {
         let mut workflows = database
@@ -257,6 +259,16 @@ Pushing {} to {}..."#,
             )
             .await?;
     }
+
+    let status = if has_failure {
+        BorsBuildStatus::Failure
+    } else {
+        BorsBuildStatus::Success
+    };
+
+    database
+        .update_approve_build_status(&approve_build, status)
+        .await?;
 
     Ok(())
 }
