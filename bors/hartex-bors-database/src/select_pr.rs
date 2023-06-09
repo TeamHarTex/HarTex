@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
 use hartex_eyre::eyre::Report;
 use sea_orm::sea_query::Alias;
@@ -47,6 +48,27 @@ use crate::entity::pull_request;
 pub(crate) struct SelectPullRequest;
 
 impl SelectPullRequest {
+    pub async fn exec_with_approve_build_one(
+        connection: &DatabaseConnection,
+        approve_build: &BorsApproveBuild
+    ) -> hartex_eyre::Result<Option<(
+        pull_request::Model,
+        Option<approve_build::Model>,
+        Option<build::Model>,
+    )>> {
+        let mut select = pull_request::Entity::find()
+            .select_only()
+            .filter(pull_request::Column::ApproveBuild.eq(approve_build.id));
+
+        add_columns_with_prefix::<_, pull_request::Entity>(&mut select, "pull_request");
+        add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
+        add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
+
+        let result = execute_query_one(&mut select, connection).await?;
+
+        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
+    }
+
     pub async fn exec_with_try_build_one(
         connection: &DatabaseConnection,
         build: &BorsBuild
