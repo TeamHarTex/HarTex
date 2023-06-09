@@ -110,8 +110,10 @@ pub(crate) async fn workflow_started(
                 BorsWorkflowStatus::Pending,
             )
             .await?;
-    } else {
-        // todo: find approved build
+    }
+
+    if run.head_branch.contains("approve") {
+        
     }
 
     Ok(())

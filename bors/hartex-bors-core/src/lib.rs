@@ -35,6 +35,7 @@ use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
 use octocrab::models::RunId;
 
+use crate::models::BorsApproveBuild;
 use crate::models::BorsBuild;
 use crate::models::BorsBuildStatus;
 use crate::models::BorsPullRequest;
@@ -97,6 +98,14 @@ pub trait DatabaseClient {
         workflow_type: BorsWorkflowType,
         workflow_status: BorsWorkflowStatus,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
+    /// Finds an approve build.
+    fn find_approve_build<'a>(
+        &'a self,
+        repo: &'a GithubRepositoryName,
+        branch: String,
+        commit_sha: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsApproveBuild>>> + '_>>;
 
     /// Finds a build.
     fn find_build<'a>(
