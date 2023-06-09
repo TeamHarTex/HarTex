@@ -94,16 +94,16 @@ pub(crate) async fn workflow_started(
         let Some(build) = database.find_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
             return Ok(());
         };
-    
+
         if build.status != BorsBuildStatus::Pending {
             return Ok(());
         }
-    
+
         log::trace!("creating workflow in database");
         database
             .create_workflow_with_try_build(
                 &build,
-                run.name,
+                run.name.clone(),
                 run.url.to_string(),
                 run.id,
                 BorsWorkflowType::GitHub,
@@ -113,7 +113,25 @@ pub(crate) async fn workflow_started(
     }
 
     if run.head_branch.contains("approve") {
-        
+        let Some(approve_build) = database.find_approve_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
+            return Ok(());
+        };
+
+        if approve_build.status != BorsBuildStatus::Pending {
+            return Ok(());
+        }
+
+        log::trace!("creating workflow in database");
+        database
+            .create_workflow_with_approve_build(
+                &approve_build,
+                run.name,
+                run.url.to_string(),
+                run.id,
+                BorsWorkflowType::GitHub,
+                BorsWorkflowStatus::Pending,
+            )
+            .await?;
     }
 
     Ok(())

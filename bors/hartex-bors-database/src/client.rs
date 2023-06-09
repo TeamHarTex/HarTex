@@ -151,6 +151,32 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn create_workflow_with_approve_build<'a>(
+        &'a self,
+        approve_build: &'a BorsApproveBuild,
+        name: String,
+        url: String,
+        run_id: RunId,
+        workflow_type: BorsWorkflowType,
+        workflow_status: BorsWorkflowStatus,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let workflow = entity::workflow::ActiveModel {
+                approve_build: Set(Some(approve_build.id)),
+                name: Set(name),
+                url: Set(url),
+                run_id: Set(run_id.0 as i64),
+                r#type: Set(workflow_type_to_database(workflow_type).to_string()),
+                status: Set(workflow_status_to_database(workflow_status).to_string()),
+                ..Default::default()
+            };
+
+            workflow.insert(&self.connection).await?;
+
+            Ok(())
+        })
+    }
+
     fn create_workflow_with_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
