@@ -175,9 +175,13 @@ impl DatabaseClient for SeaORMDatabaseClient {
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
         Box::pin(async move {
-            let result = crate::select_pr::SelectPullRequest::exec_with_try_build_one(&self.connection, build).await?;
+            let result = crate::select_pr::SelectPullRequest::exec_with_try_build_one(
+                &self.connection,
+                build,
+            )
+            .await?;
 
-            Ok(result.map(|(pr, approve_build,  build)| pr_from_database(pr, approve_build, build)))
+            Ok(result.map(|(pr, approve_build, build)| pr_from_database(pr, approve_build, build)))
         })
     }
 
@@ -273,11 +277,17 @@ impl DatabaseClient for SeaORMDatabaseClient {
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
         Box::pin(async move {
-            let workflows = crate::select_workflow::SelectWorkflow::exec_with_try_build_many(&self.connection, build).await?;
+            let workflows = crate::select_workflow::SelectWorkflow::exec_with_try_build_many(
+                &self.connection,
+                build,
+            )
+            .await?;
 
             Ok(workflows
                 .into_iter()
-                .map(|(workflow, approve_build,  build)| workflow_from_database(workflow, approve_build, build))
+                .map(|(workflow, approve_build, build)| {
+                    workflow_from_database(workflow, approve_build, build)
+                })
                 .collect())
         })
     }
