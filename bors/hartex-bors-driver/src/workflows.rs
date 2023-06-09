@@ -99,7 +99,7 @@ pub(crate) async fn workflow_started(
 
     log::trace!("creating workflow in database");
     database
-        .create_workflow(
+        .create_workflow_with_try_build(
             &build,
             run.name,
             run.url.to_string(),
