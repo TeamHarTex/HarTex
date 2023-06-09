@@ -137,6 +137,55 @@ pub(crate) async fn workflow_started(
     Ok(())
 }
 
+async fn complete_approve_build(
+    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
+    database: &mut dyn DatabaseClient,
+    event: CheckSuiteCompleted,
+) -> hartex_eyre::Result<()> {
+    if !is_relevant_branch(&event.branch) {
+        return Ok(());
+    }
+
+    let Some(approve_build) = database
+        .find_approve_build(
+            &event.repository,
+            event.branch.clone(),
+            event.commit_hash.clone(),
+        ).await? else {
+        log::warn!("received workflow completed for nonexistent workflow...?");
+
+        return Ok(());
+    };
+
+    if approve_build.status != BorsBuildStatus::Pending {
+        return Ok(());
+    }
+
+    let Some(pull_request) = database.find_pull_request_by_approve_build(&approve_build).await? else {
+        log::warn!("no pull request is found for the build {}", approve_build.commit_hash);
+
+        return Ok(());
+    };
+
+    let checks = repository
+        .client
+        .get_checks_for_commit(&event.branch, &event.commit_hash)
+        .await?;
+
+    if checks
+        .iter()
+        .any(|check| matches!(check.status, CheckStatus::Pending))
+    {
+        return Ok(());
+    }
+
+    let has_failure = checks
+        .iter()
+        .any(|check| matches!(check.status, CheckStatus::Failure));
+
+    Ok(())
+}
+
 async fn complete_try_build(
     repository: &mut GithubRepositoryState<GithubRepositoryClient>,
     database: &mut dyn DatabaseClient,
