@@ -273,15 +273,11 @@ impl DatabaseClient for SeaORMDatabaseClient {
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
         Box::pin(async move {
-            let workflows = entity::workflow::Entity::find()
-                .filter(entity::workflow::Column::Build.eq(build.id))
-                .find_also_related(entity::build::Entity)
-                .all(&self.connection)
-                .await?;
+            let workflows = crate::select_workflow::SelectWorkflow::exec_with_try_build_many(&self.connection, build).await?;
 
             Ok(workflows
                 .into_iter()
-                .map(|(workflow, build)| workflow_from_database(workflow, build))
+                .map(|(workflow, approve_build,  build)| workflow_from_database(workflow, approve_build, build))
                 .collect())
         })
     }

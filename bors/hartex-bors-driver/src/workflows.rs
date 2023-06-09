@@ -158,7 +158,7 @@ async fn complete_try_build(
         .iter()
         .any(|check| matches!(check.status, CheckStatus::Failure));
 
-    let mut workflows = database.get_workflows_for_build(&build).await?;
+    let mut workflows = database.get_workflows_for_try_build(&build).await?;
     workflows.sort_by(|a, b| a.name.cmp(&b.name));
 
     let workflow_list = workflows
