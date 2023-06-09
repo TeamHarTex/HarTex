@@ -63,6 +63,14 @@ pub trait BorsState<C: RepositoryClient> {
 
 /// A database client.
 pub trait DatabaseClient {
+    /// Associate an approve build to a pull request.
+    fn associate_approve_build<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
+        branch: String,
+        commit_hash: String,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_ >>;
+
     /// Associate a try build to a pull request.
     fn associate_try_build<'a>(
         &'a self,
@@ -79,8 +87,8 @@ pub trait DatabaseClient {
         name: &'a GithubRepositoryName,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
-    /// Creates a workflow.
-    fn create_workflow<'a>(
+    /// Creates a workflow with a try build.
+    fn create_workflow_with_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
         name: String,
