@@ -34,6 +34,8 @@ pub(crate) const PREFIX: &str = "bors";
 pub enum ParserError<'a> {
     /// Command is missing.
     MissingCommand,
+    /// Unexpected end of command.
+    UnexpectedEndOfCommand,
     /// Unknown command.
     UnknownCommand(&'a str),
 }
@@ -60,6 +62,10 @@ pub(crate) fn parse_approve(parser: Parser) -> ParserResult {
     parse_exact("r+", BorsCommand::Approve, parser)
 }
 
+pub(crate) fn parse_approve_eq(parser: Parser) -> ParserResult {
+    parse_prefix("r=", parse_approve_eq_inner, parser)
+}
+
 pub(crate) fn parse_ping(parser: Parser) -> ParserResult {
     parse_exact("ping", BorsCommand::Ping, parser)
 }
@@ -80,6 +86,24 @@ fn parse_exact<'a>(
     match parser.peek() {
         Some(word) if word == exact => Some(Ok(expected)),
         _ => None,
+    }
+}
+
+fn parse_prefix<'a>(
+    prefix: &'static str,
+    expected_fn: fn(Option<&str>) -> ParserResult<'_>,
+    mut parser: Parser<'a>,
+) -> ParserResult<'a> {
+    match parser.peek() {
+        Some(word) if word.starts_with(prefix) => expected_fn(word.strip_prefix(prefix)),
+        _ => None,
+    }
+}
+
+fn parse_approve_eq_inner(remaining: Option<&str>) -> ParserResult<'_> {
+    match remaining {
+        Some(arg) if !arg.is_empty() => Some(Ok(BorsCommand::ApproveEq(arg.to_string()))),
+        _ => Some(Err(ParserError::UnexpectedEndOfCommand)),
     }
 }
 

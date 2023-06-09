@@ -178,6 +178,15 @@ async fn handle_comment<C: RepositoryClient>(
                     )
                     .await?
                 }
+                BorsCommand::ApproveEq(arg) => {
+                    hartex_bors_commands::commands::approve::approve_command(
+                        repository,
+                        database,
+                        pr,
+                        &arg,
+                    )
+                    .await?
+                }
                 BorsCommand::Ping => {
                     hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
                 }
@@ -203,6 +212,7 @@ async fn handle_comment<C: RepositoryClient>(
             Err(error) => {
                 let error_msg = match error {
                     ParserError::MissingCommand => "Missing command.".to_string(),
+                    ParserError::UnexpectedEndOfCommand => "Unexpected end of command.".to_string(),
                     ParserError::UnknownCommand(command) => {
                         format!(r#"Unknown command "{command}"."#)
                     }
