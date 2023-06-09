@@ -43,8 +43,8 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Workflow::ApproveBuild).integer().not_null())
-                    .col(ColumnDef::new(Workflow::Build).integer().not_null())
+                    .col(ColumnDef::new(Workflow::ApproveBuild).integer().null())
+                    .col(ColumnDef::new(Workflow::Build).integer().null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-workflow-approve-build")

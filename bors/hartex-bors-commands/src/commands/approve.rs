@@ -83,13 +83,29 @@ pub async fn approve_command<C: RepositoryClient>(
         .set_branch_to_revision(APPROVE_MERGE_BRANCH_NAME, &github_pr.base.sha)
         .await?;
 
-    let _ = repository
+    let merge_hash = repository
         .client
         .merge_branches(
             APPROVE_MERGE_BRANCH_NAME,
             &github_pr.head.sha,
             &auto_merge_commit_message(&github_pr, author),
         )
+        .await?;
+
+    database
+        .associate_approve_build(&pr_model, APPROVE_BRANCH_NAME.to_string(), merge_hash.clone())
+        .await?;
+
+    
+    repository
+        .client
+        .set_branch_to_revision(APPROVE_BRANCH_NAME, &merge_hash)
+        .await?;
+
+    
+    repository
+        .client
+        .delete_branch(APPROVE_MERGE_BRANCH_NAME)
         .await?;
 
     Ok(())
