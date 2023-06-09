@@ -159,6 +159,12 @@ pub trait DatabaseClient {
         &self,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>>;
 
+    /// Gets the workflows for a certain approve build.
+    fn get_workflows_for_approve_build<'a>(
+        &'a mut self,
+        build: &'a BorsApproveBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>>;
+
     /// Gets the workflows for a certain try build.
     fn get_workflows_for_try_build<'a>(
         &'a mut self,

@@ -370,6 +370,26 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn get_workflows_for_approve_build<'a>(
+        &'a mut self,
+        approve_build: &'a BorsApproveBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + '_>> {
+        Box::pin(async move {
+            let workflows = crate::select_workflow::SelectWorkflow::exec_with_approve_build_many(
+                &self.connection,
+                approve_build,
+            )
+            .await?;
+
+            Ok(workflows
+                .into_iter()
+                .map(|(workflow, approve_build, build)| {
+                    workflow_from_database(workflow, approve_build, build)
+                })
+                .collect())
+        })        
+    }
+
     fn get_workflows_for_try_build<'a>(
         &'a mut self,
         build: &'a BorsBuild,
