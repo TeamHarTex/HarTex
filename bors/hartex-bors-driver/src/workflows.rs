@@ -79,7 +79,8 @@ pub(crate) async fn workflow_completed(
                 branch: run.head_branch,
                 commit_hash: run.head_sha,
             },
-        ).await?;
+        )
+        .await?;
     }
 
     Ok(())
@@ -195,8 +196,37 @@ async fn complete_approve_build(
         .iter()
         .any(|check| matches!(check.status, CheckStatus::Failure));
 
-    if has_failure {
-        let mut workflows = database.get_workflows_for_approve_build(&approve_build).await?;
+    if !has_failure {
+        let github_pr = repository
+            .client
+            .get_pull_request(pull_request.number)
+            .await?;
+
+        repository
+            .client
+            .post_comment(
+                pull_request.number,
+                &format!(
+                    r#":sunny: Build successfull
+Approved by: {}
+Pushing {} to {}..."#,
+                    pull_request
+                        .approved_by
+                        .unwrap_or(String::from("<unknown>")),
+                    &github_pr.head.sha,
+                    &github_pr.base.ref_field
+                ),
+            )
+            .await?;
+
+        repository
+            .client
+            .set_branch_to_revision(&github_pr.base.ref_field, &github_pr.head.sha)
+            .await?;
+    } else {
+        let mut workflows = database
+            .get_workflows_for_approve_build(&approve_build)
+            .await?;
         workflows.sort_by(|a, b| a.name.cmp(&b.name));
 
         let workflow_list = workflows
