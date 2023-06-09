@@ -126,6 +126,12 @@ pub trait DatabaseClient {
         commit_sha: String,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsBuild>>> + '_>>;
 
+    /// Find a pull request from an approve build.
+    fn find_pull_request_by_approve_build<'a>(
+        &'a self,
+        approve_build: &'a BorsApproveBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>>;
+
     /// Find a pull request from a try build.
     fn find_pull_request_by_try_build<'a>(
         &'a self,

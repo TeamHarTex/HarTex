@@ -253,6 +253,21 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn find_pull_request_by_approve_build<'a>(
+        &'a self,
+        approve_build: &'a BorsApproveBuild,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + '_>> {
+        Box::pin(async move {
+            let result = crate::select_pr::SelectPullRequest::exec_with_approve_build_one(
+                &self.connection,
+                approve_build,
+            )
+            .await?;
+
+            Ok(result.map(|(pr, approve_build, build)| pr_from_database(pr, approve_build, build)))
+        })
+    }
+
     fn find_pull_request_by_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
