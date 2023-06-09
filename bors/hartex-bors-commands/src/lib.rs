@@ -38,6 +38,10 @@ pub enum BorsCommand {
     ///
     /// `bors r+`
     Approve,
+    /// ApproveEq command.
+    ///
+    /// `bors r=`
+    ApproveEq(String),
     /// Ping command.
     ///
     /// `bors ping`
@@ -56,6 +60,7 @@ pub enum BorsCommand {
 pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
     let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![
         parser::parse_approve,
+        parser::parse_approve_eq,
         parser::parse_ping,
         parser::parse_try,
         parser::parse_try_cancel,
