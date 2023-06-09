@@ -41,9 +41,9 @@ pub async fn approve_command<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     database: &mut dyn DatabaseClient,
     pr: u64,
-    author: &str,
+    approver: &str,
 ) -> hartex_eyre::Result<()> {
-    if !check_permissions(repository, pr, author, Permission::Approve).await? {
+    if !check_permissions(repository, pr, approver, Permission::Approve).await? {
         return Ok(());
     }
 
@@ -54,7 +54,7 @@ pub async fn approve_command<C: RepositoryClient>(
         .post_comment(
             pr,
             &format!(
-                ":pushpin: Commit {} has been approved by `{author}`.",
+                ":pushpin: Commit {} has been approved by `{approver}`.",
                 github_pr.head.sha
             ),
         )
@@ -63,7 +63,7 @@ pub async fn approve_command<C: RepositoryClient>(
     let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
-            Some(author.to_string()),
+            Some(approver.to_string()),
             &github_pr,
             pr,
         )
@@ -88,7 +88,7 @@ pub async fn approve_command<C: RepositoryClient>(
         .merge_branches(
             APPROVE_MERGE_BRANCH_NAME,
             &github_pr.head.sha,
-            &auto_merge_commit_message(&github_pr, author),
+            &auto_merge_commit_message(&github_pr, approver),
         )
         .await?;
 
