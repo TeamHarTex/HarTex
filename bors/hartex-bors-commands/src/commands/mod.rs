@@ -23,6 +23,7 @@
 //! # Commands
 
 pub mod approve;
+pub mod approve_cancel;
 pub mod ping;
 pub mod r#try;
 pub mod try_cancel;
