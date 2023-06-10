@@ -20,10 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Commands
+//! # Approve cancel command
+//!
+//! bors r-
 
-pub mod approve;
-pub mod approve_cancel;
-pub mod ping;
-pub mod r#try;
-pub mod try_cancel;
+/// Executes the approve cancel command.
+pub fn approve_cancel_command() {}
