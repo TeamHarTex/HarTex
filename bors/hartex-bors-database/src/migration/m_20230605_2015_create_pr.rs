@@ -47,6 +47,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(PullRequest::Repository).string().not_null())
                     .col(ColumnDef::new(PullRequest::Number).integer().not_null())
                     .col(ColumnDef::new(PullRequest::Assignee).string().not_null())
+                    .col(ColumnDef::new(PullRequest::Approved).integer().not_null())
                     .col(ColumnDef::new(PullRequest::ApprovedBy).string().null())
                     .col(ColumnDef::new(PullRequest::Title).string().not_null())
                     .col(ColumnDef::new(PullRequest::HeadRef).string().not_null())
@@ -97,6 +98,7 @@ enum PullRequest {
     Repository,
     Number,
     Assignee,
+    Approved,
     ApprovedBy,
     Title,
     HeadRef,
