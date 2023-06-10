@@ -60,11 +60,11 @@
             display: none;
         }
 
-        .cancelled {
+        .cancelled .approve-cancelled {
             background-color: #B3B3B3;
         }
 
-        .failure {
+        .failure .approve-failure {
             background-color: #FF6666;
         }
 
@@ -72,7 +72,7 @@
             background-color: #99FF99;
         }
 
-        .pending {
+        .pending .approve-pending {
             background-color: #FFCC66;
         }
 
@@ -124,7 +124,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td><a href="{{this.url}}">{{this.number}}</a></td>
-                <td class="{{this.approve_status}}">{{this.approve_status}}</td>
+                <td class="approve-{{this.approve_status}}">{{this.approve_status}}</td>
                 <td class="{{this.try_status}}">{{this.try_status}}</td>
                 <td>{{this.title}}</td>
                 <td>{{this.head_ref}}</td>
