@@ -35,6 +35,8 @@ use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
+use octocrab::models::events::payload::PullRequestEventAction;
+use octocrab::models::events::payload::PullRequestEventPayload;
 use octocrab::models::events::payload::WorkflowRunEventAction;
 use octocrab::models::events::payload::WorkflowRunEventPayload;
 use octocrab::models::issues::Comment;
@@ -53,6 +55,8 @@ pub struct BorsEvent {
 pub enum BorsEventKind {
     /// An issue comment.
     IssueComment(IssueCommentEventPayload),
+    /// An issue comment.
+    PullRequest(PullRequestEventPayload),
     /// A workflow run.
     WorkflowRun(WorkflowRunEventPayload),
 }
@@ -80,6 +84,21 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 
             Ok(BorsEvent {
                 kind: BorsEventKind::IssueComment(deserialized),
+                repository,
+            })
+        }
+        "pull_request" => {
+            let deserialized =
+                serde_json::from_value::<PullRequestEventPayload>(event_json.clone())?;
+
+            if deserialized.action != PullRequestEventAction::Opened {
+                return Err(Report::msg("non opened pull requests are ignored"));
+            }
+
+            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+
+            Ok(BorsEvent {
+                kind: BorsEventKind::PullRequest(deserialized),
                 repository,
             })
         }
@@ -118,6 +137,20 @@ pub async fn handle_event(
                 {
                     println!("{error}");
                 }
+            }
+        }
+        BorsEventKind::PullRequest(payload) => {
+            let repository_name =
+                GithubRepositoryName::new_from_repository(event.repository.repository)?;
+
+            if let Some((repository, _)) = retrieve_repository_state(state, &repository_name)
+            {
+                repository
+                    .client
+                    .client()
+                    .issues(repository_name.owner(), repository_name.repository())
+                    .add_labels(payload.number, &[String::from("Bors: Waiting on Review")])
+                    .await?;
             }
         }
         BorsEventKind::WorkflowRun(payload)
@@ -180,10 +213,7 @@ async fn handle_comment<C: RepositoryClient>(
                 }
                 BorsCommand::ApproveEq(arg) => {
                     hartex_bors_commands::commands::approve::approve_command(
-                        repository,
-                        database,
-                        pr,
-                        &arg,
+                        repository, database, pr, &arg,
                     )
                     .await?
                 }
