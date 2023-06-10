@@ -29,12 +29,10 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
-use hartex_bors_github::messages::auto_merge_commit_message;
 
 use crate::permissions::check_permissions;
 
 pub const APPROVE_BRANCH_NAME: &str = "automation/bors/approve";
-const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
 
 /// Executes the approve command.
 pub async fn approve_command<C: RepositoryClient>(
@@ -74,11 +72,12 @@ pub async fn approve_command<C: RepositoryClient>(
     let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
-            Some(approver.to_string()),
             &github_pr,
             pr,
         )
         .await?;
+
+    database.approve_pull_request(&pr_model, approver).await?;
 
     if let Some(ref build) = pr_model.approve_build && build.status == BorsBuildStatus::Pending {
         repository
@@ -89,37 +88,38 @@ pub async fn approve_command<C: RepositoryClient>(
         return Ok(());
     };
 
-    repository
-        .client
-        .set_branch_to_revision(APPROVE_MERGE_BRANCH_NAME, &github_pr.base.sha)
-        .await?;
-
-    let merge_hash = repository
-        .client
-        .merge_branches(
-            APPROVE_MERGE_BRANCH_NAME,
-            &github_pr.head.sha,
-            &auto_merge_commit_message(&github_pr, approver),
-        )
-        .await?;
-
-    database
-        .associate_approve_build(
-            &pr_model,
-            APPROVE_BRANCH_NAME.to_string(),
-            merge_hash.clone(),
-        )
-        .await?;
-
-    repository
-        .client
-        .set_branch_to_revision(APPROVE_BRANCH_NAME, &merge_hash)
-        .await?;
-
-    repository
-        .client
-        .delete_branch(APPROVE_MERGE_BRANCH_NAME)
-        .await?;
+    // FIXME: all the code below are to be removed when the queue is implemented
+    // repository
+    //     .client
+    //     .set_branch_to_revision(APPROVE_MERGE_BRANCH_NAME, &github_pr.base.sha)
+    //     .await?;
+    //
+    // let merge_hash = repository
+    //     .client
+    //     .merge_branches(
+    //         APPROVE_MERGE_BRANCH_NAME,
+    //         &github_pr.head.sha,
+    //         &auto_merge_commit_message(&github_pr, approver),
+    //     )
+    //     .await?;
+    //
+    // database
+    //     .associate_approve_build(
+    //         &pr_model,
+    //         APPROVE_BRANCH_NAME.to_string(),
+    //         merge_hash.clone(),
+    //     )
+    //     .await?;
+    //
+    // repository
+    //     .client
+    //     .set_branch_to_revision(APPROVE_BRANCH_NAME, &merge_hash)
+    //     .await?;
+    //
+    // repository
+    //     .client
+    //     .delete_branch(APPROVE_MERGE_BRANCH_NAME)
+    //     .await?;
 
     Ok(())
 }
