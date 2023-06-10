@@ -28,6 +28,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(lazy_cell)]
+#![feature(let_chains)]
 
 use std::sync::LazyLock;
 
