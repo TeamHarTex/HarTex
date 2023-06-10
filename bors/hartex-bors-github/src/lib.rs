@@ -273,7 +273,7 @@ impl RepositoryClient for GithubRepositoryClient {
             .map_err(Report::new)
     }
 
-    async fn set_labels_of_pull_request(&mut self, labels: Vec<Label>, pr: u64) -> hartex_eyre::Result<()> {
+    async fn set_labels_of_pull_request(&mut self, labels: Vec<String>, pr: u64) -> hartex_eyre::Result<()> {
         let mut response = self.client
             ._put(
                 format!(
