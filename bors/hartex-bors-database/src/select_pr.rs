@@ -90,8 +90,9 @@ impl SelectPullRequest {
         Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
     }
 
-    pub async fn exec_with_repo_one(
+    pub async fn exec_with_repo_and_number_one(
         connection: &DatabaseConnection,
+        number: i32,
         repository: String,
     ) -> hartex_eyre::Result<Option<(
         pull_request::Model,
@@ -100,6 +101,7 @@ impl SelectPullRequest {
     )>> {
         let mut select = pull_request::Entity::find()
             .select_only()
+            .filter(pull_request::Column::Number.eq(number))
             .filter(pull_request::Column::Repository.eq(repository));
 
         add_columns_with_prefix::<_, pull_request::Entity>(&mut select, "pull_request");
