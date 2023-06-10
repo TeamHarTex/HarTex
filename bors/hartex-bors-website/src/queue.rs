@@ -24,6 +24,7 @@
 
 use std::path::PathBuf;
 
+use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
 use hartex_log::log;
@@ -73,6 +74,13 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                 &QueueData {
                     pull_requests: pull_requests
                         .iter()
+                        .filter(|pr| {
+                            if let Some(approved_build) = &pr.approve_build && approved_build.status == BorsBuildStatus::Success {
+                                return false;
+                            }
+
+                            true
+                        })
                         .map(|pr| {
                             let approve_status = if let Some(approve_build) = &pr.approve_build {
                                 approve_build.status.as_str().to_string()
