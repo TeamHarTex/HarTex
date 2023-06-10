@@ -77,7 +77,7 @@ pub async fn try_cancel_command<C: RepositoryClient>(
     Ok(())
 }
 
-async fn cancel_build_workflows<C: RepositoryClient>(
+pub(crate) async fn cancel_build_workflows<C: RepositoryClient>(
     repository: &mut GithubRepositoryState<C>,
     database: &mut dyn DatabaseClient,
     build: &BorsBuild,
