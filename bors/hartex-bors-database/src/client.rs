@@ -69,11 +69,13 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn approve_pull_request<'a>(
         &'a self,
         pr: &'a BorsPullRequest,
+        approver: &'a str,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
         Box::pin(async move {
             let pr_model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr.id),
                 approved: Set(1),
+                approved_by: Set(Some(approver.to_string())),
                 ..Default::default()
             };
 
@@ -303,7 +305,6 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-        approved_by: Option<String>,
         github_pr: &'a PullRequest,
         pr_number: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>> {
@@ -318,7 +319,6 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     .and_then(|author| Some(author.login.clone()))
                     .unwrap_or_default()),
                 approved: Set(0),
-                approved_by: Set(approved_by),
                 title: Set(github_pr.title.clone().unwrap()),
                 head_ref: Set(github_pr
                     .head

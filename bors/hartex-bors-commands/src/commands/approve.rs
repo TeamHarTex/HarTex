@@ -74,13 +74,12 @@ pub async fn approve_command<C: RepositoryClient>(
     let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
-            Some(approver.to_string()),
             &github_pr,
             pr,
         )
         .await?;
 
-    database.approve_pull_request(&pr_model).await?;
+    database.approve_pull_request(&pr_model, approver).await?;
 
     if let Some(ref build) = pr_model.approve_build && build.status == BorsBuildStatus::Pending {
         repository

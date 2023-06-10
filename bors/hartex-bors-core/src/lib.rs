@@ -69,6 +69,7 @@ pub trait DatabaseClient {
     fn approve_pull_request<'a>(
         &'a self,
         pr: &'a BorsPullRequest,
+        approver: &'a str,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
     /// Associate an approve build to a pull request.
@@ -150,7 +151,6 @@ pub trait DatabaseClient {
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-        approved_by: Option<String>,
         github_pr: &'a PullRequest,
         pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + '_>>;
