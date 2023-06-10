@@ -66,7 +66,10 @@ pub async fn approve_command<C: RepositoryClient>(
     let label = repository.client.get_label("waiting-on-bors").await?;
     labels.push(label);
 
-    repository.client.set_labels_of_pull_request(labels, pr).await?;
+    repository
+        .client
+        .set_labels_of_pull_request(labels.iter().map(|label| label.name.clone()).collect(), pr)
+        .await?;
 
     let pr_model = database
         .get_or_create_pull_request(
@@ -101,16 +104,18 @@ pub async fn approve_command<C: RepositoryClient>(
         .await?;
 
     database
-        .associate_approve_build(&pr_model, APPROVE_BRANCH_NAME.to_string(), merge_hash.clone())
+        .associate_approve_build(
+            &pr_model,
+            APPROVE_BRANCH_NAME.to_string(),
+            merge_hash.clone(),
+        )
         .await?;
 
-    
     repository
         .client
         .set_branch_to_revision(APPROVE_BRANCH_NAME, &merge_hash)
         .await?;
 
-    
     repository
         .client
         .delete_branch(APPROVE_MERGE_BRANCH_NAME)

@@ -149,7 +149,7 @@ pub async fn handle_event(
                     .client
                     .client()
                     .issues(repository_name.owner(), repository_name.repository())
-                    .add_labels(payload.number, &[String::from("Bors: Waiting on Review")])
+                    .add_labels(payload.number, &[String::from("waiting-on-review")])
                     .await?;
             }
         }
