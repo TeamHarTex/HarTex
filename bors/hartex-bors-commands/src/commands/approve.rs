@@ -60,6 +60,14 @@ pub async fn approve_command<C: RepositoryClient>(
         )
         .await?;
 
+    let mut labels = github_pr.clone().labels.unwrap();
+    labels.retain(|label| label.name != "waiting-on-review");
+
+    let label = repository.client.get_label("waiting-on-bors").await?;
+    labels.push(label);
+
+    repository.client.set_labels_of_pull_request(labels, pr).await?;
+
     let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
