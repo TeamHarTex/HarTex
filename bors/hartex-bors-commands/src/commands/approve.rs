@@ -80,6 +80,8 @@ pub async fn approve_command<C: RepositoryClient>(
         )
         .await?;
 
+    database.approve_pull_request(&pr_model).await?;
+
     if let Some(ref build) = pr_model.approve_build && build.status == BorsBuildStatus::Pending {
         repository
             .client

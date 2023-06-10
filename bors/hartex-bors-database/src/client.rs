@@ -66,6 +66,23 @@ impl SeaORMDatabaseClient {
 }
 
 impl DatabaseClient for SeaORMDatabaseClient {
+    fn approve_pull_request<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let pr_model = entity::pull_request::ActiveModel {
+                id: Unchanged(pr.id),
+                approved: Set(1),
+                ..Default::default()
+            };
+
+            pr_model.update(&self.connection).await?;
+
+            Ok(())
+        })
+    }
+
     fn associate_approve_build<'a>(
         &'a self,
         pr: &'a BorsPullRequest,

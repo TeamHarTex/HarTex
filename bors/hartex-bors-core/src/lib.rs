@@ -65,6 +65,12 @@ pub trait BorsState<C: RepositoryClient> {
 
 /// A database client.
 pub trait DatabaseClient {
+    /// Approves a bors pull request.
+    fn approve_pull_request<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
     /// Associate an approve build to a pull request.
     fn associate_approve_build<'a>(
         &'a self,
