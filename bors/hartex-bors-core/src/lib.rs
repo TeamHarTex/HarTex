@@ -30,6 +30,7 @@
 use std::future::Future;
 use std::pin::Pin;
 
+use octocrab::models::Label;
 use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
@@ -226,6 +227,9 @@ pub trait RepositoryClient {
         branch: &str,
         commit_hash: &str,
     ) -> hartex_eyre::Result<Vec<Check>>;
+
+    /// Gets a label by its name.
+    async fn get_label(&mut self, name: &str) -> hartex_eyre::Result<Label>;
 
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
