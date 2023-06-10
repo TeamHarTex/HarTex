@@ -84,6 +84,8 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                         .map(|pr| {
                             let approve_status = if let Some(approve_build) = &pr.approve_build {
                                 approve_build.status.as_str().to_string()
+                            } else if pr.approved {
+                                String::from("approved")
                             } else {
                                 String::new()
                             };
