@@ -50,7 +50,7 @@ pub async fn try_command<C: RepositoryClient>(
     let github_pr = repository.client.get_pull_request(pr).await?;
 
     let pr_model = database
-        .get_or_create_pull_request(repository.client.repository_name(), None, &github_pr, pr)
+        .get_or_create_pull_request(repository.client.repository_name(), &github_pr, pr)
         .await?;
 
     if let Some(ref build) = pr_model.try_build && build.status == BorsBuildStatus::Pending {
