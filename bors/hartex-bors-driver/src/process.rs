@@ -39,7 +39,6 @@ pub fn bors_process(mut state: GithubBorsState) -> impl Future<Output = ()> {
             match event {
                 Ok(Event::Open) => log::trace!("eventsource connection opened"),
                 Ok(Event::Message(message)) => {
-                    log::trace!("received event from smee: {}", &message.data);
                     let value = serde_json::from_str::<Value>(&message.data).unwrap();
                     if let Value::String(event_type) = &value["x-github-event"] {
                         let body = &value["body"];
