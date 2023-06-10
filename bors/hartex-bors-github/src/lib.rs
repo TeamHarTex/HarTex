@@ -274,7 +274,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn set_labels_of_pull_request(&mut self, labels: Vec<Label>, pr: u64) -> hartex_eyre::Result<()> {
-        self.client
+        let mut response = self.client
             ._put(
                 format!(
                     "https://api.github.com/repos/{}/{}/issues/{pr}/labels",
@@ -286,6 +286,15 @@ impl RepositoryClient for GithubRepositoryClient {
                 }))
             )
             .await?;
+
+        if response.status() != StatusCode::OK {
+            let mut full = String::new();
+            while let Some(result) = response.body_mut().data().await {
+                full.push_str(str::from_utf8(&result?)?);
+            }
+
+            return Err(Report::msg(full));
+        }
 
         Ok(())
     }
