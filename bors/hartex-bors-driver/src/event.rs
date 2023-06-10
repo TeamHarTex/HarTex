@@ -143,7 +143,7 @@ pub async fn handle_event(
             let repository_name =
                 GithubRepositoryName::new_from_repository(event.repository.repository)?;
 
-            if let Some((repository, _)) = retrieve_repository_state(state, &repository_name)
+            if let Some((repository, database)) = retrieve_repository_state(state, &repository_name)
             {
                 repository
                     .client
@@ -151,6 +151,8 @@ pub async fn handle_event(
                     .issues(repository_name.owner(), repository_name.repository())
                     .add_labels(payload.number, &[String::from("waiting-on-review")])
                     .await?;
+
+                database.get_or_create_pull_request(&repository_name, &payload.pull_request, payload.number).await?;
             }
         }
         BorsEventKind::WorkflowRun(payload)
