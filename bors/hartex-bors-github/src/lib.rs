@@ -46,6 +46,7 @@ use hartex_log::log;
 use http::StatusCode;
 use http_body::Body;
 use jsonwebtoken::EncodingKey;
+use octocrab::models::Label;
 use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::App;
@@ -262,6 +263,31 @@ impl RepositoryClient for GithubRepositoryClient {
             .collect();
 
         Ok(suites)
+    }
+
+    async fn get_label(&mut self, name: &str) -> hartex_eyre::Result<Label> {
+        self.client
+            .issues(self.repository_name.owner(), self.repository_name.repository())
+            .get_label(name)
+            .await
+            .map_err(Report::new)
+    }
+
+    async fn set_labels_of_pull_request(&mut self, labels: Vec<Label>, pr: u64) -> hartex_eyre::Result<()> {
+        self.client
+            ._put(
+                format!(
+                    "https://api.github.com/repos/{}/{}/issues/{pr}/labels",
+                    self.repository_name.owner(),
+                    self.repository_name.repository(),
+                ),
+                Some(&serde_json::json!({
+                    "labels": labels,
+                }))
+            )
+            .await?;
+
+        Ok(())
     }
 
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest> {
