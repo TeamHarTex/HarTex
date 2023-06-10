@@ -24,5 +24,23 @@
 //!
 //! bors r-
 
+use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::models::Permission;
+use hartex_bors_core::DatabaseClient;
+use hartex_bors_core::RepositoryClient;
+
+use crate::permissions::check_permissions;
+
 /// Executes the approve cancel command.
-pub fn approve_cancel_command() {}
+pub async fn approve_cancel_command<C: RepositoryClient>(
+    repository: &mut GithubRepositoryState<C>,
+    _: &mut dyn DatabaseClient,
+    pr: u64,
+    approver: &str,
+) -> hartex_eyre::Result<()> {
+    if !check_permissions(repository, pr, approver, Permission::Approve).await? {
+        return Ok(());
+    }
+
+    Ok(())
+}
