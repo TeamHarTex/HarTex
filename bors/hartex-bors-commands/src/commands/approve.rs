@@ -66,6 +66,8 @@ pub async fn approve_command<C: RepositoryClient>(
     let label = repository.client.get_label("Bors: Waiting on Bors").await?;
     labels.push(label);
 
+    repository.client.set_labels_of_pull_request(labels, pr).await?;
+
     let pr_model = database
         .get_or_create_pull_request(
             repository.client.repository_name(),
