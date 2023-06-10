@@ -273,6 +273,23 @@ impl RepositoryClient for GithubRepositoryClient {
             .map_err(Report::new)
     }
 
+    async fn set_labels_of_pull_request(&mut self, labels: Vec<Label>, pr: u64) -> hartex_eyre::Result<()> {
+        self.client
+            ._put(
+                format!(
+                    "https://api.github.com/repos/{}/{}/issues/{pr}/labels",
+                    self.repository_name.owner(),
+                    self.repository_name.repository(),
+                ),
+                Some(&serde_json::json!({
+                    "labels": labels,
+                }))
+            )
+            .await?;
+
+        Ok(())
+    }
+
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest> {
         self.client
             .pulls(

@@ -231,6 +231,9 @@ pub trait RepositoryClient {
     /// Gets a label by its name.
     async fn get_label(&mut self, name: &str) -> hartex_eyre::Result<Label>;
 
+    /// Sets the labels of a pull request.
+    async fn set_labels_of_pull_request(&mut self, labels: Vec<Label>, pr: u64) -> hartex_eyre::Result<()>;
+
     /// Gets a pull request by its number.
     async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
 
