@@ -324,8 +324,9 @@ impl DatabaseClient for SeaORMDatabaseClient {
             }
 
             let (pr, approve_build, build) =
-                crate::select_pr::SelectPullRequest::exec_with_repo_one(
+                crate::select_pr::SelectPullRequest::exec_with_repo_and_number_one(
                     &self.connection,
+                    pr_number as i32,
                     format!("{name}"),
                 )
                 .await?
