@@ -300,6 +300,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     .and_then(|authors| authors.first())
                     .and_then(|author| Some(author.login.clone()))
                     .unwrap_or_default()),
+                approved: Set(0),
                 approved_by: Set(approved_by),
                 title: Set(github_pr.title.clone().unwrap()),
                 head_ref: Set(github_pr
@@ -523,6 +524,7 @@ fn pr_from_database(
         id: pr.id,
         repository: pr.repository,
         number: pr.number as u64,
+        approved: pr.approved == 1,
         assignee: pr.assignee,
         approved_by: pr.approved_by,
         title: pr.title,

@@ -31,6 +31,7 @@ pub struct Model {
     pub repository: String,
     pub number: i32,
     pub assignee: String,
+    pub approved: i32,  // (boolean)
     pub approved_by: Option<String>,
     pub title: String,
     pub head_ref: String,
