@@ -39,6 +39,7 @@ use tokio::runtime::Builder;
 
 mod event;
 mod process;
+mod queue;
 mod workflows;
 
 /// Entry point.
@@ -68,7 +69,7 @@ fn actual_main() -> hartex_eyre::Result<()> {
     let mut private_key = String::new();
     private_key_file.read_to_string(&mut private_key)?;
 
-    let state = runtime.block_on(GithubBorsState::load(
+    let (state, rx) = runtime.block_on(GithubBorsState::load(
         app_id.into(),
         SeaORMDatabaseClient::new(database),
         private_key.into_bytes().into(),
@@ -76,7 +77,8 @@ fn actual_main() -> hartex_eyre::Result<()> {
 
     let future = process::bors_process(state);
 
-    runtime.block_on(future);
+    runtime.spawn(future);
+    runtime.spawn(queue::queue_processor(rx));
 
     Ok(())
 }
