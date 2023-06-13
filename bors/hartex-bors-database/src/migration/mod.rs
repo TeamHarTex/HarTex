@@ -29,6 +29,7 @@ mod m_20230529_2203_create_workflow;
 mod m_20230604_1237_create_repository;
 mod m_20230605_2015_create_pr;
 mod m_20230608_2047_create_approve_build;
+mod m_20230613_1838_create_enqueued;
 
 pub struct Migrator;
 
@@ -41,6 +42,7 @@ impl MigratorTrait for Migrator {
             Box::new(m_20230604_1237_create_repository::Migration),
             Box::new(m_20230605_2015_create_pr::Migration),
             Box::new(m_20230608_2047_create_approve_build::Migration),
+            Box::new(m_20230613_1838_create_enqueued::Migration),
         ]
     }
 }
