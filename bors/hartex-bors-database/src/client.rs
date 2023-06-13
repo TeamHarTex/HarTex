@@ -222,6 +222,22 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn enqueue_pull_request<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>> {
+        Box::pin(async move {
+            let enqueued_pr = entity::enqueued_pull_request::ActiveModel {
+                pull_request: Set(pr.id),
+                ..Default::default()
+            };
+    
+            enqueued_pr.insert(&self.connection).await?;
+
+            Ok(())
+        })
+    }
+
     fn find_approve_build<'a>(
         &'a self,
         repository: &'a GithubRepositoryName,

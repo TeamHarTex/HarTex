@@ -118,6 +118,12 @@ pub trait DatabaseClient {
         workflow_status: BorsWorkflowStatus,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
 
+    /// Enqueues a pull request.
+    fn enqueue_pull_request<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + '_>>;
+
     /// Finds an approve build.
     fn find_approve_build<'a>(
         &'a self,
