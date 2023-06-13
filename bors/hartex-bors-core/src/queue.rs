@@ -24,4 +24,10 @@
 
 /// A pull request queue event.
 #[derive(Clone, Debug)]
-pub enum BorsQueueEvent {}
+pub enum BorsQueueEvent {
+    /// A pull request was added to the queue.
+    /// 
+    /// Takes in the corresponding ID of the pull request, which is a foreign key
+    /// in the "enqueued" table to the "pull_request" table.
+    PullRequestEnqueued(i32),
+}

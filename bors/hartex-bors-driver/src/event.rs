@@ -26,10 +26,10 @@ use hartex_bors_commands::parser::ParserError;
 use hartex_bors_commands::BorsCommand;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
-use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
@@ -130,12 +130,13 @@ pub async fn handle_event(
                 return Ok(());
             }
 
-            if let Some((repository, database, _)) = retrieve_repository_state(
+            if let Some((repository, database, sender)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
                 if let Err(error) =
-                    handle_comment(repository, database, payload.comment, payload.issue).await
+                    handle_comment(repository, database, payload.comment, payload.issue, sender)
+                        .await
                 {
                     println!("{error}");
                 }
@@ -145,7 +146,8 @@ pub async fn handle_event(
             let repository_name =
                 GithubRepositoryName::new_from_repository(event.repository.repository)?;
 
-            if let Some((repository, database, _)) = retrieve_repository_state(state, &repository_name)
+            if let Some((repository, database, _)) =
+                retrieve_repository_state(state, &repository_name)
             {
                 repository
                     .client
@@ -154,7 +156,13 @@ pub async fn handle_event(
                     .add_labels(payload.number, &[String::from("waiting-on-review")])
                     .await?;
 
-                database.get_or_create_pull_request(&repository_name, &payload.pull_request, payload.number).await?;
+                database
+                    .get_or_create_pull_request(
+                        &repository_name,
+                        &payload.pull_request,
+                        payload.number,
+                    )
+                    .await?;
             }
         }
         BorsEventKind::WorkflowRun(payload)
@@ -190,6 +198,7 @@ async fn handle_comment<C: RepositoryClient>(
     database: &mut dyn DatabaseClient,
     comment: Comment,
     issue: Issue,
+    sender: Sender<BorsQueueEvent>,
 ) -> hartex_eyre::Result<()> {
     let pr = issue.number;
     let body = comment.body.unwrap();
@@ -212,12 +221,13 @@ async fn handle_comment<C: RepositoryClient>(
                         database,
                         pr,
                         &comment.user.login,
+                        sender.clone(),
                     )
                     .await?
                 }
                 BorsCommand::ApproveEq(arg) => {
                     hartex_bors_commands::commands::approve::approve_command(
-                        repository, database, pr, &arg,
+                        repository, database, pr, &arg, sender.clone(),
                     )
                     .await?
                 }
@@ -263,7 +273,11 @@ async fn handle_comment<C: RepositoryClient>(
 fn retrieve_repository_state<'a, C: RepositoryClient>(
     state: &'a mut dyn BorsState<C>,
     repository: &GithubRepositoryName,
-) -> Option<(&'a mut GithubRepositoryState<C>, &'a mut dyn DatabaseClient, Sender<BorsQueueEvent>)> {
+) -> Option<(
+    &'a mut GithubRepositoryState<C>,
+    &'a mut dyn DatabaseClient,
+    Sender<BorsQueueEvent>,
+)> {
     match state.get_repository_state_mut(repository) {
         Some(result) => Some(result),
         None => {
