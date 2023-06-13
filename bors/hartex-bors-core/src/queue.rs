@@ -20,20 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The Pull Request Queue Processor
+//! # Queue Models
 
-use hartex_bors_core::queue::BorsQueueEvent;
-use hartex_log::log;
-use tokio::sync::mpsc::Receiver;
-
-/// Background task processing the queue.
-#[allow(dead_code)]
-pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>) {
-    while let Some(event) = rx.recv().await {
-        match event {
-            BorsQueueEvent::PullRequestEnqueued(id) => {
-                log::trace!("pull request with id {id} in pull_request table has been enqueued");
-            }
-        }
-    }
+/// A pull request queue event.
+#[derive(Clone, Debug)]
+pub enum BorsQueueEvent {
+    /// A pull request was added to the queue.
+    /// 
+    /// Takes in the corresponding ID of the pull request, which is a foreign key
+    /// in the "enqueued" table to the "pull_request" table.
+    PullRequestEnqueued(i32),
 }
