@@ -6,5 +6,7 @@
         ".\\discord-frontend\\Cargo.toml",
         ".\\localization\\Cargo.toml",
         ".\\rust-utilities\\Cargo.toml",
-    ]
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "rust-analyzer.imports.merge.glob": false
 }

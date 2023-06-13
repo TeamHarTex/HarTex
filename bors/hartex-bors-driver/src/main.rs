@@ -39,6 +39,7 @@ use tokio::runtime::Builder;
 
 mod event;
 mod process;
+mod queue;
 mod workflows;
 
 /// Entry point.
