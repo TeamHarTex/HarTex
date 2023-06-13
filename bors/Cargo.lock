@@ -898,6 +898,7 @@ dependencies = [
  "hartex_eyre",
  "octocrab",
  "sea-orm",
+ "tokio",
 ]
 
 [[package]]

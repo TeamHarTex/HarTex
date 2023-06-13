@@ -122,10 +122,15 @@ impl BorsState<GithubRepositoryClient> for GithubBorsState {
     ) -> Option<(
         &mut GithubRepositoryState<GithubRepositoryClient>,
         &mut dyn DatabaseClient,
+        Sender<BorsQueueEvent>,
     )> {
-        self.repositories
-            .get_mut(repository)
-            .map(|repo| (repo, (&mut self.database) as &mut dyn DatabaseClient))
+        self.repositories.get_mut(repository).map(|repo| {
+            (
+                repo,
+                (&mut self.database) as &mut dyn DatabaseClient,
+                self.sender.clone(),
+            )
+        })
     }
 }
 
