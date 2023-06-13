@@ -50,6 +50,7 @@ use crate::models::GithubRepositoryState;
 use crate::models::Permission;
 
 pub mod models;
+pub mod queue;
 
 /// A state of bors.
 pub trait BorsState<C: RepositoryClient>: Send {

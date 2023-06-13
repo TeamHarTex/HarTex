@@ -20,13 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # The Pull Request Queue Processor
+//! # Queue Models
 
-use hartex_bors_core::queue::BorsQueueEvent;
-use tokio::sync::mpsc::Receiver;
-
-/// Background task processing the queue.
-#[allow(dead_code)]
-pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>) {
-    while let Some(_) = rx.recv().await {}
-}
+/// A pull request queue event.
+#[derive(Clone, Debug)]
+pub enum BorsQueueEvent {}
