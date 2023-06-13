@@ -1,0 +1,10 @@
+{
+    "rust-analyzer.linkedProjects": [
+        ".\\api-backend\\Cargo.toml",
+        ".\\bors\\Cargo.toml",
+        ".\\buildsystem\\Cargo.toml",
+        ".\\discord-frontend\\Cargo.toml",
+        ".\\localization\\Cargo.toml",
+        ".\\rust-utilities\\Cargo.toml",
+    ]
+}
