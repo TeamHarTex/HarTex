@@ -22,6 +22,10 @@
 
 //! # The Pull Request Queue Processor
 
+use tokio::sync::mpsc::Receiver;
+
 /// Background task processing the queue.
 #[allow(dead_code)]
-pub fn queue_processor() {}
+pub async fn queue_processor(mut rx: Receiver<()>) {
+    while let Some(_) = rx.recv().await {}
+}
