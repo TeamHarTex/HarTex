@@ -23,12 +23,13 @@
 //! # The Pull Request Queue Processor
 
 use hartex_bors_core::queue::BorsQueueEvent;
+use hartex_bors_core::DatabaseClient;
 use hartex_log::log;
 use tokio::sync::mpsc::Receiver;
 
 /// Background task processing the queue.
 #[allow(dead_code)]
-pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>) {
+pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>, _: Box<dyn DatabaseClient>) {
     while let Some(event) = rx.recv().await {
         match event {
             BorsQueueEvent::PullRequestEnqueued(id) => {

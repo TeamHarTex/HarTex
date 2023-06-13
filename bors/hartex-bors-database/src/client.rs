@@ -54,6 +54,7 @@ use sea_orm::TransactionTrait;
 use crate::entity;
 
 /// A SeaORM database client.
+#[derive(Clone)]
 pub struct SeaORMDatabaseClient {
     connection: DatabaseConnection,
 }
