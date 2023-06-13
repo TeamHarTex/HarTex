@@ -37,6 +37,7 @@ use hartex_bors_core::models::Check;
 use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
@@ -76,7 +77,7 @@ pub struct GithubBorsState {
     client: Octocrab,
     pub database: SeaORMDatabaseClient,
     repositories: RepositoryMap,
-    sender: Sender<()>,
+    sender: Sender<BorsQueueEvent>,
 }
 
 impl GithubBorsState {
@@ -85,7 +86,7 @@ impl GithubBorsState {
         application_id: AppId,
         database: SeaORMDatabaseClient,
         private_key: SecretVec<u8>,
-    ) -> hartex_eyre::Result<(Self, Receiver<()>)> {
+    ) -> hartex_eyre::Result<(Self, Receiver<BorsQueueEvent>)> {
         log::trace!("obtaining private key");
         let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref())?;
 
@@ -121,10 +122,15 @@ impl BorsState<GithubRepositoryClient> for GithubBorsState {
     ) -> Option<(
         &mut GithubRepositoryState<GithubRepositoryClient>,
         &mut dyn DatabaseClient,
+        Sender<BorsQueueEvent>,
     )> {
-        self.repositories
-            .get_mut(repository)
-            .map(|repo| (repo, (&mut self.database) as &mut dyn DatabaseClient))
+        self.repositories.get_mut(repository).map(|repo| {
+            (
+                repo,
+                (&mut self.database) as &mut dyn DatabaseClient,
+                self.sender.clone(),
+            )
+        })
     }
 }
 
