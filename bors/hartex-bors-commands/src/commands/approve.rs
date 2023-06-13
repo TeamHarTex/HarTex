@@ -29,6 +29,8 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_core::queue::BorsQueueEvent;
+use tokio::sync::mpsc::Sender;
 
 use crate::permissions::check_permissions;
 
@@ -40,6 +42,7 @@ pub async fn approve_command<C: RepositoryClient>(
     database: &mut dyn DatabaseClient,
     pr: u64,
     approver: &str,
+    sender: Sender<BorsQueueEvent>,
 ) -> hartex_eyre::Result<()> {
     if !check_permissions(repository, pr, approver, Permission::Approve).await? {
         return Ok(());
@@ -89,6 +92,7 @@ pub async fn approve_command<C: RepositoryClient>(
     };
 
     database.enqueue_pull_request(&pr_model).await?;
+    sender.send(BorsQueueEvent::PullRequestEnqueued(pr_model.id)).await?;
 
     // FIXME: all the code below are to be removed when the queue is implemented
     // repository
