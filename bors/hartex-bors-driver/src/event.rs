@@ -29,6 +29,7 @@ use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::BorsState;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_eyre::eyre::Report;
@@ -42,6 +43,7 @@ use octocrab::models::events::payload::WorkflowRunEventPayload;
 use octocrab::models::issues::Comment;
 use octocrab::models::issues::Issue;
 use serde_json::Value;
+use tokio::sync::mpsc::Sender;
 
 /// Bors event
 pub struct BorsEvent {
@@ -128,7 +130,7 @@ pub async fn handle_event(
                 return Ok(());
             }
 
-            if let Some((repository, database)) = retrieve_repository_state(
+            if let Some((repository, database, _)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
@@ -143,7 +145,7 @@ pub async fn handle_event(
             let repository_name =
                 GithubRepositoryName::new_from_repository(event.repository.repository)?;
 
-            if let Some((repository, database)) = retrieve_repository_state(state, &repository_name)
+            if let Some((repository, database, _)) = retrieve_repository_state(state, &repository_name)
             {
                 repository
                     .client
@@ -158,7 +160,7 @@ pub async fn handle_event(
         BorsEventKind::WorkflowRun(payload)
             if payload.action == WorkflowRunEventAction::InProgress =>
         {
-            if let Some((repository, database)) = retrieve_repository_state(
+            if let Some((repository, database, _)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
@@ -169,7 +171,7 @@ pub async fn handle_event(
         BorsEventKind::WorkflowRun(payload)
             if payload.action == WorkflowRunEventAction::Completed =>
         {
-            if let Some((repository, database)) = retrieve_repository_state(
+            if let Some((repository, database, _)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
@@ -261,7 +263,7 @@ async fn handle_comment<C: RepositoryClient>(
 fn retrieve_repository_state<'a, C: RepositoryClient>(
     state: &'a mut dyn BorsState<C>,
     repository: &GithubRepositoryName,
-) -> Option<(&'a mut GithubRepositoryState<C>, &'a mut dyn DatabaseClient)> {
+) -> Option<(&'a mut GithubRepositoryState<C>, &'a mut dyn DatabaseClient, Sender<BorsQueueEvent>)> {
     match state.get_repository_state_mut(repository) {
         Some(result) => Some(result),
         None => {

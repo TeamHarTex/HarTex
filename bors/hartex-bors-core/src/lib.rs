@@ -35,6 +35,7 @@ use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::CommentId;
 use octocrab::models::RunId;
+use tokio::sync::mpsc::Sender;
 
 use crate::models::BorsApproveBuild;
 use crate::models::BorsBuild;
@@ -61,7 +62,7 @@ pub trait BorsState<C: RepositoryClient>: Send {
     fn get_repository_state_mut(
         &mut self,
         repository: &GithubRepositoryName,
-    ) -> Option<(&mut GithubRepositoryState<C>, &mut dyn DatabaseClient)>;
+    ) -> Option<(&mut GithubRepositoryState<C>, &mut dyn DatabaseClient, Sender<crate::queue::BorsQueueEvent>)>;
 }
 
 /// A database client.
