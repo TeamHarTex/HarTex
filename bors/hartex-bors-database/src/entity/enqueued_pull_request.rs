@@ -20,9 +20,33 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod approve_build;
-pub mod build;
-pub mod enqueued_pull_request;
-pub mod pull_request;
-pub mod repository;
-pub mod workflow;
+use sea_orm::prelude::*;
+use serde::Serialize;
+
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize)]
+#[sea_orm(table_name = "enqueued")]
+pub struct Model {
+    #[sea_orm(primary_key)]
+    pub id: i32,
+    pub pull_request: i32,
+}
+
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+pub enum Relation {
+    #[sea_orm(
+        belongs_to = "super::pull_request::Entity",
+        from = "Column::PullRequest",
+        to = "super::pull_request::Column::Id",
+        on_update = "NoAction",
+        on_delete = "NoAction"
+    )]
+    PullRequest,
+}
+
+impl Related<super::pull_request::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::PullRequest.def()
+    }
+}
+
+impl ActiveModelBehavior for ActiveModel {}
