@@ -237,7 +237,7 @@ pub struct GithubRepositoryState<C: RepositoryClient> {
     /// The client for this repository.
     pub client: C,
     /// The permission resolver for this repository.
-    pub permission_resolver: Box<dyn PermissionResolver>,
+    pub permission_resolver: Box<dyn PermissionResolver + Send>,
 }
 
 /// The type of permission.

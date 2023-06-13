@@ -22,6 +22,6 @@
 
 //! # The Pull Request Queue Processor
 
-/// Progresses the Pull Request queue when appropriate.
+/// Background task processing the queue.
 #[allow(dead_code)]
-pub fn progress_queue() {}
+pub fn queue_processor() {}

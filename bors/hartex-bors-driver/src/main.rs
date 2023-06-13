@@ -77,7 +77,7 @@ fn actual_main() -> hartex_eyre::Result<()> {
 
     let future = process::bors_process(state);
 
-    runtime.block_on(future);
+    runtime.spawn(future);
 
     Ok(())
 }
