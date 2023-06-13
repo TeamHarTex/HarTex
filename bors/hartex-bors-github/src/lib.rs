@@ -46,20 +46,23 @@ use hartex_log::log;
 use http::StatusCode;
 use http_body::Body;
 use jsonwebtoken::EncodingKey;
-use octocrab::models::Label;
 use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
+use octocrab::models::repos::Object;
 use octocrab::models::App;
 use octocrab::models::AppId;
 use octocrab::models::CommentId;
+use octocrab::models::Label;
 use octocrab::models::Repository;
 use octocrab::models::RunId;
-use octocrab::models::repos::Object;
 use octocrab::params::repos::Reference;
 use octocrab::Octocrab;
 use secrecy::ExposeSecret;
 use secrecy::SecretVec;
 use serde::Deserialize;
+use tokio::sync::mpsc::channel;
+use tokio::sync::mpsc::Receiver;
+use tokio::sync::mpsc::Sender;
 
 pub mod messages;
 mod operations;
@@ -73,6 +76,7 @@ pub struct GithubBorsState {
     client: Octocrab,
     pub database: SeaORMDatabaseClient,
     repositories: RepositoryMap,
+    sender: Sender<()>,
 }
 
 impl GithubBorsState {
@@ -81,7 +85,7 @@ impl GithubBorsState {
         application_id: AppId,
         database: SeaORMDatabaseClient,
         private_key: SecretVec<u8>,
-    ) -> hartex_eyre::Result<Self> {
+    ) -> hartex_eyre::Result<(Self, Receiver<()>)> {
         log::trace!("obtaining private key");
         let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref())?;
 
@@ -91,13 +95,18 @@ impl GithubBorsState {
         log::trace!("obtaining github application");
         let application = client.current().app().await?;
 
+        let (tx, rx) = channel(15);
         let repositories = repositories::load_repositories(&client, &database).await?;
-        Ok(Self {
-            application,
-            client,
-            database,
-            repositories,
-        })
+        Ok((
+            Self {
+                application,
+                client,
+                database,
+                repositories,
+                sender: tx,
+            },
+            rx,
+        ))
     }
 }
 
@@ -267,14 +276,22 @@ impl RepositoryClient for GithubRepositoryClient {
 
     async fn get_label(&mut self, name: &str) -> hartex_eyre::Result<Label> {
         self.client
-            .issues(self.repository_name.owner(), self.repository_name.repository())
+            .issues(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+            )
             .get_label(name)
             .await
             .map_err(Report::new)
     }
 
-    async fn set_labels_of_pull_request(&mut self, labels: Vec<String>, pr: u64) -> hartex_eyre::Result<()> {
-        let mut response = self.client
+    async fn set_labels_of_pull_request(
+        &mut self,
+        labels: Vec<String>,
+        pr: u64,
+    ) -> hartex_eyre::Result<()> {
+        let mut response = self
+            .client
             ._put(
                 format!(
                     "https://api.github.com/repos/{}/{}/issues/{pr}/labels",
@@ -283,7 +300,7 @@ impl RepositoryClient for GithubRepositoryClient {
                 ),
                 Some(&serde_json::json!({
                     "labels": labels,
-                }))
+                })),
             )
             .await?;
 
@@ -331,8 +348,12 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn get_revision(&mut self, branch: &str) -> hartex_eyre::Result<String> {
-        let reference = self.client
-            .repos(self.repository_name.owner(), self.repository_name.repository())
+        let reference = self
+            .client
+            .repos(
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+            )
             .get_ref(&Reference::Branch(branch.to_string()))
             .await?;
 

@@ -88,6 +88,8 @@ pub async fn approve_command<C: RepositoryClient>(
         return Ok(());
     };
 
+    database.enqueue_pull_request(&pr_model).await?;
+
     // FIXME: all the code below are to be removed when the queue is implemented
     // repository
     //     .client
