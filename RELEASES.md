@@ -1,3 +1,25 @@
+# Version 0.2.0 (2023-ab-cd)
+
+> **e** contributors made contributions to this release
+
+> **f** commits since 2023-06-14
+
+> **g** pull requests merged since 2023-06-14
+
+## API Backend
+
+## Bors Buildbot
+
+## Buildsystem
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
 # Version 0.1.0 (2023-06-14)
 
 > **5** contributors made contributions to this release
