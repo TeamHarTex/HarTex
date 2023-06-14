@@ -28,6 +28,7 @@ use serde::Serialize;
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
+    pub repository: i32,
     pub pull_request: i32,
 }
 
@@ -41,11 +42,25 @@ pub enum Relation {
         on_delete = "NoAction"
     )]
     PullRequest,
+    #[sea_orm(
+        belongs_to = "super::repository::Entity",
+        from = "Column::Repository",
+        to = "super::repository::Column::Id",
+        on_update = "NoAction",
+        on_delete = "NoAction"
+    )]
+    Repository,
 }
 
 impl Related<super::pull_request::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::PullRequest.def()
+    }
+}
+
+impl Related<super::repository::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Repository.def()
     }
 }
 
