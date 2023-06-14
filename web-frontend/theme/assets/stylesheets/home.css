@@ -1,0 +1,57 @@
+.mdx-container {
+    background: var(--md-default-bg-color);
+    background-size: contain;
+    padding-top: 1rem;
+}
+
+[data-md-color-scheme="slate"] .mdx-container {
+    background: var(--md-default-bg-color);
+        background-size: contain;
+}
+
+.mdx-hero {
+    color: var(--pg-hero-color);
+    margin: 0 0.8rem;
+}
+
+.mdx-hero h1 {
+    color: currentcolor;
+    font-size: 2.6rem;
+    margin-bottom: 1rem;
+    font-weight: 900;
+}
+
+.mdx-hero h3 {
+    color: currentcolor;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+@media screen and (max-width: 29.9375em) {
+    .mdx-hero h1 {
+        font-size: 1.4rem;
+    }
+}
+
+.mdx-hero__content {
+    padding-bottom: 6rem;
+}
+
+@media screen and (min-width: 60em) {
+    .mdx-hero {
+        align-items: stretch;
+        display: flex;
+    }
+    .mdx-hero__content {
+        margin-top: 3.5rem;
+        max-width: 38rem;
+        padding-bottom: 14vw;
+    }
+    .mdx-hero__image {
+        order: 1;
+        transform: translateX(4rem);
+        width: 38rem;
+    }
+}
