@@ -19,6 +19,7 @@
     font-size: 2.6rem;
     margin-bottom: 1rem;
     font-weight: 900;
+    text-align: center;
 }
 
 .mdx-hero h3 {
@@ -26,7 +27,14 @@
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 650;
+    text-align: center;
+}
+
+.mdx-hero__content .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 @media screen and (max-width: 29.9375em) {
@@ -41,7 +49,7 @@
 
 @media screen and (min-width: 60em) {
     .mdx-hero {
-        align-items: stretch;
+        justify-content: center;
         display: flex;
     }
     .mdx-hero__content {
