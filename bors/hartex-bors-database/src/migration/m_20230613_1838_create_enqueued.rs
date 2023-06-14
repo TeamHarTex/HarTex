@@ -41,6 +41,11 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(
+                        ColumnDef::new(Enqueued::Repository)
+                            .string()
+                            .not_null()
+                    )
+                    .col(
                         ColumnDef::new(Enqueued::PullRequest)
                             .integer()
                             .not_null()
@@ -61,5 +66,6 @@ impl MigrationTrait for Migration {
 pub enum Enqueued {
     Table,
     Id,
+    Repository,
     PullRequest,
 }
