@@ -93,6 +93,12 @@ pub struct BorsBuild {
     pub created_at: DateTimeUtc,
 }
 
+/// A pull request that has been enqueued in the queue.
+pub struct BorsEnqueuedPullRequest {
+    pub id: PrimaryKey,
+    pub pull_request: BorsPullRequest,
+}
+
 /// A pull request that has been "indexed" by bors through approve and try commands.
 pub struct BorsPullRequest {
     /// The identifier for this pull request.
