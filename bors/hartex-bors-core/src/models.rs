@@ -95,7 +95,11 @@ pub struct BorsBuild {
 
 /// A pull request that has been enqueued in the queue.
 pub struct BorsEnqueuedPullRequest {
+    /// The identifier for this enqueued pull request.
     pub id: PrimaryKey,
+    /// The repository.
+    pub repository: String,
+    /// The pull request associated.
     pub pull_request: BorsPullRequest,
 }
 
