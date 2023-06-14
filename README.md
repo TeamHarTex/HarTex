@@ -6,24 +6,29 @@
 
 > **Supported by [JetBrains](https://www.jetbrains.com/) through their [Open Source Licenses](https://www.jetbrains.com/community/opensource/#support) (they are amazing!)**
 
-**HarTex is the speed-of-thought server management bot for Discord; built to be stable, flexible and customizable.**
+**HarTex: Discord Server Management. Reimagined.**
 
-## Quick Start
+This is the main source code repository for HarTex. It contains various components of HarTex: its API backend, Bors buildbot, buildsystem, Discord frontend, localization infrastructure, utilities and the Web frontend.
 
-The simplest way to use HarTex is by using the publicly hosted instance of it. As of now, HarTex is currently only for
-internal use as it is under heavy development. We will keep the usage of HarTex internal as we go through the development
-stages, further announcements will be made when we open the bot up for public usage.
+> **Note: this README is for *users* rather than *contributors*. If you wish to *contribute* to HarTex, you should read [CONTRIBUTING.md](./CONTRIBUTING.md) instead.**
+
+## Getting Started
+
+The simplest way to use HarTex is to use the publicly hosted instance of it. We are currently working towards a publicly hosted instance, so please stay around in case there are any updates!
+
+Announcements will be made as we progress through finishing the basic functionality of the bot and approaching public testing.
 
 ## Self-hosting
 
 If you are interested in using HarTex at an early stage, then you may host your own instance of HarTex. Documentation for
 which will be added at a later date.
 
-## Support
+## Community
 
-Should you need any support, have any questions or need further information, please feel free to join our 
-[support Discord](https://discord.gg/Xu8453VBAv).
+We have a dedicated [Discord server](https://discord.gg/Xu8453VBAv)! The Discord server is primarily about Team HaTex, but we also provide support for HarTex as well as answering questions. Feel free to join us!
 
 ## License
 
-HarTex is distributed under the **GNU Affero General Public License 3.0**. See [COPYING](./COPYING) for more details.
+HarTex is distributed under the terms of  **GNU Affero General Public License 3.0**. 
+
+See the [COPYING](./COPYING) file for more details.
