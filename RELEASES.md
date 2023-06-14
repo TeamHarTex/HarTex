@@ -2,7 +2,7 @@
 
 > **5** contributors made contributions to this release
 
-> **2981** commits since 2022-08-31
+> **2983** commits since 2022-08-31
 
 > **846** pull requests merged since 2022-09-05
 
