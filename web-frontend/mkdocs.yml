@@ -1,0 +1,25 @@
+site_name: HarTex
+theme:
+  name: material
+  custom_dir: theme
+  features:
+  - navigation.sections
+  - navigation.tabs
+  - navigation.top
+  icon:
+    repo: fontawesome/brands/git-alt
+  palette: 
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+copyright: Copyright &copy; 2021 - 2023 Team HarTex
+repo_name: TeamHarTex/HarTex
+repo_url: https://github.com/TeamHarTex/HarTex
+nav:
+  - Home: 'index.md'
