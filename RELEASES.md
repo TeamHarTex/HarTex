@@ -1,4 +1,4 @@
-# Version 0.2.0 (2023-ab-cd)
+# Version 0.2.0 (2023-07-19)
 
 > **e** contributors made contributions to this release
 
@@ -19,6 +19,8 @@
 ## Rust Utilities
 
 ## Web Frontend
+
+- experiment with mkdocs
 
 # Version 0.1.0 (2023-06-14)
 
