@@ -40,6 +40,7 @@ use tokio::sync::mpsc::Sender;
 use crate::models::BorsApproveBuild;
 use crate::models::BorsBuild;
 use crate::models::BorsBuildStatus;
+use crate::models::BorsEnqueuedPullRequest;
 use crate::models::BorsPullRequest;
 use crate::models::BorsRepository;
 use crate::models::BorsWorkflow;
@@ -153,6 +154,11 @@ pub trait DatabaseClient: Send + Sync {
         &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + Send  + '_>>;
+
+    fn get_enqueued_pull_requests_for_repository<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsEnqueuedPullRequest>> + Send + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
