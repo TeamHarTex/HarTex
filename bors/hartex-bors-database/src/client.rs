@@ -329,18 +329,13 @@ impl DatabaseClient for SeaORMDatabaseClient {
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsEnqueuedPullRequest>> + Send + '_>>
     {
         Box::pin(async move {
-            let enqueueds = entity::enqueued_pull_request::Entity::find()
+            let _ = entity::enqueued_pull_request::Entity::find()
                 .filter(entity::enqueued_pull_request::Column::Repository.eq(&format!("{name}")))
                 .find_also_related(entity::pull_request::Entity)
                 .all(&self.connection)
                 .await?;
 
-                Ok(enqueueds
-                    .into_iter()
-                    .map(|(enqueued_pr, pull_request, approve_build, build)| {
-                        enqueued_pull_request_from_database(enqueued_pr, pull_request, approve_build, build)
-                    })
-                    .collect())
+                todo!()
         })
     }
 
