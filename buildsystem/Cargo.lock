@@ -258,9 +258,9 @@ checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 
 [[package]]
 name = "hcl-primitives"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f6b293c5397cb844292c1205a91899ab0e65cb2bed7a7794ee95038945059a74"
+checksum = "395f49a98135905a09d33fb54899b057168ca0846729affe019f169c2a030f41"
 dependencies = [
  "itoa",
  "kstring",
@@ -271,9 +271,9 @@ dependencies = [
 
 [[package]]
 name = "hcl-rs"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cd33f7c4bdc89b0d4193395eb9a5147619c697beb2336b5faf04d910ad42620e"
+checksum = "a5f88553da100fa1eb641db94ca668056cdb9358b6936cf4cdbe94e2e1965352"
 dependencies = [
  "hcl-primitives",
  "indexmap",
