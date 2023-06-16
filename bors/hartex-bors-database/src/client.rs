@@ -326,16 +326,21 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_enqueued_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsEnqueuedPullRequest>> + Send + '_>>
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsEnqueuedPullRequest>>> + Send + '_>>
     {
         Box::pin(async move {
-            let _ = entity::enqueued_pull_request::Entity::find()
-                .filter(entity::enqueued_pull_request::Column::Repository.eq(&format!("{name}")))
-                .find_also_related(entity::pull_request::Entity)
-                .all(&self.connection)
-                .await?;
+            let result = crate::select_enqueued_pr::SelectEnqueuedPullRequest::exec_with_repo_many(
+                &self.connection,
+                format!("{name}"),
+            )
+            .await?;
 
-                todo!()
+            Ok(result
+                .into_iter()
+                .map(|(enqueud_pr, pr, approve_build, build)| {
+                    enqueued_pr_from_database(enqueud_pr, pr, approve_build, build)
+                })
+                .collect())
         })
     }
 
@@ -567,6 +572,32 @@ fn build_status_from_database(status: String) -> BorsBuildStatus {
 
 fn datetime_from_database(datetime: DateTime) -> DateTimeUtc {
     ChronoDateTime::from_utc(datetime, Utc)
+}
+
+fn enqueued_pr_from_database(
+    enqueued_pr: entity::enqueued_pull_request::Model,
+    pr: entity::pull_request::Model,
+    approve_build: Option<entity::approve_build::Model>,
+    build: Option<entity::build::Model>,
+) -> BorsEnqueuedPullRequest {
+    BorsEnqueuedPullRequest {
+        id: enqueued_pr.id,
+        repository: enqueued_pr.repository,
+        pull_request: BorsPullRequest {
+            id: pr.id,
+            repository: pr.repository,
+            number: pr.number as u64,
+            approved: pr.approved == 1,
+            assignee: pr.assignee,
+            approved_by: pr.approved_by,
+            title: pr.title,
+            head_ref: pr.head_ref,
+            approve_build: approve_build.map(approve_build_from_database),
+            try_build: build.map(build_from_database),
+            url: pr.url,
+            created_at: datetime_from_database(pr.created_at),
+        },
+    }
 }
 
 fn pr_from_database(
