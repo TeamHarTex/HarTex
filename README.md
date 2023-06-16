@@ -2,7 +2,8 @@
 
 <h1 align="center">HarTex</h1>
 
-> ⚠️**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
+> **Warning** 
+**Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
 > **Supported by [JetBrains](https://www.jetbrains.com/) through their [Open Source Licenses](https://www.jetbrains.com/community/opensource/#support) (they are amazing!)**
 

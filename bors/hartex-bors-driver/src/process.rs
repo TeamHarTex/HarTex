@@ -34,7 +34,7 @@ use serde_json::Value;
 /// Create a bors process.
 pub fn bors_process(mut state: GithubBorsState) -> impl Future<Output = ()> + Send {
     let service = async move {
-        let mut event_source = EventSource::get("https://smee.io/0hxbLZ8FapSmKi1E");
+        let mut event_source = EventSource::get("https://smee.io/USJK81aCNY4dle0U");
         while let Some(event) = event_source.next().await {
             match event {
                 Ok(Event::Open) => log::trace!("eventsource connection opened"),
