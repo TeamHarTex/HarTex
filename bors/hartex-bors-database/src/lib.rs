@@ -37,6 +37,7 @@ use sqlx::SqlitePool;
 pub mod client;
 mod entity;
 mod migration;
+mod select_enqueued_pr;
 mod select_pr;
 mod select_workflow;
 
