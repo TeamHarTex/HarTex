@@ -28,9 +28,9 @@ use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
+use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
-use hartex_bors_core::queue::BorsQueueEvent;
 use tokio::sync::mpsc::Sender;
 
 use crate::permissions::check_permissions;
@@ -74,11 +74,7 @@ pub async fn approve_command<C: RepositoryClient>(
         .await?;
 
     let pr_model = database
-        .get_or_create_pull_request(
-            repository.client.repository_name(),
-            &github_pr,
-            pr,
-        )
+        .get_or_create_pull_request(repository.client.repository_name(), &github_pr, pr)
         .await?;
 
     database.approve_pull_request(&pr_model, approver).await?;
@@ -93,7 +89,12 @@ pub async fn approve_command<C: RepositoryClient>(
     };
 
     database.enqueue_pull_request(&pr_model).await?;
-    sender.send(BorsQueueEvent::PullRequestEnqueued(GithubRepositoryName::new_from_string(pr_model.repository)?, pr_model.id)).await?;
+    sender
+        .send(BorsQueueEvent::PullRequestEnqueued(
+            GithubRepositoryName::new_from_string(pr_model.repository)?,
+            pr_model.id,
+        ))
+        .await?;
 
     // FIXME: all the code below are to be removed when the queue is implemented
     // repository
