@@ -25,6 +25,7 @@
 //! bors r+
 
 use hartex_bors_core::models::BorsBuildStatus;
+use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::models::Permission;
 use hartex_bors_core::DatabaseClient;
@@ -92,7 +93,7 @@ pub async fn approve_command<C: RepositoryClient>(
     };
 
     database.enqueue_pull_request(&pr_model).await?;
-    sender.send(BorsQueueEvent::PullRequestEnqueued(pr_model.id)).await?;
+    sender.send(BorsQueueEvent::PullRequestEnqueued(GithubRepositoryName::new_from_string(pr_model.repository)?, pr_model.id)).await?;
 
     // FIXME: all the code below are to be removed when the queue is implemented
     // repository

@@ -223,6 +223,16 @@ impl GithubRepositoryName {
         Ok(Self::new(owner, name))
     }
 
+    pub fn new_from_string(string: String) -> hartex_eyre::Result<Self> {
+        let parts = string.split('/').collect::<Vec<_>>();
+
+        if parts.len() != 2 {
+            return Err(Report::msg(format!("invalid repository name: {string}")));
+        }
+
+        Ok(Self::new(parts[0], parts[1]))
+    }
+
     /// Obtain repository owner
     pub fn owner(&self) -> &str {
         self.owner.as_str()
