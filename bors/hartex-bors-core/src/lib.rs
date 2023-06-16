@@ -162,7 +162,7 @@ pub trait DatabaseClient: Send + Sync {
     fn get_enqueued_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsEnqueuedPullRequest>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsEnqueuedPullRequest>>> + Send + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.

@@ -88,7 +88,7 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
     // split attribute vector into two
     let mut wrong_paths = input.attrs.clone();
     let correct_attrs = wrong_paths
-        .drain_filter(|attr| attr.style == AttrStyle::Outer && attr.path().is_ident("metadata"))
+        .extract_if(|attr| attr.style == AttrStyle::Outer && attr.path().is_ident("metadata"))
         .collect::<Vec<_>>();
 
     #[allow(unused_must_use)]
