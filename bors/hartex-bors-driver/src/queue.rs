@@ -29,12 +29,16 @@ use tokio::sync::mpsc::Receiver;
 
 /// Background task processing the queue.
 #[allow(dead_code)]
-pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>, _: Box<dyn DatabaseClient>) {
+pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>, database: Box<dyn DatabaseClient>) -> hartex_eyre::Result<()> {
     while let Some(event) = rx.recv().await {
         match event {
-            BorsQueueEvent::PullRequestEnqueued(id) => {
+            BorsQueueEvent::PullRequestEnqueued(name, id) => {
                 log::trace!("pull request with id {id} in pull_request table has been enqueued");
+
+                let _ = database.get_enqueued_pull_requests_for_repository(&name).await?;
             }
         }
     }
+
+    Ok(())
 }
