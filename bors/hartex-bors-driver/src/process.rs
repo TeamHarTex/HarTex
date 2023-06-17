@@ -22,6 +22,7 @@
 
 //! # The Bors Process
 
+use std::env;
 use std::future::Future;
 
 use futures_util::StreamExt;
@@ -34,7 +35,7 @@ use serde_json::Value;
 /// Create a bors process.
 pub fn bors_process(mut state: GithubBorsState) -> impl Future<Output = ()> + Send {
     let service = async move {
-        let mut event_source = EventSource::get("https://smee.io/USJK81aCNY4dle0U");
+        let mut event_source = EventSource::get(&env::var("SMEE_URL").unwrap_or_default());
         while let Some(event) = event_source.next().await {
             match event {
                 Ok(Event::Open) => log::trace!("eventsource connection opened"),
