@@ -226,11 +226,13 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
     fn enqueue_pull_request<'a>(
         &'a self,
+        name: &'a GithubRepositoryName,
         pr: &'a BorsPullRequest,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let enqueued_pr = entity::enqueued_pull_request::ActiveModel {
                 pull_request: Set(pr.id),
+                repository: Set(format!("{name}")),
                 ..Default::default()
             };
 
