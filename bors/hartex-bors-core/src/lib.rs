@@ -128,6 +128,7 @@ pub trait DatabaseClient: Send + Sync {
     /// Enqueues a pull request.
     fn enqueue_pull_request<'a>(
         &'a self,
+        name: &'a GithubRepositoryName,
         pr: &'a BorsPullRequest,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
 
