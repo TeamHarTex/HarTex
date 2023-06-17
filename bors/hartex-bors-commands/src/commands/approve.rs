@@ -88,7 +88,7 @@ pub async fn approve_command<C: RepositoryClient>(
         return Ok(());
     };
 
-    database.enqueue_pull_request(&pr_model).await?;
+    database.enqueue_pull_request(&repository.repository, &pr_model).await?;
     sender
         .send(BorsQueueEvent::PullRequestEnqueued(
             GithubRepositoryName::new_from_string(pr_model.repository)?,
