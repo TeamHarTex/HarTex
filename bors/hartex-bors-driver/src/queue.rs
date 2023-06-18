@@ -38,7 +38,7 @@ pub const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
 /// Background task processing the queue.
 #[allow(dead_code)]
 pub async fn queue_processor(
-    mut state: GithubBorsState,
+    state: &GithubBorsState,
     mut rx: Receiver<BorsQueueEvent>,
     database: Box<dyn DatabaseClient>,
 ) -> hartex_eyre::Result<()> {
@@ -55,7 +55,7 @@ pub async fn queue_processor(
                     // the enqueued pr is the only one in the queue right now
                     // just start a build for it
 
-                    let Some((repository, _, _)) = state.get_repository_state_mut(&name) else {
+                    let Some((repository, _, _)) = state.get_repository_state(&name) else {
                         unreachable!()
                     };
 

@@ -35,12 +35,15 @@ use std::io::Read;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
+use state::InitCell;
 use tokio::runtime::Builder;
 
 mod event;
 mod process;
 mod queue;
 mod workflows;
+
+static STATE: InitCell<GithubBorsState> = InitCell::new();
 
 /// Entry point.
 pub fn main() -> hartex_eyre::Result<()> {
@@ -75,11 +78,12 @@ fn actual_main() -> hartex_eyre::Result<()> {
         client.clone(),
         private_key.into_bytes().into(),
     ))?;
+    STATE.set(state);
 
-    let future = process::bors_process(state);
+    let future = process::bors_process(STATE.get());
 
     runtime.spawn(future);
-    runtime.block_on(queue::queue_processor(state, rx, Box::new(client)))?;
+    runtime.block_on(queue::queue_processor(STATE.get(), rx, Box::new(client)))?;
 
     Ok(())
 }
