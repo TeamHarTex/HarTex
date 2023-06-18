@@ -110,6 +110,7 @@ pub async fn queue_processor(
                     continue;
                 }
             }
+            BorsQueueEvent::PullRequestMerged(_, _) => todo!(),
         }
     }
 

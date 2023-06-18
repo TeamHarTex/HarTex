@@ -33,4 +33,10 @@ pub enum BorsQueueEvent {
     /// in the "enqueued" table to the "pull_request" table; and the name of the
     /// repository the pull request is associated with.
     PullRequestEnqueued(GithubRepositoryName, i32),
+    /// A pull request was merged and removed from the queue.
+    /// 
+    /// Takes in the corresponding ID of the pull request, which is a foreign key
+    /// in the "enqueued" table to the "pull_request" table; and the name of the
+    /// repository the pull request is associated with.
+    PullRequestMerged(GithubRepositoryName, i32),
 }
