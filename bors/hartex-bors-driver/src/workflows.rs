@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_bors_commands::commands::approve::APPROVE_BRANCH_NAME;
 use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
@@ -33,6 +32,8 @@ use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubRepositoryClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
+
+use crate::queue::APPROVE_BRANCH_NAME;
 
 struct CheckSuiteCompleted {
     repository: GithubRepositoryName,
