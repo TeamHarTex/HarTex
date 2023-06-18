@@ -224,6 +224,14 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    fn dequeue_pull_request<'a>(
+        &'a self,
+        _: &'a GithubRepositoryName,
+        _: u64,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+        todo!()
+    }
+
     fn enqueue_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
