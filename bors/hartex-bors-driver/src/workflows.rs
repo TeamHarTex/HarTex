@@ -159,7 +159,7 @@ async fn complete_approve_build(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
-    _: Sender<BorsQueueEvent>,
+    sender: Sender<BorsQueueEvent>,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&event.branch) {
         return Ok(());
@@ -274,6 +274,12 @@ Pushing {} to {}..."#,
 
     database
         .update_approve_build_status(&approve_build, status)
+        .await?;
+    sender
+        .send(BorsQueueEvent::PullRequestMerged(
+            repository.repository.clone(),
+            pull_request.id,
+        ))
         .await?;
 
     Ok(())
