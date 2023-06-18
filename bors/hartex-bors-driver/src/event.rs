@@ -179,11 +179,11 @@ pub async fn handle_event(
         BorsEventKind::WorkflowRun(payload)
             if payload.action == WorkflowRunEventAction::Completed =>
         {
-            if let Some((repository, database, _)) = retrieve_repository_state(
+            if let Some((repository, database, sender)) = retrieve_repository_state(
                 state,
                 &GithubRepositoryName::new_from_repository(event.repository.repository)?,
             ) {
-                crate::workflows::workflow_completed(repository, database, payload.workflow_run)
+                crate::workflows::workflow_completed(repository, database, payload.workflow_run, sender)
                     .await?;
             }
         }
