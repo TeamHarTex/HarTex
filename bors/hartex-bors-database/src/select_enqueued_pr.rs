@@ -21,6 +21,7 @@
  */
 
 use hartex_eyre::eyre::Report;
+use sea_orm::QueryOrder;
 use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
 use sea_orm::sea_query::SelectExpr;
@@ -135,6 +136,7 @@ async fn execute_query_many(
         )
         .join(JoinType::LeftJoin, pull_request::Relation::ApproveBuild.def())
         .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
+        .order_by_desc(enqueued_pull_request::Column::Id)
         .into_model::<Response>()
         .all(connection)
         .await
