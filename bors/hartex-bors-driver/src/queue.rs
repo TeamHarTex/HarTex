@@ -22,6 +22,7 @@
 
 //! # The Pull Request Queue Processor
 
+use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_core::DatabaseClient;
 use hartex_log::log;
@@ -29,13 +30,28 @@ use tokio::sync::mpsc::Receiver;
 
 /// Background task processing the queue.
 #[allow(dead_code)]
-pub async fn queue_processor(mut rx: Receiver<BorsQueueEvent>, database: Box<dyn DatabaseClient>) -> hartex_eyre::Result<()> {
+pub async fn queue_processor(
+    mut rx: Receiver<BorsQueueEvent>,
+    database: Box<dyn DatabaseClient>,
+) -> hartex_eyre::Result<()> {
     while let Some(event) = rx.recv().await {
         match event {
             BorsQueueEvent::PullRequestEnqueued(name, id) => {
                 log::trace!("pull request with id {id} in pull_request table has been enqueued");
 
-                let _ = database.get_enqueued_pull_requests_for_repository(&name).await?;
+                let queue = database
+                    .get_enqueued_pull_requests_for_repository(&name)
+                    .await?;
+                if queue.iter().any(|pull_request| {
+                    let Some(ref approve_build) = pull_request.pull_request.approve_build else {
+                        unreachable!();
+                    };
+
+                    approve_build.status == BorsBuildStatus::Pending
+                }) {
+                    // continue waiting
+                    continue;
+                }
             }
         }
     }
