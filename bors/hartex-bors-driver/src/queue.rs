@@ -42,15 +42,15 @@ pub async fn queue_processor(
                 let queue = database
                     .get_enqueued_pull_requests_for_repository(&name)
                     .await?;
-                if let Some(previous) = queue.get(1) {
-                    let Some(ref approve_build) = previous.pull_request.approve_build else {
+                if queue.iter().any(|pull_request| {
+                    let Some(ref approve_build) = pull_request.pull_request.approve_build else {
                         unreachable!();
                     };
 
-                    if approve_build.status == BorsBuildStatus::Pending {
-                        // containue waiting
-                        continue;
-                    }
+                    approve_build.status == BorsBuildStatus::Pending
+                }) {
+                    // continue waiting
+                    continue;
                 }
             }
         }
