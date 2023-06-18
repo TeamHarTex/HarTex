@@ -125,6 +125,13 @@ pub trait DatabaseClient: Send + Sync {
         workflow_status: BorsWorkflowStatus,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
 
+    /// Dequeues a pull request.
+    fn dequeue_pull_request<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+        pr: u64,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+
     /// Enqueues a pull request.
     fn enqueue_pull_request<'a>(
         &'a self,
