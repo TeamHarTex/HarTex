@@ -27,11 +27,13 @@ use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::CheckStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
+use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubRepositoryClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
+use tokio::sync::mpsc::Sender;
 
 use crate::queue::APPROVE_BRANCH_NAME;
 
@@ -45,6 +47,7 @@ pub(crate) async fn workflow_completed(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &dyn DatabaseClient,
     run: Run,
+    sender: Sender<BorsQueueEvent>,
 ) -> hartex_eyre::Result<()> {
     log::trace!(
         r#"updating status of workflow of {} to "{}""#,
@@ -80,6 +83,7 @@ pub(crate) async fn workflow_completed(
                 branch: run.head_branch,
                 commit_hash: run.head_sha,
             },
+            sender,
         )
         .await?;
     }
@@ -155,6 +159,7 @@ async fn complete_approve_build(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
+    _: Sender<BorsQueueEvent>,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&event.branch) {
         return Ok(());
