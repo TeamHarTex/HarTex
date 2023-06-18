@@ -95,6 +95,8 @@ pub async fn queue_processor(
                         .client
                         .delete_branch(APPROVE_MERGE_BRANCH_NAME)
                         .await?;
+
+                    continue;
                 }
 
                 if queue.iter().any(|pull_request| {
