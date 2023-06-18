@@ -79,7 +79,7 @@ fn actual_main() -> hartex_eyre::Result<()> {
     let future = process::bors_process(state);
 
     runtime.spawn(future);
-    runtime.block_on(queue::queue_processor(rx, Box::new(client)))?;
+    runtime.block_on(queue::queue_processor(state, rx, Box::new(client)))?;
 
     Ok(())
 }
