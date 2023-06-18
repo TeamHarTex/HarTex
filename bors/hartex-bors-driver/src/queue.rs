@@ -67,16 +67,19 @@ pub async fn queue_processor(
                         .client
                         .set_branch_to_revision(APPROVE_MERGE_BRANCH_NAME, &github_pr.base.sha)
                         .await?;
-                    
+
                     let merge_hash = repository
                         .client
                         .merge_branches(
                             APPROVE_MERGE_BRANCH_NAME,
                             &github_pr.head.sha,
-                            &auto_merge_commit_message(&github_pr, &queue[0].pull_request.approved_by.clone().unwrap()),
+                            &auto_merge_commit_message(
+                                &github_pr,
+                                &queue[0].pull_request.approved_by.clone().unwrap(),
+                            ),
                         )
                         .await?;
-                    
+
                     database
                         .associate_approve_build(
                             &queue[0].pull_request,
@@ -84,12 +87,12 @@ pub async fn queue_processor(
                             merge_hash.clone(),
                         )
                         .await?;
-                    
+
                     repository
                         .client
                         .set_branch_to_revision(APPROVE_BRANCH_NAME, &merge_hash)
                         .await?;
-                    
+
                     repository
                         .client
                         .delete_branch(APPROVE_MERGE_BRANCH_NAME)
