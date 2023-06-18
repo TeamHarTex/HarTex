@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_bors_commands::commands::approve::APPROVE_BRANCH_NAME;
 use hartex_bors_commands::commands::r#try::TRY_BRANCH_NAME;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::BorsWorkflowStatus;
@@ -34,6 +33,8 @@ use hartex_bors_github::GithubRepositoryClient;
 use hartex_log::log;
 use octocrab::models::workflows::Run;
 
+use crate::queue::APPROVE_BRANCH_NAME;
+
 struct CheckSuiteCompleted {
     repository: GithubRepositoryName,
     branch: String,
@@ -41,8 +42,8 @@ struct CheckSuiteCompleted {
 }
 
 pub(crate) async fn workflow_completed(
-    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
     log::trace!(
@@ -88,7 +89,7 @@ pub(crate) async fn workflow_completed(
 
 pub(crate) async fn workflow_started(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    database: &dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&run.head_branch) {
@@ -151,8 +152,8 @@ pub(crate) async fn workflow_started(
 }
 
 async fn complete_approve_build(
-    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&event.branch) {
@@ -274,8 +275,8 @@ Pushing {} to {}..."#,
 }
 
 async fn complete_try_build(
-    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&event.branch) {

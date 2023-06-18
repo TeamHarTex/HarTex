@@ -30,7 +30,7 @@ use std::time::SystemTime;
 
 /// Executes the ping command.
 pub async fn ping_command<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
+    repository: &GithubRepositoryState<C>,
     pr: u64,
 ) -> hartex_eyre::Result<()> {
     let now = SystemTime::now();
