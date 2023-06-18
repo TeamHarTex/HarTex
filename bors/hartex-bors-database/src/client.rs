@@ -39,6 +39,7 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::RunId;
+use sea_orm::ModelTrait;
 use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
@@ -219,6 +220,26 @@ impl DatabaseClient for SeaORMDatabaseClient {
             };
 
             workflow.insert(&self.connection).await?;
+
+            Ok(())
+        })
+    }
+
+    fn dequeue_pull_request<'a>(
+        &'a self,
+        name: &'a GithubRepositoryName,
+        pr: u64,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+        Box::pin(async move {
+            let option = entity::enqueued_pull_request::Entity::find()
+                .filter(entity::enqueued_pull_request::Column::Repository.eq(format!("{name}")))
+                .filter(entity::enqueued_pull_request::Column::PullRequest.eq(pr))
+                .one(&self.connection)
+                .await?;
+
+            if let Some(enqueued_pr) = option {
+                enqueued_pr.delete(&self.connection).await?;
+            }
 
             Ok(())
         })
