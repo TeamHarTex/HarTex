@@ -38,8 +38,8 @@ use crate::permissions::check_permissions;
 
 /// Executes the try cancel command.
 pub async fn try_cancel_command<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {
@@ -78,8 +78,8 @@ pub async fn try_cancel_command<C: RepositoryClient>(
 }
 
 pub(crate) async fn cancel_build_workflows<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     build: &BorsBuild,
 ) -> hartex_eyre::Result<()> {
     let pending_workflows = database

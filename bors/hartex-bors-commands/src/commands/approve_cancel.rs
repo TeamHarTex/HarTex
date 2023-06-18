@@ -38,8 +38,8 @@ use crate::permissions::check_permissions;
 
 /// Executes the approve cancel command.
 pub async fn approve_cancel_command<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     pr: u64,
     approver: &str,
 ) -> hartex_eyre::Result<()> {
@@ -77,10 +77,9 @@ pub async fn approve_cancel_command<C: RepositoryClient>(
     Ok(())
 }
 
-
 async fn cancel_build_workflows<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     build: &BorsApproveBuild,
 ) -> hartex_eyre::Result<()> {
     let pending_workflows = database

@@ -28,7 +28,7 @@ use hartex_bors_core::RepositoryClient;
 use hartex_log::log;
 
 pub async fn check_permissions<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
+    repository: &GithubRepositoryState<C>,
     pr: u64,
     author: &str,
     permission: Permission,
