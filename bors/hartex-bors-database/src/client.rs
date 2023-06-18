@@ -434,7 +434,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     }
 
     fn get_workflows_for_approve_build<'a>(
-        &'a mut self,
+        &'a self,
         approve_build: &'a BorsApproveBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>> {
         Box::pin(async move {
@@ -454,7 +454,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     }
 
     fn get_workflows_for_try_build<'a>(
-        &'a mut self,
+        &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>> {
         Box::pin(async move {

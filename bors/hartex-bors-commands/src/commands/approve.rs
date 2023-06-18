@@ -37,8 +37,8 @@ use crate::permissions::check_permissions;
 
 /// Executes the approve command.
 pub async fn approve_command<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     pr: u64,
     approver: &str,
     sender: Sender<BorsQueueEvent>,

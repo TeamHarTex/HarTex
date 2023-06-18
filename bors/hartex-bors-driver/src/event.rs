@@ -120,7 +120,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 
 /// Handke an event.
 pub async fn handle_event(
-    state: &mut GithubBorsState,
+    state: &GithubBorsState,
     event: BorsEvent,
 ) -> hartex_eyre::Result<()> {
     match event.kind {
@@ -194,8 +194,8 @@ pub async fn handle_event(
 }
 
 async fn handle_comment<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     comment: Comment,
     issue: Issue,
     sender: Sender<BorsQueueEvent>,
@@ -271,14 +271,14 @@ async fn handle_comment<C: RepositoryClient>(
 }
 
 fn retrieve_repository_state<'a, C: RepositoryClient>(
-    state: &'a mut dyn BorsState<C>,
+    state: &'a dyn BorsState<C>,
     repository: &GithubRepositoryName,
 ) -> Option<(
-    &'a mut GithubRepositoryState<C>,
-    &'a mut dyn DatabaseClient,
+    &'a GithubRepositoryState<C>,
+    &'a dyn DatabaseClient,
     Sender<BorsQueueEvent>,
 )> {
-    match state.get_repository_state_mut(repository) {
+    match state.get_repository_state(repository) {
         Some(result) => Some(result),
         None => {
             log::warn!("repository {repository} not found");

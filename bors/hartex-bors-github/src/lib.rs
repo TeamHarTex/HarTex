@@ -116,18 +116,18 @@ impl BorsState<GithubRepositoryClient> for GithubBorsState {
         comment.user.login == "bors-for-hartex[bot]"
     }
 
-    fn get_repository_state_mut(
-        &mut self,
+    fn get_repository_state(
+        &self,
         repository: &GithubRepositoryName,
     ) -> Option<(
-        &mut GithubRepositoryState<GithubRepositoryClient>,
-        &mut dyn DatabaseClient,
+        &GithubRepositoryState<GithubRepositoryClient>,
+        &dyn DatabaseClient,
         Sender<BorsQueueEvent>,
     )> {
-        self.repositories.get_mut(repository).map(|repo| {
+        self.repositories.get(repository).map(|repo| {
             (
                 repo,
-                (&mut self.database) as &mut dyn DatabaseClient,
+                (&self.database) as &dyn DatabaseClient,
                 self.sender.clone(),
             )
         })
@@ -161,7 +161,7 @@ impl RepositoryClient for GithubRepositoryClient {
         &self.repository_name
     }
 
-    async fn cancel_workflows(&mut self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()> {
+    async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()> {
         let actions = self.client.actions();
 
         future::join_all(run_ids.into_iter().map(|id| {
@@ -178,7 +178,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(())
     }
 
-    async fn delete_branch(&mut self, branch: &str) -> hartex_eyre::Result<()> {
+    async fn delete_branch(&self, branch: &str) -> hartex_eyre::Result<()> {
         let mut response = self
             .client
             ._delete::<()>(
@@ -205,7 +205,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn edit_comment(
-        &mut self,
+        &self,
         comment_id: CommentId,
         text: &str,
     ) -> hartex_eyre::Result<Comment> {
@@ -220,7 +220,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn get_checks_for_commit(
-        &mut self,
+        &self,
         branch: &str,
         commit_hash: &str,
     ) -> hartex_eyre::Result<Vec<Check>> {
@@ -280,7 +280,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(suites)
     }
 
-    async fn get_label(&mut self, name: &str) -> hartex_eyre::Result<Label> {
+    async fn get_label(&self, name: &str) -> hartex_eyre::Result<Label> {
         self.client
             .issues(
                 self.repository_name.owner(),
@@ -292,7 +292,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn set_labels_of_pull_request(
-        &mut self,
+        &self,
         labels: Vec<String>,
         pr: u64,
     ) -> hartex_eyre::Result<()> {
@@ -322,7 +322,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(())
     }
 
-    async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest> {
+    async fn get_pull_request(&self, pr: u64) -> hartex_eyre::Result<PullRequest> {
         self.client
             .pulls(
                 self.repository_name.owner(),
@@ -334,7 +334,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn merge_branches(
-        &mut self,
+        &self,
         base: &str,
         head: &str,
         commit_message: &str,
@@ -342,7 +342,7 @@ impl RepositoryClient for GithubRepositoryClient {
         operations::merge_branches(self, base, head, commit_message).await
     }
 
-    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment> {
+    async fn post_comment(&self, pr: u64, text: &str) -> hartex_eyre::Result<Comment> {
         self.client
             .issues(
                 self.repository_name.owner(),
@@ -353,7 +353,7 @@ impl RepositoryClient for GithubRepositoryClient {
             .map_err(Report::new)
     }
 
-    async fn get_revision(&mut self, branch: &str) -> hartex_eyre::Result<String> {
+    async fn get_revision(&self, branch: &str) -> hartex_eyre::Result<String> {
         let reference = self
             .client
             .repos(
@@ -371,7 +371,7 @@ impl RepositoryClient for GithubRepositoryClient {
     }
 
     async fn set_branch_to_revision(
-        &mut self,
+        &self,
         branch: &str,
         revision: &str,
     ) -> hartex_eyre::Result<()> {

@@ -38,8 +38,8 @@ const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
 
 /// Executes the try command.
 pub async fn try_command<C: RepositoryClient>(
-    repository: &mut GithubRepositoryState<C>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<C>,
+    database: &dyn DatabaseClient,
     pr: u64,
     author: &str,
 ) -> hartex_eyre::Result<()> {

@@ -55,17 +55,17 @@ pub mod models;
 pub mod queue;
 
 /// A state of bors.
-pub trait BorsState<C: RepositoryClient>: Send {
+pub trait BorsState<C: RepositoryClient>: Send + Sync {
     /// Checks whether the comment is posted by bors itself.
     fn comment_posted_by_bors(&self, comment: Comment) -> bool;
 
     /// Returns a mutable reference to the repository state by its name.
-    fn get_repository_state_mut(
-        &mut self,
+    fn get_repository_state(
+        &self,
         repository: &GithubRepositoryName,
     ) -> Option<(
-        &mut GithubRepositoryState<C>,
-        &mut dyn DatabaseClient,
+        &GithubRepositoryState<C>,
+        &dyn DatabaseClient,
         Sender<crate::queue::BorsQueueEvent>,
     )>;
 }
@@ -187,13 +187,13 @@ pub trait DatabaseClient: Send + Sync {
 
     /// Gets the workflows for a certain approve build.
     fn get_workflows_for_approve_build<'a>(
-        &'a mut self,
+        &'a self,
         build: &'a BorsApproveBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>>;
 
     /// Gets the workflows for a certain try build.
     fn get_workflows_for_try_build<'a>(
-        &'a mut self,
+        &'a self,
         build: &'a BorsBuild,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>>;
 
@@ -235,54 +235,54 @@ pub trait RepositoryClient {
     fn repository_name(&self) -> &GithubRepositoryName;
 
     /// Cancel workflows.
-    async fn cancel_workflows(&mut self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()>;
+    async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()>;
 
     /// Deletes a branch.
-    async fn delete_branch(&mut self, branch: &str) -> hartex_eyre::Result<()>;
+    async fn delete_branch(&self, branch: &str) -> hartex_eyre::Result<()>;
 
     /// Edit a speific comment.
     async fn edit_comment(
-        &mut self,
+        &self,
         comment_id: CommentId,
         text: &str,
     ) -> hartex_eyre::Result<Comment>;
 
     async fn get_checks_for_commit(
-        &mut self,
+        &self,
         branch: &str,
         commit_hash: &str,
     ) -> hartex_eyre::Result<Vec<Check>>;
 
     /// Gets a label by its name.
-    async fn get_label(&mut self, name: &str) -> hartex_eyre::Result<Label>;
+    async fn get_label(&self, name: &str) -> hartex_eyre::Result<Label>;
 
     /// Sets the labels of a pull request.
     async fn set_labels_of_pull_request(
-        &mut self,
+        &self,
         labels: Vec<String>,
         pr: u64,
     ) -> hartex_eyre::Result<()>;
 
     /// Gets a pull request by its number.
-    async fn get_pull_request(&mut self, pr: u64) -> hartex_eyre::Result<PullRequest>;
+    async fn get_pull_request(&self, pr: u64) -> hartex_eyre::Result<PullRequest>;
 
     /// Merges two branches together.
     async fn merge_branches(
-        &mut self,
+        &self,
         base: &str,
         head: &str,
         commit_message: &str,
     ) -> hartex_eyre::Result<String>;
 
     /// Post a comment on a specific pull request.
-    async fn post_comment(&mut self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
+    async fn post_comment(&self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
 
     /// Get the revision of a branch.
-    async fn get_revision(&mut self, branch: &str) -> hartex_eyre::Result<String>;
+    async fn get_revision(&self, branch: &str) -> hartex_eyre::Result<String>;
 
     /// Set a branch to a specific revision.
     async fn set_branch_to_revision(
-        &mut self,
+        &self,
         branch: &str,
         revision: &str,
     ) -> hartex_eyre::Result<()>;

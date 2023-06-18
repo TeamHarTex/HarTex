@@ -42,8 +42,8 @@ struct CheckSuiteCompleted {
 }
 
 pub(crate) async fn workflow_completed(
-    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
     log::trace!(
@@ -89,7 +89,7 @@ pub(crate) async fn workflow_completed(
 
 pub(crate) async fn workflow_started(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    database: &dyn DatabaseClient,
     run: Run,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&run.head_branch) {
@@ -152,8 +152,8 @@ pub(crate) async fn workflow_started(
 }
 
 async fn complete_approve_build(
-    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&event.branch) {
@@ -275,8 +275,8 @@ Pushing {} to {}..."#,
 }
 
 async fn complete_try_build(
-    repository: &mut GithubRepositoryState<GithubRepositoryClient>,
-    database: &mut dyn DatabaseClient,
+    repository: &GithubRepositoryState<GithubRepositoryClient>,
+    database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
 ) -> hartex_eyre::Result<()> {
     if !is_relevant_branch(&event.branch) {
