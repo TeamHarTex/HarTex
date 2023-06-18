@@ -36,7 +36,6 @@ pub const APPROVE_BRANCH_NAME: &str = "automation/bors/approve";
 pub const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
 
 /// Background task processing the queue.
-#[allow(dead_code)]
 pub async fn queue_processor(
     state: &GithubBorsState,
     mut rx: Receiver<BorsQueueEvent>,
