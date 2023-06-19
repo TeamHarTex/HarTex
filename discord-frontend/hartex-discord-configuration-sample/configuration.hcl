@@ -67,3 +67,10 @@ ranks users {
         level = 100
     }
 }
+
+// The above configurations belongs to the general plugin. Configurations for other plugins should reside here.
+plugins {
+    plugin utilities {
+        enabled = true
+    }
+}
