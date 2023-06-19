@@ -116,9 +116,53 @@ pub async fn queue_processor(
                 database.dequeue_pull_request(&name, id as u64).await?;
 
                 let queue = database.get_enqueued_pull_requests_for_repository(&name).await?;
-                let Some(_) = queue.last() else {
+                let Some(next_in_line) = queue.last() else {
                     continue;
                 };
+
+                let Some((repository, _, _)) = state.get_repository_state(&name) else {
+                    unreachable!()
+                };
+
+                let github_pr = repository
+                    .client
+                    .get_pull_request(next_in_line.pull_request.number)
+                    .await?;
+
+                repository
+                    .client
+                    .set_branch_to_revision(APPROVE_MERGE_BRANCH_NAME, &github_pr.base.sha)
+                    .await?;
+
+                let merge_hash = repository
+                    .client
+                    .merge_branches(
+                        APPROVE_MERGE_BRANCH_NAME,
+                        &github_pr.head.sha,
+                        &auto_merge_commit_message(
+                            &github_pr,
+                            &next_in_line.pull_request.approved_by.clone().unwrap(),
+                        ),
+                    )
+                    .await?;
+
+                database
+                    .associate_approve_build(
+                        &next_in_line.pull_request,
+                        APPROVE_BRANCH_NAME.to_string(),
+                        merge_hash.clone(),
+                    )
+                    .await?;
+
+                repository
+                    .client
+                    .set_branch_to_revision(APPROVE_BRANCH_NAME, &merge_hash)
+                    .await?;
+
+                repository
+                    .client
+                    .delete_branch(APPROVE_MERGE_BRANCH_NAME)
+                    .await?;
             }                   
         }
     }
