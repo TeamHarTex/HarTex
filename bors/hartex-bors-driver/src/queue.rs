@@ -114,7 +114,9 @@ pub async fn queue_processor(
             }
             BorsQueueEvent::PullRequestMerged(name, id) => {
                 database.dequeue_pull_request(&name, id as u64).await?;
-            }
+
+                let _ = database.get_enqueued_pull_requests_for_repository(&name).await;
+            }                   
         }
     }
 
