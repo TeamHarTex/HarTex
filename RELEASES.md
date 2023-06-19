@@ -10,6 +10,9 @@
 
 ## Bors Buildbot
 
+- implement pull request queue
+- update enqueued pull request model
+
 ## Buildsystem
 
 ## Discord Frontend
@@ -19,8 +22,6 @@
 ## Rust Utilities
 
 ## Web Frontend
-
-- experiment with mkdocs
 
 # Version 0.1.0 (2023-06-14)
 
