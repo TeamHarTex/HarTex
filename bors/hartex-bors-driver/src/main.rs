@@ -27,6 +27,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(let_chains)]
 
 use std::env;
 use std::fs::File;

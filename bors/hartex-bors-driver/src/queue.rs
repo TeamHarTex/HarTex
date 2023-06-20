@@ -102,11 +102,11 @@ pub async fn queue_processor(
                 }
 
                 if queue.iter().any(|pull_request| {
-                    let Some(ref approve_build) = pull_request.pull_request.approve_build else {
-                        unreachable!();
-                    };
-
-                    approve_build.status == BorsBuildStatus::Pending
+                    if let Some(ref approve_build) = pull_request.pull_request.approve_build && approve_build.status == BorsBuildStatus::Pending {
+                        true
+                    } else {
+                        false
+                    }
                 }) {
                     // continue waiting
                     continue;
@@ -115,7 +115,9 @@ pub async fn queue_processor(
             BorsQueueEvent::PullRequestMerged(name, id) => {
                 database.dequeue_pull_request(&name, id as u64).await?;
 
-                let queue = database.get_enqueued_pull_requests_for_repository(&name).await?;
+                let queue = database
+                    .get_enqueued_pull_requests_for_repository(&name)
+                    .await?;
                 let Some(next_in_line) = queue.last() else {
                     continue;
                 };
@@ -163,7 +165,7 @@ pub async fn queue_processor(
                     .client
                     .delete_branch(APPROVE_MERGE_BRANCH_NAME)
                     .await?;
-            }                   
+            }
         }
     }
 
