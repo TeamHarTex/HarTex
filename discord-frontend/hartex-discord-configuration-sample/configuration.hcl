@@ -68,9 +68,11 @@ ranks users {
     }
 }
 
-// The above configurations belongs to the general plugin. Configurations for other plugins should reside here.
+// Configuration for various plugins.
 plugins {
-    plugin utilities {
+    // Configuration for the Utilities plugin.
+    plugin "utilities" {
+        // Whether this plugin is enabled.
         enabled = true
     }
 }
