@@ -23,9 +23,18 @@
 // This file is a sample configuration for the per-guild configuration of HarTex.
 // This sample may change as the data structures and manifest evolves.
 
+// ======================================== DO NOT EDIT ========================================
 // Version of manifest, automatically generated.
-// DO NOT EDIT: will break functionality in some form or another!
-version = 2
+// The version is calculated using the version number (major.minor.patch) using the following formula:
+//
+//     (major << 16) | minor patch
+//
+// Examples:
+//   0.1.0 => (0 << 16) | 10 = 10
+//   0.1.1 => (0 << 16) | 11 = 11
+//   0.2.0 => (0 << 16) | 20 = 20
+version = 20
+// ======================================== DO NOT EDIT ========================================
 
 // Dashboard access configurations.
 dashboard {
