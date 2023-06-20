@@ -1,0 +1,13 @@
+{
+  "name": "serverinfo",
+  "description": "Obtain information about the current or a specific Discord server.",
+  "options": [
+    {
+      "name": "server",
+      "description": "The specific Discord server to obtain information for.",
+      "required": false,
+      "type": 3
+    }
+  ],
+  "type": 1
+}
