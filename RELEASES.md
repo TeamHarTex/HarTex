@@ -17,6 +17,8 @@
 
 ## Discord Frontend
 
+- update configuration api
+
 ## Localization Infrastructure
 
 ## Rust Utilities
