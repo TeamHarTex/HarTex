@@ -2,20 +2,24 @@
   "name": "serverinfo",
   "description": "Obtain information about the current or a specific Discord server.",
   "name_localizations": {
-    "zh-TW": "伺服器資訊"
+    "zh-TW": "伺服器資訊",
+    "zh-CN": "服务器信息"
   },
   "description_localizations": {
-    "zh-TW": "獲取當前或特定 Discord 伺服器的資訊。"
+    "zh-TW": "獲取當前或特定 Discord 伺服器的資訊。",
+    "zh-CN": "获取当前或指定 Discord 服务器的信息。"
   },
   "options": [
     {
       "name": "server",
       "description": "The specific Discord server to obtain information for.",
       "name_localizations": {
-        "zh-TW": "伺服器"
+        "zh-TW": "伺服器",
+        "zh-CN": "服务器"
       },
       "description_localizations": {
-        "zh-TW": "要獲取資訊的特定 Discord 伺服器。"
+        "zh-TW": "要獲取資訊的特定 Discord 伺服器。",
+        "zh-CN": "所指定的需要获取信息的 Discord 服务器。"
       },
       "required": false,
       "type": 3
