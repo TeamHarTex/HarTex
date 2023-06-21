@@ -112,7 +112,9 @@ pub async fn queue_processor(
                     continue;
                 }
             }
-            BorsQueueEvent::PullRequestFailed(_, _) => todo!(),
+            BorsQueueEvent::PullRequestFailed(name, id) => {
+                database.dequeue_pull_request(&name, id as u64).await?;
+            }
             BorsQueueEvent::PullRequestMerged(name, id) => {
                 database.dequeue_pull_request(&name, id as u64).await?;
 

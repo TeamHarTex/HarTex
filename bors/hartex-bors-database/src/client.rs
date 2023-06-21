@@ -39,7 +39,6 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::RunId;
-use sea_orm::ModelTrait;
 use sea_orm::prelude::DateTime;
 use sea_orm::prelude::DateTimeUtc;
 use sea_orm::sea_query::OnConflict;
@@ -50,6 +49,7 @@ use sea_orm::ColumnTrait;
 use sea_orm::DatabaseConnection;
 use sea_orm::DbErr;
 use sea_orm::EntityTrait;
+use sea_orm::ModelTrait;
 use sea_orm::QueryFilter;
 use sea_orm::TransactionTrait;
 
@@ -491,6 +491,24 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     workflow_from_database(workflow, approve_build, build)
                 })
                 .collect())
+        })
+    }
+
+    fn unapprove_pull_request<'a>(
+        &'a self,
+        pr: &'a BorsPullRequest,
+    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+        Box::pin(async move {
+            let model = entity::pull_request::ActiveModel {
+                id: Unchanged(pr.id),
+                approved: Set(0),
+                approved_by: Set(None),
+                ..Default::default()
+            };
+
+            model.update(&self.connection).await?;
+
+            Ok(())
         })
     }
 
