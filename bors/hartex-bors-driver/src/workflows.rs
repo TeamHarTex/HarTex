@@ -275,12 +275,22 @@ Pushing {} to {}..."#,
     database
         .update_approve_build_status(&approve_build, status)
         .await?;
-    sender
-        .send(BorsQueueEvent::PullRequestMerged(
-            repository.repository.clone(),
-            pull_request.id,
-        ))
-        .await?;
+    
+    if !has_failure {
+        sender
+            .send(BorsQueueEvent::PullRequestMerged(
+                repository.repository.clone(),
+                pull_request.id,
+            ))
+            .await?;
+    } else {
+        sender
+            .send(BorsQueueEvent::PullRequestFailed(
+                repository.repository.clone(),
+                pull_request.id,
+            ))
+            .await?;
+    }
 
     Ok(())
 }
