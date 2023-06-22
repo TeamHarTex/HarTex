@@ -21,13 +21,18 @@
  */
 
 use std::collections::BTreeMap;
-
 use serde::Deserialize;
-use serde::Serialize;
+use serde::Deserializer;
 
 /// Access ranks configuration for roles and users.
-#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct Ranks {
     pub roles: BTreeMap<String, u16>,
     pub users: BTreeMap<String, u16>,
+}
+
+impl<'de> Deserialize<'de> for Ranks {
+    fn deserialize<D>(_: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+        todo!()
+    }
 }
