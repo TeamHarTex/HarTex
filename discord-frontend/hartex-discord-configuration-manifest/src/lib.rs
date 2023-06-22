@@ -34,6 +34,7 @@ use serde::Serialize;
 
 pub mod appearance;
 pub mod dashboard;
+pub mod ranks;
 
 /// The root of everything.
 #[derive(Deserialize, Serialize)]
@@ -44,6 +45,8 @@ pub struct Configuration {
     pub dashboard: dashboard::Dashboard,
     /// Appearance of HarTex in the server.
     pub appearance: appearance::Appearance,
+    /// Ranks of roles and users in the server.
+    pub ranks: ranks::Ranks,
 }
 
 pub fn deserialize_config(source_hcl: &str) -> hartex_eyre::Result<Configuration> {
