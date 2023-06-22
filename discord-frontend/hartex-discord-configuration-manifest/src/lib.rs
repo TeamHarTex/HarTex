@@ -37,7 +37,7 @@ pub mod dashboard;
 pub mod ranks;
 
 /// The root of everything.
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
 pub struct Configuration {
     /// Version of the configuration schema.
     pub version: u8,
