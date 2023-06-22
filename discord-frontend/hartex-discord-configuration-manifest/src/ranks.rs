@@ -20,8 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeMap;
+
 use serde::Deserialize;
+use serde::Serialize;
 
 /// Access ranks configuration for roles and users.
-#[derive(Deserialize)]
-pub struct Ranks;
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
+pub struct Ranks {
+    pub roles: BTreeMap<String, u16>,
+    pub users: BTreeMap<String, u16>,
+}

@@ -24,7 +24,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 /// Dashboard access configurations.
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
 pub struct Dashboard {
     /// Admins of the server, they can add people to the configuration editor.
     pub admins: Vec<String>,
