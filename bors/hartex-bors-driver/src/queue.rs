@@ -114,6 +114,7 @@ pub async fn queue_processor(
             }
             BorsQueueEvent::PullRequestFailed(name, id) => {
                 database.dequeue_pull_request(&name, id as u64).await?;
+                database.unapprove_pull_request(id as u64).await?;
             }
             BorsQueueEvent::PullRequestMerged(name, id) => {
                 database.dequeue_pull_request(&name, id as u64).await?;
