@@ -772,6 +772,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_configuration_test"
+version = "0.1.0"
+dependencies = [
+ "hartex_discord_configuration_manifest",
+]
+
+[[package]]
 name = "hartex_discord_core"
 version = "0.1.0"
 dependencies = [
