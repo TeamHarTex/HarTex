@@ -205,9 +205,9 @@ pub trait DatabaseClient: Send + Sync {
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>>;
 
     /// Unapprove a pull request.
-    fn unapprove_pull_request<'a>(
-        &'a self,
-        pr: &'a BorsPullRequest
+    fn unapprove_pull_request(
+        &self,
+        pr: u64
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
 
     /// Update the status of an approve build.
