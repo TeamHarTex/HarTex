@@ -27,7 +27,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 /// Appearance of HarTex in the server.
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
 pub struct Appearance {
     /// Nickname of the bot user in the server.
     pub nickname: Option<String>,
