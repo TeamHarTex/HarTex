@@ -494,13 +494,13 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
-    fn unapprove_pull_request<'a>(
-        &'a self,
-        pr: &'a BorsPullRequest,
+    fn unapprove_pull_request(
+        &self,
+        pr: u64,
     ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let model = entity::pull_request::ActiveModel {
-                id: Unchanged(pr.id),
+                id: Unchanged(pr as i32),
                 approved: Set(0),
                 approved_by: Set(None),
                 ..Default::default()
