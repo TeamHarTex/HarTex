@@ -33,7 +33,7 @@
 //   0.1.0 => (0 << 16) | 10 = 10
 //   0.1.1 => (0 << 16) | 11 = 11
 //   0.2.0 => (0 << 16) | 20 = 20
-version = 30
+version = 31
 // ======================================== DO NOT EDIT ========================================
 
 // Dashboard access configurations.
@@ -77,7 +77,7 @@ ranks {
 // Configuration for various plugins.
 plugins {
     // Configuration for the Utilities plugin.
-    plugin "utilities" {
+    utilities {
         // Whether this plugin is enabled.
         enabled = true
     }
