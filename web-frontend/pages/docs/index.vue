@@ -21,41 +21,50 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-    <div class="flex">
-        <div class="half menu">
-            <h1 class="title">HarTex Interactive Docs</h1>
-            <input class="searchbar" placeholder="Type to search..." />
-            <p class="browse">or <button>browse through a list</button>.</p>
-        </div>
-        <div class="half content">
-            <p>markdown content stuff...</p>
-        </div>
-    </div>
+  <div class="docs">
+    <header>
+      <NuxtLink class="brand">hartex.</NuxtLink>
+    </header>
+    <main>
+      <aside>main index</aside>
+      <article>content</article>
+      <nav>article index</nav>
+    </main>
+  </div>
 </template>
 
 <style scoped lang="postcss">
-.half {
-    @apply flex flex-1 flex-col;
-    @apply h-screen justify-center items-center;
+.docs {
+  @apply transition-all;
 }
 
-.menu {
-    @apply bg-main-background;
+header {
+  @apply sticky top-0 bg-dark-900 p-6;
 }
 
-.title {
-    @apply text-4xl mb-8;
+main {
+  @apply grid;
+
+  grid-template-columns: 24rem 1fr 24rem;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "aside article nav";
 }
 
-.searchbar {
-    @apply w-[60%];
+aside {
+  grid-area: aside;
+
+  @apply bg-dark-800;
 }
 
-.browse {
-    @apply text-xl mt-8;
+article {
+  grid-area: article;
+
+  @apply bg-dark-600 h-screen;
 }
 
-.content {
-    @apply bg-gray-950;
+nav {
+  grid-area: nav;
+
+  @apply bg-dark-400;
 }
 </style>
