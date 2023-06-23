@@ -37,7 +37,7 @@ pub fn deserialize_test() {
     let deserialized = deserialize_config(string).expect("deserialization failed");
 
     let expected = Configuration {
-        version: 30,
+        version: 31,
         dashboard: Dashboard {
             admins: vec!["1000000000000000".to_string(), "1000000000000001".to_string()],
             editors: Some(vec!["1000000000000002".to_string(), "1000000000000003".to_string()]),
