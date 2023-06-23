@@ -20,13 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-
 use hartex_discord_configuration_manifest::appearance::Appearance;
 use hartex_discord_configuration_manifest::Configuration;
 use hartex_discord_configuration_manifest::dashboard::Dashboard;
 use hartex_discord_configuration_manifest::deserialize_config;
-use hartex_discord_configuration_manifest::ranks::Ranks;
 
 #[test]
 pub fn deserialize_test() {
@@ -42,21 +39,7 @@ pub fn deserialize_test() {
         },
         appearance: Appearance {
             nickname: Some("HarTex Nightly".to_string()),
-            role_colour: None,
-        },
-        ranks: Ranks {
-            roles: {
-                let mut map = BTreeMap::new();
-                map.insert("1234567890987654".to_string(), 100);
-
-                map
-            },
-            users: {
-                let mut map = BTreeMap::new();
-                map.insert("1000000000000000".to_string(), 100);
-
-                map
-            }
+            role_colour: Some(3285852160),
         },
     };
 
