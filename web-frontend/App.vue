@@ -28,7 +28,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <style>
 * {
-    @apply p-0 m-0 outline-none;
+    @apply p-0 m-0 outline-none border-box;
     @apply font-sans text-main-text;
 }
 
