@@ -15,4 +15,5 @@ impl _commands_core::traits::CommandMetadata for Derive {
     fn name(&self) -> String {
         String::from("derive")
     }
+    fn minimum_level(&self) -> u16 { 0 }
 }

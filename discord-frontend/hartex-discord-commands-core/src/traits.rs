@@ -32,6 +32,9 @@ pub trait CommandMetadata {
 
     /// The name of the command.
     fn name(&self) -> String;
+
+    /// The minimum rank permission level required to run this command.
+    fn minimum_level(&self) -> u16;
 }
 
 /// The command trait.
