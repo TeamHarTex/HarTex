@@ -41,6 +41,7 @@ use hartex_localization_macros::bundle_get;
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
 #[metadata(name = "contributors")]
+#[metadata(minimum_level = 0)]
 pub struct Contributors;
 
 impl Command for Contributors {
