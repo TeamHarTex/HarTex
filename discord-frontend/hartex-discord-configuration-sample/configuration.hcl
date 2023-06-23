@@ -33,7 +33,7 @@
 //   0.1.0 => (0 << 16) | 10 = 10
 //   0.1.1 => (0 << 16) | 11 = 11
 //   0.2.0 => (0 << 16) | 20 = 20
-version = 20
+version = 30
 // ======================================== DO NOT EDIT ========================================
 
 // Dashboard access configurations.
@@ -59,7 +59,7 @@ appearance {
     role_colour = rgb(195, 218, 32)
 }
 
-// Permission ranks for HarTex usage (roles).
+// Permission ranks for HarTex usage roles and users.
 ranks {
     // Permissions for the role with ID 1234567890987654
     role "1234567890987654" {
