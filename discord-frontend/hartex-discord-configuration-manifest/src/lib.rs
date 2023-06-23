@@ -25,6 +25,7 @@
 //! Specifies the configuration manifest in models that can be serialized from and deserialized
 //! into.
 
+use std::collections::BTreeMap;
 use hartex_eyre::eyre::Report;
 use hcl::eval::Context;
 use hcl::eval::FuncDef;
@@ -34,7 +35,6 @@ use serde::Serialize;
 
 pub mod appearance;
 pub mod dashboard;
-pub mod ranks;
 
 /// The root of everything.
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
@@ -45,8 +45,6 @@ pub struct Configuration {
     pub dashboard: dashboard::Dashboard,
     /// Appearance of HarTex in the server.
     pub appearance: appearance::Appearance,
-    /// Ranks of roles and users in the server.
-    pub ranks: ranks::Ranks,
 }
 
 pub fn deserialize_config(source_hcl: &str) -> hartex_eyre::Result<Configuration> {
