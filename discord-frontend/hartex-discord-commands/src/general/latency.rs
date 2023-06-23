@@ -40,6 +40,7 @@ use hartex_localization_macros::bundle_get_args;
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
 #[metadata(name = "latency")]
+#[metadata(minimum_level = 0)]
 pub struct Latency;
 
 impl Command for Latency {

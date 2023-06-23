@@ -26,4 +26,5 @@ use hartex_discord_commands_core::CommandMetadata;
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
 #[metadata(name = "derive")]
+#[metadata(minimum_level = 0)]
 pub struct Derive;

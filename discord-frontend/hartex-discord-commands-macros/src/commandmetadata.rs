@@ -33,8 +33,8 @@ use syn::DeriveInput;
 use syn::Visibility;
 
 const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
-const LITERAL_PARAMETERS: [&str; 2] = ["command_type", "name"];
-const VALID_ATTR_PARAMETER_NAMES: [&str; 3] = ["command_type", "interaction_only", "name"];
+const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "name", "minimum_level"];
+const VALID_ATTR_PARAMETER_NAMES: [&str; 4] = ["command_type", "interaction_only", "name", "minimum_level"];
 
 #[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
@@ -231,6 +231,14 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
                     let expanded = quote::quote! {
                         fn name(&self) -> String {
                             String::from(#tree_next)
+                        }
+                    };
+                    functions.extend(expanded);
+                }
+                "minimum_level" => {
+                    let expanded = quote::quote! {
+                        fn minimum_level(&self) -> u16 {
+                            #tree_next
                         }
                     };
                     functions.extend(expanded);
