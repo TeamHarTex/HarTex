@@ -21,5 +21,50 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-    <p>Docs</p>
+  <div class="docs">
+    <header>
+      <NuxtLink class="brand">hartex.</NuxtLink>
+    </header>
+    <main>
+      <aside>main index</aside>
+      <article>content</article>
+      <nav>article index</nav>
+    </main>
+  </div>
 </template>
+
+<style scoped lang="postcss">
+.docs {
+  @apply transition-all;
+}
+
+header {
+  @apply sticky top-0 bg-dark-900 p-6;
+}
+
+main {
+  @apply grid;
+
+  grid-template-columns: 24rem 1fr 24rem;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "aside article nav";
+}
+
+aside {
+  grid-area: aside;
+
+  @apply bg-dark-800;
+}
+
+article {
+  grid-area: article;
+
+  @apply bg-dark-600 h-screen;
+}
+
+nav {
+  grid-area: nav;
+
+  @apply bg-dark-400;
+}
+</style>
