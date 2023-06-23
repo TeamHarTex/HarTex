@@ -25,6 +25,8 @@ use std::collections::BTreeMap;
 use hartex_discord_configuration_manifest::appearance::Appearance;
 use hartex_discord_configuration_manifest::Configuration;
 use hartex_discord_configuration_manifest::dashboard::Dashboard;
+use hartex_discord_configuration_manifest::plugins::Plugins;
+use hartex_discord_configuration_manifest::plugins::UtilitiesPlugin;
 use hartex_discord_configuration_manifest::ranks::RankPermission;
 use hartex_discord_configuration_manifest::ranks::Ranks;
 use hartex_discord_configuration_manifest::deserialize_config;
@@ -62,7 +64,12 @@ pub fn deserialize_test() {
 
                 map
             },
-        }
+        },
+        plugins: Plugins {
+            utilities: Some(UtilitiesPlugin {
+                enabled: true
+            }),
+        },
     };
 
     pretty_assertions::assert_eq!(deserialized, expected);
