@@ -50,6 +50,7 @@ use hyper::Request;
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
 #[metadata(name = "uptime")]
+#[metadata(minimum_level = 0)]
 pub struct Uptime;
 
 impl Command for Uptime {
