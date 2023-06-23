@@ -1242,7 +1242,7 @@
     "@unocss/preset-mini" "0.53.3"
     "@unocss/preset-wind" "0.53.3"
 
-"@unocss/preset-web-fonts@0.53.1", "@unocss/preset-web-fonts@^0.53.0":
+"@unocss/preset-web-fonts@0.53.1":
   version "0.53.1"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.53.1.tgz#06e6b84351bfbe2dac76b7554e699583348593e9"
   integrity sha512-UwAYDkdIVwydw1UxXFVQ7HufzIPxY6Nf3ATb3cKgC134xLNGxbzIQx7DQRFSGe6hmqYC2S86U+URayboGlL1iA==
@@ -1250,7 +1250,7 @@
     "@unocss/core" "0.53.1"
     ofetch "^1.0.1"
 
-"@unocss/preset-web-fonts@0.53.3":
+"@unocss/preset-web-fonts@0.53.3", "@unocss/preset-web-fonts@^0.53.0":
   version "0.53.3"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.53.3.tgz#f7c47d867926419d8e515948f5ed7bbf41c0e3ca"
   integrity sha512-P17xcbhx4F+J1HQWrfbslqIibslF/o8iQg+94DYRxaZRg7a+uAKwYIOUCKiPxGXz88r4/QBYhXpsvjoHv4VZ+A==
@@ -4516,16 +4516,7 @@ object-assign@^4.1.1:
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
-ofetch@^1.0.1:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ofetch/-/ofetch-1.1.0.tgz#f97ce927b3eb1384ce50fab0f81d039ad452c587"
-  integrity sha512-yjq2ZUUMto1ITpge2J5vNlUfteLzxfHn9aJC55WtVGD3okKwSfPoLaKpcHXmmKd2kZZUGo+jdkFuuj09Blyeig==
-  dependencies:
-    destr "^1.2.2"
-    node-fetch-native "^1.2.0"
-    ufo "^1.1.2"
-
-ofetch@^1.1.1:
+ofetch@^1.0.1, ofetch@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ofetch/-/ofetch-1.1.1.tgz#a0e5117500f4ac02e2c61ec1bb754bc54d5ba44d"
   integrity sha512-SSMoktrp9SNLi20BWfB/BnnKcL0RDigXThD/mZBeQxkIRv1xrd9183MtLdsqRYLYSqW0eTr5t8w8MqjNhvoOQQ==
