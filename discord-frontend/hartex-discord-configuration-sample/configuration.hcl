@@ -33,7 +33,7 @@
 //   0.1.0 => (0 << 16) | 10 = 10
 //   0.1.1 => (0 << 16) | 11 = 11
 //   0.2.0 => (0 << 16) | 20 = 20
-version = 20
+version = 31
 // ======================================== DO NOT EDIT ========================================
 
 // Dashboard access configurations.
@@ -59,17 +59,14 @@ appearance {
     role_colour = rgb(195, 218, 32)
 }
 
-// Permission ranks for HarTex usage (roles).
-ranks roles {
+// Permission ranks for HarTex usage roles and users.
+ranks {
     // Permissions for the role with ID 1234567890987654
     role "1234567890987654" {
         // Permission level
         level = 100
     }
-}
 
-// Permission ranks for HarTex usage (users).
-ranks users {
     // Permissions for the user with ID 1000000000000000
     user "1000000000000000" {
         // Permission level
@@ -80,7 +77,7 @@ ranks users {
 // Configuration for various plugins.
 plugins {
     // Configuration for the Utilities plugin.
-    plugin "utilities" {
+    utilities {
         // Whether this plugin is enabled.
         enabled = true
     }

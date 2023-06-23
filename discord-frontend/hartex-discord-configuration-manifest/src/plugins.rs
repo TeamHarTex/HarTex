@@ -20,25 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-
 use serde::Deserialize;
 use serde::Serialize;
 
-/// Permission rank configurations,
+/// Plugins configuration.
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
-pub struct Ranks {
-    /// The role rank configurations.
-    #[serde(rename = "role")]
-    pub roles: BTreeMap<String, RankPermission>,
-    /// The user rank configurations,
-    #[serde(rename = "user")]
-    pub users: BTreeMap<String, RankPermission>,
+pub struct Plugins {
+    /// Configuration for the utilities plugin.
+    pub utilities: Option<UtilitiesPlugin>,
 }
 
-/// A rank permission,
+/// Configuration for the utilities plugin.
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
-pub struct RankPermission {
-    /// The permission level of the rank,
-    pub level: u16
+pub struct UtilitiesPlugin {
+    #[serde(default)]
+    pub enabled: bool,
 }
