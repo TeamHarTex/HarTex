@@ -39,8 +39,8 @@ use hartex_localization_macros::bundle_get_args;
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
-#[metadata(name = "latency")]
 #[metadata(minimum_level = 0)]
+#[metadata(name = "latency")]
 pub struct Latency;
 
 impl Command for Latency {

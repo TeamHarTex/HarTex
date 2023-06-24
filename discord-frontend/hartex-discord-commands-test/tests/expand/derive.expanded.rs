@@ -13,10 +13,10 @@ impl _commands_core::traits::CommandMetadata for Derive {
     fn interaction_only(&self) -> bool {
         true
     }
-    fn name(&self) -> String {
-        String::from("derive")
-    }
     fn minimum_level(&self) -> u16 {
         0
+    }
+    fn name(&self) -> String {
+        String::from("derive")
     }
 }
