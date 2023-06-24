@@ -30,11 +30,11 @@ pub trait CommandMetadata {
     /// Whether the command is only available in the form of an interaction.
     fn interaction_only(&self) -> bool;
 
-    /// The name of the command.
-    fn name(&self) -> String;
-
     /// The minimum rank permission level required to run this command.
     fn minimum_level(&self) -> u16;
+
+    /// The name of the command.
+    fn name(&self) -> String;
 }
 
 /// The command trait.
