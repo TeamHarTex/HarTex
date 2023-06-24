@@ -1,6 +1,7 @@
 use hartex_discord_commands_core::CommandMetadata;
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
+#[metadata(minimum_level = 0)]
 #[metadata(name = "derive")]
 pub struct Derive;
 extern crate hartex_discord_commands_core as _commands_core;
