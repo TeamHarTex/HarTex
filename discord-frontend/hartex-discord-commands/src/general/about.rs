@@ -42,8 +42,8 @@ use hartex_localization_macros::bundle_get_args;
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
 #[metadata(interaction_only = true)]
-#[metadata(name = "about")]
 #[metadata(minimum_level = 0)]
+#[metadata(name = "about")]
 pub struct About;
 
 impl Command for About {
