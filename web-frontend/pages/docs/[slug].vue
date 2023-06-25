@@ -27,7 +27,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     </header>
     <main>
       <aside>main index</aside>
-      <article>content</article>
+      <article><ContentDoc/></article>
       <nav>article index</nav>
     </main>
   </div>
