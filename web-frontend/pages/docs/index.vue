@@ -23,7 +23,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <template>
   <div class="docs">
     <header>
-      <NuxtLink class="brand">hartex.</NuxtLink>
+      <NuxtLink class="brand">HarTex Documentation</NuxtLink>
     </header>
     <main>
       <aside>main index</aside>
