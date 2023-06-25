@@ -35,6 +35,8 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <style scoped lang="postcss">
 header {
+  line-height: 18px;
+
   @apply sticky top-0 bg-dark-900 p-5;
 }
 
@@ -54,9 +56,21 @@ aside {
 
 article {
   grid-area: article;
-  height: 95.29vh;
+  overflow: hidden;
 
   @apply bg-dark-600;
+  @apply px-16 py-6;
+}
+
+article :deep(img) {
+  width: 1100px;
+
+  @apply pb-6;
+}
+
+article :deep(h1) {
+  @apply pb-6;
+  @apply text-[1.5vw];
 }
 
 nav {
