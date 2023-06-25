@@ -73,6 +73,11 @@ article :deep(h1) {
   @apply text-[1.5vw];
 }
 
+article :deep(h2) {
+  @apply pb-6;
+  @apply text-[1.2vw];
+}
+
 nav {
   grid-area: nav;
 
