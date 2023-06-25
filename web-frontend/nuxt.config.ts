@@ -4,8 +4,8 @@ export default defineNuxtConfig({
       title: 'HarTex'
     }
   },
-	modules: [
-		'@nuxt/content',
+  modules: [
+    '@nuxt/content',
     '@unocss/nuxt',
   ],
 })

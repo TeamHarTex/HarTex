@@ -630,7 +630,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nuxt/content@^2.6.0":
+"@nuxt/content@^2.7.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@nuxt/content/-/content-2.7.0.tgz#b4bee5c7af9c7b8664347cfe481042c3cf9454a2"
   integrity sha512-3vv3Rbpf6NH7RRuy7PLVmpQCt8C9DgV4aTWLmTCdnWpmlNsX+0wQT8bA/ypqmh8zrJ6BXWztFM35WVESkNvDvQ==
@@ -991,7 +991,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.3.1.tgz#e8a83f1aa8b649377bb1fb5d7bac5cb90e784dfe"
   integrity sha512-EhcH/wvidPy1WeML3TtYFGR83UzjxeWRen9V402T8aUGYsCHOmfoisV3ZSg03gAFIbLq8TnWOJ0f4cALtnSEUg==
 
-"@types/node@^18":
+"@types/node@^18.16.18":
   version "18.16.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.16.18.tgz#85da09bafb66d4bc14f7c899185336d0c1736390"
   integrity sha512-/aNaQZD0+iSBAGnvvN2Cx92HqE5sZCPZtx2TsK+4nvV23fFe09jVDvpArXr2j9DnYlzuU9WuoykDDc6wqvpNcw==
@@ -1134,7 +1134,7 @@
     gzip-size "^6.0.0"
     sirv "^2.0.3"
 
-"@unocss/nuxt@^0.53.0":
+"@unocss/nuxt@^0.53.3":
   version "0.53.3"
   resolved "https://registry.yarnpkg.com/@unocss/nuxt/-/nuxt-0.53.3.tgz#624084345d06fe0f52a5a36fe5ac8f331834a5d9"
   integrity sha512-Q3YWkgeOdJsoCo7Gagx0FvvPu9F2gXjm+PialE6lEQvi6yjcu7meze+w3m7c4w8dmxr+WCqL++0nckihMO3GpA==
@@ -1214,7 +1214,7 @@
     "@unocss/preset-mini" "0.53.3"
     "@unocss/preset-wind" "0.53.3"
 
-"@unocss/preset-web-fonts@0.53.3", "@unocss/preset-web-fonts@^0.53.0":
+"@unocss/preset-web-fonts@0.53.3", "@unocss/preset-web-fonts@^0.53.3":
   version "0.53.3"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.53.3.tgz#f7c47d867926419d8e515948f5ed7bbf41c0e3ca"
   integrity sha512-P17xcbhx4F+J1HQWrfbslqIibslF/o8iQg+94DYRxaZRg7a+uAKwYIOUCKiPxGXz88r4/QBYhXpsvjoHv4VZ+A==
@@ -1261,7 +1261,7 @@
   dependencies:
     "@unocss/core" "0.53.3"
 
-"@unocss/transformer-directives@0.53.3", "@unocss/transformer-directives@^0.53.0":
+"@unocss/transformer-directives@0.53.3", "@unocss/transformer-directives@^0.53.3":
   version "0.53.3"
   resolved "https://registry.yarnpkg.com/@unocss/transformer-directives/-/transformer-directives-0.53.3.tgz#18854ac09dd57e6684f79daab276d1ba3e0d3c7f"
   integrity sha512-FIPdg8z3OMHEDu9RqbCFcl+84HaELDWKU1ecYTvZQkLzdpugCJfqls4FUg0gPwwzKJbJze2hSqECpWSFk883oA==
@@ -2364,21 +2364,21 @@ end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   dependencies:
     once "^1.4.0"
 
-engine.io-client@~6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-6.4.0.tgz#88cd3082609ca86d7d3c12f0e746d12db4f47c91"
-  integrity sha512-GyKPDyoEha+XZ7iEqam49vz6auPnNJ9ZBfy89f+rMMas8AuiMWOZ9PVzu8xb9ZC6rafUqiGHSCfu22ih66E+1g==
+engine.io-client@~6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-6.5.0.tgz#c77f14c0e996d3746a1fa681b3b093003dc1743d"
+  integrity sha512-C7eN3OKggSfd5g8IDgUA9guC8TNS6CEganKT7dL6Fp3q+FobcQ/WBn2Qq2XTL1vNTiFZfDzXohvqLuR9dWejdg==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.1"
-    engine.io-parser "~5.0.3"
+    engine.io-parser "~5.1.0"
     ws "~8.11.0"
     xmlhttprequest-ssl "~2.0.0"
 
-engine.io-parser@~5.0.3:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-5.0.7.tgz#ed5eae76c71f398284c578ab6deafd3ba7e4e4f6"
-  integrity sha512-P+jDFbvK6lE3n1OL+q9KuzdOFWkkZ/cMV9gol/SbVfpyqfvrfrFTOFJ6fQm2VC3PZHlU3QPhVwmbsCnauHF2MQ==
+engine.io-parser@~5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-5.1.0.tgz#d593d6372d7f79212df48f807b8cace1ea1cb1b8"
+  integrity sha512-enySgNiK5tyZFynt3z7iqBR+Bto9EVVVvDFuTT0ioHCGbzirZVGDGiQjZzEp8hWl6hd5FSVytJGuScX1C1C35w==
 
 enhanced-resolve@^4.1.1:
   version "4.5.0"
@@ -2863,19 +2863,6 @@ gzip-size@^7.0.0:
   integrity sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==
   dependencies:
     duplexer "^0.1.2"
-
-h3@^1.6.6:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/h3/-/h3-1.6.6.tgz#f7da8517ae3bf906716975e38f2d3c24ab79a239"
-  integrity sha512-DWu2s11OuuO9suEkX99dXaJoxd1RgPXiM4iDmLdrhGV63GLoav13f3Kdd5/Rw7xNKzhzn2+F2dleQjG66SnMPQ==
-  dependencies:
-    cookie-es "^1.0.0"
-    defu "^6.1.2"
-    destr "^1.2.2"
-    iron-webcrypto "^0.7.0"
-    radix3 "^1.0.1"
-    ufo "^1.1.2"
-    uncrypto "^0.1.2"
 
 h3@^1.7.0:
   version "1.7.0"
@@ -3560,11 +3547,6 @@ lru-cache@^7.10.1:
   version "7.18.3"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
-
-lru-cache@^9.1.1:
-  version "9.1.2"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-9.1.2.tgz#255fdbc14b75589d6d0e73644ca167a8db506835"
-  integrity sha512-ERJq3FOzJTxBbFjZ7iDs+NiK4VI9Wz+RdrrAB8dio1oV+YvdPzUEE4QNiT2VD51DkIbCYRUUzCRkssXCHqSnKQ==
 
 magic-string-ast@^0.1.2:
   version "0.1.2"
@@ -4390,7 +4372,7 @@ nuxi@3.6.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-nuxt@^3.4.3:
+nuxt@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/nuxt/-/nuxt-3.6.0.tgz#78fac96caead3d573de77512629b7b086409fac5"
   integrity sha512-/ZUnaPJHdBbE9KoiVduD87unRaRx7DuO9cfy7rQLcGMo2LWVLRJ7I4CIq2ruq21fO/4jddA3G36LFWVJAKhcXQ==
@@ -5486,13 +5468,13 @@ smob@^1.0.0:
   integrity sha512-MqR3fVulhjWuRNSMydnTlweu38UhQ0HXM4buStD/S3mc/BzX3CuM9OmhyQpmtYCvoYdl5ris6TI0ZqH355Ymqg==
 
 socket.io-client@^4.6.2:
-  version "4.6.2"
-  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.6.2.tgz#2bfde952e74625d54e622718a7cb1d591ee62fd6"
-  integrity sha512-OwWrMbbA8wSqhBAR0yoPK6EdQLERQAYjXb3A0zLpgxfM1ZGLKoxHx8gVmCHA6pcclRX5oA/zvQf7bghAS11jRA==
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.0.tgz#f869a41a2593bc36f058f3b46175024491d997b5"
+  integrity sha512-7Q8CeDrhuZzg4QLXl3tXlk5yb086oxYzehAVZRLiGCzCmtDneiHz1qHyyWcxhTgxXiokVpWQXoG/u60HoXSQew==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.2"
-    engine.io-client "~6.4.0"
+    engine.io-client "~6.5.0"
     socket.io-parser "~4.2.4"
 
 socket.io-parser@~4.2.4:
@@ -5806,6 +5788,11 @@ type-fest@^2.11.2:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-2.19.0.tgz#88068015bb33036a598b952e55e9311a60fd3a9b"
   integrity sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==
 
+typescript@^5.1.0:
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.3.tgz#8d84219244a6b40b6fb2b33cc1c062f715b9e826"
+  integrity sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==
+
 ufo@^0.8.4, ufo@^0.8.5, ufo@^0.8.6:
   version "0.8.6"
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-0.8.6.tgz#c0ec89bc0e0c9fa59a683680feb0f28b55ec323b"
@@ -5830,7 +5817,7 @@ unconfig@^0.3.9:
     defu "^6.1.2"
     jiti "^1.18.2"
 
-uncrypto@^0.1.2, uncrypto@^0.1.3:
+uncrypto@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/uncrypto/-/uncrypto-0.1.3.tgz#e1288d609226f2d02d8d69ee861fa20d8348ef2b"
   integrity sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==
@@ -5965,7 +5952,7 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
-unocss@0.53.3, unocss@^0.53.0:
+unocss@0.53.3, unocss@^0.53.3:
   version "0.53.3"
   resolved "https://registry.yarnpkg.com/unocss/-/unocss-0.53.3.tgz#fbef5c64ed52266755e56b8df77a9c1866a6c2fe"
   integrity sha512-kZx3GFOczE7uS2zUecmvW1kM0MTPdVtQIMcXC5XYoPfr2Ho6G1p75eGAXmaL7jaompSo+WHsK4HrSC756nbfgg==
@@ -6020,24 +6007,7 @@ unplugin@^1.3.1:
     webpack-sources "^3.2.3"
     webpack-virtual-modules "^0.5.0"
 
-unstorage@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/unstorage/-/unstorage-1.6.1.tgz#144ea7d36852b69b74009e3bafa947154f6ac2c0"
-  integrity sha512-GUJzwbP5IStEGZy9/0peRqef5CY9icqApsSu8vxj13admjISyz1g5eYk2wPRBjmZhQ3DUMQ36q+zwTbe68khew==
-  dependencies:
-    anymatch "^3.1.3"
-    chokidar "^3.5.3"
-    destr "^1.2.2"
-    h3 "^1.6.6"
-    ioredis "^5.3.2"
-    listhen "^1.0.4"
-    lru-cache "^9.1.1"
-    mri "^1.2.0"
-    node-fetch-native "^1.1.1"
-    ofetch "^1.0.1"
-    ufo "^1.1.2"
-
-unstorage@^1.7.0:
+unstorage@^1.6.1, unstorage@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/unstorage/-/unstorage-1.7.0.tgz#1b3c66aa495f52bc248d63b9b2f75446b0435544"
   integrity sha512-f78UtR4HyUGWuET35iNPdKMvCh9YPQpC7WvkGpP6XiLlolT/9wjyAICYN9AMD/tlB8ZdOqWQHZn+j7mXcTSO4w==
