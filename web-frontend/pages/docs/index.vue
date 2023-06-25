@@ -58,10 +58,10 @@ aside {
 
 article {
   grid-area: article;
+  height: 95.29vh;
 
-  @apply bg-dark-600 h-screen;
+  @apply bg-dark-600;
 }
-
 nav {
   grid-area: nav;
 
