@@ -62,6 +62,12 @@ article {
   @apply px-16 py-6;
 }
 
+article :deep(img) {
+  width: 1100px;
+
+  @apply pb-6;
+}
+
 article :deep(h1) {
   @apply pb-6;
   @apply text-[1.5vw];
