@@ -34,12 +34,8 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 </template>
 
 <style scoped lang="postcss">
-.docs {
-  @apply transition-all;
-}
-
 header {
-  @apply sticky top-0 bg-dark-900 p-6;
+  @apply sticky top-0 bg-dark-900 p-5;
 }
 
 main {
@@ -62,9 +58,18 @@ article {
 
   @apply bg-dark-600;
 }
+
 nav {
   grid-area: nav;
 
   @apply bg-dark-400;
+}
+
+.brand {
+  @apply font-bold text-[0.8vw];
+}
+
+.docs {
+  @apply transition-all;
 }
 </style>
