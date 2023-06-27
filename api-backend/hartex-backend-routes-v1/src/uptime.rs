@@ -27,14 +27,9 @@ use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
 use hartex_backend_ratelimiter::RateLimiter;
-use hartex_backend_status_util::StatusFns;
 use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
-use scylla::cql_to_rust::FromCqlVal;
-use scylla::frame::Compression;
-use scylla::SessionBuilder;
-use serde_json::json;
 use serde_json::Value;
 
 use crate::RateLimitGuard;
@@ -47,76 +42,5 @@ pub async fn v1_post_uptime(
     data: Json<UptimeQuery<'_>>,
     _ratelimit: RateLimiter<'_, RateLimitGuard>,
 ) -> (Status, Value) {
-    let username = env::var("API_SCYLLADB_USERNAME");
-    let passwd = env::var("API_SCYLLADB_PASSWORD");
-    if username.is_err() || passwd.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
-    }
-
-    let session = SessionBuilder::new()
-        .known_node("localhost:9042")
-        .compression(Some(Compression::Lz4))
-        .user(username.unwrap(), passwd.unwrap())
-        .build()
-        .await;
-    if session.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
-    }
-
-    let session = session.unwrap();
-    let statement = session
-        .prepare("SELECT current_time FROM main.start_timestamp WHERE bot_name = ?")
-        .await;
-    if statement.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
-    }
-
-    let statement = statement.unwrap();
-    let result = session
-        .execute(&statement, (data.0.component_name().to_string(),))
-        .await;
-    if result.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
-    }
-
-    let result = result.unwrap();
-    let rows = result.rows.unwrap();
-    if rows.is_empty() {
-        return (Status::NotFound, StatusFns::not_found());
-    }
-
-    let row = rows.get(0).unwrap();
-    let value = row.columns.get(0).unwrap().as_ref().unwrap();
-    let duration = i64::from_cql(value.clone());
-    if duration.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
-    }
-
-    let millis = duration.unwrap() / 1000;
-
-    (
-        Status::Ok,
-        json!({
-            "code": 200,
-            "message": "ok",
-            "data": {
-                "start_timestamp": millis,
-            }
-        }),
-    )
+    todo!()
 }
