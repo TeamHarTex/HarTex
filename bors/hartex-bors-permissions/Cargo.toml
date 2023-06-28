@@ -21,6 +21,6 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 hyper = { version = "0.14.27", features = ["client", "http2"] }
 serde_json = "1.0.99"
-tokio = { version = "1.28.2", features = ["sync"] }
+tokio = { version = "1.29.0", features = ["sync"] }
 
 [features]
