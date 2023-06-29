@@ -23,14 +23,18 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
+
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
 use hartex_backend_ratelimiter::RateLimiter;
+use hartex_backend_status_util::StatusFns;
 use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
 use serde_json::Value;
+use sqlx::postgres::PgConnection;
+use sqlx::prelude::Connection;
 
 use crate::RateLimitGuard;
 
@@ -42,5 +46,12 @@ pub async fn v1_post_uptime(
     data: Json<UptimeQuery<'_>>,
     _ratelimit: RateLimiter<'_, RateLimitGuard>,
 ) -> (Status, Value) {
+    let connect_res = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await;
+    if connect_res.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
+
+    let _ = connect_res.unwrap();
+
     todo!()
 }
