@@ -26,11 +26,19 @@
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
+use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_backend_ratelimiter::RateLimiter;
+use hartex_backend_status_util::StatusFns;
 use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
 use serde_json::Value;
+use sqlx::postgres::PgConnection;
+use sqlx::postgres::PgTypeInfo;
+use sqlx::prelude::Connection;
+use sqlx::prelude::Executor;
+use sqlx::prelude::Statement;
+use sqlx::Error;
 
 use crate::RateLimitGuard;
 
@@ -42,5 +50,41 @@ pub async fn v1_post_uptime(
     data: Json<UptimeQuery<'_>>,
     _ratelimit: RateLimiter<'_, RateLimitGuard>,
 ) -> (Status, Value) {
+    let connect_res = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await;
+    if connect_res.is_err() {
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
+    }
+
+    let mut connection = connect_res.unwrap();
+    let statement_res = connection
+        .prepare_with(
+            r#"SELECT * FROM public."StartTimestamps" WHERE component = $1;"#,
+            &[PgTypeInfo::with_name("TEXT")],
+        )
+        .await;
+    if statement_res.is_err() {
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
+    }
+
+    let statement = statement_res.unwrap();
+    let response_res = statement
+        .query_as::<UptimeResponse>()
+        .bind(data.0.component_name())
+        .fetch_one(&mut connection)
+        .await;
+
+    if let Err(Error::RowNotFound) = &response_res {
+        return (
+            Status::NotFound,
+            StatusFns::not_found(),
+        );
+    }
+
     todo!()
 }
