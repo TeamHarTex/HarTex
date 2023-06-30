@@ -23,7 +23,6 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
-
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
@@ -33,9 +32,10 @@ use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
 use serde_json::Value;
-use sqlx::Executor;
 use sqlx::postgres::PgConnection;
+use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
+use sqlx::Executor;
 
 use crate::RateLimitGuard;
 
@@ -49,13 +49,24 @@ pub async fn v1_post_uptime(
 ) -> (Status, Value) {
     let connect_res = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await;
     if connect_res.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     let connection = connect_res.unwrap();
-    let statement_res = connection.prepare(r#"SELECT * FROM public."StartTimestamps" WHERE component = $1;"#).await;
+    let statement_res = connection
+        .prepare_with(
+            r#"SELECT * FROM public."StartTimestamps" WHERE component = $1;"#,
+            &[PgTypeInfo::with_name("TEXT")],
+        )
+        .await;
     if statement_res.is_err() {
-        return (Status::InternalServerError, StatusFns::internal_server_error());
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
     }
 
     todo!()
