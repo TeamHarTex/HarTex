@@ -58,7 +58,7 @@ pub async fn v1_post_uptime(
         );
     }
 
-    let connection = connect_res.unwrap();
+    let mut connection = connect_res.unwrap();
     let statement_res = connection
         .prepare_with(
             r#"SELECT * FROM public."StartTimestamps" WHERE component = $1;"#,
@@ -76,10 +76,10 @@ pub async fn v1_post_uptime(
     let response_res = statement
         .query_as::<UptimeResponse>()
         .bind(data.0.component_name())
-        .fetch_one(&connection)
+        .fetch_one(&mut connection)
         .await;
 
-    if let Err(&Error::RowNotFound) = &response_res {
+    if let Err(Error::RowNotFound) = &response_res {
         return (
             Status::NotFound,
             StatusFns::not_found(),
