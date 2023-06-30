@@ -33,6 +33,7 @@ use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
 use serde_json::Value;
+use sqlx::Executor;
 use sqlx::postgres::PgConnection;
 use sqlx::prelude::Connection;
 
@@ -51,7 +52,11 @@ pub async fn v1_post_uptime(
         return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let _ = connect_res.unwrap();
+    let connection = connect_res.unwrap();
+    let statement_res = connection.prepare(r#"SELECT * FROM public."StartTimestamps" WHERE component = $1;"#).await;
+    if statement_res.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
 
     todo!()
 }
