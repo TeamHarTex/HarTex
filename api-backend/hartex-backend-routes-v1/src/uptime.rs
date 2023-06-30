@@ -26,6 +26,7 @@
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
+use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
 use rocket::http::Status;
@@ -35,7 +36,9 @@ use serde_json::Value;
 use sqlx::postgres::PgConnection;
 use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
-use sqlx::Executor;
+use sqlx::prelude::Executor;
+use sqlx::prelude::Statement;
+use sqlx::Error;
 
 use crate::RateLimitGuard;
 
@@ -66,6 +69,20 @@ pub async fn v1_post_uptime(
         return (
             Status::InternalServerError,
             StatusFns::internal_server_error(),
+        );
+    }
+
+    let statement = statement_res.unwrap();
+    let response_res = statement
+        .query_as::<UptimeResponse>()
+        .bind(data.0.component_name())
+        .fetch_one(&connection)
+        .await;
+
+    if let Err(&Error::RowNotFound) = &response_res {
+        return (
+            Status::NotFound,
+            StatusFns::not_found(),
         );
     }
 
