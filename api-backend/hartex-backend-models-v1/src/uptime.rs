@@ -26,6 +26,12 @@
 
 use serde::Deserialize;
 use serde::Serialize;
+use sqlx::prelude::FromRow;
+use sqlx::prelude::Row;
+use sqlx::postgres::PgRow;
+use sqlx::types::chrono::DateTime;
+use sqlx::types::chrono::Utc;
+use sqlx::Error;
 
 /// An uptime query.
 #[derive(Deserialize, Serialize)]
@@ -55,5 +61,15 @@ impl UptimeResponse {
     /// The start timestamp of the uptime entry.
     pub fn start_timestamp(&self) -> u128 {
         self.start_timestamp
+    }
+}
+
+impl<'r> FromRow<'r, PgRow> for UptimeResponse {
+    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
+        let timestamp: DateTime<Utc> = row.try_get("timestamp")?;
+
+        Ok(Self {
+            start_timestamp: timestamp.timestamp() as u128
+        })
     }
 }
