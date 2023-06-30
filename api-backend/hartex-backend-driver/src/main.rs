@@ -34,8 +34,8 @@
 use hartex_backend_routes_v1::bors::v1_repositories_repository_permissions_permissions;
 use hartex_backend_routes_v1::uptime::v1_post_uptime;
 use hartex_log::log;
-use rocket::config::Config;
 use rocket::catchers;
+use rocket::config::Config;
 use rocket::routes;
 
 mod catchers;
