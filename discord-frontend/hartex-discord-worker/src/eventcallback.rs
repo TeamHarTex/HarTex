@@ -22,13 +22,12 @@
 
 use std::env;
 
-use chrono::Utc;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
-use hartex_discord_core::scylla::transport::Compression;
-use hartex_discord_core::scylla::SessionBuilder;
 use hartex_log::log;
+use sqlx::postgres::PgConnection;
+use sqlx::prelude::Connection;
 
 /// Invoke a corresponding event callback for an event,
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
@@ -49,24 +48,7 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                         ready.version
                     );
 
-                    let username = env::var("HARTEX_NIGHTLY_SCYLLADB_USERNAME")?;
-                    let passwd = env::var("HARTEX_NIGHTLY_SCYLLADB_PASSWORD")?;
-                    let session = SessionBuilder::new()
-                        .known_node("localhost:9042")
-                        .compression(Some(Compression::Lz4))
-                        .user(username, passwd)
-                        .build()
-                        .await?;
-                    let statement = session.prepare(
-                        "INSERT INTO main.start_timestamp (bot_name, current_time) VALUES (?, ?)"
-                    ).await?;
-
-                    session
-                        .execute(
-                            &statement,
-                            ("HarTex Nightly", Utc::now().timestamp_millis()),
-                        )
-                        .await?;
+                    let _ = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
 
                     Ok(())
                 }
