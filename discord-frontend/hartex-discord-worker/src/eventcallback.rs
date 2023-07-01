@@ -37,41 +37,40 @@ use sqlx::types::chrono::Utc;
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
     #[allow(clippy::collapsible_match)]
     match event {
-        GatewayEvent::Dispatch(seq, dispatch) => {
-            match dispatch {
-                DispatchEvent::InteractionCreate(interaction_create)
-                    if interaction_create.kind == InteractionType::ApplicationCommand =>
-                {
-                    crate::interaction::application_command(interaction_create).await
-                }
-                DispatchEvent::Ready(ready) => {
-                    log::info!(
+        GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
+            DispatchEvent::InteractionCreate(interaction_create)
+                if interaction_create.kind == InteractionType::ApplicationCommand =>
+            {
+                crate::interaction::application_command(interaction_create).await
+            }
+            DispatchEvent::Ready(ready) => {
+                log::info!(
                         "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
                         ready.user.name,
                         ready.user.discriminator,
                         ready.version
                     );
 
-                    let mut connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
-                    let statement = connection
+                let mut connection =
+                    PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
+                let statement = connection
                         .prepare_with(
                             include_str!("../../../database-queries/start-timestamp/insert-into-on-conflict-update.sql"),
                             &[PgTypeInfo::with_name("TEXT"), PgTypeInfo::with_name("TIMESTAMPTZ")],
                         )
                         .await?;
 
-                    statement
-                        .query()
-                        .bind("HarTex Nightly")
-                        .bind(Utc::now())
-                        .execute(&mut connection)
-                        .await?;
+                statement
+                    .query()
+                    .bind("HarTex Nightly")
+                    .bind(Utc::now())
+                    .execute(&mut connection)
+                    .await?;
 
-                    Ok(())
-                }
-                _ => Ok(()),
+                Ok(())
             }
-        }
+            _ => Ok(()),
+        },
         _ => Ok(()),
     }
 }

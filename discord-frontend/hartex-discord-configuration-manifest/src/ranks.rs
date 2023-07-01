@@ -40,5 +40,5 @@ pub struct Ranks {
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
 pub struct RankPermission {
     /// The permission level of the rank,
-    pub level: u16
+    pub level: u16,
 }
