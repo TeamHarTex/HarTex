@@ -21,7 +21,7 @@
  */
 
 //! # Entity Cache Entities
-//! 
+//!
 //! This crate provides definitions for entities stored in the entity cache.
 
 #![deny(clippy::pedantic)]
