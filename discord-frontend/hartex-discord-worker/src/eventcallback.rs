@@ -53,7 +53,7 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                     let connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
                     let _ = connection
                         .prepare_with(
-                            r#"INSERT INTO public."StartTimestamps" (component, timestamp) VALUES ($1, $2)"#,
+                            include_str!("../../../database-queries/start-timestamp/insert-into-on-conflict-update.sql"),
                             &[PgTypeInfo::with_name("TEXT"), PgTypeInfo::with_name("TIMESTAMPTZ")],
                         )
                         .await?;
