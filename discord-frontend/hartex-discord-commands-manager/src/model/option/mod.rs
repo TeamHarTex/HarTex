@@ -37,7 +37,7 @@ use super::TypeEnumExt;
 pub mod choice;
 
 /// Command option.
-/// 
+///
 /// Refer to the corresponding API documentation on discord official website.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Deserialize, Serialize)]

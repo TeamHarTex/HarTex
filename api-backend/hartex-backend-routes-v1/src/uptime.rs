@@ -61,7 +61,7 @@ pub async fn v1_post_uptime(
     let mut connection = connect_res.unwrap();
     let statement_res = connection
         .prepare_with(
-            r#"SELECT * FROM public."StartTimestamps" WHERE component = $1;"#,
+            include_str!("../../../database-queries/start-timestamp/select-by-component.sql"),
             &[PgTypeInfo::with_name("TEXT")],
         )
         .await;
