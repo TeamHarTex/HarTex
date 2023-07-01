@@ -21,7 +21,7 @@
  */
 
 //! # Command System Manager Executable
-//! 
+//!
 //! This is the executable for the command system manager, which managers the commands specified
 //! and registered with Discord.
 

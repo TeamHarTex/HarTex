@@ -23,13 +23,13 @@
 use std::collections::BTreeMap;
 
 use hartex_discord_configuration_manifest::appearance::Appearance;
-use hartex_discord_configuration_manifest::Configuration;
 use hartex_discord_configuration_manifest::dashboard::Dashboard;
+use hartex_discord_configuration_manifest::deserialize_config;
 use hartex_discord_configuration_manifest::plugins::Plugins;
 use hartex_discord_configuration_manifest::plugins::UtilitiesPlugin;
 use hartex_discord_configuration_manifest::ranks::RankPermission;
 use hartex_discord_configuration_manifest::ranks::Ranks;
-use hartex_discord_configuration_manifest::deserialize_config;
+use hartex_discord_configuration_manifest::Configuration;
 
 #[test]
 pub fn deserialize_test() {
@@ -39,9 +39,18 @@ pub fn deserialize_test() {
     let expected = Configuration {
         version: 31,
         dashboard: Dashboard {
-            admins: vec!["1000000000000000".to_string(), "1000000000000001".to_string()],
-            editors: Some(vec!["1000000000000002".to_string(), "1000000000000003".to_string()]),
-            viewers: Some(vec!["1000000000000004".to_string(), "1000000000000005".to_string()])
+            admins: vec![
+                "1000000000000000".to_string(),
+                "1000000000000001".to_string(),
+            ],
+            editors: Some(vec![
+                "1000000000000002".to_string(),
+                "1000000000000003".to_string(),
+            ]),
+            viewers: Some(vec![
+                "1000000000000004".to_string(),
+                "1000000000000005".to_string(),
+            ]),
         },
         appearance: Appearance {
             nickname: Some("HarTex Nightly".to_string()),
@@ -50,25 +59,25 @@ pub fn deserialize_test() {
         ranks: Ranks {
             roles: {
                 let mut map = BTreeMap::new();
-                map.insert("1234567890987654".to_string(), RankPermission {
-                    level: 100
-                });
+                map.insert(
+                    "1234567890987654".to_string(),
+                    RankPermission { level: 100 },
+                );
 
                 map
             },
             users: {
                 let mut map = BTreeMap::new();
-                map.insert("1000000000000000".to_string(), RankPermission {
-                    level: 100
-                });
+                map.insert(
+                    "1000000000000000".to_string(),
+                    RankPermission { level: 100 },
+                );
 
                 map
             },
         },
         plugins: Plugins {
-            utilities: Some(UtilitiesPlugin {
-                enabled: true
-            }),
+            utilities: Some(UtilitiesPlugin { enabled: true }),
         },
     };
 
