@@ -27,7 +27,9 @@ use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_log::log;
 use sqlx::postgres::PgConnection;
+use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
+use sqlx::prelude::Executor;
 
 /// Invoke a corresponding event callback for an event,
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
@@ -48,7 +50,13 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                         ready.version
                     );
 
-                    let _ = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
+                    let connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
+                    let _ = connection
+                        .prepare_with(
+                            r#"INSERT INTO public."StartTimestamps" (component, timestamp) VALUES ($1, $2)"#,
+                            &[PgTypeInfo::with_name("TEXT"), PgTypeInfo::with_name("TIMESTAMPTZ")],
+                        )
+                        .await?;
 
                     Ok(())
                 }
