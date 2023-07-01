@@ -30,6 +30,8 @@ use sqlx::postgres::PgConnection;
 use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
 use sqlx::prelude::Executor;
+use sqlx::prelude::Statement;
+use sqlx::types::chrono::Utc;
 
 /// Invoke a corresponding event callback for an event,
 pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
@@ -50,12 +52,19 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                         ready.version
                     );
 
-                    let connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
-                    let _ = connection
+                    let mut connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
+                    let statement = connection
                         .prepare_with(
                             include_str!("../../../database-queries/start-timestamp/insert-into-on-conflict-update.sql"),
                             &[PgTypeInfo::with_name("TEXT"), PgTypeInfo::with_name("TIMESTAMPTZ")],
                         )
+                        .await?;
+
+                    statement
+                        .query()
+                        .bind("HarTex Nightly")
+                        .bind(Utc::now())
+                        .execute(&mut connection)
                         .await?;
 
                     Ok(())
