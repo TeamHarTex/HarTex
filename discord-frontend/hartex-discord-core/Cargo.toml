@@ -14,7 +14,6 @@ rust-version = "1.72.0"
 dotenvy = { version = "0.15.7", optional = true }
 num_enum = "0.6.1"
 num_enum_derive = "0.6.1"
-scylla = { version = "0.8.2", optional = true }
 socket2 = { git = "https://github.com/rust-lang/socket2.git", branch = "v0.4.x" }
 tokio = { version = "1.29.1", optional = true }
 twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
@@ -26,7 +25,6 @@ twilight-util = { git = "https://github.com/TeamHarTex/twilight.git", branch = "
 async-net = ["dep:tokio", "tokio?/net"]
 async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thread"]
 async-signal = ["tokio?/signal"]
-database = ["scylla"]
 discord-gateway = ["dep:twilight-gateway"]
 discord-http = ["dep:twilight-http"]
 discord-model = ["dep:twilight-model"]
