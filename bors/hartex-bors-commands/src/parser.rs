@@ -32,10 +32,18 @@ pub(crate) const PREFIX: &str = "bors";
 /// An error occurred during parsing.
 #[derive(Debug)]
 pub enum ParserError<'a> {
+    /// An invalid parameter is provided.
+    InvalidParameter,
     /// Command is missing.
     MissingCommand,
+    /// No parameter value was provided.
+    NoParameterValueProvided,
     /// Unexpected end of command.
     UnexpectedEndOfCommand,
+    /// Unexpected parameter was provided.
+    UnexpectedParameter(&'a str),
+    /// Unexpected parameters were provided.
+    UnexpectedParameters,
     /// Unknown command.
     UnknownCommand(&'a str),
 }
@@ -51,8 +59,16 @@ impl<'a> Parser<'a> {
         }
     }
 
+    fn next(&mut self) {
+        self.iterator.next();
+    }
+
     fn peek(&mut self) -> Option<&'a str> {
         self.iterator.peek().copied()
+    }
+
+    fn remaining(&mut self) -> String {
+        self.iterator.join(" ")
     }
 }
 
@@ -71,7 +87,7 @@ pub(crate) fn parse_ping(parser: Parser) -> ParserResult {
 }
 
 pub(crate) fn parse_try(parser: Parser) -> ParserResult {
-    parse_exact("try", BorsCommand::Try, parser)
+    parse_with_params("try", parse_try_inner, parser)
 }
 
 pub(crate) fn parse_try_cancel(parser: Parser) -> ParserResult {
@@ -100,11 +116,53 @@ fn parse_prefix<'a>(
     }
 }
 
+fn parse_with_params<'a>(
+    cmd: &'static str,
+    f: fn(&str) -> ParserResult<'_>,
+    mut parser: Parser<'a>,
+) -> ParserResult<'_> {
+    match parser.peek() {
+        Some(word) if word == cmd => {
+            parser.next();
+            f(parser.remaining().as_str())
+        },
+        _ => None,
+    }
+}
+
 fn parse_approve_eq_inner(remaining: Option<&str>) -> ParserResult<'_> {
     match remaining {
-        Some(arg) if !arg.is_empty() => Some(Ok(BorsCommand::ApproveEq(arg.to_string()))),
+        Some(arg) if !arg.is_empty() => Some(Ok(BorsCommand::ApproveEq {
+            reviewer: arg.to_string()
+        })),
         _ => Some(Err(ParserError::UnexpectedEndOfCommand)),
     }
+}
+
+fn parse_try_inner(remaining: &str) -> ParserResult<'_> {
+    if remaining.is_empty() {
+        return Some(Ok(BorsCommand::Try {
+            parent: None,
+        }));
+    }
+
+    let split = remaining.split_whitespace().collect::<Vec<_>>();
+    if split.len() > 1 {
+        return Some(Err(ParserError::UnexpectedParameters));
+    }
+
+    let param_segments = split[0].split('=').collect::<Vec<_>>();
+    if param_segments.len() < 2 {
+        return Some(Err(ParserError::NoParameterValueProvided));
+    }
+
+    if param_segments[0] != "parent" {
+        return Some(Err(ParserError::UnexpectedParameter(param_segments[0])));
+    }
+
+    Some(Ok(BorsCommand::Try {
+        parent: Some(param_segments[1].to_string())
+    }))
 }
 
 pub(crate) fn parse_remaining(mut parser: Parser) -> ParserResult {

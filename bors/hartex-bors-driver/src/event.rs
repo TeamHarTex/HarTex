@@ -225,16 +225,16 @@ async fn handle_comment<C: RepositoryClient>(
                     )
                     .await?
                 }
-                BorsCommand::ApproveEq(arg) => {
+                BorsCommand::ApproveEq { reviewer } => {
                     hartex_bors_commands::commands::approve::approve_command(
-                        repository, database, pr, &arg, sender.clone(),
+                        repository, database, pr, &reviewer, sender.clone(),
                     )
                     .await?
                 }
                 BorsCommand::Ping => {
                     hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
                 }
-                BorsCommand::Try => {
+                BorsCommand::Try { .. } => {
                     hartex_bors_commands::commands::r#try::try_command(
                         repository,
                         database,
@@ -260,6 +260,7 @@ async fn handle_comment<C: RepositoryClient>(
                     ParserError::UnknownCommand(command) => {
                         format!(r#"Unknown command "{command}"."#)
                     }
+                    _ => format!("An error occurred."),
                 };
 
                 repository.client.post_comment(pr, &error_msg).await?;
