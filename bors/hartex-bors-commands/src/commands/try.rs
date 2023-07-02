@@ -42,6 +42,7 @@ pub async fn try_command<C: RepositoryClient>(
     database: &dyn DatabaseClient,
     pr: u64,
     author: &str,
+    parent: Option<String>,
 ) -> hartex_eyre::Result<()> {
     if !check_permissions(repository, pr, author, Permission::TryBuild).await? {
         return Ok(());
@@ -62,9 +63,11 @@ pub async fn try_command<C: RepositoryClient>(
         return Ok(());
     };
 
+    let base_sha = parent.as_ref().unwrap_or(&github_pr.base.sha);
+
     repository
         .client
-        .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, &github_pr.base.sha)
+        .set_branch_to_revision(TRY_MERGE_BRANCH_NAME, base_sha)
         .await?;
 
     let merge_hash = repository
