@@ -36,7 +36,8 @@ pub fn lint_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
         println!("Linting {project_name} ({} / {})", i + 1, len);
 
         let Some(project) = file.projects.get(project_name) else {
-            return Err(Report::msg(format!("project not found: {project_name}")))
+            println!("{:?}", Report::msg(format!("project not found: {project_name}")));
+            continue;
         };
 
         project.lint(project_name.clone())?;

@@ -36,7 +36,8 @@ pub fn test_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
         println!("Testing {project_name} ({} / {})", i + 1, len);
 
         let Some(project) = file.projects.get(project_name) else {
-            return Err(Report::msg(format!("project not found: {project_name}")))
+            println!("{:?}", Report::msg(format!("project not found: {project_name}")));
+            continue;
         };
 
         project.test(project_name.clone())?;
