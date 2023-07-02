@@ -29,10 +29,16 @@ use hartex_eyre::eyre::Report;
 pub fn test_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
 
-    let project_name = matches.get_one::<String>("project").unwrap();
-    let Some(project) = file.projects.get(project_name) else {
-        return Err(Report::msg(format!("project not found: {project_name}")))
-    };
+    let project_names = matches.get_many::<String>("project").unwrap();
+    let len = project_names.len();
+
+    for (i, project_name) in project_names.enumerate() {
+        println!("Testing {project_name} ({} / {})", i + 1, len);
+
+        let Some(project) = file.projects.get(project_name) else {
+            return Err(Report::msg(format!("project not found: {project_name}")))
+        };
+    }
 
     project.test(project_name.clone())?;
 
