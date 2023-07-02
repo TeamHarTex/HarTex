@@ -38,9 +38,9 @@ pub fn test_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
         let Some(project) = file.projects.get(project_name) else {
             return Err(Report::msg(format!("project not found: {project_name}")))
         };
-    }
 
-    project.test(project_name.clone())?;
+        project.test(project_name.clone())?;
+    }
 
     Ok(())
 }
