@@ -21,6 +21,8 @@
  */
 
 use hartex_discord_commands_core::CommandMetadata;
+use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::model::application::interaction::Interaction;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -28,3 +30,9 @@ use hartex_discord_commands_core::CommandMetadata;
 #[metadata(minimum_level = 0)]
 #[metadata(name = "serverinfo")]
 pub struct ServerInfo;
+
+impl Command for ServerInfo {
+    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+        todo!()
+    }
+}
