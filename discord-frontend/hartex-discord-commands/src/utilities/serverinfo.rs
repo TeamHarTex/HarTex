@@ -32,7 +32,7 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 pub struct ServerInfo;
 
 impl Command for ServerInfo {
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, _: Interaction) -> hartex_eyre::Result<()> {
         todo!()
     }
 }
