@@ -23,6 +23,7 @@
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_localization_core::create_bundle;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -32,7 +33,12 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 pub struct ServerInfo;
 
 impl Command for ServerInfo {
-    async fn execute(&self, _: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+        let _ = create_bundle(
+            interaction.locale.and_then(|locale| locale.parse().ok()),
+            &["discord-frontend", "commands"],
+        )?;
+
         todo!()
     }
 }
