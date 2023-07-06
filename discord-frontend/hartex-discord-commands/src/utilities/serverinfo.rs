@@ -23,6 +23,7 @@
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_localization_core::create_bundle;
 
 #[derive(CommandMetadata)]
@@ -38,6 +39,8 @@ impl Command for ServerInfo {
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
+
+        let _ = EmbedBuilder::new();
 
         todo!()
     }
