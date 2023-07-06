@@ -64,7 +64,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .set(format!("guild:{}:id", entity.id), entity.id.get())
             .await?;
         connection
-            .set(format!("guild:{}:name", entity.name), entity.name)
+            .set(format!("guild:{}:name", entity.id), entity.name)
             .await?;
 
         Ok(())
