@@ -14,4 +14,4 @@ rust-version = "1.72.0"
 hartex_discord_configuration_manifest = { path = "../hartex-discord-configuration-manifest" }
 
 [dev-dependencies]
-pretty_assertions = "1.3.0"
+pretty_assertions = "1.4.0"
