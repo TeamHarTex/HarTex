@@ -20,6 +20,6 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 async-lock = "2.7.0"
 handlebars = { version = "5.0.0-beta.2", features = ["dir_source"] }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
-serde = { version = "1.0.169", features = ["derive"] }
+serde = { version = "1.0.171", features = ["derive"] }
 
 [features]
