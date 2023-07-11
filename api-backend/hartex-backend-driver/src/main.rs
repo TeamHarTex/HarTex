@@ -31,8 +31,10 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use dotenvy::Error;
 use hartex_backend_routes_v1::bors::v1_repositories_repository_permissions_permissions;
 use hartex_backend_routes_v1::uptime::v1_post_uptime;
+use hartex_errors::dotenv;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use rocket::catchers;
@@ -50,7 +52,15 @@ pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     log::trace!("loading environment variables");
-    dotenvy::dotenv().into_diagnostic()?;
+    if let Err(error) = dotenvy::dotenv() {
+        match error {
+            Error::LineParse(content, index) => Err(dotenv::LineParseError {
+                src: content,
+                err_span: (index - 1, 1).into()
+            })?,
+            _ => todo!()
+        }
+    }
 
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 8000)))

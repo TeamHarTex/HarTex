@@ -1,0 +1,17 @@
+[package]
+name = "hartex_errors"
+version = "0.1.0"
+edition = "2021"
+description = """
+Errors in HarTex. All are displayed in the console but some may appear on Discord.
+"""
+license = "AGPL-3.0-only"
+rust-version = "1.72.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+miette = "5.9.0"
+thiserror = "1.0.40"
+
+[features]

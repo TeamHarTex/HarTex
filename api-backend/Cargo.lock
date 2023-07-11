@@ -715,7 +715,7 @@ dependencies = [
  "hartex_backend_ratelimiter",
  "hartex_backend_routes_v1",
  "hartex_backend_status_util",
- "hartex_eyre",
+ "hartex_errors",
  "hartex_log",
  "miette",
  "rocket",
@@ -769,6 +769,14 @@ name = "hartex_backend_status_util"
 version = "0.1.0"
 dependencies = [
  "serde_json",
+]
+
+[[package]]
+name = "hartex_errors"
+version = "0.1.0"
+dependencies = [
+ "miette",
+ "thiserror",
 ]
 
 [[package]]
