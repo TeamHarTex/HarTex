@@ -80,10 +80,7 @@ pub async fn v1_post_uptime(
         .await;
 
     if let Err(Error::RowNotFound) = &response_res {
-        return (
-            Status::NotFound,
-            StatusFns::not_found(),
-        );
+        return (Status::NotFound, StatusFns::not_found());
     }
 
     todo!()

@@ -34,6 +34,7 @@
 use hartex_backend_routes_v1::bors::v1_repositories_repository_permissions_permissions;
 use hartex_backend_routes_v1::uptime::v1_post_uptime;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use rocket::catchers;
 use rocket::config::Config;
 use rocket::routes;
@@ -45,12 +46,11 @@ mod catchers;
 /// This is the entry point of the API backend for HarTex. This does the heavy lifting of building
 /// a Rocket server, igniting, and launching it.
 #[rocket::main]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
+    dotenvy::dotenv().into_diagnostic()?;
 
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 8000)))
@@ -66,10 +66,11 @@ pub async fn main() -> hartex_eyre::Result<()> {
             catchers![catchers::not_found, catchers::too_many_requests],
         )
         .ignite()
-        .await?;
+        .await
+        .into_diagnostic()?;
 
     log::debug!("launching rocket");
-    rocket.launch().await?;
+    rocket.launch().await.into_diagnostic()?;
 
     Ok(())
 }
