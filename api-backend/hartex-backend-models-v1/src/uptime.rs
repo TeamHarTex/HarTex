@@ -26,9 +26,9 @@
 
 use serde::Deserialize;
 use serde::Serialize;
+use sqlx::postgres::PgRow;
 use sqlx::prelude::FromRow;
 use sqlx::prelude::Row;
-use sqlx::postgres::PgRow;
 use sqlx::types::chrono::DateTime;
 use sqlx::types::chrono::Utc;
 use sqlx::Error;
@@ -69,7 +69,7 @@ impl<'r> FromRow<'r, PgRow> for UptimeResponse {
         let timestamp: DateTime<Utc> = row.try_get("timestamp")?;
 
         Ok(Self {
-            start_timestamp: timestamp.timestamp() as u128
+            start_timestamp: timestamp.timestamp() as u128,
         })
     }
 }

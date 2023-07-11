@@ -89,6 +89,7 @@
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-website/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-test/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-test/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-errors/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
