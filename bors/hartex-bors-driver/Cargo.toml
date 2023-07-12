@@ -16,11 +16,12 @@ hartex_bors_core = { path = "../hartex-bors-core" }
 hartex_bors_database = { path = "../hartex-bors-database" }
 hartex_bors_github = { path = "../hartex-bors-github" }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 dotenvy = "0.15.7"
 futures-util = "0.3.28"
+miette = { version = "5.9.0", features = ["fancy"] }
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 reqwest-eventsource = { git = "https://github.com/TeamHarTex/reqwest-eventsource.git" }
 serde_json = "1.0.102"
