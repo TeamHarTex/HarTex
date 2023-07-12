@@ -33,8 +33,10 @@ use std::env;
 use std::fs::File;
 use std::io::Read;
 
+use dotenvy::Error;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_github::GithubBorsState;
+use hartex_errors::dotenv;
 use hartex_log::log;
 use state::InitCell;
 use tokio::runtime::Builder;
@@ -47,8 +49,7 @@ mod workflows;
 static STATE: InitCell<GithubBorsState> = InitCell::new();
 
 /// Entry point.
-pub fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     actual_main()?;
@@ -57,8 +58,17 @@ pub fn main() -> hartex_eyre::Result<()> {
 }
 
 /// Actual entry point, building the runtime and other stuff.
-fn actual_main() -> hartex_eyre::Result<()> {
-    dotenvy::dotenv()?;
+fn actual_main() -> miette::Result<()> {
+    log::trace!("loading environment variables");
+    if let Err(error) = dotenvy::dotenv() {
+        match error {
+            Error::LineParse(content, index) => Err(dotenv::LineParseError {
+                src: content,
+                err_span: (index - 1, 1).into()
+            })?,
+            _ => todo!()
+        }
+    }
 
     log::trace!("constructing runtime");
     let runtime = Builder::new_multi_thread().enable_all().build()?;
