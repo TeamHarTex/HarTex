@@ -23,7 +23,7 @@ dotenvy = "0.15.7"
 futures-util = "0.3.28"
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 reqwest-eventsource = { git = "https://github.com/TeamHarTex/reqwest-eventsource.git" }
-serde_json = "1.0.100"
+serde_json = "1.0.102"
 state = "0.6.0"
 tokio = { version = "1.29.1", features = ["rt-multi-thread", "sync"] }
 
