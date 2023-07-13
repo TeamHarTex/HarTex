@@ -36,9 +36,7 @@ mod cmdline;
 mod commands;
 
 /// Main entry point.
-pub fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
-
+pub fn main() -> miette::Result<()> {
     let command = Command::new("hartexbuild")
         .subcommand(
             Command::new("build")
