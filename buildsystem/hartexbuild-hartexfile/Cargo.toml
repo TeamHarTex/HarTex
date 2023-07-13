@@ -15,6 +15,6 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
 miette = "5.9.0"
 serde = { version = "1.0.171", features = ["derive"] }
-hcl-rs = "0.15.0"
+hcl-rs = "0.16.0"
 
 [features]
