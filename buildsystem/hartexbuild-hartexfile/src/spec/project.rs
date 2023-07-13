@@ -25,7 +25,7 @@
 use std::env;
 use std::process::Command;
 
-use hartex_eyre::eyre::Report;
+use miette::Report;
 use serde::Deserialize;
 
 /// A project.
@@ -42,7 +42,7 @@ pub struct Project {
 
 impl Project {
     /// Build a project with its name.
-    pub fn build(&self, name: String) -> hartex_eyre::Result<()> {
+    pub fn build(&self, name: String) -> miette::Result<()> {
         let mut pwd = env::current_dir()?;
         pwd.push(name);
 
@@ -72,7 +72,7 @@ impl Project {
     }
 
     /// Runs linting on a project with its name.
-    pub fn lint(&self, name: String) -> hartex_eyre::Result<()> {
+    pub fn lint(&self, name: String) -> miette::Result<()> {
         let mut pwd = env::current_dir()?;
         pwd.push(name);
 
@@ -97,7 +97,7 @@ impl Project {
     }
 
     /// Runs a test suite on a project with its name.
-    pub fn test(&self, name: String) -> hartex_eyre::Result<()> {
+    pub fn test(&self, name: String) -> miette::Result<()> {
         let mut pwd = env::current_dir()?;
         pwd.push(name);
 

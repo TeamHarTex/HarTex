@@ -27,7 +27,7 @@ use clap::ArgMatches;
 use crate::commands;
 
 /// Handle a command line command with the matches.
-pub fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
+pub fn handle(matches: ArgMatches) -> miette::Result<()> {
     match matches.subcommand() {
         Some(("build", subcommand_matches)) => {
             commands::build::build_command(subcommand_matches.clone())

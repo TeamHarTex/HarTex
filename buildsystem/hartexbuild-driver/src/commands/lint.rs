@@ -26,7 +26,7 @@ use clap::ArgMatches;
 use hartex_eyre::eyre::Report;
 
 /// Runs the lint command.
-pub fn lint_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
+pub fn lint_command(matches: ArgMatches) -> miette::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
 
     let project_names = matches.get_many::<String>("project").unwrap();
