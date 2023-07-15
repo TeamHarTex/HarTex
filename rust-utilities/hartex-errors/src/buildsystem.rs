@@ -20,25 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Hartexbuild Manifest Models
-//! 
-//! This crate contains the models a "Hartexfile" build manifest file deserialize into.
+use miette::Diagnostic;
+use miette::SourceSpan;
+use thiserror::Error;
 
-#![feature(exit_status_error)]
-#![feature(let_chains)]
-
-use std::fs;
-
-use hcl::eval;
-use hcl::eval::Context;
-use miette::IntoDiagnostic;
-
-pub mod spec;
-
-/// Deserialize a manifest file.
-pub fn from_manifest() -> miette::Result<spec::HarTexFile> {
-    let file = fs::read_to_string("HarTexfile").into_diagnostic()?;
-
-    let hartexfile = eval::from_str::<spec::HarTexFile>(&file, &Context::new()).into_diagnostic()?;
-    Ok(hartexfile)
+#[derive(Debug, Diagnostic, Error)]
+#[diagnostic(
+    code("E0002: buildsystem::project_not_found"),
+    help("check the spelling of the project name")
+)]
+#[error("could not find the specified project")]
+pub struct ProjectNotFound {
+    #[source_code]
+    pub src: String,
+    #[label("this project is not found")]
+    pub err_span: SourceSpan,
 }

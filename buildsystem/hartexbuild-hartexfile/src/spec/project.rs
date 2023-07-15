@@ -25,6 +25,7 @@
 use std::env;
 use std::process::Command;
 
+use miette::IntoDiagnostic;
 use miette::Report;
 use serde::Deserialize;
 
@@ -43,14 +44,14 @@ pub struct Project {
 impl Project {
     /// Build a project with its name.
     pub fn build(&self, name: String) -> miette::Result<()> {
-        let mut pwd = env::current_dir()?;
+        let mut pwd = env::current_dir().into_diagnostic()?;
         pwd.push(name);
 
         let result = match self.r#type {
             ProjectType::JsTs => {
                 let mut command = Command::new("pwsh");
                 command.current_dir(pwd).arg("-c").arg("yarn build");
-                command.status()?.exit_ok()
+                command.status().into_diagnostic()?.exit_ok()
             }
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
@@ -64,7 +65,7 @@ impl Project {
                     command.env("RUSTFLAGS", "-g");
                 }
 
-                command.status()?.exit_ok()
+                command.status().into_diagnostic()?.exit_ok()
             }
         };
 
@@ -73,23 +74,23 @@ impl Project {
 
     /// Runs linting on a project with its name.
     pub fn lint(&self, name: String) -> miette::Result<()> {
-        let mut pwd = env::current_dir()?;
+        let mut pwd = env::current_dir().into_diagnostic()?;
         pwd.push(name);
 
         let result = match self.r#type {
             ProjectType::JsTs => {
                 let mut command = Command::new("pwsh");
                 command.current_dir(pwd).arg("-c").arg("yarn eslint");
-                command.status()?.exit_ok()
+                command.status().into_diagnostic()?.exit_ok()
             }
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
                 command.arg("clippy").current_dir(pwd.clone());
-                command.status()?.exit_ok()?;
+                command.status().into_diagnostic()?.exit_ok().into_diagnostic()?;
 
                 let mut command = Command::new("cargo");
                 command.arg("fmt").current_dir(pwd);
-                command.status()?.exit_ok()
+                command.status().into_diagnostic()?.exit_ok()
             }
         };
 
@@ -98,7 +99,7 @@ impl Project {
 
     /// Runs a test suite on a project with its name.
     pub fn test(&self, name: String) -> miette::Result<()> {
-        let mut pwd = env::current_dir()?;
+        let mut pwd = env::current_dir().into_diagnostic()?;
         pwd.push(name);
 
         let result = match self.r#type {
@@ -108,7 +109,7 @@ impl Project {
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
                 command.arg("nextest").arg("run").current_dir(pwd.clone());
-                command.status()?.exit_ok()
+                command.status().into_diagnostic()?.exit_ok()
             }
         };
 

@@ -13,6 +13,7 @@ rust-version = "1.73.0"
 [dependencies]
 hartexbuild_hartexfile = { path = "../hartexbuild-hartexfile" }
 
+hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
 clap = "4.3.12"
