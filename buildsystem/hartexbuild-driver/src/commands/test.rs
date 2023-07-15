@@ -23,7 +23,7 @@
 //! # Test Command
 
 use clap::ArgMatches;
-use hartex_eyre::eyre::Report;
+use miette::Report;
 
 /// Runs the test command.
 pub fn test_command(matches: ArgMatches) -> miette::Result<()> {
