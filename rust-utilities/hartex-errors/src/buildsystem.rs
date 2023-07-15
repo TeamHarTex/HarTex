@@ -48,3 +48,10 @@ pub struct JstsTestNotSupported {
     #[label("this is a jsts project")]
     pub err_span: SourceSpan
 }
+
+#[derive(Debug, Diagnostic, Error)]
+#[diagnostic(
+    code("E0004: buildsystem::abnormal_termination")
+)]
+#[error("the process terminated abnormally")]
+pub struct AbnormalTermination;
