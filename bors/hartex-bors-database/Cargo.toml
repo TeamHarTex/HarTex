@@ -13,9 +13,8 @@ rust-version = "1.73.0"
 [dependencies]
 hartex_bors_core = { path = "../hartex-bors-core" }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
-
 chrono = { version = "0.4.26", features = ["clock"], default-features = false }
+miette = "5.9.0"
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 sea-orm = { version = "0.12.0-rc.4", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
 sea-orm-migration = { version = "0.12.0-rc.4", features = ["runtime-tokio-native-tls", "sqlx-sqlite"] }

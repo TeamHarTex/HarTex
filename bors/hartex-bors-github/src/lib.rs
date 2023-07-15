@@ -42,11 +42,12 @@ use hartex_bors_core::BorsState;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_database::client::SeaORMDatabaseClient;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use http::StatusCode;
 use http_body::Body;
 use jsonwebtoken::EncodingKey;
+use miette::IntoDiagnostic;
+use miette::Report;
 use octocrab::models::issues::Comment;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::repos::Object;
@@ -86,15 +87,15 @@ impl GithubBorsState {
         application_id: AppId,
         database: SeaORMDatabaseClient,
         private_key: SecretVec<u8>,
-    ) -> hartex_eyre::Result<(Self, Receiver<BorsQueueEvent>)> {
+    ) -> miette::Result<(Self, Receiver<BorsQueueEvent>)> {
         log::trace!("obtaining private key");
-        let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref())?;
+        let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref()).into_diagnostic()?;
 
         log::trace!("building github client");
-        let client = Octocrab::builder().app(application_id, key).build()?;
+        let client = Octocrab::builder().app(application_id, key).build().into_diagnostic()?;
 
         log::trace!("obtaining github application");
-        let application = client.current().app().await?;
+        let application = client.current().app().await.into_diagnostic()?;
 
         let (tx, rx) = channel(15);
         let repositories = repositories::load_repositories(&client, &database).await?;
@@ -161,7 +162,7 @@ impl RepositoryClient for GithubRepositoryClient {
         &self.repository_name
     }
 
-    async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()> {
+    async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> miette::Result<()> {
         let actions = self.client.actions();
 
         future::join_all(run_ids.into_iter().map(|id| {
@@ -173,12 +174,13 @@ impl RepositoryClient for GithubRepositoryClient {
         }))
         .await
         .into_iter()
-        .collect::<Result<Vec<_>, octocrab::Error>>()?;
+        .collect::<Result<Vec<_>, octocrab::Error>>()
+        .into_diagnostic()?;
 
         Ok(())
     }
 
-    async fn delete_branch(&self, branch: &str) -> hartex_eyre::Result<()> {
+    async fn delete_branch(&self, branch: &str) -> miette::Result<()> {
         let mut response = self
             .client
             ._delete::<()>(
@@ -190,12 +192,13 @@ impl RepositoryClient for GithubRepositoryClient {
                 ),
                 None,
             )
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         if response.status() != StatusCode::NO_CONTENT {
             let mut full = String::new();
             while let Some(result) = response.body_mut().data().await {
-                full.push_str(str::from_utf8(&result?)?);
+                full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
             }
 
             return Err(Report::msg(format!("failed to delete branch: {full}")));
@@ -208,7 +211,7 @@ impl RepositoryClient for GithubRepositoryClient {
         &self,
         comment_id: CommentId,
         text: &str,
-    ) -> hartex_eyre::Result<Comment> {
+    ) -> miette::Result<Comment> {
         self.client
             .issues(
                 self.repository_name.owner(),
@@ -216,14 +219,14 @@ impl RepositoryClient for GithubRepositoryClient {
             )
             .update_comment(comment_id, text)
             .await
-            .map_err(Report::new)
+            .into_diagnostic()
     }
 
     async fn get_checks_for_commit(
         &self,
         branch: &str,
         commit_hash: &str,
-    ) -> hartex_eyre::Result<Vec<Check>> {
+    ) -> miette::Result<Vec<Check>> {
         let mut response = self
             .client
             ._get(format!(
@@ -232,7 +235,7 @@ impl RepositoryClient for GithubRepositoryClient {
                 self.repository_name.repository(),
                 commit_hash
             ))
-            .await?;
+            .await.into_diagnostic()?;
 
         #[derive(Deserialize)]
         struct CheckSuitePayload<'a> {
@@ -248,10 +251,10 @@ impl RepositoryClient for GithubRepositoryClient {
 
         let mut full = String::new();
         while let Some(result) = response.body_mut().data().await {
-            full.push_str(str::from_utf8(&result?)?);
+            full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
         }
 
-        let response = serde_json::from_str::<CheckSuiteResponse<'_>>(&full)?;
+        let response = serde_json::from_str::<CheckSuiteResponse<'_>>(&full).into_diagnostic()?;
         let suites = response
             .check_suites
             .into_iter()
@@ -280,7 +283,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(suites)
     }
 
-    async fn get_label(&self, name: &str) -> hartex_eyre::Result<Label> {
+    async fn get_label(&self, name: &str) -> miette::Result<Label> {
         self.client
             .issues(
                 self.repository_name.owner(),
@@ -288,14 +291,14 @@ impl RepositoryClient for GithubRepositoryClient {
             )
             .get_label(name)
             .await
-            .map_err(Report::new)
+            .into_diagnostic()
     }
 
     async fn set_labels_of_pull_request(
         &self,
         labels: Vec<String>,
         pr: u64,
-    ) -> hartex_eyre::Result<()> {
+    ) -> miette::Result<()> {
         let mut response = self
             .client
             ._put(
@@ -308,12 +311,13 @@ impl RepositoryClient for GithubRepositoryClient {
                     "labels": labels,
                 })),
             )
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         if response.status() != StatusCode::OK {
             let mut full = String::new();
             while let Some(result) = response.body_mut().data().await {
-                full.push_str(str::from_utf8(&result?)?);
+                full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
             }
 
             return Err(Report::msg(full));
@@ -322,7 +326,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(())
     }
 
-    async fn get_pull_request(&self, pr: u64) -> hartex_eyre::Result<PullRequest> {
+    async fn get_pull_request(&self, pr: u64) -> miette::Result<PullRequest> {
         self.client
             .pulls(
                 self.repository_name.owner(),
@@ -330,7 +334,7 @@ impl RepositoryClient for GithubRepositoryClient {
             )
             .get(pr)
             .await
-            .map_err(Report::new)
+            .into_diagnostic()
     }
 
     async fn merge_branches(
@@ -338,11 +342,11 @@ impl RepositoryClient for GithubRepositoryClient {
         base: &str,
         head: &str,
         commit_message: &str,
-    ) -> hartex_eyre::Result<String> {
+    ) -> miette::Result<String> {
         operations::merge_branches(self, base, head, commit_message).await
     }
 
-    async fn post_comment(&self, pr: u64, text: &str) -> hartex_eyre::Result<Comment> {
+    async fn post_comment(&self, pr: u64, text: &str) -> miette::Result<Comment> {
         self.client
             .issues(
                 self.repository_name.owner(),
@@ -350,10 +354,10 @@ impl RepositoryClient for GithubRepositoryClient {
             )
             .create_comment(pr, text)
             .await
-            .map_err(Report::new)
+            .into_diagnostic()
     }
 
-    async fn get_revision(&self, branch: &str) -> hartex_eyre::Result<String> {
+    async fn get_revision(&self, branch: &str) -> miette::Result<String> {
         let reference = self
             .client
             .repos(
@@ -361,7 +365,8 @@ impl RepositoryClient for GithubRepositoryClient {
                 self.repository_name.repository(),
             )
             .get_ref(&Reference::Branch(branch.to_string()))
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         let Object::Commit { sha, .. } = reference.object else {
             return Err(Report::msg("invalid reference"));
@@ -374,7 +379,7 @@ impl RepositoryClient for GithubRepositoryClient {
         &self,
         branch: &str,
         revision: &str,
-    ) -> hartex_eyre::Result<()> {
+    ) -> miette::Result<()> {
         operations::set_branch_to_revision(self, branch.to_string(), revision.to_string()).await
     }
 }
