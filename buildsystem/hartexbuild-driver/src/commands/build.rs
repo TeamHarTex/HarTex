@@ -23,7 +23,8 @@
 //! # Build Command
 
 use clap::ArgMatches;
-use hartex_eyre::eyre::Report;
+use hartex_errors::buildsystem::ProjectNotFound;
+use miette::Report;
 
 /// Runs the build command.
 pub fn build_command(matches: ArgMatches) -> miette::Result<()> {
@@ -36,7 +37,10 @@ pub fn build_command(matches: ArgMatches) -> miette::Result<()> {
         println!("Building {project_name} ({} / {})", i + 1, len);
 
         let Some(project) = file.projects.get(project_name) else {
-            println!("{:?}", Report::msg(format!("project not found: {project_name}")));
+            println!("{:?}", Report::from(ProjectNotFound {
+                src: project_name.clone(),
+                err_span: (0, project_name.len()).into()
+            }));
             continue;
         };
 
