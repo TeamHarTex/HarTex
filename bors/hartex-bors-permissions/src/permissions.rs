@@ -27,13 +27,13 @@ use std::str;
 use hartex_backend_models::Response;
 use hartex_backend_models_v1::bors::RepositoryPermissionsResponse;
 use hartex_bors_core::models::GithubRepositoryName;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
+use miette::Report;
 
 use crate::Permission;
 
@@ -56,7 +56,7 @@ impl UserPermissions {
 
 pub(crate) async fn load(
     repository: &GithubRepositoryName,
-) -> hartex_eyre::Result<UserPermissions> {
+) -> miette::Result<UserPermissions> {
     let try_build_users =
         load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
     let approve_users =
@@ -71,7 +71,7 @@ pub(crate) async fn load(
 async fn load_permissions_from_api(
     repository_name: &str,
     permission: Permission,
-) -> hartex_eyre::Result<HashSet<String>> {
+) -> miette::Result<HashSet<String>> {
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN")?;
     let uri = format!(

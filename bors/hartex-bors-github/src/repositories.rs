@@ -41,7 +41,7 @@ use crate::RepositoryState;
 async fn create_repository_state(
     repository_client: Octocrab,
     repository: Repository,
-) -> hartex_eyre::Result<RepositoryState> {
+) -> miette::Result<RepositoryState> {
     let Some(owner) = &repository.owner else {
         return Err(Report::msg(format!("repository {} has no owner", &repository.name)));
     };
@@ -66,7 +66,7 @@ async fn create_repository_state(
 pub(crate) async fn load_repositories(
     client: &Octocrab,
     database: &SeaORMDatabaseClient,
-) -> hartex_eyre::Result<RepositoryMap> {
+) -> miette::Result<RepositoryMap> {
     let installations = client.apps().installations().send().await?;
 
     let mut hashmap = HashMap::new();

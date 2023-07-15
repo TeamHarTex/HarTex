@@ -48,7 +48,7 @@ pub(crate) async fn workflow_completed(
     database: &dyn DatabaseClient,
     run: Run,
     sender: Sender<BorsQueueEvent>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     log::trace!(
         r#"updating status of workflow of {} to "{}""#,
         run.url,
@@ -95,7 +95,7 @@ pub(crate) async fn workflow_started(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &dyn DatabaseClient,
     run: Run,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     if !is_relevant_branch(&run.head_branch) {
         return Ok(());
     }
@@ -160,7 +160,7 @@ async fn complete_approve_build(
     database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
     sender: Sender<BorsQueueEvent>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     if !is_relevant_branch(&event.branch) {
         return Ok(());
     }
@@ -299,7 +299,7 @@ async fn complete_try_build(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &dyn DatabaseClient,
     event: CheckSuiteCompleted,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     if !is_relevant_branch(&event.branch) {
         return Ok(());
     }

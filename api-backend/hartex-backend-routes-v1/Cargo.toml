@@ -15,7 +15,6 @@ hartex_backend_models_v1 = { path = "../hartex-backend-models-v1" }
 hartex_backend_ratelimiter = { path = "../hartex-backend-ratelimiter" }
 hartex_backend_status_util = { path = "../hartex-backend-status-util" }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 governor = { git = "https://github.com/antifuchs/governor.git" }
