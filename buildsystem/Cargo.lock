@@ -222,6 +222,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6c80984affa11d98d1b88b66ac8853f143217b399d3c74116778ff8fdb4ed2e"
 
 [[package]]
+name = "hartex_errors"
+version = "0.1.0"
+dependencies = [
+ "miette",
+ "thiserror",
+]
+
+[[package]]
 name = "hartex_eyre"
 version = "0.1.0"
 dependencies = [
@@ -234,6 +242,7 @@ name = "hartexbuild_driver"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "hartex_errors",
  "hartex_eyre",
  "hartexbuild_hartexfile",
  "miette",
@@ -243,7 +252,7 @@ dependencies = [
 name = "hartexbuild_hartexfile"
 version = "0.1.0"
 dependencies = [
- "hartex_eyre",
+ "hartex_errors",
  "hcl-rs",
  "miette",
  "serde",

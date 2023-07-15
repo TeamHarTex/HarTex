@@ -31,13 +31,14 @@ use std::fs;
 
 use hcl::eval;
 use hcl::eval::Context;
+use miette::IntoDiagnostic;
 
 pub mod spec;
 
 /// Deserialize a manifest file.
-pub fn from_manifest() -> hartex_eyre::Result<spec::HarTexFile> {
-    let file = fs::read_to_string("HarTexfile")?;
+pub fn from_manifest() -> miette::Result<spec::HarTexFile> {
+    let file = fs::read_to_string("HarTexfile").into_diagnostic()?;
 
-    let hartexfile = eval::from_str::<spec::HarTexFile>(&file, &Context::new())?;
+    let hartexfile = eval::from_str::<spec::HarTexFile>(&file, &Context::new()).into_diagnostic()?;
     Ok(hartexfile)
 }
