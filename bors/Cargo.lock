@@ -1001,7 +1001,7 @@ dependencies = [
 name = "hartex_bors_core"
 version = "0.1.0"
 dependencies = [
- "hartex_eyre",
+ "miette",
  "octocrab",
  "sea-orm",
  "tokio",
@@ -1013,7 +1013,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "hartex_bors_core",
- "hartex_eyre",
+ "miette",
  "octocrab",
  "sea-orm",
  "sea-orm-migration",
@@ -1049,11 +1049,11 @@ dependencies = [
  "hartex_bors_core",
  "hartex_bors_database",
  "hartex_bors_permissions",
- "hartex_errors",
  "hartex_log",
  "http",
  "http-body",
  "jsonwebtoken",
+ "miette",
  "octocrab",
  "secrecy",
  "serde",

@@ -29,10 +29,12 @@ use std::fmt::Result as FmtResult;
 use std::str;
 use std::str::FromStr;
 
-use hartex_eyre::eyre::Report;
 use http::StatusCode;
 use http::Uri;
 use http_body::Body;
+use miette::Diagnostic;
+use miette::IntoDiagnostic;
+use miette::Report;
 use octocrab::params::repos::Reference;
 use serde_json::Value;
 
@@ -40,7 +42,7 @@ use crate::GithubRepositoryClient;
 
 /// Errors when updating a branch.
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Debug, Diagnostic)]
 pub enum UpdateBranchError {
     /// The branch to update does not exist.
     BranchNotFound(String),
@@ -99,7 +101,8 @@ async fn create_branch(
             repository.repository_name.repository(),
         )
         .create_ref(&Reference::Branch(name), commit_hash)
-        .await?;
+        .await
+        .into_diagnostic()?;
 
     Ok(())
 }
@@ -133,17 +136,18 @@ pub async fn merge_branches(
                 "commit_message": commit_message
             })),
         )
-        .await?;
+        .await
+        .into_diagnostic()?;
 
     let status = response.status();
     let mut full = String::new();
     while let Some(result) = response.body_mut().data().await {
-        full.push_str(str::from_utf8(&result?)?);
+        full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
     }
 
     match status {
         StatusCode::CREATED => {
-            let value = serde_json::from_str::<Value>(&full)?;
+            let value = serde_json::from_str::<Value>(&full).into_diagnostic()?;
             let Value::String(sha) = value["sha"].clone() else {
                 unreachable!()
             };
@@ -167,7 +171,8 @@ async fn update_branch(
         repository.repository_name.owner(),
         repository.repository_name.repository(),
         Reference::Branch(name.clone()).ref_url()
-    ))?;
+    ))
+    .into_diagnostic()?;
 
     let result = repository
         .client
@@ -178,7 +183,8 @@ async fn update_branch(
                 "force": true
             })),
         )
-        .await?;
+        .await
+        .into_diagnostic()?;
 
     match result.status() {
         StatusCode::OK => Ok(()),

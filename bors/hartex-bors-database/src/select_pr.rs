@@ -22,7 +22,7 @@
 
 use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
-use hartex_eyre::eyre::Report;
+use miette::IntoDiagnostic;
 use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
 use sea_orm::sea_query::SelectExpr;
@@ -51,7 +51,7 @@ impl SelectPullRequest {
     pub async fn exec_with_approve_build_one(
         connection: &DatabaseConnection,
         approve_build: &BorsApproveBuild
-    ) -> hartex_eyre::Result<Option<(
+    ) -> miette::Result<Option<(
         pull_request::Model,
         Option<approve_build::Model>,
         Option<build::Model>,
@@ -72,7 +72,7 @@ impl SelectPullRequest {
     pub async fn exec_with_try_build_one(
         connection: &DatabaseConnection,
         build: &BorsBuild
-    ) -> hartex_eyre::Result<Option<(
+    ) -> miette::Result<Option<(
         pull_request::Model,
         Option<approve_build::Model>,
         Option<build::Model>,
@@ -94,7 +94,7 @@ impl SelectPullRequest {
         connection: &DatabaseConnection,
         number: i32,
         repository: String,
-    ) -> hartex_eyre::Result<Option<(
+    ) -> miette::Result<Option<(
         pull_request::Model,
         Option<approve_build::Model>,
         Option<build::Model>,
@@ -116,7 +116,7 @@ impl SelectPullRequest {
     pub async fn exec_with_repo_many(
         connection: &DatabaseConnection,
         repository: String,
-    ) -> hartex_eyre::Result<
+    ) -> miette::Result<
         Vec<(
             pull_request::Model,
             Option<approve_build::Model>,
@@ -184,7 +184,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 async fn execute_query_one(
     select: &mut Select<pull_request::Entity>,
     connection: &DatabaseConnection,
-) -> hartex_eyre::Result<Option<Response>> {
+) -> miette::Result<Option<Response>> {
     select
         .clone()
         .join(
@@ -195,13 +195,13 @@ async fn execute_query_one(
         .into_model::<Response>()
         .one(connection)
         .await
-        .map_err(Report::new)
+        .into_diagnostic()
 }
 
 async fn execute_query_many(
     select: &mut Select<pull_request::Entity>,
     connection: &DatabaseConnection,
-) -> hartex_eyre::Result<Vec<Response>> {
+) -> miette::Result<Vec<Response>> {
     select
         .clone()
         .join(
@@ -212,5 +212,5 @@ async fn execute_query_many(
         .into_model::<Response>()
         .all(connection)
         .await
-        .map_err(Report::new)
+        .into_diagnostic()
 }

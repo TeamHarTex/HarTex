@@ -33,7 +33,7 @@ use hyper::header::ACCEPT;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
-use miette::Report;
+use miette::{IntoDiagnostic, Report};
 
 use crate::Permission;
 
@@ -73,7 +73,7 @@ async fn load_permissions_from_api(
     permission: Permission,
 ) -> miette::Result<HashSet<String>> {
     let client = Client::builder().build_http::<String>();
-    let api_domain = env::var("API_DOMAIN")?;
+    let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!(
         "http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}"
     );
@@ -84,12 +84,13 @@ async fn load_permissions_from_api(
         .uri(uri)
         .method(Method::GET)
         .header(ACCEPT, "application/json")
-        .body(String::new())?;
+        .body(String::new())
+        .into_diagnostic()?;
 
-    let mut response = client.request(request).await?;
+    let mut response = client.request(request).await.into_diagnostic()?;
     let mut full = String::new();
     while let Some(result) = response.body_mut().data().await {
-        full.push_str(str::from_utf8(&result?)?);
+        full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
     }
     if !response.status().is_success() {
         log::error!("unsuccessful HTTP request, response: {full}");
@@ -100,7 +101,7 @@ async fn load_permissions_from_api(
         )));
     }
 
-    let response = serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full)?;
+    let response = serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full).into_diagnostic()?;
     let data = response.data();
 
     Ok(HashSet::from_iter(data.github_users().to_vec()))

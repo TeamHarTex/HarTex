@@ -22,7 +22,7 @@
 
 use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
-use hartex_eyre::eyre::Report;
+use miette::IntoDiagnostic;
 use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
 use sea_orm::sea_query::SelectExpr;
@@ -51,7 +51,7 @@ impl SelectWorkflow {
     pub async fn exec_with_approve_build_many(
         connection: &DatabaseConnection,
         approve_build: &BorsApproveBuild,
-    ) -> hartex_eyre::Result<
+    ) -> miette::Result<
         Vec<(
             workflow::Model,
             Option<approve_build::Model>,
@@ -83,7 +83,7 @@ impl SelectWorkflow {
     pub async fn exec_with_try_build_many(
         connection: &DatabaseConnection,
         build: &BorsBuild,
-    ) -> hartex_eyre::Result<
+    ) -> miette::Result<
         Vec<(
             workflow::Model,
             Option<approve_build::Model>,
@@ -151,7 +151,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 async fn execute_query_many(
     select: &mut Select<workflow::Entity>,
     connection: &DatabaseConnection,
-) -> hartex_eyre::Result<Vec<Response>> {
+) -> miette::Result<Vec<Response>> {
     select
         .clone()
         .join(JoinType::LeftJoin, workflow::Relation::ApproveBuild.def())
@@ -159,5 +159,5 @@ async fn execute_query_many(
         .into_model::<Response>()
         .all(connection)
         .await
-        .map_err(Report::new)
+        .into_diagnostic()
 }
