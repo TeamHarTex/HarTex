@@ -266,9 +266,9 @@ checksum = "2c6201b9ff9fd90a5a3bac2e56a830d0caa509576f0e503818ee82c181b3437a"
 
 [[package]]
 name = "hcl-edit"
-version = "0.7.0"
+version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c07c3838dc89683482456e75a4515086f2c182bf9b859a0aeba5e0dc9889a2ed"
+checksum = "660ffd3f700e7a1b69db280a4d909ae2da8c6fd1f58df9aad5af5a25a0402729"
 dependencies = [
  "fnv",
  "hcl-primitives",
@@ -291,9 +291,9 @@ dependencies = [
 
 [[package]]
 name = "hcl-rs"
-version = "0.16.0"
+version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28dd6009d3cdbbb74cc5f03a556f2a04a4eb95d50c96a4a969b7a00c4dff3f5e"
+checksum = "251cd99e38725ad2c40e56884f2f28d996274c6b42c1bed6ff241e9d98a29f7b"
 dependencies = [
  "hcl-edit",
  "hcl-primitives",
@@ -768,9 +768,9 @@ checksum = "1a515f5799fe4961cb532f983ce2b23082366b898e52ffbce459c86f67c8378a"
 
 [[package]]
 name = "winnow"
-version = "0.4.9"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81a2094c43cc94775293eaa0e499fbc30048a6d824ac82c0351a8c0bf9112529"
+checksum = "81fac9742fd1ad1bd9643b991319f72dd031016d44b77039a26977eb667141e7"
 dependencies = [
  "memchr",
 ]
