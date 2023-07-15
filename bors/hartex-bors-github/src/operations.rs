@@ -73,7 +73,7 @@ pub async fn set_branch_to_revision(
     repository: &GithubRepositoryClient,
     name: String,
     commit_hash: String,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     match update_branch(repository, name.clone(), commit_hash.clone()).await {
         Ok(_) => Ok(()),
         Err(error) if let Some(error) = error.downcast_ref::<UpdateBranchError>()
@@ -91,7 +91,7 @@ async fn create_branch(
     repository: &GithubRepositoryClient,
     name: String,
     commit_hash: String,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     repository
         .client
         .repos(
@@ -109,7 +109,7 @@ pub async fn merge_branches(
     base: &str,
     head: &str,
     commit_message: &str,
-) -> hartex_eyre::Result<String> {
+) -> miette::Result<String> {
     let url = repository
         .repository
         .merges_url
@@ -161,7 +161,7 @@ async fn update_branch(
     repository: &GithubRepositoryClient,
     name: String,
     commit_hash: String,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     let uri = Uri::from_str(&format!(
         "https://api.github.com/repos/{}/{}/git/refs/{}",
         repository.repository_name.owner(),

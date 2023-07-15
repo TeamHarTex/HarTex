@@ -32,8 +32,8 @@ use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use miette::Report;
 use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
 use octocrab::models::events::payload::PullRequestEventAction;
@@ -64,7 +64,7 @@ pub enum BorsEventKind {
 }
 
 /// Deserialize an event.
-pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::Result<BorsEvent> {
+pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Result<BorsEvent> {
     match &*event_type {
         "issue_comment" => {
             let deserialized =
@@ -122,7 +122,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> hartex_eyre::
 pub async fn handle_event(
     state: &GithubBorsState,
     event: BorsEvent,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     match event.kind {
         BorsEventKind::IssueComment(payload) => {
             if state.comment_posted_by_bors(payload.comment.clone()) {
@@ -199,7 +199,7 @@ async fn handle_comment<C: RepositoryClient>(
     comment: Comment,
     issue: Issue,
     sender: Sender<BorsQueueEvent>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     let pr = issue.number;
     let body = comment.body.unwrap();
     let commands = hartex_bors_commands::parse_commands(&body);
