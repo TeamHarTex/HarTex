@@ -25,6 +25,7 @@
 use std::env;
 use std::process::Command;
 
+use hartex_errors::buildsystem::AbnormalTermination;
 use hartex_errors::buildsystem::JstsTestNotSupported;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -70,7 +71,7 @@ impl Project {
             }
         };
 
-        result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
+        result.map_err(|_| Report::from(AbnormalTermination))
     }
 
     /// Runs linting on a project with its name.
@@ -95,7 +96,7 @@ impl Project {
             }
         };
 
-        result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
+        result.map_err(|_| Report::from(AbnormalTermination))
     }
 
     /// Runs a test suite on a project with its name.
@@ -117,7 +118,7 @@ impl Project {
             }
         };
 
-        result.map_err(|error| Report::msg(format!("abnormal termination: {error}")))
+        result.map_err(|_| Report::from(AbnormalTermination))
     }
 }
 
