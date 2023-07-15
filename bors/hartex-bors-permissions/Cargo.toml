@@ -20,7 +20,7 @@ hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 hyper = { version = "0.14.27", features = ["client", "http2"] }
-serde_json = "1.0.102"
+serde_json = "1.0.103"
 tokio = { version = "1.29.1", features = ["sync"] }
 
 [features]
