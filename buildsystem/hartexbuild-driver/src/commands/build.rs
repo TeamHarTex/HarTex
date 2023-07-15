@@ -23,7 +23,7 @@
 //! # Build Command
 
 use clap::ArgMatches;
-use hartex_eyre::eyre::Report;
+use miette::Report;
 
 /// Runs the build command.
 pub fn build_command(matches: ArgMatches) -> miette::Result<()> {

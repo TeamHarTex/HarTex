@@ -23,7 +23,7 @@
 //! # Lint Command
 
 use clap::ArgMatches;
-use hartex_eyre::eyre::Report;
+use miette::Report;
 
 /// Runs the lint command.
 pub fn lint_command(matches: ArgMatches) -> miette::Result<()> {
