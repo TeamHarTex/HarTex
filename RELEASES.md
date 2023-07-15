@@ -1,37 +1,63 @@
-# Version 0.2.0 (2023-07-19)
+# Version 0.2.0 (2023-07-16)
 
 > **e** contributors made contributions to this release
 
 > **f** commits since 2023-06-14
 
-> **g** pull requests merged since 2023-06-14
-
 ## API Backend
+
+- switched from ScyllaDB to PostgreSQL
+- migrated from eyre to miette for error reporting
+- updated rust version to 1.73.0
 
 ## Bors Buildbot
 
-- implement pull request queue
-- update enqueued pull request model
+- implemented pull request queue
+- updated enqueued pull request model
+- updated command parsing to support passing parameters to commands
+- modified try command to optionally accept a parent commit for the try build creation
+- migrated from eyre to miette for error reporting
+- updated rust version to 1.73.0
 
 ## Buildsystem
 
+- added support for passing multiple projects to individual commands
+- changed the algorithm to not bail out when a project is not found; skipping it and continue instead
+- updated rust version to 1.73.0
+
+## Database Queries
+
+- initial release
+- added basic queries for usage in backend and Discord frontend
+
 ## Discord Frontend
 
-- update configuration api
+- updated configuration API
+- updated configuration version computation algorithm
+- implemented corresponding changes to uptime updates with the API
+- switched from ScyllaDB to PostgreSQL
+- added `/serverinfo` command
+- updated rust version to 1.73.0
 
 ## Localization Infrastructure
 
+- updated rust version to 1.73.0
+
 ## Rust Utilities
 
+- added a dedicated crate for errors
+- updated rust version to 1.73.0
+
 ## Web Frontend
+
+- added documentation website
+- added introduction page
 
 # Version 0.1.0 (2023-06-14)
 
 > **5** contributors made contributions to this release
 
 > **2983** commits since 2022-08-31
-
-> **846** pull requests merged since 2022-09-05
 
 ## API Backend
 
