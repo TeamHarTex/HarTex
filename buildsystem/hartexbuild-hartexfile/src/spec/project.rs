@@ -25,6 +25,7 @@
 use std::env;
 use std::process::Command;
 
+use hartex_errors::buildsystem::JstsTestNotSupported;
 use miette::IntoDiagnostic;
 use miette::Report;
 use serde::Deserialize;
@@ -100,11 +101,14 @@ impl Project {
     /// Runs a test suite on a project with its name.
     pub fn test(&self, name: String) -> miette::Result<()> {
         let mut pwd = env::current_dir().into_diagnostic()?;
-        pwd.push(name);
+        pwd.push(name.clone());
 
         let result = match self.r#type {
             ProjectType::JsTs => {
-                return Err(Report::msg("testing currently not supported for jsts projects"));
+                return Err(Report::from(JstsTestNotSupported {
+                    src: name.clone(),
+                    err_span: (0, name.len()).into(),
+                }));
             }
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
