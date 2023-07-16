@@ -37,7 +37,7 @@ pub async fn update(event: GatewayEvent) -> miette::Result<()> {
     #[allow(clippy::single_match)]
     match dispatch {
         DispatchEvent::GuildCreate(guild_create) => {
-            guild_create.update().await.into_diagnostic()?
+            guild_create.update().await.into_diagnostic()?;
         }
         _ => (),
     }
