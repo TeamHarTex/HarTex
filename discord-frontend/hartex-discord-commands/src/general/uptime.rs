@@ -35,7 +35,6 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
-use hartex_eyre::eyre::Report;
 use hartex_localization_core::{create_bundle, handle_errors};
 use hartex_localization_macros::bundle_get_args;
 use hartex_log::log;
@@ -45,6 +44,7 @@ use hyper::header::USER_AGENT;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
+use miette::Report;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
