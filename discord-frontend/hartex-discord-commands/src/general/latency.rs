@@ -35,6 +35,7 @@ use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
+use miette::IntoDiagnostic;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -68,7 +69,8 @@ impl Command for Latency {
                     ),
                 },
             )
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         let milliseconds = initial_t.elapsed().as_millis();
 
@@ -78,7 +80,8 @@ impl Command for Latency {
         interaction_client
             .update_response(&interaction.token)
             .content(Some(edited_response))
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         Ok(())
     }

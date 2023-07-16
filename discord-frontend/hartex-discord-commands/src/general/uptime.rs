@@ -44,6 +44,7 @@ use hyper::header::USER_AGENT;
 use hyper::Client;
 use hyper::Method;
 use hyper::Request;
+use miette::IntoDiagnostic;
 use miette::Report;
 
 #[derive(CommandMetadata)]
@@ -56,7 +57,7 @@ pub struct Uptime;
 impl Command for Uptime {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let client = Client::builder().build_http::<String>();
-        let api_domain = env::var("API_DOMAIN")?;
+        let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
         let uri = format!("http://{api_domain}/api/v1/uptime");
 
         log::debug!("sending a request to {}", &uri);
@@ -70,12 +71,12 @@ impl Command for Uptime {
                 USER_AGENT,
                 "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend",
             )
-            .body(serde_json::to_string(&query)?)?;
+            .body(serde_json::to_string(&query).into_diagnostic()?).into_diagnostic()?;
 
-        let mut response = client.request(request).await?;
+        let mut response = client.request(request).await.into_diagnostic()?;
         let mut full = String::new();
         while let Some(result) = response.body_mut().data().await {
-            full.push_str(str::from_utf8(&result?)?);
+            full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
         }
         if !response.status().is_success() {
             log::error!("unsuccessful HTTP request, response: {full}");
@@ -86,7 +87,7 @@ impl Command for Uptime {
             )));
         }
 
-        let response = serde_json::from_str::<Response<UptimeResponse>>(&full)?;
+        let response = serde_json::from_str::<Response<UptimeResponse>>(&full).into_diagnostic()?;
         let data = response.data();
         let timestamp = data.start_timestamp();
 
@@ -114,7 +115,8 @@ impl Command for Uptime {
                     ),
                 },
             )
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         Ok(())
     }
