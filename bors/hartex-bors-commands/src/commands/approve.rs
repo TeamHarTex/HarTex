@@ -24,6 +24,7 @@
 //!
 //! bors r+
 
+use miette::IntoDiagnostic;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
@@ -42,7 +43,7 @@ pub async fn approve_command<C: RepositoryClient>(
     pr: u64,
     approver: &str,
     sender: Sender<BorsQueueEvent>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     if !check_permissions(repository, pr, approver, Permission::Approve).await? {
         return Ok(());
     }
@@ -92,7 +93,8 @@ pub async fn approve_command<C: RepositoryClient>(
             GithubRepositoryName::new_from_string(pr_model.repository)?,
             pr_model.id,
         ))
-        .await?;
+        .await
+        .into_diagnostic()?;
 
     Ok(())
 }

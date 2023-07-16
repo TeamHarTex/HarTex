@@ -43,7 +43,7 @@ pub async fn try_command<C: RepositoryClient>(
     pr: u64,
     author: &str,
     parent: Option<String>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     if !check_permissions(repository, pr, author, Permission::TryBuild).await? {
         return Ok(());
     }
