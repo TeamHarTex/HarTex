@@ -25,6 +25,7 @@
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_entitycache_cacheupdaters::CacheUpdater;
+use miette::IntoDiagnostic;
 
 /// Update entity cache.
 #[allow(clippy::unused_async)]
@@ -35,7 +36,7 @@ pub async fn update(event: GatewayEvent) -> miette::Result<()> {
 
     #[allow(clippy::single_match)]
     match dispatch {
-        DispatchEvent::GuildCreate(guild_create) => guild_create.update().await?,
+        DispatchEvent::GuildCreate(guild_create) => guild_create.update().await.into_diagnostic()?,
         _ => (),
     }
 
