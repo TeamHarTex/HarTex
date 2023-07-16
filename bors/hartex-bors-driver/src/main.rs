@@ -38,6 +38,7 @@ use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_github::GithubBorsState;
 use hartex_errors::dotenv;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use state::InitCell;
 use tokio::runtime::Builder;
 
@@ -71,17 +72,17 @@ fn actual_main() -> miette::Result<()> {
     }
 
     log::trace!("constructing runtime");
-    let runtime = Builder::new_multi_thread().enable_all().build()?;
+    let runtime = Builder::new_multi_thread().enable_all().build().into_diagnostic()?;
 
     log::trace!("loading github application state");
-    let app_id = env::var("APP_ID")?.parse::<u64>()?;
+    let app_id = env::var("APP_ID").into_diagnostic()?.parse::<u64>().into_diagnostic()?;
 
     log::trace!("initializing sqlite database");
     let database = runtime.block_on(hartex_bors_database::initialize_database(true))?;
 
-    let mut private_key_file = File::open("../bors-private-key.pem")?;
+    let mut private_key_file = File::open("../bors-private-key.pem").into_diagnostic()?;
     let mut private_key = String::new();
-    private_key_file.read_to_string(&mut private_key)?;
+    private_key_file.read_to_string(&mut private_key).into_diagnostic()?;
 
     let client = SeaORMDatabaseClient::new(database);
     let (state, rx) = runtime.block_on(GithubBorsState::load(

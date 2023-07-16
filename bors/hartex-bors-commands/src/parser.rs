@@ -43,7 +43,7 @@ pub enum ParserError<'a> {
     /// Unexpected end of command.
     UnexpectedEndOfCommand,
     /// Unexpected parameter was provided.
-    UnexpectedParameter(&'a str),
+    UnexpectedParameter(String),
     /// Unexpected parameters were provided.
     UnexpectedParameters,
     /// Unknown command.
@@ -120,13 +120,13 @@ fn parse_prefix<'a>(
 
 fn parse_with_params<'a>(
     cmd: &'static str,
-    f: fn(&str) -> ParserResult<'_>,
+    mut f: impl FnMut(Parser<'a>) -> ParserResult<'_>,
     mut parser: Parser<'a>,
-) -> ParserResult<'_> {
+) -> ParserResult<'a> {
     match parser.peek() {
         Some(word) if word == cmd => {
             parser.next();
-            f(parser.remaining().as_str())
+            f(parser)
         },
         _ => None,
     }
@@ -141,25 +141,27 @@ fn parse_approve_eq_inner(remaining: Option<&str>) -> ParserResult<'_> {
     }
 }
 
-fn parse_try_inner(remaining: &str) -> ParserResult<'_> {
+fn parse_try_inner(mut parser: Parser<'_>) -> ParserResult<'_> {
+    let remaining = parser.remaining();
+
     if remaining.is_empty() {
         return Some(Ok(BorsCommand::Try {
             parent: None,
         }));
     }
 
-    let split = remaining.split_whitespace().collect::<Vec<_>>();
+    let split = remaining.split_whitespace().map(String::from).collect::<Vec<String>>();
     if split.len() > 1 {
         return Some(Err(ParserError::UnexpectedParameters));
     }
 
-    let param_segments = split[0].split('=').collect::<Vec<_>>();
+    let param_segments = split[0].split('=').map(String::from).collect::<Vec<String>>();
     if param_segments.len() < 2 {
         return Some(Err(ParserError::NoParameterValueProvided));
     }
 
     if param_segments[0] != "parent" {
-        return Some(Err(ParserError::UnexpectedParameter(param_segments[0])));
+        return Some(Err(ParserError::UnexpectedParameter(param_segments[0].clone())));
     }
 
     Some(Ok(BorsCommand::Try {
