@@ -28,8 +28,8 @@ use miette::IntoDiagnostic;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message;
 use hartex_discord_core::discord::gateway::Shard;
-use miette::Report;
 use hartex_log::log;
+use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
@@ -70,7 +70,7 @@ pub async fn handle(
                     )
                     .await
                 {
-                    println!("{:?}", Report::new(error));
+                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
 
                     continue;
                 }
