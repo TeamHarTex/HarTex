@@ -25,6 +25,8 @@
 use std::iter::Peekable;
 use std::str::SplitWhitespace;
 
+use itertools::Itertools;
+
 use crate::BorsCommand;
 
 pub(crate) const PREFIX: &str = "bors";

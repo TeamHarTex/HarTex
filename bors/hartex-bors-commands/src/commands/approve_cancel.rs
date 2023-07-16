@@ -42,7 +42,7 @@ pub async fn approve_cancel_command<C: RepositoryClient>(
     database: &dyn DatabaseClient,
     pr: u64,
     approver: &str,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     if !check_permissions(repository, pr, approver, Permission::Approve).await? {
         return Ok(());
     }
@@ -81,7 +81,7 @@ async fn cancel_build_workflows<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     database: &dyn DatabaseClient,
     build: &BorsApproveBuild,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     let pending_workflows = database
         .get_workflows_for_approve_build(build)
         .await?
