@@ -32,12 +32,13 @@ use hartex_discord_core::discord::model::gateway::payload::outgoing::update_pres
 use hartex_discord_core::discord::model::gateway::presence::Activity;
 use hartex_discord_core::discord::model::gateway::presence::ActivityType;
 use hartex_discord_core::discord::model::gateway::presence::Status;
+use miette::IntoDiagnostic;
 
 /// Obtain a list of shards.
-pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue>) -> hartex_eyre::Result<Vec<Shard>> {
-    let bot_token = std::env::var("BOT_TOKEN")?;
+pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue>) -> miette::Result<Vec<Shard>> {
+    let bot_token = std::env::var("BOT_TOKEN").into_diagnostic()?;
 
-    let shard_start_index = std::env::var("SHARDS_START_INDEX")?.parse::<u32>()?;
+    let shard_start_index = std::env::var("SHARDS_START_INDEX").into_diagnostic()?.parse::<u32>().into_diagnostic()?;
     let config = Config::new(bot_token, Intents::all());
 
     Ok(stream::create_bucket(

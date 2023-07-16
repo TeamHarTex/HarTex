@@ -33,6 +33,7 @@ use std::env;
 use std::time::Duration;
 
 use futures_util::future;
+use miette::IntoDiagnostic;
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
@@ -52,14 +53,14 @@ mod shards;
 
 /// Entry point.
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
+    dotenvy::dotenv().into_diagnostic()?;
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
+    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
+        .into_diagnostic()?
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
@@ -68,10 +69,11 @@ pub async fn main() -> hartex_eyre::Result<()> {
         .bootstrap_servers(bootstrap_servers.into_iter())
         .compression_type(CompressionType::Lz4)
         .delivery_timeout_ms(30000)
-        .create::<FutureProducer>()?;
+        .create::<FutureProducer>()
+        .into_diagnostic()?;
 
     log::trace!("building clusters");
-    let num_shards = env::var("NUM_SHARDS")?.parse::<u32>()?;
+    let num_shards = env::var("NUM_SHARDS").into_diagnostic()?.parse::<u32>().into_diagnostic()?;
     let queue = queue::obtain()?;
     let mut shards = shards::obtain(num_shards, &queue)?;
 
@@ -89,11 +91,11 @@ pub async fn main() -> hartex_eyre::Result<()> {
         }
     });
 
-    signal::ctrl_c().await?;
+    signal::ctrl_c().await.into_diagnostic()?;
 
     log::warn!("ctrl-c signal received, shutting down");
 
-    tx.send(true)?;
+    tx.send(true).into_diagnostic()?;
     time::sleep(Duration::from_secs(5)).await;
 
     Ok(())

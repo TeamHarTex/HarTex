@@ -25,6 +25,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::time::Duration;
 
+use miette::IntoDiagnostic;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc::unbounded_channel;
@@ -114,10 +115,10 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
 }
 
 /// Obtain a queue to use for the startup of the bot.
-pub fn obtain() -> hartex_eyre::Result<Arc<dyn Queue>> {
-    let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse::<usize>()?;
+pub fn obtain() -> miette::Result<Arc<dyn Queue>> {
+    let concurrency = std::env::var("SHARD_CONCURRENCY").into_diagnostic()?.parse::<usize>().into_diagnostic()?;
     let wait =
-        Duration::from_secs(std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS")?.parse::<u64>()?);
+        Duration::from_secs(std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS").into_diagnostic()?.parse::<u64>().into_diagnostic()?);
 
     if concurrency == 1 {
         Ok(Arc::new(LocalQueue::new(wait)))
