@@ -17,7 +17,7 @@ hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 
 clap = "4.3.12"
-miette = { version = "5.9.0", features = ["fancy"] }
+miette = { version = "5.10.0", features = ["fancy"] }
 
 [features]
 

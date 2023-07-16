@@ -13,7 +13,7 @@ rust-version = "1.73.0"
 [dependencies]
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 
-miette = "5.9.0"
+miette = "5.10.0"
 serde = { version = "1.0.171", features = ["derive"] }
 hcl-rs = "0.16.2"
 
