@@ -19,7 +19,7 @@ hartex_bors_core = { path = "../hartex-bors-core" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 hyper = { version = "0.14.27", features = ["client", "http2"] }
-miette = "5.9.0"
+miette = "5.10.0"
 serde_json = "1.0.103"
 tokio = { version = "1.29.1", features = ["sync"] }
 
