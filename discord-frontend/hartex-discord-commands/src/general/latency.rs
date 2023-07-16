@@ -44,7 +44,7 @@ use hartex_localization_macros::bundle_get_args;
 pub struct Latency;
 
 impl Command for Latency {
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),

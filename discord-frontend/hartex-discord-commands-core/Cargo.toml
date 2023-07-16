@@ -14,7 +14,7 @@ rust-version = "1.73.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros", optional = true }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
+miette = "5.9.0"
 
 [features]
 derive = ["dep:hartex_discord_commands_macros"]

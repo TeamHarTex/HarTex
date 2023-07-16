@@ -34,7 +34,7 @@ use hartex_localization_core::create_bundle;
 pub struct ServerInfo;
 
 impl Command for ServerInfo {
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let _ = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
