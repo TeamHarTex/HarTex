@@ -29,7 +29,7 @@ rdkafka = { version = "0.33.2", default-features = false, features = ["cmake-bui
 serde = "1.0.171"
 serde_json = "1.0.103"
 serde_scan = "0.4.1"
-sqlx = { version = "0.6.3", features = ["runtime-tokio-native-tls", "postgres"] }
+sqlx = { version = "0.7.1", features = ["runtime-tokio-native-tls", "postgres"] }
 tracing = { version = "0.1.37", features = ["log-always" ] }
 time = "0.3.23"
 

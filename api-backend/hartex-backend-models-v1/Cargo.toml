@@ -12,6 +12,6 @@ rust-version = "1.73.0"
 
 [dependencies]
 serde = { version = "1.0.171", features = ["derive"] }
-sqlx = { version = "0.6.3", features = ["chrono", "postgres", "runtime-tokio-native-tls"] }
+sqlx = { version = "0.7.1", features = ["chrono", "postgres", "runtime-tokio-native-tls"] }
 
 [features]
