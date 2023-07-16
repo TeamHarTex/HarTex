@@ -31,6 +31,8 @@ We have a dedicated [Discord server](https://discord.gg/Xu8453VBAv)! The Discord
 
 ## License
 
-HarTex is distributed under the terms of  **GNU Affero General Public License 3.0**. 
+<img src="meta/images/agplv3.svg" align="right" width=225x alt="AGPLv3">
 
-See the [COPYING](./COPYING) file for more details.
+HarTex is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License (version 3) as published by the Free Software Foundation.
+
+See the [COPYING](./COPYING) file for license rights and limitations.
