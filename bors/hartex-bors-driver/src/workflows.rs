@@ -110,7 +110,14 @@ pub(crate) async fn workflow_started(
     );
 
     if run.head_branch.contains("try") {
-        let Some(build) = database.find_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
+        let Some(build) = database
+            .find_build(
+                &repository.repository,
+                run.head_branch.clone(),
+                run.head_sha.clone(),
+            )
+            .await?
+        else {
             return Ok(());
         };
 
@@ -132,7 +139,14 @@ pub(crate) async fn workflow_started(
     }
 
     if run.head_branch.contains("approve") {
-        let Some(approve_build) = database.find_approve_build(&repository.repository, run.head_branch.clone(), run.head_sha.clone()).await? else {
+        let Some(approve_build) = database
+            .find_approve_build(
+                &repository.repository,
+                run.head_branch.clone(),
+                run.head_sha.clone(),
+            )
+            .await?
+        else {
             return Ok(());
         };
 
@@ -171,7 +185,9 @@ async fn complete_approve_build(
             &event.repository,
             event.branch.clone(),
             event.commit_hash.clone(),
-        ).await? else {
+        )
+        .await?
+    else {
         log::warn!("received workflow completed for nonexistent workflow...?");
 
         return Ok(());
@@ -181,8 +197,14 @@ async fn complete_approve_build(
         return Ok(());
     }
 
-    let Some(pull_request) = database.find_pull_request_by_approve_build(&approve_build).await? else {
-        log::warn!("no pull request is found for the build {}", approve_build.commit_hash);
+    let Some(pull_request) = database
+        .find_pull_request_by_approve_build(&approve_build)
+        .await?
+    else {
+        log::warn!(
+            "no pull request is found for the build {}",
+            approve_build.commit_hash
+        );
 
         return Ok(());
     };
@@ -276,7 +298,7 @@ Pushing {} to {}..."#,
     database
         .update_approve_build_status(&approve_build, status)
         .await?;
-    
+
     if !has_failure {
         sender
             .send(BorsQueueEvent::PullRequestMerged(
@@ -312,7 +334,9 @@ async fn complete_try_build(
             &event.repository,
             event.branch.clone(),
             event.commit_hash.clone(),
-        ).await? else {
+        )
+        .await?
+    else {
         log::warn!("received workflow completed for nonexistent workflow...?");
 
         return Ok(());
@@ -323,7 +347,10 @@ async fn complete_try_build(
     }
 
     let Some(pull_request) = database.find_pull_request_by_try_build(&build).await? else {
-        log::warn!("no pull request is found for the build {}", build.commit_hash);
+        log::warn!(
+            "no pull request is found for the build {}",
+            build.commit_hash
+        );
 
         return Ok(());
     };

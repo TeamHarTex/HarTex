@@ -25,17 +25,20 @@
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_entitycache_cacheupdaters::CacheUpdater;
+use miette::IntoDiagnostic;
 
 /// Update entity cache.
 #[allow(clippy::unused_async)]
-pub async fn update(event: GatewayEvent) -> hartex_eyre::Result<()> {
+pub async fn update(event: GatewayEvent) -> miette::Result<()> {
     let GatewayEvent::Dispatch(_, dispatch) = event else {
         return Ok(());
     };
 
     #[allow(clippy::single_match)]
     match dispatch {
-        DispatchEvent::GuildCreate(guild_create) => guild_create.update().await?,
+        DispatchEvent::GuildCreate(guild_create) => {
+            guild_create.update().await.into_diagnostic()?;
+        }
         _ => (),
     }
 

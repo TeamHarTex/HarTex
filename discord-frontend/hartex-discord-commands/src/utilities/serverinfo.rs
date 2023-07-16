@@ -20,8 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_localization_core::create_bundle;
@@ -34,7 +34,7 @@ use hartex_localization_core::create_bundle;
 pub struct ServerInfo;
 
 impl Command for ServerInfo {
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let _ = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],

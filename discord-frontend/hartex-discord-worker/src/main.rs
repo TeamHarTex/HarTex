@@ -30,6 +30,7 @@
 
 use std::env;
 use std::str;
+use std::str::Utf8Error;
 
 use futures_util::StreamExt;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
@@ -38,13 +39,14 @@ use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::TOKEN;
-use hartex_eyre::eyre::Report;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use once_cell::sync::Lazy;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
+use rdkafka::error::KafkaError;
 use rdkafka::message::Message;
 use rdkafka::ClientConfig;
 use serde::de::DeserializeSeed;
@@ -60,34 +62,35 @@ mod interaction;
 
 /// Entry point.
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
+    dotenvy::dotenv().into_diagnostic()?;
 
     Lazy::force(&TOKEN);
     Lazy::force(&CLIENT);
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")?
+    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
+        .into_diagnostic()?
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
-    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD")?;
+    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
         .compression_type(CompressionType::Lz4)
         .group_id("com.github.teamhartex.hartex.inbound.gateway.payload.consumer")
-        .create::<StreamConsumer>()?;
+        .create::<StreamConsumer>()
+        .into_diagnostic()?;
 
-    consumer.subscribe(&[&topic])?;
+    consumer.subscribe(&[&topic]).into_diagnostic()?;
 
     while let Some(result) = consumer.stream().next().await {
         let Ok(message) = result else {
             let error = result.unwrap_err();
-            println!("{:?}", Report::new(error));
+            println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
 
             continue;
         };
@@ -97,7 +100,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         let (gateway_deserializer, mut json_deserializer) = {
             let result = str::from_utf8(bytes);
             if let Err(error) = result {
-                println!("{:?}", Report::new(error));
+                println!("{:?}", Err::<(), Utf8Error>(error).into_diagnostic());
 
                 continue;
             }
@@ -108,7 +111,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
                 });
 
             if let Err(error) = result {
-                println!("{:?}", Report::new(error));
+                println!("{:?}", Err::<(), ConsumerError>(error).into_diagnostic());
 
                 continue;
             }
@@ -121,13 +124,13 @@ pub async fn main() -> hartex_eyre::Result<()> {
         let key_bytes = message.key().unwrap();
         let result = str::from_utf8(key_bytes);
         if let Err(error) = result {
-            println!("{:?}", Report::new(error));
+            println!("{:?}", Err::<(), Utf8Error>(error).into_diagnostic());
 
             continue;
         }
 
         let key = result.unwrap();
-        let scanned: u8 = scan!("INBOUND_GATEWAY_PAYLOAD_SHARD_{}" <- key)?;
+        let scanned: u8 = scan!("INBOUND_GATEWAY_PAYLOAD_SHARD_{}" <- key).into_diagnostic()?;
 
         log::trace!(
             "[shard {scanned}] received {} event; attempting to deserialize",
@@ -135,7 +138,10 @@ pub async fn main() -> hartex_eyre::Result<()> {
         );
         let result = gateway_deserializer.deserialize(&mut json_deserializer);
         if let Err(error) = result {
-            println!("{:?}", Report::new(error));
+            println!(
+                "{:?}",
+                Err::<(), serde_json::Error>(error).into_diagnostic()
+            );
 
             continue;
         }
@@ -143,9 +149,9 @@ pub async fn main() -> hartex_eyre::Result<()> {
         let event = result.unwrap();
 
         let (Ok(update_result), Ok(event_result)) = tokio::join!(
-                tokio::spawn(entitycache::update(event.clone())),
-                tokio::spawn(eventcallback::invoke(event, scanned))
-            ) else {
+            tokio::spawn(entitycache::update(event.clone())),
+            tokio::spawn(eventcallback::invoke(event, scanned))
+        ) else {
             log::trace!("failed to join futures; skipping event");
             continue;
         };
@@ -159,7 +165,7 @@ pub async fn main() -> hartex_eyre::Result<()> {
         }
     }
 
-    signal::ctrl_c().await?;
+    signal::ctrl_c().await.into_diagnostic()?;
     log::warn!("ctrl-c signal received, shutting down");
 
     Ok(())

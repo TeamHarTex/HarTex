@@ -26,6 +26,7 @@ use hartex_discord_core::discord::model::application::interaction::InteractionTy
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use sqlx::postgres::PgConnection;
 use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
@@ -34,7 +35,7 @@ use sqlx::prelude::Statement;
 use sqlx::types::chrono::Utc;
 
 /// Invoke a corresponding event callback for an event,
-pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
+pub async fn invoke(event: GatewayEvent, shard: u8) -> miette::Result<()> {
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
@@ -51,21 +52,24 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
                         ready.version
                     );
 
-                let mut connection =
-                    PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await?;
+                let mut connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap())
+                    .await
+                    .into_diagnostic()?;
                 let statement = connection
                         .prepare_with(
                             include_str!("../../../database-queries/start-timestamp/insert-into-on-conflict-update.sql"),
                             &[PgTypeInfo::with_name("TEXT"), PgTypeInfo::with_name("TIMESTAMPTZ")],
                         )
-                        .await?;
+                        .await
+                    .into_diagnostic()?;
 
                 statement
                     .query()
                     .bind("HarTex Nightly")
                     .bind(Utc::now())
                     .execute(&mut connection)
-                    .await?;
+                    .await
+                    .into_diagnostic()?;
 
                 Ok(())
             }

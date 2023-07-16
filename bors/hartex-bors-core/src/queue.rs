@@ -28,7 +28,7 @@ use crate::models::GithubRepositoryName;
 #[derive(Clone, Debug)]
 pub enum BorsQueueEvent {
     /// A pull request was added to the queue.
-    /// 
+    ///
     /// Takes in the corresponding ID of the pull request, which is a foreign key
     /// in the "enqueued" table to the "pull_request" table; and the name of the
     /// repository the pull request is associated with.
@@ -36,7 +36,7 @@ pub enum BorsQueueEvent {
     /// A pull request failed its approve build, and will be de-approved.
     PullRequestFailed(GithubRepositoryName, i32),
     /// A pull request was merged and removed from the queue.
-    /// 
+    ///
     /// Takes in the corresponding ID of the pull request, which is a foreign key
     /// in the "enqueued" table to the "pull_request" table; and the name of the
     /// repository the pull request is associated with.

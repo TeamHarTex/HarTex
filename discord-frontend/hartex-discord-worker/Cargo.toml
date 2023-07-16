@@ -18,12 +18,12 @@ hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" 
 hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 chrono = { version = "0.4.26", features = ["clock"], default-features = false }
 futures-util = "0.3.28"
+miette = { version = "5.9.0", features = ["fancy"] }
 once_cell = "1.18.0"
 rdkafka = { version = "0.33.2", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
 serde = "1.0.171"

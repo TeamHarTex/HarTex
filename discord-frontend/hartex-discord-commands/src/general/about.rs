@@ -38,6 +38,7 @@ use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
+use miette::IntoDiagnostic;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -48,7 +49,7 @@ pub struct About;
 
 impl Command for About {
     #[allow(clippy::unused_async)]
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
@@ -68,14 +69,15 @@ impl Command for About {
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
-                    .icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png")?)
+                    .icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png").into_diagnostic()?)
                     .build()
             )
             .color(0x41_A0_DE)
             .description(about_embed_description)
             .field(EmbedFieldBuilder::new(about_embed_github_repo_field_name, "https://github.com/TeamHarTex/HarTex").build())
             .footer(EmbedFooterBuilder::new(about_embed_footer).build())
-            .validate()?
+            .validate()
+            .into_diagnostic()?
             .build();
 
         interaction_client
@@ -91,7 +93,8 @@ impl Command for About {
                     ),
                 },
             )
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         Ok(())
     }

@@ -41,9 +41,7 @@ pub enum BorsCommand {
     /// ApproveEq command.
     ///
     /// `bors r=`
-    ApproveEq {
-        reviewer: String,
-    },
+    ApproveEq { reviewer: String },
     /// Ping command.
     ///
     /// `bors ping`
@@ -51,9 +49,7 @@ pub enum BorsCommand {
     /// Try command.
     ///
     /// `bors try`
-    Try {
-        parent: Option<String>,
-    },
+    Try { parent: Option<String> },
     /// Try cancel command.
     ///
     /// `bors try-`
