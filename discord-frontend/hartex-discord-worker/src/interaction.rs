@@ -32,7 +32,7 @@ use hartex_discord_core::discord::model::gateway::payload::incoming::Interaction
 /// Handle an application command interaction
 pub async fn application_command(
     interaction_create: Box<InteractionCreate>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap() else {
         unreachable!("this should not be possible")
     };

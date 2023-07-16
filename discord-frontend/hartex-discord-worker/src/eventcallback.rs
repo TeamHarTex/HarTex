@@ -34,7 +34,7 @@ use sqlx::prelude::Statement;
 use sqlx::types::chrono::Utc;
 
 /// Invoke a corresponding event callback for an event,
-pub async fn invoke(event: GatewayEvent, shard: u8) -> hartex_eyre::Result<()> {
+pub async fn invoke(event: GatewayEvent, shard: u8) -> miette::Result<()> {
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {

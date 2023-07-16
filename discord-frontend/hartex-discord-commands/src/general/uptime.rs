@@ -54,7 +54,7 @@ use hyper::Request;
 pub struct Uptime;
 
 impl Command for Uptime {
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let client = Client::builder().build_http::<String>();
         let api_domain = env::var("API_DOMAIN")?;
         let uri = format!("http://{api_domain}/api/v1/uptime");

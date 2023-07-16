@@ -48,7 +48,7 @@ pub struct About;
 
 impl Command for About {
     #[allow(clippy::unused_async)]
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),

@@ -60,7 +60,7 @@ mod interaction;
 
 /// Entry point.
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::Result<()> {
+pub async fn main() -> miette::Result<()> {
     hartex_eyre::initialize()?;
     hartex_log::initialize();
 
