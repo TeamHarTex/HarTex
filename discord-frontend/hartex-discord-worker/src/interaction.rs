@@ -30,10 +30,9 @@ use hartex_discord_core::discord::model::application::interaction::InteractionDa
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 
 /// Handle an application command interaction
-pub async fn application_command(
-    interaction_create: Box<InteractionCreate>,
-) -> miette::Result<()> {
-    let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap() else {
+pub async fn application_command(interaction_create: Box<InteractionCreate>) -> miette::Result<()> {
+    let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap()
+    else {
         unreachable!("this should not be possible")
     };
 

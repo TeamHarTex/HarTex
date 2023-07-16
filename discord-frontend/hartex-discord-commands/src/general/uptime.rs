@@ -71,7 +71,8 @@ impl Command for Uptime {
                 USER_AGENT,
                 "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend",
             )
-            .body(serde_json::to_string(&query).into_diagnostic()?).into_diagnostic()?;
+            .body(serde_json::to_string(&query).into_diagnostic()?)
+            .into_diagnostic()?;
 
         let mut response = client.request(request).await.into_diagnostic()?;
         let mut full = String::new();

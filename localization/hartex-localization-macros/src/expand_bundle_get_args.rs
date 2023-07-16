@@ -59,10 +59,7 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
     let bundle = parameters.parameters.bundle_variable_name;
     let key = parameters.parameters.key_name_lit;
     let Lit::Str(_) = key else {
-        key.span()
-            .unwrap()
-            .error("expected string literal")
-            .emit();
+        key.span().unwrap().error("expected string literal").emit();
 
         return None;
     };
@@ -83,7 +80,8 @@ pub fn expand_bundle_get_args(parameters: ParametersWithArgs) -> Option<TokenStr
 
     for arg in parameters.args {
         let Lit::Str(_) = arg.key_lit else {
-            arg.key_lit.span()
+            arg.key_lit
+                .span()
                 .unwrap()
                 .error("expected string literal")
                 .emit();

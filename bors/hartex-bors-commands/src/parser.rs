@@ -127,7 +127,7 @@ fn parse_with_params<'a>(
         Some(word) if word == cmd => {
             parser.next();
             f(parser)
-        },
+        }
         _ => None,
     }
 }
@@ -135,7 +135,7 @@ fn parse_with_params<'a>(
 fn parse_approve_eq_inner(remaining: Option<&str>) -> ParserResult<'_> {
     match remaining {
         Some(arg) if !arg.is_empty() => Some(Ok(BorsCommand::ApproveEq {
-            reviewer: arg.to_string()
+            reviewer: arg.to_string(),
         })),
         _ => Some(Err(ParserError::UnexpectedEndOfCommand)),
     }
@@ -145,27 +145,33 @@ fn parse_try_inner(mut parser: Parser<'_>) -> ParserResult<'_> {
     let remaining = parser.remaining();
 
     if remaining.is_empty() {
-        return Some(Ok(BorsCommand::Try {
-            parent: None,
-        }));
+        return Some(Ok(BorsCommand::Try { parent: None }));
     }
 
-    let split = remaining.split_whitespace().map(String::from).collect::<Vec<String>>();
+    let split = remaining
+        .split_whitespace()
+        .map(String::from)
+        .collect::<Vec<String>>();
     if split.len() > 1 {
         return Some(Err(ParserError::UnexpectedParameters));
     }
 
-    let param_segments = split[0].split('=').map(String::from).collect::<Vec<String>>();
+    let param_segments = split[0]
+        .split('=')
+        .map(String::from)
+        .collect::<Vec<String>>();
     if param_segments.len() < 2 {
         return Some(Err(ParserError::NoParameterValueProvided));
     }
 
     if param_segments[0] != "parent" {
-        return Some(Err(ParserError::UnexpectedParameter(param_segments[0].clone())));
+        return Some(Err(ParserError::UnexpectedParameter(
+            param_segments[0].clone(),
+        )));
     }
 
     Some(Ok(BorsCommand::Try {
-        parent: Some(param_segments[1].to_string())
+        parent: Some(param_segments[1].to_string()),
     }))
 }
 

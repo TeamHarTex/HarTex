@@ -56,9 +56,9 @@ pub async fn main() -> miette::Result<()> {
         match error {
             Error::LineParse(content, index) => Err(dotenv::LineParseError {
                 src: content,
-                err_span: (index - 1, 1).into()
+                err_span: (index - 1, 1).into(),
             })?,
-            _ => todo!()
+            _ => todo!(),
         }
     }
 

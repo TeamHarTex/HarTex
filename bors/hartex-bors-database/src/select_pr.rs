@@ -50,12 +50,14 @@ pub(crate) struct SelectPullRequest;
 impl SelectPullRequest {
     pub async fn exec_with_approve_build_one(
         connection: &DatabaseConnection,
-        approve_build: &BorsApproveBuild
-    ) -> miette::Result<Option<(
-        pull_request::Model,
-        Option<approve_build::Model>,
-        Option<build::Model>,
-    )>> {
+        approve_build: &BorsApproveBuild,
+    ) -> miette::Result<
+        Option<(
+            pull_request::Model,
+            Option<approve_build::Model>,
+            Option<build::Model>,
+        )>,
+    > {
         let mut select = pull_request::Entity::find()
             .select_only()
             .filter(pull_request::Column::ApproveBuild.eq(approve_build.id));
@@ -66,17 +68,25 @@ impl SelectPullRequest {
 
         let result = execute_query_one(&mut select, connection).await?;
 
-        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
+        Ok(result.map(|response| {
+            (
+                response.pull_request,
+                response.approve_build,
+                response.build,
+            )
+        }))
     }
 
     pub async fn exec_with_try_build_one(
         connection: &DatabaseConnection,
-        build: &BorsBuild
-    ) -> miette::Result<Option<(
-        pull_request::Model,
-        Option<approve_build::Model>,
-        Option<build::Model>,
-    )>> {
+        build: &BorsBuild,
+    ) -> miette::Result<
+        Option<(
+            pull_request::Model,
+            Option<approve_build::Model>,
+            Option<build::Model>,
+        )>,
+    > {
         let mut select = pull_request::Entity::find()
             .select_only()
             .filter(pull_request::Column::TryBuild.eq(build.id));
@@ -87,18 +97,26 @@ impl SelectPullRequest {
 
         let result = execute_query_one(&mut select, connection).await?;
 
-        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
+        Ok(result.map(|response| {
+            (
+                response.pull_request,
+                response.approve_build,
+                response.build,
+            )
+        }))
     }
 
     pub async fn exec_with_repo_and_number_one(
         connection: &DatabaseConnection,
         number: i32,
         repository: String,
-    ) -> miette::Result<Option<(
-        pull_request::Model,
-        Option<approve_build::Model>,
-        Option<build::Model>,
-    )>> {
+    ) -> miette::Result<
+        Option<(
+            pull_request::Model,
+            Option<approve_build::Model>,
+            Option<build::Model>,
+        )>,
+    > {
         let mut select = pull_request::Entity::find()
             .select_only()
             .filter(pull_request::Column::Number.eq(number))
@@ -110,7 +128,13 @@ impl SelectPullRequest {
 
         let result = execute_query_one(&mut select, connection).await?;
 
-        Ok(result.map(|response| (response.pull_request, response.approve_build, response.build)))
+        Ok(result.map(|response| {
+            (
+                response.pull_request,
+                response.approve_build,
+                response.build,
+            )
+        }))
     }
 
     pub async fn exec_with_repo_many(

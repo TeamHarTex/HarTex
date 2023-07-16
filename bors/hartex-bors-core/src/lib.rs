@@ -207,7 +207,7 @@ pub trait DatabaseClient: Send + Sync {
     /// Unapprove a pull request.
     fn unapprove_pull_request(
         &self,
-        pr: u64
+        pr: u64,
     ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Update the status of an approve build.
@@ -254,11 +254,7 @@ pub trait RepositoryClient {
     async fn delete_branch(&self, branch: &str) -> miette::Result<()>;
 
     /// Edit a speific comment.
-    async fn edit_comment(
-        &self,
-        comment_id: CommentId,
-        text: &str,
-    ) -> miette::Result<Comment>;
+    async fn edit_comment(&self, comment_id: CommentId, text: &str) -> miette::Result<Comment>;
 
     async fn get_checks_for_commit(
         &self,
@@ -270,11 +266,7 @@ pub trait RepositoryClient {
     async fn get_label(&self, name: &str) -> miette::Result<Label>;
 
     /// Sets the labels of a pull request.
-    async fn set_labels_of_pull_request(
-        &self,
-        labels: Vec<String>,
-        pr: u64,
-    ) -> miette::Result<()>;
+    async fn set_labels_of_pull_request(&self, labels: Vec<String>, pr: u64) -> miette::Result<()>;
 
     /// Gets a pull request by its number.
     async fn get_pull_request(&self, pr: u64) -> miette::Result<PullRequest>;
@@ -294,9 +286,5 @@ pub trait RepositoryClient {
     async fn get_revision(&self, branch: &str) -> miette::Result<String>;
 
     /// Set a branch to a specific revision.
-    async fn set_branch_to_revision(
-        &self,
-        branch: &str,
-        revision: &str,
-    ) -> miette::Result<()>;
+    async fn set_branch_to_revision(&self, branch: &str, revision: &str) -> miette::Result<()>;
 }

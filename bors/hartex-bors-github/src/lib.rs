@@ -89,10 +89,14 @@ impl GithubBorsState {
         private_key: SecretVec<u8>,
     ) -> miette::Result<(Self, Receiver<BorsQueueEvent>)> {
         log::trace!("obtaining private key");
-        let key = EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref()).into_diagnostic()?;
+        let key =
+            EncodingKey::from_rsa_pem(private_key.expose_secret().as_ref()).into_diagnostic()?;
 
         log::trace!("building github client");
-        let client = Octocrab::builder().app(application_id, key).build().into_diagnostic()?;
+        let client = Octocrab::builder()
+            .app(application_id, key)
+            .build()
+            .into_diagnostic()?;
 
         log::trace!("obtaining github application");
         let application = client.current().app().await.into_diagnostic()?;
@@ -207,11 +211,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(())
     }
 
-    async fn edit_comment(
-        &self,
-        comment_id: CommentId,
-        text: &str,
-    ) -> miette::Result<Comment> {
+    async fn edit_comment(&self, comment_id: CommentId, text: &str) -> miette::Result<Comment> {
         self.client
             .issues(
                 self.repository_name.owner(),
@@ -235,7 +235,8 @@ impl RepositoryClient for GithubRepositoryClient {
                 self.repository_name.repository(),
                 commit_hash
             ))
-            .await.into_diagnostic()?;
+            .await
+            .into_diagnostic()?;
 
         #[derive(Deserialize)]
         struct CheckSuitePayload<'a> {
@@ -294,11 +295,7 @@ impl RepositoryClient for GithubRepositoryClient {
             .into_diagnostic()
     }
 
-    async fn set_labels_of_pull_request(
-        &self,
-        labels: Vec<String>,
-        pr: u64,
-    ) -> miette::Result<()> {
+    async fn set_labels_of_pull_request(&self, labels: Vec<String>, pr: u64) -> miette::Result<()> {
         let mut response = self
             .client
             ._put(
@@ -375,11 +372,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(sha)
     }
 
-    async fn set_branch_to_revision(
-        &self,
-        branch: &str,
-        revision: &str,
-    ) -> miette::Result<()> {
+    async fn set_branch_to_revision(&self, branch: &str, revision: &str) -> miette::Result<()> {
         operations::set_branch_to_revision(self, branch.to_string(), revision.to_string()).await
     }
 }

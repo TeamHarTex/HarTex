@@ -24,11 +24,11 @@ use std::env;
 use std::time::Duration;
 
 use futures_util::StreamExt;
-use miette::IntoDiagnostic;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
@@ -50,7 +50,7 @@ pub async fn handle(
                     Message::Close(_) => None,
                     Message::Text(string) => Some(string.into_bytes()),
                 }) else {
-                    continue
+                    continue;
                 };
 
                 log::trace!(

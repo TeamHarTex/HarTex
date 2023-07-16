@@ -46,9 +46,9 @@ use miette::IntoDiagnostic;
 use once_cell::sync::Lazy;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
+use rdkafka::error::KafkaError;
 use rdkafka::message::Message;
 use rdkafka::ClientConfig;
-use rdkafka::error::KafkaError;
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
 
@@ -71,7 +71,8 @@ pub async fn main() -> miette::Result<()> {
     Lazy::force(&TOKEN);
     Lazy::force(&CLIENT);
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS").into_diagnostic()?
+    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
+        .into_diagnostic()?
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
@@ -137,7 +138,10 @@ pub async fn main() -> miette::Result<()> {
         );
         let result = gateway_deserializer.deserialize(&mut json_deserializer);
         if let Err(error) = result {
-            println!("{:?}", Err::<(), serde_json::Error>(error).into_diagnostic());
+            println!(
+                "{:?}",
+                Err::<(), serde_json::Error>(error).into_diagnostic()
+            );
 
             continue;
         }
@@ -145,9 +149,9 @@ pub async fn main() -> miette::Result<()> {
         let event = result.unwrap();
 
         let (Ok(update_result), Ok(event_result)) = tokio::join!(
-                tokio::spawn(entitycache::update(event.clone())),
-                tokio::spawn(eventcallback::invoke(event, scanned))
-            ) else {
+            tokio::spawn(entitycache::update(event.clone())),
+            tokio::spawn(eventcallback::invoke(event, scanned))
+        ) else {
             log::trace!("failed to join futures; skipping event");
             continue;
         };

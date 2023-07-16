@@ -54,9 +54,7 @@ impl UserPermissions {
     }
 }
 
-pub(crate) async fn load(
-    repository: &GithubRepositoryName,
-) -> miette::Result<UserPermissions> {
+pub(crate) async fn load(repository: &GithubRepositoryName) -> miette::Result<UserPermissions> {
     let try_build_users =
         load_permissions_from_api(repository.repository(), Permission::TryBuild).await?;
     let approve_users =
@@ -101,7 +99,8 @@ async fn load_permissions_from_api(
         )));
     }
 
-    let response = serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full).into_diagnostic()?;
+    let response =
+        serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full).into_diagnostic()?;
     let data = response.data();
 
     Ok(HashSet::from_iter(data.github_users().to_vec()))

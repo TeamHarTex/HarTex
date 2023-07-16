@@ -21,7 +21,6 @@
  */
 
 use miette::IntoDiagnostic;
-use sea_orm::QueryOrder;
 use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
 use sea_orm::sea_query::SelectExpr;
@@ -33,6 +32,7 @@ use sea_orm::FromQueryResult;
 use sea_orm::Iden;
 use sea_orm::JoinType;
 use sea_orm::QueryFilter;
+use sea_orm::QueryOrder;
 use sea_orm::QueryResult;
 use sea_orm::QuerySelect;
 use sea_orm::QueryTrait;
@@ -48,7 +48,6 @@ use crate::entity::pull_request;
 pub(crate) struct SelectEnqueuedPullRequest;
 
 impl SelectEnqueuedPullRequest {
-
     pub async fn exec_with_repo_many(
         connection: &DatabaseConnection,
         repository: String,
@@ -63,7 +62,6 @@ impl SelectEnqueuedPullRequest {
         let mut select = enqueued_pull_request::Entity::find()
             .select_only()
             .filter(pull_request::Column::Repository.eq(repository));
-
 
         add_columns_with_prefix::<_, enqueued_pull_request::Entity>(&mut select, "enqueued");
         add_columns_with_prefix::<_, pull_request::Entity>(&mut select, "pull_request");
@@ -96,7 +94,8 @@ struct Response {
 
 impl FromQueryResult for Response {
     fn from_query_result(result: &QueryResult, _pre: &str) -> Result<Self, sea_orm::DbErr> {
-        let enqueued_pull_request = enqueued_pull_request::Model::from_query_result(result, "enqueued")?;
+        let enqueued_pull_request =
+            enqueued_pull_request::Model::from_query_result(result, "enqueued")?;
         let pull_request = pull_request::Model::from_query_result(result, "pull_request")?;
         let approve_build = approve_build::Model::from_query_result(result, "approve_build").ok();
         let build = build::Model::from_query_result(result, "build").ok();
@@ -134,7 +133,10 @@ async fn execute_query_many(
             JoinType::LeftJoin,
             enqueued_pull_request::Relation::PullRequest.def(),
         )
-        .join(JoinType::LeftJoin, pull_request::Relation::ApproveBuild.def())
+        .join(
+            JoinType::LeftJoin,
+            pull_request::Relation::ApproveBuild.def(),
+        )
         .join(JoinType::LeftJoin, pull_request::Relation::Build.def())
         .order_by_desc(enqueued_pull_request::Column::Id)
         .into_model::<Response>()

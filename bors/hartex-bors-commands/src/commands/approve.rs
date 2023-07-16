@@ -24,7 +24,6 @@
 //!
 //! bors r+
 
-use miette::IntoDiagnostic;
 use hartex_bors_core::models::BorsBuildStatus;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::models::GithubRepositoryState;
@@ -32,6 +31,7 @@ use hartex_bors_core::models::Permission;
 use hartex_bors_core::queue::BorsQueueEvent;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
+use miette::IntoDiagnostic;
 use tokio::sync::mpsc::Sender;
 
 use crate::permissions::check_permissions;
@@ -87,7 +87,9 @@ pub async fn approve_command<C: RepositoryClient>(
         return Ok(());
     };
 
-    database.enqueue_pull_request(&repository.repository, &pr_model).await?;
+    database
+        .enqueue_pull_request(&repository.repository, &pr_model)
+        .await?;
     sender
         .send(BorsQueueEvent::PullRequestEnqueued(
             GithubRepositoryName::new_from_string(pr_model.repository)?,
