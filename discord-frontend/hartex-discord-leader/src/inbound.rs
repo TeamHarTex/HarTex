@@ -24,10 +24,11 @@ use std::env;
 use std::time::Duration;
 
 use futures_util::StreamExt;
+use miette::IntoDiagnostic;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message;
 use hartex_discord_core::discord::gateway::Shard;
-use hartex_eyre::eyre::Report;
+use miette::Report;
 use hartex_log::log;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
@@ -37,9 +38,9 @@ use rdkafka::util::Timeout;
 pub async fn handle(
     shards: impl Iterator<Item = &mut Shard>,
     producer: FutureProducer,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     let mut stream = ShardMessageStream::new(shards);
-    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD")?;
+    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
     while let Some((shard, result)) = stream.next().await {
         match result {
