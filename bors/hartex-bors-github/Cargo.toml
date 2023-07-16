@@ -21,7 +21,7 @@ futures = "0.3.28"
 http = "0.2.9"
 http-body = "0.4.5"
 jsonwebtoken = "8.3.0"
-miette = "5.9.0"
+miette = "5.10.0"
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 secrecy = "0.8.0"
 serde = { version = "1.0.171", features = ["derive"] }
