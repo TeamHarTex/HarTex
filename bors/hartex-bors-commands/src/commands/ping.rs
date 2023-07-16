@@ -26,17 +26,18 @@
 
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::RepositoryClient;
+use miette::IntoDiagnostic;
 use std::time::SystemTime;
 
 /// Executes the ping command.
 pub async fn ping_command<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     pr: u64,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     let now = SystemTime::now();
     let comment = repository.client.post_comment(pr, "🏓 Pong!").await?;
 
-    let latency = now.elapsed()?;
+    let latency = now.elapsed().into_diagnostic()?;
     let millis = latency.as_millis();
     repository
         .client

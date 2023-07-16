@@ -32,7 +32,7 @@ pub async fn check_permissions<C: RepositoryClient>(
     pr: u64,
     author: &str,
     permission: Permission,
-) -> hartex_eyre::Result<bool> {
+) -> miette::Result<bool> {
     log::trace!("checking {permission} permissions");
 
     let result = if !repository

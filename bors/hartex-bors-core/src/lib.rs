@@ -77,7 +77,7 @@ pub trait DatabaseClient: Send + Sync {
         &'a self,
         pr: &'a BorsPullRequest,
         approver: &'a str,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Associate an approve build to a pull request.
     fn associate_approve_build<'a>(
@@ -85,7 +85,7 @@ pub trait DatabaseClient: Send + Sync {
         pr: &'a BorsPullRequest,
         branch: String,
         commit_hash: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Associate a try build to a pull request.
     fn associate_try_build<'a>(
@@ -93,7 +93,7 @@ pub trait DatabaseClient: Send + Sync {
         pr: &'a BorsPullRequest,
         branch: String,
         commit_hash: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Creates a bors repository.
     ///
@@ -101,7 +101,7 @@ pub trait DatabaseClient: Send + Sync {
     fn create_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Creates a workflow with an approve build.
     fn create_workflow_with_approve_build<'a>(
@@ -112,7 +112,7 @@ pub trait DatabaseClient: Send + Sync {
         run_id: RunId,
         workflow_type: BorsWorkflowType,
         workflow_status: BorsWorkflowStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Creates a workflow with a try build.
     fn create_workflow_with_try_build<'a>(
@@ -123,21 +123,21 @@ pub trait DatabaseClient: Send + Sync {
         run_id: RunId,
         workflow_type: BorsWorkflowType,
         workflow_status: BorsWorkflowStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Dequeues a pull request.
     fn dequeue_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
         pr: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Enqueues a pull request.
     fn enqueue_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
         pr: &'a BorsPullRequest,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Finds an approve build.
     fn find_approve_build<'a>(
@@ -145,7 +145,7 @@ pub trait DatabaseClient: Send + Sync {
         repo: &'a GithubRepositoryName,
         branch: String,
         commit_sha: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsApproveBuild>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsApproveBuild>>> + Send + '_>>;
 
     /// Finds a build.
     fn find_build<'a>(
@@ -153,24 +153,24 @@ pub trait DatabaseClient: Send + Sync {
         repo: &'a GithubRepositoryName,
         branch: String,
         commit_sha: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsBuild>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsBuild>>> + Send + '_>>;
 
     /// Find a pull request from an approve build.
     fn find_pull_request_by_approve_build<'a>(
         &'a self,
         approve_build: &'a BorsApproveBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>>;
 
     /// Find a pull request from a try build.
     fn find_pull_request_by_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>>;
 
     fn get_enqueued_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsEnqueuedPullRequest>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsEnqueuedPullRequest>>> + Send + '_>>;
 
     /// Gets a bors pull request in the bors database, or creates before returning if the pull
     /// request is not present yet.
@@ -179,57 +179,57 @@ pub trait DatabaseClient: Send + Sync {
         name: &'a GithubRepositoryName,
         github_pr: &'a PullRequest,
         pr: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<BorsPullRequest>> + Send + '_>>;
 
     /// Gets pull requests stored in the database in a repository.
     fn get_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsPullRequest>>> + Send + '_>>;
 
     /// Gets the repositories bors is installed in.
     fn get_repositories(
         &self,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsRepository>>> + Send + '_>>;
 
     /// Gets the workflows for a certain approve build.
     fn get_workflows_for_approve_build<'a>(
         &'a self,
         build: &'a BorsApproveBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsWorkflow>>> + Send + '_>>;
 
     /// Gets the workflows for a certain try build.
     fn get_workflows_for_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsWorkflow>>> + Send + '_>>;
 
     /// Unapprove a pull request.
     fn unapprove_pull_request(
         &self,
         pr: u64
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Update the status of an approve build.
     fn update_approve_build_status<'a>(
         &'a self,
         approve_build: &'a BorsApproveBuild,
         status: BorsBuildStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Update the status of a build.
     fn update_build_status<'a>(
         &'a self,
         build: &'a BorsBuild,
         status: BorsBuildStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 
     /// Update the status of a workflow.
     fn update_workflow_status(
         &self,
         run_id: u64,
         status: BorsWorkflowStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>>;
 }
 
 /// A base permission resolver.
@@ -248,36 +248,36 @@ pub trait RepositoryClient {
     fn repository_name(&self) -> &GithubRepositoryName;
 
     /// Cancel workflows.
-    async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> hartex_eyre::Result<()>;
+    async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> miette::Result<()>;
 
     /// Deletes a branch.
-    async fn delete_branch(&self, branch: &str) -> hartex_eyre::Result<()>;
+    async fn delete_branch(&self, branch: &str) -> miette::Result<()>;
 
     /// Edit a speific comment.
     async fn edit_comment(
         &self,
         comment_id: CommentId,
         text: &str,
-    ) -> hartex_eyre::Result<Comment>;
+    ) -> miette::Result<Comment>;
 
     async fn get_checks_for_commit(
         &self,
         branch: &str,
         commit_hash: &str,
-    ) -> hartex_eyre::Result<Vec<Check>>;
+    ) -> miette::Result<Vec<Check>>;
 
     /// Gets a label by its name.
-    async fn get_label(&self, name: &str) -> hartex_eyre::Result<Label>;
+    async fn get_label(&self, name: &str) -> miette::Result<Label>;
 
     /// Sets the labels of a pull request.
     async fn set_labels_of_pull_request(
         &self,
         labels: Vec<String>,
         pr: u64,
-    ) -> hartex_eyre::Result<()>;
+    ) -> miette::Result<()>;
 
     /// Gets a pull request by its number.
-    async fn get_pull_request(&self, pr: u64) -> hartex_eyre::Result<PullRequest>;
+    async fn get_pull_request(&self, pr: u64) -> miette::Result<PullRequest>;
 
     /// Merges two branches together.
     async fn merge_branches(
@@ -285,18 +285,18 @@ pub trait RepositoryClient {
         base: &str,
         head: &str,
         commit_message: &str,
-    ) -> hartex_eyre::Result<String>;
+    ) -> miette::Result<String>;
 
     /// Post a comment on a specific pull request.
-    async fn post_comment(&self, pr: u64, text: &str) -> hartex_eyre::Result<Comment>;
+    async fn post_comment(&self, pr: u64, text: &str) -> miette::Result<Comment>;
 
     /// Get the revision of a branch.
-    async fn get_revision(&self, branch: &str) -> hartex_eyre::Result<String>;
+    async fn get_revision(&self, branch: &str) -> miette::Result<String>;
 
     /// Set a branch to a specific revision.
     async fn set_branch_to_revision(
         &self,
         branch: &str,
         revision: &str,
-    ) -> hartex_eyre::Result<()>;
+    ) -> miette::Result<()>;
 }

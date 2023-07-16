@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_eyre::eyre::Report;
+use miette::IntoDiagnostic;
 use sea_orm::QueryOrder;
 use sea_orm::sea_query::Alias;
 use sea_orm::sea_query::IntoIden;
@@ -52,7 +52,7 @@ impl SelectEnqueuedPullRequest {
     pub async fn exec_with_repo_many(
         connection: &DatabaseConnection,
         repository: String,
-    ) -> hartex_eyre::Result<
+    ) -> miette::Result<
         Vec<(
             enqueued_pull_request::Model,
             pull_request::Model,
@@ -127,7 +127,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 async fn execute_query_many(
     select: &mut Select<enqueued_pull_request::Entity>,
     connection: &DatabaseConnection,
-) -> hartex_eyre::Result<Vec<Response>> {
+) -> miette::Result<Vec<Response>> {
     select
         .clone()
         .join(
@@ -140,5 +140,5 @@ async fn execute_query_many(
         .into_model::<Response>()
         .all(connection)
         .await
-        .map_err(Report::new)
+        .into_diagnostic()
 }

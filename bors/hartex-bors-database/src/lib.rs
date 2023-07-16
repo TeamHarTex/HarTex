@@ -28,6 +28,7 @@
 
 use std::str::FromStr;
 
+use miette::IntoDiagnostic;
 use sea_orm::DatabaseConnection;
 use sea_orm::SqlxSqliteConnector;
 use sea_orm_migration::prelude::MigratorTrait;
@@ -41,16 +42,16 @@ mod select_enqueued_pr;
 mod select_pr;
 mod select_workflow;
 
-pub async fn initialize_database(migrate: bool) -> hartex_eyre::Result<DatabaseConnection> {
+pub async fn initialize_database(migrate: bool) -> miette::Result<DatabaseConnection> {
     let database = SqlxSqliteConnector::from_sqlx_sqlite_pool(
         SqlitePool::connect_with(
-            SqliteConnectOptions::from_str("sqlite:bors-data/data.db")?.create_if_missing(true),
+            SqliteConnectOptions::from_str("sqlite:bors-data/data.db").into_diagnostic()?.create_if_missing(true),
         )
-        .await?,
+        .await.into_diagnostic()?,
     );
 
     if migrate {
-        migration::Migrator::up(&database, None).await?;
+        migration::Migrator::up(&database, None).await.into_diagnostic()?;
     }
 
     Ok(database)

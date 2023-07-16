@@ -28,8 +28,9 @@ use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_bors_permissions::BackendApiPermissionResolver;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use miette::IntoDiagnostic;
+use miette::Report;
 use octocrab::models::InstallationRepositories;
 use octocrab::models::Repository;
 use octocrab::Octocrab;
@@ -41,7 +42,7 @@ use crate::RepositoryState;
 async fn create_repository_state(
     repository_client: Octocrab,
     repository: Repository,
-) -> hartex_eyre::Result<RepositoryState> {
+) -> miette::Result<RepositoryState> {
     let Some(owner) = &repository.owner else {
         return Err(Report::msg(format!("repository {} has no owner", &repository.name)));
     };
@@ -66,13 +67,13 @@ async fn create_repository_state(
 pub(crate) async fn load_repositories(
     client: &Octocrab,
     database: &SeaORMDatabaseClient,
-) -> hartex_eyre::Result<RepositoryMap> {
-    let installations = client.apps().installations().send().await?;
+) -> miette::Result<RepositoryMap> {
+    let installations = client.apps().installations().send().await.into_diagnostic()?;
 
     let mut hashmap = HashMap::new();
     for installation in installations {
         if let Some(ref url) = installation.repositories_url {
-            let (installation_client, _) = client.installation_and_token(installation.id).await?;
+            let (installation_client, _) = client.installation_and_token(installation.id).await.into_diagnostic()?;
 
             match installation_client
                 .get::<InstallationRepositories, _, ()>(url, None)
@@ -100,7 +101,7 @@ pub(crate) async fn load_repositories(
                     }
                 }
                 Err(error) => {
-                    return Err(Report::new(error));
+                    return Err(error).into_diagnostic();
                 }
             }
         }

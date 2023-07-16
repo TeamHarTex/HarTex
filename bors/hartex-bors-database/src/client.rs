@@ -37,6 +37,7 @@ use hartex_bors_core::models::BorsWorkflowStatus;
 use hartex_bors_core::models::BorsWorkflowType;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_bors_core::DatabaseClient;
+use miette::IntoDiagnostic;
 use octocrab::models::pulls::PullRequest;
 use octocrab::models::RunId;
 use sea_orm::prelude::DateTime;
@@ -73,7 +74,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &'a self,
         pr: &'a BorsPullRequest,
         approver: &'a str,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let pr_model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr.id),
@@ -82,7 +83,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            pr_model.update(&self.connection).await?;
+            pr_model.update(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -93,7 +94,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         pr: &'a BorsPullRequest,
         branch: String,
         commit_hash: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let approve_build = entity::approve_build::ActiveModel {
                 repository: Set(pr.repository.clone()),
@@ -103,18 +104,18 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            let tx = self.connection.begin().await?;
+            let tx = self.connection.begin().await.into_diagnostic()?;
             let approve_build = entity::approve_build::Entity::insert(approve_build)
                 .exec_with_returning(&tx)
-                .await?;
+                .await.into_diagnostic()?;
 
             let pr_model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr.id),
                 approve_build: Set(Some(approve_build.id)),
                 ..Default::default()
             };
-            pr_model.update(&tx).await?;
-            tx.commit().await?;
+            pr_model.update(&tx).await.into_diagnostic()?;
+            tx.commit().await.into_diagnostic()?;
 
             Ok(())
         })
@@ -125,7 +126,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         pr: &'a BorsPullRequest,
         branch: String,
         commit_hash: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let build = entity::build::ActiveModel {
                 repository: Set(pr.repository.clone()),
@@ -135,18 +136,18 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            let tx = self.connection.begin().await?;
+            let tx = self.connection.begin().await.into_diagnostic()?;
             let build = entity::build::Entity::insert(build)
                 .exec_with_returning(&tx)
-                .await?;
+                .await.into_diagnostic()?;
 
             let pr_model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr.id),
                 try_build: Set(Some(build.id)),
                 ..Default::default()
             };
-            pr_model.update(&tx).await?;
-            tx.commit().await?;
+            pr_model.update(&tx).await.into_diagnostic()?;
+            tx.commit().await.into_diagnostic()?;
 
             Ok(())
         })
@@ -155,7 +156,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn create_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let repo = entity::repository::ActiveModel {
                 repository: Set(format!("{name}")),
@@ -168,7 +169,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .await
             {
                 Ok(_) | Err(DbErr::RecordNotInserted) => Ok(()),
-                Err(error) => return Err(error.into()),
+                Err(error) => return Err(error).into_diagnostic(),
             }
         })
     }
@@ -181,7 +182,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         run_id: RunId,
         workflow_type: BorsWorkflowType,
         workflow_status: BorsWorkflowStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 approve_build: Set(Some(approve_build.id)),
@@ -193,7 +194,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            workflow.insert(&self.connection).await?;
+            workflow.insert(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -207,7 +208,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         run_id: RunId,
         workflow_type: BorsWorkflowType,
         workflow_status: BorsWorkflowStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 build: Set(Some(build.id)),
@@ -219,7 +220,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            workflow.insert(&self.connection).await?;
+            workflow.insert(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -229,16 +230,16 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &'a self,
         name: &'a GithubRepositoryName,
         pr: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let option = entity::enqueued_pull_request::Entity::find()
                 .filter(entity::enqueued_pull_request::Column::Repository.eq(format!("{name}")))
                 .filter(entity::enqueued_pull_request::Column::PullRequest.eq(pr))
                 .one(&self.connection)
-                .await?;
+                .await.into_diagnostic()?;
 
             if let Some(enqueued_pr) = option {
-                enqueued_pr.delete(&self.connection).await?;
+                enqueued_pr.delete(&self.connection).await.into_diagnostic()?;
             }
 
             Ok(())
@@ -249,7 +250,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &'a self,
         name: &'a GithubRepositoryName,
         pr: &'a BorsPullRequest,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let enqueued_pr = entity::enqueued_pull_request::ActiveModel {
                 pull_request: Set(pr.id),
@@ -257,7 +258,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            enqueued_pr.insert(&self.connection).await?;
+            enqueued_pr.insert(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -268,7 +269,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         repository: &'a GithubRepositoryName,
         branch: String,
         commit_sha: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsApproveBuild>>> + Send + '_>>
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsApproveBuild>>> + Send + '_>>
     {
         Box::pin(async move {
             let approve_build = entity::approve_build::Entity::find()
@@ -283,7 +284,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                         .and(entity::approve_build::Column::CommitHash.eq(commit_sha)),
                 )
                 .one(&self.connection)
-                .await?;
+                .await.into_diagnostic()?;
 
             Ok(approve_build.map(approve_build_from_database))
         })
@@ -294,7 +295,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         repository: &'a GithubRepositoryName,
         branch: String,
         commit_sha: String,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsBuild>>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsBuild>>> + Send + '_>> {
         Box::pin(async move {
             let build = entity::build::Entity::find()
                 .filter(
@@ -308,7 +309,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                         .and(entity::build::Column::CommitHash.eq(commit_sha)),
                 )
                 .one(&self.connection)
-                .await?;
+                .await.into_diagnostic()?;
 
             Ok(build.map(build_from_database))
         })
@@ -317,7 +318,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn find_pull_request_by_approve_build<'a>(
         &'a self,
         approve_build: &'a BorsApproveBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + Send + '_>>
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>>
     {
         Box::pin(async move {
             let result = crate::select_pr::SelectPullRequest::exec_with_approve_build_one(
@@ -333,7 +334,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn find_pull_request_by_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Option<BorsPullRequest>>> + Send + '_>>
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>>
     {
         Box::pin(async move {
             let result = crate::select_pr::SelectPullRequest::exec_with_try_build_one(
@@ -349,7 +350,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_enqueued_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsEnqueuedPullRequest>>> + Send + '_>>
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsEnqueuedPullRequest>>> + Send + '_>>
     {
         Box::pin(async move {
             let result = crate::select_enqueued_pr::SelectEnqueuedPullRequest::exec_with_repo_many(
@@ -372,7 +373,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         name: &'a GithubRepositoryName,
         github_pr: &'a PullRequest,
         pr_number: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<BorsPullRequest>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<BorsPullRequest>> + Send + '_>> {
         Box::pin(async move {
             let pr = entity::pull_request::ActiveModel {
                 repository: Set(format!("{name}")),
@@ -403,7 +404,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 Err(DbErr::RecordNotInserted) => {
                     // the record is already in the database
                 }
-                Err(error) => return Err(error.into()),
+                Err(error) => return Err(error).into_diagnostic(),
             }
 
             let (pr, approve_build, build) =
@@ -422,7 +423,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_pull_requests_for_repository<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsPullRequest>>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsPullRequest>>> + Send + '_>> {
         Box::pin(async move {
             let pull_requests = crate::select_pr::SelectPullRequest::exec_with_repo_many(
                 &self.connection,
@@ -441,11 +442,12 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
     fn get_repositories(
         &self,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsRepository>>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsRepository>>> + Send + '_>> {
         Box::pin(async move {
             let repositories = entity::repository::Entity::find()
                 .all(&self.connection)
-                .await?;
+                .await
+                .into_diagnostic()?;
 
             Ok(repositories
                 .into_iter()
@@ -457,7 +459,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_workflows_for_approve_build<'a>(
         &'a self,
         approve_build: &'a BorsApproveBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsWorkflow>>> + Send + '_>> {
         Box::pin(async move {
             let workflows = crate::select_workflow::SelectWorkflow::exec_with_approve_build_many(
                 &self.connection,
@@ -477,7 +479,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn get_workflows_for_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<Vec<BorsWorkflow>>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Vec<BorsWorkflow>>> + Send + '_>> {
         Box::pin(async move {
             let workflows = crate::select_workflow::SelectWorkflow::exec_with_try_build_many(
                 &self.connection,
@@ -497,7 +499,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn unapprove_pull_request(
         &self,
         pr: u64,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr as i32),
@@ -506,7 +508,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            model.update(&self.connection).await?;
+            model.update(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -516,7 +518,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &'a self,
         approve_build: &'a BorsApproveBuild,
         status: BorsBuildStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let model = entity::approve_build::ActiveModel {
                 id: Unchanged(approve_build.id),
@@ -524,7 +526,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            model.update(&self.connection).await?;
+            model.update(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -534,7 +536,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &'a self,
         build: &'a BorsBuild,
         status: BorsBuildStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let model = entity::build::ActiveModel {
                 id: Unchanged(build.id),
@@ -542,7 +544,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            model.update(&self.connection).await?;
+            model.update(&self.connection).await.into_diagnostic()?;
 
             Ok(())
         })
@@ -552,7 +554,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         &self,
         run_id: u64,
         status: BorsWorkflowStatus,
-    ) -> Pin<Box<dyn Future<Output = hartex_eyre::Result<()>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<()>> + Send + '_>> {
         Box::pin(async move {
             let workflow = entity::workflow::ActiveModel {
                 status: Set(workflow_status_to_database(status).to_string()),
@@ -563,7 +565,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .set(workflow)
                 .filter(entity::workflow::Column::RunId.eq(run_id))
                 .exec(&self.connection)
-                .await?;
+                .await.into_diagnostic()?;
 
             Ok(())
         })

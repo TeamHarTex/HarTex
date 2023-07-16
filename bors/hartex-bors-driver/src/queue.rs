@@ -40,7 +40,7 @@ pub async fn queue_processor(
     state: &GithubBorsState,
     mut rx: Receiver<BorsQueueEvent>,
     database: Box<dyn DatabaseClient>,
-) -> hartex_eyre::Result<()> {
+) -> miette::Result<()> {
     while let Some(event) = rx.recv().await {
         match event {
             BorsQueueEvent::PullRequestEnqueued(name, id) => {
