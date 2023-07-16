@@ -32,6 +32,7 @@ use hartex_bors_core::DatabaseClient;
 use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::GithubRepositoryClient;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use octocrab::models::workflows::Run;
 use tokio::sync::mpsc::Sender;
 
@@ -282,14 +283,16 @@ Pushing {} to {}..."#,
                 repository.repository.clone(),
                 pull_request.id,
             ))
-            .await?;
+            .await
+            .into_diagnostic()?;
     } else {
         sender
             .send(BorsQueueEvent::PullRequestFailed(
                 repository.repository.clone(),
                 pull_request.id,
             ))
-            .await?;
+            .await
+            .into_diagnostic()?;
     }
 
     Ok(())
