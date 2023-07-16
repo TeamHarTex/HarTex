@@ -1,5 +1,43 @@
 # Version 0.2.0 (2023-07-16)
 
+> **1** contributor made contributions to this release
+
+> **16** commits since 2023-07-16
+
+## API Backend
+
+- no major changes
+
+## Bors Buildbot
+
+- fixed compiler errors
+
+## Buildsystem
+
+- no major changes
+
+## Database Queries
+
+- no major changes
+
+## Discord Frontend
+
+- no major changes
+
+## Localization Infrastructure
+
+- no major changes
+
+## Rust Utilities
+
+- no major changes
+
+## Web Frontend
+
+- no major changes
+
+# Version 0.2.0 (2023-07-16)
+
 > **5** contributors made contributions to this release
 
 > **388** commits since 2023-06-14

@@ -1,6 +1,6 @@
 [package]
 name = "hartex_backend_models_v1"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = """
 Backend routes (API v1)
