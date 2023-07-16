@@ -699,7 +699,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_driver"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "dotenvy",
  "hartex_backend_ratelimiter",
@@ -715,14 +715,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_backend_models_v1"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
  "sqlx",
@@ -730,7 +730,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_ratelimiter"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "governor",
@@ -741,7 +741,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_routes_v1"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "governor",
  "hartex_backend_models_v1",
@@ -755,14 +755,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_status_util"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde_json",
 ]
 
 [[package]]
 name = "hartex_errors"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "miette",
  "thiserror",
@@ -770,7 +770,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "log",
  "log4rs",
