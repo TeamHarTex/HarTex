@@ -37,7 +37,8 @@ use std::path::PathBuf;
 
 use fluent_bundle::FluentError;
 use fluent_bundle::FluentResource;
-use hartex_eyre::eyre::Report;
+use miette::IntoDiagnostic;
+use miette::Report;
 use unic_langid::langid;
 use unic_langid::LanguageIdentifier;
 
@@ -49,7 +50,7 @@ pub mod types;
 pub fn create_bundle(
     requested: Option<LanguageIdentifier>,
     path: &[&str],
-) -> hartex_eyre::Result<types::LocalizationBundle> {
+) -> miette::Result<types::LocalizationBundle> {
     let fallback = langid!("en-US");
     let locale = requested.unwrap_or(fallback);
     let mut bundle = types::LocalizationBundle::new_concurrent(vec![locale.clone()]);
@@ -61,7 +62,7 @@ pub fn create_bundle(
     path.iter()
         .for_each(|segment| localizations_root.push(segment));
 
-    if !localizations_root.try_exists()? {
+    if !localizations_root.try_exists().into_diagnostic()? {
         return Err(Report::msg(format!(
             "localization root not found: {}",
             localizations_root.to_string_lossy()
@@ -75,19 +76,21 @@ pub fn create_bundle(
         )));
     }
 
-    for result in localizations_root.read_dir()? {
-        let entry = result?;
+    for result in localizations_root.read_dir().into_diagnostic()? {
+        let entry = result.into_diagnostic()?;
         let path = entry.path();
         if path.extension().and_then(OsStr::to_str) != Some("ftl") {
             continue;
         }
 
-        let resource_string = fs::read_to_string(path)?;
+        let resource_string = fs::read_to_string(path).into_diagnostic()?;
         let resource = FluentResource::try_new(resource_string)
-            .map_err(|(_, errors)| errors.last().unwrap().clone())?;
+            .map_err(|(_, errors)| errors.last().unwrap().clone())
+            .into_diagnostic()?;
         bundle
             .add_resource(resource)
-            .map_err(|errors| errors.last().unwrap().clone())?;
+            .map_err(|errors| errors.last().unwrap().clone())
+            .into_diagnostic()?;
     }
 
     Ok(bundle)
@@ -97,10 +100,10 @@ pub fn create_bundle(
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::needless_pass_by_value)]
-pub fn handle_errors(errors: Vec<FluentError>) -> hartex_eyre::Result<()> {
+pub fn handle_errors(errors: Vec<FluentError>) -> miette::Result<()> {
     if errors.is_empty() {
         return Ok(());
     }
 
-    Err(Report::new(errors[0].clone()))
+    Err(errors[0].clone()).into_diagnostic()
 }

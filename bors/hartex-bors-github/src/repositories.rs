@@ -44,7 +44,10 @@ async fn create_repository_state(
     repository: Repository,
 ) -> miette::Result<RepositoryState> {
     let Some(owner) = &repository.owner else {
-        return Err(Report::msg(format!("repository {} has no owner", &repository.name)));
+        return Err(Report::msg(format!(
+            "repository {} has no owner",
+            &repository.name
+        )));
     };
 
     let name = GithubRepositoryName::new(&owner.login, &repository.name);
@@ -68,12 +71,20 @@ pub(crate) async fn load_repositories(
     client: &Octocrab,
     database: &SeaORMDatabaseClient,
 ) -> miette::Result<RepositoryMap> {
-    let installations = client.apps().installations().send().await.into_diagnostic()?;
+    let installations = client
+        .apps()
+        .installations()
+        .send()
+        .await
+        .into_diagnostic()?;
 
     let mut hashmap = HashMap::new();
     for installation in installations {
         if let Some(ref url) = installation.repositories_url {
-            let (installation_client, _) = client.installation_and_token(installation.id).await.into_diagnostic()?;
+            let (installation_client, _) = client
+                .installation_and_token(installation.id)
+                .await
+                .into_diagnostic()?;
 
             match installation_client
                 .get::<InstallationRepositories, _, ()>(url, None)

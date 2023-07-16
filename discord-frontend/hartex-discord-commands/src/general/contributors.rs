@@ -36,6 +36,7 @@ use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
+use miette::IntoDiagnostic;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -45,7 +46,7 @@ use hartex_localization_macros::bundle_get;
 pub struct Contributors;
 
 impl Command for Contributors {
-    async fn execute(&self, interaction: Interaction) -> hartex_eyre::Result<()> {
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
@@ -88,7 +89,8 @@ impl Command for Contributors {
                 .build(),
             )
             .footer(EmbedFooterBuilder::new(contributors_embed_footer))
-            .validate()?
+            .validate()
+            .into_diagnostic()?
             .build();
 
         interaction_client
@@ -104,7 +106,8 @@ impl Command for Contributors {
                     ),
                 },
             )
-            .await?;
+            .await
+            .into_diagnostic()?;
 
         Ok(())
     }

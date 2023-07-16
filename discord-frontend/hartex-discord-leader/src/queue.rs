@@ -34,6 +34,7 @@ use hartex_discord_core::tokio::sync::oneshot;
 use hartex_discord_core::tokio::sync::oneshot::Sender;
 use hartex_discord_core::tokio::time::sleep;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 
 /// A local queue.
 #[allow(clippy::module_name_repetitions)]
@@ -114,10 +115,17 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
 }
 
 /// Obtain a queue to use for the startup of the bot.
-pub fn obtain() -> hartex_eyre::Result<Arc<dyn Queue>> {
-    let concurrency = std::env::var("SHARD_CONCURRENCY")?.parse::<usize>()?;
-    let wait =
-        Duration::from_secs(std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS")?.parse::<u64>()?);
+pub fn obtain() -> miette::Result<Arc<dyn Queue>> {
+    let concurrency = std::env::var("SHARD_CONCURRENCY")
+        .into_diagnostic()?
+        .parse::<usize>()
+        .into_diagnostic()?;
+    let wait = Duration::from_secs(
+        std::env::var("SHARD_CONCURRENCY_WAIT_SECONDS")
+            .into_diagnostic()?
+            .parse::<u64>()
+            .into_diagnostic()?,
+    );
 
     if concurrency == 1 {
         Ok(Arc::new(LocalQueue::new(wait)))

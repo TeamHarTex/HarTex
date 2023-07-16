@@ -123,7 +123,8 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             .peekable();
 
         let Some(tree_first) = iter.next() else {
-            attr.span().unwrap()
+            attr.span()
+                .unwrap()
                 .error("expected parameter; found none")
                 .emit();
 
@@ -131,7 +132,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
         };
 
         let TokenTree::Ident(ident) = tree_first.clone() else {
-            tree_first.span().unwrap()
+            tree_first
+                .span()
+                .unwrap()
                 .error(format!("expected identifier; found `{tree_first}`"))
                 .emit();
 
@@ -159,7 +162,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
         }
 
         let Some(tree_next) = iter.next() else {
-            tree_first.span().unwrap()
+            tree_first
+                .span()
+                .unwrap()
                 .error("unexpected end of parameter")
                 .emit();
 
@@ -167,7 +172,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
         };
 
         let TokenTree::Punct(punct) = tree_next.clone() else {
-            tree_next.span().unwrap()
+            tree_next
+                .span()
+                .unwrap()
                 .error(format!("expected punctuation; found `{tree_next}` instead"))
                 .emit();
 
@@ -185,7 +192,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
         }
 
         let Some(tree_next) = iter.next() else {
-            tree_next.span().unwrap()
+            tree_next
+                .span()
+                .unwrap()
                 .error("unexpected end of parameter")
                 .emit();
 
@@ -194,7 +203,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
 
         if LITERAL_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Literal(literal) = tree_next.clone() else {
-                tree_next.span().unwrap()
+                tree_next
+                    .span()
+                    .unwrap()
                     .error(format!("expected literal; found `{tree_next}`"))
                     .emit();
 
@@ -204,8 +215,12 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             match ident.to_string().as_str() {
                 "command_type" => {
                     let Ok(command_type) = literal.to_string().parse::<u8>() else {
-                        literal.span().unwrap()
-                            .error(format!("expected integer literal; found literal `{literal}`"))
+                        literal
+                            .span()
+                            .unwrap()
+                            .error(format!(
+                                "expected integer literal; found literal `{literal}`"
+                            ))
                             .emit();
 
                         return None;
@@ -248,7 +263,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             }
         } else if BOOLEAN_PARAMETERS.contains(&ident.to_string().as_str()) {
             let TokenTree::Ident(ident_bool) = tree_next.clone() else {
-                tree_next.span().unwrap()
+                tree_next
+                    .span()
+                    .unwrap()
                     .error(format!("expected identifier; found `{tree_next}`"))
                     .emit();
 
@@ -258,7 +275,9 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
             match ident.to_string().as_str() {
                 "interaction_only" => {
                     let Ok(_) = ident_bool.to_string().parse::<bool>() else {
-                        ident_bool.span().unwrap()
+                        ident_bool
+                            .span()
+                            .unwrap()
                             .error(format!("expected boolean; found `{ident_bool}`"))
                             .emit();
 

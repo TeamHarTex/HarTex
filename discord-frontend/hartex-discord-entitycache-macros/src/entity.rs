@@ -123,9 +123,7 @@ pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2>
             }
 
             let TokenTree::Ident(ident) = tree.clone().unwrap() else {
-                tree.span().unwrap()
-                    .error("expected identifier")
-                    .emit();
+                tree.span().unwrap().error("expected identifier").emit();
 
                 return None;
             };

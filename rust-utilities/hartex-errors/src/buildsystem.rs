@@ -38,20 +38,16 @@ pub struct ProjectNotFound {
 }
 
 #[derive(Debug, Diagnostic, Error)]
-#[diagnostic(
-    code("E0003: buildsystem::jsts_test_not_supported")
-)]
+#[diagnostic(code("E0003: buildsystem::jsts_test_not_supported"))]
 #[error("testing is currently not supported for jsts projects")]
 pub struct JstsTestNotSupported {
     #[source_code]
     pub src: String,
     #[label("this is a jsts project")]
-    pub err_span: SourceSpan
+    pub err_span: SourceSpan,
 }
 
 #[derive(Debug, Diagnostic, Error)]
-#[diagnostic(
-    code("E0004: buildsystem::abnormal_termination")
-)]
+#[diagnostic(code("E0004: buildsystem::abnormal_termination"))]
 #[error("the process terminated abnormally")]
 pub struct AbnormalTermination;
