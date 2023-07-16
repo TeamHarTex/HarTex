@@ -1,8 +1,8 @@
 # Version 0.2.0 (2023-07-16)
 
-> **e** contributors made contributions to this release
+> **5** contributors made contributions to this release
 
-> **f** commits since 2023-06-14
+> **388** commits since 2023-06-14
 
 ## API Backend
 
@@ -23,6 +23,7 @@
 
 - added support for passing multiple projects to individual commands
 - changed the algorithm to not bail out when a project is not found; skipping it and continue instead
+- migrated from eyre to miette for error reporting
 - updated rust version to 1.73.0
 
 ## Database Queries
