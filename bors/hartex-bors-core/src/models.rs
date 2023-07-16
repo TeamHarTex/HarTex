@@ -26,7 +26,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
 
-use hartex_eyre::eyre::Report;
+use miette::Report;
 use octocrab::models::Repository;
 use octocrab::models::RunId;
 use sea_orm::prelude::DateTimeUtc;
@@ -212,7 +212,7 @@ impl GithubRepositoryName {
         }
     }
 
-    pub fn new_from_repository(repository: Repository) -> hartex_eyre::Result<Self> {
+    pub fn new_from_repository(repository: Repository) -> miette::Result<Self> {
         let name = &repository.name;
         let Some(owner) = repository.owner
             .as_ref()
@@ -223,7 +223,7 @@ impl GithubRepositoryName {
         Ok(Self::new(owner, name))
     }
 
-    pub fn new_from_string(string: String) -> hartex_eyre::Result<Self> {
+    pub fn new_from_string(string: String) -> miette::Result<Self> {
         let parts = string.split('/').collect::<Vec<_>>();
 
         if parts.len() != 2 {

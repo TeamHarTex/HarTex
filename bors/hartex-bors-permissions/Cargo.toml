@@ -16,11 +16,11 @@ hartex_backend_models_v1 = { path = "../../api-backend/hartex-backend-models-v1"
 
 hartex_bors_core = { path = "../hartex-bors-core" }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 hyper = { version = "0.14.27", features = ["client", "http2"] }
-serde_json = "1.0.103"
+miette = "5.9.0"
+serde_json = "1.0.102"
 tokio = { version = "1.29.1", features = ["sync"] }
 
 [features]

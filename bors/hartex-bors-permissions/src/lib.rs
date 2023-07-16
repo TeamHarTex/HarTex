@@ -49,7 +49,7 @@ pub struct BackendApiPermissionResolver {
 
 impl BackendApiPermissionResolver {
     /// Load the permission resolver
-    pub async fn load(repository: GithubRepositoryName) -> hartex_eyre::Result<Self> {
+    pub async fn load(repository: GithubRepositoryName) -> miette::Result<Self> {
         let permissions = permissions::load(&repository).await?;
 
         Ok(Self {
