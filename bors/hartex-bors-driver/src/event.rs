@@ -33,6 +33,7 @@ use hartex_bors_core::RepositoryClient;
 use hartex_bors_github::webhook::WebhookRepository;
 use hartex_bors_github::GithubBorsState;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use miette::Report;
 use octocrab::models::events::payload::IssueCommentEventAction;
 use octocrab::models::events::payload::IssueCommentEventPayload;
@@ -68,7 +69,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Resul
     match &*event_type {
         "issue_comment" => {
             let deserialized =
-                serde_json::from_value::<IssueCommentEventPayload>(event_json.clone())?;
+                serde_json::from_value::<IssueCommentEventPayload>(event_json.clone()).into_diagnostic()?;
 
             if deserialized.action != IssueCommentEventAction::Created {
                 return Err(Report::msg("non created issue comments are ignored"));
@@ -82,7 +83,7 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Resul
                 return Err(Report::msg("comments on closed pull requests are ignored"));
             }
 
-            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+            let repository = serde_json::from_value::<WebhookRepository>(event_json).into_diagnostic()?;
 
             Ok(BorsEvent {
                 kind: BorsEventKind::IssueComment(deserialized),
@@ -91,13 +92,13 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Resul
         }
         "pull_request" => {
             let deserialized =
-                serde_json::from_value::<PullRequestEventPayload>(event_json.clone())?;
+                serde_json::from_value::<PullRequestEventPayload>(event_json.clone()).into_diagnostic()?;
 
             if deserialized.action != PullRequestEventAction::Opened {
                 return Err(Report::msg("non opened pull requests are ignored"));
             }
 
-            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+            let repository = serde_json::from_value::<WebhookRepository>(event_json).into_diagnostic()?;
 
             Ok(BorsEvent {
                 kind: BorsEventKind::PullRequest(deserialized),
@@ -106,8 +107,8 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Resul
         }
         "workflow_run" => {
             let deserialized =
-                serde_json::from_value::<WorkflowRunEventPayload>(event_json.clone())?;
-            let repository = serde_json::from_value::<WebhookRepository>(event_json)?;
+                serde_json::from_value::<WorkflowRunEventPayload>(event_json.clone()).into_diagnostic()?;
+            let repository = serde_json::from_value::<WebhookRepository>(event_json).into_diagnostic()?;
 
             Ok(BorsEvent {
                 kind: BorsEventKind::WorkflowRun(deserialized),
@@ -154,7 +155,8 @@ pub async fn handle_event(
                     .client()
                     .issues(repository_name.owner(), repository_name.repository())
                     .add_labels(payload.number, &[String::from("waiting-on-review")])
-                    .await?;
+                    .await
+                    .into_diagnostic()?;
 
                 database
                     .get_or_create_pull_request(
