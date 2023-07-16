@@ -5,7 +5,7 @@ edition = "2021"
 description = """
 Errors in HarTex. All are displayed in the console but some may appear on Discord.
 """
-license = "AGPL-3.0-only"
+license = "AGPL-3.0-or-later"
 rust-version = "1.73.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
