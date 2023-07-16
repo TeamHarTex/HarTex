@@ -54,8 +54,12 @@ pub async fn try_cancel_command<C: RepositoryClient>(
         .await?;
     let Some(build) = pull_request
         .try_build
-        .and_then(|build| (build.status == BorsBuildStatus::Pending).then_some(build)) else {
-        repository.client.post_comment(pr, ":warning: There is currently no try build in progress.").await?;
+        .and_then(|build| (build.status == BorsBuildStatus::Pending).then_some(build))
+    else {
+        repository
+            .client
+            .post_comment(pr, ":warning: There is currently no try build in progress.")
+            .await?;
 
         return Ok(());
     };

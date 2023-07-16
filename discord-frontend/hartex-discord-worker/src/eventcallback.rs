@@ -52,8 +52,9 @@ pub async fn invoke(event: GatewayEvent, shard: u8) -> miette::Result<()> {
                         ready.version
                     );
 
-                let mut connection =
-                    PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await.into_diagnostic()?;
+                let mut connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap())
+                    .await
+                    .into_diagnostic()?;
                 let statement = connection
                         .prepare_with(
                             include_str!("../../../database-queries/start-timestamp/insert-into-on-conflict-update.sql"),

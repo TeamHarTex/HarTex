@@ -65,24 +65,32 @@ fn actual_main() -> miette::Result<()> {
         match error {
             Error::LineParse(content, index) => Err(dotenv::LineParseError {
                 src: content,
-                err_span: (index - 1, 1).into()
+                err_span: (index - 1, 1).into(),
             })?,
-            _ => todo!()
+            _ => todo!(),
         }
     }
 
     log::trace!("constructing runtime");
-    let runtime = Builder::new_multi_thread().enable_all().build().into_diagnostic()?;
+    let runtime = Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .into_diagnostic()?;
 
     log::trace!("loading github application state");
-    let app_id = env::var("APP_ID").into_diagnostic()?.parse::<u64>().into_diagnostic()?;
+    let app_id = env::var("APP_ID")
+        .into_diagnostic()?
+        .parse::<u64>()
+        .into_diagnostic()?;
 
     log::trace!("initializing sqlite database");
     let database = runtime.block_on(hartex_bors_database::initialize_database(true))?;
 
     let mut private_key_file = File::open("../bors-private-key.pem").into_diagnostic()?;
     let mut private_key = String::new();
-    private_key_file.read_to_string(&mut private_key).into_diagnostic()?;
+    private_key_file
+        .read_to_string(&mut private_key)
+        .into_diagnostic()?;
 
     let client = SeaORMDatabaseClient::new(database);
     let (state, rx) = runtime.block_on(GithubBorsState::load(

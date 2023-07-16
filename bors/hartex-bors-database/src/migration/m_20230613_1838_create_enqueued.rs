@@ -40,16 +40,8 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(
-                        ColumnDef::new(Enqueued::Repository)
-                            .string()
-                            .not_null()
-                    )
-                    .col(
-                        ColumnDef::new(Enqueued::PullRequest)
-                            .integer()
-                            .not_null()
-                    )
+                    .col(ColumnDef::new(Enqueued::Repository).string().not_null())
+                    .col(ColumnDef::new(Enqueued::PullRequest).integer().not_null())
                     .to_owned(),
             )
             .await

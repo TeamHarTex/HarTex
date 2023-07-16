@@ -33,7 +33,6 @@ use std::env;
 use std::time::Duration;
 
 use futures_util::future;
-use miette::IntoDiagnostic;
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
@@ -44,6 +43,7 @@ use hartex_discord_core::tokio::time;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
@@ -73,7 +73,10 @@ pub async fn main() -> miette::Result<()> {
         .into_diagnostic()?;
 
     log::trace!("building clusters");
-    let num_shards = env::var("NUM_SHARDS").into_diagnostic()?.parse::<u32>().into_diagnostic()?;
+    let num_shards = env::var("NUM_SHARDS")
+        .into_diagnostic()?
+        .parse::<u32>()
+        .into_diagnostic()?;
     let queue = queue::obtain()?;
     let mut shards = shards::obtain(num_shards, &queue)?;
 

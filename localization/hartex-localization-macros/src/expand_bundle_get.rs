@@ -44,10 +44,7 @@ pub fn expand_bundle_get(parameters: Parameters) -> Option<TokenStream2> {
     let bundle = parameters.bundle_variable_name;
     let key = parameters.key_name_lit;
     let Lit::Str(_) = key else {
-        key.span()
-            .unwrap()
-            .error("expected string literal")
-            .emit();
+        key.span().unwrap().error("expected string literal").emit();
 
         return None;
     };

@@ -214,10 +214,10 @@ impl GithubRepositoryName {
 
     pub fn new_from_repository(repository: Repository) -> miette::Result<Self> {
         let name = &repository.name;
-        let Some(owner) = repository.owner
-            .as_ref()
-            .map(|author| &author.login) else {
-            return Err(Report::msg(format!("repository {name} seemingly has no owner")));
+        let Some(owner) = repository.owner.as_ref().map(|author| &author.login) else {
+            return Err(Report::msg(format!(
+                "repository {name} seemingly has no owner"
+            )));
         };
 
         Ok(Self::new(owner, name))

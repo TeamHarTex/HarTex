@@ -107,7 +107,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
             let tx = self.connection.begin().await.into_diagnostic()?;
             let approve_build = entity::approve_build::Entity::insert(approve_build)
                 .exec_with_returning(&tx)
-                .await.into_diagnostic()?;
+                .await
+                .into_diagnostic()?;
 
             let pr_model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr.id),
@@ -139,7 +140,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
             let tx = self.connection.begin().await.into_diagnostic()?;
             let build = entity::build::Entity::insert(build)
                 .exec_with_returning(&tx)
-                .await.into_diagnostic()?;
+                .await
+                .into_diagnostic()?;
 
             let pr_model = entity::pull_request::ActiveModel {
                 id: Unchanged(pr.id),
@@ -236,10 +238,14 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .filter(entity::enqueued_pull_request::Column::Repository.eq(format!("{name}")))
                 .filter(entity::enqueued_pull_request::Column::PullRequest.eq(pr))
                 .one(&self.connection)
-                .await.into_diagnostic()?;
+                .await
+                .into_diagnostic()?;
 
             if let Some(enqueued_pr) = option {
-                enqueued_pr.delete(&self.connection).await.into_diagnostic()?;
+                enqueued_pr
+                    .delete(&self.connection)
+                    .await
+                    .into_diagnostic()?;
             }
 
             Ok(())
@@ -258,7 +264,10 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 ..Default::default()
             };
 
-            enqueued_pr.insert(&self.connection).await.into_diagnostic()?;
+            enqueued_pr
+                .insert(&self.connection)
+                .await
+                .into_diagnostic()?;
 
             Ok(())
         })
@@ -269,8 +278,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         repository: &'a GithubRepositoryName,
         branch: String,
         commit_sha: String,
-    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsApproveBuild>>> + Send + '_>>
-    {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsApproveBuild>>> + Send + '_>> {
         Box::pin(async move {
             let approve_build = entity::approve_build::Entity::find()
                 .filter(
@@ -284,7 +292,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                         .and(entity::approve_build::Column::CommitHash.eq(commit_sha)),
                 )
                 .one(&self.connection)
-                .await.into_diagnostic()?;
+                .await
+                .into_diagnostic()?;
 
             Ok(approve_build.map(approve_build_from_database))
         })
@@ -309,7 +318,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                         .and(entity::build::Column::CommitHash.eq(commit_sha)),
                 )
                 .one(&self.connection)
-                .await.into_diagnostic()?;
+                .await
+                .into_diagnostic()?;
 
             Ok(build.map(build_from_database))
         })
@@ -318,8 +328,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn find_pull_request_by_approve_build<'a>(
         &'a self,
         approve_build: &'a BorsApproveBuild,
-    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>>
-    {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>> {
         Box::pin(async move {
             let result = crate::select_pr::SelectPullRequest::exec_with_approve_build_one(
                 &self.connection,
@@ -334,8 +343,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
     fn find_pull_request_by_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
-    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>>
-    {
+    ) -> Pin<Box<dyn Future<Output = miette::Result<Option<BorsPullRequest>>> + Send + '_>> {
         Box::pin(async move {
             let result = crate::select_pr::SelectPullRequest::exec_with_try_build_one(
                 &self.connection,
@@ -565,7 +573,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
                 .set(workflow)
                 .filter(entity::workflow::Column::RunId.eq(run_id))
                 .exec(&self.connection)
-                .await.into_diagnostic()?;
+                .await
+                .into_diagnostic()?;
 
             Ok(())
         })
