@@ -1003,8 +1003,8 @@ name = "hartex_localization_core"
 version = "0.3.0"
 dependencies = [
  "fluent-bundle",
- "hartex_eyre",
  "intl-memoizer",
+ "miette",
  "unic-langid",
 ]
 
