@@ -21,3 +21,4 @@
 #
 
 serverinfo-embed-title=Information about {$serverName}
+serverinfo-embed-id-field-name=Server ID
