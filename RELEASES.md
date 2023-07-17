@@ -1,4 +1,42 @@
-# Version 0.2.0 (2023-07-16)
+# Version 0.3.0 (2023-08-23)
+
+> **x** contributor made contributions to this release
+
+> **y** commits since 2023-07-16
+
+## API Backend
+
+- no major changes
+
+## Bors Buildbot
+
+- migrated from eyre to miette for error reporting
+
+## Buildsystem
+
+- migrated from eyre to miette for error reporting
+
+## Database Queries
+
+- no major changes
+
+## Discord Frontend
+
+- migrated from eyre to miette for error reporting
+
+## Localization Infrastructure
+
+- migrated from eyre to miette for error reporting
+
+## Rust Utilities
+
+- removed hartex-eyre
+
+## Web Frontend
+
+- no major changes
+
+# Version 0.2.1 (2023-07-16)
 
 > **1** contributor made contributions to this release
 
