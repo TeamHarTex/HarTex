@@ -189,16 +189,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eyre"
-version = "0.6.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c2b6b5a29c02cdc822728b7d7b8ae1bab3e3b05d44522770ddd49722eeac7eb"
-dependencies = [
- "indenter",
- "once_cell",
-]
-
-[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -230,20 +220,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_eyre"
-version = "0.3.0"
-dependencies = [
- "backtrace",
- "eyre",
-]
-
-[[package]]
 name = "hartexbuild_driver"
 version = "0.3.0"
 dependencies = [
  "clap",
  "hartex_errors",
- "hartex_eyre",
  "hartexbuild_hartexfile",
  "miette",
 ]
@@ -317,12 +298,6 @@ name = "hermit-abi"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "443144c8cdadd93ebf52ddb4056d257f5b52c04d3c804e657d19eb73fc33668b"
-
-[[package]]
-name = "indenter"
-version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce23b50ad8242c51a442f3ff322d56b02f08852c77e4c0b4d3fd684abc89c683"
 
 [[package]]
 name = "indexmap"

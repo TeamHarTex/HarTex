@@ -27,7 +27,7 @@ use clap::ArgMatches;
 use crate::commands;
 
 /// Handle the command line with argument matches.
-pub async fn handle(matches: ArgMatches) -> hartex_eyre::Result<()> {
+pub async fn handle(matches: ArgMatches) -> miette::Result<()> {
     match matches.subcommand() {
         Some(("list-from-discord", subcommand_matches)) => {
             commands::list_from_discord::list_from_discord_command(subcommand_matches.clone()).await
