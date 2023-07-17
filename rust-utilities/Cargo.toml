@@ -2,7 +2,6 @@
 members = [
     "hartex-discord-utils",
     "hartex-errors",
-    "hartex-eyre",
     "hartex-kafka-utils",
     "hartex-log",
 ]
