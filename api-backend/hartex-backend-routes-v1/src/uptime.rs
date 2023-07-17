@@ -32,6 +32,7 @@ use hartex_backend_status_util::StatusFns;
 use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
+use serde_json::json;
 use serde_json::Value;
 use sqlx::postgres::PgConnection;
 use sqlx::postgres::PgTypeInfo;
@@ -83,5 +84,12 @@ pub async fn v1_post_uptime(
         return (Status::NotFound, StatusFns::not_found());
     }
 
-    todo!()
+    (
+        Status::Ok,
+        json!({
+            "code": 200,
+            "message": "ok",
+            "data": response_res.unwrap(),
+        }),
+    )
 }

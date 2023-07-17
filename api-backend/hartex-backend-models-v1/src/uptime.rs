@@ -52,7 +52,7 @@ impl<'a> UptimeQuery<'a> {
 }
 
 /// A response to an uptime query.
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct UptimeResponse {
     start_timestamp: u128,
 }
