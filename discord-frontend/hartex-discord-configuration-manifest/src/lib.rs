@@ -25,10 +25,10 @@
 //! Specifies the configuration manifest in models that can be serialized from and deserialized
 //! into.
 
-use hartex_eyre::eyre::Report;
 use hcl::eval::Context;
 use hcl::eval::FuncDef;
 use hcl::eval::ParamType;
+use miette::IntoDiagnostic;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -52,7 +52,7 @@ pub struct Configuration {
     pub plugins: plugins::Plugins,
 }
 
-pub fn deserialize_config(source_hcl: &str) -> hartex_eyre::Result<Configuration> {
+pub fn deserialize_config(source_hcl: &str) -> miette::Result<Configuration> {
     let mut context = Context::new();
     context.declare_func(
         "rgb",
@@ -61,5 +61,5 @@ pub fn deserialize_config(source_hcl: &str) -> hartex_eyre::Result<Configuration
             .build(appearance::hcl_rgb_function),
     );
 
-    hcl::eval::from_str::<Configuration>(source_hcl, &context).map_err(Report::new)
+    hcl::eval::from_str::<Configuration>(source_hcl, &context).into_diagnostic()
 }
