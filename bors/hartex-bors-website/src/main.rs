@@ -36,6 +36,7 @@ use async_lock::OnceCell;
 use handlebars::Handlebars;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use rocket::config::Config;
 use rocket::routes;
 
@@ -56,8 +57,7 @@ pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
 
 /// The entry point.
 #[rocket::main]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     log::trace!("initializing handlebars instance");
@@ -78,10 +78,11 @@ pub async fn main() -> hartex_eyre::Result<()> {
     let rocket = rocket::custom(Config::figment().merge(("port", 9000)))
         .mount("/", routes![index::index, queue::queue])
         .ignite()
-        .await?;
+        .await
+        .into_diagnostic()?;
 
     log::debug!("launching rocket");
-    rocket.launch().await?;
+    rocket.launch().await.into_diagnostic()?;
 
     Ok(())
 }

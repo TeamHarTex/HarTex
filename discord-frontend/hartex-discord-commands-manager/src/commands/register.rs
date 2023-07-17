@@ -27,7 +27,6 @@ use std::str;
 
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
@@ -38,13 +37,15 @@ use hyper::Client;
 use hyper::Method;
 use hyper::Request;
 use hyper_trust_dns::TrustDnsResolver;
+use miette::IntoDiagnostic;
+use miette::Report;
 use walkdir::WalkDir;
 
 /// Register a command.
 #[allow(clippy::module_name_repetitions)]
-pub async fn register_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
+pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
     log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
+    dotenvy::dotenv().into_diagnostic()?;
 
     log::trace!("searching for the command specification");
     log::warn!(
@@ -66,8 +67,8 @@ pub async fn register_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
             break None;
         }
 
-        let entry = option.unwrap()?;
-        if entry.metadata()?.is_dir() {
+        let entry = option.unwrap().into_diagnostic()?;
+        if entry.metadata().into_diagnostic()?.is_dir() {
             continue;
         }
 
@@ -82,16 +83,16 @@ pub async fn register_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
         )));
     }
 
-    let mut file = File::open(entry_option.unwrap().path())?;
+    let mut file = File::open(entry_option.unwrap().path()).into_diagnostic()?;
     let mut json = String::new();
-    file.read_to_string(&mut json)?;
+    file.read_to_string(&mut json).into_diagnostic()?;
 
     let client =
         Client::builder().build(TrustDnsResolver::default().into_native_tls_https_connector());
 
-    let application_id = env::var("APPLICATION_ID")?;
+    let application_id = env::var("APPLICATION_ID").into_diagnostic()?;
 
-    let mut token = env::var("BOT_TOKEN")?;
+    let mut token = env::var("BOT_TOKEN").into_diagnostic()?;
     if !token.starts_with("Bot ") {
         token.insert_str(0, "Bot ");
     }
@@ -108,12 +109,13 @@ pub async fn register_command(matches: ArgMatches) -> hartex_eyre::Result<()> {
             USER_AGENT,
             "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
         )
-        .body(json)?;
-    let mut response = client.request(request).await?;
+        .body(json)
+        .into_diagnostic()?;
+    let mut response = client.request(request).await.into_diagnostic()?;
     if !response.status().is_success() {
         let mut full = String::new();
         while let Some(result) = response.body_mut().data().await {
-            full.push_str(str::from_utf8(&result?)?);
+            full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
         }
         log::error!("unsuccessful HTTP request, response: {full}");
 

@@ -557,16 +557,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 
 [[package]]
-name = "eyre"
-version = "0.6.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c2b6b5a29c02cdc822728b7d7b8ae1bab3e3b05d44522770ddd49722eeac7eb"
-dependencies = [
- "indenter",
- "once_cell",
-]
-
-[[package]]
 name = "fastrand"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -827,10 +817,10 @@ version = "0.3.0"
 dependencies = [
  "clap",
  "hartex_discord_core",
- "hartex_eyre",
  "hartex_log",
  "hyper",
  "hyper-trust-dns",
+ "miette",
  "owo-colors",
  "serde",
  "serde_json",
@@ -852,8 +842,8 @@ dependencies = [
 name = "hartex_discord_configuration_manifest"
 version = "0.3.0"
 dependencies = [
- "hartex_eyre",
  "hcl-rs",
+ "miette",
  "serde",
 ]
 
@@ -981,14 +971,6 @@ dependencies = [
  "sqlx",
  "time",
  "tracing",
-]
-
-[[package]]
-name = "hartex_eyre"
-version = "0.3.0"
-dependencies = [
- "backtrace",
- "eyre",
 ]
 
 [[package]]
@@ -1287,12 +1269,6 @@ dependencies = [
  "unicode-bidi",
  "unicode-normalization",
 ]
-
-[[package]]
-name = "indenter"
-version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce23b50ad8242c51a442f3ff322d56b02f08852c77e4c0b4d3fd684abc89c683"
 
 [[package]]
 name = "indexmap"

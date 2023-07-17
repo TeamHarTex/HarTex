@@ -13,12 +13,12 @@ rust-version = "1.73.0"
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment"] }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 clap = "4.3.12"
 hyper = { version = "0.14.27", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
+miette = { version = "5.9.0", features = ["fancy"] }
 owo-colors = "3.5.0"
 serde = { version = "1.0.171", features = ["derive"] }
 serde_json = "1.0.103"
