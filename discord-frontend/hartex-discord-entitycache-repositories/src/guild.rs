@@ -67,10 +67,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
         if let Some(icon) = entity.icon {
             connection
-                .set(format!("guild:{}:icon", entity.id), icon)
+                .set(format!("guild:{}:icon", entity.id), icon.to_string())
                 .await?;
         }
-        
+
         connection
             .set(format!("guild:{}:id", entity.id), entity.id.get())
             .await?;
