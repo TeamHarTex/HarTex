@@ -14,11 +14,11 @@ rust-version = "1.73.0"
 hartex_bors_core = { path = "../hartex-bors-core" }
 hartex_bors_database = { path = "../hartex-bors-database" }
 
-hartex_eyre = { path = "../../rust-utilities/hartex-eyre" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 async-lock = "2.7.0"
 handlebars = { version = "5.0.0-beta.2", features = ["dir_source"] }
+miette = { version = "5.9.0", features = ["fancy"] }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 serde = { version = "1.0.171", features = ["derive"] }
 
