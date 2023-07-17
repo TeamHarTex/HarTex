@@ -25,11 +25,13 @@
 use hartex_discord_core::discord::model::guild::Guild;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::Entity;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Entity)]
 pub struct GuildEntity {
+    pub icon: Option<ImageHash>,
     #[entity(id)]
     pub id: Id<GuildMarker>,
     pub name: String,
@@ -38,6 +40,7 @@ pub struct GuildEntity {
 impl From<Guild> for GuildEntity {
     fn from(guild: Guild) -> Self {
         Self {
+            icon: guild.icon,
             id: guild.id,
             name: guild.name,
         }
