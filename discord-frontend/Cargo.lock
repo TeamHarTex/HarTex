@@ -827,10 +827,10 @@ version = "0.3.0"
 dependencies = [
  "clap",
  "hartex_discord_core",
- "hartex_eyre",
  "hartex_log",
  "hyper",
  "hyper-trust-dns",
+ "miette",
  "owo-colors",
  "serde",
  "serde_json",

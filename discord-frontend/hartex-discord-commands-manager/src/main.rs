@@ -43,8 +43,7 @@ mod model;
 
 /// Maneger entry point.
 #[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> hartex_eyre::Result<()> {
-    hartex_eyre::initialize()?;
+pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     let command = Command::new("cmdmgr")
