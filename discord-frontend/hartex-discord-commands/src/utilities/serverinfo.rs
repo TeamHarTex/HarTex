@@ -45,8 +45,9 @@ impl Command for ServerInfo {
             &["discord-frontend", "commands"],
         )?;
 
-        let server_name = CachedGuildRepository.get(interaction.guild_id.unwrap()).await.into_diagnostic()?;
-        bundle_get_args!(bundle."serverinfo-embed-title": message, out [serverinfo_embed_title, errors], args ["serverName" to server_name]);
+        let guild = CachedGuildRepository.get(interaction.guild_id.unwrap()).await.into_diagnostic()?;
+        let name = guild.name;
+        bundle_get_args!(bundle."serverinfo-embed-title": message, out [serverinfo_embed_title, errors], args ["serverName" to name]);
         handle_errors(errors)?;
 
         let _ = EmbedBuilder::new()
