@@ -24,25 +24,25 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_discord_core::dotenvy;
-use hartex_eyre::eyre::Report;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use walkdir::WalkDir;
 
 use crate::model::command::CommandManagerCommand;
 
 /// List commands from filesystem.
 #[allow(clippy::module_name_repetitions)]
-pub fn list_from_fs_command() -> hartex_eyre::Result<()> {
+pub fn list_from_fs_command() -> miette::Result<()> {
     log::trace!("loading environment variables");
-    dotenvy::dotenv()?;
+    dotenvy::dotenv().into_diagnostic()?;
 
     log::trace!("reading specification directory");
     log::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
     for result in WalkDir::new("hartex-discord-commands-spec").same_file_system(true) {
-        let entry = result?;
-        if entry.metadata()?.is_dir() {
+        let entry = result.into_diagnostic()?;
+        if entry.metadata().into_diagnostic()?.is_dir() {
             continue;
         }
 
@@ -55,7 +55,7 @@ pub fn list_from_fs_command() -> hartex_eyre::Result<()> {
         }
 
         let mut buffer = String::new();
-        File::open(entry.path())?.read_to_string(&mut buffer)?;
+        File::open(entry.path()).into_diagnostic()?.read_to_string(&mut buffer).into_diagnostic()?;
 
         let result = serde_json::from_str::<CommandManagerCommand>(&buffer);
         let command = match result {
@@ -65,7 +65,7 @@ pub fn list_from_fs_command() -> hartex_eyre::Result<()> {
                     "deserialization failed for file: {}",
                     entry.path().to_str().unwrap()
                 );
-                println!("{:?}", Report::new(error));
+                println!("{:?}", Err::<(), serde_json::Error>(error).into_diagnostic());
                 log::warn!("skipping file due to above error");
 
                 continue;
