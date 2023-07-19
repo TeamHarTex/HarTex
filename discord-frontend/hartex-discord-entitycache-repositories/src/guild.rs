@@ -25,6 +25,7 @@
 use std::env;
 
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -41,6 +42,9 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
+        let icon = connection
+            .get::<String, Option<String>>(format!("guild:{id}:icon"))
+            .await?;
         let id = connection
             .get::<String, u64>(format!("guild:{id}:id"))
             .await?;
@@ -49,6 +53,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .await?;
 
         Ok(GuildEntity {
+            icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
             name,
         })
@@ -59,6 +64,12 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
+
+        if let Some(icon) = entity.icon {
+            connection
+                .set(format!("guild:{}:icon", entity.id), icon.to_string())
+                .await?;
+        }
 
         connection
             .set(format!("guild:{}:id", entity.id), entity.id.get())

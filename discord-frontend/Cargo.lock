@@ -777,11 +777,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_cdn"
+version = "0.3.0"
+dependencies = [
+ "hartex_discord_core",
+]
+
+[[package]]
 name = "hartex_discord_commands"
 version = "0.3.0"
 dependencies = [
  "hartex_backend_models",
  "hartex_backend_models_v1",
+ "hartex_discord_cdn",
  "hartex_discord_commands_core",
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
