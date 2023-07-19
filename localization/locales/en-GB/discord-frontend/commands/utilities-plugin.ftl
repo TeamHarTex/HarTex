@@ -20,4 +20,4 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
-serverinfo-embed-title=Information about {$serverName}
+serverinfo-embed-id-field-name=Server ID
