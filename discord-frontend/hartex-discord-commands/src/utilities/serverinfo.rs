@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -28,6 +29,7 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
+use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
@@ -52,15 +54,26 @@ impl Command for ServerInfo {
             &["discord-frontend", "commands"],
         )?;
 
-        let guild = CachedGuildRepository.get(interaction.guild_id.unwrap()).await.into_diagnostic()?;
+        let guild = CachedGuildRepository
+            .get(interaction.guild_id.unwrap())
+            .await
+            .into_diagnostic()?;
 
         bundle_get!(bundle."serverinfo-embed-id-field-name": message, out [serverinfo_embed_id_field_name, errors]);
         handle_errors(errors)?;
 
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
-            .author(EmbedAuthorBuilder::new(guild.name))
-            .field(EmbedFieldBuilder::new(serverinfo_embed_id_field_name, guild.id.get().to_string()))
+            .author(
+                EmbedAuthorBuilder::new(guild.name).icon_url(
+                    ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
+                        .into_diagnostic()?,
+                ),
+            )
+            .field(EmbedFieldBuilder::new(
+                serverinfo_embed_id_field_name,
+                guild.id.get().to_string(),
+            ))
             .validate()
             .into_diagnostic()?
             .build();

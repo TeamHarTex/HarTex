@@ -19,3 +19,24 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::util::ImageHash;
+
+pub struct Cdn;
+
+impl Cdn {
+    pub const URL_BASE: &'static str = "https://cdn.discordapp.com/";
+
+    pub fn guild_icon(guild_id: Id<GuildMarker>, icon: ImageHash) -> String {
+        let mut url = format!("{URL_BASE}icons/{guild_id}/{icon}");
+        if icon.is_animated() {
+            url.push_str(".gif");
+        } else {
+            url.push_str(".png");
+        }
+
+        url
+    }
+}
