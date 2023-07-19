@@ -61,6 +61,8 @@ impl Command for ServerInfo {
 
         bundle_get!(bundle."serverinfo-embed-id-field-name": message, out [serverinfo_embed_id_field_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-name-field-name": message, out [serverinfo_embed_name_field_name, errors]);
+        handle_errors(errors)?;
 
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
@@ -73,7 +75,11 @@ impl Command for ServerInfo {
             .field(EmbedFieldBuilder::new(
                 serverinfo_embed_id_field_name,
                 guild.id.get().to_string(),
-            ))
+            ).inline())
+            .field(EmbedFieldBuilder::new(
+                serverinfo_embed_name_field_name,
+                guild.id.get().to_string(),
+            ).inline())
             .validate()
             .into_diagnostic()?
             .build();

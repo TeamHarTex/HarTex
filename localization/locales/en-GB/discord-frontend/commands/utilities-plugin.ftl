@@ -21,3 +21,4 @@
 #
 
 serverinfo-embed-id-field-name=Server ID
+serverinfo-embed-name-field-name=Server Name
