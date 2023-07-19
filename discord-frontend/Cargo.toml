@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "hartex-discord-cdn",
     "hartex-discord-commands",
     "hartex-discord-commands-core",
     "hartex-discord-commands-macros",
