@@ -64,21 +64,24 @@ impl Command for ServerInfo {
         bundle_get!(bundle."serverinfo-embed-name-field-name": message, out [serverinfo_embed_name_field_name, errors]);
         handle_errors(errors)?;
 
+        let mut author = EmbedAuthorBuilder::new(guild.name.clone());
+        if guild.icon.is_some() {
+            author = author.icon_url(
+                ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
+                    .into_diagnostic()?
+            );
+        }
+
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
-            .author(
-                EmbedAuthorBuilder::new(guild.name).icon_url(
-                    ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
-                        .into_diagnostic()?,
-                ),
-            )
+            .author(author)
             .field(EmbedFieldBuilder::new(
                 serverinfo_embed_id_field_name,
                 guild.id.get().to_string(),
             ).inline())
             .field(EmbedFieldBuilder::new(
                 serverinfo_embed_name_field_name,
-                guild.id.get().to_string(),
+                guild.name,
             ).inline())
             .validate()
             .into_diagnostic()?
