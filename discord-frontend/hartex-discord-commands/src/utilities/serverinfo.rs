@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use chrono::{LocalResult, TimeZone, Utc};
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
@@ -31,6 +32,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_utils::CLIENT;
@@ -74,6 +76,12 @@ impl Command for ServerInfo {
             );
         }
 
+        let timestamp = Utc.timestamp_millis_opt(guild.id.timestamp());
+        let timestamp_str = match timestamp {
+            LocalResult::Single(dt) => dt.to_rfc2822(),
+            _ => "unknown",
+        };
+
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
             .author(author)
@@ -87,7 +95,7 @@ impl Command for ServerInfo {
             ).inline())
             .field(EmbedFieldBuilder::new(
                 serverinfo_embed_creation_timestamp_field_name,
-                ""
+                timestamp_str,
             ).inline())
             .validate()
             .into_diagnostic()?
