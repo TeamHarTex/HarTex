@@ -59,9 +59,11 @@ impl Command for ServerInfo {
             .await
             .into_diagnostic()?;
 
+        bundle_get!(bundle."serverinfo-embed-name-field-name": message, out [serverinfo_embed_name_field_name, errors]);
+        handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-id-field-name": message, out [serverinfo_embed_id_field_name, errors]);
         handle_errors(errors)?;
-        bundle_get!(bundle."serverinfo-embed-name-field-name": message, out [serverinfo_embed_name_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-creation-timestamp-field-name": message, out [serverinfo_embed_creation_timestamp_field_name, errors]);
         handle_errors(errors)?;
 
         let mut author = EmbedAuthorBuilder::new(guild.name.clone());
@@ -76,12 +78,16 @@ impl Command for ServerInfo {
             .color(0x41_A0_DE)
             .author(author)
             .field(EmbedFieldBuilder::new(
+                serverinfo_embed_name_field_name,
+                guild.name,
+            ).inline())
+            .field(EmbedFieldBuilder::new(
                 serverinfo_embed_id_field_name,
                 guild.id.get().to_string(),
             ).inline())
             .field(EmbedFieldBuilder::new(
-                serverinfo_embed_name_field_name,
-                guild.name,
+                serverinfo_embed_creation_timestamp_field_name,
+                ""
             ).inline())
             .validate()
             .into_diagnostic()?
