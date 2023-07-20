@@ -20,6 +20,6 @@ async-lock = "2.7.0"
 handlebars = { version = "5.0.0-beta.2", features = ["dir_source"] }
 miette = { version = "5.10.0", features = ["fancy"] }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
-serde = { version = "1.0.172", features = ["derive"] }
+serde = { version = "1.0.173", features = ["derive"] }
 
 [features]
