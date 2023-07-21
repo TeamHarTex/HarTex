@@ -51,11 +51,15 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let name = connection
             .get::<String, String>(format!("guild:{id}:name"))
             .await?;
+        let owner_id = connection
+            .get::<String, u64>(format!("guild:{id}:owner_id"))
+            .await?;
 
         Ok(GuildEntity {
             icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
             name,
+            owner_id: Id::new_checked(owner_id).expect("id is zero (unexpected and unreachable)"),
         })
     }
 
@@ -76,6 +80,9 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .await?;
         connection
             .set(format!("guild:{}:name", entity.id), entity.name)
+            .await?;
+        connection
+            .set(format!("guild:{}:owner_id", entity.id), entity.owner_id.get())
             .await?;
 
         Ok(())

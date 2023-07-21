@@ -24,6 +24,7 @@
 
 use hartex_discord_core::discord::model::guild::Guild;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::Entity;
@@ -35,6 +36,7 @@ pub struct GuildEntity {
     #[entity(id)]
     pub id: Id<GuildMarker>,
     pub name: String,
+    pub owner_id: Id<UserMarker>,
 }
 
 impl From<Guild> for GuildEntity {
@@ -43,6 +45,7 @@ impl From<Guild> for GuildEntity {
             icon: guild.icon,
             id: guild.id,
             name: guild.name,
+            owner_id: guild.owner_id,
         }
     }
 }
