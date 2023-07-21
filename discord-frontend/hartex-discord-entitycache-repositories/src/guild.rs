@@ -22,8 +22,10 @@
 
 //! # Guild Repository
 
+use std::borrow::Cow;
 use std::env;
 
+use hartex_discord_core::discord::model::guild::GuildFeature;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -42,6 +44,12 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
+        let features = connection
+            .get::<String, String>(format!("guild:{id}:features"))
+            .await?
+            .split(",")
+            .map(|str| GuildFeature::from(str.to_string()))
+            .collect::<Vec<_>>();
         let icon = connection
             .get::<String, Option<String>>(format!("guild:{id}:icon"))
             .await?;
@@ -56,6 +64,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .await?;
 
         Ok(GuildEntity {
+            features,
             icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
             name,
@@ -75,6 +84,9 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 .await?;
         }
 
+        connection
+            .set(format!("guild:{}:features", entity.id), entity.features.into_iter().map(|feature| feature.into()).collect::<Vec<Cow<'static, str>>>().join(","))
+            .await?;
         connection
             .set(format!("guild:{}:id", entity.id), entity.id.get())
             .await?;
