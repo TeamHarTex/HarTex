@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::borrow::Cow;
+
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
@@ -69,21 +71,40 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-generalinfo-owner-subfield-name": message, out [serverinfo_embed_generalinfo_owner_subfield_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-generalinfo-enabled-features-subfield-name": message, out [serverinfo_embed_generalinfo_enabled_features_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-field-name": message, out [serverinfo_embed_channelinfo_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-textchannels-subfield-name": message, out [serverinfo_embed_channelinfo_textchannels_subfield_name, errors]);
+        handle_errors(errors)?;
 
+        let features =
+            guild.features.into_iter().map(|feature| feature.into()).collect::<Vec<Cow<'static, str>>>()
+                .iter().map(|str| format!("\n- `{str}`"))
+                .collect::<String>();
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
             .field(EmbedFieldBuilder::new(
                 format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
                 format!(
-                    "{} {}\n{} {}\n{} {}",
+                    "{} {}\n{} {}\n{} {}\n{} {}",
                     serverinfo_embed_generalinfo_id_subfield_name.to_string().discord_bold(),
                     guild.id.to_string().discord_inline_code(),
                     serverinfo_embed_generalinfo_created_subfield_name.to_string().discord_bold(),
                     (guild.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
                     serverinfo_embed_generalinfo_owner_subfield_name.to_string().discord_bold(),
                     guild.owner_id.mention(),
+                    serverinfo_embed_generalinfo_enabled_features_subfield_name.to_string().discord_bold(),
+                    features,
                 ),
-            ).inline())
+            ))
+            .field(EmbedFieldBuilder::new(
+                format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
+                format!(
+                    "{} <:textChannel:1131860470488375316>:",
+                    serverinfo_embed_channelinfo_textchannels_subfield_name.to_string().discord_bold(),
+                ),
+            ))
             .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
             .title(guild.name)
             .validate()
