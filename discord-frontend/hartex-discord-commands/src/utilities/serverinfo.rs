@@ -82,6 +82,8 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-voicechannels-subfield-name": message, out [serverinfo_embed_channelinfo_voicechannels_subfield_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-announcementchannels-subfield-name": message, out [serverinfo_embed_channelinfo_announcementchannels_subfield_name, errors]);
+        handle_errors(errors)?;
 
         let channels = CLIENT
             .guild_channels(guild.id)
@@ -101,6 +103,10 @@ impl Command for ServerInfo {
         let voice_count = channels
             .iter()
             .filter(|channel| channel.kind == ChannelType::GuildVoice)
+            .count();
+        let announcement_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildAnnouncement)
             .count();
 
         let mut features_vec = guild
@@ -132,7 +138,7 @@ impl Command for ServerInfo {
             .field(EmbedFieldBuilder::new(
                 format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
                 format!(
-                    "{} {} {}\n{} {} {}\n{} {} {}",
+                    "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
                     "<:category:1131915276980600872>",
                     serverinfo_embed_channelinfo_categories_subfield_name.to_string().discord_bold(),
                     category_count,
@@ -142,6 +148,9 @@ impl Command for ServerInfo {
                     "<:voiceChannel:1131908258945318923>",
                     serverinfo_embed_channelinfo_voicechannels_subfield_name.to_string().discord_bold(),
                     voice_count,
+                    "<:announcement:1131923904324186296>",
+                    serverinfo_embed_channelinfo_announcementchannels_subfield_name.to_string().discord_bold(),
+                    announcement_count,
                 ),
             ))
             .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
