@@ -27,3 +27,4 @@ serverinfo-embed-generalinfo-owner-subfield-name=Owner:
 serverinfo-embed-generalinfo-enabled-features-subfield-name=Enabled Features:
 serverinfo-embed-channelinfo-field-name=Channel Information
 serverinfo-embed-channelinfo-textchannels-subfield-name=Text Channels
+serverinfo-embed-channelinfo-voicechannels-subfield-name=Voice Channels
