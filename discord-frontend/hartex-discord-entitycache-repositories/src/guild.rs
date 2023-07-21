@@ -85,7 +85,15 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         }
 
         connection
-            .set(format!("guild:{}:features", entity.id), entity.features.into_iter().map(|feature| feature.into()).collect::<Vec<Cow<'static, str>>>().join(","))
+            .set(
+                format!("guild:{}:features", entity.id),
+                entity
+                    .features
+                    .into_iter()
+                    .map(|feature| feature.into())
+                    .collect::<Vec<Cow<'static, str>>>()
+                    .join(","),
+            )
             .await?;
         connection
             .set(format!("guild:{}:id", entity.id), entity.id.get())
@@ -94,7 +102,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .set(format!("guild:{}:name", entity.id), entity.name)
             .await?;
         connection
-            .set(format!("guild:{}:owner_id", entity.id), entity.owner_id.get())
+            .set(
+                format!("guild:{}:owner_id", entity.id),
+                entity.owner_id.get(),
+            )
             .await?;
 
         Ok(())
