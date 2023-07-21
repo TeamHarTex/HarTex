@@ -18,6 +18,7 @@ socket2 = { git = "https://github.com/rust-lang/socket2.git", branch = "v0.4.x" 
 tokio = { version = "1.29.1", optional = true }
 twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-http = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
+twilight-mention = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-util = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 
@@ -27,6 +28,7 @@ async-runtime = ["dep:tokio", "tokio?/macros", "tokio?/rt", "tokio?/rt-multi-thr
 async-signal = ["tokio?/signal"]
 discord-gateway = ["dep:twilight-gateway"]
 discord-http = ["dep:twilight-http"]
+discord-mention = ["dep:twilight-mention"]
 discord-model = ["dep:twilight-model"]
 discord-util = ["dep:twilight-util"]
 discord-util-builder = ["twilight-util?/builder"]

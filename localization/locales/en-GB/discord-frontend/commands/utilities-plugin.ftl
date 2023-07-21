@@ -20,6 +20,15 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
-serverinfo-embed-id-field-name=Server ID
-serverinfo-embed-name-field-name=Server Name
-serverinfo-embed-creation-timestamp-field-name=Server Creation Timestamp
+serverinfo-embed-generalinfo-field-name=General Information
+serverinfo-embed-generalinfo-id-subfield-name=ID:
+serverinfo-embed-generalinfo-created-subfield-name=Created:
+serverinfo-embed-generalinfo-owner-subfield-name=Owner:
+serverinfo-embed-generalinfo-enabled-features-subfield-name=Enabled Features:
+serverinfo-embed-channelinfo-field-name=Channel Information
+serverinfo-embed-channelinfo-categories-subfield-name=Categories:
+serverinfo-embed-channelinfo-textchannels-subfield-name=Text Channels:
+serverinfo-embed-channelinfo-voicechannels-subfield-name=Voice Channels:
+serverinfo-embed-channelinfo-announcementchannels-subfield-name=Announcement Channels:
+serverinfo-embed-channelinfo-stagechannels-subfield-name=Stage Channels:
+serverinfo-embed-channelinfo-forumchannels-subfield-name=Forum Channels:

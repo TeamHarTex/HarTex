@@ -22,8 +22,10 @@
 
 //! # Guild Repository
 
+use std::borrow::Cow;
 use std::env;
 
+use hartex_discord_core::discord::model::guild::GuildFeature;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -42,6 +44,12 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
+        let features = connection
+            .get::<String, String>(format!("guild:{id}:features"))
+            .await?
+            .split(",")
+            .map(|str| GuildFeature::from(str.to_string()))
+            .collect::<Vec<_>>();
         let icon = connection
             .get::<String, Option<String>>(format!("guild:{id}:icon"))
             .await?;
@@ -51,11 +59,16 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let name = connection
             .get::<String, String>(format!("guild:{id}:name"))
             .await?;
+        let owner_id = connection
+            .get::<String, u64>(format!("guild:{id}:owner_id"))
+            .await?;
 
         Ok(GuildEntity {
+            features,
             icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
             name,
+            owner_id: Id::new_checked(owner_id).expect("id is zero (unexpected and unreachable)"),
         })
     }
 
@@ -72,10 +85,27 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         }
 
         connection
+            .set(
+                format!("guild:{}:features", entity.id),
+                entity
+                    .features
+                    .into_iter()
+                    .map(|feature| feature.into())
+                    .collect::<Vec<Cow<'static, str>>>()
+                    .join(","),
+            )
+            .await?;
+        connection
             .set(format!("guild:{}:id", entity.id), entity.id.get())
             .await?;
         connection
             .set(format!("guild:{}:name", entity.id), entity.name)
+            .await?;
+        connection
+            .set(
+                format!("guild:{}:owner_id", entity.id),
+                entity.owner_id.get(),
+            )
             .await?;
 
         Ok(())
