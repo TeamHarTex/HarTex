@@ -27,6 +27,7 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::channel::ChannelType;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
@@ -77,6 +78,11 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-textchannels-subfield-name": message, out [serverinfo_embed_channelinfo_textchannels_subfield_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-voicechannel-subfield-name": message, out [serverinfo_embed_channelinfo_voicechannels_subfield_name, errors]);
+        handle_errors(errors)?;
+
+        let channels = CLIENT.guild_channels(guild.id).await.into_diagnostic()?.model().await.into_diagnostic()?;
+        let text_count = channels.iter().filter(|channel| channel.kind == ChannelType::GuildText).count();
 
         let features =
             guild.features.into_iter().map(|feature| feature.into()).collect::<Vec<Cow<'static, str>>>()
@@ -101,8 +107,10 @@ impl Command for ServerInfo {
             .field(EmbedFieldBuilder::new(
                 format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
                 format!(
-                    "{} <:textChannel:1131860470488375316>:",
+                    "{} <:textChannel:1131860470488375316> : {}\n{} <:voiceChannel:1131908258945318923> :",
                     serverinfo_embed_channelinfo_textchannels_subfield_name.to_string().discord_bold(),
+                    text_count,
+                    serverinfo_embed_channelinfo_voicechannels_subfield_name.to_string().discord_bold(),
                 ),
             ))
             .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
