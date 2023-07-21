@@ -84,6 +84,8 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-announcementchannels-subfield-name": message, out [serverinfo_embed_channelinfo_announcementchannels_subfield_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-stagechannels-subfield-name": message, out [serverinfo_embed_channelinfo_stagechannels_subfield_name, errors]);
+        handle_errors(errors)?;
 
         let channels = CLIENT
             .guild_channels(guild.id)
@@ -107,6 +109,10 @@ impl Command for ServerInfo {
         let announcement_count = channels
             .iter()
             .filter(|channel| channel.kind == ChannelType::GuildAnnouncement)
+            .count();
+        let stage_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildStageVoice)
             .count();
 
         let mut features_vec = guild
@@ -138,7 +144,7 @@ impl Command for ServerInfo {
             .field(EmbedFieldBuilder::new(
                 format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
                 format!(
-                    "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
+                    "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
                     "<:category:1131915276980600872>",
                     serverinfo_embed_channelinfo_categories_subfield_name.to_string().discord_bold(),
                     category_count,
@@ -151,6 +157,9 @@ impl Command for ServerInfo {
                     "<:announcement:1131923904324186296>",
                     serverinfo_embed_channelinfo_announcementchannels_subfield_name.to_string().discord_bold(),
                     announcement_count,
+                    "<:stage:1131926172574421032>",
+                    serverinfo_embed_channelinfo_stagechannels_subfield_name.to_string().discord_bold(),
+                    stage_count,
                 ),
             ))
             .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
