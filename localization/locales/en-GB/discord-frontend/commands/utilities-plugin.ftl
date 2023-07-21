@@ -31,3 +31,4 @@ serverinfo-embed-channelinfo-textchannels-subfield-name=Text Channels:
 serverinfo-embed-channelinfo-voicechannels-subfield-name=Voice Channels:
 serverinfo-embed-channelinfo-announcementchannels-subfield-name=Announcement Channels:
 serverinfo-embed-channelinfo-stagechannels-subfield-name=Stage Channels:
+serverinfo-embed-channelinfo-forumchannels-subfield-name=Forum Channels:
