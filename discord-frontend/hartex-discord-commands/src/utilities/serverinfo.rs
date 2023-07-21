@@ -20,14 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use chrono::{LocalResult, TimeZone, Utc};
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
+use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
@@ -35,6 +34,7 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
@@ -61,42 +61,31 @@ impl Command for ServerInfo {
             .await
             .into_diagnostic()?;
 
-        bundle_get!(bundle."serverinfo-embed-name-field-name": message, out [serverinfo_embed_name_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-generalinfo-field-name": message, out [serverinfo_embed_generalinfo_field_name, errors]);
         handle_errors(errors)?;
-        bundle_get!(bundle."serverinfo-embed-id-field-name": message, out [serverinfo_embed_id_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-generalinfo-id-subfield-name": message, out [serverinfo_embed_generalinfo_id_subfield_name, errors]);
         handle_errors(errors)?;
-        bundle_get!(bundle."serverinfo-embed-creation-timestamp-field-name": message, out [serverinfo_embed_creation_timestamp_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-generalinfo-created-subfield-name": message, out [serverinfo_embed_generalinfo_created_subfield_name, errors]);
         handle_errors(errors)?;
-
-        let mut author = EmbedAuthorBuilder::new(guild.name.clone());
-        if guild.icon.is_some() {
-            author = author.icon_url(
-                ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
-                    .into_diagnostic()?
-            );
-        }
-
-        let timestamp = Utc.timestamp_millis_opt(guild.id.timestamp());
-        let timestamp_str = match timestamp {
-            LocalResult::Single(dt) => dt.to_rfc2822(),
-            _ => "unknown".to_string(),
-        };
+        bundle_get!(bundle."serverinfo-embed-generalinfo-owner-subfield-name": message, out [serverinfo_embed_generalinfo_owner_subfield_name, errors]);
+        handle_errors(errors)?;
 
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
-            .author(author)
             .field(EmbedFieldBuilder::new(
-                serverinfo_embed_name_field_name,
-                guild.name,
+                format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
+                format!(
+                    "{} {}\n{} {}\n{} {}",
+                    serverinfo_embed_generalinfo_id_subfield_name.to_string().discord_bold(),
+                    guild.id.to_string().discord_inline_code(),
+                    serverinfo_embed_generalinfo_created_subfield_name.to_string().discord_bold(),
+                    (guild.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
+                    serverinfo_embed_generalinfo_owner_subfield_name.to_string().discord_bold(),
+                    guild.owner_id.mention(),
+                ),
             ).inline())
-            .field(EmbedFieldBuilder::new(
-                serverinfo_embed_id_field_name,
-                guild.id.get().to_string(),
-            ).inline())
-            .field(EmbedFieldBuilder::new(
-                serverinfo_embed_creation_timestamp_field_name,
-                timestamp_str,
-            ))
+            .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
+            .title(guild.name)
             .validate()
             .into_diagnostic()?
             .build();

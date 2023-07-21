@@ -26,6 +26,8 @@
 pub use twilight_gateway as gateway;
 #[cfg(feature = "discord-http")]
 pub use twilight_http as http;
+#[cfg(feature = "discord-mention")]
+pub use twilight_mention as mention;
 #[cfg(feature = "discord-model")]
 pub use twilight_model as model;
 #[cfg(feature = "discord-util")]

@@ -20,26 +20,42 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Discord Utilities
-//!
-//! Various useful Discord utilities.
+pub trait MarkdownStyle {
+    fn discord_bold(self) -> Self;
 
-use std::env;
-use std::ops::Deref;
+    fn discord_inline_code(self) -> Self;
 
-use hartex_discord_core::discord::http::Client;
-use once_cell::sync::Lazy;
+    fn discord_italic(self) -> Self;
 
-pub mod markdown;
+    fn discord_relative_timestamp(self) -> Self;
 
-/// A proxied Discord HTTP cliemt.
-pub static CLIENT: Lazy<Client> = Lazy::new(|| {
-    Client::builder()
-        .token(TOKEN.deref().to_owned())
-        .proxy(String::from("localhost:3000"), true)
-        .ratelimiter(None)
-        .build()
-});
+    fn discord_underline(self) -> Self;
 
-/// The bot token used for logging in to the Discord gateway and sending HTTP requests.
-pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());
+    fn discord_strikethrough(self) -> Self;
+}
+
+impl MarkdownStyle for String {
+    fn discord_bold(self) -> Self {
+        format!("**{}**", self)
+    }
+
+    fn discord_inline_code(self) -> Self {
+        format!("`{}`", self)
+    }
+
+    fn discord_italic(self) -> Self {
+        format!("*{}*", self)
+    }
+
+    fn discord_relative_timestamp(self) -> Self {
+        format!("<t:{}:R>", self)
+    }
+
+    fn discord_underline(self) -> Self {
+        format!("__{}__", self)
+    }
+
+    fn discord_strikethrough(self) -> Self {
+        format!("~~{}~~", self)
+    }
+}

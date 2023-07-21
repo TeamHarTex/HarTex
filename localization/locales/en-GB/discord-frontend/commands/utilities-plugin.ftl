@@ -20,6 +20,7 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
-serverinfo-embed-id-field-name=Server ID
-serverinfo-embed-name-field-name=Server Name
-serverinfo-embed-creation-timestamp-field-name=Server Creation Timestamp
+serverinfo-embed-generalinfo-field-name=General Information
+serverinfo-embed-generalinfo-id-subfield-name=ID:
+serverinfo-embed-generalinfo-created-subfield-name=Created:
+serverinfo-embed-generalinfo-owner-subfield-name=Owner:
