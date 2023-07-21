@@ -296,10 +296,7 @@ checksum = "ec837a71355b28f6556dbd569b37b3f363091c0bd4b2e735674521b4c5fd9bc5"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
- "js-sys",
  "num-traits",
- "time 0.1.45",
- "wasm-bindgen",
  "winapi",
 ]
 
@@ -730,7 +727,7 @@ checksum = "be4136b2a15dd319360be1c07d9933517ccf0be8f16bf62a3bee4f0d618df427"
 dependencies = [
  "cfg-if",
  "libc",
- "wasi 0.11.0+wasi-snapshot-preview1",
+ "wasi",
 ]
 
 [[package]]
@@ -790,7 +787,6 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.3.0"
 dependencies = [
- "chrono",
  "hartex_backend_models",
  "hartex_backend_models_v1",
  "hartex_discord_cdn",
@@ -880,6 +876,7 @@ dependencies = [
  "tokio",
  "twilight-gateway",
  "twilight-http",
+ "twilight-mention",
  "twilight-model",
  "twilight-util",
 ]
@@ -983,7 +980,7 @@ dependencies = [
  "serde_json",
  "serde_scan",
  "sqlx",
- "time 0.3.23",
+ "time",
  "tracing",
 ]
 
@@ -1589,7 +1586,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "927a765cd3fc26206e66b296465fa9d3e5ab003e651c1b3c060e7956d96b19d2"
 dependencies = [
  "libc",
- "wasi 0.11.0+wasi-snapshot-preview1",
+ "wasi",
  "windows-sys",
 ]
 
@@ -2618,17 +2615,6 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.1.45"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b797afad3f312d1c66a56d11d0316f916356d11bd158fbc6ca6389ff6bf805a"
-dependencies = [
- "libc",
- "wasi 0.10.0+wasi-snapshot-preview1",
- "winapi",
-]
-
-[[package]]
-name = "time"
 version = "0.3.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59e399c068f43a5d116fedaf73b203fa4f9c519f17e2b34f63221d3792f81446"
@@ -2931,7 +2917,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "bitflags 2.3.3",
  "flate2",
@@ -2952,7 +2938,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "tokio",
  "tracing",
@@ -2961,7 +2947,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "brotli",
  "hyper",
@@ -2980,7 +2966,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "futures-util",
  "tokio",
@@ -2988,22 +2974,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "twilight-mention"
+version = "0.15.1"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
+dependencies = [
+ "twilight-model",
+]
+
+[[package]]
 name = "twilight-model"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "bitflags 2.3.3",
  "serde",
  "serde-value",
  "serde_repr",
- "time 0.3.23",
+ "time",
  "tracing",
 ]
 
 [[package]]
 name = "twilight-util"
 version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "twilight-model",
  "twilight-validate",
@@ -3012,7 +3006,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.1"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#20bbe7061a3ef6ee84e0580b7ea6d56e4d6dfc4b"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#7dc7b36511a607f581ddb69dbc4985d2548fd9d0"
 dependencies = [
  "twilight-model",
 ]
@@ -3192,12 +3186,6 @@ checksum = "bfa7760aed19e106de2c7c0b581b509f2f25d3dacaf737cb82ac61bc6d760b0e"
 dependencies = [
  "try-lock",
 ]
-
-[[package]]
-name = "wasi"
-version = "0.10.0+wasi-snapshot-preview1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a143597ca7c7793eff794def352d41792a93c481eb1042423ff7ff72ba2c31f"
 
 [[package]]
 name = "wasi"

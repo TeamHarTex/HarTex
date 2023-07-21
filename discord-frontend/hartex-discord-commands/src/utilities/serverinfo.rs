@@ -20,14 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use chrono::{LocalResult, TimeZone, Utc};
+use std::borrow::Cow;
+
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
+use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::channel::ChannelType;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
@@ -35,6 +37,7 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
@@ -61,42 +64,115 @@ impl Command for ServerInfo {
             .await
             .into_diagnostic()?;
 
-        bundle_get!(bundle."serverinfo-embed-name-field-name": message, out [serverinfo_embed_name_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-generalinfo-field-name": message, out [serverinfo_embed_generalinfo_field_name, errors]);
         handle_errors(errors)?;
-        bundle_get!(bundle."serverinfo-embed-id-field-name": message, out [serverinfo_embed_id_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-generalinfo-id-subfield-name": message, out [serverinfo_embed_generalinfo_id_subfield_name, errors]);
         handle_errors(errors)?;
-        bundle_get!(bundle."serverinfo-embed-creation-timestamp-field-name": message, out [serverinfo_embed_creation_timestamp_field_name, errors]);
+        bundle_get!(bundle."serverinfo-embed-generalinfo-created-subfield-name": message, out [serverinfo_embed_generalinfo_created_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-generalinfo-owner-subfield-name": message, out [serverinfo_embed_generalinfo_owner_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-generalinfo-enabled-features-subfield-name": message, out [serverinfo_embed_generalinfo_enabled_features_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-field-name": message, out [serverinfo_embed_channelinfo_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-categories-subfield-name": message, out [serverinfo_embed_channelinfo_categories_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-textchannels-subfield-name": message, out [serverinfo_embed_channelinfo_textchannels_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-voicechannels-subfield-name": message, out [serverinfo_embed_channelinfo_voicechannels_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-announcementchannels-subfield-name": message, out [serverinfo_embed_channelinfo_announcementchannels_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-stagechannels-subfield-name": message, out [serverinfo_embed_channelinfo_stagechannels_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-forumchannels-subfield-name": message, out [serverinfo_embed_channelinfo_forumchannels_subfield_name, errors]);
         handle_errors(errors)?;
 
-        let mut author = EmbedAuthorBuilder::new(guild.name.clone());
-        if guild.icon.is_some() {
-            author = author.icon_url(
-                ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
-                    .into_diagnostic()?
-            );
-        }
+        let channels = CLIENT
+            .guild_channels(guild.id)
+            .await
+            .into_diagnostic()?
+            .model()
+            .await
+            .into_diagnostic()?;
+        let category_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildCategory)
+            .count();
+        let text_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildText)
+            .count();
+        let voice_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildVoice)
+            .count();
+        let announcement_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildAnnouncement)
+            .count();
+        let stage_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildStageVoice)
+            .count();
+        let forum_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildForum)
+            .count();
 
-        let timestamp = Utc.timestamp_millis_opt(guild.id.timestamp());
-        let timestamp_str = match timestamp {
-            LocalResult::Single(dt) => dt.to_rfc2822(),
-            _ => "unknown".to_string(),
-        };
-
+        let mut features_vec = guild
+            .features
+            .into_iter()
+            .map(|feature| feature.into())
+            .collect::<Vec<Cow<'static, str>>>();
+        features_vec.sort();
+        let features = features_vec
+            .iter()
+            .map(|str| format!("\n- `{str}`"))
+            .collect::<String>();
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
-            .author(author)
             .field(EmbedFieldBuilder::new(
-                serverinfo_embed_name_field_name,
-                guild.name,
-            ).inline())
-            .field(EmbedFieldBuilder::new(
-                serverinfo_embed_id_field_name,
-                guild.id.get().to_string(),
-            ).inline())
-            .field(EmbedFieldBuilder::new(
-                serverinfo_embed_creation_timestamp_field_name,
-                timestamp_str,
+                format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
+                format!(
+                    "{} {}\n{} {}\n{} {}\n{} {}",
+                    serverinfo_embed_generalinfo_id_subfield_name.to_string(),
+                    guild.id.to_string().discord_inline_code(),
+                    serverinfo_embed_generalinfo_created_subfield_name.to_string(),
+                    (guild.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
+                    serverinfo_embed_generalinfo_owner_subfield_name.to_string(),
+                    guild.owner_id.mention(),
+                    serverinfo_embed_generalinfo_enabled_features_subfield_name.to_string(),
+                    features,
+                ),
             ))
+            .field(EmbedFieldBuilder::new(
+                format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
+                format!(
+                    "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
+                    "<:category:1131915276980600872>",
+                    serverinfo_embed_channelinfo_categories_subfield_name.to_string(),
+                    category_count,
+                    "<:textChannel:1131860470488375316>",
+                    serverinfo_embed_channelinfo_textchannels_subfield_name.to_string(),
+                    text_count,
+                    "<:voiceChannel:1131908258945318923>",
+                    serverinfo_embed_channelinfo_voicechannels_subfield_name.to_string(),
+                    voice_count,
+                    "<:announcement:1131923904324186296>",
+                    serverinfo_embed_channelinfo_announcementchannels_subfield_name.to_string(),
+                    announcement_count,
+                    "<:stage:1131926172574421032>",
+                    serverinfo_embed_channelinfo_stagechannels_subfield_name.to_string(),
+                    stage_count,
+                    "<:forum:1131928666176241735>",
+                    serverinfo_embed_channelinfo_forumchannels_subfield_name.to_string(),
+                    forum_count,
+                ),
+            ))
+            .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
+            .title(guild.name)
             .validate()
             .into_diagnostic()?
             .build();
