@@ -137,13 +137,13 @@ impl Command for ServerInfo {
                 format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
                 format!(
                     "{} {}\n{} {}\n{} {}\n{} {}",
-                    serverinfo_embed_generalinfo_id_subfield_name.to_string().discord_bold(),
+                    serverinfo_embed_generalinfo_id_subfield_name.to_string(),
                     guild.id.to_string().discord_inline_code(),
-                    serverinfo_embed_generalinfo_created_subfield_name.to_string().discord_bold(),
+                    serverinfo_embed_generalinfo_created_subfield_name.to_string(),
                     (guild.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
-                    serverinfo_embed_generalinfo_owner_subfield_name.to_string().discord_bold(),
+                    serverinfo_embed_generalinfo_owner_subfield_name.to_string(),
                     guild.owner_id.mention(),
-                    serverinfo_embed_generalinfo_enabled_features_subfield_name.to_string().discord_bold(),
+                    serverinfo_embed_generalinfo_enabled_features_subfield_name.to_string(),
                     features,
                 ),
             ))
