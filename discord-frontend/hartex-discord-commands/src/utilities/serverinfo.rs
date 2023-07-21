@@ -76,6 +76,8 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-field-name": message, out [serverinfo_embed_channelinfo_field_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-channelinfo-categories-subfield-name": message, out [serverinfo_embed_channelinfo_categories_subfield_name, errors]);
+        handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-textchannels-subfield-name": message, out [serverinfo_embed_channelinfo_textchannels_subfield_name, errors]);
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-voicechannels-subfield-name": message, out [serverinfo_embed_channelinfo_voicechannels_subfield_name, errors]);
@@ -88,6 +90,10 @@ impl Command for ServerInfo {
             .model()
             .await
             .into_diagnostic()?;
+        let category_count = channels
+            .iter()
+            .filter(|channel| channel.kind == ChannelType::GuildCategory)
+            .count();
         let text_count = channels
             .iter()
             .filter(|channel| channel.kind == ChannelType::GuildText)
@@ -126,9 +132,14 @@ impl Command for ServerInfo {
             .field(EmbedFieldBuilder::new(
                 format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
                 format!(
-                    "{} <:textChannel:1131860470488375316> : {}\n{} <:voiceChannel:1131908258945318923> : {}",
+                    "{} {} {}\n{} {} {}\n{} {} {}",
+                    "<:category:1131915276980600872>",
+                    serverinfo_embed_channelinfo_categories_subfield_name.to_string().discord_bold(),
+                    category_count,
+                    "<:textChannel:1131860470488375316>",
                     serverinfo_embed_channelinfo_textchannels_subfield_name.to_string().discord_bold(),
                     text_count,
+                    "<:voiceChannel:1131908258945318923>",
                     serverinfo_embed_channelinfo_voicechannels_subfield_name.to_string().discord_bold(),
                     voice_count,
                 ),
