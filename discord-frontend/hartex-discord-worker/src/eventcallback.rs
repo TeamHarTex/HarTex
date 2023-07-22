@@ -21,13 +21,20 @@
  */
 
 use std::env;
+use std::time::Duration;
 
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
+use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
+use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
+use hartex_discord_core::discord::model::gateway::OpCode;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
+use rdkafka::producer::FutureRecord;
+use rdkafka::util::Timeout;
 use sqlx::postgres::PgConnection;
 use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
@@ -46,6 +53,30 @@ pub async fn invoke(event: GatewayEvent, shard: u8, producer: FutureProducer) ->
                 log::trace!(
                     "shard {shard} has received GUILD_CREATE payload from Discord (sequence {seq})"
                 );
+
+                let request = RequestGuildMembers {
+                    d: RequestGuildMembersInfo {
+                        guild_id: guild_create.id,
+                        limit: Some(0),
+                        nonce: None,
+                        presences: Some(true),
+                        query: Some(String::new()),
+                        user_ids: None,
+                    },
+                    op: OpCode::RequestGuildMembers,
+                };
+                let string = serde_json::to_string(&request).into_diagnostic()?;
+                if let Err((error, _)) = producer
+                    .send(
+                        FutureRecord::to(&topic)
+                            .key(&format!("OUTBOUND_REQUEST_GUILD_MEMBERS_{shard}"))
+                            .payload(&string),
+                        Timeout::After(Duration::from_secs(0))
+                    )
+                    .await
+                {
+                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
+                }
 
                 Ok(())
             }
