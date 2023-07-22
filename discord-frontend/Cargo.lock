@@ -989,6 +989,8 @@ dependencies = [
  "hartex_log",
  "miette",
  "rdkafka",
+ "serde_json",
+ "serde_scan",
  "tracing",
 ]
 

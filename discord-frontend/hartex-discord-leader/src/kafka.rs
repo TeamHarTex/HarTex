@@ -21,13 +21,16 @@
  */
 
 use std::env;
+use std::str;
 use std::time::Duration;
 
 use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
-use hartex_discord_core::discord::gateway::Message;
+use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
+use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
+use hartex_discord_core::tokio;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use rdkafka::consumer::StreamConsumer;
@@ -35,7 +38,8 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use hartex_discord_core::tokio;
+use rdkafka::Message;
+use serde_scan::scan;
 
 /// Handle inbound AND outbound messages.
 pub async fn handle(
@@ -44,7 +48,10 @@ pub async fn handle(
     consumer: StreamConsumer,
 ) -> miette::Result<()> {
     let shards = shards.collect::<Vec<_>>();
-    let senders = shards.iter().map(|shard| shard.sender()).collect::<Vec<_>>();
+    let senders = shards
+        .iter()
+        .map(|shard| (shard.id().number(), shard.sender()))
+        .collect::<Vec<_>>();
     let stream = ShardMessageStream::new(shards.into_iter());
 
     tokio::select! {
@@ -57,7 +64,7 @@ pub async fn handle(
 
 async fn inbound(
     mut stream: ShardMessageStream<'_>,
-    producer: FutureProducer
+    producer: FutureProducer,
 ) -> miette::Result<()> {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
@@ -66,8 +73,8 @@ async fn inbound(
             Ok(message) => {
                 let Some(bytes) = (match message {
                     // todo: handle close frame
-                    Message::Close(_) => None,
-                    Message::Text(string) => Some(string.into_bytes()),
+                    GatewayMessage::Close(_) => None,
+                    GatewayMessage::Text(string) => Some(string.into_bytes()),
                 }) else {
                     continue;
                 };
@@ -115,8 +122,34 @@ async fn inbound(
 }
 
 async fn outbound(
-    _: Vec<MessageSender>,
-    _: StreamConsumer,
+    senders: Vec<(u32, MessageSender)>,
+    consumer: StreamConsumer,
 ) -> miette::Result<()> {
-    todo!()
+    while let Some(result) = consumer.stream().next().await {
+        let Ok(message) = result else {
+            let error = result.unwrap_err();
+            println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
+
+            continue;
+        };
+
+        let key = str::from_utf8(message.key().unwrap()).unwrap();
+
+        if key.contains("REQUEST_GUILD_MEMBERS") {
+            let bytes = message.payload().unwrap();
+
+            let command = serde_json::from_slice::<RequestGuildMembers>(bytes).into_diagnostic()?;
+            let scanned: u32 =
+                scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
+
+            let sender = senders
+                .iter()
+                .find(|(shard_id, _)| scanned == *shard_id)
+                .map(|(_, sender)| sender)
+                .unwrap();
+            sender.command(&command).into_diagnostic()?;
+        }
+    }
+
+    Ok(())
 }

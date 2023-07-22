@@ -26,8 +26,8 @@ use std::time::Duration;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
-use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
+use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::OpCode;
 use hartex_log::log;
 use miette::IntoDiagnostic;
@@ -43,7 +43,11 @@ use sqlx::prelude::Statement;
 use sqlx::types::chrono::Utc;
 
 /// Invoke a corresponding event callback for an event,
-pub async fn invoke(event: GatewayEvent, shard: u8, producer: FutureProducer) -> miette::Result<()> {
+pub async fn invoke(
+    event: GatewayEvent,
+    shard: u8,
+    producer: FutureProducer,
+) -> miette::Result<()> {
     let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION").into_diagnostic()?;
 
     #[allow(clippy::collapsible_match)]
@@ -71,7 +75,7 @@ pub async fn invoke(event: GatewayEvent, shard: u8, producer: FutureProducer) ->
                         FutureRecord::to(&topic)
                             .key(&format!("OUTBOUND_REQUEST_GUILD_MEMBERS_{shard}"))
                             .payload(&string),
-                        Timeout::After(Duration::from_secs(0))
+                        Timeout::After(Duration::from_secs(0)),
                     )
                     .await
                 {
@@ -79,6 +83,9 @@ pub async fn invoke(event: GatewayEvent, shard: u8, producer: FutureProducer) ->
                 }
 
                 Ok(())
+            }
+            DispatchEvent::MemberChunk(member_chunk) => {
+                todo!()
             }
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>
