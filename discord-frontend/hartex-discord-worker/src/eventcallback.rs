@@ -84,8 +84,10 @@ pub async fn invoke(
 
                 Ok(())
             }
-            DispatchEvent::MemberChunk(member_chunk) => {
-                todo!()
+            DispatchEvent::MemberChunk(_) => {
+                log::trace!(
+                    "shard {shard} has received GUILD_MEMBER_CHUNK payload from Discord (sequence {seq})"
+                );
             }
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>

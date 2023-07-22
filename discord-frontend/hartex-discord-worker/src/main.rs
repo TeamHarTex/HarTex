@@ -157,7 +157,7 @@ pub async fn main() -> miette::Result<()> {
 
         let (Ok(update_result), Ok(event_result)) = tokio::join!(
             tokio::spawn(entitycache::update(event.clone())),
-            tokio::spawn(eventcallback::invoke(event, scanned, producer))
+            tokio::spawn(eventcallback::invoke(event, scanned, producer.clone()))
         ) else {
             log::trace!("failed to join futures; skipping event");
             continue;
