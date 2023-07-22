@@ -26,20 +26,39 @@ use std::time::Duration;
 use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message;
+use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
+use hartex_discord_core::tokio;
 
-/// Handle inbound messages.
+/// Handle inbound AND outbound messages.
 pub async fn handle(
-    shards: impl Iterator<Item = &mut Shard>,
+    shards: impl Iterator<Item = &mut Shard> + Send,
     producer: FutureProducer,
+    consumer: StreamConsumer,
 ) -> miette::Result<()> {
-    let mut stream = ShardMessageStream::new(shards);
+    let shards = shards.collect::<Vec<_>>();
+    let senders = shards.iter().map(|shard| shard.sender()).collect::<Vec<_>>();
+    let stream = ShardMessageStream::new(shards.into_iter());
+
+    tokio::select! {
+        _ = inbound(stream, producer) => {},
+        _ = outbound(senders, consumer) => {}
+    }
+
+    Ok(())
+}
+
+async fn inbound(
+    mut stream: ShardMessageStream<'_>,
+    producer: FutureProducer
+) -> miette::Result<()> {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
     while let Some((shard, result)) = stream.next().await {
@@ -93,4 +112,11 @@ pub async fn handle(
     }
 
     Ok(())
+}
+
+async fn outbound(
+    _: Vec<MessageSender>,
+    _: StreamConsumer,
+) -> miette::Result<()> {
+    todo!()
 }
