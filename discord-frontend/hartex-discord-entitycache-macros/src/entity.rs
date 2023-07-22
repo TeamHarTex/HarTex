@@ -33,6 +33,7 @@ use syn::DataUnion;
 use syn::DeriveInput;
 use syn::Visibility;
 
+#[allow(clippy::needless_pass_by_ref_mut)]
 #[allow(clippy::too_many_lines)]
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
