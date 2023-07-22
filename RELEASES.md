@@ -6,7 +6,7 @@
 
 ## API Backend
 
-- no major changes
+- fixed returning in the uptime route
 
 ## Bors Buildbot
 
