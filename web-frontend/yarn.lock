@@ -1302,7 +1302,7 @@
     "@unocss/preset-mini" "0.53.6"
     "@unocss/preset-wind" "0.53.6"
 
-"@unocss/preset-web-fonts@0.53.5", "@unocss/preset-web-fonts@^0.53.3":
+"@unocss/preset-web-fonts@0.53.5":
   version "0.53.5"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.53.5.tgz#1492f6a34e0a2c13c1120274dc8624cf87d8ace2"
   integrity sha512-yVkOOECyOQqahRGSefcBKtNYAUnYFqqFedGy0SBBjadPWn80vjVg7ojljKlJsgSQdrpcJ38wwWr3Oh4UWwBuQQ==
@@ -1310,7 +1310,7 @@
     "@unocss/core" "0.53.5"
     ofetch "^1.1.1"
 
-"@unocss/preset-web-fonts@0.53.6":
+"@unocss/preset-web-fonts@0.53.6", "@unocss/preset-web-fonts@^0.53.3":
   version "0.53.6"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.53.6.tgz#dc6c679ef417900029545e58fe51feaed6c5e1e4"
   integrity sha512-IWswKHaqD6A7baTQxdt01lkFKe7qDpt6OzRMRgrCF9fDV4gsD7mJdpQOGFE9HolDbEHJbxS2NObzXXZChI/u2w==
@@ -1396,7 +1396,7 @@
   dependencies:
     "@unocss/core" "0.53.6"
 
-"@unocss/transformer-directives@0.53.5", "@unocss/transformer-directives@^0.53.3":
+"@unocss/transformer-directives@0.53.5":
   version "0.53.5"
   resolved "https://registry.yarnpkg.com/@unocss/transformer-directives/-/transformer-directives-0.53.5.tgz#e58bce7b08841bf041a9dad86a889a46899d172d"
   integrity sha512-u1OIZZUAXux9Q0mb58X3infxY2Iq6pY7uJB7IhMc2I1ntpyx875spwyvvfUHqOgIPTNR4XxfxKFGPHpjPNbNeQ==
@@ -1404,7 +1404,7 @@
     "@unocss/core" "0.53.5"
     css-tree "^2.3.1"
 
-"@unocss/transformer-directives@0.53.6":
+"@unocss/transformer-directives@0.53.6", "@unocss/transformer-directives@^0.53.3":
   version "0.53.6"
   resolved "https://registry.yarnpkg.com/@unocss/transformer-directives/-/transformer-directives-0.53.6.tgz#3d04d19992d9d99a0c4e3d0dcf9931cad8f91f13"
   integrity sha512-tgG7ZOyLFRWB980BthwcDzKqe44JCyDMWGRzPsmPmNKVHZ86tDHibJOJYDgFu25PlPtJTzQpc3OA8Lw2xCCGKA==
