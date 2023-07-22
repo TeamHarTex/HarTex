@@ -23,6 +23,8 @@
 ## Discord Frontend
 
 - migrated from eyre to miette for error reporting
+- implemented `/serverinfo`
+- allowed workers to send gateway commands to leaders
 
 ## Localization Infrastructure
 
