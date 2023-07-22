@@ -98,7 +98,7 @@ pub async fn main() -> miette::Result<()> {
 
     tokio::spawn(async move {
         tokio::select! {
-            _ = kafka::handle(shards.iter_mut(), producer, consumer) => {},
+            _ = kafka::handle(shards.iter_mut(), producer.clone(), consumer) => {},
             _ = rx.changed() => {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| shard.close(CloseFrame::RESUME))).await;
             },
