@@ -27,8 +27,10 @@ use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message;
 use hartex_discord_core::discord::gateway::Shard;
+use hartex_discord_core::tokio;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
@@ -36,6 +38,16 @@ use rdkafka::util::Timeout;
 
 /// Handle inbound messages.
 pub async fn handle(
+    shards: impl Iterator<Item = &mut Shard>,
+    producer: FutureProducer,
+    consumer: StreamConsumer,
+) -> miette::Result<()> {
+    let (_, _) = tokio::join!(inbound(shards, producer), outbound(shards, consumer));
+
+    Ok(())
+}
+
+async fn inbound(
     shards: impl Iterator<Item = &mut Shard>,
     producer: FutureProducer,
 ) -> miette::Result<()> {
@@ -92,5 +104,12 @@ pub async fn handle(
         }
     }
 
+    Ok(())
+}
+
+async fn outbound(
+    _: impl Iterator<Item = &mut Shard>,
+    _: StreamConsumer,
+) -> miette::Result<()> {
     Ok(())
 }

@@ -49,8 +49,7 @@ use rdkafka::consumer::StreamConsumer;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 
-mod inbound;
-mod outbound;
+mod kafka;
 mod queue;
 mod shards;
 
@@ -99,8 +98,7 @@ pub async fn main() -> miette::Result<()> {
 
     tokio::spawn(async move {
         tokio::select! {
-            _ = inbound::handle(shards.iter_mut(), producer) => {},
-            _ = outbound::handle(shards.iter_mut(), consumer) => {},
+            _ = kafka::handle(shards.iter_mut(), producer, consumer) => {},
             _ = rx.changed() => {
                 future::join_all(shards.iter_mut().map(|shard: &mut Shard| shard.close(CloseFrame::RESUME))).await;
             },
