@@ -48,6 +48,7 @@ use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
 use rdkafka::message::Message;
+use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
@@ -78,6 +79,12 @@ pub async fn main() -> miette::Result<()> {
         .collect::<Vec<_>>();
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
+    let producer = ClientConfig::new()
+        .bootstrap_servers(bootstrap_servers.clone().into_iter())
+        .compression_type(CompressionType::Lz4)
+        .delivery_timeout_ms(30000)
+        .create::<FutureProducer>()
+        .into_diagnostic()?;
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
         .compression_type(CompressionType::Lz4)
@@ -150,7 +157,7 @@ pub async fn main() -> miette::Result<()> {
 
         let (Ok(update_result), Ok(event_result)) = tokio::join!(
             tokio::spawn(entitycache::update(event.clone())),
-            tokio::spawn(eventcallback::invoke(event, scanned))
+            tokio::spawn(eventcallback::invoke(event, scanned, producer))
         ) else {
             log::trace!("failed to join futures; skipping event");
             continue;

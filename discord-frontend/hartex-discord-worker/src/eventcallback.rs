@@ -27,6 +27,7 @@ use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use rdkafka::producer::FutureProducer;
 use sqlx::postgres::PgConnection;
 use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
@@ -35,22 +36,35 @@ use sqlx::prelude::Statement;
 use sqlx::types::chrono::Utc;
 
 /// Invoke a corresponding event callback for an event,
-pub async fn invoke(event: GatewayEvent, shard: u8) -> miette::Result<()> {
+pub async fn invoke(event: GatewayEvent, shard: u8, producer: FutureProducer) -> miette::Result<()> {
+    let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION").into_diagnostic()?;
+
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
+            DispatchEvent::GuildCreate(guild_create) => {
+                log::trace!(
+                    "shard {shard} has received GUILD_CREATE payload from Discord (sequence {seq})"
+                );
+
+                Ok(())
+            }
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>
             {
+                log::trace!(
+                    "shard {shard} has received INTERACTION_CREATE payload from Discord (sequence {seq})"
+                );
+
                 crate::interaction::application_command(interaction_create).await
             }
             DispatchEvent::Ready(ready) => {
                 log::info!(
-                        "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
-                        ready.user.name,
-                        ready.user.discriminator,
-                        ready.version
-                    );
+                    "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
+                    ready.user.name,
+                    ready.user.discriminator,
+                    ready.version
+                );
 
                 let mut connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap())
                     .await
