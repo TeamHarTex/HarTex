@@ -85,9 +85,13 @@ pub async fn invoke(
                 Ok(())
             }
             DispatchEvent::MemberChunk(_) => {
+                // this is temporarily here
+                // to be moved to the enittycache
                 log::trace!(
                     "shard {shard} has received GUILD_MEMBER_CHUNK payload from Discord (sequence {seq})"
                 );
+
+                Ok(())
             }
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>
