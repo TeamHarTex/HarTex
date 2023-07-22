@@ -134,13 +134,17 @@ impl Command for ServerInfo {
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
             .field(EmbedFieldBuilder::new(
-                format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
+                format!(
+                    "<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"
+                ),
                 format!(
                     "{} {}\n{} {}\n{} {}\n{} {}",
                     serverinfo_embed_generalinfo_id_subfield_name.to_string(),
                     guild.id.to_string().discord_inline_code(),
                     serverinfo_embed_generalinfo_created_subfield_name.to_string(),
-                    (guild.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
+                    (guild.id.timestamp() / 1000)
+                        .to_string()
+                        .discord_relative_timestamp(),
                     serverinfo_embed_generalinfo_owner_subfield_name.to_string(),
                     guild.owner_id.mention(),
                     serverinfo_embed_generalinfo_enabled_features_subfield_name.to_string(),
@@ -148,7 +152,9 @@ impl Command for ServerInfo {
                 ),
             ))
             .field(EmbedFieldBuilder::new(
-                format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
+                format!(
+                    "<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"
+                ),
                 format!(
                     "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
                     "<:category:1131915276980600872>",
@@ -171,7 +177,10 @@ impl Command for ServerInfo {
                     forum_count,
                 ),
             ))
-            .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?)
+            .thumbnail(
+                ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
+                    .into_diagnostic()?,
+            )
             .title(guild.name)
             .validate()
             .into_diagnostic()?
