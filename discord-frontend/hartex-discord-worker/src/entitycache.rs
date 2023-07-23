@@ -25,8 +25,8 @@
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_entitycache_cacheupdaters::CacheUpdater;
-use miette::IntoDiagnostic;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 
 /// Update entity cache.
 #[allow(clippy::unused_async)]
