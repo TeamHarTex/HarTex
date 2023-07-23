@@ -25,6 +25,7 @@
 - migrated from eyre to miette for error reporting
 - implemented `/serverinfo`
 - allowed workers to send gateway commands to leaders
+- updated cache entities and repositories
 
 ## Localization Infrastructure
 
