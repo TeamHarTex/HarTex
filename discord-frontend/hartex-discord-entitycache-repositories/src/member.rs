@@ -23,6 +23,7 @@
 use std::env;
 
 use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
 use redis::AsyncCommands;
@@ -31,7 +32,7 @@ use redis::Client;
 pub struct CachedMemberRepository;
 
 impl Repository<MemberEntity> for CachedMemberRepository {
-    async fn get(&self, _: MemberEntity::Id) -> CacheResult<MemberEntity> {
+    async fn get(&self, _: <MemberEntity as Entity>::Id) -> CacheResult<MemberEntity> {
         todo!()
     }
 
