@@ -22,6 +22,9 @@
 
 use std::env;
 
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -30,6 +33,34 @@ use redis::AsyncCommands;
 use redis::Client;
 
 pub struct CachedMemberRepository;
+
+impl CachedMemberRepository {
+    pub async fn member_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<UserMarker>>> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+        let bulk: Vec<Vec<String>> = redis::cmd("SCAN")
+            .arg("0")
+            .arg("MATCH")
+            .arg(format!("\"guild:{guild_id}:member:*:id\""))
+            .arg("COUNT")
+            .arg("1000")
+            .query_async(&mut connection)
+            .await?;
+
+        let id_iter = bulk[1].clone();
+
+        let mut members = Vec::new();
+
+        for key in id_iter {
+            let id = connection.get::<String, u64>(key).await?;
+
+            members.push(Id::new_checked(id).expect("id is zero (unexpected and unreachable)"));
+        }
+
+        Ok(members)
+    }
+}
 
 impl Repository<MemberEntity> for CachedMemberRepository {
     async fn get(&self, _: <MemberEntity as Entity>::Id) -> CacheResult<MemberEntity> {
@@ -41,7 +72,10 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
         connection
-            .set(format!("guild:{}:member:{}:id", entity.guild_id, entity.id), entity.id.get())
+            .set(
+                format!("guild:{}:member:{}:id", entity.guild_id, entity.id),
+                entity.id.get(),
+            )
             .await?;
 
         Ok(())
