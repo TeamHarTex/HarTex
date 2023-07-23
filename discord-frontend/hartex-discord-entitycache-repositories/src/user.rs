@@ -20,19 +20,38 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::user::UserEntity;
+use redis::AsyncCommands;
+use redis::Client;
 
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
-    async fn get(&self, _: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        todo!()
+    async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+
+        let bot = connection
+            .get::<String, bool>(format!("user:{id}:bot"))
+            .await?;
+
+        Ok(UserEntity { bot, id })
     }
 
-    async fn upsert(&self, _: UserEntity) -> CacheResult<()> {
-        todo!()
+    async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+        connection
+            .set(format!("user:{}:bot", entity.id), entity.bot)
+            .await?;
+
+        Ok(())
     }
 }

@@ -35,7 +35,10 @@ use redis::Client;
 pub struct CachedMemberRepository;
 
 impl CachedMemberRepository {
-    pub async fn member_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<UserMarker>>> {
+    pub async fn member_ids_in_guild(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> CacheResult<Vec<Id<UserMarker>>> {
         let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut sync_connection = client.get_connection()?;
@@ -63,11 +66,11 @@ impl CachedMemberRepository {
 }
 
 impl Repository<MemberEntity> for CachedMemberRepository {
-    async fn get(&self, (guild_id, user_id): <MemberEntity as Entity>::Id) -> CacheResult<MemberEntity> {
-        Ok(MemberEntity {
-            guild_id,
-            user_id,
-        })
+    async fn get(
+        &self,
+        (guild_id, user_id): <MemberEntity as Entity>::Id,
+    ) -> CacheResult<MemberEntity> {
+        Ok(MemberEntity { guild_id, user_id })
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
