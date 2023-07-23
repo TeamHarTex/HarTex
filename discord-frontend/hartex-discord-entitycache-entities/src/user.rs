@@ -20,8 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::user::User;
 use hartex_discord_entitycache_core::Entity;
 

@@ -37,13 +37,13 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
+use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
-use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -137,7 +137,10 @@ impl Command for ServerInfo {
             .map(|str| format!("\n- `{str}`"))
             .collect::<String>();
 
-        let members = CachedMemberRepository.member_ids_in_guild(guild.id).await.into_diagnostic()?;
+        let members = CachedMemberRepository
+            .member_ids_in_guild(guild.id)
+            .await
+            .into_diagnostic()?;
 
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
@@ -186,9 +189,7 @@ impl Command for ServerInfo {
                 ),
             ))
             .field(EmbedFieldBuilder::new(
-                format!(
-                    "<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"
-                ),
+                format!("<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"),
                 format!(
                     "{} {}",
                     serverinfo_embed_memberinfo_membercount_subfield_name,
