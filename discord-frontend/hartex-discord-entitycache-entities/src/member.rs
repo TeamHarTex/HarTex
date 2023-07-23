@@ -20,22 +20,26 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::gateway::payload::incoming::MemberChunk;
-use hartex_discord_entitycache_core::error::CacheResult;
-use hartex_discord_entitycache_core::traits::Repository;
-use hartex_discord_entitycache_entities::member::MemberEntity;
-use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
+use hartex_discord_core::discord::model::guild::Member;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_entitycache_core::Entity;
 
-use crate::CacheUpdater;
+#[allow(clippy::module_name_repetitions)]
+#[derive(Entity)]
+pub struct MemberEntity {
+    #[entity(id)]
+    pub guild_id: Id<GuildMarker>,
+    #[entity(id)]
+    pub id: Id<UserMarker>
+}
 
-impl CacheUpdater for MemberChunk {
-    async fn update(&self) -> CacheResult<()> {
-        for member in self.members {
-            let entity = MemberEntity::from((member, self.guild_id));
-
-            CachedMemberRepository.upsert(entity).await?;
+impl From<(Member, Id<GuildMarker>)> for MemberEntity {
+    fn from((member, guild_id): (Member, Id<GuildMarker>)) -> Self {
+        Self {
+            guild_id,
+            id: member.user.id
         }
-
-        Ok(())
     }
 }
