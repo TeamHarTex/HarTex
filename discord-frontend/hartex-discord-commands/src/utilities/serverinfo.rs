@@ -22,6 +22,7 @@
 
 use std::borrow::Cow;
 
+use futures::future;
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
@@ -44,6 +45,7 @@ use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
+use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -93,6 +95,10 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-memberinfo-membercount-subfield-name": message, out [serverinfo_embed_memberinfo_membercount_subfield_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-memberinfo-humancount-subfield-name": message, out [serverinfo_embed_memberinfo_humancount_subfield_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-memberinfo-botcount-subfield-name": message, out [serverinfo_embed_memberinfo_botcount_subfield_name, errors]);
+        handle_errors(errors)?;
 
         let channels = CLIENT
             .guild_channels(guild.id)
@@ -141,6 +147,10 @@ impl Command for ServerInfo {
             .member_ids_in_guild(guild.id)
             .await
             .into_diagnostic()?;
+        let users = future::try_join_all(members.iter().map(|id| CachedUserRepository.get(*id)))
+            .await
+            .into_diagnostic()?;
+        let humans = users.iter().filter(|user| !user.bot).count();
 
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
@@ -191,9 +201,13 @@ impl Command for ServerInfo {
             .field(EmbedFieldBuilder::new(
                 format!("<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"),
                 format!(
-                    "{} {}",
+                    "{} {}\n{} {}\n{} {}",
                     serverinfo_embed_memberinfo_membercount_subfield_name,
                     members.len(),
+                    serverinfo_embed_memberinfo_humancount_subfield_name,
+                    humans,
+                    serverinfo_embed_memberinfo_botcount_subfield_name,
+                    members.len() - humans,
                 ),
             ))
             .thumbnail(

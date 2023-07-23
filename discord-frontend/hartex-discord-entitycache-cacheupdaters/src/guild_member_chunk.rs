@@ -24,16 +24,20 @@ use hartex_discord_core::discord::model::gateway::payload::incoming::MemberChunk
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
+use hartex_discord_entitycache_entities::user::UserEntity;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
+use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 
 use crate::CacheUpdater;
 
 impl CacheUpdater for MemberChunk {
     async fn update(&self) -> CacheResult<()> {
         for member in &self.members {
-            let entity = MemberEntity::from((member.clone(), self.guild_id));
+            let member_entity = MemberEntity::from((member.clone(), self.guild_id));
+            let user_entity = UserEntity::from(member.user.clone());
 
-            CachedMemberRepository.upsert(entity).await?;
+            CachedMemberRepository.upsert(member_entity).await?;
+            CachedUserRepository.upsert(user_entity).await?;
         }
 
         Ok(())
