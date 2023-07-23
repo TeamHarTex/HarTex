@@ -22,6 +22,9 @@
 
 use std::env;
 
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -31,9 +34,43 @@ use redis::Client;
 
 pub struct CachedMemberRepository;
 
+impl CachedMemberRepository {
+    pub async fn member_ids_in_guild(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> CacheResult<Vec<Id<UserMarker>>> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut sync_connection = client.get_connection()?;
+        let keys = redis::cmd("SCAN")
+            .cursor_arg(0)
+            .arg("MATCH")
+            .arg(format!("guild:{guild_id}:member:*:user_id"))
+            .arg("COUNT")
+            .arg("1000")
+            .clone()
+            .iter::<String>(&mut sync_connection)?
+            .collect::<Vec<_>>();
+
+        let mut members = Vec::new();
+
+        let mut connection = client.get_tokio_connection().await?;
+        for key in keys {
+            let id = connection.get::<String, u64>(key).await?;
+
+            members.push(Id::new_checked(id).expect("id is zero (unexpected and unreachable)"));
+        }
+
+        Ok(members)
+    }
+}
+
 impl Repository<MemberEntity> for CachedMemberRepository {
-    async fn get(&self, _: <MemberEntity as Entity>::Id) -> CacheResult<MemberEntity> {
-        todo!()
+    async fn get(
+        &self,
+        (guild_id, user_id): <MemberEntity as Entity>::Id,
+    ) -> CacheResult<MemberEntity> {
+        Ok(MemberEntity { guild_id, user_id })
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
@@ -41,7 +78,10 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
         connection
-            .set(format!("guild:{}:member:{}:id", entity.guild_id, entity.id), entity.id.get())
+            .set(
+                format!("guild:{}:member:{}:user_id", entity.guild_id, entity.user_id),
+                entity.user_id.get(),
+            )
             .await?;
 
         Ok(())
