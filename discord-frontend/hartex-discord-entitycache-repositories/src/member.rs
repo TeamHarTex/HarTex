@@ -38,20 +38,21 @@ impl CachedMemberRepository {
     pub async fn member_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<UserMarker>>> {
         let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
-        let mut id_iter = redis::cmd("SCAN")
+        let mut sync_connection = client.get_connection()?;
+        let keys = redis::cmd("SCAN")
             .cursor_arg(0)
             .arg("MATCH")
-            .arg(format!("\"guild:{guild_id}:member:*:id\""))
+            .arg(format!("guild:{guild_id}:member:*:id"))
             .arg("COUNT")
             .arg("1000")
             .clone()
-            .iter_async::<String>(&mut connection)
-            .await?;
+            .iter::<String>(&mut sync_connection)?
+            .collect::<Vec<_>>();
 
         let mut members = Vec::new();
 
-        while let Some(key) = id_iter.next_item().await {
+        let mut connection = client.get_tokio_connection().await?;
+        for key in keys {
             let id = connection.get::<String, u64>(key).await?;
 
             members.push(Id::new_checked(id).expect("id is zero (unexpected and unreachable)"));
