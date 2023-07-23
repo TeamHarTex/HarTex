@@ -79,8 +79,8 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         let mut connection = client.get_tokio_connection().await?;
         connection
             .set(
-                format!("guild:{}:member:{}:id", entity.guild_id, entity.id),
-                entity.id.get(),
+                format!("guild:{}:member:{}:user_id", entity.guild_id, entity.user_id),
+                entity.user_id.get(),
             )
             .await?;
 
