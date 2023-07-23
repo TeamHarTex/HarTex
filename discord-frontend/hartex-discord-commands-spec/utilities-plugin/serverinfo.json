@@ -23,6 +23,12 @@
       },
       "required": false,
       "type": 3
+    },
+    {
+      "name": "verbose",
+      "description": "Whether to display more detailed information in the returned embed.",
+      "required": false,
+      "type": 5
     }
   ],
   "type": 1
