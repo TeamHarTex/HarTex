@@ -20,13 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Entities
-//!
-//! This crate provides definitions for entities stored in the entity cache.
+use hartex_discord_core::discord::model::gateway::payload::incoming::MemberChunk;
+use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::member::MemberEntity;
+use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+use crate::CacheUpdater;
 
-pub mod guild;
-pub mod member;
+impl CacheUpdater for MemberChunk {
+    async fn update(&self) -> CacheResult<()> {
+        for member in &self.members {
+            let entity = MemberEntity::from((member.clone(), self.guild_id));
+
+            CachedMemberRepository.upsert(entity).await?;
+        }
+
+        Ok(())
+    }
+}

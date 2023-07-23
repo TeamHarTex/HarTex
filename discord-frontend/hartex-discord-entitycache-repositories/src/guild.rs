@@ -72,7 +72,6 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         })
     }
 
-    #[allow(clippy::unused_async)]
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
         let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
