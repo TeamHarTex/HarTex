@@ -27,6 +27,12 @@
     {
       "name": "verbose",
       "description": "Whether to display more detailed information in the returned embed.",
+      "name_localizations": {
+        "zh-CN": "详细信息"
+      },
+      "description_localizations": {
+        "zh-CN": "是否在返回的嵌入中显示更详细的信息。"
+      },
       "required": false,
       "type": 5
     }
