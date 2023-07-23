@@ -29,3 +29,4 @@
 #![deny(warnings)]
 
 pub mod guild;
+pub mod member;

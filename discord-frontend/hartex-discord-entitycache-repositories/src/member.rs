@@ -20,21 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::gateway::payload::incoming::MemberChunk;
+use std::env;
+
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
-use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
+use redis::AsyncCommands;
+use redis::Client;
 
-use crate::CacheUpdater;
+pub struct CachedMemberRepository;
 
-impl CacheUpdater for MemberChunk {
-    async fn update(&self) -> CacheResult<()> {
-        for member in self.members {
-            let entity = MemberEntity::from((member, self.guild_id));
+impl Repository<MemberEntity> for CachedMemberRepository {
+    async fn get(&self, _: MemberEntity::Id) -> CacheResult<MemberEntity> {
+        todo!()
+    }
 
-            CachedMemberRepository.upsert(entity).await?;
-        }
+    async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+        connection
+            .set(format!("guild:{}:member:{}:id", entity.guild_id, entity.id), entity.id.get())
+            .await?;
 
         Ok(())
     }
