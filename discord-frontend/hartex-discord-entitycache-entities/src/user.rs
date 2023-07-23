@@ -20,14 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Entities
-//!
-//! This crate provides definitions for entities stored in the entity cache.
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_core::discord::model::user::User;
+use hartex_discord_entitycache_core::Entity;
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+#[allow(clippy::module_name_repetitions)]
+#[derive(Entity)]
+pub struct UserEntity {
+    pub bot: bool,
+    #[entity(id)]
+    pub id: Id<UserMarker>,
+}
 
-pub mod guild;
-pub mod member;
-pub mod user;
+impl From<User> for UserEntity {
+    fn from(user: User) -> Self {
+        Self {
+            bot: user.bot,
+            id: user.id,
+        }
+    }
+}
