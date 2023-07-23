@@ -42,7 +42,7 @@ impl CachedMemberRepository {
         let keys = redis::cmd("SCAN")
             .cursor_arg(0)
             .arg("MATCH")
-            .arg(format!("guild:{guild_id}:member:*:id"))
+            .arg(format!("guild:{guild_id}:member:*:user_id"))
             .arg("COUNT")
             .arg("1000")
             .clone()
@@ -63,8 +63,11 @@ impl CachedMemberRepository {
 }
 
 impl Repository<MemberEntity> for CachedMemberRepository {
-    async fn get(&self, _: <MemberEntity as Entity>::Id) -> CacheResult<MemberEntity> {
-        todo!()
+    async fn get(&self, (guild_id, user_id): <MemberEntity as Entity>::Id) -> CacheResult<MemberEntity> {
+        Ok(MemberEntity {
+            guild_id,
+            user_id,
+        })
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {

@@ -32,14 +32,14 @@ pub struct MemberEntity {
     #[entity(id)]
     pub guild_id: Id<GuildMarker>,
     #[entity(id)]
-    pub id: Id<UserMarker>,
+    pub user_id: Id<UserMarker>,
 }
 
 impl From<(Member, Id<GuildMarker>)> for MemberEntity {
     fn from((member, guild_id): (Member, Id<GuildMarker>)) -> Self {
         Self {
             guild_id,
-            id: member.user.id,
+            user_id: member.user.id,
         }
     }
 }

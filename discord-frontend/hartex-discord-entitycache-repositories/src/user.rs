@@ -20,14 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Entities
-//!
-//! This crate provides definitions for entities stored in the entity cache.
+use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Entity;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::user::UserEntity;
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+pub struct CachedUserRepository;
 
-pub mod guild;
-pub mod member;
-pub mod user;
+impl Repository<UserEntity> for CachedUserRepository {
+    async fn get(&self, _: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
+        todo!()
+    }
+
+    async fn upsert(&self, _: UserEntity) -> CacheResult<()> {
+        todo!()
+    }
+}

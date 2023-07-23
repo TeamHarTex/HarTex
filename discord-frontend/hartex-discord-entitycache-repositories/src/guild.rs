@@ -53,9 +53,6 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let icon = connection
             .get::<String, Option<String>>(format!("guild:{id}:icon"))
             .await?;
-        let id = connection
-            .get::<String, u64>(format!("guild:{id}:id"))
-            .await?;
         let name = connection
             .get::<String, String>(format!("guild:{id}:name"))
             .await?;
@@ -66,7 +63,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         Ok(GuildEntity {
             features,
             icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
-            id: Id::new_checked(id).expect("id is zero (unexpected and unreachable)"),
+            id,
             name,
             owner_id: Id::new_checked(owner_id).expect("id is zero (unexpected and unreachable)"),
         })
@@ -93,9 +90,6 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                     .collect::<Vec<Cow<'static, str>>>()
                     .join(","),
             )
-            .await?;
-        connection
-            .set(format!("guild:{}:id", entity.id), entity.id.get())
             .await?;
         connection
             .set(format!("guild:{}:name", entity.id), entity.name)
