@@ -34,3 +34,5 @@ serverinfo-embed-channelinfo-stagechannels-subfield-name=Stage Channels:
 serverinfo-embed-channelinfo-forumchannels-subfield-name=Forum Channels:
 serverinfo-embed-memberinfo-field-name=Member Information
 serverinfo-embed-memberinfo-membercount-subfield-name=Member Count:
+serverinfo-embed-memberinfo-humancount-subfield-name=Human Count:
+serverinfo-embed-memberinfo-botcount-subfield-name=Bot Count:
