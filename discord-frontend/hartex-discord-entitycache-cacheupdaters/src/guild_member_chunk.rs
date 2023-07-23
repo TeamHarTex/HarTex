@@ -30,8 +30,8 @@ use crate::CacheUpdater;
 
 impl CacheUpdater for MemberChunk {
     async fn update(&self) -> CacheResult<()> {
-        for member in self.members {
-            let entity = MemberEntity::from((member, self.guild_id));
+        for member in &self.members {
+            let entity = MemberEntity::from((member.clone(), self.guild_id));
 
             CachedMemberRepository.upsert(entity).await?;
         }
