@@ -43,6 +43,7 @@ use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
+use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -88,6 +89,10 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-channelinfo-forumchannels-subfield-name": message, out [serverinfo_embed_channelinfo_forumchannels_subfield_name, errors]);
         handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-memberinfo-field-name": message, out [serverinfo_embed_memberinfo_field_name, errors]);
+        handle_errors(errors)?;
+        bundle_get!(bundle."serverinfo-embed-memberinfo-membercount-subfield-name": message, out [serverinfo_embed_memberinfo_membercount_subfield_name, errors]);
+        handle_errors(errors)?;
 
         let channels = CLIENT
             .guild_channels(guild.id)
@@ -131,6 +136,9 @@ impl Command for ServerInfo {
             .iter()
             .map(|str| format!("\n- `{str}`"))
             .collect::<String>();
+
+        let members = CachedMemberRepository.member_ids_in_guild(guild.id).await.into_diagnostic()?;
+
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
             .field(EmbedFieldBuilder::new(
@@ -175,6 +183,16 @@ impl Command for ServerInfo {
                     "<:forum:1131928666176241735>",
                     serverinfo_embed_channelinfo_forumchannels_subfield_name.to_string(),
                     forum_count,
+                ),
+            ))
+            .field(EmbedFieldBuilder::new(
+                format!(
+                    "<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"
+                ),
+                format!(
+                    "{} {}",
+                    serverinfo_embed_memberinfo_membercount_subfield_name,
+                    members.len(),
                 ),
             ))
             .thumbnail(
