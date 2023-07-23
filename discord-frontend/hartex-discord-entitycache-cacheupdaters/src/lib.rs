@@ -33,6 +33,7 @@
 use hartex_discord_entitycache_core::error::CacheResult;
 
 pub mod guild_create;
+pub mod guild_member_chunk;
 
 /// A trait for all cache updaters to implement.
 pub trait CacheUpdater {
