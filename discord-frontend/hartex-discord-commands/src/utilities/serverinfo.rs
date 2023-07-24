@@ -56,6 +56,7 @@ use miette::IntoDiagnostic;
 pub struct ServerInfo;
 
 impl Command for ServerInfo {
+    #[allow(clippy::too_many_lines)]
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let Some(InteractionData::ApplicationCommand(command)) = interaction.data else {
             unreachable!()
@@ -163,7 +164,7 @@ impl Command for ServerInfo {
         let mut features_vec = guild
             .features
             .into_iter()
-            .map(|feature| feature.into())
+            .map(Into::into)
             .collect::<Vec<Cow<'static, str>>>();
         features_vec.sort();
         let features = features_vec
@@ -188,15 +189,15 @@ impl Command for ServerInfo {
                 ),
                 format!(
                     "{} {}\n{} {}\n{} {}\n{} {}",
-                    serverinfo_embed_generalinfo_id_subfield_name.to_string(),
+                    serverinfo_embed_generalinfo_id_subfield_name,
                     guild.id.to_string().discord_inline_code(),
-                    serverinfo_embed_generalinfo_created_subfield_name.to_string(),
+                    serverinfo_embed_generalinfo_created_subfield_name,
                     (guild.id.timestamp() / 1000)
                         .to_string()
                         .discord_relative_timestamp(),
-                    serverinfo_embed_generalinfo_owner_subfield_name.to_string(),
+                    serverinfo_embed_generalinfo_owner_subfield_name,
                     guild.owner_id.mention(),
-                    serverinfo_embed_generalinfo_enabled_features_subfield_name.to_string(),
+                    serverinfo_embed_generalinfo_enabled_features_subfield_name,
                     features,
                 ),
             ))
@@ -207,22 +208,22 @@ impl Command for ServerInfo {
                 format!(
                     "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
                     "<:category:1131915276980600872>",
-                    serverinfo_embed_channelinfo_categories_subfield_name.to_string(),
+                    serverinfo_embed_channelinfo_categories_subfield_name,
                     category_count,
                     "<:textChannel:1131860470488375316>",
-                    serverinfo_embed_channelinfo_textchannels_subfield_name.to_string(),
+                    serverinfo_embed_channelinfo_textchannels_subfield_name,
                     text_count,
                     "<:voiceChannel:1131908258945318923>",
-                    serverinfo_embed_channelinfo_voicechannels_subfield_name.to_string(),
+                    serverinfo_embed_channelinfo_voicechannels_subfield_name,
                     voice_count,
                     "<:announcement:1131923904324186296>",
-                    serverinfo_embed_channelinfo_announcementchannels_subfield_name.to_string(),
+                    serverinfo_embed_channelinfo_announcementchannels_subfield_name,
                     announcement_count,
                     "<:stage:1131926172574421032>",
                     serverinfo_embed_channelinfo_stagechannels_subfield_name.to_string(),
                     stage_count,
                     "<:forum:1131928666176241735>",
-                    serverinfo_embed_channelinfo_forumchannels_subfield_name.to_string(),
+                    serverinfo_embed_channelinfo_forumchannels_subfield_name,
                     forum_count,
                 ),
             ))
