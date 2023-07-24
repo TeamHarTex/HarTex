@@ -27,6 +27,7 @@ use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::mention::Mention;
+use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::channel::ChannelType;
@@ -90,6 +91,15 @@ impl Command for ServerInfo {
             return Ok(());
         }
 
+        let CommandOptionValue::Boolean(verbose) = command
+            .options
+            .iter()
+            .find(|option| option.name.as_str() == "verbose")
+            .map(|option| option.value.clone())
+            .unwrap_or(CommandOptionValue::Boolean(false)) else {
+            unreachable!()
+        };
+
         let guild = CachedGuildRepository
             .get(interaction.guild_id.unwrap())
             .await
@@ -127,6 +137,18 @@ impl Command for ServerInfo {
         handle_errors(errors)?;
         bundle_get!(bundle."serverinfo-embed-memberinfo-botcount-subfield-name": message, out [serverinfo_embed_memberinfo_botcount_subfield_name, errors]);
         handle_errors(errors)?;
+
+        let mut default_general_information = format!(
+            "{} {}\n{} {}\n{} {}",
+            serverinfo_embed_generalinfo_id_subfield_name,
+            guild.id.to_string().discord_inline_code(),
+            serverinfo_embed_generalinfo_created_subfield_name,
+            (guild.id.timestamp() / 1000)
+                .to_string()
+                .discord_relative_timestamp(),
+            serverinfo_embed_generalinfo_owner_subfield_name,
+            guild.owner_id.mention(),
+        );
 
         let channels = CLIENT
             .guild_channels(guild.id)
@@ -180,25 +202,22 @@ impl Command for ServerInfo {
             .into_diagnostic()?;
         let humans = users.iter().filter(|user| !user.bot).count();
 
+        if verbose {
+            default_general_information
+                .push_str(&format!(
+                    "\n {} {}",
+                    serverinfo_embed_generalinfo_enabled_features_subfield_name,
+                    features,
+                ));
+        }
+
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
             .field(EmbedFieldBuilder::new(
                 format!(
                     "<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"
                 ),
-                format!(
-                    "{} {}\n{} {}\n{} {}\n{} {}",
-                    serverinfo_embed_generalinfo_id_subfield_name,
-                    guild.id.to_string().discord_inline_code(),
-                    serverinfo_embed_generalinfo_created_subfield_name,
-                    (guild.id.timestamp() / 1000)
-                        .to_string()
-                        .discord_relative_timestamp(),
-                    serverinfo_embed_generalinfo_owner_subfield_name,
-                    guild.owner_id.mention(),
-                    serverinfo_embed_generalinfo_enabled_features_subfield_name,
-                    features,
-                ),
+                default_general_information,
             ))
             .field(EmbedFieldBuilder::new(
                 format!(
