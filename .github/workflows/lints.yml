@@ -9,6 +9,54 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  ClippyApiBackend:
+    name: api-backend - Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest nightly Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          components: clippy, rustfmt
+          toolchain: nightly
+      - name: Download Buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
+      - name: Run Buildsystem
+        run: sudo chmod +x ./hartexbuild && ./hartexbuild lint api-backend
+
+  ClippyBors:
+    name: bors - Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest nightly Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          components: clippy, rustfmt
+          toolchain: nightly
+      - name: Download Buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
+      - name: Run Buildsystem
+        run: sudo chmod +x ./hartexbuild && ./hartexbuild lint bors
+
+  ClippyBuildsystem:
+    name: buildsystem - Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest nightly Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          components: clippy, rustfmt
+          toolchain: nightly
+      - name: Download Buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
+      - name: Run Buildsystem
+        run: sudo chmod +x ./hartexbuild && ./hartexbuild lint buildsystem
+
   ClippyDiscordFrontend:
     name: discord-frontend - Lint
     runs-on: ubuntu-latest
