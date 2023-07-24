@@ -28,7 +28,7 @@
       "name": "verbose",
       "description": "Whether to display more detailed information in the returned embed.",
       "name_localizations": {
-        "zh-CN": "详细信息",
+        "zh-CN": "详细",
         "zh-TW": "詳細"
       },
       "description_localizations": {
