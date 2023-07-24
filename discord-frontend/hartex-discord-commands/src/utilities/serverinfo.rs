@@ -28,6 +28,7 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::channel::ChannelType;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -39,13 +40,13 @@ use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
+use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
-use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -56,11 +57,38 @@ pub struct ServerInfo;
 
 impl Command for ServerInfo {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
+        let InteractionData::ApplicationCommand(command) = interaction.data else {
+            unreachable!()
+        };
+
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
+
+        if command
+            .options
+            .iter()
+            .find(|option| option.name == String::from("server"))
+            .is_some()
+        {
+            interaction_client
+                .create_response(
+                    interaction.id,
+                    &interaction.token,
+                    &InteractionResponse {
+                        kind: InteractionResponseType::ChannelMessageWithSource,
+                        data: Some(InteractionResponseDataBuilder::new()
+                            .content(":warning: Querying information for a specific server is currently not supported.")
+                            .build())
+                    }
+                )
+                .await
+                .into_diagnostic()?;
+
+            return Ok(());
+        }
 
         let guild = CachedGuildRepository
             .get(interaction.guild_id.unwrap())
