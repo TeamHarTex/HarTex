@@ -24,7 +24,7 @@ jsonwebtoken = "8.3.0"
 miette = "5.10.0"
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 secrecy = "0.8.0"
-serde = { version = "1.0.174", features = ["derive"] }
+serde = { version = "1.0.175", features = ["derive"] }
 serde_json = "1.0.103"
 tokio = { version = "1.29.1", features = ["sync"] }
 
