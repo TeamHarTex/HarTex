@@ -95,8 +95,7 @@ impl Command for ServerInfo {
             .options
             .iter()
             .find(|option| option.name.as_str() == "verbose")
-            .map(|option| option.value.clone())
-            .unwrap_or(CommandOptionValue::Boolean(false)) else {
+            .map_or(CommandOptionValue::Boolean(false), |option| option.value.clone()) else {
             unreachable!()
         };
 
@@ -205,9 +204,7 @@ impl Command for ServerInfo {
         if verbose {
             default_general_information
                 .push_str(&format!(
-                    "\n {} {}",
-                    serverinfo_embed_generalinfo_enabled_features_subfield_name,
-                    features,
+                    "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}",
                 ));
         }
 
