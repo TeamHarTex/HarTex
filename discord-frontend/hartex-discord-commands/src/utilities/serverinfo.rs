@@ -57,7 +57,7 @@ pub struct ServerInfo;
 
 impl Command for ServerInfo {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
-        let InteractionData::ApplicationCommand(command) = interaction.data else {
+        let Some(InteractionData::ApplicationCommand(command)) = interaction.data else {
             unreachable!()
         };
 
