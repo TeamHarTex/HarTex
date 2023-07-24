@@ -36,6 +36,7 @@ pub struct StatusFns;
 
 impl StatusFns {
     /// Returns a 404 JSON payload.
+    #[must_use]
     pub fn not_found() -> Value {
         json!({
             "code": 404,
@@ -44,6 +45,7 @@ impl StatusFns {
     }
 
     /// Returns a 405 JSON payload.
+    #[must_use]
     pub fn method_not_allowed() -> Value {
         json!({
             "code": 405,
@@ -52,6 +54,7 @@ impl StatusFns {
     }
 
     /// Returns a 429 JSON payload.
+    #[must_use]
     pub fn too_many_requests() -> Value {
         json!({
             "code": 429,
@@ -60,6 +63,7 @@ impl StatusFns {
     }
 
     /// Returns a 500 JSON payload.
+    #[must_use]
     pub fn internal_server_error() -> Value {
         json!({
             "code": 500,

@@ -56,7 +56,7 @@ pub fn main() -> miette::Result<()> {
 
     let matches = command.get_matches();
 
-    cmdline::handle(matches)?;
+    cmdline::handle(&matches)?;
 
     Ok(())
 }
