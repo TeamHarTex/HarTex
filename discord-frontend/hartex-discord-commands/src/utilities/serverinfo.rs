@@ -69,6 +69,9 @@ impl Command for ServerInfo {
             &["discord-frontend", "commands"],
         )?;
 
+        bundle_get!(bundle."serverinfo-server-not-supported": message, out [serverinfo_server_not_supported, errors]);
+        handle_errors(errors)?;
+
         if command
             .options
             .iter()
@@ -81,7 +84,7 @@ impl Command for ServerInfo {
                     &InteractionResponse {
                         kind: InteractionResponseType::ChannelMessageWithSource,
                         data: Some(InteractionResponseDataBuilder::new()
-                            .content(":warning: Querying information for a specific server is currently not supported.")
+                            .content(format!(":warning: {serverinfo_server_not_supported}"))
                             .build())
                     }
                 )
