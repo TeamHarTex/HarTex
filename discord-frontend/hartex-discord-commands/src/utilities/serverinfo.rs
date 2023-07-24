@@ -83,10 +83,12 @@ impl Command for ServerInfo {
                     &interaction.token,
                     &InteractionResponse {
                         kind: InteractionResponseType::ChannelMessageWithSource,
-                        data: Some(InteractionResponseDataBuilder::new()
-                            .content(format!(":warning: {serverinfo_server_not_supported}"))
-                            .build())
-                    }
+                        data: Some(
+                            InteractionResponseDataBuilder::new()
+                                .content(format!(":warning: {serverinfo_server_not_supported}"))
+                                .build(),
+                        ),
+                    },
                 )
                 .await
                 .into_diagnostic()?;
@@ -98,7 +100,10 @@ impl Command for ServerInfo {
             .options
             .iter()
             .find(|option| option.name.as_str() == "verbose")
-            .map_or(CommandOptionValue::Boolean(false), |option| option.value.clone()) else {
+            .map_or(CommandOptionValue::Boolean(false), |option| {
+                option.value.clone()
+            })
+        else {
             unreachable!()
         };
 
@@ -205,10 +210,9 @@ impl Command for ServerInfo {
         let humans = users.iter().filter(|user| !user.bot).count();
 
         if verbose {
-            default_general_information
-                .push_str(&format!(
-                    "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}",
-                ));
+            default_general_information.push_str(&format!(
+                "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}",
+            ));
         }
 
         let embed = EmbedBuilder::new()
