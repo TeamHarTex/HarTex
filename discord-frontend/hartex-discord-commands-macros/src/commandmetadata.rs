@@ -37,6 +37,7 @@ const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "name", "minimum_level"];
 const VALID_ATTR_PARAMETER_NAMES: [&str; 4] =
     ["command_type", "interaction_only", "name", "minimum_level"];
 
+#[allow(clippy::needless_pass_by_ref_mut)]
 #[allow(clippy::too_many_lines)]
 pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
