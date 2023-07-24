@@ -40,13 +40,13 @@ use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
+use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
-use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -67,7 +67,12 @@ impl Command for ServerInfo {
             &["discord-frontend", "commands"],
         )?;
 
-        if command.options.iter().find(|option| option.name == String::from("server")).is_some() {
+        if command
+            .options
+            .iter()
+            .find(|option| option.name == String::from("server"))
+            .is_some()
+        {
             interaction_client
                 .create_response(
                     interaction.id,
