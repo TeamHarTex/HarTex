@@ -71,8 +71,7 @@ impl Command for ServerInfo {
         if command
             .options
             .iter()
-            .find(|option| option.name == String::from("server"))
-            .is_some()
+            .any(|option| option.name == String::from("server"))
         {
             interaction_client
                 .create_response(
