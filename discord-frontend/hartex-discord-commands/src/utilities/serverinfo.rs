@@ -28,6 +28,7 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::channel::ChannelType;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -56,11 +57,33 @@ pub struct ServerInfo;
 
 impl Command for ServerInfo {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
+        let InteractionData::ApplicationCommand(command) = interaction.data else {
+            unreachable!()
+        };
+
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let bundle = create_bundle(
             interaction.locale.and_then(|locale| locale.parse().ok()),
             &["discord-frontend", "commands"],
         )?;
+
+        if command.options.iter().find(|option| option.name == String::from("server")).is_some() {
+            interaction_client
+                .create_response(
+                    interaction.id,
+                    &interaction.token,
+                    &InteractionResponse {
+                        kind: InteractionResponseType::ChannelMessageWithSource,
+                        data: Some(InteractionResponseDataBuilder::new()
+                            .content(":warning: Querying information for a specific server is currently not supported.")
+                            .build())
+                    }
+                )
+                .await
+                .into_diagnostic()?;
+
+            return Ok(());
+        }
 
         let guild = CachedGuildRepository
             .get(interaction.guild_id.unwrap())
