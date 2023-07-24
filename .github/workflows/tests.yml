@@ -12,6 +12,51 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  BuildApiBackend:
+    name: api-backend - Full Release Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest nightly Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+      - name: Download Buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
+      - name: Run Buildsystem
+        run: sudo chmod +x ./hartexbuild && ./hartexbuild build api-backend
+
+  BuildBors:
+    name: bors - Full Release Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest nightly Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+      - name: Download Buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
+      - name: Run Buildsystem
+        run: sudo chmod +x ./hartexbuild && ./hartexbuild build bors
+
+  BuildBuildsystem:
+    name: buildsystem - Full Release Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest nightly Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+      - name: Download Buildsystem
+        run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
+      - name: Run Buildsystem
+        run: sudo chmod +x ./hartexbuild && ./hartexbuild build buildsystem
+
   BuildDiscordFrontend:
     name: discord-frontend - Full Release Build
     runs-on: ubuntu-latest

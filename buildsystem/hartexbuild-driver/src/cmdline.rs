@@ -27,16 +27,16 @@ use clap::ArgMatches;
 use crate::commands;
 
 /// Handle a command line command with the matches.
-pub fn handle(matches: ArgMatches) -> miette::Result<()> {
+pub fn handle(matches: &ArgMatches) -> miette::Result<()> {
     match matches.subcommand() {
         Some(("build", subcommand_matches)) => {
-            commands::build::build_command(subcommand_matches.clone())
+            commands::build::build_command(subcommand_matches)
         }
         Some(("lint", subcommand_matches)) => {
-            commands::lint::lint_command(subcommand_matches.clone())
+            commands::lint::lint_command(subcommand_matches)
         }
         Some(("test", subcommand_matches)) => {
-            commands::test::test_command(subcommand_matches.clone())
+            commands::test::test_command(subcommand_matches)
         }
         _ => Ok(()),
     }
