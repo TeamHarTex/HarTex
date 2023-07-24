@@ -215,6 +215,7 @@ impl GithubRepositoryName {
     }
 
     #[allow(clippy::missing_errors_doc)]
+    #[allow(clippy::needless_pass_by_value)]
     pub fn new_from_repository(repository: Repository) -> miette::Result<Self> {
         let name = &repository.name;
         let Some(owner) = repository.owner.as_ref().map(|author| &author.login) else {
