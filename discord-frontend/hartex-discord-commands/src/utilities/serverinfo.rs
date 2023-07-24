@@ -219,7 +219,7 @@ impl Command for ServerInfo {
                     serverinfo_embed_channelinfo_announcementchannels_subfield_name,
                     announcement_count,
                     "<:stage:1131926172574421032>",
-                    serverinfo_embed_channelinfo_stagechannels_subfield_name.to_string(),
+                    serverinfo_embed_channelinfo_stagechannels_subfield_name,
                     stage_count,
                     "<:forum:1131928666176241735>",
                     serverinfo_embed_channelinfo_forumchannels_subfield_name,
