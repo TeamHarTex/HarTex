@@ -47,7 +47,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let features = connection
             .get::<String, String>(format!("guild:{id}:features"))
             .await?
-            .split(",")
+            .split(',')
             .map(|str| GuildFeature::from(str.to_string()))
             .collect::<Vec<_>>();
         let icon = connection
@@ -86,7 +86,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 entity
                     .features
                     .into_iter()
-                    .map(|feature| feature.into())
+                    .map(Into::into)
                     .collect::<Vec<Cow<'static, str>>>()
                     .join(","),
             )
