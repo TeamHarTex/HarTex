@@ -51,6 +51,7 @@ pub enum BorsBuildStatus {
 
 impl BorsBuildStatus {
     /// Converts the enum to a displayable string.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         match self {
             Self::Pending => "pending",
@@ -205,6 +206,7 @@ pub struct GithubRepositoryName {
 
 impl GithubRepositoryName {
     /// Constrct a new repository name.
+    #[must_use]
     pub fn new(owner: &str, repository: &str) -> Self {
         Self {
             owner: owner.to_lowercase(),
@@ -212,6 +214,7 @@ impl GithubRepositoryName {
         }
     }
 
+    #[allow(clippy::missing_errors_doc)]
     pub fn new_from_repository(repository: Repository) -> miette::Result<Self> {
         let name = &repository.name;
         let Some(owner) = repository.owner.as_ref().map(|author| &author.login) else {
@@ -223,6 +226,8 @@ impl GithubRepositoryName {
         Ok(Self::new(owner, name))
     }
 
+    #[allow(clippy::missing_errors_doc)]
+    #[allow(clippy::needless_pass_by_value)]
     pub fn new_from_string(string: String) -> miette::Result<Self> {
         let parts = string.split('/').collect::<Vec<_>>();
 
@@ -234,11 +239,13 @@ impl GithubRepositoryName {
     }
 
     /// Obtain repository owner
+    #[must_use]
     pub fn owner(&self) -> &str {
         self.owner.as_str()
     }
 
     /// Obtain repository name
+    #[must_use]
     pub fn repository(&self) -> &str {
         self.repository.as_str()
     }
