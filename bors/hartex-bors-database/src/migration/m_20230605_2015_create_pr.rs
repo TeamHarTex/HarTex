@@ -79,14 +79,14 @@ impl MigrationTrait for Migration {
                             .col(PullRequest::Repository)
                             .col(PullRequest::Number),
                     )
-                    .to_owned(),
+                    .clone(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(PullRequest::Table).to_owned())
+            .drop_table(Table::drop().table(PullRequest::Table).clone())
             .await
     }
 }
