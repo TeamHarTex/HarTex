@@ -2,9 +2,11 @@
   "name": "info",
   "description": "Information about a certain entity.",
   "name_localizations": {
+    "zh-CN": "信息",
     "zh-TW": "資訊"
   },
   "description_localizations": {
+    "zh-CN": "有关特定实体的信息。",
     "zh-TW": "關於特定實體的資訊。"
   },
   "options": [
@@ -40,9 +42,11 @@
       "name": "bot",
       "description": "Runtime information of the bot.",
       "name_localizations": {
+        "zh-CN": "机器人",
         "zh-TW": "機器人"
       },
       "description_localizations": {
+        "zh-CN": "机器人的运行时信息。",
         "zh-TW": "機器人的運行資訊。"
       },
       "type": 1
