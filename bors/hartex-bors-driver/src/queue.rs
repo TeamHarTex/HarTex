@@ -36,6 +36,9 @@ pub const APPROVE_BRANCH_NAME: &str = "automation/bors/approve";
 pub const APPROVE_MERGE_BRANCH_NAME: &str = "automation/bors/approve-merge";
 
 /// Background task processing the queue.
+#[allow(clippy::cast_sign_loss)]
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::too_many_lines)]
 pub async fn queue_processor(
     state: &GithubBorsState,
     mut rx: Receiver<BorsQueueEvent>,

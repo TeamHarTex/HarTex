@@ -37,6 +37,7 @@ use serde_json::Value;
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
 /// Obtain the list of users having the specified permission in a repository.
+#[allow(clippy::unused_async)]
 #[get("/bors/repositories/<repository>/permissions/<permission>")]
 pub async fn v1_repositories_repository_permissions_permissions(
     repository: String,
@@ -55,7 +56,7 @@ pub async fn v1_repositories_repository_permissions_permissions(
 
     let mut file = result.unwrap();
     let mut buffer = String::new();
-    if let Err(_) = file.read_to_string(&mut buffer) {
+    if file.read_to_string(&mut buffer).is_err() {
         return (
             Status::InternalServerError,
             StatusFns::internal_server_error(),

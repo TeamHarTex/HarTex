@@ -20,28 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * SPDX-License-Identifier: AGPL-3.0-only
- *
- * This file is part of HarTex.
- *
- * HarTex
- * Copyright (c) 2021-2023 HarTex Project Developers
- *
- * HarTex is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * HarTex is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License along
- * with HarTex. If not, see <https://www.gnu.org/licenses/>.
- */
-
 use sea_orm_migration::prelude::*;
 
 #[derive(DeriveMigrationName)]
@@ -69,14 +47,14 @@ impl MigrationTrait for Migration {
                             .name("unique-repository-repository")
                             .col(Repository::Repository),
                     )
-                    .to_owned(),
+                    .clone(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Repository::Table).to_owned())
+            .drop_table(Table::drop().table(Repository::Table).clone())
             .await
     }
 }

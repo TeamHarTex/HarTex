@@ -27,6 +27,7 @@ use hartex_bors_core::models::Permission;
 use hartex_bors_core::RepositoryClient;
 use hartex_log::log;
 
+#[allow(clippy::module_name_repetitions)]
 pub async fn check_permissions<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     pr: u64,
@@ -35,11 +36,13 @@ pub async fn check_permissions<C: RepositoryClient>(
 ) -> miette::Result<bool> {
     log::trace!("checking {permission} permissions");
 
-    let result = if !repository
+    let result = if repository
         .permission_resolver
         .resolve_user(author, permission)
         .await
     {
+        true
+    } else {
         log::warn!("user does not have {permission} permisisons");
 
         repository
@@ -50,8 +53,6 @@ pub async fn check_permissions<C: RepositoryClient>(
             ).await?;
 
         false
-    } else {
-        true
     };
 
     Ok(result)

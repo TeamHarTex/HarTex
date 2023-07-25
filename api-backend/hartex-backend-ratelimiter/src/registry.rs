@@ -54,9 +54,7 @@ impl Registry {
 
         let option_limiter = if let Ok(readlock) = REGISTRY.limiter_map.read() {
             if let Some(found_method) = readlock.get(&method) {
-                found_method
-                    .get(&route_name)
-                    .map(|limiter| Arc::clone(limiter))
+                found_method.get(&route_name).map(Arc::clone)
             } else {
                 None
             }

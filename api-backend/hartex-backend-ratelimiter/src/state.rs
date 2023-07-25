@@ -24,6 +24,7 @@
 use governor::Quota;
 
 /// A cached state for requests coming into the API backend.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub struct RequestState {
     pub(crate) quota: Quota,
@@ -39,11 +40,13 @@ impl RequestState {
     }
 
     /// The remaining quota.
+    #[must_use]
     pub fn quota(&self) -> &Quota {
         &self.quota
     }
 
     /// The request capacity.
+    #[must_use]
     pub fn request_capacity(&self) -> u32 {
         self.request_capacity
     }

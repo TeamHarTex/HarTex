@@ -49,6 +49,7 @@ pub struct BackendApiPermissionResolver {
 
 impl BackendApiPermissionResolver {
     /// Load the permission resolver
+    #[allow(clippy::missing_errors_doc)]
     pub async fn load(repository: GithubRepositoryName) -> miette::Result<Self> {
         let permissions = permissions::load(&repository).await?;
 
