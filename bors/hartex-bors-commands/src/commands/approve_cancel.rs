@@ -37,6 +37,8 @@ use hartex_log::log;
 use crate::permissions::check_permissions;
 
 /// Executes the approve cancel command.
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub async fn approve_cancel_command<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     database: &dyn DatabaseClient,

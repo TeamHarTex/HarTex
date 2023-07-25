@@ -24,12 +24,15 @@
 //!
 //! bors ping
 
+use std::time::SystemTime;
+
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::RepositoryClient;
 use miette::IntoDiagnostic;
-use std::time::SystemTime;
 
 /// Executes the ping command.
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub async fn ping_command<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     pr: u64,

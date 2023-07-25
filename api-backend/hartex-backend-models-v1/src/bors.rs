@@ -34,6 +34,7 @@ pub struct RepositoryPermissionsResponse {
 
 impl RepositoryPermissionsResponse {
     /// The Github users having this specific permission.
+    #[must_use]
     pub fn github_users(&self) -> &[String] {
         self.github_users.as_ref()
     }

@@ -37,6 +37,8 @@ pub const TRY_BRANCH_NAME: &str = "automation/bors/try";
 const TRY_MERGE_BRANCH_NAME: &str = "automation/bors/try-merge";
 
 /// Executes the try command.
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub async fn try_command<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     database: &dyn DatabaseClient,
