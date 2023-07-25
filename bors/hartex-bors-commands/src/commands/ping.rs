@@ -24,10 +24,11 @@
 //!
 //! bors ping
 
+use std::time::SystemTime;
+
 use hartex_bors_core::models::GithubRepositoryState;
 use hartex_bors_core::RepositoryClient;
 use miette::IntoDiagnostic;
-use std::time::SystemTime;
 
 /// Executes the ping command.
 pub async fn ping_command<C: RepositoryClient>(

@@ -28,6 +28,7 @@ use serde::Deserialize;
 /// A repository sent from a webhook.
 ///
 /// This is for some reason not returned by Octocrab the crate.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize)]
 pub struct WebhookRepository {
     /// The repository field.
