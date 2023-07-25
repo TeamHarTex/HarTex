@@ -282,7 +282,7 @@ async fn handle_comment<C: RepositoryClient>(
                     ParserError::UnknownCommand(command) => {
                         format!(r#"Unknown command "{command}"."#)
                     }
-                    _ => format!("An error occurred."),
+                    _ => "An error occurred.".to_string(),
                 };
 
                 repository.client.post_comment(pr, &error_msg).await?;
