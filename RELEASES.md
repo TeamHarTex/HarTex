@@ -23,13 +23,15 @@
 ## Discord Frontend
 
 - migrated from eyre to miette for error reporting
-- implemented `/serverinfo` and verbose filtering
+- implemented `/info server` and verbose filtering
 - allowed workers to send gateway commands to leaders
 - updated cache entities and repositories
+- replaced `/latency` and `/uptime` with `/info bot`
 
 ## Localization Infrastructure
 
 - migrated from eyre to miette for error reporting
+- updated localizations
 
 ## Rust Utilities
 
