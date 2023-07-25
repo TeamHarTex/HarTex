@@ -10,11 +10,14 @@
   "options": [
     {
       "name": "server",
+      "description": "Information about the current server.",
       "name_localizations": {
         "zh-CN": "服务器",
         "zh-TW": "伺服器"
       },
-      "description": "Information about the current server.",
+      "description_localizations": {
+        "zh-TW": "關於當前伺服器的資訊。"
+      },
       "options": [
         {
           "name": "verbose",
@@ -36,6 +39,12 @@
     {
       "name": "bot",
       "description": "Runtime information of the bot.",
+      "name_localizations": {
+        "zh-TW": "機器人"
+      },
+      "description_localizations": {
+        "zh-TW": "機器人的運行資訊。"
+      },
       "type": 1
     }
   ],
