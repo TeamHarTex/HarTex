@@ -57,7 +57,7 @@ pub(crate) async fn workflow_completed(
     );
     database
         .update_workflow_status(
-            run.id.0 as u64,
+            run.id.0,
             string_to_workflow_status(run.conclusion.unwrap_or_default().as_str()),
         )
         .await?;
@@ -170,6 +170,7 @@ pub(crate) async fn workflow_started(
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 async fn complete_approve_build(
     repository: &GithubRepositoryState<GithubRepositoryClient>,
     database: &dyn DatabaseClient,
@@ -225,36 +226,7 @@ async fn complete_approve_build(
         .iter()
         .any(|check| matches!(check.status, CheckStatus::Failure));
 
-    if !has_failure {
-        let github_pr = repository
-            .client
-            .get_pull_request(pull_request.number)
-            .await?;
-
-        repository
-            .client
-            .post_comment(
-                pull_request.number,
-                &format!(
-                    r#":sunny: Build successfull
-Approved by: {}
-Pushing {} to {}..."#,
-                    pull_request
-                        .approved_by
-                        .unwrap_or(String::from("<unknown>")),
-                    &github_pr.head.sha,
-                    &github_pr.base.ref_field
-                ),
-            )
-            .await?;
-
-        let revision = repository.client.get_revision(APPROVE_BRANCH_NAME).await?;
-
-        repository
-            .client
-            .set_branch_to_revision(&github_pr.base.ref_field, &revision)
-            .await?;
-    } else {
+    if has_failure {
         let mut workflows = database
             .get_workflows_for_approve_build(&approve_build)
             .await?;
@@ -287,6 +259,35 @@ Pushing {} to {}..."#,
                 ),
             )
             .await?;
+    } else {
+        let github_pr = repository
+            .client
+            .get_pull_request(pull_request.number)
+            .await?;
+
+        repository
+            .client
+            .post_comment(
+                pull_request.number,
+                &format!(
+                    r#":sunny: Build successfull
+Approved by: {}
+Pushing {} to {}..."#,
+                    pull_request
+                        .approved_by
+                        .unwrap_or(String::from("<unknown>")),
+                    &github_pr.head.sha,
+                    &github_pr.base.ref_field
+                ),
+            )
+            .await?;
+
+        let revision = repository.client.get_revision(APPROVE_BRANCH_NAME).await?;
+
+        repository
+            .client
+            .set_branch_to_revision(&github_pr.base.ref_field, &revision)
+            .await?;
     }
 
     let status = if has_failure {
@@ -299,9 +300,9 @@ Pushing {} to {}..."#,
         .update_approve_build_status(&approve_build, status)
         .await?;
 
-    if !has_failure {
+    if has_failure {
         sender
-            .send(BorsQueueEvent::PullRequestMerged(
+            .send(BorsQueueEvent::PullRequestFailed(
                 repository.repository.clone(),
                 pull_request.id,
             ))
@@ -309,7 +310,7 @@ Pushing {} to {}..."#,
             .into_diagnostic()?;
     } else {
         sender
-            .send(BorsQueueEvent::PullRequestFailed(
+            .send(BorsQueueEvent::PullRequestMerged(
                 repository.repository.clone(),
                 pull_request.id,
             ))
@@ -391,7 +392,13 @@ async fn complete_try_build(
         .collect::<Vec<_>>()
         .join("\n");
 
-    let message = if !has_failure {
+    let message = if has_failure {
+        log::info!("Workflow failed");
+        format!(
+            r#":broken_heart: Try build failed
+{workflow_list}"#
+        )
+    } else {
         log::info!("Workflow succeeded");
 
         let hash = &event.commit_hash;
@@ -400,12 +407,6 @@ async fn complete_try_build(
 {workflow_list}
 
 Build commit: {hash} (`{hash}`)"#
-        )
-    } else {
-        log::info!("Workflow failed");
-        format!(
-            r#":broken_heart: Try build failed
-{workflow_list}"#
         )
     };
     repository

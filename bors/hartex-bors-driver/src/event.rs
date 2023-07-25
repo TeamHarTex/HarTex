@@ -47,6 +47,7 @@ use serde_json::Value;
 use tokio::sync::mpsc::Sender;
 
 /// Bors event
+#[allow(clippy::module_name_repetitions)]
 pub struct BorsEvent {
     /// The kind of event.
     pub kind: BorsEventKind,
@@ -55,6 +56,7 @@ pub struct BorsEvent {
 }
 
 /// The kind of event.
+#[allow(clippy::large_enum_variant)]
 pub enum BorsEventKind {
     /// An issue comment.
     IssueComment(IssueCommentEventPayload),
@@ -65,6 +67,8 @@ pub enum BorsEventKind {
 }
 
 /// Deserialize an event.
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::needless_pass_by_value)]
 pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Result<BorsEvent> {
     match &*event_type {
         "issue_comment" => {
@@ -126,6 +130,9 @@ pub fn deserialize_event(event_type: String, event_json: Value) -> miette::Resul
 }
 
 /// Handke an event.
+#[allow(clippy::large_futures)]
+#[allow(clippy::match_wildcard_for_single_variants)]
+#[allow(clippy::module_name_repetitions)]
 pub async fn handle_event(state: &GithubBorsState, event: BorsEvent) -> miette::Result<()> {
     match event.kind {
         BorsEventKind::IssueComment(payload) => {
@@ -233,7 +240,7 @@ async fn handle_comment<C: RepositoryClient>(
                         &comment.user.login,
                         sender.clone(),
                     )
-                    .await?
+                    .await?;
                 }
                 BorsCommand::ApproveEq { reviewer } => {
                     hartex_bors_commands::commands::approve::approve_command(
@@ -243,10 +250,10 @@ async fn handle_comment<C: RepositoryClient>(
                         &reviewer,
                         sender.clone(),
                     )
-                    .await?
+                    .await?;
                 }
                 BorsCommand::Ping => {
-                    hartex_bors_commands::commands::ping::ping_command(repository, pr).await?
+                    hartex_bors_commands::commands::ping::ping_command(repository, pr).await?;
                 }
                 BorsCommand::Try { parent } => {
                     hartex_bors_commands::commands::r#try::try_command(
@@ -256,7 +263,7 @@ async fn handle_comment<C: RepositoryClient>(
                         &comment.user.login,
                         parent,
                     )
-                    .await?
+                    .await?;
                 }
                 BorsCommand::TryCancel => {
                     hartex_bors_commands::commands::try_cancel::try_cancel_command(
@@ -265,7 +272,7 @@ async fn handle_comment<C: RepositoryClient>(
                         pr,
                         &comment.user.login,
                     )
-                    .await?
+                    .await?;
                 }
             },
             Err(error) => {
@@ -286,6 +293,7 @@ async fn handle_comment<C: RepositoryClient>(
     Ok(())
 }
 
+#[allow(clippy::single_match_else)]
 fn retrieve_repository_state<'a, C: RepositoryClient>(
     state: &'a dyn BorsState<C>,
     repository: &GithubRepositoryName,
