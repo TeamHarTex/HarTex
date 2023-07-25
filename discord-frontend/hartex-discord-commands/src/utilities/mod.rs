@@ -27,4 +27,3 @@
 //! - serverinfo
 
 pub mod info;
-pub mod serverinfo;
