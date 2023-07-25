@@ -57,6 +57,7 @@ pub enum BorsCommand {
 }
 
 /// Parses bors commands from an input string.
+#[must_use]
 pub fn parse_commands(input: &str) -> Vec<Result<BorsCommand, parser::ParserError>> {
     let parsers: Vec<fn(parser::Parser) -> parser::ParserResult> = vec![
         parser::parse_approve,

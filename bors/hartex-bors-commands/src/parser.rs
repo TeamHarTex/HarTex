@@ -32,6 +32,7 @@ use crate::BorsCommand;
 pub(crate) const PREFIX: &str = "bors";
 
 /// An error occurred during parsing.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum ParserError<'a> {
     /// An invalid parameter is provided.
@@ -132,6 +133,7 @@ fn parse_with_params<'a>(
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 fn parse_approve_eq_inner(remaining: Option<&str>) -> ParserResult<'_> {
     match remaining {
         Some(arg) if !arg.is_empty() => Some(Ok(BorsCommand::ApproveEq {
@@ -141,6 +143,7 @@ fn parse_approve_eq_inner(remaining: Option<&str>) -> ParserResult<'_> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 fn parse_try_inner(mut parser: Parser<'_>) -> ParserResult<'_> {
     let remaining = parser.remaining();
 
@@ -175,6 +178,7 @@ fn parse_try_inner(mut parser: Parser<'_>) -> ParserResult<'_> {
     }))
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub(crate) fn parse_remaining(mut parser: Parser) -> ParserResult {
     let result = match parser.peek() {
         Some(arg) => Err(ParserError::UnknownCommand(arg)),
