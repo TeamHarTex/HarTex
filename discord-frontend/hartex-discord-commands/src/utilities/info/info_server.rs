@@ -47,6 +47,7 @@ use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
 
+#[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()
