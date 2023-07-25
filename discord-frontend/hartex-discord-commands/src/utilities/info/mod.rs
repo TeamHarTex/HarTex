@@ -26,6 +26,7 @@ use hartex_discord_core::discord::model::application::interaction::application_c
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 
+mod info_bot;
 mod info_server;
 
 #[derive(CommandMetadata)]
@@ -48,6 +49,7 @@ impl Command for Info {
         };
 
         match subcommand.name.as_str() {
+            "bot" => info_bot::execute(interaction, subcommand.clone()).await,
             "server" => info_server::execute(interaction, subcommand.clone()).await,
             _ => unreachable!(),
         }
