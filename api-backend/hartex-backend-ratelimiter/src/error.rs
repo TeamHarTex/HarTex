@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// # Ratelimit Errors
+///
+/// Ratelimit errors that may be returned by the ratelimiter.
+use std::io::Cursor;
+
 use governor::Quota;
 use hartex_backend_status_util::StatusFns;
 use rocket::http::ContentType;
@@ -28,12 +33,9 @@ use rocket::response::Responder;
 use rocket::response::Result;
 use rocket::Request;
 use rocket::Response;
-/// # Ratelimit Errors
-///
-/// Ratelimit errors that may be returned by the ratelimiter.
-use std::io::Cursor;
 
 /// A ratelimit error.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub enum LimitError {
     /// The Client IP of the request is not specified.
@@ -49,6 +51,7 @@ pub enum LimitError {
 }
 
 impl<'r, 'o: 'r> Responder<'r, 'o> for &LimitError {
+    #[allow(clippy::match_same_arms)]
     fn respond_to(self, _: &'r Request<'_>) -> Result<'o> {
         let mut response = Response::build().header(ContentType::JSON).finalize();
 

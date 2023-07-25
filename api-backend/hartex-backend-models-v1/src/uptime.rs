@@ -34,6 +34,7 @@ use sqlx::types::chrono::Utc;
 use sqlx::Error;
 
 /// An uptime query.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, Serialize)]
 pub struct UptimeQuery<'a> {
     component_name: &'a str,
@@ -41,17 +42,20 @@ pub struct UptimeQuery<'a> {
 
 impl<'a> UptimeQuery<'a> {
     /// Create a new uptime query with the component name to search for.
+    #[must_use]
     pub fn new(component_name: &'a str) -> Self {
         Self { component_name }
     }
 
     /// The component name to search for in this uptime query.
+    #[must_use]
     pub fn component_name(&self) -> &'a str {
         self.component_name
     }
 }
 
 /// A response to an uptime query.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Deserialize, Serialize)]
 pub struct UptimeResponse {
     start_timestamp: u128,
@@ -59,12 +63,14 @@ pub struct UptimeResponse {
 
 impl UptimeResponse {
     /// The start timestamp of the uptime entry.
+    #[must_use]
     pub fn start_timestamp(&self) -> u128 {
         self.start_timestamp
     }
 }
 
 impl<'r> FromRow<'r, PgRow> for UptimeResponse {
+    #[allow(clippy::cast_sign_loss)]
     fn from_row(row: &'r PgRow) -> Result<Self, Error> {
         let timestamp: DateTime<Utc> = row.try_get("timestamp")?;
 

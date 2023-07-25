@@ -47,6 +47,7 @@ mod catchers;
 ///
 /// This is the entry point of the API backend for HarTex. This does the heavy lifting of building
 /// a Rocket server, igniting, and launching it.
+#[allow(clippy::no_effect_underscore_binding)]
 #[rocket::main]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
