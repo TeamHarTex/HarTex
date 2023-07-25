@@ -36,4 +36,3 @@ serverinfo-embed-memberinfo-field-name=成员信息
 serverinfo-embed-memberinfo-membercount-subfield-name=成员数量：
 serverinfo-embed-memberinfo-humancount-subfield-name=人类数量：
 serverinfo-embed-memberinfo-botcount-subfield-name=机器人数量：
-serverinfo-server-not-supported=目前不支持查询指定服务器的信息。

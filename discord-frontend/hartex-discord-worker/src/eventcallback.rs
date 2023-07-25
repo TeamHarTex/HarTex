@@ -42,7 +42,8 @@ use sqlx::prelude::Executor;
 use sqlx::prelude::Statement;
 use sqlx::types::chrono::Utc;
 
-/// Invoke a corresponding event callback for an event,
+/// Invoke a corresponding event callback for an event.
+#[allow(clippy::large_futures)]
 pub async fn invoke(
     event: GatewayEvent,
     shard: u8,

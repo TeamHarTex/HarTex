@@ -36,4 +36,3 @@ serverinfo-embed-memberinfo-field-name=Member Information
 serverinfo-embed-memberinfo-membercount-subfield-name=Member Count:
 serverinfo-embed-memberinfo-humancount-subfield-name=Human Count:
 serverinfo-embed-memberinfo-botcount-subfield-name=Bot Count:
-serverinfo-server-not-supported=Querying information for a specific server is currently not supported.
