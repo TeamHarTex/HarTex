@@ -35,7 +35,7 @@ pub trait Limitable<'r> {
     fn evaluate_limit(method: Method, route: &str) -> Quota;
 
     /// Create a nonzero u32 for quota.
-    #[inline(always)]
+    #[must_use]
     fn non_zero(i: u32) -> NonZeroU32 {
         NonZeroU32::new(i).unwrap_or(NonZeroU32::new(1).unwrap())
     }
