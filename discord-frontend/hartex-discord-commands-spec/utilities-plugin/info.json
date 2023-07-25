@@ -1,5 +1,11 @@
 {
   "name": "info",
   "description": "Information about a certain entity.",
+  "name_localizations": {
+    "zh-TW": "資訊"
+  },
+  "description_localizations": {
+    "zh-TW": "關於特定實體的資訊。"
+  },
   "type": 1
 }
