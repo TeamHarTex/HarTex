@@ -25,10 +25,6 @@
 //! Command list:
 //! - about
 //! - contributors
-//! - latency
-//! - uptime
 
 pub mod about;
 pub mod contributors;
-pub mod latency;
-pub mod uptime;
