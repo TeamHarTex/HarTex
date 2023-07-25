@@ -217,50 +217,61 @@ impl Command for ServerInfo {
 
         let embed = EmbedBuilder::new()
             .color(0x41_A0_DE)
-            .field(EmbedFieldBuilder::new(
-                format!(
+            .field(
+                EmbedFieldBuilder::new(
+                    format!(
                     "<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"
                 ),
-                default_general_information,
-            ))
-            .field(EmbedFieldBuilder::new(
-                format!(
-                    "<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"
-                ),
-                format!(
-                    "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
-                    "<:category:1131915276980600872>",
-                    serverinfo_embed_channelinfo_categories_subfield_name,
-                    category_count,
-                    "<:textChannel:1131860470488375316>",
-                    serverinfo_embed_channelinfo_textchannels_subfield_name,
-                    text_count,
-                    "<:voiceChannel:1131908258945318923>",
-                    serverinfo_embed_channelinfo_voicechannels_subfield_name,
-                    voice_count,
-                    "<:announcement:1131923904324186296>",
-                    serverinfo_embed_channelinfo_announcementchannels_subfield_name,
-                    announcement_count,
-                    "<:stage:1131926172574421032>",
-                    serverinfo_embed_channelinfo_stagechannels_subfield_name,
-                    stage_count,
-                    "<:forum:1131928666176241735>",
-                    serverinfo_embed_channelinfo_forumchannels_subfield_name,
-                    forum_count,
-                ),
-            ))
-            .field(EmbedFieldBuilder::new(
-                format!("<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"),
-                format!(
-                    "{} {}\n{} {}\n{} {}",
-                    serverinfo_embed_memberinfo_membercount_subfield_name,
-                    members.len(),
-                    serverinfo_embed_memberinfo_humancount_subfield_name,
-                    humans,
-                    serverinfo_embed_memberinfo_botcount_subfield_name,
-                    members.len() - humans,
-                ),
-            ))
+                    default_general_information,
+                )
+                .inline(),
+            )
+            .field(
+                EmbedFieldBuilder::new(
+                    format!(
+                        "<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"
+                    ),
+                    format!(
+                        "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
+                        "<:category:1131915276980600872>",
+                        serverinfo_embed_channelinfo_categories_subfield_name,
+                        category_count,
+                        "<:textChannel:1131860470488375316>",
+                        serverinfo_embed_channelinfo_textchannels_subfield_name,
+                        text_count,
+                        "<:voiceChannel:1131908258945318923>",
+                        serverinfo_embed_channelinfo_voicechannels_subfield_name,
+                        voice_count,
+                        "<:announcement:1131923904324186296>",
+                        serverinfo_embed_channelinfo_announcementchannels_subfield_name,
+                        announcement_count,
+                        "<:stage:1131926172574421032>",
+                        serverinfo_embed_channelinfo_stagechannels_subfield_name,
+                        stage_count,
+                        "<:forum:1131928666176241735>",
+                        serverinfo_embed_channelinfo_forumchannels_subfield_name,
+                        forum_count,
+                    ),
+                )
+                .inline(),
+            )
+            .field(
+                EmbedFieldBuilder::new(
+                    format!(
+                        "<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"
+                    ),
+                    format!(
+                        "{} {}\n{} {}\n{} {}",
+                        serverinfo_embed_memberinfo_membercount_subfield_name,
+                        members.len(),
+                        serverinfo_embed_memberinfo_humancount_subfield_name,
+                        humans,
+                        serverinfo_embed_memberinfo_botcount_subfield_name,
+                        members.len() - humans,
+                    ),
+                )
+                .inline(),
+            )
             .thumbnail(
                 ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap()))
                     .into_diagnostic()?,
