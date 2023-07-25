@@ -42,11 +42,7 @@ impl Command for Info {
         };
 
         let Some(subcommand) = command.options.iter().find(|option| {
-            if let CommandOptionValue::SubCommand(_) = option.value {
-                true
-            } else {
-                false
-            }
+            matches!(option.value, CommandOptionValue::SubCommand(_))
         }) else {
             unreachable!()
         };
