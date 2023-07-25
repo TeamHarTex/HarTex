@@ -56,6 +56,7 @@ pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
 });
 
 /// The entry point.
+#[allow(clippy::no_effect_underscore_binding)]
 #[rocket::main]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();

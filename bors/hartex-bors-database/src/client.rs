@@ -25,7 +25,6 @@ use std::pin::Pin;
 
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
-
 use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
 use hartex_bors_core::models::BorsBuildStatus;

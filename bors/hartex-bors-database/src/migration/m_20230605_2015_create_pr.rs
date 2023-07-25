@@ -20,11 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::migration::m_20230527_2254_create_build::Build;
-use crate::migration::m_20230608_2047_create_approve_build::ApproveBuild;
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::sea_query::types::Keyword;
 use sea_orm_migration::sea_query::SimpleExpr;
+
+use crate::migration::m_20230527_2254_create_build::Build;
+use crate::migration::m_20230608_2047_create_approve_build::ApproveBuild;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
