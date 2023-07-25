@@ -20,9 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_commands_core::CommandMetadata;
+use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::application::interaction::InteractionData;
+
+mod info_server;
 
 #[derive(CommandMetadata)]
 #[metadata(command_type = 1)]
@@ -32,7 +36,24 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 pub struct Info;
 
 impl Command for Info {
-    async fn execute(&self, _: Interaction) -> miette::Result<()> {
-        Ok(())
+    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
+        let Some(InteractionData::ApplicationCommand(command)) = interaction.clone().data else {
+            unreachable!()
+        };
+
+        let Some(subcommand) = command.options.iter().find(|option| {
+            if let CommandOptionValue::SubCommand(_) = option.value {
+                true
+            } else {
+                false
+            }
+        }) else {
+            unreachable!()
+        };
+
+        match subcommand.name.as_str() {
+            "server" => info_server::execute(interaction, subcommand.clone()).await,
+            _ => unreachable!(),
+        }
     }
 }
