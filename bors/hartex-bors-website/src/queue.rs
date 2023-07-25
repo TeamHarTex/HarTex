@@ -58,7 +58,7 @@ struct PullRequest {
 #[get("/queue/<repository..>")]
 pub async fn queue(repository: PathBuf) -> RawHtml<String> {
     let repository_string = repository.to_string_lossy().to_string();
-    let segments = repository_string.split("\\").collect::<Vec<&str>>();
+    let segments = repository_string.split('\\').collect::<Vec<&str>>();
     let name = GithubRepositoryName::new(segments[0], segments[1]);
     let database = DATABASE.wait().await;
     log::trace!("obtaining pull requests for repository: {name}");
@@ -96,7 +96,7 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                                 String::new()
                             };
 
-                            let pull_request = PullRequest {
+                            PullRequest {
                                 number: pr.number,
                                 assignee: pr.assignee.clone(),
                                 approved_by: pr.approved_by.clone().unwrap_or_default(),
@@ -105,12 +105,10 @@ pub async fn queue(repository: PathBuf) -> RawHtml<String> {
                                 url: pr.url.clone(),
                                 approve_status,
                                 try_status,
-                            };
-
-                            pull_request
+                            }
                         })
                         .collect(),
-                    repository: repository_string.replace("\\", "/"),
+                    repository: repository_string.replace('\\', "/"),
                     total: pull_requests.len(),
                 },
             )
