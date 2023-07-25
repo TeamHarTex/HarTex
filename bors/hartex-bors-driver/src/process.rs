@@ -23,7 +23,6 @@
 //! # The Bors Process
 
 use std::env;
-use std::future::Future;
 
 use futures_util::StreamExt;
 use hartex_bors_github::GithubBorsState;
@@ -33,33 +32,31 @@ use reqwest_eventsource::EventSource;
 use serde_json::Value;
 
 /// Create a bors process.
-pub fn bors_process(state: &GithubBorsState) -> impl Future<Output = ()> + Send + '_ {
-    let service = async move {
-        let mut event_source = EventSource::get(&env::var("SMEE_URL").unwrap_or_default());
-        while let Some(event) = event_source.next().await {
-            match event {
-                Ok(Event::Open) => log::trace!("eventsource connection opened"),
-                Ok(Event::Message(message)) => {
-                    let value = serde_json::from_str::<Value>(&message.data).unwrap();
-                    if let Value::String(event_type) = &value["x-github-event"] {
-                        let body = &value["body"];
-                        let result =
-                            crate::event::deserialize_event(event_type.to_string(), body.clone());
-                        if let Err(error) = &result {
-                            println!("{error:?}");
-                            continue;
-                        }
+#[allow(clippy::large_futures)]
+#[allow(clippy::module_name_repetitions)]
+pub async fn bors_process(state: &GithubBorsState) {
+    let mut event_source = EventSource::get(&env::var("SMEE_URL").unwrap_or_default());
+    while let Some(event) = event_source.next().await {
+        match event {
+            Ok(Event::Open) => log::trace!("eventsource connection opened"),
+            Ok(Event::Message(message)) => {
+                let value = serde_json::from_str::<Value>(&message.data).unwrap();
+                if let Value::String(event_type) = &value["x-github-event"] {
+                    let body = &value["body"];
+                    let result =
+                        crate::event::deserialize_event(event_type.to_string(), body.clone());
+                    if let Err(error) = &result {
+                        println!("{error:?}");
+                        continue;
+                    }
 
-                        let event = result.unwrap();
-                        if let Err(error) = crate::event::handle_event(&state, event).await {
-                            println!("{error:?}");
-                        }
+                    let event = result.unwrap();
+                    if let Err(error) = crate::event::handle_event(state, event).await {
+                        println!("{error:?}");
                     }
                 }
-                Err(error) => log::error!("an error occurred: {error:?}"),
             }
+            Err(error) => log::error!("an error occurred: {error:?}"),
         }
-    };
-
-    service
+    }
 }
