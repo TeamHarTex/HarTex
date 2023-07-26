@@ -93,11 +93,13 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
 
     bundle_get!(bundle."botinfo-embed-title": message, out [botinfo_embed_title, errors]);
     handle_errors(errors)?;
+    bundle_get!(bundle."botinfo-embed-botstarted-field-name": message, out [botinfo_embed_botstarted_field_name, errors]);
+    handle_errors(errors)?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
-            "Bot Started",
+            botinfo_embed_botstarted_field_name,
             format!("<t:{timestamp}:R>")
         ))
         .title(botinfo_embed_title)
