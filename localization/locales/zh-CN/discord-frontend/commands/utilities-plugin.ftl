@@ -36,3 +36,5 @@ serverinfo-embed-memberinfo-field-name=成员信息
 serverinfo-embed-memberinfo-membercount-subfield-name=成员数量：
 serverinfo-embed-memberinfo-humancount-subfield-name=人类数量：
 serverinfo-embed-memberinfo-botcount-subfield-name=机器人数量：
+botinfo-embed-title=运行时信息
+botinfo-embed-botstarted-field-name=机器人已启动
