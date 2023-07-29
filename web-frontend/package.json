@@ -13,7 +13,7 @@
     "@nuxt/image": "^0.7.1",
     "@types/node": "^18.16.18",
     "@unocss/nuxt": "^0.54.0",
-    "@unocss/preset-web-fonts": "^0.53.3",
+    "@unocss/preset-web-fonts": "^0.54.0",
     "@unocss/transformer-directives": "^0.54.0",
     "nuxt": "^3.6.0",
     "typescript": "^5.1.0",
