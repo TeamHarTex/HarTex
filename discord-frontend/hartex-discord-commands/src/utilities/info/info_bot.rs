@@ -54,7 +54,6 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         &["discord-frontend", "commands"],
     )?;
 
-
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!("http://{api_domain}/api/v1/uptime");
