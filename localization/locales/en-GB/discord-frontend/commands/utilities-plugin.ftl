@@ -38,3 +38,4 @@ serverinfo-embed-memberinfo-humancount-subfield-name=Human Count:
 serverinfo-embed-memberinfo-botcount-subfield-name=Bot Count:
 botinfo-embed-title=Runtime Information
 botinfo-embed-botstarted-field-name=Bot Started
+botinfo-embed-latency-field-name=Latency (Milliseconds)
