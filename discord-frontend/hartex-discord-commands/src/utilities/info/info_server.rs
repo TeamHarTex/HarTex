@@ -159,8 +159,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     features_vec.sort();
     let features = features_vec
         .iter()
-        .map(|str| format!("\n- `{str}`"))
-        .collect::<String>();
+        .fold(String::new(), |mut output, feature| {
+            let _ = write!(output, "\n- `{feature}`");
+            output
+        });
 
     let members = CachedMemberRepository
         .member_ids_in_guild(guild.id)
