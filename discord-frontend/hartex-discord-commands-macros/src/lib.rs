@@ -34,7 +34,6 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
 use syn::parse_macro_input;
 use syn::DeriveInput;
 
@@ -45,6 +44,6 @@ mod commandmetadata;
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
     commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or(TokenStream2::new())
+        .unwrap_or_default()
         .into()
 }
