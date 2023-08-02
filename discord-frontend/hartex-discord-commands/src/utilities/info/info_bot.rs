@@ -22,6 +22,7 @@
 
 use std::env;
 use std::str;
+use std::time::SystemTime;
 
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -57,6 +58,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!("http://{api_domain}/api/v1/uptime");
+    let now = SystemTime::now();
 
     log::debug!("sending a request to {}", &uri);
 
@@ -86,6 +88,8 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         )));
     }
 
+    let latency = now.elapsed().into_diagnostic()?.as_millis();
+
     let response = serde_json::from_str::<Response<UptimeResponse>>(&full).into_diagnostic()?;
     let data = response.data();
     let timestamp = data.start_timestamp();
@@ -94,12 +98,18 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     handle_errors(errors)?;
     bundle_get!(bundle."botinfo-embed-botstarted-field-name": message, out [botinfo_embed_botstarted_field_name, errors]);
     handle_errors(errors)?;
+    bundle_get!(bundle."botinfo-embed-latency-field-name": message, out [botinfo_embed_latency_field_name, errors]);
+    handle_errors(errors)?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             botinfo_embed_botstarted_field_name,
             format!("<t:{timestamp}:R>")
+        ))
+        .field(EmbedFieldBuilder::new(
+            botinfo_embed_latency_field_name,
+            format!("`{latency}`")
         ))
         .title(botinfo_embed_title)
         .validate()
