@@ -43,7 +43,7 @@ mod types;
 pub fn bundle_get(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as Parameters);
     expand_bundle_get::expand_bundle_get(parameters)
-        .unwrap_or(TokenStream2::new())
+        .unwrap_or_default()
         .into()
 }
 
@@ -52,6 +52,6 @@ pub fn bundle_get(tokens: TokenStream) -> TokenStream {
 pub fn bundle_get_args(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as ParametersWithArgs);
     expand_bundle_get_args::expand_bundle_get_args(parameters)
-        .unwrap_or(TokenStream2::new())
+        .unwrap_or_default()
         .into()
 }
