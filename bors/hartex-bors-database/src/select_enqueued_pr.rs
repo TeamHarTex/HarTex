@@ -124,7 +124,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 }
 
 async fn execute_query_many(
-    select: &mut Select<enqueued_pull_request::Entity>,
+    select: &Select<enqueued_pull_request::Entity>,
     connection: &DatabaseConnection,
 ) -> miette::Result<Vec<Response>> {
     select
