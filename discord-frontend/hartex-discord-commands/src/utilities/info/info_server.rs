@@ -21,6 +21,7 @@
  */
 
 use std::borrow::Cow;
+use std::fmt::Write;
 
 use futures::future;
 use hartex_discord_cdn::Cdn;
