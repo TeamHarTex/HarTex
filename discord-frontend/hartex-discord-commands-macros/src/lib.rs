@@ -45,6 +45,6 @@ mod commandmetadata;
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
     commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or(TokenStream2::new())
+        .unwrap_or_default()
         .into()
 }
