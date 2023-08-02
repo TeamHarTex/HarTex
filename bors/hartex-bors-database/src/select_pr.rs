@@ -206,7 +206,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 }
 
 async fn execute_query_one(
-    select: &mut Select<pull_request::Entity>,
+    select: &Select<pull_request::Entity>,
     connection: &DatabaseConnection,
 ) -> miette::Result<Option<Response>> {
     select
@@ -223,7 +223,7 @@ async fn execute_query_one(
 }
 
 async fn execute_query_many(
-    select: &mut Select<pull_request::Entity>,
+    select: &Select<pull_request::Entity>,
     connection: &DatabaseConnection,
 ) -> miette::Result<Vec<Response>> {
     select

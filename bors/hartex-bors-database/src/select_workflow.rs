@@ -149,7 +149,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 }
 
 async fn execute_query_many(
-    select: &mut Select<workflow::Entity>,
+    select: &Select<workflow::Entity>,
     connection: &DatabaseConnection,
 ) -> miette::Result<Vec<Response>> {
     select
