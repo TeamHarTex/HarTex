@@ -38,3 +38,4 @@ serverinfo-embed-memberinfo-humancount-subfield-name=真人數：
 serverinfo-embed-memberinfo-botcount-subfield-name=機器人數：
 botinfo-embed-title=運行資訊
 botinfo-embed-botstarted-field-name=機器人已啟動
+botinfo-embed-latency-field-name=延遲（毫秒）
