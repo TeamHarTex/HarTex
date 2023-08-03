@@ -62,11 +62,8 @@ pub fn create_bundle(
     path.iter()
         .for_each(|segment| localizations_root.push(segment));
 
-    if !localizations_root.try_exists().into_diagnostic()? {
-        return Err(Report::msg(format!(
-            "localization root not found: {}",
-            localizations_root.to_string_lossy()
-        )));
+    if !localizations_root.exists() {
+        localizations_root = PathBuf::from("../localization/locales/en-GB");
     }
 
     if !localizations_root.is_dir() {
