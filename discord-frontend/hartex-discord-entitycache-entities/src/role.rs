@@ -20,4 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct RoleEntity;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::RoleMarker;
+use hartex_discord_entitycache_core::Entity;
+
+#[derive(Entity)]
+pub struct RoleEntity {
+    #[entity(id)]
+    pub id: Id<RoleMarker>,
+    pub name: String,
+}
