@@ -20,15 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Entities
-//!
-//! This crate provides definitions for entities stored in the entity cache.
-
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
-pub mod guild;
-pub mod member;
-pub mod role;
-pub mod user;
+pub struct RoleEntity;
