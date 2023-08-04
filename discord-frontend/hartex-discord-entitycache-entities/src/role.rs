@@ -20,4 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct RoleEntity;
+use hartex_discord_core::discord::model::guild::Role;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::RoleMarker;
+use hartex_discord_entitycache_core::Entity;
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Entity)]
+pub struct RoleEntity {
+    #[entity(id)]
+    pub id: Id<RoleMarker>,
+    pub name: String,
+}
+
+impl From<Role> for RoleEntity {
+    fn from(role: Role) -> Self {
+        Self {
+            id: role.id,
+            name: role.name
+        }
+    }
+}
