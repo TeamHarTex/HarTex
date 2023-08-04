@@ -18,7 +18,7 @@ miette = "5.10.0"
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 sea-orm = { version = "0.12.1", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
 sea-orm-migration = { version = "0.12.1", features = ["runtime-tokio-native-tls", "sqlx-sqlite"] }
-serde = { version = "1.0.180", features = ["derive"] }
+serde = { version = "1.0.181", features = ["derive"] }
 sqlx = { version = "0.7.0", features = ["runtime-tokio-native-tls", "sqlite"] }
 
 [features]
