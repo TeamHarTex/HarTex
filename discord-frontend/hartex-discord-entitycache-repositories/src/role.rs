@@ -20,4 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Entity;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::role::RoleEntity;
+
 pub struct CachedRoleRepository;
+
+impl Repository<RoleEntity> for CachedRoleRepository {
+    async fn get(&self, _: <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
+        todo!()
+    }
+
+    async fn upsert(&self, _: RoleEntity) -> CacheResult<()> {
+        todo!()
+    }
+}
