@@ -41,7 +41,7 @@ impl CacheUpdater for GuildCreate {
         CachedGuildRepository.upsert(entity).await?;
 
         for role in &self.0.roles {
-            CachedRoleRepository.upsert(RoleEntity::from(role.clone())).await?;
+            CachedRoleRepository.upsert(RoleEntity::from((self.0.id, role.clone()))).await?;
         }
 
         Ok(())
