@@ -20,10 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
+use redis::AsyncCommands;
+use redis::Client;
 
 pub struct CachedRoleRepository;
 
@@ -32,7 +36,20 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         todo!()
     }
 
-    async fn upsert(&self, _: RoleEntity) -> CacheResult<()> {
-        todo!()
+    async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+        connection
+            .set(
+                format!(
+                    "guild:{}:role:{}:name",
+                    entity.guild_id, entity.id
+                ),
+                entity.name,
+            )
+            .await?;
+
+        Ok(())
     }
 }
