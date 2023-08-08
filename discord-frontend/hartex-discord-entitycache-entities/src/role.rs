@@ -22,6 +22,7 @@
 
 use hartex_discord_core::discord::model::guild::Role;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_entitycache_core::Entity;
 
@@ -29,13 +30,16 @@ use hartex_discord_entitycache_core::Entity;
 #[derive(Entity)]
 pub struct RoleEntity {
     #[entity(id)]
+    pub guild_id: Id<GuildMarker>,
+    #[entity(id)]
     pub id: Id<RoleMarker>,
     pub name: String,
 }
 
-impl From<Role> for RoleEntity {
-    fn from(role: Role) -> Self {
+impl From<(Id<GuildMarker>, Role)> for RoleEntity {
+    fn from((guild_id, role): (Id<GuildMarker>, Role)) -> Self {
         Self {
+            guild_id,
             id: role.id,
             name: role.name
         }
