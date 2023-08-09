@@ -56,7 +56,7 @@ impl CachedRoleRepository {
             .collect::<Vec<_>>();
 
         Ok(keys
-            .into_iter()
+            .iter()
             .map(|key| {
                 let (_, role_id): (u64, u64) = scan!("guild_:{}:role:{}:name" <- key).unwrap();
 
