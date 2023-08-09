@@ -61,7 +61,7 @@
 
 ## Bors Buildbot
 
-- implemented pull request queue
+- **Added:** pull request queue
 - **Changed:** updated enqueued pull request model
 - **Changed:** updated command parsing to support passing parameters to commands
 - **Changed:** modified try command to optionally accept a parent commit for the try build creation
@@ -94,7 +94,7 @@
 
 ## Rust Utilities
 
-- added a dedicated crate for errors
+- **Added:** a dedicated crate for errors
 - **Changed:** updated rust version to 1.73.0
 
 ## Web Frontend
