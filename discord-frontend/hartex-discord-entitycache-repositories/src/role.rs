@@ -32,8 +32,20 @@ use redis::Client;
 pub struct CachedRoleRepository;
 
 impl Repository<RoleEntity> for CachedRoleRepository {
-    async fn get(&self, _: <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        todo!()
+    async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+
+        let name = connection
+            .get::<String, String>(format!("guild:{guild_id}:role:{id}"))
+            .await?;
+
+        Ok(RoleEntity {
+            guild_id,
+            id,
+            name,
+        })
     }
 
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
