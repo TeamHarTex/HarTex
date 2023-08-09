@@ -1,6 +1,6 @@
 # [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.2.1...nightly)
 
-> **x** contributor made contributions to this release
+> **3** contributor made contributions to this release
 
 > **y** commits since 2023-07-16
 
