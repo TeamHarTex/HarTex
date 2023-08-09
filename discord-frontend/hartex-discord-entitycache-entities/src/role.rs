@@ -21,9 +21,9 @@
  */
 
 use hartex_discord_core::discord::model::guild::Role;
-use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::Entity;
 
 #[allow(clippy::module_name_repetitions)]
@@ -41,7 +41,7 @@ impl From<(Id<GuildMarker>, Role)> for RoleEntity {
         Self {
             guild_id,
             id: role.id,
-            name: role.name
+            name: role.name,
         }
     }
 }

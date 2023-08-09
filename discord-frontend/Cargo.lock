@@ -989,6 +989,7 @@ dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_entities",
  "redis",
+ "serde_scan",
 ]
 
 [[package]]
