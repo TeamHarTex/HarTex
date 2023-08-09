@@ -24,6 +24,9 @@ use std::env;
 use std::str;
 use std::time::SystemTime;
 
+use hartex_backend_models::Response;
+use hartex_backend_models_v1::uptime::UptimeQuery;
+use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
@@ -32,10 +35,10 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
-use hartex_log::log;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
+use hartex_log::log;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
 use hyper::header::USER_AGENT;
@@ -44,9 +47,6 @@ use hyper::Method;
 use hyper::Request;
 use miette::IntoDiagnostic;
 use miette::Report;
-use hartex_backend_models::Response;
-use hartex_backend_models_v1::uptime::UptimeQuery;
-use hartex_backend_models_v1::uptime::UptimeResponse;
 
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);
@@ -105,11 +105,11 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             botinfo_embed_botstarted_field_name,
-            format!("<t:{timestamp}:R>")
+            format!("<t:{timestamp}:R>"),
         ))
         .field(EmbedFieldBuilder::new(
             botinfo_embed_latency_field_name,
-            format!("`{latency}`")
+            format!("`{latency}`"),
         ))
         .title(botinfo_embed_title)
         .validate()
