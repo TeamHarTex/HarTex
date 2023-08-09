@@ -38,7 +38,7 @@ pub struct CachedRoleRepository;
 impl CachedRoleRepository {
     #[allow(clippy::missing_errors_doc)]
     #[allow(clippy::missing_panics_doc)]
-    pub async fn role_ids_in_guild(
+    pub fn role_ids_in_guild(
         &self,
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<RoleMarker>>> {
