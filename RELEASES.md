@@ -1,4 +1,4 @@
-# Version 0.3.0 (2023-08-23)
+# [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.2.1...nightly)
 
 > **x** contributor made contributions to this release
 
@@ -41,7 +41,7 @@
 
 - no major changes
 
-# Version 0.2.1 (2023-07-16)
+# [Version 0.2.1 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.2.0...0.2.1)
 
 > **1** contributor made contributions to this release
 
@@ -79,7 +79,7 @@
 
 - no major changes
 
-# Version 0.2.0 (2023-07-16)
+# [Version 0.2.0 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.1.0...0.2.0)
 
 > **5** contributors made contributions to this release
 
@@ -135,7 +135,7 @@
 - added documentation website
 - added introduction page
 
-# Version 0.1.0 (2023-06-14)
+# [Version 0.1.0 (2023-06-14)](https://github.com/TeamHarTex/HarTex/commits/0.1.0)
 
 > **5** contributors made contributions to this release
 
