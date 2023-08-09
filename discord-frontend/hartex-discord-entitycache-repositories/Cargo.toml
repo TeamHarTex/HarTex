@@ -16,5 +16,6 @@ hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" 
 hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-entities" }
 
 redis = { version = "0.23.1", features = ["tokio-comp"] }
+serde_scan = "0.4.1"
 
 [features]
