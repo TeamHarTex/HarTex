@@ -26,8 +26,8 @@ fn main() {
             miette::Report::msg({
                 let res = ::alloc::fmt::format(
                     format_args!(
-                        "key `{0}` not found for locale `{1}`",
-                        "bundle-get-args-term", bundle.locales[0]
+                        "key `{0}` not found for locale `{1}`", "bundle-get-args-term",
+                        bundle.locales[0]
                     ),
                 );
                 res
