@@ -16,7 +16,7 @@ hartex_bors_database = { path = "../hartex-bors-database" }
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-async-lock = "2.7.0"
+async-lock = "2.8.0"
 handlebars = { version = "5.0.0-beta.2", features = ["dir_source"] }
 miette = { version = "5.10.0", features = ["fancy"] }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
