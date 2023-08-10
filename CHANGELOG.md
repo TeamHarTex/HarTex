@@ -28,8 +28,10 @@
 
 ## Localization Infrastructure
 
+- **Added:** fallback to `en-GB` if locale is not specified or locale is not found in `locales` folder
 - **Changed:** migrated from eyre to miette for error reporting
 - **Changed:** updated localizations
+- **Fixed:** do not panic if key is not found
 
 ## Rust Utilities
 
