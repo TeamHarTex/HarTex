@@ -2,10 +2,12 @@
   "name": "info",
   "description": "Information about a certain entity.",
   "name_localizations": {
+    "ja": "情報",
     "zh-CN": "信息",
     "zh-TW": "資訊"
   },
   "description_localizations": {
+    "ja": "指定実体の情報。",
     "zh-CN": "有关特定实体的信息。",
     "zh-TW": "關於特定實體的資訊。"
   },
@@ -14,10 +16,12 @@
       "name": "server",
       "description": "Information about the current server.",
       "name_localizations": {
+        "ja": "サーバー",
         "zh-CN": "服务器",
         "zh-TW": "伺服器"
       },
       "description_localizations": {
+        "ja": "このサーバーについて…",
         "zh-TW": "關於當前伺服器的資訊。"
       },
       "options": [
@@ -25,10 +29,12 @@
           "name": "verbose",
           "description": "Whether to display more detailed information in the returned embed.",
           "name_localizations": {
+            "ja": "詳しく",
             "zh-CN": "详细",
             "zh-TW": "詳細"
           },
           "description_localizations": {
+            "ja": "もっと詳しい情報を？",
             "zh-CN": "是否在返回的嵌入中显示更详细的信息。",
             "zh-TW": "是否在返回的嵌入中顯示更多詳細信息。"
           },
@@ -42,10 +48,12 @@
       "name": "bot",
       "description": "Runtime information of the bot.",
       "name_localizations": {
+        "ja": "ボット",
         "zh-CN": "机器人",
         "zh-TW": "機器人"
       },
       "description_localizations": {
+        "ja": "ボットの運転情報。",
         "zh-CN": "机器人的运行时信息。",
         "zh-TW": "機器人的運行資訊。"
       },
