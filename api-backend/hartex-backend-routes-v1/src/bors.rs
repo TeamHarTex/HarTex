@@ -45,7 +45,7 @@ pub async fn v1_repositories_repository_permissions_permissions(
 ) -> (Status, Value) {
     log::trace!("attempting to retrieve permissions data");
     let result = File::open(format!(
-        "./backend-data/bors.{}.permissions.{}",
+        "../backend-data/bors.{}.permissions.{}",
         repository.to_lowercase(),
         permission.to_lowercase()
     ));
