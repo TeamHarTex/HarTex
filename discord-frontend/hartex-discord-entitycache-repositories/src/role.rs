@@ -38,10 +38,7 @@ pub struct CachedRoleRepository;
 impl CachedRoleRepository {
     #[allow(clippy::missing_errors_doc)]
     #[allow(clippy::missing_panics_doc)]
-    pub fn role_ids_in_guild(
-        &self,
-        guild_id: Id<GuildMarker>,
-    ) -> CacheResult<Vec<Id<RoleMarker>>> {
+    pub fn role_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<RoleMarker>>> {
         let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut sync_connection = client.get_connection()?;
