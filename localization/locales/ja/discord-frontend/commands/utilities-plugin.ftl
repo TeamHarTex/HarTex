@@ -39,3 +39,5 @@ serverinfo-embed-memberinfo-field-name=メンバー情報
 serverinfo-embed-memberinfo-membercount-subfield-name=メンバー数：
 serverinfo-embed-memberinfo-humancount-subfield-name=人數：
 serverinfo-embed-memberinfo-botcount-subfield-name=ボット數：
+serverinfo-embed-roleinfo-field-name=ロール情報
+serverinfo-embed-roleinfo-rolecount-subfield-name=ロール数:
