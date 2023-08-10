@@ -17,6 +17,6 @@
     "@unocss/transformer-directives": "^0.55.0",
     "nuxt": "^3.6.0",
     "typescript": "^5.1.0",
-    "unocss": "^0.54.0"
+    "unocss": "^0.55.0"
   }
 }
