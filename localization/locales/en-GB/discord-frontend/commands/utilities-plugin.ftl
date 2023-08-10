@@ -20,6 +20,9 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
+botinfo-embed-title=Runtime Information
+botinfo-embed-botstarted-field-name=Bot Started
+botinfo-embed-latency-field-name=Latency (Milliseconds)
 serverinfo-embed-generalinfo-field-name=General Information
 serverinfo-embed-generalinfo-id-subfield-name=ID:
 serverinfo-embed-generalinfo-created-subfield-name=Created:
@@ -36,6 +39,5 @@ serverinfo-embed-memberinfo-field-name=Member Information
 serverinfo-embed-memberinfo-membercount-subfield-name=Member Count:
 serverinfo-embed-memberinfo-humancount-subfield-name=Human Count:
 serverinfo-embed-memberinfo-botcount-subfield-name=Bot Count:
-botinfo-embed-title=Runtime Information
-botinfo-embed-botstarted-field-name=Bot Started
-botinfo-embed-latency-field-name=Latency (Milliseconds)
+serverinfo-embed-roleinfo-field-name=Role Information
+serverinfo-embed-roleinfo-rolecount-subfield-name=Role Count:

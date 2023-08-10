@@ -20,6 +20,9 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
+botinfo-embed-title=运行时信息
+botinfo-embed-botstarted-field-name=机器人已启动
+botinfo-embed-latency-field-name=延迟（毫秒）
 serverinfo-embed-generalinfo-field-name=常规信息
 serverinfo-embed-generalinfo-id-subfield-name=ID:
 serverinfo-embed-generalinfo-created-subfield-name=创建：
@@ -36,6 +39,3 @@ serverinfo-embed-memberinfo-field-name=成员信息
 serverinfo-embed-memberinfo-membercount-subfield-name=成员数量：
 serverinfo-embed-memberinfo-humancount-subfield-name=人类数量：
 serverinfo-embed-memberinfo-botcount-subfield-name=机器人数量：
-botinfo-embed-title=运行时信息
-botinfo-embed-botstarted-field-name=机器人已启动
-botinfo-embed-latency-field-name=延迟（毫秒）

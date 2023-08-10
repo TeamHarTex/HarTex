@@ -40,6 +40,7 @@ use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
+use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -106,6 +107,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     bundle_get!(bundle."serverinfo-embed-memberinfo-humancount-subfield-name": message, out [serverinfo_embed_memberinfo_humancount_subfield_name, errors]);
     handle_errors(errors)?;
     bundle_get!(bundle."serverinfo-embed-memberinfo-botcount-subfield-name": message, out [serverinfo_embed_memberinfo_botcount_subfield_name, errors]);
+    handle_errors(errors)?;
+    bundle_get!(bundle."serverinfo-embed-roleinfo-field-name": message, out [serverinfo_embed_roleinfo_field_name, errors]);
+    handle_errors(errors)?;
+    bundle_get!(bundle."serverinfo-embed-roleinfo-rolecount-subfield-name": message, out [serverinfo_embed_roleinfo_rolecount_subfield_name, errors]);
     handle_errors(errors)?;
 
     let mut default_general_information = format!(
@@ -180,6 +185,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         ));
     }
 
+    let roles = CachedRoleRepository
+        .role_ids_in_guild(guild.id)
+        .into_diagnostic()?;
+
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
@@ -230,6 +239,14 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             )
             .inline(),
         )
+        .field(EmbedFieldBuilder::new(
+            format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
+            format!(
+                "{} {}",
+                serverinfo_embed_roleinfo_rolecount_subfield_name,
+                roles.len(),
+            ),
+        ))
         .thumbnail(
             ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?,
         )
