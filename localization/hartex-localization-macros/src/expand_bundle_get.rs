@@ -60,7 +60,7 @@ pub fn expand_bundle_get(parameters: Parameters) -> Option<TokenStream2> {
     };
 
     Some(quote::quote! {
-        let irrelevant = #bundle.#function_name(#key).unwrap();
+        let irrelevant = #bundle.#function_name(#key).ok_or(miette::Report::msg(format!("key `{}` not found for locale `{}`", #key, #bundle.locales[0])))?;
         let mut #errors = Vec::new();
         let #value = #bundle.format_pattern(#format_pattern_param1, None, &mut errors);
         let #value = #value.trim();
