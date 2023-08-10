@@ -55,7 +55,7 @@ impl CachedRoleRepository {
         Ok(keys
             .iter()
             .map(|key| {
-                let (_, role_id): (u64, u64) = scan!("guild_:{}:role:{}:name" <- key).unwrap();
+                let (_, role_id): (u64, u64) = scan!("guild:{}:role:{}:name" <- key).unwrap();
 
                 Id::new_checked(role_id).expect("unreachable")
             })
