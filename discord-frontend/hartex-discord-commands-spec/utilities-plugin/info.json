@@ -63,10 +63,22 @@
     {
       "name": "role",
       "description": "Information about a specific role.",
+      "name_localizations": {
+        "ja": "ロール"
+      },
+      "description_localizations": {
+        "ja": "特定のロールについて…"
+      },
       "options": [
         {
           "name": "role",
           "description": "The role to obtain information for.",
+          "name_localizations": {
+            "ja": "ロール"
+          },
+          "description_localizations": {
+            "ja": "どっちのロールの情報を？"
+          },
           "required": true,
           "type": 8
         }
