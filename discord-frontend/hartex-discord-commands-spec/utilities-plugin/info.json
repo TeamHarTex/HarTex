@@ -37,7 +37,7 @@
           "description_localizations": {
             "ja": "もっと詳しい情報を？",
             "zh-CN": "是否在返回的嵌入中显示更详细的信息。",
-            "zh-TW": "是否在返回的嵌入中顯示更多詳細信息。"
+            "zh-TW": "是否在返回的嵌入中顯示更多詳細資訊。"
           },
           "required": false,
           "type": 5
@@ -63,10 +63,22 @@
     {
       "name": "role",
       "description": "Information about a specific role.",
+      "name_localizations": {
+        "zh-TW": "身分組"
+      },
+      "description_localizations": {
+        "zh-TW": "關於特定身分組的資訊。"
+      },
       "options": [
         {
           "name": "role",
           "description": "The role to obtain information for.",
+          "name_localizations": {
+            "zh-TW": "身分組"
+          },
+          "description_localizations": {
+            "zh-TW": "要獲取資訊的身分組。"
+          },
           "required": true,
           "type": 8
         }
