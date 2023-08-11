@@ -27,6 +27,7 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 
 mod info_bot;
+mod info_role;
 mod info_server;
 
 #[derive(CommandMetadata)]
@@ -52,7 +53,7 @@ impl Command for Info {
 
         match subcommand.name.as_str() {
             "bot" => info_bot::execute(interaction, subcommand.clone()).await,
-            "role" => todo!(),
+            "role" => info_role::execute(interaction, subcommand.clone()).await,
             "server" => info_server::execute(interaction, subcommand.clone()).await,
             _ => unreachable!(),
         }
