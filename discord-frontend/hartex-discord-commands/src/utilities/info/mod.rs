@@ -52,6 +52,7 @@ impl Command for Info {
 
         match subcommand.name.as_str() {
             "bot" => info_bot::execute(interaction, subcommand.clone()).await,
+            "role" => todo!(),
             "server" => info_server::execute(interaction, subcommand.clone()).await,
             _ => unreachable!(),
         }
