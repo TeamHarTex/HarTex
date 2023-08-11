@@ -22,6 +22,7 @@
       },
       "description_localizations": {
         "ja": "このサーバーについて…",
+        "zh-CN": "关于当前服务器的信息。",
         "zh-TW": "關於當前伺服器的資訊。"
       },
       "options": [
