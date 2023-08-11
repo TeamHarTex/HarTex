@@ -58,6 +58,19 @@
         "zh-TW": "機器人的運行資訊。"
       },
       "type": 1
+    },
+    {
+      "name": "role",
+      "description": "Information about a specific role.",
+      "options": [
+        {
+          "name": "role",
+          "description": "The role to obtain information for.",
+          "required": true,
+          "type": 8
+        }
+      ],
+      "type": 1
     }
   ],
   "type": 1
