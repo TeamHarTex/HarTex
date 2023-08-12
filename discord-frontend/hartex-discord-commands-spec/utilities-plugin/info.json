@@ -65,10 +65,12 @@
       "description": "Information about a specific role.",
       "name_localizations": {
         "ja": "ロール",
+        "zh-CN": "身份组",
         "zh-TW": "身分組"
       },
       "description_localizations": {
         "ja": "特定のロールについて…",
+        "zh-CN": "关于指定身份组的信息。",
         "zh-TW": "關於特定身分組的資訊。"
       },
       "options": [
@@ -77,10 +79,12 @@
           "description": "The role to obtain information for.",
           "name_localizations": {
             "ja": "ロール",
+            "zh-CN": "身份组",
             "zh-TW": "身分組"
           },
           "description_localizations": {
             "ja": "どっちのロールの情報を？",
+            "zh-CN": "要获取信息的身份组。",
             "zh-TW": "要獲取資訊的身分組。"
           },
           "required": true,
