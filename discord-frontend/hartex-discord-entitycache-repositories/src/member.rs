@@ -21,8 +21,10 @@
  */
 
 use std::env;
+use std::str::FromStr;
 
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -72,7 +74,18 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
-        Ok(MemberEntity { guild_id, user_id })
+        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
+        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
+        let mut connection = client.get_tokio_connection().await?;
+
+        let roles = connection
+            .get::<String, String>(format!("guild:{guild_id}:member:{user_id}:roles"))
+            .await?
+            .split(',')
+            .map(|str| Id::<RoleMarker>::from_str(str).unwrap())
+            .collect::<Vec<_>>();
+
+        Ok(MemberEntity { guild_id, roles, user_id })
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
@@ -86,6 +99,20 @@ impl Repository<MemberEntity> for CachedMemberRepository {
                     entity.guild_id, entity.user_id
                 ),
                 entity.user_id.get(),
+            )
+            .await?;
+        connection
+            .set(
+                format!(
+                    "guild:{}:member:{}:roles",
+                    entity.guild_id, entity.user_id
+                ),
+                entity
+                    .roles
+                    .into_iter()
+                    .map(|id| id.to_string())
+                    .collect::<Vec<String>>()
+                    .join(",")
             )
             .await?;
 
