@@ -40,8 +40,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let CommandOptionValue::Role(_) = options
         .iter()
         .find(|option| option.name.as_str() == "role")
-        .map(|option| option.value)
-        .unwrap();
+        .map(|option| option.value.clone())
+        .unwrap() else {
+        unreachable!();
+    };
 
     Ok(())
 }
