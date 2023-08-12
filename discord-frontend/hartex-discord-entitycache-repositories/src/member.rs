@@ -110,7 +110,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
                 entity
                     .roles
                     .into_iter()
-                    .map(ToString::to_string)
+                    .map(|id| id.to_string())
                     .collect::<Vec<String>>()
                     .join(",")
             )
