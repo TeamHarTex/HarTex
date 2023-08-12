@@ -84,7 +84,7 @@
           },
           "description_localizations": {
             "ja": "どっちのロールの情報を？",
-            "zh-CN": "要获取信息的身份组",
+            "zh-CN": "要获取信息的身份组。",
             "zh-TW": "要獲取資訊的身分組。"
           },
           "required": true,
