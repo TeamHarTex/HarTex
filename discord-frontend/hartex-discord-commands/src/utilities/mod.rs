@@ -24,6 +24,5 @@
 //!
 //! Command List:
 //! - info
-//! - serverinfo
 
 pub mod info;

@@ -77,11 +77,11 @@ pub async fn set_branch_to_revision(
     commit_hash: String,
 ) -> miette::Result<()> {
     match update_branch(repository, name.clone(), commit_hash.clone()).await {
-        Ok(_) => Ok(()),
+        Ok(()) => Ok(()),
         Err(error) if let Some(error) = error.downcast_ref::<UpdateBranchError>()
             && error.is_branch_not_found() => {
             match create_branch(repository, name.clone(), commit_hash).await {
-                Ok(_) => Ok(()),
+                Ok(()) => Ok(()),
                 error => error,
             }
         },
