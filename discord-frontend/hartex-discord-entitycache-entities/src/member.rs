@@ -22,6 +22,7 @@
 
 use hartex_discord_core::discord::model::guild::Member;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::Entity;
@@ -31,6 +32,7 @@ use hartex_discord_entitycache_core::Entity;
 pub struct MemberEntity {
     #[entity(id)]
     pub guild_id: Id<GuildMarker>,
+    pub roles: Vec<Id<RoleMarker>>,
     #[entity(id)]
     pub user_id: Id<UserMarker>,
 }
@@ -39,6 +41,7 @@ impl From<(Member, Id<GuildMarker>)> for MemberEntity {
     fn from((member, guild_id): (Member, Id<GuildMarker>)) -> Self {
         Self {
             guild_id,
+            roles: member.roles,
             user_id: member.user.id,
         }
     }
