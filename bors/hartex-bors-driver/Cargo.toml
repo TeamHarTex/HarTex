@@ -26,6 +26,6 @@ octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 reqwest-eventsource = { git = "https://github.com/TeamHarTex/reqwest-eventsource.git" }
 serde_json = "1.0.104"
 state = "0.6.0"
-tokio = { version = "1.30.0", features = ["rt-multi-thread", "sync"] }
+tokio = { version = "1.31.0", features = ["rt-multi-thread", "sync"] }
 
 [features]
