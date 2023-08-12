@@ -103,7 +103,7 @@ where
         });
 
         match result {
-            Ok(_) => Outcome::Success(Self::default()),
+            Ok(()) => Outcome::Success(Self::default()),
             Err(error) => {
                 let error = error.clone();
 
