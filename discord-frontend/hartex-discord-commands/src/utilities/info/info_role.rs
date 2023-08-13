@@ -23,8 +23,11 @@
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
+use miette::IntoDiagnostic;
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
@@ -37,13 +40,15 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         &["discord-frontend", "commands"],
     )?;
 
-    let CommandOptionValue::Role(_) = options
+    let CommandOptionValue::Role(role_id) = options
         .iter()
         .find(|option| option.name.as_str() == "role")
         .map(|option| option.value.clone())
         .unwrap() else {
         unreachable!();
     };
+
+    let _ = CachedRoleRepository.get((interaction.guild_id.unwrap(), role_id)).await.into_diagnostic()?;
 
     Ok(())
 }
