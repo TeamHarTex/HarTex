@@ -24,6 +24,7 @@ use proc_macro::Diagnostic;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
 use proc_macro2::TokenTree;
+use syn::parse::{Parse, ParseStream};
 use syn::spanned::Spanned;
 use syn::AttrStyle;
 use syn::Data;
@@ -37,8 +38,17 @@ const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "name", "minimum_level"];
 const VALID_ATTR_PARAMETER_NAMES: [&str; 4] =
     ["command_type", "interaction_only", "name", "minimum_level"];
 
+pub(crate) struct MetadataMacroInput;
+
+impl Parse for MetadataMacroInput {
+    fn parse(_: ParseStream) -> syn::Result<Self> {
+        todo!()
+    }
+}
+
 #[allow(clippy::needless_pass_by_ref_mut)]
 #[allow(clippy::too_many_lines)]
+#[deprecated(since = "0.3.0")]
 pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
     match input.vis.clone() {
@@ -327,4 +337,8 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
     Some(quote::quote! {
        #expanded
     })
+}
+
+pub fn implement_metadata(_: &mut MetadataMacroInput) -> Option<TokenStream2> {
+    None
 }
