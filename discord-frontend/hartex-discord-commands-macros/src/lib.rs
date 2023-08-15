@@ -40,6 +40,7 @@ use syn::DeriveInput;
 mod commandmetadata;
 
 /// Macro to derive the `CommandMetadata` trait.
+#[deprecated(since = "0.3.0")]
 #[proc_macro_derive(CommandMetadata, attributes(metadata))]
 pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
