@@ -14,6 +14,6 @@ rust-version = "1.73.0"
 miette = "5.10.0"
 octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
 sea-orm = { version = "0.12.2", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
-tokio = { version = "1.31.0", features = ["sync"] }
+tokio = { version = "1.32.0", features = ["sync"] }
 
 [features]
