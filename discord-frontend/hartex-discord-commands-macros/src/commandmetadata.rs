@@ -31,6 +31,9 @@ use syn::Data;
 use syn::DataEnum;
 use syn::DataUnion;
 use syn::DeriveInput;
+use syn::Lit;
+use syn::Ident;
+use syn::Token;
 use syn::Visibility;
 
 const BOOLEAN_PARAMETERS: [&str; 1] = ["interaction_only"];
@@ -38,11 +41,45 @@ const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "name", "minimum_level"];
 const VALID_ATTR_PARAMETER_NAMES: [&str; 4] =
     ["command_type", "interaction_only", "name", "minimum_level"];
 
-pub(crate) struct MetadataMacroInput;
+pub(crate) struct MetadataMacroInput {
+    pub(self) command_type_ident: Ident,
+    pub(self) equal1: Token![=],
+    pub(self) command_type_lit: Lit,
+    pub(self) comma1: Token![,],
+    pub(self) interaction_only_ident: Ident,
+    pub(self) equal2: Token![=],
+    pub(self) interaction_only_lit: Lit,
+    pub(self) comma2: Token![,],
+    pub(self) minimum_level_ident: Ident,
+    pub(self) equal3: Token![=],
+    pub(self) minimum_level_lit: Lit,
+    pub(self) comma3: Token![,],
+    pub(self) name_ident: Ident,
+    pub(self) equal4: Token![=],
+    pub(self) name_lit: Lit,
+    pub(self) comma4: Option<Token![,]>,
+}
 
 impl Parse for MetadataMacroInput {
-    fn parse(_: ParseStream) -> syn::Result<Self> {
-        todo!()
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            command_type_ident: input.parse()?,
+            equal1: input.parse()?,
+            command_type_lit: input.parse()?,
+            comma1: input.parse()?,
+            interaction_only_ident: input.parse()?,
+            equal2: input.parse()?,
+            interaction_only_lit: input.parse()?,
+            comma2: input.parse()?,
+            minimum_level_ident: input.parse()?,
+            equal3: input.parse()?,
+            minimum_level_lit: input.parse()?,
+            comma3: input.parse()?,
+            name_ident: input.parse()?,
+            equal4: input.parse()?,
+            name_lit: input.parse()?,
+            comma4: input.parse().ok()
+        })
     }
 }
 
