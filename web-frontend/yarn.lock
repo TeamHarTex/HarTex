@@ -1327,7 +1327,7 @@
     "@unocss/preset-mini" "0.55.2"
     "@unocss/preset-wind" "0.55.2"
 
-"@unocss/preset-web-fonts@0.55.1", "@unocss/preset-web-fonts@^0.55.0":
+"@unocss/preset-web-fonts@0.55.1":
   version "0.55.1"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.55.1.tgz#ff5bac048f8640531dce42eaa65fec1bc7673044"
   integrity sha512-ggYOWBQwJIKpU/8MAXzYd1gEHIzP7ajScKx8UkGYePL3ZOww42G6PvovEIZ9BFm8vlx/EWH1HEjBXFzsZIF5GQ==
@@ -1335,7 +1335,7 @@
     "@unocss/core" "0.55.1"
     ofetch "^1.1.1"
 
-"@unocss/preset-web-fonts@0.55.2":
+"@unocss/preset-web-fonts@0.55.2", "@unocss/preset-web-fonts@^0.55.0":
   version "0.55.2"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.55.2.tgz#7e81f37c7cedce37592574cd6e02b8200eb8b483"
   integrity sha512-kRnrfZPDkU2r9tp507rsh4kwhUzZ76XBTZLmElYm8tlP6HZzIHcFF8fdW15J4nh81b/IGw8ZOS7aQmqtHu3A8A==
