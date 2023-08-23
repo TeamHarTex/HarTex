@@ -1,18 +1,27 @@
 # [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.3.0...nightly)
 
-> **x** contributors made contributions to this release
+> **1** contributor made contributions to this release
 
 > **y** commits since 2022-08-31
 
 ## API Backend
 
+- **Changed:** unpinned `serde`
+
 ## Bors Buildbot
 
+- **Fixed:** fixed `octocrab` dependency
+- **Changed:** unpinned `serde`
+
 ## Buildsystem
+
+- **Changed:** unpinned `serde`
 
 ## Database Queries
 
 ## Discord Frontend
+
+- **Changed:** pinned serde to version 1.0.185
 
 ## Localization Infrastructure
 
@@ -28,15 +37,18 @@
 
 ## API Backend
 
+- **Changed:** pinned serde to version 1.0.185
 - **Fixed:** returning in the uptime route
 
 ## Bors Buildbot
 
+- **Changed:** pinned serde to version 1.0.185
 - **Changed:** migrated from eyre to miette for error reporting
 
 ## Buildsystem
 
 - **Changed:** migrated from eyre to miette for error reporting
+- **Changed:** pinned serde to version 1.0.185
 
 ## Discord Frontend
 
@@ -46,6 +58,7 @@
 - **Changed:** updated cache entities and repositories
 - **Changed:** replaced `/latency` and `/uptime` with `/info bot`
 - **Changed:** deprecated `CommandMetadata` derive macro
+- **Changed:** pinned serde to version 1.0.185
 
 ## Localization Infrastructure
 
