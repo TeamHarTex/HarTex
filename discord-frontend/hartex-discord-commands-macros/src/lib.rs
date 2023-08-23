@@ -54,7 +54,7 @@ pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
 
 /// Macro to implement the `CommandMetadata` trait.
 #[proc_macro_attribute]
-pub fn metadata(tokens: TokenStream) -> TokenStream {
+pub fn metadata(tokens: TokenStream, _: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as commandmetadata::MetadataMacroInput);
     commandmetadata::implement_metadata(&mut input)
         .unwrap_or_default()
