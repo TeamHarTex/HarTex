@@ -45,6 +45,7 @@
 - **Changed:** allowed workers to send gateway commands to leaders
 - **Changed:** updated cache entities and repositories
 - **Changed:** replaced `/latency` and `/uptime` with `/info bot`
+- **Changed:** deprecated `CommandMetadata` derive macro
 
 ## Localization Infrastructure
 
