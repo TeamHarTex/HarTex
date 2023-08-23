@@ -41,6 +41,7 @@ const LITERAL_PARAMETERS: [&str; 3] = ["command_type", "name", "minimum_level"];
 const VALID_ATTR_PARAMETER_NAMES: [&str; 4] =
     ["command_type", "interaction_only", "name", "minimum_level"];
 
+#[allow(dead_code)]
 pub struct MetadataMacroInput {
     pub(self) command_type_ident: Ident,
     pub(self) equal1: Token![=],
