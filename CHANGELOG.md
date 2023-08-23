@@ -1,8 +1,30 @@
-# [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.2.1...nightly)
+# [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.3.0...nightly)
+
+> **x** contributors made contributions to this release
+
+> **y** commits since 2022-08-31
+
+## API Backend
+
+## Bors Buildbot
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [Version 0.3.0 (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
 
 > **4** contributors made contributions to this release
 
-> **y** commits since 2023-07-16
+> **516** commits since 2023-07-16
 
 ## API Backend
 
@@ -15,8 +37,6 @@
 ## Buildsystem
 
 - **Changed:** migrated from eyre to miette for error reporting
-
-## Database Queries
 
 ## Discord Frontend
 
@@ -37,8 +57,6 @@
 ## Rust Utilities
 
 - **Changed:** removed hartex-eyre
-
-## Web Frontend
 
 # [Version 0.2.1 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.2.0...0.2.1)
 
