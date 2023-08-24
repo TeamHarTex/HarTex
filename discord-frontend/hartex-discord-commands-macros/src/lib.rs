@@ -35,23 +35,9 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 use syn::parse_macro_input;
-use syn::DeriveInput;
 use syn::ItemStruct;
 
 mod commandmetadata;
-
-/// Macro to derive the `CommandMetadata` trait.
-///
-/// Deprecated since **0.3.0**. Use the `#[metadata]` attribute macro instead.
-#[allow(deprecated)]
-#[deprecated(since = "0.3.0")]
-#[proc_macro_derive(CommandMetadata, attributes(metadata))]
-pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(tokens as DeriveInput);
-    commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or_default()
-        .into()
-}
 
 /// Macro to implement the `CommandMetadata` trait.
 #[proc_macro_attribute]
