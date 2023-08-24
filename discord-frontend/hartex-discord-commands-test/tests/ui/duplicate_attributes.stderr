@@ -1,5 +1,0 @@
-error: duplicate attribute: `command_type`
-  --> tests/ui/duplicate_attributes.rs:27:12
-   |
-27 | #[metadata(command_type = 2)]
-   |            ^^^^^^^^^^^^

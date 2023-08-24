@@ -23,7 +23,7 @@
 //! # The Contributors Command
 
 use hartex_discord_commands_core::traits::Command;
-use hartex_discord_commands_core::CommandMetadata;
+use hartex_discord_commands_core::metadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -38,11 +38,11 @@ use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
 
-#[derive(CommandMetadata)]
-#[metadata(command_type = 1)]
-#[metadata(interaction_only = true)]
-#[metadata(minimum_level = 0)]
-#[metadata(name = "contributors")]
+#[metadata(
+    command_type = 1,
+    interaction_only = true,
+    name = "contributors"
+)]
 pub struct Contributors;
 
 impl Command for Contributors {
