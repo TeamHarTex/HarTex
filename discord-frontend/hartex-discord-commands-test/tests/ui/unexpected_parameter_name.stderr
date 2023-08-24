@@ -1,5 +1,0 @@
-error: unexpected parameter name: `unexpected_parameter_name`
-  --> tests/ui/unexpected_parameter_name.rs:26:12
-   |
-26 | #[metadata(unexpected_parameter_name = "unexpected_parameter_name")]
-   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
