@@ -21,7 +21,10 @@
 
 ## Discord Frontend
 
+- **Added:** `metadata` macro for writing command metadata, replacing `CommandMetadata` derive
 - **Changed:** pinned serde to version 1.0.185
+- **Changed:** deprecated `minimum_level` function of the `CommandMetada` trait
+- **Removed:** removed deprecated `CommandMetadata` derive macro
 
 ## Localization Infrastructure
 
