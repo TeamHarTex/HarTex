@@ -32,7 +32,9 @@ pub trait CommandMetadata {
 
     /// The minimum rank permission level required to run this command.
     #[deprecated(since = "0.4.0")]
-    fn minimum_level(&self) -> u16;
+    fn minimum_level(&self) -> u16{
+        0
+    }
 
     /// The name of the command.
     fn name(&self) -> String;
