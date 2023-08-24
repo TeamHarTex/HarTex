@@ -408,13 +408,13 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
     let mut functions = TokenStream2::new();
 
     // command_type = ?
-    let command_type_literal = &parameters.command_type_lit;
+    let command_type_literal = parameters.command_type_lit.clone();
     let Ok(command_type) = command_type_literal.to_string().parse::<u8>() else {
         command_type_literal
             .span()
             .unwrap()
             .error(format!(
-                "expected integer literal; found literal `{literal}`"
+                "expected integer literal"
             ))
             .emit();
 
@@ -426,7 +426,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
             .command_type_lit
             .span()
             .unwrap()
-            .error(format!("invalid command type: `{literal}`"))
+            .error(format!("invalid command type"))
             .emit();
 
         return None;
@@ -440,12 +440,12 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
     functions.extend(expanded);
 
     // interaction_only = ?
-    let interaction_only_literal = &parameters.interaction_only_lit;
+    let interaction_only_literal = parameters.interaction_only_lit.clone();
     let Ok(_) = interaction_only_literal.to_string().parse::<bool>() else {
         interaction_only_literal
             .span()
             .unwrap()
-            .error(format!("expected boolean; found `{ident_bool}`"))
+            .error(format!("expected boolean"))
             .emit();
 
         return None;
@@ -459,7 +459,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
     functions.extend(expanded);
 
     // name = ?
-    let name = &parameters.name_lit;
+    let name = parameters.name_lit.clone();
     let expanded = quote::quote! {
         fn name(&self) -> String {
             String::from(#name)
