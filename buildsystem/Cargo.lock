@@ -185,7 +185,7 @@ checksum = "6fb8d784f27acf97159b40fc4db5ecd8aa23b9ad5ef69cdd136d3bc80665f0c0"
 
 [[package]]
 name = "hartex_errors"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "miette",
  "thiserror",
@@ -193,7 +193,7 @@ dependencies = [
 
 [[package]]
 name = "hartexbuild_driver"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "hartex_errors",
@@ -203,7 +203,7 @@ dependencies = [
 
 [[package]]
 name = "hartexbuild_hartexfile"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "hartex_errors",
  "hcl-rs",
@@ -219,9 +219,9 @@ checksum = "2c6201b9ff9fd90a5a3bac2e56a830d0caa509576f0e503818ee82c181b3437a"
 
 [[package]]
 name = "hcl-edit"
-version = "0.7.2"
+version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "660ffd3f700e7a1b69db280a4d909ae2da8c6fd1f58df9aad5af5a25a0402729"
+checksum = "4b0742688008be2ba42fdff59d9957c854aa9b991a2db78144261203fe40fe27"
 dependencies = [
  "fnv",
  "hcl-primitives",
@@ -244,9 +244,9 @@ dependencies = [
 
 [[package]]
 name = "hcl-rs"
-version = "0.16.3"
+version = "0.16.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f18728c4761bdc994566a11204680e775623fece11f6ae6a59ade0ca17525ef9"
+checksum = "93bfe5579dccda73d287c5b2113cc708c9a435e3e1966c817a20eaf47abd6312"
 dependencies = [
  "hcl-edit",
  "hcl-primitives",
