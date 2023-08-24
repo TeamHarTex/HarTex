@@ -408,9 +408,9 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
     let mut functions = TokenStream2::new();
 
     // command_type = ?
-    let command_type_literal = parameters.command_type_lit.clone();
-    let Ok(command_type) = command_type_literal.to_string().parse::<u8>() else {
-        command_type_literal
+    let Lit::Int(command_type_literal) = parameters.command_type_lit.clone() else {
+        parameters
+            .command_type_lit
             .span()
             .unwrap()
             .error(format!(
@@ -419,6 +419,9 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
             .emit();
 
         return None;
+    };
+    let Ok(command_type) = command_type_literal.base10_digits().parse::<u8>() else {
+        unreachable!()
     };
 
     if !(1..=3).contains(&command_type) {
@@ -440,12 +443,14 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
     functions.extend(expanded);
 
     // interaction_only = ?
-    let interaction_only_literal = parameters.interaction_only_lit.clone();
-    let Ok(_) = interaction_only_literal.to_string().parse::<bool>() else {
-        interaction_only_literal
+    let Lit::Bool(interaction_only_literal) = parameters.interaction_only_lit.clone() else {
+        parameters
+            .interaction_only_lit
             .span()
             .unwrap()
-            .error(format!("expected boolean"))
+            .error(format!(
+                "expected boolean"
+            ))
             .emit();
 
         return None;
@@ -459,7 +464,18 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
     functions.extend(expanded);
 
     // name = ?
-    let name = parameters.name_lit.clone();
+    let Lit::Str(name) = parameters.name_lit.clone() else {
+        parameters
+            .name_lit
+            .span()
+            .unwrap()
+            .error(format!(
+                "expected string"
+            ))
+            .emit();
+
+        return None;
+    };
     let expanded = quote::quote! {
         fn name(&self) -> String {
             String::from(#name)
