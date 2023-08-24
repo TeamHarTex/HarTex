@@ -31,6 +31,7 @@ pub trait CommandMetadata {
     fn interaction_only(&self) -> bool;
 
     /// The minimum rank permission level required to run this command.
+    #[deprecated(since = "0.4.0")]
     fn minimum_level(&self) -> u16;
 
     /// The name of the command.

@@ -24,13 +24,15 @@ use proc_macro::Diagnostic;
 use proc_macro2::Span;
 use proc_macro2::TokenStream as TokenStream2;
 use proc_macro2::TokenTree;
-use syn::parse::{Parse, ParseStream};
+use syn::parse::Parse;
+use syn::parse::ParseStream;
 use syn::spanned::Spanned;
 use syn::AttrStyle;
 use syn::Data;
 use syn::DataEnum;
 use syn::DataUnion;
 use syn::DeriveInput;
+use syn::ItemStruct;
 use syn::Lit;
 use syn::Ident;
 use syn::Token;
@@ -51,14 +53,10 @@ pub struct MetadataMacroInput {
     pub(self) equal2: Token![=],
     pub(self) interaction_only_lit: Lit,
     pub(self) comma2: Token![,],
-    pub(self) minimum_level_ident: Ident,
-    pub(self) equal3: Token![=],
-    pub(self) minimum_level_lit: Lit,
-    pub(self) comma3: Token![,],
     pub(self) name_ident: Ident,
-    pub(self) equal4: Token![=],
+    pub(self) equal3: Token![=],
     pub(self) name_lit: Lit,
-    pub(self) comma4: Option<Token![,]>,
+    pub(self) comma3: Option<Token![,]>,
 }
 
 impl Parse for MetadataMacroInput {
@@ -72,14 +70,10 @@ impl Parse for MetadataMacroInput {
             equal2: input.parse()?,
             interaction_only_lit: input.parse()?,
             comma2: input.parse()?,
-            minimum_level_ident: input.parse()?,
-            equal3: input.parse()?,
-            minimum_level_lit: input.parse()?,
-            comma3: input.parse()?,
             name_ident: input.parse()?,
-            equal4: input.parse()?,
+            equal3: input.parse()?,
             name_lit: input.parse()?,
-            comma4: input.parse().ok()
+            comma3: input.parse().ok()
         })
     }
 }
@@ -377,6 +371,116 @@ pub fn expand_command_metadata_derivation(input: &mut DeriveInput) -> Option<Tok
     })
 }
 
-pub fn implement_metadata(_: &mut MetadataMacroInput) -> Option<TokenStream2> {
-    None
+pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut ItemStruct) -> Option<TokenStream2> {
+    if parameters.command_type_ident.to_string() != "command_type" {
+        parameters
+            .command_type_ident
+            .span()
+            .unwrap()
+            .error("expected `command_type`")
+            .emit();
+
+        return None;
+    }
+
+    if parameters.interaction_only_ident.to_string() != "interaction_only" {
+        parameters
+            .interaction_only_ident
+            .span()
+            .unwrap()
+            .error("expected `interaction_only`")
+            .emit();
+
+        return None;
+    }
+
+    if parameters.name_ident.to_string() != "name" {
+        parameters
+            .name_ident
+            .span()
+            .unwrap()
+            .error("expected `name`")
+            .emit();
+
+        return None;
+    }
+
+    let mut functions = TokenStream2::new();
+
+    // command_type = ?
+    let command_type_literal = &parameters.command_type_lit;
+    let Ok(command_type) = command_type_literal.to_string().parse::<u8>() else {
+        command_type_literal
+            .span()
+            .unwrap()
+            .error(format!(
+                "expected integer literal; found literal `{literal}`"
+            ))
+            .emit();
+
+        return None;
+    };
+
+    if !(1..=3).contains(&command_type) {
+        parameters
+            .command_type_lit
+            .span()
+            .unwrap()
+            .error(format!("invalid command type: `{literal}`"))
+            .emit();
+
+        return None;
+    }
+
+    let expanded = quote::quote! {
+        fn command_type(&self) -> u8 {
+            #command_type_literal
+        }
+    };
+    functions.extend(expanded);
+
+    // interaction_only = ?
+    let interaction_only_literal = &parameters.interaction_only_lit;
+    let Ok(_) = interaction_only_literal.to_string().parse::<bool>() else {
+        interaction_only_literal
+            .span()
+            .unwrap()
+            .error(format!("expected boolean; found `{ident_bool}`"))
+            .emit();
+
+        return None;
+    };
+
+    let expanded = quote::quote! {
+                        fn interaction_only(&self) -> bool {
+                            #interaction_only_literal
+                        }
+                    };
+    functions.extend(expanded);
+
+    // name = ?
+    let name = &parameters.name_lit;
+    let expanded = quote::quote! {
+        fn name(&self) -> String {
+            String::from(#name)
+        }
+    };
+    functions.extend(expanded);
+
+    let core_use = quote::quote! {
+        extern crate hartex_discord_commands_core as _commands_core;
+    };
+    let ident = struct_item.ident.clone();
+    let expanded = quote::quote! {
+        #core_use
+
+        #[automatically_derived]
+        impl _commands_core::traits::CommandMetadata for #ident {
+            #functions
+        }
+    };
+
+    Some(quote::quote! {
+       #expanded
+    })
 }
