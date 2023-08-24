@@ -20,28 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_commands_macros::metadata;
 
-/// The command metadata trait, specifying the various information about the command.
-pub trait CommandMetadata {
-    /// The type of the command.
-    fn command_type(&self) -> u8;
+#[metadata()]
+pub struct UnexpectedEndOfInput1;
 
-    /// Whether the command is only available in the form of an interaction.
-    fn interaction_only(&self) -> bool;
-
-    /// The minimum rank permission level required to run this command.
-    #[deprecated(since = "0.4.0")]
-    fn minimum_level(&self) -> u16{
-        0
-    }
-
-    /// The name of the command.
-    fn name(&self) -> String;
-}
-
-/// The command trait.
-pub trait Command: CommandMetadata {
-    /// Executes the command.
-    async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
-}
+fn main() {}
