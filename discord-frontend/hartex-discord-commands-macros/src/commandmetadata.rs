@@ -64,8 +64,8 @@ impl Parse for MetadataMacroInput {
 }
 
 #[allow(clippy::too_many_lines)]
-pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut ItemStruct) -> Option<TokenStream2> {
-    if parameters.command_type_ident.to_string() != "command_type" {
+pub fn implement_metadata(parameters: &MetadataMacroInput, struct_item: &ItemStruct) -> Option<TokenStream2> {
+    if parameters.command_type_ident != "command_type" {
         parameters
             .command_type_ident
             .span()
@@ -76,7 +76,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
         return None;
     }
 
-    if parameters.interaction_only_ident.to_string() != "interaction_only" {
+    if parameters.interaction_only_ident != "interaction_only" {
         parameters
             .interaction_only_ident
             .span()
@@ -87,7 +87,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
         return None;
     }
 
-    if parameters.name_ident.to_string() != "name" {
+    if parameters.name_ident != "name" {
         parameters
             .name_ident
             .span()
