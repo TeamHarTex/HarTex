@@ -302,7 +302,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "num_enum 0.7.0",
  "num_enum_derive 0.7.0",
@@ -312,7 +312,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "hartex_discord_core",
  "once_cell",
@@ -320,7 +320,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "miette",
  "thiserror",
@@ -328,14 +328,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_log"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "log",
  "log4rs",
@@ -750,9 +750,9 @@ dependencies = [
 
 [[package]]
 name = "rdkafka"
-version = "0.33.2"
+version = "0.34.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da18026aad1c24033da3da726200de7e911e75c2e2cc2f77ffb9b4502720faae"
+checksum = "053adfa02fab06e86c01d586cc68aa47ee0ff4489a59469081dc12cbcde578bf"
 dependencies = [
  "futures-channel",
  "futures-util",
@@ -768,9 +768,9 @@ dependencies = [
 
 [[package]]
 name = "rdkafka-sys"
-version = "4.5.0+1.9.2"
+version = "4.6.0+2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1bb0676c2112342ac7165decdedbc4e7086c0af384479ccce534546b10687a5d"
+checksum = "ad63c279fca41a27c231c450a2d2ad18288032e9cbb159ad16c9d96eba35aaaf"
 dependencies = [
  "cmake",
  "libc",
