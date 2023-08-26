@@ -42,9 +42,9 @@ mod commandmetadata;
 /// Macro to implement the `CommandMetadata` trait.
 #[proc_macro_attribute]
 pub fn metadata(tokens: TokenStream, item: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(tokens as commandmetadata::MetadataMacroInput);
-    let mut struct_decl = parse_macro_input!(item as ItemStruct);
-    commandmetadata::implement_metadata(&mut input, &mut struct_decl)
+    let input = parse_macro_input!(tokens as commandmetadata::MetadataMacroInput);
+    let struct_decl = parse_macro_input!(item as ItemStruct);
+    commandmetadata::implement_metadata(&input, &struct_decl)
         .unwrap_or_default()
         .into()
 }
