@@ -63,6 +63,7 @@ impl Parse for MetadataMacroInput {
     }
 }
 
+#[allow(clippy::too_many_lines)]
 pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut ItemStruct) -> Option<TokenStream2> {
     if parameters.command_type_ident.to_string() != "command_type" {
         parameters
@@ -105,9 +106,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
             .command_type_lit
             .span()
             .unwrap()
-            .error(format!(
-                "expected integer literal"
-            ))
+            .error("expected integer literal")
             .emit();
 
         return None;
@@ -121,7 +120,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
             .command_type_lit
             .span()
             .unwrap()
-            .error(format!("invalid command type"))
+            .error("invalid command type")
             .emit();
 
         return None;
@@ -140,19 +139,17 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
             .interaction_only_lit
             .span()
             .unwrap()
-            .error(format!(
-                "expected boolean"
-            ))
+            .error("expected boolean")
             .emit();
 
         return None;
     };
 
     let expanded = quote::quote! {
-                        fn interaction_only(&self) -> bool {
-                            #interaction_only_literal
-                        }
-                    };
+        fn interaction_only(&self) -> bool {
+            #interaction_only_literal
+        }
+    };
     functions.extend(expanded);
 
     // name = ?
@@ -161,9 +158,7 @@ pub fn implement_metadata(parameters: &mut MetadataMacroInput, struct_item: &mut
             .name_lit
             .span()
             .unwrap()
-            .error(format!(
-                "expected string"
-            ))
+            .error("expected string")
             .emit();
 
         return None;
