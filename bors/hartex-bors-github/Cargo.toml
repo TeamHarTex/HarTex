@@ -24,7 +24,7 @@ jsonwebtoken = "8.3.0"
 miette = "5.10.0"
 octocrab = "0.29.3"
 secrecy = "0.8.0"
-serde = { version = "1.0.186", features = ["derive"] }
+serde = { version = "1.0.187", features = ["derive"] }
 serde_json = "1.0.105"
 tokio = { version = "1.32.0", features = ["sync"] }
 
