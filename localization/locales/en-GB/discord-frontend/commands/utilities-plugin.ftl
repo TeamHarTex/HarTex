@@ -23,6 +23,7 @@
 botinfo-embed-title=Runtime Information
 botinfo-embed-botstarted-field-name=Bot Started
 botinfo-embed-latency-field-name=Latency (Milliseconds)
+roleinfo-embed-title=Role Information: {$roleMention}
 serverinfo-embed-generalinfo-field-name=General Information
 serverinfo-embed-generalinfo-id-subfield-name=ID:
 serverinfo-embed-generalinfo-created-subfield-name=Created:
