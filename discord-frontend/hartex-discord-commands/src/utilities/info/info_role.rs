@@ -23,6 +23,7 @@
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::CLIENT;
@@ -49,6 +50,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let _ = CachedRoleRepository.get((interaction.guild_id.unwrap(), role_id)).await.into_diagnostic()?;
+    let _ = EmbedBuilder::new()
+        .color(0x41_A0_DE)
+        .build();
 
     Ok(())
 }
