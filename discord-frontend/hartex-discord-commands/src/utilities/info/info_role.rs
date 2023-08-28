@@ -26,12 +26,14 @@ use hartex_discord_core::discord::model::application::interaction::application_c
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFieldBuilder};
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
+use hartex_localization_core::handle_errors;
+use hartex_localization_macros::bundle_get;
 use hartex_localization_macros::bundle_get_args;
 use miette::IntoDiagnostic;
 
@@ -54,13 +56,18 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!();
     };
 
-    let mention = role_id.mention().to_string();
-    bundle_get_args!(bundle."roleinfo-embed-title": message, out [roleinfo_embed_title, errors], args ["roleMention" to mention]);
+    bundle_get!(bundle."roleinfo-embed-name-field-name": message, out [roleinfo_embed_name_field_name, errors]);
+    handle_errors(errors)?;
 
-    let _ = CachedRoleRepository.get((interaction.guild_id.unwrap(), role_id)).await.into_diagnostic()?;
+    let mention = role_id.mention().to_string();
+    bundle_get_args!(bundle."roleinfo-embed-description": message, out [roleinfo_embed_description, errors], args ["roleMention" to mention]);
+    handle_errors(errors)?;
+
+    let role = CachedRoleRepository.get((interaction.guild_id.unwrap(), role_id)).await.into_diagnostic()?;
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
-        .title(roleinfo_embed_title)
+        .description(roleinfo_embed_description)
+        .field(EmbedFieldBuilder::new(roleinfo_embed_name_field_name, role.name))
         .build();
 
     interaction_client
