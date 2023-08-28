@@ -1,29 +1,27 @@
-import { defineConfig } from 'unocss';
+import { defineConfig } from "unocss";
 
-import presetUno from '@unocss/preset-uno';
-import presetWebFonts from '@unocss/preset-web-fonts';
+import presetIcons from "@unocss/preset-icons";
+import presetUno from "@unocss/preset-uno";
+import presetWebFonts from "@unocss/preset-web-fonts";
 import transformerDirectives from "@unocss/transformer-directives";
 
 export default defineConfig({
+  theme: {
+    colors: {
+      primary: "#401d19",
+      secondary: "#FF682C",
+      tertiary: "#EDD0C6",
+    },
+  },
   presets: [
+    presetIcons(),
     presetUno(),
     presetWebFonts({
-      provider: 'fontshare',
+      provider: "fontshare",
       fonts: {
-        sans: 'Satoshi',
+        sans: "Satoshi",
       },
     }),
   ],
-  transformers: [
-    transformerDirectives(),
-  ],
-  theme: {
-    colors: {
-      mainBackground: '#0F1020',
-      mainBackgroundSecondary: '#252852',
-      mainPrimary: '#29658A',
-      mainSecondary: '#474866',
-      mainText: '#DDDDDD',
-    }
-  },
-})
+  transformers: [transformerDirectives()],
+});
