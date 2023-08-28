@@ -514,7 +514,21 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.18.12.tgz#1da26735ce5954bf914f8f2117b5096c548bbba2"
   integrity sha512-O0UYQVkvfM/jO8a4OwoV0mAKSJw+mjWTAd1MJd/1FCX6uiMdLmMRPK/w6e9OQ0ob2WGxzIm9va/KG0Ja4zIOgg==
 
-"@iconify/types@^2.0.0":
+"@hypernym/nuxt-gsap@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@hypernym/nuxt-gsap/-/nuxt-gsap-2.2.2.tgz#ce1aea4eb975fc265cb62ef18b25e51b75e05fd7"
+  integrity sha512-of36aoK0o6TEGOn6S/x4xRcq7JIv1s67sRCAp0Wcj93uQKrrmC5F3ja3S5dAnj5n3u87O8d6VhcYudO2J+XXaQ==
+  dependencies:
+    gsap "^3.11.5"
+
+"@iconify-json/carbon@^1.1.19":
+  version "1.1.19"
+  resolved "https://registry.yarnpkg.com/@iconify-json/carbon/-/carbon-1.1.19.tgz#829470b821352ce1cc400c93d23e659a8372e0c0"
+  integrity sha512-4obFv2J5L/bIgXCKnW8Xkly47dGgPH+xbP3NZ6DRYznc8ykAo+X5z3WSAW5/ZKO9cKZzRcOnNS6DYofOZZbRCA==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
@@ -1124,6 +1138,11 @@
   resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.53.5.tgz#26f987d26843903a689c3b83c024e6e6c9b72f4a"
   integrity sha512-jBvk4FeUAALAomGfMFFmrXLy01/5DjugdnWgawFAQpSToFTxbMHS7x+pXKu/18cq+YLS8uyl9S0Ywy1jNbfS3Q==
 
+"@unocss/core@0.55.1":
+  version "0.55.1"
+  resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.55.1.tgz#ca6e347e5764c618fe76407d39e44828554248ca"
+  integrity sha512-hZffURZtvH72UvobL9anzE1t7PDldBa89fxWVIsjLb8KHReNfcOv8uEepce0ODUfGrdWPbij017XG/HY5YUexg==
+
 "@unocss/extractor-arbitrary-variants@0.53.5":
   version "0.53.5"
   resolved "https://registry.yarnpkg.com/@unocss/extractor-arbitrary-variants/-/extractor-arbitrary-variants-0.53.5.tgz#3e13784fcdb8d08e548c16e3ee4fec511ca07ff8"
@@ -1185,6 +1204,15 @@
   dependencies:
     "@iconify/utils" "^2.1.7"
     "@unocss/core" "0.53.5"
+    ofetch "^1.1.1"
+
+"@unocss/preset-icons@^0.55.1":
+  version "0.55.1"
+  resolved "https://registry.yarnpkg.com/@unocss/preset-icons/-/preset-icons-0.55.1.tgz#d1f9ccb3c8aed2fb53d696f7d717f51802e6ec32"
+  integrity sha512-gml2I6hGbBDrGaqq4TJu81pIeUvR3m/y/wH2BovIYicVhuk5NyBLTXJ7NxJY5y5FmE0AmNM1/Ctju3ZiDvj/pA==
+  dependencies:
+    "@iconify/utils" "^2.1.7"
+    "@unocss/core" "0.55.1"
     ofetch "^1.1.1"
 
 "@unocss/preset-mini@0.53.5":
@@ -2783,6 +2811,11 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   version "4.2.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
+
+gsap@^3.11.5:
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/gsap/-/gsap-3.12.2.tgz#6e88203eed360761cbf2a2cb3a8d702aa87f3f6d"
+  integrity sha512-EkYnpG8qHgYBFAwsgsGEqvT1WUidX0tt/ijepx7z8EUJHElykg91RvW1XbkT59T0gZzzszOpjQv7SE41XuIXyQ==
 
 gzip-size@^6.0.0:
   version "6.0.0"

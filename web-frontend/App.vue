@@ -21,26 +21,32 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-    <NuxtLayout>
-        <NuxtPage />
-    </NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
-<style>
+<style lang="postcss">
 * {
-    @apply p-0 m-0 outline-none border-box;
-    @apply font-sans text-main-text;
+  @apply p-0 m-0;
+  @apply font-sans outline-none border-box;
 }
 
-button {
-    @apply bg-transparent cursor-pointer;
-    @apply border-1 border-solid border-rd;
-    @apply text-xl underline;
+a {
+  @apply decoration-none text-tertiary;
 }
 
-input {
-    @apply bg-transparent p-4;
-    @apply border-1 border-solid border-rd;
-    @apply text-xl;
+body {
+  @apply bg-primary text-tertiary;
+}
+
+main {
+  @apply mx-18;
+}
+
+@screen lt-md {
+  main {
+    @apply mx-12;
+  }
 }
 </style>
