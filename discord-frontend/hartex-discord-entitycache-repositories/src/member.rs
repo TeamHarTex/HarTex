@@ -85,7 +85,11 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .map(|str| Id::<RoleMarker>::from_str(str).unwrap())
             .collect::<Vec<_>>();
 
-        Ok(MemberEntity { guild_id, roles, user_id })
+        Ok(MemberEntity {
+            guild_id,
+            roles,
+            user_id,
+        })
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
@@ -103,16 +107,13 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .await?;
         connection
             .set(
-                format!(
-                    "guild:{}:member:{}:roles",
-                    entity.guild_id, entity.user_id
-                ),
+                format!("guild:{}:member:{}:roles", entity.guild_id, entity.user_id),
                 entity
                     .roles
                     .into_iter()
                     .map(|id| id.to_string())
                     .collect::<Vec<String>>()
-                    .join(",")
+                    .join(","),
             )
             .await?;
 

@@ -20,8 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::metadata;
+use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
@@ -30,11 +30,7 @@ mod info_bot;
 mod info_role;
 mod info_server;
 
-#[metadata(
-    command_type = 1,
-    interaction_only = true,
-    name = "info"
-)]
+#[metadata(command_type = 1, interaction_only = true, name = "info")]
 pub struct Info;
 
 impl Command for Info {
