@@ -41,7 +41,6 @@ pub struct RoleEntity {
     pub id: Id<RoleMarker>,
     pub managed: bool,
     pub mentionable: bool,
-    pub name: String,
     pub position: i64,
 }
 
@@ -56,7 +55,6 @@ impl From<(Id<GuildMarker>, Role)> for RoleEntity {
             id: role.id,
             managed: role.managed,
             mentionable: role.mentionable,
-            name: role.name,
             position: role.position,
         }
     }
