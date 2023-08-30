@@ -648,12 +648,12 @@
     fastq "^1.6.0"
 
 "@nuxt/content@^2.7.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@nuxt/content/-/content-2.8.0.tgz#cfb69e15e322b78ac3572f4ba1713d983e4a74a1"
-  integrity sha512-XqzsIPjBnG58d8mMUeyPStu1IAzHjFrmgNOPhQ6KUecYRAvVVm5AXEzIh8909yaXmPqZ9E3Su1lY+8t0wmpHMQ==
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@nuxt/content/-/content-2.8.1.tgz#28009ecb80c0adb66bf21bdfeaebbc1c805a1443"
+  integrity sha512-uFhZXuP/5MVkK8rhj/1QPQKasW1ThyjE9JfLwTF0QEH/KJWgDg1FssKhGY7aCidR3ycUI+V3zHd407uSrdoCFw==
   dependencies:
     "@nuxt/kit" "^3.7.0"
-    "@nuxtjs/mdc" "^0.1.2"
+    "@nuxtjs/mdc" "^0.1.3"
     "@vueuse/head" "^1.3.1"
     consola "^3.2.3"
     defu "^6.1.2"
@@ -813,10 +813,10 @@
     vite-plugin-checker "^0.6.2"
     vue-bundle-renderer "^2.0.0"
 
-"@nuxtjs/mdc@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@nuxtjs/mdc/-/mdc-0.1.2.tgz#232a41eeece5cc8d507cd46bfd2afe99b3720714"
-  integrity sha512-f0N+5s8jktxWIEw3Gln0thq95DtGZi9R0V1n5Qj1U5ShdLMUKw2EuTGKPqfFFMsOrGK81KLn8fDaq7OBU0UFzg==
+"@nuxtjs/mdc@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/mdc/-/mdc-0.1.3.tgz#8e919b6dd07c1651388ea793666faa51717cd672"
+  integrity sha512-oZCdIxbq4rb7UaAJpUHbXIZxKeIsNd2tbT3SVaKK8TcFZdrUVQENlamo8VpJ5S387LocQdJLwinVbW+bOl8nOw==
   dependencies:
     "@nuxt/kit" latest
     "@types/hast" "^3.0.0"
@@ -2509,9 +2509,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.477:
-  version "1.4.504"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.504.tgz#975522945676cf2d55910988a169f07b83081488"
-  integrity sha512-cSMwIAd8yUh54VwitVRVvHK66QqHWE39C3DRj8SWiXitEpVSY3wNPD9y1pxQtLIi4w3UdzF9klLsmuPshz09DQ==
+  version "1.4.505"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.505.tgz#00571ade5975b58413f0f56a665b065bfc29cdfc"
+  integrity sha512-0A50eL5BCCKdxig2SsCXhpuztnB9PfUgRMojj5tMvt8O54lbwz3t6wNgnpiTRosw5QjlJB7ixhVyeg8daLQwSQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -3257,9 +3257,9 @@ ipx@^0.9.9:
     xss "^1.0.14"
 
 iron-webcrypto@^0.8.0:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/iron-webcrypto/-/iron-webcrypto-0.8.1.tgz#0ae9d61553f35f33382d22adcf5702e716f5fdcf"
-  integrity sha512-BH/nkSVjcMSRGDlFUIWQpzHE3ceIQro4LRpUjB2TmGeY8OLHv0Iy6mDMbVvBrb0lQUwJ/dqsL0f3yFKjkYfQKw==
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/iron-webcrypto/-/iron-webcrypto-0.8.2.tgz#c7b60c20ffc22f880f12540ba44b4db615ce515e"
+  integrity sha512-jGiwmpgTuF19Vt4hn3+AzaVFGpVZt7A1ysd5ivFel2r4aNVFwqaYa6aU6qsF1PM7b+WFivZHz3nipwUOXaOnHg==
 
 is-absolute-url@^4.0.0:
   version "4.0.1"
@@ -3510,9 +3510,9 @@ listhen@^0.2.15:
     ufo "^0.8.5"
 
 listhen@^1.2.2, listhen@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/listhen/-/listhen-1.4.3.tgz#a6cb0b561527086d9d173e40db7dbc9fc8fa3cb5"
-  integrity sha512-qVWeM07q7q5R3jwB+Zm603khFQ3yq5OLmAwLIlE3Ftv1K9yfwx4R6/tbCkkr0/SrIyKnHK9xY1C6j03uGOSnIQ==
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/listhen/-/listhen-1.4.4.tgz#a42768360b15497466ac9e377d44c500d2765f10"
+  integrity sha512-xoZWbfziou7xPWj9nlFXeroFTJZVIyJ6wKrLea2jxvWgMkcz/vLMoZACYHLRmcLGi5hZkcDF48tmkmv1Y6Y42Q==
   dependencies:
     "@parcel/watcher" "^2.3.0"
     "@parcel/watcher-wasm" "2.3.0"
