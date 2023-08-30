@@ -77,9 +77,6 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         let flags = connection
             .get::<String, u64>(format!("guild:{guild_id}:role:{id}:flags"))
             .await?;
-        let name = connection
-            .get::<String, String>(format!("guild:{guild_id}:role:{id}:name"))
-            .await?;
         let hoist = connection
             .get::<String, bool>(format!("guild:{guild_id}:role:{id}:hoist"))
             .await?;
@@ -105,7 +102,6 @@ impl Repository<RoleEntity> for CachedRoleRepository {
             id,
             managed,
             mentionable,
-            name,
             position,
         })
     }
@@ -152,12 +148,6 @@ impl Repository<RoleEntity> for CachedRoleRepository {
             .set(
                 format!("guild:{}:role:{}:mentionable", entity.guild_id, entity.id),
                 entity.mentionable,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:name", entity.guild_id, entity.id),
-                entity.name,
             )
             .await?;
         connection
