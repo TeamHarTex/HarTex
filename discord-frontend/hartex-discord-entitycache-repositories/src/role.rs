@@ -105,7 +105,6 @@ impl Repository<RoleEntity> for CachedRoleRepository {
             id,
             managed,
             mentionable,
-            name,
             position,
         })
     }
@@ -152,12 +151,6 @@ impl Repository<RoleEntity> for CachedRoleRepository {
             .set(
                 format!("guild:{}:role:{}:mentionable", entity.guild_id, entity.id),
                 entity.mentionable,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:name", entity.guild_id, entity.id),
-                entity.name,
             )
             .await?;
         connection
