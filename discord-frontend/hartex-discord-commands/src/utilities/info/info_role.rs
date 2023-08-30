@@ -30,6 +30,7 @@ use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFiel
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
@@ -52,22 +53,38 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .iter()
         .find(|option| option.name.as_str() == "role")
         .map(|option| option.value.clone())
-        .unwrap() else {
+        .unwrap()
+    else {
         unreachable!();
     };
 
-    bundle_get!(bundle."roleinfo-embed-name-field-name": message, out [roleinfo_embed_name_field_name, errors]);
+    bundle_get!(bundle."roleinfo-embed-generalinfo-field-name": message, out [roleinfo_embed_generalinfo_field_name, errors]);
+    handle_errors(errors)?;
+    bundle_get!(bundle."roleinfo-embed-generalinfo-id-subfield-name": message, out [roleinfo_embed_generalinfo_id_subfield_name, errors]);
     handle_errors(errors)?;
 
     let mention = role_id.mention().to_string();
     bundle_get_args!(bundle."roleinfo-embed-description": message, out [roleinfo_embed_description, errors], args ["roleMention" to mention]);
     handle_errors(errors)?;
 
-    let role = CachedRoleRepository.get((interaction.guild_id.unwrap(), role_id)).await.into_diagnostic()?;
+    let role = CachedRoleRepository
+        .get((interaction.guild_id.unwrap(), role_id))
+        .await
+        .into_diagnostic()?;
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .description(roleinfo_embed_description)
-        .field(EmbedFieldBuilder::new(roleinfo_embed_name_field_name, role.name))
+        .field(EmbedFieldBuilder::new(
+            format!(
+                "<:role:1139004530277765211> {}",
+                roleinfo_embed_generalinfo_field_name
+            ),
+            format!(
+                "{} {}\n",
+                roleinfo_embed_generalinfo_id_subfield_name,
+                role.id.to_string().discord_inline_code()
+            ),
+        ))
         .build();
 
     interaction_client

@@ -115,10 +115,12 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
-
         if let Some(icon) = entity.icon {
             connection
-                .set(format!("guild:{}:role:{}:icon", entity.guild_id, entity.id), icon.to_string())
+                .set(
+                    format!("guild:{}:role:{}:icon", entity.guild_id, entity.id),
+                    icon.to_string(),
+                )
                 .await?;
         }
 

@@ -23,9 +23,9 @@
 use proc_macro2::TokenStream as TokenStream2;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
-use syn::Ident;
 use syn::Token;
 
 #[allow(dead_code)]
@@ -58,13 +58,16 @@ impl Parse for MetadataMacroInput {
             name_ident: input.parse()?,
             equal3: input.parse()?,
             name_lit: input.parse()?,
-            comma3: input.parse().ok()
+            comma3: input.parse().ok(),
         })
     }
 }
 
 #[allow(clippy::too_many_lines)]
-pub fn implement_metadata(parameters: &MetadataMacroInput, struct_item: &ItemStruct) -> Option<TokenStream2> {
+pub fn implement_metadata(
+    parameters: &MetadataMacroInput,
+    struct_item: &ItemStruct,
+) -> Option<TokenStream2> {
     if parameters.command_type_ident != "command_type" {
         parameters
             .command_type_ident
