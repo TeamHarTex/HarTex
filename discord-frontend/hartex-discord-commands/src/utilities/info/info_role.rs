@@ -82,7 +82,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 roleinfo_embed_generalinfo_field_name
             ),
             format!(
-                "{} {}\n{} {:#X}",
+                "{} {}\n{} `{:#08X}`",
                 roleinfo_embed_generalinfo_id_subfield_name,
                 role.id.to_string().discord_inline_code(),
                 roleinfo_embed_generalinfo_color_subfield_name,
