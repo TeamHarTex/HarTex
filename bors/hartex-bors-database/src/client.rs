@@ -631,7 +631,7 @@ fn build_status_from_database(status: String) -> BorsBuildStatus {
 }
 
 fn datetime_from_database(datetime: DateTime) -> DateTimeUtc {
-    ChronoDateTime::from_utc(datetime, Utc)
+    ChronoDateTime::from_naive_utc_and_offset(datetime, Utc)
 }
 
 #[allow(clippy::cast_sign_loss)]
