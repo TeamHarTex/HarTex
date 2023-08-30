@@ -60,6 +60,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     bundle_get!(bundle."roleinfo-embed-generalinfo-field-name": message, out [roleinfo_embed_generalinfo_field_name, errors]);
     handle_errors(errors)?;
+    bundle_get!(bundle."serverinfo-embed-generalinfo-color-subfield-name": message, out [roleinfo_embed_generalinfo_color_subfield_name, errors]);
+    handle_errors(errors)?;
     bundle_get!(bundle."roleinfo-embed-generalinfo-id-subfield-name": message, out [roleinfo_embed_generalinfo_id_subfield_name, errors]);
     handle_errors(errors)?;
 
@@ -80,9 +82,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 roleinfo_embed_generalinfo_field_name
             ),
             format!(
-                "{} {}\n",
+                "{} {}\n{} {:#X}",
                 roleinfo_embed_generalinfo_id_subfield_name,
-                role.id.to_string().discord_inline_code()
+                role.id.to_string().discord_inline_code(),
+                roleinfo_embed_generalinfo_color_subfield_name,
+                role.color,
             ),
         ))
         .build();
