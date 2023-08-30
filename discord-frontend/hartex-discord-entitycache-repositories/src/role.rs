@@ -77,9 +77,6 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         let flags = connection
             .get::<String, u64>(format!("guild:{guild_id}:role:{id}:flags"))
             .await?;
-        let name = connection
-            .get::<String, String>(format!("guild:{guild_id}:role:{id}:name"))
-            .await?;
         let hoist = connection
             .get::<String, bool>(format!("guild:{guild_id}:role:{id}:hoist"))
             .await?;
