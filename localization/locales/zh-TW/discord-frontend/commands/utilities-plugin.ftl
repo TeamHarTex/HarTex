@@ -23,6 +23,10 @@
 botinfo-embed-title=運行資訊
 botinfo-embed-botstarted-field-name=機器人已啟動
 botinfo-embed-latency-field-name=延遲（毫秒）
+roleinfo-embed-description={$roleMention}的資訊
+roleinfo-embed-generalinfo-field-name=一般資訊
+roleinfo-embed-generalinfo-id-subfield-name=ID：
+serverinfo-embed-generalinfo-color-subfield-name=顏色：
 serverinfo-embed-generalinfo-field-name=一般資訊
 serverinfo-embed-generalinfo-id-subfield-name=ID：
 serverinfo-embed-generalinfo-created-subfield-name=創建於：
