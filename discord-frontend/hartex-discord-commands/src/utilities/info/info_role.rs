@@ -26,7 +26,8 @@ use hartex_discord_core::discord::model::application::interaction::application_c
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFieldBuilder};
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
@@ -77,12 +78,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .color(0x41_A0_DE)
         .description(roleinfo_embed_description)
         .field(EmbedFieldBuilder::new(
+            format!("<:role:1139004530277765211> {roleinfo_embed_generalinfo_field_name}"),
             format!(
-                "<:role:1139004530277765211> {}",
-                roleinfo_embed_generalinfo_field_name
-            ),
-            format!(
-                "{} {}\n{} `{:#08X}`",
+                "{} {}\n{} `#{:06X}`",
                 roleinfo_embed_generalinfo_id_subfield_name,
                 role.id.to_string().discord_inline_code(),
                 roleinfo_embed_generalinfo_color_subfield_name,
