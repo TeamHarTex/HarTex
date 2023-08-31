@@ -23,8 +23,12 @@
 botinfo-embed-title=运行时信息
 botinfo-embed-botstarted-field-name=机器人已启动
 botinfo-embed-latency-field-name=延迟（毫秒）
+roleinfo-embed-description={$roleMention} 的信息
+roleinfo-embed-generalinfo-field-name=常规信息
+roleinfo-embed-generalinfo-id-subfield-name=ID：
+serverinfo-embed-generalinfo-color-subfield-name=颜色：
 serverinfo-embed-generalinfo-field-name=常规信息
-serverinfo-embed-generalinfo-id-subfield-name=ID:
+serverinfo-embed-generalinfo-id-subfield-name=ID：
 serverinfo-embed-generalinfo-created-subfield-name=创建：
 serverinfo-embed-generalinfo-owner-subfield-name=所有者：
 serverinfo-embed-generalinfo-enabled-features-subfield-name=服务器特点：
