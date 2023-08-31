@@ -78,10 +78,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .color(0x41_A0_DE)
         .description(roleinfo_embed_description)
         .field(EmbedFieldBuilder::new(
-            format!(
-                "<:role:1139004530277765211> {}",
-                roleinfo_embed_generalinfo_field_name
-            ),
+            format!("<:role:1139004530277765211> {roleinfo_embed_generalinfo_field_name}"),
             format!(
                 "{} {}\n{} `#{:06X}`",
                 roleinfo_embed_generalinfo_id_subfield_name,
