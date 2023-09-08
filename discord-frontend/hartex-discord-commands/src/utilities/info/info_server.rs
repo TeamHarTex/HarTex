@@ -112,6 +112,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     handle_errors(errors)?;
     bundle_get!(bundle."serverinfo-embed-roleinfo-rolecount-subfield-name": message, out [serverinfo_embed_roleinfo_rolecount_subfield_name, errors]);
     handle_errors(errors)?;
+    bundle_get!(bundle."serverinfo-embed-flags-field-name": message, out [serverinfo_embed_flags_field_name, errors]);
+    handle_errors(errors)?;
 
     let mut default_general_information = format!(
         "{} {}\n{} {}\n{} {}",
@@ -246,6 +248,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 serverinfo_embed_roleinfo_rolecount_subfield_name,
                 roles.len(),
             ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            serverinfo_embed_flags_field_name,
+            "*to be completed*"
         ))
         .thumbnail(
             ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?,

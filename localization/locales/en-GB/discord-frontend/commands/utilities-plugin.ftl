@@ -45,3 +45,4 @@ serverinfo-embed-memberinfo-humancount-subfield-name=Human Count:
 serverinfo-embed-memberinfo-botcount-subfield-name=Bot Count:
 serverinfo-embed-roleinfo-field-name=Role Information
 serverinfo-embed-roleinfo-rolecount-subfield-name=Role Count:
+serverinfo-embed-flags-field-name=Flags
