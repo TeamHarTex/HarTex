@@ -56,9 +56,16 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
+    let locale = interaction.locale.and_then(|locale| locale.parse().ok());
+
     let bundle = create_bundle(
-        interaction.locale.and_then(|locale| locale.parse().ok()),
+        locale.clone(),
         &["discord-frontend", "commands"],
+    )?;
+
+    let bundle1 = create_bundle(
+        locale,
+        &["discord-frontend"],
     )?;
 
     let CommandOptionValue::Boolean(verbose) = options
@@ -113,6 +120,13 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     bundle_get!(bundle."serverinfo-embed-roleinfo-rolecount-subfield-name": message, out [serverinfo_embed_roleinfo_rolecount_subfield_name, errors]);
     handle_errors(errors)?;
     bundle_get!(bundle."serverinfo-embed-flags-field-name": message, out [serverinfo_embed_flags_field_name, errors]);
+    handle_errors(errors)?;
+    bundle_get!(bundle."serverinfo-embed-flags-large-subfield-name": message, out [serverinfo_embed_flags_large_subfield_name, errors]);
+    handle_errors(errors)?;
+
+    bundle_get!(bundle1."boolean-true": message, out [boolean_true, errors]);
+    handle_errors(errors)?;
+    bundle_get!(bundle1."boolean-false": message, out [boolean_false, errors]);
     handle_errors(errors)?;
 
     let mut default_general_information = format!(
@@ -251,7 +265,15 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         ))
         .field(EmbedFieldBuilder::new(
             serverinfo_embed_flags_field_name,
-            "*to be completed*"
+            format!(
+                "{} {}",
+                serverinfo_embed_flags_large_subfield_name,
+                if guild.large {
+                    boolean_true
+                } else {
+                    boolean_false
+                }
+            )
         ))
         .thumbnail(
             ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?,
