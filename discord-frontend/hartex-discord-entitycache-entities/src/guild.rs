@@ -37,6 +37,7 @@ pub struct GuildEntity {
     pub icon: Option<ImageHash>,
     #[entity(id)]
     pub id: Id<GuildMarker>,
+    pub large: bool,
     pub name: String,
     pub owner_id: Id<UserMarker>,
 }
@@ -47,6 +48,7 @@ impl From<Guild> for GuildEntity {
             features: guild.features,
             icon: guild.icon,
             id: guild.id,
+            large: guild.large,
             name: guild.name,
             owner_id: guild.owner_id,
         }
