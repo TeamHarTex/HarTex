@@ -33,6 +33,7 @@
 use std::sync::LazyLock;
 
 use async_lock::OnceCell;
+use handlebars::DirectorySourceOptions;
 use handlebars::Handlebars;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_log::log;
@@ -49,7 +50,7 @@ pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
     let mut handlebars = Handlebars::new();
     handlebars.set_strict_mode(true);
     handlebars
-        .register_templates_directory("./bors/hartex-bors-website/templates", Default::default())
+        .register_templates_directory("./bors/hartex-bors-website/templates", DirectorySourceOptions::default())
         .unwrap();
 
     handlebars
