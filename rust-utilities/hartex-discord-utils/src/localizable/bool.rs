@@ -34,7 +34,7 @@ impl Localizable for bool {
             &["discord-frontend"],
         )?;
 
-        let result = if self {
+        let result = if *self {
             bundle_get!(bundle."boolean-true": message, out [boolean_true, errors]);
             handle_errors(errors)?;
 
