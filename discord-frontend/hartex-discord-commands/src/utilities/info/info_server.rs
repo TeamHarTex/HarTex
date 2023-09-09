@@ -42,6 +42,7 @@ use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
+use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
@@ -61,11 +62,6 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let bundle = create_bundle(
         locale.clone(),
         &["discord-frontend", "commands"],
-    )?;
-
-    let bundle1 = create_bundle(
-        locale,
-        &["discord-frontend"],
     )?;
 
     let CommandOptionValue::Boolean(verbose) = options
@@ -122,11 +118,6 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     bundle_get!(bundle."serverinfo-embed-flags-field-name": message, out [serverinfo_embed_flags_field_name, errors]);
     handle_errors(errors)?;
     bundle_get!(bundle."serverinfo-embed-flags-large-subfield-name": message, out [serverinfo_embed_flags_large_subfield_name, errors]);
-    handle_errors(errors)?;
-
-    bundle_get!(bundle1."boolean-true": message, out [boolean_true, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle1."boolean-false": message, out [boolean_false, errors]);
     handle_errors(errors)?;
 
     let mut default_general_information = format!(
@@ -268,11 +259,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             format!(
                 "{} {}",
                 serverinfo_embed_flags_large_subfield_name,
-                if guild.large {
-                    boolean_true
-                } else {
-                    boolean_false
-                }
+                guild.large.localize(locale)?,
             )
         ))
         .thumbnail(
