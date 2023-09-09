@@ -34,18 +34,16 @@ impl Localizable for bool {
             &["discord-frontend"],
         )?;
 
-        let result = if *self {
+        if *self {
             bundle_get!(bundle."boolean-true": message, out [boolean_true, errors]);
             handle_errors(errors)?;
 
-            boolean_true
+            Ok(boolean_true.to_owned())
         } else {
             bundle_get!(bundle."boolean-false": message, out [boolean_false, errors]);
             handle_errors(errors)?;
 
-            boolean_false
-        };
-
-        Ok(result.to_owned())
+            Ok(boolean_false.to_owned())
+        }
     }
 }
