@@ -259,7 +259,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             format!(
                 "{} {}",
                 serverinfo_embed_flags_large_subfield_name,
-                guild.large.localize(locale),
+                guild.large.localize(locale)?,
             )
         ))
         .thumbnail(
