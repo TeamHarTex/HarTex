@@ -1002,7 +1002,11 @@ name = "hartex_discord_utils"
 version = "0.4.0"
 dependencies = [
  "hartex_discord_core",
+ "hartex_localization_core",
+ "hartex_localization_macros",
+ "miette",
  "once_cell",
+ "unic-langid",
 ]
 
 [[package]]
