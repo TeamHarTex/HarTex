@@ -20,27 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Discord Utilities
-//!
-//! Various useful Discord utilities.
+use unic_langid::LanguageIdentifier;
 
-use std::env;
-use std::ops::Deref;
+mod bool;
 
-use hartex_discord_core::discord::http::Client;
-use once_cell::sync::Lazy;
-
-pub mod localizable;
-pub mod markdown;
-
-/// A proxied Discord HTTP cliemt.
-pub static CLIENT: Lazy<Client> = Lazy::new(|| {
-    Client::builder()
-        .token(TOKEN.deref().to_owned())
-        .proxy(String::from("localhost:3000"), true)
-        .ratelimiter(None)
-        .build()
-});
-
-/// The bot token used for logging in to the Discord gateway and sending HTTP requests.
-pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());
+pub trait Localizable {
+    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<&str>;
+}
