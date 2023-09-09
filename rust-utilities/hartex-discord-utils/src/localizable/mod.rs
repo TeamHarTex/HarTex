@@ -25,5 +25,5 @@ use unic_langid::LanguageIdentifier;
 mod bool;
 
 pub trait Localizable {
-    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<&str>;
+    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String>;
 }
