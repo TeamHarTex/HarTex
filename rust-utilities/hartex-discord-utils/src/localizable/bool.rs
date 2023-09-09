@@ -28,7 +28,7 @@ use unic_langid::LanguageIdentifier;
 use crate::localizable::Localizable;
 
 impl Localizable for bool {
-    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<&str> {
+    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String> {
         let bundle = create_bundle(
             locale,
             &["discord-frontend"],
@@ -46,6 +46,6 @@ impl Localizable for bool {
             boolean_false
         };
 
-        Ok(result)
+        Ok(result.to_owned())
     }
 }
