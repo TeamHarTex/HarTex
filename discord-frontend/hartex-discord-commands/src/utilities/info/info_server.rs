@@ -63,11 +63,6 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         &["discord-frontend", "commands"],
     )?;
 
-    let bundle1 = create_bundle(
-        locale,
-        &["discord-frontend"],
-    )?;
-
     let CommandOptionValue::Boolean(verbose) = options
         .iter()
         .find(|option| option.name.as_str() == "verbose")
@@ -122,11 +117,6 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     bundle_get!(bundle."serverinfo-embed-flags-field-name": message, out [serverinfo_embed_flags_field_name, errors]);
     handle_errors(errors)?;
     bundle_get!(bundle."serverinfo-embed-flags-large-subfield-name": message, out [serverinfo_embed_flags_large_subfield_name, errors]);
-    handle_errors(errors)?;
-
-    bundle_get!(bundle1."boolean-true": message, out [boolean_true, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle1."boolean-false": message, out [boolean_false, errors]);
     handle_errors(errors)?;
 
     let mut default_general_information = format!(
