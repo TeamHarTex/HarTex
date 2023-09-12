@@ -19,3 +19,7 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
+
+default-message-notification-level-all=All
+default-message-notification-level-mention=Mentions
+default-message-notification-level-unknown=Unknown
