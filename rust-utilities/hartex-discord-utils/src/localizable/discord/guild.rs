@@ -21,10 +21,12 @@
  */
 
 use unic_langid::LanguageIdentifier;
+use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 
-mod bool;
-mod discord;
+use crate::localizable::Localizable;
 
-pub trait Localizable {
-    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String>;
+impl Localizable for DefaultMessageNotificationLevel {
+    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String> {
+        todo!()
+    }
 }

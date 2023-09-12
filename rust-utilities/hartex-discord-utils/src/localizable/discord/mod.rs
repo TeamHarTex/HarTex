@@ -20,11 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use unic_langid::LanguageIdentifier;
-
-mod bool;
-mod discord;
-
-pub trait Localizable {
-    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String>;
-}
+mod guild;
