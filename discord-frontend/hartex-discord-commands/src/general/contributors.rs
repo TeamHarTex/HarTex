@@ -69,18 +69,18 @@ impl Command for Contributors {
             .field(
                 EmbedFieldBuilder::new(
                     contributors_embed_global_admin_field_name,
-                    "HTGAzureX1212.#4937",
+                    "htgazurex1212.",
                 )
                 .build(),
             )
             .field(
-                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "Ariz#0288")
+                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "arizlunari")
                     .build(),
             )
             .field(
                 EmbedFieldBuilder::new(
                     contributors_embed_translation_team_field_name,
-                    "teddy#6071 (Locale: `zh-CN`)\n星曌#4316 (Locale: `zh-TW`)",
+                    "madonuko (Locale: `ja`)\nteddyji (Locale: `zh-CN`)\nxzihnago (Locale: `zh-TW`)",
                 )
                 .build(),
             )
