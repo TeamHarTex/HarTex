@@ -34,6 +34,7 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::create_bundle;
 use hartex_localization_core::handle_errors;
@@ -105,11 +106,11 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             botinfo_embed_botstarted_field_name,
-            format!("<t:{timestamp}:R>"),
+            timestamp.to_string().discord_relative_timestamp(),
         ))
         .field(EmbedFieldBuilder::new(
             botinfo_embed_latency_field_name,
-            format!("`{latency}`"),
+            latency.to_string().discord_inline_code(),
         ))
         .title(botinfo_embed_title)
         .validate()
