@@ -59,10 +59,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.and_then(|locale| locale.parse().ok());
 
-    let bundle = create_bundle(
-        locale.clone(),
-        &["discord-frontend", "commands"],
-    )?;
+    let bundle = create_bundle(locale.clone(), &["discord-frontend", "commands"])?;
 
     let CommandOptionValue::Boolean(verbose) = options
         .iter()
@@ -118,6 +115,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     bundle_get!(bundle."serverinfo-embed-flags-field-name": message, out [serverinfo_embed_flags_field_name, errors]);
     handle_errors(errors)?;
     bundle_get!(bundle."serverinfo-embed-flags-large-subfield-name": message, out [serverinfo_embed_flags_large_subfield_name, errors]);
+    handle_errors(errors)?;
+    bundle_get!(bundle."serverinfo-embed-flags-default-message-notification-level-subfield-name": message, out [serverinfo_embed_flags_default_message_notification_level_subfield_name, errors]);
     handle_errors(errors)?;
 
     let mut default_general_information = format!(
@@ -257,10 +256,12 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .field(EmbedFieldBuilder::new(
             serverinfo_embed_flags_field_name,
             format!(
-                "{} {}",
+                "{} {}\n{} {}",
                 serverinfo_embed_flags_large_subfield_name,
-                guild.large.localize(locale)?,
-            )
+                guild.large.localize(locale.clone())?,
+                serverinfo_embed_flags_default_message_notification_level_subfield_name,
+                guild.large.localize(locale)?
+            ),
         ))
         .thumbnail(
             ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?,

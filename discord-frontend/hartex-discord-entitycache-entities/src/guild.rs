@@ -22,6 +22,7 @@
 
 //! # Guild Entities
 
+use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::Guild;
 use hartex_discord_core::discord::model::guild::GuildFeature;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
@@ -33,6 +34,7 @@ use hartex_discord_entitycache_core::Entity;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Entity)]
 pub struct GuildEntity {
+    pub default_message_notifications: DefaultMessageNotificationLevel,
     pub features: Vec<GuildFeature>,
     pub icon: Option<ImageHash>,
     #[entity(id)]
@@ -45,6 +47,7 @@ pub struct GuildEntity {
 impl From<Guild> for GuildEntity {
     fn from(guild: Guild) -> Self {
         Self {
+            default_message_notifications: guild.default_message_notifications,
             features: guild.features,
             icon: guild.icon,
             id: guild.id,
