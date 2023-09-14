@@ -25,6 +25,7 @@
 use std::borrow::Cow;
 use std::env;
 
+use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::GuildFeature;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
@@ -44,6 +45,9 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
         let mut connection = client.get_tokio_connection().await?;
 
+        let default_message_notifications = connection
+            .get::<String, u8>(format!("guild:{id}:default_message_notifications"))
+            .await?;
         let features = connection
             .get::<String, String>(format!("guild:{id}:features"))
             .await?
@@ -64,6 +68,9 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .await?;
 
         Ok(GuildEntity {
+            default_message_notifications: DefaultMessageNotificationLevel::from(
+                default_message_notifications,
+            ),
             features,
             icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
@@ -86,6 +93,12 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
         connection
             .set(
+                format!("guild:{}:default_message_notifications", entity.id),
+                u8::from(entity.default_message_notifications),
+            )
+            .await?;
+        connection
+            .set(
                 format!("guild:{}:features", entity.id),
                 entity
                     .features
@@ -96,10 +109,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             )
             .await?;
         connection
-            .set(
-                format!("guild:{}:large", entity.id),
-                entity.large,
-            )
+            .set(format!("guild:{}:large", entity.id), entity.large)
             .await?;
         connection
             .set(format!("guild:{}:name", entity.id), entity.name)
