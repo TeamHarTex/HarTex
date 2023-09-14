@@ -45,3 +45,5 @@ serverinfo-embed-memberinfo-humancount-subfield-name=真人數：
 serverinfo-embed-memberinfo-botcount-subfield-name=機器人數：
 serverinfo-embed-roleinfo-field-name=身分組資訊
 serverinfo-embed-roleinfo-rolecount-subfield-name=身分組數量：
+serverinfo-embed-flags-field-name=旗標
+serverinfo-embed-flags-large-subfield-name=是否為大型伺服器：
