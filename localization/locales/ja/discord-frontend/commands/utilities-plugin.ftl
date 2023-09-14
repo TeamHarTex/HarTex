@@ -41,3 +41,5 @@ serverinfo-embed-memberinfo-humancount-subfield-name=人數：
 serverinfo-embed-memberinfo-botcount-subfield-name=ボット數：
 serverinfo-embed-roleinfo-field-name=ロール情報
 serverinfo-embed-roleinfo-rolecount-subfield-name=ロール数:
+serverinfo-embed-flags-field-name=フラグ
+serverinfo-embed-flags-large-subfield-name=鯖は大きいか：
