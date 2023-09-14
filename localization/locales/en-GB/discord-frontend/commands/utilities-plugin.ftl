@@ -47,3 +47,4 @@ serverinfo-embed-roleinfo-field-name=Role Information
 serverinfo-embed-roleinfo-rolecount-subfield-name=Role Count:
 serverinfo-embed-flags-field-name=Flags
 serverinfo-embed-flags-large-subfield-name=Is Large Server:
+serverinfo-embed-flags-default-message-notifications-subfield-name=Default Message Notification Level:
