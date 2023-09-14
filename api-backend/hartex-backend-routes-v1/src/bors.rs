@@ -37,6 +37,7 @@ use serde_json::Value;
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
 /// Obtain the list of users having the specified permission in a repository.
+#[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::unused_async)]
 #[get("/bors/repositories/<repository>/permissions/<permission>")]
 pub async fn v1_repositories_repository_permissions_permissions(
