@@ -46,6 +46,7 @@ use crate::RateLimitGuard;
 /// # `POST /uptime`
 ///
 /// Obtain the uptime of a certain component.
+#[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 #[post("/uptime", data = "<data>")]
 pub async fn v1_post_uptime(
