@@ -25,8 +25,10 @@
 use std::borrow::Cow;
 use std::env;
 
-use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::GuildFeature;
+use hartex_discord_core::discord::model::guild::{
+    DefaultMessageNotificationLevel, ExplicitContentFilter,
+};
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -47,6 +49,9 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
         let default_message_notifications = connection
             .get::<String, u8>(format!("guild:{id}:default_message_notifications"))
+            .await?;
+        let explicit_content_filter = connection
+            .get::<String, u8>(format!("guild:{id}:explicit_content_filter"))
             .await?;
         let features = connection
             .get::<String, String>(format!("guild:{id}:features"))
@@ -71,6 +76,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             default_message_notifications: DefaultMessageNotificationLevel::from(
                 default_message_notifications,
             ),
+            explicit_content_filter: ExplicitContentFilter::from(explicit_content_filter),
             features,
             icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
@@ -95,6 +101,12 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .set(
                 format!("guild:{}:default_message_notifications", entity.id),
                 u8::from(entity.default_message_notifications),
+            )
+            .await?;
+        connection
+            .set(
+                format!("guild:{}:explicit_content_filter", entity.id),
+                u8::from(entity.explicit_content_filter),
             )
             .await?;
         connection
