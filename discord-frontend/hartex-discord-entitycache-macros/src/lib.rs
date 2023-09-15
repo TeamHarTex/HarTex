@@ -27,6 +27,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(deprecated)]
 #![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
@@ -38,6 +39,7 @@ use syn::DeriveInput;
 mod entity;
 
 /// Macro to derive the `Entity` trait.
+#[deprecated(since = "0.4.0")]
 #[proc_macro_derive(Entity, attributes(entity))]
 pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
