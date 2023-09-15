@@ -23,6 +23,7 @@
 //! # Guild Entities
 
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
+use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::Guild;
 use hartex_discord_core::discord::model::guild::GuildFeature;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
@@ -35,6 +36,7 @@ use hartex_discord_entitycache_core::Entity;
 #[derive(Entity)]
 pub struct GuildEntity {
     pub default_message_notifications: DefaultMessageNotificationLevel,
+    pub explicit_content_filter: ExplicitContentFilter,
     pub features: Vec<GuildFeature>,
     pub icon: Option<ImageHash>,
     #[entity(id)]
@@ -48,6 +50,7 @@ impl From<Guild> for GuildEntity {
     fn from(guild: Guild) -> Self {
         Self {
             default_message_notifications: guild.default_message_notifications,
+            explicit_content_filter: guild.explicit_content_filter,
             features: guild.features,
             icon: guild.icon,
             id: guild.id,
