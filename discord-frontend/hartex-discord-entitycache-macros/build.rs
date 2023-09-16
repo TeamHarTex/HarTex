@@ -32,13 +32,20 @@ use std::io;
 use std::io::Cursor;
 use std::io::Read;
 use std::io::Seek;
+use std::io::Write;
 use std::path::Path;
 use std::str;
+use std::str::FromStr;
 
+use convert_case::Case;
+use convert_case::Casing;
 use proc_macro2::Ident;
 use proc_macro2::Span;
+use proc_macro2::TokenStream;
+use quote::quote;
 use syn::Item;
 use syn::ItemMod;
+use syn::ItemStruct;
 use syn::ItemUse;
 use syn::Token;
 use syn::Visibility;
@@ -75,6 +82,22 @@ pub fn main() {
         &lib_rs_path,
         &Visibility::Public(Token![pub](Span::call_site())),
     );
+
+    let metadata_from_module_tree = generate_metadata_from_module_tree(&module_tree, false);
+    let code = quote! {
+        use std::collections::HashMap;
+        use lazy_static::lazy_static;
+
+        #metadata_from_module_tree
+    };
+
+    let generated_dir = Path::new("generated");
+    fs::create_dir_all(&generated_dir).expect("failed to create directory");
+
+    let metadata_file_path = generated_dir.join("metadata.rs");
+    let mut file = File::create(metadata_file_path).expect("failed to create file");
+    file.write_all(code.to_string().as_bytes())
+        .expect("failed to write code to file");
 }
 
 fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
@@ -86,30 +109,41 @@ fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
         visibility: item_mod.vis.clone(),
     };
 
-    item_mod.content.as_ref().unwrap().1.iter().for_each(|item|  match item {
-        Item::Mod(item_mod) => if item_mod.ident == "tests" {
-            // do nothing
-        } else if item_mod.content.is_some() {
-            module_tree.children.push(build_module_tree_from_mod(item_mod));
-        } else {
-            let mod_name = &item_mod.ident.to_string();
-            let mod_file = Path::new(mod_name).with_extension("rs");
-            let mod_dir_file = Path::new(mod_name).join(mod_name).join("mod.rs");
+    item_mod
+        .content
+        .as_ref()
+        .unwrap()
+        .1
+        .iter()
+        .for_each(|item| match item {
+            Item::Mod(item_mod) => {
+                if item_mod.ident == "tests" || item_mod.ident == "test" {
+                    // do nothing
+                } else if item_mod.content.is_some() {
+                    module_tree
+                        .children
+                        .push(build_module_tree_from_mod(item_mod));
+                } else {
+                    let mod_name = &item_mod.ident.to_string();
+                    let mod_file = Path::new(mod_name).with_extension("rs");
+                    let mod_dir_file = Path::new(mod_name).join(mod_name).join("mod.rs");
 
-            if mod_file.exists() {
-                module_tree.children.push(
-                    build_module_tree_from_file(&mod_file, &item_mod.vis)
-                );
-            } else if mod_dir_file.exists() {
-                module_tree.children.push(
-                    build_module_tree_from_file(&mod_dir_file, &item_mod.vis)
-                );
+                    if mod_file.exists() {
+                        module_tree
+                            .children
+                            .push(build_module_tree_from_file(&mod_file, &item_mod.vis));
+                    } else if mod_dir_file.exists() {
+                        module_tree
+                            .children
+                            .push(build_module_tree_from_file(&mod_dir_file, &item_mod.vis));
+                    }
+                }
             }
-        }
-        Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) =>
-            module_tree.reexports.push(item_use.clone()),
-        item => module_tree.items.push(item.clone()),
-    });
+            Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) => {
+                module_tree.reexports.push(item_use.clone())
+            }
+            item => module_tree.items.push(item.clone()),
+        });
 
     module_tree
 }
@@ -140,27 +174,32 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
     };
 
     rust_file.items.iter().for_each(|item| match item {
-        Item::Mod(item_mod) => if item_mod.content.is_some() {
-            module_tree.children.push(build_module_tree_from_mod(item_mod));
-        } else {
-            let mod_name = &item_mod.ident.to_string();
-            let mod_file = path.parent().unwrap().join(format!("{mod_name}.rs"));
-            let mod_dir_file = path.parent().unwrap().join(mod_name).join("mod.rs");
-
-            if mod_name == "test" {
+        Item::Mod(item_mod) => {
+            if item_mod.ident == "tests" || item_mod.ident == "test" {
                 // do nothing
-            } else if mod_file.exists() {
-                module_tree.children.push(
-                    build_module_tree_from_file(&mod_file, &item_mod.vis)
-                );
-            } else if mod_dir_file.exists() {
-                module_tree.children.push(
-                    build_module_tree_from_file(&mod_dir_file, &item_mod.vis)
-                );
+            } else if item_mod.content.is_some() {
+                module_tree
+                    .children
+                    .push(build_module_tree_from_mod(item_mod));
+            } else {
+                let mod_name = &item_mod.ident.to_string();
+                let mod_file = path.parent().unwrap().join(format!("{mod_name}.rs"));
+                let mod_dir_file = path.parent().unwrap().join(mod_name).join("mod.rs");
+
+                if mod_file.exists() {
+                    module_tree
+                        .children
+                        .push(build_module_tree_from_file(&mod_file, &item_mod.vis));
+                } else if mod_dir_file.exists() {
+                    module_tree
+                        .children
+                        .push(build_module_tree_from_file(&mod_dir_file, &item_mod.vis));
+                }
             }
         }
-        Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) =>
-            module_tree.reexports.push(item_use.clone()),
+        Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) => {
+            module_tree.reexports.push(item_use.clone())
+        }
         item => module_tree.items.push(item.clone()),
     });
 
@@ -188,6 +227,103 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
         } else {
             let mut output_file = File::create(&file_path).expect("failed to create file");
             io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
+        }
+    }
+}
+
+fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStream {
+    let ident = &item_struct.ident;
+    let const_name = ident.to_string().to_case(Case::ScreamingSnake);
+    let const_ident = TokenStream::from_str(&const_name).unwrap();
+
+    let generic_params = item_struct
+        .generics
+        .params
+        .iter()
+        .map(|generic_param| {
+            if let syn::GenericParam::Type(type_param) = generic_param {
+                let ident = &type_param.ident;
+
+                Some(quote! {
+                    crate::reflect::GenericParameter {
+                        name: stringify!(#ident).to_string()
+                    }
+                })
+            } else {
+                None
+            }
+        })
+        .filter(|option| option.is_some())
+        .map(|option| option.unwrap())
+        .collect::<Vec<_>>();
+
+    let fields = item_struct
+        .fields
+        .iter()
+        .map(|field| {
+            let ident = &field.ident;
+            let vis = &field.vis;
+            let ty = &field.ty;
+
+            quote! {
+                crate::reflect::Field {
+                    name: stringify!(#ident).to_string(),
+                    vis: stringify!(#vis).to_string(),
+                    ty: stringify!(#ty).to_string(),
+                }
+            }
+        })
+        .collect::<Vec<_>>();
+
+    quote! {
+        pub static ref #const_ident: crate::reflect::Struct = crate::reflect::Struct {
+            name: stringify!(#ident).to_string(),
+            generic_params: vec![#(#generic_params,)*],
+            fields: vec![#(#fields,)*]
+        };
+    }
+}
+
+fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStream {
+    let name = &tree.name;
+    let items = &tree.items;
+    let children = tree
+        .children
+        .iter()
+        .map(|child| generate_metadata_from_module_tree(child, true))
+        .collect::<Vec<_>>();
+
+    let structs = items
+        .iter()
+        .map(|item| {
+            if let Item::Struct(item_struct) = item {
+                Some(item_struct)
+            } else {
+                None
+            }
+        })
+        .filter(|option| option.is_some())
+        .map(|option| option.unwrap())
+        .map(|item_struct| generate_lazy_static_from_item_struct(&item_struct))
+        .collect::<Vec<_>>();
+
+    if nest {
+        quote! {
+            pub mod #name {
+                lazy_static! {
+                    #(#structs)*
+                }
+
+                #(#children)*
+            }
+        }
+    } else {
+        quote! {
+            lazy_static! {
+                #(#structs)*
+            }
+
+            #(#children)*
         }
     }
 }
