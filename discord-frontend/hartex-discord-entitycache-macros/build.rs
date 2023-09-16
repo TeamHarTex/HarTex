@@ -147,7 +147,9 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
             let mod_file = path.parent().unwrap().join(format!("{mod_name}.rs"));
             let mod_dir_file = path.parent().unwrap().join(mod_name).join("mod.rs");
 
-            if mod_file.exists() {
+            if mod_name == "test" {
+                // do nothing
+            } else if mod_file.exists() {
                 module_tree.children.push(
                     build_module_tree_from_file(&mod_file, &item_mod.vis)
                 );
