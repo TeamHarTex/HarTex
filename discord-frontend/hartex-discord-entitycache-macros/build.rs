@@ -43,9 +43,14 @@ pub fn main() {
 
     // extract the archive
     let reader = Cursor::new(bytes);
+    let output_dir = Path::new("downloaded");
+
+    extract_archive(reader, output_dir);
+}
+
+fn extract_archive<R>(reader: R, output_dir: &Path) {
     let mut archive = ZipArchive::new(reader).expect("failed to open zip archive");
 
-    let output_dir = Path::new("downloaded");
     for i in 0..archive.len() {
         let mut file = archive
             .by_index(i)
