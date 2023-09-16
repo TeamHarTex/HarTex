@@ -24,13 +24,20 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+#![allow(clippy::expect_fun_call)]
+
 use std::fs::File;
+use std::fs;
 use std::io::Cursor;
 use std::io::Read;
 use std::io::Seek;
+use std::io;
 use std::path::Path;
 use std::str;
 
+use proc_macro2::Span;
+use syn::Token;
+use syn::Visibility;
 use zip::ZipArchive;
 
 #[cfg(feature = "discord_model_v_0_15_4")]
@@ -48,7 +55,14 @@ pub fn main() {
     let output_dir = Path::new("downloaded");
 
     extract_archive(reader, output_dir);
+
+    let crate_dir = output_dir.join(format!("twilight-twilight-model-{MODEL_CRATE_VERSION}/twilight-model"));
+    let lib_rs_path = crate_dir.join("src/lib.rs");
+
+    let _ = build_module_tree(&lib_rs_path, &Visibility::Public(Token![pub](Span::call_site())));
 }
+
+fn build_module_tree(_: &Path, _: &Visibility) {}
 
 fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
     let mut archive = ZipArchive::new(reader).expect("failed to open zip archive");
@@ -65,10 +79,10 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
         let file_path = output_dir.join(file.name());
 
         if file.name().ends_with('/') {
-            std::fs::create_dir_all(&file_path).expect("failed to create directory");
+            fs::create_dir_all(&file_path).expect("failed to create directory");
         } else {
             let mut output_file = File::create(&file_path).expect("failed to create file");
-            std::io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
+            io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
         }
     }
 }
