@@ -27,6 +27,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(deprecated)]
 
 pub mod guild;
 pub mod member;
