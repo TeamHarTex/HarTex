@@ -24,10 +24,14 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+#![allow(clippy::expect_fun_call)]
+
 use std::fs::File;
+use std::fs;
 use std::io::Cursor;
 use std::io::Read;
 use std::io::Seek;
+use std::io;
 use std::path::Path;
 use std::str;
 
@@ -65,10 +69,10 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
         let file_path = output_dir.join(file.name());
 
         if file.name().ends_with('/') {
-            std::fs::create_dir_all(&file_path).expect("failed to create directory");
+            fs::create_dir_all(&file_path).expect("failed to create directory");
         } else {
             let mut output_file = File::create(&file_path).expect("failed to create file");
-            std::io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
+            io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
         }
     }
 }
