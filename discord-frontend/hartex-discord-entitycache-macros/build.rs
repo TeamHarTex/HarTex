@@ -24,7 +24,51 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::fs::File;
+use std::io::Cursor;
+use std::io::Read;
+use std::io::Seek;
+use std::path::Path;
+use std::str;
+
+use zip::ZipArchive;
+
 #[cfg(feature = "discord_model_v_0_15_4")]
 const MODEL_CRATE_VERSION: &str = "0.15.4";
 
-pub fn main() {}
+pub fn main() {
+    let response = reqwest::blocking::get(format!("https://github.com/twilight-rs/twilight/archive/refs/tags/twilight-model-{MODEL_CRATE_VERSION}.zip"))
+        .expect(&format!("twilight-model {MODEL_CRATE_VERSION} is not found"));
+    let bytes = response
+        .bytes()
+        .expect("failed to obtain archive bytes");
+
+    // extract the archive
+    let reader = Cursor::new(bytes);
+    let output_dir = Path::new("downloaded");
+
+    extract_archive(reader, output_dir);
+}
+
+fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
+    let mut archive = ZipArchive::new(reader).expect("failed to open zip archive");
+
+    for i in 0..archive.len() {
+        let mut file = archive
+            .by_index(i)
+            .expect("failed to obtain file in zip archive");
+
+        if !file.name().starts_with(&format!("twilight-twilight-model-{MODEL_CRATE_VERSION}/twilight-model")) {
+            continue;
+        }
+
+        let file_path = output_dir.join(file.name());
+
+        if file.name().ends_with('/') {
+            std::fs::create_dir_all(&file_path).expect("failed to create directory");
+        } else {
+            let mut output_file = File::create(&file_path).expect("failed to create file");
+            std::io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
+        }
+    }
+}
