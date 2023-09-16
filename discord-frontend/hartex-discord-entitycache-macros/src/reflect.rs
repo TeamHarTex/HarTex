@@ -20,33 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Macros
-//!
-//! Useful macros for the entity cache.
+#[derive(Debug, Clone)]
+pub struct Field {
+    pub name: String,
+    pub vis: String,
+    pub ty: String,
+}
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![allow(deprecated)]
-#![feature(proc_macro_diagnostic)]
+#[derive(Debug, Clone)]
+pub struct GenericParameter {
+    pub name: String,
+}
 
-extern crate proc_macro;
-
-use proc_macro::TokenStream;
-use syn::parse_macro_input;
-use syn::DeriveInput;
-
-mod entity;
-#[path = "../generated/metadata.rs"]
-mod metadata;
-mod reflect;
-
-/// Macro to derive the `Entity` trait.
-#[deprecated(since = "0.4.0")]
-#[proc_macro_derive(Entity, attributes(entity))]
-pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(tokens as DeriveInput);
-    entity::expand_entity_derivation(&mut input)
-        .unwrap_or_default()
-        .into()
+#[derive(Debug, Clone)]
+pub struct Struct {
+    pub name: String,
+    pub generic_params: Vec<GenericParameter>,
+    pub fields: Vec<Field>,
 }
