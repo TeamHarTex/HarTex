@@ -87,7 +87,9 @@ fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
     };
 
     item_mod.content.as_ref().unwrap().1.iter().for_each(|item|  match item {
-        Item::Mod(item_mod) => if item_mod.content.is_some() {
+        Item::Mod(item_mod) => if item_mod.ident == "tests" {
+            // do nothing
+        } else if item_mod.content.is_some() {
             module_tree.children.push(build_module_tree_from_mod(item_mod));
         } else {
             let mod_name = &item_mod.ident.to_string();
