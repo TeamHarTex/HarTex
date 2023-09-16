@@ -50,7 +50,7 @@ struct ModuleTree {
     children: Vec<ModuleTree>,
     items: Vec<Item>,
     name: Ident,
-    reexports: ItemUse,
+    reexports: Vec<ItemUse>,
     visibility: Visibility,
 }
 
@@ -76,17 +76,54 @@ pub fn main() {
     );
 }
 
-fn build_module_tree_from_dir(_: &ItemMod) -> ModuleTree {
+fn build_module_tree_from_mod(_: &ItemMod) -> ModuleTree {
     todo!()
 }
 
-fn build_module_tree_from_file(path: &Path, _: &Visibility) -> ModuleTree {
+fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTree {
     let content = fs::read_to_string(path)
         .expect(&format!("failed to read file: {}", path.to_string_lossy()));
-    let _ = syn::parse_file(&content)
+    let rust_file = syn::parse_file(&content)
         .expect(&format!("failed to parse file: {}", path.to_string_lossy()));
 
-    todo!()
+    let module_name = if path.file_stem().unwrap() == "mod" {
+        path.parent()
+            .unwrap()
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+    } else {
+        path.file_stem().unwrap().to_str().unwrap()
+    };
+
+    let mut module_tree = ModuleTree {
+        children: vec![],
+        items: vec![],
+        name: Ident::new(module_name, Span::call_site()),
+        reexports: vec![],
+        visibility: visibility.clone(),
+    };
+
+    rust_file.items.iter().for_each(|item| match item {
+        Item::Mod(item_mod) => if item_mod.content.is_some() {
+            module_tree.children.push(build_module_tree_from_mod(item_mod));
+        } else {
+            let mod_name = &item_mod.ident.to_string();
+            let mod_file = path.parent().unwrap().join(format!("{mod_name}.rs"));
+            let mod_dir_file = path.parent().unwrap().join(mod_name).join("mod.rs");
+
+            if mod_file.exists() ||  mod_dir_file.exists() {
+                module_tree.children.push(
+                    build_module_tree_from_file(&mod_file, &item_mod.vis)
+                );
+            }
+        }
+        Item::Use(item_use) => module_tree.reexports.push(item_use.clone()),
+        item => module_tree.items.push(item.clone())
+    });
+
+    module_tree
 }
 
 fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
