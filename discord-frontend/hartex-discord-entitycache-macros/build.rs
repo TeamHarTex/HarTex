@@ -25,6 +25,6 @@
 #![deny(warnings)]
 
 #[cfg(feature = "discord_model_v_0_15_4")]
-const MODEL_CRATE_VERSION: &'static str = "0.15.4";
+const MODEL_CRATE_VERSION: &str = "0.15.4";
 
 pub fn main() {}
