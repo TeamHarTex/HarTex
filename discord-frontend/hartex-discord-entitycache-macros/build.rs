@@ -24,7 +24,17 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::io::Cursor;
+
 #[cfg(feature = "discord_model_v_0_15_4")]
 const MODEL_CRATE_VERSION: &str = "0.15.4";
 
-pub fn main() {}
+pub fn main() {
+    let result = reqwest::blocking::get(format!("https://github.com/twilight-rs/twilight/archive/refs/tags/twilight-model-{MODEL_CRATE_VERSION}.zip"));
+    if result.is_err() {
+        panic!("twilight-model {MODEL_CRATE_VERSION} is not found");
+    }
+
+    let response = result.unwrap();
+    let _ = Cursor::new(response);
+}
