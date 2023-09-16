@@ -13,7 +13,7 @@ rust-version = "1.73.0"
 [dependencies]
 proc-macro2 = "1.0.67"
 quote = "1.0.33"
-syn = { version = "2.0.33", features = ["extra-traits", "full"] }
+syn = { version = "2.0.35", features = ["extra-traits", "full"] }
 
 [build-dependencies]
 reqwest = "0.11.20"
