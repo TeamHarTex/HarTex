@@ -37,6 +37,8 @@ use syn::parse_macro_input;
 use syn::DeriveInput;
 
 mod entity;
+#[path = "../generated/metadata.rs"]
+mod metadata;
 mod reflect;
 
 /// Macro to derive the `Entity` trait.

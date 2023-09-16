@@ -1023,6 +1023,7 @@ name = "hartex_discord_entitycache_macros"
 version = "0.4.0"
 dependencies = [
  "convert_case",
+ "lazy_static",
  "proc-macro2",
  "quote",
  "reqwest",
