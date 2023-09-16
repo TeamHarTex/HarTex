@@ -35,6 +35,7 @@ use syn::Visibility;
 
 #[allow(clippy::needless_pass_by_ref_mut)]
 #[allow(clippy::too_many_lines)]
+#[deprecated(since = "0.4.0")]
 pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
     // check if item is public
     match input.vis.clone() {
