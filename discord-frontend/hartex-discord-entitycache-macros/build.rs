@@ -26,6 +26,8 @@
 
 use std::fs::File;
 use std::io::Cursor;
+use std::io::Read;
+use std::io::Seek;
 use std::path::Path;
 use std::str;
 
@@ -48,7 +50,7 @@ pub fn main() {
     extract_archive(reader, output_dir);
 }
 
-fn extract_archive<R>(reader: R, output_dir: &Path) {
+fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
     let mut archive = ZipArchive::new(reader).expect("failed to open zip archive");
 
     for i in 0..archive.len() {
