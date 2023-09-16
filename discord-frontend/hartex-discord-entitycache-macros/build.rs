@@ -23,6 +23,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(dead_code)]
 #![allow(clippy::expect_fun_call)]
 
 use std::fs;
@@ -70,14 +71,45 @@ pub fn main() {
     ));
     let lib_rs_path = crate_dir.join("src/lib.rs");
 
-    let _ = build_module_tree_from_file(
+    let module_tree = build_module_tree_from_file(
         &lib_rs_path,
         &Visibility::Public(Token![pub](Span::call_site())),
     );
 }
 
-fn build_module_tree_from_mod(_: &ItemMod) -> ModuleTree {
-    todo!()
+fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
+    let mut module_tree = ModuleTree {
+        children: vec![],
+        items: vec![],
+        name: item_mod.ident.clone(),
+        reexports: vec![],
+        visibility: item_mod.vis.clone(),
+    };
+
+    item_mod.content.as_ref().unwrap().1.iter().for_each(|item|  match item {
+        Item::Mod(item_mod) => if item_mod.content.is_some() {
+            module_tree.children.push(build_module_tree_from_mod(item_mod));
+        } else {
+            let mod_name = &item_mod.ident.to_string();
+            let mod_file = Path::new(mod_name).with_extension("rs");
+            let mod_dir_file = Path::new(mod_name).join(mod_name).join("mod.rs");
+
+            if mod_file.exists() {
+                module_tree.children.push(
+                    build_module_tree_from_file(&mod_file, &item_mod.vis)
+                );
+            } else if mod_dir_file.exists() {
+                module_tree.children.push(
+                    build_module_tree_from_file(&mod_dir_file, &item_mod.vis)
+                );
+            }
+        }
+        Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) =>
+            module_tree.reexports.push(item_use.clone()),
+        item => module_tree.items.push(item.clone()),
+    });
+
+    module_tree
 }
 
 fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTree {
@@ -113,14 +145,19 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
             let mod_file = path.parent().unwrap().join(format!("{mod_name}.rs"));
             let mod_dir_file = path.parent().unwrap().join(mod_name).join("mod.rs");
 
-            if mod_file.exists() ||  mod_dir_file.exists() {
+            if mod_file.exists() {
                 module_tree.children.push(
                     build_module_tree_from_file(&mod_file, &item_mod.vis)
                 );
+            } else if mod_dir_file.exists() {
+                module_tree.children.push(
+                    build_module_tree_from_file(&mod_dir_file, &item_mod.vis)
+                );
             }
         }
-        Item::Use(item_use) => module_tree.reexports.push(item_use.clone()),
-        item => module_tree.items.push(item.clone())
+        Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) =>
+            module_tree.reexports.push(item_use.clone()),
+        item => module_tree.items.push(item.clone()),
     });
 
     module_tree
