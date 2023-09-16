@@ -16,7 +16,9 @@ quote = "1.0.33"
 syn = { version = "2.0.35", features = ["extra-traits", "full"] }
 
 [build-dependencies]
+proc-macro2 = "1.0.67"
 reqwest = { version = "0.11.20", features = ["blocking"] }
+syn = { version = "2.0.35", features = ["extra-traits", "full"] }
 zip = { version = "0.6.6" }
 
 [features]
