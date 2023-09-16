@@ -30,6 +30,7 @@
 **/build
 
 **/downloaded
+**/generated
 
 bors-data
 backend-data
