@@ -29,6 +29,8 @@
 **/.gradle
 **/build
 
+**/downloaded
+
 bors-data
 backend-data
 hartexbuild.exe
