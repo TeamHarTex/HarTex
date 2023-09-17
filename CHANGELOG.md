@@ -1,6 +1,6 @@
 # [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.3.0...nightly)
 
-> This release is within the **Deuterium (23Q3)** development quarter.
+> This release is within the **Helium (2023Q3)** development quarter.
 
 > **4** contributors made contributions to this release
 
@@ -39,9 +39,7 @@
 
 ## Web Frontend
 
-# [Version 0.3.0 (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
-
-> This release is within the **Deuterium (23Q3)** development quarter.
+# [Version 0.3.0, Lithium I (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
 
 > **4** contributors made contributions to this release
 
@@ -84,9 +82,7 @@
 
 - **Changed:** removed hartex-eyre
 
-# [Version 0.2.1 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.2.0...0.2.1)
-
-> This release is within the **Deuterium (23Q3)** development quarter.
+# [Version 0.2.1, Helium II (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.2.0...0.2.1)
 
 > **1** contributor made contributions to this release
 
@@ -96,9 +92,7 @@
 
 - **Fixed:** compiler errors
 
-# [Version 0.2.0 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.1.0...0.2.0)
-
-> This release is within the **Deuterium (23Q3)** development quarter.
+# [Version 0.2.0, Helium I (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.1.0...0.2.0)
 
 > **5** contributors made contributions to this release
 
@@ -153,9 +147,7 @@
 - **Added:** documentation website
 - **Added:** introduction page
 
-# [Version 0.1.0 (2023-06-14)](https://github.com/TeamHarTex/HarTex/commits/0.1.0)
-
-> This release is within the **Protium (23Q2)** development quarter.
+# [Version 0.1.0, Hydrogen I (2023-06-14)](https://github.com/TeamHarTex/HarTex/commits/0.1.0)
 
 > **5** contributors made contributions to this release
 
