@@ -1,8 +1,10 @@
 # [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.3.0...nightly)
 
-> **1** contributor made contributions to this release
+> This release is within the **Helium (2023Q3)** development quarter.
 
-> **y** commits since 2022-08-31
+> **4** contributors made contributions to this release
+
+> **y** commits since 2022-08-23
 
 ## API Backend
 
@@ -22,17 +24,22 @@
 ## Discord Frontend
 
 - **Added:** `metadata` macro for writing command metadata, replacing `CommandMetadata` derive
+- **Added:** `/info role` command
 - **Changed:** pinned serde to version 1.0.185
-- **Changed:** deprecated `minimum_level` function of the `CommandMetada` trait
+- **Changed:** deprecated `minimum_level` function of the `CommandMetadata` trait
+- **Changed:** deprecated `Entity` macro derive trait
+- **Changed:** updated `/info server` command with mor einformation
 - **Removed:** removed deprecated `CommandMetadata` derive macro
 
 ## Localization Infrastructure
 
 ## Rust Utilities
 
+- **Added**: some APIs for localizing data types
+
 ## Web Frontend
 
-# [Version 0.3.0 (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
+# [Version 0.3.0, Lithium I (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
 
 > **4** contributors made contributions to this release
 
@@ -75,7 +82,7 @@
 
 - **Changed:** removed hartex-eyre
 
-# [Version 0.2.1 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.2.0...0.2.1)
+# [Version 0.2.1, Helium II (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.2.0...0.2.1)
 
 > **1** contributor made contributions to this release
 
@@ -85,7 +92,7 @@
 
 - **Fixed:** compiler errors
 
-# [Version 0.2.0 (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.1.0...0.2.0)
+# [Version 0.2.0, Helium I (2023-07-16)](https://github.com/TeamHarTex/HarTex/compare/0.1.0...0.2.0)
 
 > **5** contributors made contributions to this release
 
@@ -140,7 +147,7 @@
 - **Added:** documentation website
 - **Added:** introduction page
 
-# [Version 0.1.0 (2023-06-14)](https://github.com/TeamHarTex/HarTex/commits/0.1.0)
+# [Version 0.1.0, Hydrogen I (2023-06-14)](https://github.com/TeamHarTex/HarTex/commits/0.1.0)
 
 > **5** contributors made contributions to this release
 
