@@ -212,7 +212,10 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
     module_tree
 }
 
-fn collect_type_to_module_path_mappings(tree: &ModuleTree, current_path: &str) -> Vec<(String, String)> {
+fn collect_type_to_module_path_mappings(
+    tree: &ModuleTree,
+    current_path: &str,
+) -> Vec<(String, String)> {
     let mut mappings = Vec::new();
 
     // Get the current path
@@ -268,7 +271,6 @@ fn collect_type_to_module_path_mappings(tree: &ModuleTree, current_path: &str) -
     }
 
     mappings
-
 }
 
 fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
@@ -372,7 +374,7 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
     }
 }
 
-fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStream {
+fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_macro2::TokenStream {
     let name = &tree.name;
     let items = &tree.items;
     let children = tree
