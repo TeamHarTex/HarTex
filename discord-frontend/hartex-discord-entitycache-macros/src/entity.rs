@@ -29,6 +29,8 @@ use syn::ItemStruct;
 use syn::LitStr;
 use syn::Token;
 
+use crate::metadata;
+
 #[allow(dead_code)]
 pub struct EntityMacroInput {
     pub(crate) from_ident: Ident,
@@ -109,6 +111,16 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         return None;
     }
+
+    let Some(_) = metadata::STRUCT_MAP.get(&input.from_lit.value()) else {
+        input
+            .from_lit
+            .span()
+            .unwrap()
+            .error("this struct is not found");
+
+        return None;
+    };
 
     todo!()
 }
