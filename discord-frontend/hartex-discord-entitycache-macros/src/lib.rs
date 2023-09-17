@@ -35,6 +35,7 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use syn::parse_macro_input;
 use syn::DeriveInput;
+use syn::ItemStruct;
 
 mod entity;
 mod entity_deprecated;
@@ -53,6 +54,10 @@ pub fn derive_entity_trait_deprecated(tokens: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn entity(_: TokenStream, _: TokenStream) -> TokenStream {
-    todo!()
+pub fn entity(tokens: TokenStream, item: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(tokens as entity::EntityMacroInput);
+    let struct_decl = parse_macro_input!(item as ItemStruct);
+    entity::implement_entity(&input, &struct_decl)
+        .unwrap_or_default()
+        .into()
 }

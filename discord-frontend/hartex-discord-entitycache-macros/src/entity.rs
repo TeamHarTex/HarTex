@@ -20,13 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::ItemStruct;
 
-pub struct EntityMacroInput;
+pub struct EntityMacroInput {
+
+}
 
 impl Parse for EntityMacroInput {
     fn parse(_: ParseStream) -> syn::Result<Self> {
         todo!()
     }
+}
+
+pub fn implement_entity(_: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+    todo!()
 }
