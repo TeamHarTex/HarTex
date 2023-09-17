@@ -29,22 +29,26 @@ use syn::ItemStruct;
 use syn::LitStr;
 use syn::Token;
 
+use crate::metadata;
+
 #[allow(dead_code)]
 pub struct EntityMacroInput {
     pub(crate) from_ident: Ident,
     pub(crate) equal1: Token![=],
     pub(crate) from_lit: LitStr,
     pub(crate) comma1: Token![,],
-    pub(crate) include_ident: Ident,
+    pub(crate) exclude_ident: Ident,
     pub(crate) equal2: Token![=],
-    pub(crate) include_array: ExprArray,
+    pub(crate) exclude_array: ExprArray,
     pub(crate) comma2: Token![,],
-    pub(crate) omit_ident: Ident,
+    pub(crate) include_ident: Ident,
     pub(crate) equal3: Token![=],
-    pub(crate) omit_array: ExprArray,
+    pub(crate) include_array: ExprArray,
+    pub(crate) comma3: Token![,],
     pub(crate) id_ident: Ident,
     pub(crate) equal4: Token![=],
     pub(crate) id_array: ExprArray,
+    pub(crate) comma4: Option<Token![,]>,
 }
 
 impl Parse for EntityMacroInput {
@@ -54,20 +58,69 @@ impl Parse for EntityMacroInput {
             equal1: input.parse()?,
             from_lit: input.parse()?,
             comma1: input.parse()?,
-            include_ident: input.parse()?,
+            exclude_ident: input.parse()?,
             equal2: input.parse()?,
-            include_array: input.parse()?,
+            exclude_array: input.parse()?,
             comma2: input.parse()?,
-            omit_ident: input.parse()?,
+            include_ident: input.parse()?,
             equal3: input.parse()?,
-            omit_array: input.parse()?,
+            include_array: input.parse()?,
+            comma3: input.parse()?,
             id_ident: input.parse()?,
             equal4: input.parse()?,
             id_array: input.parse()?,
+            comma4: input.parse().ok(),
         })
     }
 }
 
-pub fn implement_entity(_: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+    if input.from_ident != "from" {
+        input
+            .from_ident
+            .span()
+            .unwrap()
+            .error("expected `from`")
+            .emit();
+
+        return None;
+    }
+
+    if input.exclude_ident != "exclude" {
+        input
+            .exclude_ident
+            .span()
+            .unwrap()
+            .error("expected `exclude`")
+            .emit();
+    }
+
+    if input.include_ident != "include" {
+        input
+            .include_ident
+            .span()
+            .unwrap()
+            .error("expected `include`")
+            .emit();
+
+        return None;
+    }
+
+    if input.id_ident != "id" {
+        input.id_ident.span().unwrap().error("expected `id`").emit();
+
+        return None;
+    }
+
+    let Some(_) = metadata::STRUCT_MAP.get(&input.from_lit.value()) else {
+        input
+            .from_lit
+            .span()
+            .unwrap()
+            .error("this struct is not found");
+
+        return None;
+    };
+
     todo!()
 }
