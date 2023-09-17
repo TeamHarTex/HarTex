@@ -20,182 +20,48 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro::Diagnostic;
-use proc_macro2::Span;
-use proc_macro2::TokenStream as TokenStream2;
-use proc_macro2::TokenTree;
-use quote::ToTokens;
-use syn::spanned::Spanned;
-use syn::Data;
-use syn::DataEnum;
-use syn::DataStruct;
-use syn::DataUnion;
-use syn::DeriveInput;
-use syn::Visibility;
+use proc_macro2::Ident;
+use proc_macro2::TokenStream;
+use syn::parse::Parse;
+use syn::parse::ParseStream;
+use syn::ExprArray;
+use syn::ItemStruct;
+use syn::LitStr;
+use syn::Token;
 
-#[allow(clippy::needless_pass_by_ref_mut)]
-#[allow(clippy::too_many_lines)]
-#[deprecated(since = "0.4.0")]
-pub fn expand_entity_derivation(input: &mut DeriveInput) -> Option<TokenStream2> {
-    // check if item is public
-    match input.vis.clone() {
-        Visibility::Public(_) => {}
-        visibility => {
-            visibility
-                .span()
-                .unwrap()
-                .error("trait can only be derived on pub items")
-                .emit();
+#[allow(dead_code)]
+pub struct EntityMacroInput {
+    pub(crate) from_ident: Ident,
+    pub(crate) equal1: Token![=],
+    pub(crate) from_lit: LitStr,
+    pub(crate) comma1: Token![,],
+    pub(crate) include_ident: Ident,
+    pub(crate) equal2: Token![=],
+    pub(crate) include_array: ExprArray,
+    pub(crate) comma2: Token![,],
+    pub(crate) omit_ident: Ident,
+    pub(crate) equal3: Token![=],
+    pub(crate) omit_array: ExprArray,
+}
 
-            return None;
-        }
+impl Parse for EntityMacroInput {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            from_ident: input.parse()?,
+            equal1: input.parse()?,
+            from_lit: input.parse()?,
+            comma1: input.parse()?,
+            include_ident: input.parse(),
+            equal2: input.parse()?,
+            include_array: input.parse(),
+            comma2: input.parse()?,
+            omit_ident: input.parse()?,
+            equal3: input.parse()?,
+            omit_array: input.parse()?,
+        })
     }
+}
 
-    // check if item is a struct
-    match input.data.clone() {
-        Data::Struct(_) => {}
-        Data::Enum(DataEnum { enum_token, .. }) => {
-            enum_token
-                .span()
-                .unwrap()
-                .error("trait can only be derived on structs")
-                .emit();
-
-            return None;
-        }
-        Data::Union(DataUnion { union_token, .. }) => {
-            union_token
-                .span()
-                .unwrap()
-                .error("trait can only be derived on structs")
-                .emit();
-
-            return None;
-        }
-    }
-
-    let Data::Struct(DataStruct { fields, .. }) = input.data.clone() else {
-        unreachable!()
-    };
-
-    let iter = fields.into_iter();
-    let mut map = iter.clone().map(|field| field.attrs);
-    if !map.any(|attrs| !attrs.is_empty()) {
-        Span::call_site()
-            .unwrap()
-            .error("no field with `entity(..)` attribute")
-            .emit();
-
-        return None;
-    }
-
-    let attrs_iter = iter.map(|field| (field.clone(), field.attrs));
-    let mut field_names = Vec::new();
-    let mut id_tys = Vec::new();
-    for (field, attrs) in attrs_iter {
-        let mut invalid_attrs = attrs.clone();
-
-        // look for non-entity attributes
-        invalid_attrs.retain(|attr| !attr.path().is_ident("entity"));
-
-        #[allow(unused_must_use)]
-        if !invalid_attrs.is_empty() {
-            invalid_attrs
-                .into_iter()
-                .map(|attr| attr.path().span().unwrap())
-                .map(|span| span.error("expected `entity` attribute"))
-                .map(Diagnostic::emit);
-
-            return None;
-        }
-
-        // all attributes are entity attributes
-        for attr in attrs {
-            let mut tree_iter = attr.parse_args::<TokenStream2>().unwrap().into_iter();
-
-            let tree = tree_iter.next();
-            if tree.is_none() {
-                attr.path()
-                    .span()
-                    .unwrap()
-                    .error("unexpected end of attribute")
-                    .emit();
-
-                return None;
-            }
-
-            let TokenTree::Ident(ident) = tree.clone().unwrap() else {
-                tree.span().unwrap().error("expected identifier").emit();
-
-                return None;
-            };
-
-            if ident != "id" {
-                ident
-                    .span()
-                    .unwrap()
-                    .error(format!("expected `id`; found `{ident}`"))
-                    .emit();
-
-                return None;
-            }
-
-            if field.ident.is_none() {
-                field
-                    .ty
-                    .span()
-                    .unwrap()
-                    .error("cannot apply id attribute on tuple structs")
-                    .emit();
-
-                return None;
-            }
-
-            field_names.push(field.ident.clone().unwrap());
-            id_tys.push(field.ty.clone());
-        }
-    }
-
-    let type_tokens = if id_tys.len() == 1 {
-        let ty = id_tys[0].to_token_stream();
-        quote::quote! {
-            #ty
-        }
-    } else {
-        quote::quote! {
-            ( #(#id_tys ,)* )
-        }
-    };
-
-    let field_tokens = if field_names.len() == 1 {
-        let ident = field_names[0].to_token_stream();
-        quote::quote! {
-            self.#ident
-        }
-    } else {
-        quote::quote! {
-            ( #(self.#field_names ,)* )
-        }
-    };
-
-    let core_use = quote::quote! {
-        extern crate hartex_discord_entitycache_core as _entitycache_core;
-    };
-    let ident = input.ident.clone();
-    let expanded = quote::quote! {
-        #core_use
-
-        #[automatically_derived]
-        impl _entitycache_core::traits::Entity for #ident {
-            type Id = #type_tokens;
-
-            fn id(&self) -> <Self as _entitycache_core::traits::Entity>::Id {
-                #field_tokens
-            }
-        }
-    };
-
-    Some(quote::quote! {
-        #expanded
-    })
+pub fn implement_entity(_: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+    todo!()
 }

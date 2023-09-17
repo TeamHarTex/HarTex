@@ -47,7 +47,9 @@ use syn::Item;
 use syn::ItemMod;
 use syn::ItemStruct;
 use syn::ItemUse;
+use syn::LitStr;
 use syn::Token;
+use syn::UsePath;
 use syn::Visibility;
 use zip::ZipArchive;
 
@@ -84,11 +86,15 @@ pub fn main() {
     );
 
     let metadata_from_module_tree = generate_metadata_from_module_tree(&module_tree, false);
+    let struct_metadata_map = generate_struct_metadata_map(&module_tree);
+
     let code = quote! {
         use std::collections::HashMap;
-        use lazy_static::lazy_static;
+        use std::ops::Deref;
 
         #metadata_from_module_tree
+
+        #struct_metadata_map
     };
 
     let generated_dir = Path::new("generated");
@@ -206,6 +212,67 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
     module_tree
 }
 
+fn collect_type_to_module_path_mappings(
+    tree: &ModuleTree,
+    current_path: &str,
+) -> Vec<(String, String)> {
+    let mut mappings = Vec::new();
+
+    // Get the current path
+    let current_path =
+        format!("{}::{}", current_path, tree.name).replace("twilight_model::lib", "twilight_model");
+
+    // If the current item is a struct, capture its path
+    for item in &tree.items {
+        match item {
+            Item::Struct(item_struct) => {
+                let type_descriptor = item_struct.ident.to_string();
+                let path_descriptor = format!("{}::{}", current_path, type_descriptor);
+                mappings.push((type_descriptor, path_descriptor));
+            }
+            Item::Enum(item_enum) => {
+                let type_descriptor = item_enum.ident.to_string();
+                let path_descriptor = format!("{}::{}", current_path, type_descriptor);
+                mappings.push((type_descriptor, path_descriptor));
+            }
+            _ => {}
+        }
+    }
+
+    for item_use in &tree.reexports {
+        if let syn::UseTree::Path(use_path) = &item_use.tree {
+            let idents = extract_identifiers_from_use_path(&use_path);
+            for last_segment in idents {
+                let type_name = last_segment.to_string();
+                let full_path = format!("{}::{}", current_path, type_name);
+                mappings.push((type_name, full_path));
+            }
+        } else if let syn::UseTree::Group(use_group) = &item_use.tree {
+            for inner_tree in &use_group.items {
+                if let syn::UseTree::Path(use_path) = inner_tree {
+                    let idents = extract_identifiers_from_use_path(&use_path);
+                    for last_segment in idents {
+                        let type_name = last_segment.to_string();
+                        let full_path = format!("{}::{}", current_path, type_name);
+                        mappings.push((type_name, full_path));
+                    }
+                }
+            }
+        }
+    }
+
+    // Recursively collect from public child modules
+    for child in &tree.children {
+        if !tree.name.eq("http") {
+            if matches!(child.visibility, syn::Visibility::Public(_)) {
+                mappings.extend(collect_type_to_module_path_mappings(child, &current_path));
+            }
+        }
+    }
+
+    mappings
+}
+
 fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
     let mut archive = ZipArchive::new(reader).expect("failed to open zip archive");
 
@@ -229,6 +296,29 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
             io::copy(&mut file, &mut output_file).expect("failed to copy file from zip");
         }
     }
+}
+
+fn extract_identifiers_from_use_path(use_path: &UsePath) -> Vec<Ident> {
+    let mut identifiers = Vec::new();
+
+    match &use_path.tree.as_ref() {
+        syn::UseTree::Name(use_name) => {
+            identifiers.push(use_name.ident.clone());
+        }
+        syn::UseTree::Path(inner_path) => {
+            identifiers.extend(extract_identifiers_from_use_path(inner_path));
+        }
+        syn::UseTree::Group(use_group) => {
+            for inner_tree in &use_group.items {
+                if let syn::UseTree::Path(inner_use_path) = inner_tree {
+                    identifiers.extend(extract_identifiers_from_use_path(inner_use_path));
+                }
+            }
+        }
+        _ => {}
+    }
+
+    identifiers
 }
 
 fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStream {
@@ -284,7 +374,7 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
     }
 }
 
-fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStream {
+fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_macro2::TokenStream {
     let name = &tree.name;
     let items = &tree.items;
     let children = tree
@@ -310,6 +400,8 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
     if nest {
         quote! {
             pub mod #name {
+                use lazy_static::lazy_static;
+
                 lazy_static! {
                     #(#structs)*
                 }
@@ -319,6 +411,8 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
         }
     } else {
         quote! {
+            use lazy_static::lazy_static;
+
             lazy_static! {
                 #(#structs)*
             }
@@ -326,4 +420,78 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
             #(#children)*
         }
     }
+}
+
+fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
+    let reexported_paths = collect_type_to_module_path_mappings(&tree, "twilight_model");
+    let paths = generate_module_path_from_tree("twilight_model", tree);
+    let entries = paths
+        .into_iter()
+        .map(|path| {
+            let path = format!("{}{}", &path[0..16], &path[21..]);
+            let key_literal = LitStr::new(&path, Span::call_site());
+            let path_parts: Vec<_> = path.split("::").collect();
+            let struct_name = path_parts.last().unwrap();
+            let reexported_path = reexported_paths
+                .iter()
+                .filter(|(export_struct, _path)| struct_name.eq(export_struct))
+                .map(|(_, path)| path.clone())
+                .next();
+            let value_path_name = format!(
+                "{}::{}",
+                &path[16..(path.len() - (struct_name.len() + 2))],
+                struct_name.to_case(Case::ScreamingSnake),
+            );
+            let value_path: syn::Path = syn::parse_str(&value_path_name).unwrap();
+
+            let additional_insert = if let Some(reexported_path) = reexported_path {
+                if !reexported_path.eq(&value_path_name) {
+                    let key_literal = LitStr::new(&reexported_path, Span::call_site());
+                    quote! {
+                        map.insert(#key_literal, #value_path.deref());
+                    }
+                } else {
+                    quote!()
+                }
+            } else {
+                quote!()
+            };
+
+            quote! {
+                map.insert(#key_literal, #value_path.deref());
+                #additional_insert
+            }
+        })
+        .collect::<Vec<_>>();
+    quote! {
+        fn create_struct_map() -> HashMap<&'static str, &'static crate::reflect::Struct> {
+            let mut map = HashMap::new();
+            #(#entries)*
+            map
+        }
+
+        lazy_static::lazy_static! {
+            pub(crate) static ref STRUCT_MAP: HashMap<&'static str, &'static crate::reflect::Struct> = create_struct_map();
+        }
+    }
+}
+
+fn generate_module_path_from_tree(base_path: &str, tree: &ModuleTree) -> Vec<String> {
+    let mut paths = vec![];
+
+    // Construct the new base path
+    let new_base_path = format!("{}::{}", base_path, tree.name);
+
+    for item in &tree.items {
+        if let Item::Struct(s) = item {
+            paths.push(format!("{}::{}", new_base_path, s.ident));
+        }
+    }
+
+    // Recurse for child modules
+    for child in &tree.children {
+        paths.extend(generate_module_path_from_tree(&new_base_path, child));
+    }
+
+    paths
 }
