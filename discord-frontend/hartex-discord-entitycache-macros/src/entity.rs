@@ -114,7 +114,7 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
-    let Some(_) = metadata::STRUCT_MAP.get(&input.from_lit.value()) else {
+    let Some(struct_metadata) = metadata::STRUCT_MAP.get(input.from_lit.value().as_str()) else {
         input
             .from_lit
             .span()
@@ -123,6 +123,11 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         return None;
     };
+    let _ = struct_metadata
+        .fields
+        .iter()
+        .map(|field| field.name.clone())
+        .collect::<Vec<_>>();
 
     let _ = input
         .exclude_array
@@ -131,8 +136,7 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .filter_map(|expr| match expr {
             Expr::Lit(Lit::Str(lit_str)) => Some(lit_str.value()),
             _ => None,
-        })
-        .collect::<Vec<_>>();
+        });
 
     todo!()
 }
