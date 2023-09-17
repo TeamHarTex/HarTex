@@ -42,6 +42,9 @@ pub struct EntityMacroInput {
     pub(crate) omit_ident: Ident,
     pub(crate) equal3: Token![=],
     pub(crate) omit_array: ExprArray,
+    pub(crate) id_ident: Ident,
+    pub(crate) equal4: Token![=],
+    pub(crate) id_array: ExprArray,
 }
 
 impl Parse for EntityMacroInput {
@@ -51,13 +54,16 @@ impl Parse for EntityMacroInput {
             equal1: input.parse()?,
             from_lit: input.parse()?,
             comma1: input.parse()?,
-            include_ident: input.parse(),
+            include_ident: input.parse()?,
             equal2: input.parse()?,
-            include_array: input.parse(),
+            include_array: input.parse()?,
             comma2: input.parse()?,
             omit_ident: input.parse()?,
             equal3: input.parse()?,
             omit_array: input.parse()?,
+            id_ident: input.parse()?,
+            equal4: input.parse()?,
+            id_array: input.parse()?,
         })
     }
 }
