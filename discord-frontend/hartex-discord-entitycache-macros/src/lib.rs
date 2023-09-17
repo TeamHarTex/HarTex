@@ -37,6 +37,7 @@ use syn::parse_macro_input;
 use syn::DeriveInput;
 
 mod entity;
+mod entity_deprecated;
 #[path = "../generated/metadata.rs"]
 mod metadata;
 mod reflect;
@@ -44,9 +45,14 @@ mod reflect;
 /// Macro to derive the `Entity` trait.
 #[deprecated(since = "0.4.0")]
 #[proc_macro_derive(Entity, attributes(entity))]
-pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
+pub fn derive_entity_trait_deprecated(tokens: TokenStream) -> TokenStream {
     let mut input = parse_macro_input!(tokens as DeriveInput);
-    entity::expand_entity_derivation(&mut input)
+    entity_deprecated::expand_entity_derivation(&mut input)
         .unwrap_or_default()
         .into()
+}
+
+#[proc_macro_attribute]
+pub fn entity(_: TokenStream, _: TokenStream) -> TokenStream {
+    todo!()
 }
