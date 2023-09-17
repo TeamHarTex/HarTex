@@ -20,3 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use syn::parse::Parse;
+use syn::parse::ParseStream;
+
+pub struct EntityMacroInput;
+
+impl Parse for EntityMacroInput {
+    fn parse(_: ParseStream) -> syn::Result<Self> {
+        todo!()
+    }
+}
