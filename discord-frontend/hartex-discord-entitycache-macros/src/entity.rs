@@ -24,8 +24,10 @@ use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::spanned::Spanned;
 use syn::Expr;
 use syn::ExprArray;
+use syn::ExprLit;
 use syn::ItemStruct;
 use syn::Lit;
 use syn::LitStr;
@@ -123,19 +125,58 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         return None;
     };
-    let _ = struct_metadata
+    let struct_field_names = struct_metadata
         .fields
         .iter()
         .map(|field| field.name.clone())
         .collect::<Vec<_>>();
 
-    let _ = input
-        .exclude_array
-        .elems
-        .iter()
-        .filter_map(|expr| match expr {
-            Expr::Lit(Lit::Str(lit_str)) => Some(lit_str.value()),
-            _ => None,
+    let exclude_field_names =
+        input
+            .exclude_array
+            .elems
+            .iter()
+            .filter_map(|expr| match expr.clone() {
+                Expr::Lit(ExprLit {
+                    lit: Lit::Str(lit_str),
+                    ..
+                }) => Some((lit_str.value(), expr.span())),
+                _ => None,
+            });
+    exclude_field_names
+        .clone()
+        .filter(|(name, _)| !struct_field_names.contains(name))
+        .for_each(|(name, span)| {
+            span.unwrap()
+                .warning(format!(
+                    "field {name} is not found in struct {}",
+                    struct_metadata.name
+                ))
+                .emit()
+        });
+
+    let include_field_names =
+        input
+            .include_array
+            .elems
+            .iter()
+            .filter_map(|expr| match expr.clone() {
+                Expr::Lit(ExprLit {
+                    lit: Lit::Str(lit_str),
+                    ..
+                }) => Some((lit_str.value(), expr.span())),
+                _ => None,
+            });
+    include_field_names
+        .clone()
+        .filter(|(name, _)| !struct_field_names.contains(name))
+        .for_each(|(name, span)| {
+            span.unwrap()
+                .warning(format!(
+                    "field {name} is not found in struct {}",
+                    struct_metadata.name
+                ))
+                .emit()
         });
 
     todo!()
