@@ -143,8 +143,31 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
                 }) => Some((lit_str.value(), expr.span())),
                 _ => None,
             });
-
     exclude_field_names
+        .clone()
+        .filter(|(name, _)| !struct_field_names.contains(name))
+        .for_each(|(name, span)| {
+            span.unwrap()
+                .warning(format!(
+                    "field {name} is not found in struct {}",
+                    struct_metadata.name
+                ))
+                .emit()
+        });
+
+    let include_field_names =
+        input
+            .include_array
+            .elems
+            .iter()
+            .filter_map(|expr| match expr.clone() {
+                Expr::Lit(ExprLit {
+                    lit: Lit::Str(lit_str),
+                    ..
+                }) => Some((lit_str.value(), expr.span())),
+                _ => None,
+            });
+    include_field_names
         .clone()
         .filter(|(name, _)| !struct_field_names.contains(name))
         .for_each(|(name, span)| {
