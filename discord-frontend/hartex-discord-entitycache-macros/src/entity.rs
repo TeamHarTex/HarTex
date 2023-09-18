@@ -26,6 +26,7 @@ use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::Expr;
 use syn::ExprArray;
+use syn::ExprLit;
 use syn::ItemStruct;
 use syn::Lit;
 use syn::LitStr;
@@ -134,7 +135,10 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .elems
         .iter()
         .filter_map(|expr| match expr {
-            Expr::Lit(Lit::Str(lit_str)) => Some(lit_str.value()),
+            Expr::Lit(ExprLit {
+                lit: Lit::Str(lit_str),
+                ..
+            }) => Some(lit_str.value()),
             _ => None,
         });
 
