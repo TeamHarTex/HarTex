@@ -90,21 +90,21 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
-    if input.exclude_ident != "exclude" {
+    if input.exclude_ident.is_some() && input.include_array.is_some() {
         input
             .exclude_ident
+            .unwrap()
             .span()
             .unwrap()
-            .error("expected `exclude`")
+            .error("the `exclude` and `include` parameters are mutually exclusive")
             .emit();
-    }
 
-    if input.include_ident != "include" {
         input
-            .include_ident
+            .include_array
+            .unwrap()
             .span()
             .unwrap()
-            .error("expected `include`")
+            .error("the `exclude` and `include` parameters are mutually exclusive")
             .emit();
 
         return None;
@@ -125,59 +125,11 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         return None;
     };
-    let struct_field_names = struct_metadata
+    let _ = struct_metadata
         .fields
         .iter()
         .map(|field| field.name.clone())
         .collect::<Vec<_>>();
-
-    let exclude_field_names =
-        input
-            .exclude_array
-            .elems
-            .iter()
-            .filter_map(|expr| match expr.clone() {
-                Expr::Lit(ExprLit {
-                    lit: Lit::Str(lit_str),
-                    ..
-                }) => Some((lit_str.value(), expr.span())),
-                _ => None,
-            });
-    exclude_field_names
-        .clone()
-        .filter(|(name, _)| !struct_field_names.contains(name))
-        .for_each(|(name, span)| {
-            span.unwrap()
-                .warning(format!(
-                    "field {name} is not found in struct {}",
-                    struct_metadata.name
-                ))
-                .emit()
-        });
-
-    let include_field_names =
-        input
-            .include_array
-            .elems
-            .iter()
-            .filter_map(|expr| match expr.clone() {
-                Expr::Lit(ExprLit {
-                    lit: Lit::Str(lit_str),
-                    ..
-                }) => Some((lit_str.value(), expr.span())),
-                _ => None,
-            });
-    include_field_names
-        .clone()
-        .filter(|(name, _)| !struct_field_names.contains(name))
-        .for_each(|(name, span)| {
-            span.unwrap()
-                .warning(format!(
-                    "field {name} is not found in struct {}",
-                    struct_metadata.name
-                ))
-                .emit()
-        });
 
     todo!()
 }
