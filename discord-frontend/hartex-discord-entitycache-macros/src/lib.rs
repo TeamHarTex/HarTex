@@ -28,6 +28,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![allow(deprecated)]
+#![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
