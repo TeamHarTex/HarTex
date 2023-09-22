@@ -25,11 +25,8 @@ use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
-use syn::Expr;
 use syn::ExprArray;
-use syn::ExprLit;
 use syn::ItemStruct;
-use syn::Lit;
 use syn::LitStr;
 use syn::Token;
 
@@ -110,6 +107,10 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
+    if input.exclude_array.is_some() && input.include_array.is_some() {
+        unreachable!()
+    }
+
     if input.id_ident != "id" {
         input.id_ident.span().unwrap().error("expected `id`").emit();
 
@@ -130,6 +131,10 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .iter()
         .map(|field| field.name.clone())
         .collect::<Vec<_>>();
+
+    if let Some(_) = input.exclude_array.clone() && input.exclude_ident.is_some() {
+    } else if let Some(_) = input.include_array.clone() && input.include_ident.is_some() {
+    }
 
     todo!()
 }
