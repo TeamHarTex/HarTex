@@ -61,11 +61,11 @@ impl Parse for EntityMacroInput {
             comma1: input.parse()?,
             exclude_ident: input.parse()?,
             equal2: input.parse()?,
-            exclude_array: input.parse()?,
+            exclude_array: input.parse().ok(),
             comma2: input.parse()?,
             include_ident: input.parse()?,
             equal3: input.parse()?,
-            include_array: input.parse()?,
+            include_array: input.parse().ok(),
             comma3: input.parse()?,
             id_ident: input.parse()?,
             equal4: input.parse()?,
@@ -90,7 +90,6 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
     if input.exclude_ident.is_some() && input.include_array.is_some() {
         input
             .exclude_ident
-            .unwrap()
             .span()
             .unwrap()
             .error("the `exclude` and `include` parameters are mutually exclusive")
@@ -98,7 +97,6 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         input
             .include_array
-            .unwrap()
             .span()
             .unwrap()
             .error("the `exclude` and `include` parameters are mutually exclusive")
