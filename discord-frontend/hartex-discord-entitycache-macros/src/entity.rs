@@ -25,8 +25,10 @@ use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
+use syn::Expr;
 use syn::ExprArray;
 use syn::ItemStruct;
+use syn::Lit;
 use syn::LitStr;
 use syn::Token;
 
@@ -124,13 +126,23 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         return None;
     };
-    let _ = struct_metadata
+    let struct_field_names = struct_metadata
         .fields
         .iter()
         .map(|field| field.name.clone())
         .collect::<Vec<_>>();
 
-    if let Some(_) = input.exclude_array.clone() && input.exclude_ident.is_some() {
+    if let Some(excludes) = input.exclude_array.clone() && input.exclude_ident.is_some() {
+        let exclude_field_names_and_literals =
+            excludes
+                .elems
+                .iter()
+                .filter_map(|expr| match expr {
+                    Expr::Lit(Lit::Str(lit_str)) => Some((lit_str.clone(), lit_str.value())),
+                    _ => None,
+                })
+                .collect::<Vec<_>>();
+        let (_, _): (Vec<_>, Vec<_>) = itertools::multiunzip(exclude_field_names_and_literals);
     } else if let Some(_) = input.include_array.clone() && input.include_ident.is_some() {
     }
 
