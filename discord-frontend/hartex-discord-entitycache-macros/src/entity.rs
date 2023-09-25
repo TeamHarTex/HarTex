@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeMap;
+use std::collections::BTreeSet;
+
 use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
@@ -27,6 +30,7 @@ use syn::parse::ParseStream;
 use syn::spanned::Spanned;
 use syn::Expr;
 use syn::ExprArray;
+use syn::ExprLit;
 use syn::ItemStruct;
 use syn::Lit;
 use syn::LitStr;
@@ -130,19 +134,29 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .fields
         .iter()
         .map(|field| field.name.clone())
-        .collect::<Vec<_>>();
+        .collect::<BTreeSet<_>>();
 
     if let Some(excludes) = input.exclude_array.clone() && input.exclude_ident.is_some() {
-        let exclude_field_names_and_literals =
+        let exclude_field_literals_and_names =
             excludes
                 .elems
                 .iter()
                 .filter_map(|expr| match expr {
-                    Expr::Lit(Lit::Str(lit_str)) => Some((lit_str.clone(), lit_str.value())),
+                    Expr::Lit(ExprLit { lit: Lit::Str(lit_str), .. }) => Some((lit_str.value(), lit_str.clone())),
                     _ => None,
                 })
-                .collect::<Vec<_>>();
-        let (_, _): (Vec<_>, Vec<_>) = itertools::multiunzip(exclude_field_names_and_literals);
+                .collect::<BTreeMap<_, _>>();
+        let exclude_field_names = exclude_field_literals_and_names.keys().cloned().collect::<BTreeSet<_>>();
+        let difference = exclude_field_names.difference(&struct_field_names);
+        difference.for_each(|name| {
+            exclude_field_literals_and_names
+                .get(name)
+                .unwrap()
+                .span()
+                .unwrap()
+                .warning(&format!("unknown field `{name}`"))
+                .emit()
+        });
     } else if let Some(_) = input.include_array.clone() && input.include_ident.is_some() {
     }
 
