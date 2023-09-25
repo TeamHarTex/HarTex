@@ -157,7 +157,27 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
                 .warning(&format!("unknown field `{name}`"))
                 .emit()
         });
-    } else if let Some(_) = input.include_array.clone() && input.include_ident.is_some() {
+    } else if let Some(includes) = input.include_array.clone() && input.include_ident.is_some() {
+        let include_field_literals_and_names =
+            includes
+                .elems
+                .iter()
+                .filter_map(|expr| match expr {
+                    Expr::Lit(ExprLit { lit: Lit::Str(lit_str), .. }) => Some((lit_str.value(), lit_str.clone())),
+                    _ => None,
+                })
+                .collect::<BTreeMap<_, _>>();
+        let include_field_names = include_field_literals_and_names.keys().cloned().collect::<BTreeSet<_>>();
+        let difference = include_field_names.difference(&struct_field_names);
+        difference.for_each(|name| {
+            include_field_literals_and_names
+                .get(name)
+                .unwrap()
+                .span()
+                .unwrap()
+                .warning(&format!("unknown field `{name}`"))
+                .emit()
+        });
     }
 
     todo!()
