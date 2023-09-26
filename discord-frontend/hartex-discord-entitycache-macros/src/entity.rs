@@ -81,7 +81,7 @@ impl Parse for EntityMacroInput {
     }
 }
 
-pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
             .from_ident
@@ -135,6 +135,12 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .iter()
         .map(|field| field.name.clone())
         .collect::<BTreeSet<_>>();
+
+    let vis = item_struct.vis.clone();
+    let name = item_struct.ident.clone();
+    let _ = quote::quote! {
+        #vis struct #name
+    };
 
     if let Some(excludes) = input.exclude_array.clone() && input.exclude_ident.is_some() {
         let exclude_field_literals_and_names =
