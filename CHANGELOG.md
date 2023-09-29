@@ -46,7 +46,7 @@
 - **Changed:** pinned serde to version 1.0.185
 - **Changed:** deprecated `minimum_level` function of the `CommandMetadata` trait
 - **Changed:** deprecated `Entity` macro derive trait
-- **Changed:** updated `/info server` command with mor einformation
+- **Changed:** updated `/info server` command with more information
 - **Removed:** removed deprecated `CommandMetadata` derive macro
 
 ## Rust Utilities
