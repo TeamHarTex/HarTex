@@ -46,14 +46,12 @@
 - **Changed:** pinned serde to version 1.0.185
 - **Changed:** deprecated `minimum_level` function of the `CommandMetadata` trait
 - **Changed:** deprecated `Entity` macro derive trait
-- **Changed:** updated `/info server` command with mor einformation
+- **Changed:** updated `/info server` command with more information
 - **Removed:** removed deprecated `CommandMetadata` derive macro
 
 ## Rust Utilities
 
 - **Added**: some APIs for localizing data types
-
-## Web Frontend
 
 # [Version 0.3.0, Lithium I (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
 
