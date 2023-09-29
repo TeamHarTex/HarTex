@@ -53,8 +53,6 @@
 
 - **Added**: some APIs for localizing data types
 
-## Web Frontend
-
 # [Version 0.3.0, Lithium I (2023-08-23)](https://github.com/TeamHarTex/HarTex/compare/0.2.1...0.3.0)
 
 > **4** contributors made contributions to this release
