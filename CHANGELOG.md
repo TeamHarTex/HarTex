@@ -1,10 +1,30 @@
-# [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.3.0...nightly)
+# [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.4.0...nightly)
 
-> This release is within the **Helium (2023Q3)** development quarter.
+> **x** contributors made contributions to this release
+
+> **y** commits since 2022-09-29
+
+## API Backend
+
+## Bors Buildbot
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [Version 0.4.0, Beryllium I (2023-09-29)](https://github.com/TeamHarTex/HarTex/compare/0.3.0..0.4.0)
 
 > **4** contributors made contributions to this release
 
-> **y** commits since 2022-08-23
+> **321** commits since 2022-08-23
 
 ## API Backend
 
@@ -19,8 +39,6 @@
 
 - **Changed:** unpinned `serde`
 
-## Database Queries
-
 ## Discord Frontend
 
 - **Added:** `metadata` macro for writing command metadata, replacing `CommandMetadata` derive
@@ -30,8 +48,6 @@
 - **Changed:** deprecated `Entity` macro derive trait
 - **Changed:** updated `/info server` command with mor einformation
 - **Removed:** removed deprecated `CommandMetadata` derive macro
-
-## Localization Infrastructure
 
 ## Rust Utilities
 
