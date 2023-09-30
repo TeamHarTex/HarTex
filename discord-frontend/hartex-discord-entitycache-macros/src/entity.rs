@@ -142,7 +142,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         #vis struct #name
     };
 
-    if let Some(excludes) = input.exclude_array.clone() && input.exclude_ident.is_some() {
+    let _ = if let Some(excludes) = input.exclude_array.clone() && input.exclude_ident.is_some() {
         let exclude_field_literals_and_names =
             excludes
                 .elems
@@ -163,6 +163,12 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .warning(&format!("unknown field `{name}`"))
                 .emit()
         });
+
+        struct_field_names.iter().cloned().filter_map(|field_name| if !exclude_field_names.contains(&field_name) {
+            None
+        } else {
+            Some(field_name)
+        }).collect::<Vec<_>>()
     } else if let Some(includes) = input.include_array.clone() && input.include_ident.is_some() {
         let include_field_literals_and_names =
             includes
@@ -184,7 +190,13 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .warning(&format!("unknown field `{name}`"))
                 .emit()
         });
-    }
+
+        struct_field_names.iter().cloned().filter_map(|field_name| if include_field_names.contains(&field_name) {
+            None
+        } else {
+            Some(field_name)
+        }).collect::<Vec<_>>()
+    };
 
     todo!()
 }
