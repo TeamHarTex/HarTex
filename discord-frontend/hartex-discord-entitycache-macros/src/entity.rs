@@ -38,6 +38,7 @@ use syn::Token;
 
 use crate::metadata;
 
+// FIXME: this needs to be reimagined
 #[allow(dead_code)]
 pub struct EntityMacroInput {
     pub(crate) from_ident: Ident,
@@ -81,7 +82,6 @@ impl Parse for EntityMacroInput {
     }
 }
 
-// FIXME: check content of the idents
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
