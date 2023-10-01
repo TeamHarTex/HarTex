@@ -81,6 +81,7 @@ impl Parse for EntityMacroInput {
     }
 }
 
+// FIXME: check content of the idents
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
@@ -93,7 +94,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         return None;
     }
 
-    if input.exclude_ident.is_some() && input.include_array.is_some() {
+    if input.exclude_ident.is_some() && input.include_ident.is_some() {
         input
             .exclude_ident
             .span()
@@ -102,7 +103,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .emit();
 
         input
-            .include_array
+            .include_ident
             .span()
             .unwrap()
             .error("the `exclude` and `include` parameters are mutually exclusive")
