@@ -20,19 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-use std::collections::BTreeSet;
-
 use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
-use syn::spanned::Spanned;
-use syn::Expr;
-use syn::ExprArray;
-use syn::ExprLit;
 use syn::ItemStruct;
-use syn::Lit;
 use syn::LitStr;
 use syn::Token;
 
@@ -40,14 +32,46 @@ use crate::metadata;
 
 // FIXME: this needs to be reimagined
 #[allow(dead_code)]
-pub struct EntityMacroInput {}
+pub struct EntityMacroInput {
+    from_ident: Ident,
+    equal1: Token![=],
+    from_lit_str: LitStr,
+}
 
 impl Parse for EntityMacroInput {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(Self {})
+        Ok(Self {
+            from_ident: input.parse()?,
+            equal1: input.parse()?,
+            from_lit_str: input.parse()?,
+        })
     }
 }
 
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
+    if input.from_ident != "from" {
+        input
+            .from_ident
+            .span()
+            .unwrap()
+            .error("expected `from`")
+            .emit();
+
+        return None;
+    }
+
+    // FIXME: add help about version of twilight-model the metadata is generated for
+    let type_key = input.from_lit_str.value();
+    if !metadata::STRUCT_MAP.contains_key(&type_key) {
+        input
+            .from_lit_str
+            .span()
+            .unwrap()
+            .error(format!("type `{type_key}` cannot be found"))
+            .emit();
+
+        return None;
+    }
+
     todo!()
 }
