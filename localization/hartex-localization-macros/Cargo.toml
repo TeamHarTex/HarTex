@@ -13,7 +13,7 @@ rust-version = "1.74.0"
 [dependencies]
 proc-macro2 = "1.0.67"
 quote = "1.0.33"
-syn = "2.0.37"
+syn = "2.0.38"
 
 [lib]
 name = "hartex_localization_macros"
