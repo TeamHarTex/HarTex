@@ -1,5 +1,0 @@
-error: cannot find attribute `expected_entity_attribute` in this scope
-  --> tests/ui/expected_entity_attribute.rs:27:7
-   |
-27 |     #[expected_entity_attribute]
-   |       ^^^^^^^^^^^^^^^^^^^^^^^^^
