@@ -6,17 +6,29 @@
 
 ## API Backend
 
+- **Changed:** updated Rust Version to 1.75
+
 ## Bors Buildbot
 
+- **Changed:** updated Rust Version to 1.75
+
 ## Buildsystem
+
+- **Changed:** updated Rust Version to 1.75
 
 ## Database Queries
 
 ## Discord Frontend
 
+- **Changed:** updated Rust Version to 1.75
+
 ## Localization Infrastructure
 
+- **Changed:** updated Rust Version to 1.75
+
 ## Rust Utilities
+
+- **Changed:** updated Rust Version to 1.75
 
 ## Web Frontend
 
