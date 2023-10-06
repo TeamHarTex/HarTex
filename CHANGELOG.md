@@ -1,4 +1,4 @@
-# [Next Version](https://github.com/TeamHarTex/HarTex/compare/0.4.0...nightly)
+# [Next Version, Boron I](https://github.com/TeamHarTex/HarTex/compare/0.4.0...nightly)
 
 > **x** contributors made contributions to this release
 
@@ -20,6 +20,7 @@
 
 ## Discord Frontend
 
+- **Changed:** implemented version and type metadata for `twilight-model`
 - **Changed:** updated Rust Version to 1.75
 
 ## Localization Infrastructure
