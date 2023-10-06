@@ -87,10 +87,13 @@ pub fn main() {
 
     let metadata_from_module_tree = generate_metadata_from_module_tree(&module_tree, false);
     let struct_metadata_map = generate_struct_metadata_map(&module_tree);
+    let version_constant = generate_version_constant(MODEL_CRATE_VERSION);
 
     let code = quote! {
         use std::collections::HashMap;
         use std::ops::Deref;
+
+        #version_constant
 
         #metadata_from_module_tree
 
@@ -493,4 +496,12 @@ fn generate_module_path_from_tree(base_path: &str, tree: &ModuleTree) -> Vec<Str
     }
 
     paths
+}
+
+fn generate_version_constant(version: &str) -> TokenStream {
+    let lit = syn::parse_str::<LitStr>(&format!("{version:?}")).unwrap();
+
+    quote! {
+        pub const CRATE_VERSION: &'static str = #lit;
+    }
 }
