@@ -36,8 +36,10 @@ pub trait Entity {
 /// A cache repository holding entities.
 pub trait Repository<T: Entity> {
     /// Retrieves an entity from the repository.
+    #[allow(async_fn_in_trait)]
     async fn get(&self, entity_id: T::Id) -> CacheResult<T>;
 
     /// Upserts an entity into the repository.
+    #[allow(async_fn_in_trait)]
     async fn upsert(&self, entity: T) -> CacheResult<()>;
 }

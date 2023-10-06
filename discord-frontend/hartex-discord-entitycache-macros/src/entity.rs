@@ -48,7 +48,7 @@ impl Parse for EntityMacroInput {
     }
 }
 
-pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
+pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
             .from_ident
@@ -62,12 +62,17 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     // FIXME: add help about version of twilight-model the metadata is generated for
     let type_key = input.from_lit_str.value();
-    if !metadata::STRUCT_MAP.contains_key(&type_key) {
+    if !metadata::STRUCT_MAP.contains_key(type_key.as_str()) {
         input
             .from_lit_str
             .span()
             .unwrap()
             .error(format!("type `{type_key}` cannot be found"))
+            .note(format!(
+                "the type metadata generated was for twilight-model version {}",
+                metadata::CRATE_VERSION
+            ))
+            .help("consider regenerating the metadata for a newer version if the type is recently added")
             .emit();
 
         return None;

@@ -43,5 +43,6 @@ pub trait CommandMetadata {
 /// The command trait.
 pub trait Command: CommandMetadata {
     /// Executes the command.
+    #[allow(async_fn_in_trait)]
     async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
 }
