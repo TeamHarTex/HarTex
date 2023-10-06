@@ -38,5 +38,6 @@ pub mod guild_member_chunk;
 /// A trait for all cache updaters to implement.
 pub trait CacheUpdater {
     /// Update the cache.
+    #[allow(async_fn_in_trait)]
     async fn update(&self) -> CacheResult<()>;
 }

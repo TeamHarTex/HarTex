@@ -20,11 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_entitycache_macros::Entity;
+use hartex_discord_entitycache_macros::entity;
 
-#[derive(Entity)]
-pub struct NoFieldWithAttribute {
-    no_field_with_attribute: u64
-}
+#[entity(from = "twilight_model::DoesNotExistOrOlderVersion")]
+pub struct DoesNotExistOrOlderVersion;
 
 fn main() {}
