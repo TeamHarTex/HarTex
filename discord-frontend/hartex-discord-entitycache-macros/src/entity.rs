@@ -24,8 +24,11 @@ use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::Expr;
 use syn::ExprArray;
+use syn::ExprLit;
 use syn::ItemStruct;
+use syn::Lit;
 use syn::LitStr;
 use syn::Token;
 
@@ -87,6 +90,19 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
 
         return None;
     }
+
+    let _ = input
+        .exclude_or_include_array
+        .elems
+        .iter()
+        .filter_map(|expr| match expr {
+            Expr::Lit(ExprLit {
+                lit: Lit::Str(lit_str),
+                ..
+            }) => Some(lit_str.value()),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
 
     match input.exclude_or_include_ident.to_string().as_str() {
         "exclude" => None,
