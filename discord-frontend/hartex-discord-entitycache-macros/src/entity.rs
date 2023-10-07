@@ -24,6 +24,7 @@ use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::ExprArray;
 use syn::ItemStruct;
 use syn::LitStr;
 use syn::Token;
@@ -36,6 +37,11 @@ pub struct EntityMacroInput {
     from_ident: Ident,
     equal1: Token![=],
     from_lit_str: LitStr,
+    comma1: Token![,],
+    exclude_or_include_ident: Ident,
+    equal2: Token![=],
+    exclude_or_include_array: ExprArray,
+    comma2: Option<Token![,]>,
 }
 
 impl Parse for EntityMacroInput {
@@ -44,6 +50,11 @@ impl Parse for EntityMacroInput {
             from_ident: input.parse()?,
             equal1: input.parse()?,
             from_lit_str: input.parse()?,
+            comma1: input.parse()?,
+            exclude_or_include_ident: input.parse()?,
+            equal2: input.parse()?,
+            exclude_or_include_array: input.parse()?,
+            comma2: input.parse().ok(),
         })
     }
 }
@@ -60,7 +71,6 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
-    // FIXME: add help about version of twilight-model the metadata is generated for
     let type_key = input.from_lit_str.value();
     if !metadata::STRUCT_MAP.contains_key(type_key.as_str()) {
         input
@@ -78,5 +88,18 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
-    todo!()
+    match input.exclude_or_include_ident.to_string().as_str() {
+        "exclude" => None,
+        "include" => None,
+        _ => {
+            input
+                .exclude_or_include_ident
+                .span()
+                .unwrap()
+                .error("expected `exclude` or `include`")
+                .emit();
+
+            return None;
+        }
+    }
 }
