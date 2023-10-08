@@ -22,7 +22,7 @@
 
 //! # Uptime Models V1
 //!
-//! Models for the uptime API specifcation V1 of the backend.
+//! Models for the uptime API specification V1 of the backend.
 
 use serde::Deserialize;
 use serde::Serialize;

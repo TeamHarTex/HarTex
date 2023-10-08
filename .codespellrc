@@ -1,0 +1,3 @@
+[codespell]
+skip = yarn.lock,Cargo.lock
+ignore-words-list = crate

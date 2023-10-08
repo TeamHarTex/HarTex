@@ -43,7 +43,7 @@ pub async fn check_permissions<C: RepositoryClient>(
     {
         true
     } else {
-        log::warn!("user does not have {permission} permisisons");
+        log::warn!("user does not have {permission} permissions");
 
         repository
             .client

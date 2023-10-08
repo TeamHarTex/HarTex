@@ -46,7 +46,7 @@ pub enum LimitError {
     RouteNameNotSpecified,
     /// The route of the request is not specified.
     RouteNotSpecified,
-    /// An unknown error has occured.
+    /// An unknown error has occurred.
     UnknownError,
 }
 
