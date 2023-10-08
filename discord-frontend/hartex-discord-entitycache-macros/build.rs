@@ -401,7 +401,7 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_mac
 
     if nest {
         quote! {
-            #[allow(clippy::module_name_reptitions)]
+            #[allow(clippy::module_name_repetitions)]
             pub mod #name {
                 use lazy_static::lazy_static;
 
