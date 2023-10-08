@@ -90,6 +90,11 @@ pub fn main() {
     let version_constant = generate_version_constant(MODEL_CRATE_VERSION);
 
     let code = quote! {
+        #![allow(warnings)]
+        #![allow(clippy::explicit_deref_methods)]
+        #![allow(clippy::manual_string_new)]
+        #![allow(clippy::module_name_reptitions)]
+
         use std::collections::HashMap;
         use std::ops::Deref;
 
@@ -396,6 +401,7 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_mac
 
     if nest {
         quote! {
+            #[allow(clippy::module_name_repetitions)]
             pub mod #name {
                 use lazy_static::lazy_static;
 
