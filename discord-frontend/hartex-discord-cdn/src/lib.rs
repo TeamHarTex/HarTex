@@ -33,6 +33,7 @@ pub struct Cdn;
 impl Cdn {
     pub const URL_BASE: &'static str = "https://cdn.discordapp.com/";
 
+    #[must_use]
     pub fn guild_icon(guild_id: Id<GuildMarker>, icon: ImageHash) -> String {
         let mut url = format!("{}icons/{guild_id}/{icon}", Self::URL_BASE);
         if icon.is_animated() {
