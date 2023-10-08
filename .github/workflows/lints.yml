@@ -104,3 +104,12 @@ jobs:
         run: sudo wget https://github.com/TeamHarTex/HarTex/releases/download/buildsystem-2023-07-16/hartexbuild
       - name: Run Buildsystem
         run: sudo chmod +x ./hartexbuild && ./hartexbuild lint localization
+
+  CodeSpellAll:
+    name: CodeSpell
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run CodeSpell
+        uses: codespell-project/actions-codespell@master
