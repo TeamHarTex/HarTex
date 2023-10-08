@@ -191,7 +191,7 @@
         },
         "uk": {
           "type": "string",
-          "description": "Ukranian localization",
+          "description": "Ukrainian localization",
           "maxLength": 100,
           "minLength": 1
         },
@@ -390,7 +390,7 @@
         },
         "uk": {
           "type": "string",
-          "description": "Ukranian localization",
+          "description": "Ukrainian localization",
           "maxLength": 32,
           "minLength": 1
         },
@@ -624,7 +624,7 @@
                     },
                     "uk": {
                       "type": "string",
-                      "description": "Ukranian localization",
+                      "description": "Ukrainian localization",
                       "maxLength": 32,
                       "minLength": 1
                     },
@@ -826,7 +826,7 @@
               },
               "uk": {
                 "type": "string",
-                "description": "Ukranian localization",
+                "description": "Ukrainian localization",
                 "maxLength": 100,
                 "minLength": 1
               },
@@ -1038,7 +1038,7 @@
               },
               "uk": {
                 "type": "string",
-                "description": "Ukranian localization",
+                "description": "Ukrainian localization",
                 "maxLength": 32,
                 "minLength": 1
               },

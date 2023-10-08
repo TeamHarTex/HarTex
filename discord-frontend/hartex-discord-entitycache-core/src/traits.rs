@@ -29,7 +29,7 @@ pub trait Entity {
     /// The identifier of the entity.
     type Id;
 
-    /// Returns the entity identifer.
+    /// Returns the entity identifier.
     fn id(&self) -> Self::Id;
 }
 

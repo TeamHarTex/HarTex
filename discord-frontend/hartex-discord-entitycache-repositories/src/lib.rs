@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Repositries
+//! # Entity Cache Repositories
 
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]

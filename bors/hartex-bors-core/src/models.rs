@@ -205,7 +205,7 @@ pub struct GithubRepositoryName {
 }
 
 impl GithubRepositoryName {
-    /// Constrct a new repository name.
+    /// Construct a new repository name.
     #[must_use]
     pub fn new(owner: &str, repository: &str) -> Self {
         Self {
