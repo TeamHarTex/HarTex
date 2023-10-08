@@ -331,7 +331,7 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
         .generics
         .params
         .iter()
-        .map(|generic_param| {
+        .filter_map(|generic_param| {
             if let syn::GenericParam::Type(type_param) = generic_param {
                 let ident = &type_param.ident;
 
@@ -344,7 +344,6 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
                 None
             }
         })
-        .flatten()
         .collect::<Vec<_>>();
 
     let fields = item_struct
