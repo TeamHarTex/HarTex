@@ -24,6 +24,7 @@ use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::spanned::Spanned;
 use syn::Expr;
 use syn::ExprArray;
 use syn::ExprLit;
@@ -100,7 +101,14 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
                 lit: Lit::Str(lit_str),
                 ..
             }) => Some(lit_str.value()),
-            _ => None,
+            expr => {
+                expr.span()
+                    .unwrap()
+                    .warning("non-string expressions are ignored")
+                    .emit();
+
+                None
+            }
         })
         .collect::<Vec<_>>();
 
