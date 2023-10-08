@@ -101,7 +101,7 @@ pub fn main() {
     };
 
     let generated_dir = Path::new("generated");
-    fs::create_dir_all(&generated_dir).expect("failed to create directory");
+    fs::create_dir_all(generated_dir).expect("failed to create directory");
 
     let metadata_file_path = generated_dir.join("metadata.rs");
     let mut file = File::create(metadata_file_path).expect("failed to create file");
@@ -149,7 +149,7 @@ fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
                 }
             }
             Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) => {
-                module_tree.reexports.push(item_use.clone())
+                module_tree.reexports.push(item_use.clone());
             }
             item => module_tree.items.push(item.clone()),
         });
@@ -207,7 +207,7 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
             }
         }
         Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) => {
-            module_tree.reexports.push(item_use.clone())
+            module_tree.reexports.push(item_use.clone());
         }
         item => module_tree.items.push(item.clone()),
     });
@@ -230,12 +230,12 @@ fn collect_type_to_module_path_mappings(
         match item {
             Item::Struct(item_struct) => {
                 let type_descriptor = item_struct.ident.to_string();
-                let path_descriptor = format!("{}::{}", current_path, type_descriptor);
+                let path_descriptor = format!("{current_path}::{type_descriptor}");
                 mappings.push((type_descriptor, path_descriptor));
             }
             Item::Enum(item_enum) => {
                 let type_descriptor = item_enum.ident.to_string();
-                let path_descriptor = format!("{}::{}", current_path, type_descriptor);
+                let path_descriptor = format!("{current_path}::{type_descriptor}");
                 mappings.push((type_descriptor, path_descriptor));
             }
             _ => {}
@@ -244,19 +244,19 @@ fn collect_type_to_module_path_mappings(
 
     for item_use in &tree.reexports {
         if let syn::UseTree::Path(use_path) = &item_use.tree {
-            let idents = extract_identifiers_from_use_path(&use_path);
+            let idents = extract_identifiers_from_use_path(use_path);
             for last_segment in idents {
                 let type_name = last_segment.to_string();
-                let full_path = format!("{}::{}", current_path, type_name);
+                let full_path = format!("{current_path}::{type_name}");
                 mappings.push((type_name, full_path));
             }
         } else if let syn::UseTree::Group(use_group) = &item_use.tree {
             for inner_tree in &use_group.items {
                 if let syn::UseTree::Path(use_path) = inner_tree {
-                    let idents = extract_identifiers_from_use_path(&use_path);
+                    let idents = extract_identifiers_from_use_path(use_path);
                     for last_segment in idents {
                         let type_name = last_segment.to_string();
-                        let full_path = format!("{}::{}", current_path, type_name);
+                        let full_path = format!("{current_path}::{type_name}");
                         mappings.push((type_name, full_path));
                     }
                 }
@@ -266,10 +266,8 @@ fn collect_type_to_module_path_mappings(
 
     // Recursively collect from public child modules
     for child in &tree.children {
-        if !tree.name.eq("http") {
-            if matches!(child.visibility, syn::Visibility::Public(_)) {
-                mappings.extend(collect_type_to_module_path_mappings(child, &current_path));
-            }
+        if !tree.name.eq("http") && matches!(child.visibility, syn::Visibility::Public(_)) {
+            mappings.extend(collect_type_to_module_path_mappings(child, &current_path));
         }
     }
 
@@ -333,7 +331,7 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
         .generics
         .params
         .iter()
-        .map(|generic_param| {
+        .filter_map(|generic_param| {
             if let syn::GenericParam::Type(type_param) = generic_param {
                 let ident = &type_param.ident;
 
@@ -346,8 +344,6 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
                 None
             }
         })
-        .filter(|option| option.is_some())
-        .map(|option| option.unwrap())
         .collect::<Vec<_>>();
 
     let fields = item_struct
@@ -388,15 +384,14 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_mac
 
     let structs = items
         .iter()
-        .map(|item| {
+        .filter_map(|item| {
             if let Item::Struct(item_struct) = item {
                 Some(item_struct)
             } else {
                 None
             }
         })
-        .flatten()
-        .map(|item_struct| generate_lazy_static_from_item_struct(&item_struct))
+        .map(generate_lazy_static_from_item_struct)
         .collect::<Vec<_>>();
 
     if nest {
@@ -425,7 +420,7 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_mac
 }
 
 fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
-    let reexported_paths = collect_type_to_module_path_mappings(&tree, "twilight_model");
+    let reexported_paths = collect_type_to_module_path_mappings(tree, "twilight_model");
     let paths = generate_module_path_from_tree("twilight_model", tree);
     let entries = paths
         .into_iter()
@@ -447,13 +442,13 @@ fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
             let value_path: syn::Path = syn::parse_str(&value_path_name).unwrap();
 
             let additional_insert = if let Some(reexported_path) = reexported_path {
-                if !reexported_path.eq(&value_path_name) {
+                if reexported_path.eq(&value_path_name) {
+                    quote!()
+                } else {
                     let key_literal = LitStr::new(&reexported_path, Span::call_site());
                     quote! {
                         map.insert(#key_literal, #value_path.deref());
                     }
-                } else {
-                    quote!()
                 }
             } else {
                 quote!()
