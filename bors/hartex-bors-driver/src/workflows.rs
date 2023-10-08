@@ -270,7 +270,7 @@ async fn complete_approve_build(
             .post_comment(
                 pull_request.number,
                 &format!(
-                    r#":sunny: Build successfull
+                    r#":sunny: Build successful
 Approved by: {}
 Pushing {} to {}..."#,
                     pull_request

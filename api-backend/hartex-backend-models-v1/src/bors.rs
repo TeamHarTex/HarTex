@@ -22,7 +22,7 @@
 
 //! # Bors Models V1
 //!
-//! Models for the bors API specifcation V1 of the backend.
+//! Models for the bors API specification V1 of the backend.
 
 use serde::Deserialize;
 
