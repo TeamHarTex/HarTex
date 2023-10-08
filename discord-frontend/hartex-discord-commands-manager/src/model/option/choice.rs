@@ -88,7 +88,7 @@ impl CommandManagerCommandOptionChoiceValue {
             f,
             "{}  {}",
             "    ".repeat(depth),
-            "Comamnd Option Choice Value: ".bold()
+            "Command Option Choice Value: ".bold()
         )?;
 
         match self {

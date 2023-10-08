@@ -32,7 +32,7 @@ pub trait ClientConfigUtils {
     /// Configure compression type.
     fn compression_type(&mut self, compression: CompressionType) -> &mut Self;
 
-    /// Configure the duration for delibery timeout.
+    /// Configure the duration for delivery timeout.
     fn delivery_timeout_ms(&mut self, timeout: u32) -> &mut Self;
 
     /// Configure group id.

@@ -43,7 +43,7 @@ impl Display for ConsumerError {
 
 impl Error for ConsumerError {}
 
-/// The type of consumer error that has occured.
+/// The type of consumer error that has occurred.
 #[derive(Clone, Debug)]
 pub enum ConsumerErrorKind {
     InvalidGatewayPayload,
