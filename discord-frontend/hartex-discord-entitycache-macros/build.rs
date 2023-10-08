@@ -391,7 +391,7 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_mac
                 None
             }
         })
-        .map(|item_struct| generate_lazy_static_from_item_struct(item_struct))
+        .map(generate_lazy_static_from_item_struct)
         .collect::<Vec<_>>();
 
     if nest {
