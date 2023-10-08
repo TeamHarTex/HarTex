@@ -90,9 +90,6 @@ pub fn main() {
     let version_constant = generate_version_constant(MODEL_CRATE_VERSION);
 
     let code = quote! {
-        #![allow(warnings)]
-        #![allow(clippy::all)]
-
         use std::collections::HashMap;
         use std::ops::Deref;
 
