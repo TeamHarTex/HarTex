@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::future::Future;
-use std::pin::Pin;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -31,6 +29,7 @@ use hartex_discord_core::tokio::sync::mpsc::unbounded_channel;
 use hartex_discord_core::tokio::sync::mpsc::UnboundedReceiver;
 use hartex_discord_core::tokio::sync::mpsc::UnboundedSender;
 use hartex_discord_core::tokio::sync::oneshot;
+use hartex_discord_core::tokio::sync::oneshot::Receiver;
 use hartex_discord_core::tokio::sync::oneshot::Sender;
 use hartex_discord_core::tokio::time::sleep;
 use hartex_log::log;
@@ -53,17 +52,14 @@ impl LocalQueue {
 
 impl Queue for LocalQueue {
     #[allow(unused_must_use)]
-    fn request(&'_ self, [_, _]: [u32; 2]) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
-        Box::pin(async move {
-            let (tx, rx) = oneshot::channel::<()>();
+    fn enqueue(&'_ self, _: u32) -> Receiver<()> {
+        let (tx, rx) = oneshot::channel::<()>();
 
-            if let Err(error) = self.0.clone().send(tx) {
-                log::warn!("skipping, send failed: {:?}", error);
-                return;
-            }
+        if let Err(error) = self.0.clone().send(tx) {
+            log::warn!("skipping, send failed: {:?}", error);
+        }
 
-            rx.await;
-        })
+        rx
     }
 }
 
@@ -88,19 +84,15 @@ impl LargeBotQueue {
 
 impl Queue for LargeBotQueue {
     #[allow(unused_must_use)]
-    fn request(&'_ self, shard_id: [u32; 2]) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
+    fn enqueue(&'_ self, shard_id: u32) -> Receiver<()> {
         #[allow(clippy::cast_possible_truncation)]
-        let bucket = (shard_id[0] % (self.0.len() as u32)) as usize;
+        let bucket = (shard_id % (self.0.len() as u32)) as usize;
         let (tx, rx) = oneshot::channel();
+        if let Err(error) = self.0[bucket].clone().send(tx) {
+            log::warn!("skipping, send failed: {:?}", error);
+        }
 
-        Box::pin(async move {
-            if let Err(error) = self.0[bucket].clone().send(tx) {
-                log::warn!("skipping, send failed: {:?}", error);
-                return;
-            }
-
-            rx.await;
-        })
+        rx
     }
 }
 
@@ -115,7 +107,7 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
 }
 
 /// Obtain a queue to use for the startup of the bot.
-pub fn obtain() -> miette::Result<Arc<dyn Queue>> {
+pub fn obtain() -> miette::Result<Arc<dyn Queue + Send + Sync>> {
     let concurrency = std::env::var("SHARD_CONCURRENCY")
         .into_diagnostic()?
         .parse::<usize>()
