@@ -37,6 +37,7 @@ use crate::metadata;
 
 // FIXME: this needs to be reimagined
 #[allow(dead_code)]
+#[allow(clippy::module_name_repetitions)]
 pub struct EntityMacroInput {
     from_ident: Ident,
     equal1: Token![=],
@@ -63,6 +64,7 @@ impl Parse for EntityMacroInput {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
@@ -123,7 +125,7 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
                 .error("expected `exclude` or `include`")
                 .emit();
 
-            return None;
+            None
         }
     }
 }
