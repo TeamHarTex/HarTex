@@ -35,7 +35,7 @@ use serde_json::Value;
 #[allow(clippy::large_futures)]
 #[allow(clippy::module_name_repetitions)]
 pub async fn bors_process(state: &GithubBorsState) {
-    let mut event_source = EventSource::get(&env::var("SMEE_URL").unwrap_or_default());
+    let mut event_source = EventSource::get(env::var("SMEE_URL").unwrap_or_default());
     while let Some(event) = event_source.next().await {
         match event {
             Ok(Event::Open) => log::trace!("eventsource connection opened"),

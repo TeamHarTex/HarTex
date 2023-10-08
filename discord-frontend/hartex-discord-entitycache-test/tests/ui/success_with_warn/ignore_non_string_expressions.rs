@@ -20,11 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use trybuild::TestCases;
+use hartex_discord_entitycache_macros::entity;
 
-#[test]
-pub fn ui() {
-    let test_cases = TestCases::new();
-    test_cases.compile_fail("tests/ui/fail/*.rs");
-    test_cases.pass("tests/ui/success_with_warn/*.rs")
-}
+#[entity(from = "twilight_model::channel::Channel", include = [true])]
+pub struct IgnoreNonStringExpressions;
+
+fn main() {}
