@@ -159,7 +159,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .fields
                 .iter()
                 .filter_map(|field| {
-                    if !fields.contains(&field.name) {
+                    if fields.contains(&field.name) {
                         None
                     } else {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
