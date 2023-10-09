@@ -21,7 +21,9 @@
  */
 
 use proc_macro2::Ident;
+use proc_macro2::Span;
 use proc_macro2::TokenStream;
+use quote::quote;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
@@ -32,6 +34,7 @@ use syn::ItemStruct;
 use syn::Lit;
 use syn::LitStr;
 use syn::Token;
+use syn::Type;
 
 use crate::metadata;
 
@@ -65,7 +68,7 @@ impl Parse for EntityMacroInput {
 }
 
 #[allow(clippy::module_name_repetitions)]
-pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
             .from_ident
@@ -99,6 +102,7 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .cloned()
         .cloned()
         .unwrap();
+    let mut any_not_found = false;
     let fields = input
         .exclude_or_include_array
         .elems
@@ -125,6 +129,7 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
                         ))
                         .help("consider regenerating the metadata for a newer version if the field is recently added")
                         .emit();
+                    any_not_found = true;
 
                     None
                 }
@@ -140,24 +145,57 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         })
         .collect::<Vec<_>>();
 
+    if any_not_found {
+        return None;
+    }
+
+    let item_struct_vis = item_struct.vis.clone();
+    let item_struct_name = item_struct.ident.clone();
+
     match input.exclude_or_include_ident.to_string().as_str() {
         "exclude" => {
-            let _ = type_metadata
+            let fields = type_metadata
                 .fields
                 .iter()
-                .filter(|field| !fields.contains(&field.name))
+                .filter_map(|field| {
+                    if !fields.contains(&field.name) {
+                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                        let field_type = syn::parse_str::<Type>(field.ty.as_str()).unwrap();
+
+                        Some(quote! {#field_name: #field_type})
+                    } else {
+                        None
+                    }
+                })
                 .collect::<Vec<_>>();
 
-            todo!()
+            Some(quote! {
+                #item_struct_vis struct #item_struct_name {
+                    #(#fields),*
+                }
+            })
         }
         "include" => {
-            let _ = type_metadata
+            let fields = type_metadata
                 .fields
                 .iter()
-                .filter(|field| fields.contains(&field.name))
+                .filter_map(|field| {
+                    if fields.contains(&field.name) {
+                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                        let field_type = syn::parse_str::<Type>(field.ty.as_str()).unwrap();
+
+                        Some(quote! {#field_name: #field_type})
+                    } else {
+                        None
+                    }
+                })
                 .collect::<Vec<_>>();
 
-            todo!()
+            Some(quote! {
+                #item_struct_vis struct #item_struct_name {
+                    #(#fields),*
+                }
+            })
         }
         _ => {
             input
