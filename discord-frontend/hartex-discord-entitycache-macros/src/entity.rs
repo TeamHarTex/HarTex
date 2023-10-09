@@ -21,7 +21,9 @@
  */
 
 use proc_macro2::Ident;
+use proc_macro2::Span;
 use proc_macro2::TokenStream;
+use quote::quote;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
@@ -32,6 +34,7 @@ use syn::ItemStruct;
 use syn::Lit;
 use syn::LitStr;
 use syn::Token;
+use syn::Type;
 
 use crate::metadata;
 
@@ -65,7 +68,8 @@ impl Parse for EntityMacroInput {
 }
 
 #[allow(clippy::module_name_repetitions)]
-pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<TokenStream> {
+#[allow(clippy::too_many_lines)]
+pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
             .from_ident
@@ -94,7 +98,13 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
-    let _ = input
+    let type_metadata = metadata::STRUCT_MAP
+        .get(type_key.as_str())
+        .copied()
+        .cloned()
+        .unwrap();
+    let mut any_not_found = false;
+    let fields = input
         .exclude_or_include_array
         .elems
         .iter()
@@ -102,7 +112,29 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
             Expr::Lit(ExprLit {
                 lit: Lit::Str(lit_str),
                 ..
-            }) => Some(lit_str.value()),
+            }) => {
+                if type_metadata
+                    .fields
+                    .iter()
+                    .any(|field| field.name == lit_str.value())
+                {
+                    Some(lit_str.value())
+                } else {
+                    lit_str
+                        .span()
+                        .unwrap()
+                        .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+                        .note(format!(
+                            "the type metadata generated was for twilight-model version {}",
+                            metadata::CRATE_VERSION
+                        ))
+                        .help("consider regenerating the metadata for a newer version if the field is recently added")
+                        .emit();
+                    any_not_found = true;
+
+                    None
+                }
+            }
             expr => {
                 expr.span()
                     .unwrap()
@@ -114,9 +146,58 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         })
         .collect::<Vec<_>>();
 
+    if any_not_found {
+        return None;
+    }
+
+    let item_struct_vis = item_struct.vis.clone();
+    let item_struct_name = item_struct.ident.clone();
+
     match input.exclude_or_include_ident.to_string().as_str() {
-        "exclude" => None,
-        "include" => None,
+        "exclude" => {
+            let fields = type_metadata
+                .fields
+                .iter()
+                .filter_map(|field| {
+                    if fields.contains(&field.name) {
+                        None
+                    } else {
+                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                        let field_type = syn::parse_str::<Type>(field.ty.as_str()).unwrap();
+
+                        Some(quote! {#field_name: #field_type})
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            Some(quote! {
+                #item_struct_vis struct #item_struct_name {
+                    #(#fields),*
+                }
+            })
+        }
+        "include" => {
+            let fields = type_metadata
+                .fields
+                .iter()
+                .filter_map(|field| {
+                    if fields.contains(&field.name) {
+                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                        let field_type = syn::parse_str::<Type>(field.ty.as_str()).unwrap();
+
+                        Some(quote! {#field_name: #field_type})
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            Some(quote! {
+                #item_struct_vis struct #item_struct_name {
+                    #(#fields),*
+                }
+            })
+        }
         _ => {
             input
                 .exclude_or_include_ident
