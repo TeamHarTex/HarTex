@@ -94,7 +94,12 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         return None;
     }
 
-    let _ = input
+    let type_metadata = metadata::STRUCT_MAP
+        .get(type_key.as_str())
+        .cloned()
+        .cloned()
+        .unwrap();
+    let fields = input
         .exclude_or_include_array
         .elems
         .iter()
@@ -102,7 +107,28 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
             Expr::Lit(ExprLit {
                 lit: Lit::Str(lit_str),
                 ..
-            }) => Some(lit_str.value()),
+            }) => {
+                if type_metadata
+                    .fields
+                    .iter()
+                    .any(|field| field.name == lit_str.value())
+                {
+                    Some(lit_str.value())
+                } else {
+                    lit_str
+                        .span()
+                        .unwrap()
+                        .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+                        .note(format!(
+                            "the type metadata generated was for twilight-model version {}",
+                            metadata::CRATE_VERSION
+                        ))
+                        .help("consider regenerating the metadata for a newer version if the field is recently added")
+                        .emit();
+
+                    None
+                }
+            }
             expr => {
                 expr.span()
                     .unwrap()
@@ -115,8 +141,24 @@ pub fn implement_entity(input: &EntityMacroInput, _: &ItemStruct) -> Option<Toke
         .collect::<Vec<_>>();
 
     match input.exclude_or_include_ident.to_string().as_str() {
-        "exclude" => None,
-        "include" => None,
+        "exclude" => {
+            let _ = type_metadata
+                .fields
+                .iter()
+                .filter(|field| !fields.contains(&field.name))
+                .collect::<Vec<_>>();
+
+            todo!()
+        }
+        "include" => {
+            let _ = type_metadata
+                .fields
+                .iter()
+                .filter(|field| fields.contains(&field.name))
+                .collect::<Vec<_>>();
+
+            todo!()
+        }
         _ => {
             input
                 .exclude_or_include_ident
