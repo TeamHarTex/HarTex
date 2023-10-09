@@ -68,6 +68,7 @@ impl Parse for EntityMacroInput {
 }
 
 #[allow(clippy::module_name_repetitions)]
+#[allow(clippy::too_many_lines)]
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         input
@@ -99,7 +100,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     let type_metadata = metadata::STRUCT_MAP
         .get(type_key.as_str())
-        .cloned()
+        .copied()
         .cloned()
         .unwrap();
     let mut any_not_found = false;
@@ -159,12 +160,12 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .iter()
                 .filter_map(|field| {
                     if !fields.contains(&field.name) {
+                        None
+                    } else {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
                         let field_type = syn::parse_str::<Type>(field.ty.as_str()).unwrap();
 
                         Some(quote! {#field_name: #field_type})
-                    } else {
-                        None
                     }
                 })
                 .collect::<Vec<_>>();
