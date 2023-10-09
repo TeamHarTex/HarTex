@@ -13,13 +13,13 @@ rust-version = "1.75.0"
 [dependencies]
 itertools = "0.11.0"
 lazy_static = "1.4.0"
-proc-macro2 = "1.0.68"
+proc-macro2 = "1.0.69"
 quote = "1.0.33"
 syn = { version = "2.0.38", features = ["extra-traits", "full"] }
 
 [build-dependencies]
 convert_case = "0.6.0"
-proc-macro2 = "1.0.68"
+proc-macro2 = "1.0.69"
 quote = "1.0.33"
 reqwest = { version = "0.11.22", features = ["blocking"] }
 syn = { version = "2.0.38", features = ["extra-traits", "full"] }
