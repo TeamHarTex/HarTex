@@ -168,7 +168,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                         None
                     } else {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                        let field_type = syn::parse_str::<Type>(field.ty.as_str()).unwrap();
+                        let field_type = syn::parse_str::<Type>(
+                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                        )
+                        .unwrap();
 
                         Some(quote! {#field_name: #field_type})
                     }
