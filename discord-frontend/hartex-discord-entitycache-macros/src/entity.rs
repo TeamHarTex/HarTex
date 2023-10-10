@@ -38,6 +38,11 @@ use syn::Type;
 
 use crate::metadata;
 
+const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
+    "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "&str",
+    "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
+];
+
 // FIXME: this needs to be reimagined
 #[allow(dead_code)]
 #[allow(clippy::module_name_repetitions)]
@@ -215,5 +220,29 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 }
 
 fn expand_fully_qualified_type_name(to_expand: String) -> String {
-    to_expand
+    let open_angle_brackets = to_expand.find("<");
+    let close_angle_brackets = to_expand.rfind(">");
+
+    if open_angle_brackets.is_none() && close_angle_brackets.is_none() {
+        if PRELUDE_AND_PRIMITIVES.contains(&to_expand.as_str()) {
+            return to_expand;
+        }
+
+        let Some(fully_qualified) = metadata::STRUCT_MAP
+            .keys()
+            .find(|key| key.ends_with(&to_expand))
+        else {
+            return to_expand;
+        };
+
+        return fully_qualified.to_string();
+    }
+
+    format!(
+        "{}<{}>",
+        &to_expand[0..open_angle_brackets.unwrap()],
+        expand_fully_qualified_type_name(
+            to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()].to_string()
+        )
+    )
 }
