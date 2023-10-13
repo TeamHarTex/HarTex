@@ -223,10 +223,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 }
 
 fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
-    to_expand = to_expand.replace(" ", "");
+    to_expand = to_expand.replace(' ', "");
 
-    let open_angle_brackets = to_expand.find("<");
-    let close_angle_brackets = to_expand.rfind(">");
+    let open_angle_brackets = to_expand.find('<');
+    let close_angle_brackets = to_expand.rfind('>');
 
     if open_angle_brackets.is_none() && close_angle_brackets.is_none() {
         if PRELUDE_AND_PRIMITIVES.contains(&to_expand.as_str()) {
@@ -240,7 +240,7 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
             return to_expand;
         };
 
-        return fully_qualified.to_string();
+        return (*fully_qualified).to_string();
     }
 
     format!(
