@@ -222,7 +222,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     }
 }
 
-fn expand_fully_qualified_type_name(to_expand: String) -> String {
+fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
+    to_expand = to_expand.replace(" ", "");
+
     let open_angle_brackets = to_expand.find("<");
     let close_angle_brackets = to_expand.rfind(">");
 
