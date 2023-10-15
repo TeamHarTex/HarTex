@@ -25,7 +25,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 
 use std::future::Future;
 use std::pin::Pin;
