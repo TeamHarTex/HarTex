@@ -51,6 +51,10 @@ pub struct EntityMacroInput {
     equal1: Token![=],
     from_lit_str: LitStr,
     comma1: Token![,],
+    id_ident: Ident,
+    equal3: Token![=],
+    id_array: ExprArray,
+    comma3: Token![,],
     exclude_or_include_ident: Ident,
     equal2: Token![=],
     exclude_or_include_array: ExprArray,
@@ -64,6 +68,10 @@ impl Parse for EntityMacroInput {
             equal1: input.parse()?,
             from_lit_str: input.parse()?,
             comma1: input.parse()?,
+            id_ident: input.parse()?,
+            equal3: input.parse()?,
+            id_array: input.parse()?,
+            comma3: input.parse()?,
             exclude_or_include_ident: input.parse()?,
             equal2: input.parse()?,
             exclude_or_include_array: input.parse()?,
@@ -84,6 +92,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .emit();
 
         return None;
+    }
+
+    if input.id_ident != "id" {
+        input.id_ident.span().unwrap().error("expected `id`").emit();
     }
 
     let type_key = input.from_lit_str.value();
@@ -111,6 +123,48 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let mut any_not_found = false;
     let fields = input
         .exclude_or_include_array
+        .elems
+        .iter()
+        .filter_map(|expr| match expr {
+            Expr::Lit(ExprLit {
+                lit: Lit::Str(lit_str),
+                ..
+            }) => {
+                if type_metadata
+                    .fields
+                    .iter()
+                    .any(|field| field.name == lit_str.value())
+                {
+                    Some(lit_str.value())
+                } else {
+                    lit_str
+                        .span()
+                        .unwrap()
+                        .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+                        .note(format!(
+                            "the type metadata generated was for twilight-model version {}",
+                            metadata::CRATE_VERSION
+                        ))
+                        .help("consider regenerating the metadata for a newer version if the field is recently added")
+                        .emit();
+                    any_not_found = true;
+
+                    None
+                }
+            }
+            expr => {
+                expr.span()
+                    .unwrap()
+                    .warning("non-string expressions are ignored")
+                    .emit();
+
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+
+    let _ = input
+        .id_array
         .elems
         .iter()
         .filter_map(|expr| match expr {
