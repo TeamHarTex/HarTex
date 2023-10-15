@@ -26,6 +26,7 @@
 #![allow(dead_code)]
 #![allow(clippy::expect_fun_call)]
 
+use std::cmp::Reverse;
 use std::fs;
 use std::fs::File;
 use std::io;
@@ -426,7 +427,12 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_mac
 }
 
 fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
-    let reexported_paths = collect_type_to_module_path_mappings(tree, "twilight_model");
+    let mut reexported_paths = collect_type_to_module_path_mappings(tree, "twilight_model");
+    reexported_paths.sort_by_key(|element| Reverse(element.clone()));
+    reexported_paths
+        .dedup_by(|(name1, full1), (name2, full2)| name1 == name2 && full1.len() < full2.len());
+    reexported_paths.reverse();
+
     let paths = generate_module_path_from_tree("twilight_model", tree);
     let entries = paths
         .into_iter()
