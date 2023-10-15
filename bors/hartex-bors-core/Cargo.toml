@@ -12,7 +12,7 @@ rust-version = "1.75.0"
 
 [dependencies]
 miette = "5.10.0"
-octocrab = "0.31.1"
+octocrab = "0.31.2"
 sea-orm = { version = "0.12.3", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
 tokio = { version = "1.33.0", features = ["sync"] }
 
