@@ -299,7 +299,7 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
 
         let Some(fully_qualified) = metadata::STRUCT_MAP.keys().find(|key| {
             let index = key.rfind(':').unwrap();
-            key[index + 1..].to_string() == to_expand
+            key[index + 1..] == to_expand
         }) else {
             return to_expand;
         };
