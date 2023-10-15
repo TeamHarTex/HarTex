@@ -51,6 +51,10 @@ pub struct EntityMacroInput {
     equal1: Token![=],
     from_lit_str: LitStr,
     comma1: Token![,],
+    id_ident: Ident,
+    equal3: Token![=],
+    id_array: ExprArray,
+    comma3: Token![,],
     exclude_or_include_ident: Ident,
     equal2: Token![=],
     exclude_or_include_array: ExprArray,
@@ -64,6 +68,10 @@ impl Parse for EntityMacroInput {
             equal1: input.parse()?,
             from_lit_str: input.parse()?,
             comma1: input.parse()?,
+            id_ident: input.parse()?,
+            equal3: input.parse()?,
+            id_array: input.parse()?,
+            comma3: input.parse()?,
             exclude_or_include_ident: input.parse()?,
             equal2: input.parse()?,
             exclude_or_include_array: input.parse()?,
@@ -84,6 +92,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .emit();
 
         return None;
+    }
+
+    if input.id_ident != "id" {
+        input.id_ident.span().unwrap().error("expected `id`").emit();
     }
 
     let type_key = input.from_lit_str.value();
@@ -151,6 +163,48 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         })
         .collect::<Vec<_>>();
 
+    let id_fields = input
+        .id_array
+        .elems
+        .iter()
+        .filter_map(|expr| match expr {
+            Expr::Lit(ExprLit {
+                lit: Lit::Str(lit_str),
+                ..
+            }) => {
+                if type_metadata
+                    .fields
+                    .iter()
+                    .any(|field| field.name == lit_str.value())
+                {
+                    Some(lit_str.value())
+                } else {
+                    lit_str
+                        .span()
+                        .unwrap()
+                        .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+                        .note(format!(
+                            "the type metadata generated was for twilight-model version {}",
+                            metadata::CRATE_VERSION
+                        ))
+                        .help("consider regenerating the metadata for a newer version if the field is recently added")
+                        .emit();
+                    any_not_found = true;
+
+                    None
+                }
+            }
+            expr => {
+                expr.span()
+                    .unwrap()
+                    .warning("non-string expressions are ignored")
+                    .emit();
+
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+
     if any_not_found {
         return None;
     }
@@ -158,57 +212,41 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let item_struct_vis = item_struct.vis.clone();
     let item_struct_name = item_struct.ident.clone();
 
-    match input.exclude_or_include_ident.to_string().as_str() {
-        "exclude" => {
-            let fields = type_metadata
-                .fields
-                .iter()
-                .filter_map(|field| {
-                    if fields.contains(&field.name) {
-                        None
-                    } else {
-                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                        let field_type = syn::parse_str::<Type>(
-                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
-                        )
-                        .unwrap();
+    let mut fields_tokens = match input.exclude_or_include_ident.to_string().as_str() {
+        "exclude" => type_metadata
+            .fields
+            .iter()
+            .filter_map(|field| {
+                if fields.contains(&field.name) {
+                    None
+                } else {
+                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                    let field_type = syn::parse_str::<Type>(
+                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                    )
+                    .unwrap();
 
-                        Some(quote! {#field_name: #field_type})
-                    }
-                })
-                .collect::<Vec<_>>();
-
-            Some(quote! {
-                #item_struct_vis struct #item_struct_name {
-                    #(#fields),*
+                    Some(quote! {#field_name: #field_type})
                 }
             })
-        }
-        "include" => {
-            let fields = type_metadata
-                .fields
-                .iter()
-                .filter_map(|field| {
-                    if fields.contains(&field.name) {
-                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                        let field_type = syn::parse_str::<Type>(
-                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
-                        )
-                        .unwrap();
+            .collect::<Vec<_>>(),
+        "include" => type_metadata
+            .fields
+            .iter()
+            .filter_map(|field| {
+                if fields.contains(&field.name) {
+                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                    let field_type = syn::parse_str::<Type>(
+                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                    )
+                    .unwrap();
 
-                        Some(quote! {#field_name: #field_type})
-                    } else {
-                        None
-                    }
-                })
-                .collect::<Vec<_>>();
-
-            Some(quote! {
-                #item_struct_vis struct #item_struct_name {
-                    #(#fields),*
+                    Some(quote! {#field_name: #field_type})
+                } else {
+                    None
                 }
             })
-        }
+            .collect::<Vec<_>>(),
         _ => {
             input
                 .exclude_or_include_ident
@@ -217,9 +255,35 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .error("expected `exclude` or `include`")
                 .emit();
 
-            None
+            return None;
         }
-    }
+    };
+
+    fields_tokens.append(
+        &mut type_metadata
+            .fields
+            .iter()
+            .filter_map(|field| {
+                if id_fields.contains(&field.name) {
+                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                    let field_type = syn::parse_str::<Type>(
+                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                    )
+                    .unwrap();
+
+                    Some(quote! {#field_name: #field_type})
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<_>>(),
+    );
+
+    Some(quote! {
+        #item_struct_vis struct #item_struct_name {
+            #(#fields_tokens),*
+        }
+    })
 }
 
 fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
@@ -233,10 +297,10 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
             return to_expand;
         }
 
-        let Some(fully_qualified) = metadata::STRUCT_MAP
-            .keys()
-            .find(|key| key.ends_with(&to_expand))
-        else {
+        let Some(fully_qualified) = metadata::STRUCT_MAP.keys().find(|key| {
+            let index = key.rfind(':').unwrap();
+            key[index + 1..] == to_expand
+        }) else {
             return to_expand;
         };
 
@@ -245,7 +309,7 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
 
     format!(
         "{}<{}>",
-        &to_expand[0..open_angle_brackets.unwrap()],
+        expand_fully_qualified_type_name(to_expand[0..open_angle_brackets.unwrap()].to_string()),
         expand_fully_qualified_type_name(
             to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()].to_string()
         )

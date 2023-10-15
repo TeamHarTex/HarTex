@@ -5,5 +5,6 @@ pub struct UserExpand {
     bot: bool,
     discriminator: u16,
     name: String,
+    id: twilight_model::id::Id<twilight_model::id::marker::UserMarker>,
 }
 fn main() {}
