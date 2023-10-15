@@ -283,6 +283,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*
         }
+
+        impl hartex_discord_entitycache_core::traits::Entity for #item_struct_name {}
     })
 }
 
