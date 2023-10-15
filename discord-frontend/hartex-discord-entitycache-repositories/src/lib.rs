@@ -26,7 +26,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 
 pub mod guild;
 pub mod member;
