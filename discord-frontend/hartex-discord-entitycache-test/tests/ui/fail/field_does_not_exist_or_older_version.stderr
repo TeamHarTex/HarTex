@@ -1,8 +1,8 @@
 error: field `nonexistent_field` cannot be found in type `twilight_model::channel::Channel`
-  --> tests/ui/fail/field_does_not_exist_or_older_version.rs:25:64
+  --> tests/ui/fail/field_does_not_exist_or_older_version.rs:25:73
    |
-25 | #[entity(from = "twilight_model::channel::Channel", exclude = ["nonexistent_field"])]
-   |                                                                ^^^^^^^^^^^^^^^^^^^
+25 | #[entity(from = "twilight_model::channel::Channel", id = [], exclude = ["nonexistent_field"])]
+   |                                                                         ^^^^^^^^^^^^^^^^^^^
    |
    = note: the type metadata generated was for twilight-model version 0.15.4
    = help: consider regenerating the metadata for a newer version if the field is recently added
