@@ -22,7 +22,7 @@
 
 use hartex_discord_entitycache_macros::entity;
 
-#[entity(from = "twilight_model::DoesNotExistOrOlderVersion", include = [])]
+#[entity(from = "twilight_model::DoesNotExistOrOlderVersion", id = [], include = [])]
 pub struct DoesNotExistOrOlderVersion;
 
 fn main() {}

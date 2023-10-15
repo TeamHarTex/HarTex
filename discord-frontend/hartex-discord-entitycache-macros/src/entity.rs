@@ -309,7 +309,7 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
 
     format!(
         "{}<{}>",
-        &to_expand[0..open_angle_brackets.unwrap()],
+        expand_fully_qualified_type_name(to_expand[0..open_angle_brackets.unwrap()].to_string()),
         expand_fully_qualified_type_name(
             to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()].to_string()
         )

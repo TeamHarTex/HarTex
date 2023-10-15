@@ -22,7 +22,7 @@
 
 use hartex_discord_entitycache_macros::entity;
 
-#[entity(from = "twilight_model::channel::Channel", exclude = ["nonexistent_field"])]
+#[entity(from = "twilight_model::channel::Channel", id = [], exclude = ["nonexistent_field"])]
 pub struct NonexistentFieldOrOlderVersion;
 
 fn main() {}
