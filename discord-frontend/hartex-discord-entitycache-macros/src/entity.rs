@@ -297,10 +297,10 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
             return to_expand;
         }
 
-        let Some(fully_qualified) = metadata::STRUCT_MAP
-            .keys()
-            .find(|key| key.ends_with(&to_expand))
-        else {
+        let Some(fully_qualified) = metadata::STRUCT_MAP.keys().find(|key| {
+            let index = key.rfind(':').unwrap();
+            key[index + 1..].to_string() == to_expand
+        }) else {
             return to_expand;
         };
 
