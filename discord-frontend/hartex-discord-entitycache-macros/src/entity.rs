@@ -23,7 +23,7 @@
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
-use quote::quote;
+use quote::{quote, ToTokens};
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
@@ -279,12 +279,69 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .collect::<Vec<_>>(),
     );
 
+    let type_tokens = if id_fields.len() == 1 {
+        let field = type_metadata
+            .fields
+            .iter()
+            .find(|field| field.name == id_fields[0])
+            .unwrap();
+
+        syn::parse_str::<Type>(expand_fully_qualified_type_name(field.ty.clone()).as_str())
+            .unwrap()
+            .to_token_stream()
+    } else {
+        let vec = id_fields
+            .iter()
+            .map(|name| {
+                type_metadata
+                    .fields
+                    .iter()
+                    .find(|field| field.name == name.clone())
+                    .unwrap()
+            })
+            .map(|field| {
+                syn::parse_str::<Type>(expand_fully_qualified_type_name(field.ty.clone()).as_str())
+                    .unwrap()
+            })
+            .collect::<Vec<_>>();
+
+        quote! {
+            (#(#vec),*)
+        }
+    };
+
+    let field_expr_tokens = if id_fields.len() == 1 {
+        let ident = Ident::new(&id_fields[0], Span::call_site()).to_token_stream();
+        quote::quote! {
+            self.#ident
+        }
+    } else {
+        let vec = id_fields
+            .iter()
+            .map(|name| {
+                let ident = Ident::new(&name, Span::call_site()).to_token_stream();
+                quote::quote! {
+                    self.#ident
+                }
+            })
+            .collect::<Vec<_>>();
+
+        quote! {
+            (#(#vec),*)
+        }
+    };
+
     Some(quote! {
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*
         }
-
-        impl hartex_discord_entitycache_core::traits::Entity for #item_struct_name {}
+        #[automatically_derived]
+        impl hartex_discord_entitycache_core::traits::Entity for #item_struct_name {
+            type Id = #type_tokens;
+            fn id(&self) -> <Self as hartex_discord_entitycache_core::traits::Entity>::Id {
+                #field_expr_tokens
+            }
+        }
     })
 }
 
