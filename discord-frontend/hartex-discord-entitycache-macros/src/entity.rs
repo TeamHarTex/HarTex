@@ -212,72 +212,83 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let item_struct_vis = item_struct.vis.clone();
     let item_struct_name = item_struct.ident.clone();
 
-    let mut fields_tokens = match input.exclude_or_include_ident.to_string().as_str() {
-        "exclude" => type_metadata
-            .fields
-            .iter()
-            .filter_map(|field| {
-                if fields.contains(&field.name) {
-                    None
-                } else {
-                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                    let field_type = syn::parse_str::<Type>(
-                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
-                    )
-                    .unwrap();
+    let (mut fields_tokens, mut fields_assignments): (Vec<_>, Vec<_>) =
+        match input.exclude_or_include_ident.to_string().as_str() {
+            "exclude" => type_metadata
+                .fields
+                .iter()
+                .filter_map(|field| {
+                    if fields.contains(&field.name) {
+                        None
+                    } else {
+                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                        let field_type = syn::parse_str::<Type>(
+                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                        )
+                        .unwrap();
 
-                    Some(quote! {#field_name: #field_type})
-                }
-            })
-            .collect::<Vec<_>>(),
-        "include" => type_metadata
-            .fields
-            .iter()
-            .filter_map(|field| {
-                if fields.contains(&field.name) {
-                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                    let field_type = syn::parse_str::<Type>(
-                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
-                    )
-                    .unwrap();
+                        Some((
+                            quote! {#field_name: #field_type},
+                            quote! {#field_name: model.#field_name},
+                        ))
+                    }
+                })
+                .unzip(),
+            "include" => type_metadata
+                .fields
+                .iter()
+                .filter_map(|field| {
+                    if fields.contains(&field.name) {
+                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                        let field_type = syn::parse_str::<Type>(
+                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                        )
+                        .unwrap();
 
-                    Some(quote! {#field_name: #field_type})
-                } else {
-                    None
-                }
-            })
-            .collect::<Vec<_>>(),
-        _ => {
-            input
-                .exclude_or_include_ident
-                .span()
-                .unwrap()
-                .error("expected `exclude` or `include`")
-                .emit();
+                        Some((
+                            quote! {#field_name: #field_type},
+                            quote! {#field_name: model.#field_name},
+                        ))
+                    } else {
+                        None
+                    }
+                })
+                .unzip(),
+            _ => {
+                input
+                    .exclude_or_include_ident
+                    .span()
+                    .unwrap()
+                    .error("expected `exclude` or `include`")
+                    .emit();
 
-            return None;
-        }
-    };
+                return None;
+            }
+        };
 
-    fields_tokens.append(
-        &mut type_metadata
-            .fields
-            .iter()
-            .filter_map(|field| {
-                if id_fields.contains(&field.name) {
-                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                    let field_type = syn::parse_str::<Type>(
-                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
-                    )
-                    .unwrap();
+    let (mut field_tokens_to_append, mut field_assignments_to_append) = type_metadata
+        .fields
+        .iter()
+        .filter_map(|field| {
+            if id_fields.contains(&field.name) {
+                let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                let field_type = syn::parse_str::<Type>(
+                    expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                )
+                .unwrap();
 
-                    Some(quote! {#field_name: #field_type})
-                } else {
-                    None
-                }
-            })
-            .collect::<Vec<_>>(),
-    );
+                Some((
+                    quote! {#field_name: #field_type},
+                    quote! {#field_name: model.#field_name},
+                ))
+            } else {
+                None
+            }
+        })
+        .unzip();
+
+    fields_tokens.append(&mut field_tokens_to_append);
+    fields_assignments.append(&mut field_assignments_to_append);
 
     let type_tokens = if id_fields.len() == 1 {
         let field = type_metadata
@@ -319,7 +330,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         let vec = id_fields
             .iter()
             .map(|name| {
-                let ident = Ident::new(&name, Span::call_site()).to_token_stream();
+                let ident = Ident::new(name, Span::call_site()).to_token_stream();
                 quote::quote! {
                     self.#ident
                 }
@@ -331,6 +342,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         }
     };
 
+    let from_type = syn::parse_str::<Type>(type_key.as_str()).unwrap();
     Some(quote! {
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*
@@ -340,6 +352,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             type Id = #type_tokens;
             fn id(&self) -> <Self as hartex_discord_entitycache_core::traits::Entity>::Id {
                 #field_expr_tokens
+            }
+        }
+        impl From<#from_type> for #item_struct_name {
+            fn from(model: #from_type) -> Self {
+                Self { #(#fields_assignments),* }
             }
         }
     })

@@ -14,4 +14,16 @@ impl hartex_discord_entitycache_core::traits::Entity for UserExpand {
         self.id
     }
 }
+impl From<twilight_model::user::User> for UserExpand {
+    fn from(model: twilight_model::user::User) -> Self {
+        Self {
+            accent_color: model.accent_color,
+            avatar: model.avatar,
+            bot: model.bot,
+            discriminator: model.discriminator,
+            name: model.name,
+            id: model.id,
+        }
+    }
+}
 fn main() {}

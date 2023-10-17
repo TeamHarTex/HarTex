@@ -1060,6 +1060,7 @@ dependencies = [
  "macrotest",
  "rustversion",
  "trybuild",
+ "twilight-model",
 ]
 
 [[package]]
