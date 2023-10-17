@@ -246,7 +246,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                         .unwrap();
 
                         Some((
-                            quote! {#field_name: #field_type},
+                            quote! {pub #field_name: #field_type},
                             quote! {#field_name: model.#field_name},
                         ))
                     } else {
@@ -278,7 +278,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .unwrap();
 
                 Some((
-                    quote! {#field_name: #field_type},
+                    quote! {pub #field_name: #field_type},
                     quote! {#field_name: model.#field_name},
                 ))
             } else {
