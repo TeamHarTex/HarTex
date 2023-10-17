@@ -20,24 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::id::marker::UserMarker;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::user::User;
-use hartex_discord_entitycache_core::Entity;
+use hartex_discord_entitycache_core::entity;
 
 #[allow(clippy::module_name_repetitions)]
-#[derive(Entity)]
-pub struct UserEntity {
-    pub bot: bool,
-    #[entity(id)]
-    pub id: Id<UserMarker>,
-}
-
-impl From<User> for UserEntity {
-    fn from(user: User) -> Self {
-        Self {
-            bot: user.bot,
-            id: user.id,
-        }
-    }
-}
+#[entity(
+    from = "twilight_model::user::User",
+    id = ["id"],
+    include = ["bot"],
+)]
+pub struct UserEntity;
