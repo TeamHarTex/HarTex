@@ -1,11 +1,11 @@
 use hartex_discord_entitycache_macros::entity;
 pub struct UserExpand {
-    accent_color: Option<u32>,
-    avatar: Option<twilight_model::util::image_hash::ImageHash>,
-    bot: bool,
-    discriminator: u16,
-    name: String,
-    id: twilight_model::id::Id<twilight_model::id::marker::UserMarker>,
+    pub accent_color: Option<u32>,
+    pub avatar: Option<twilight_model::util::image_hash::ImageHash>,
+    pub bot: bool,
+    pub discriminator: u16,
+    pub name: String,
+    pub id: twilight_model::id::Id<twilight_model::id::marker::UserMarker>,
 }
 #[automatically_derived]
 impl hartex_discord_entitycache_core::traits::Entity for UserExpand {

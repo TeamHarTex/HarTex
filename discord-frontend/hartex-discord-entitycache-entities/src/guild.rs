@@ -22,41 +22,11 @@
 
 //! # Guild Entities
 
-use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
-use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
-use hartex_discord_core::discord::model::guild::Guild;
-use hartex_discord_core::discord::model::guild::GuildFeature;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::marker::UserMarker;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::util::ImageHash;
-use hartex_discord_entitycache_core::Entity;
+use hartex_discord_entitycache_core::entity;
 
-#[allow(clippy::module_name_repetitions)]
-#[derive(Entity)]
-pub struct GuildEntity {
-    pub default_message_notifications: DefaultMessageNotificationLevel,
-    pub explicit_content_filter: ExplicitContentFilter,
-    pub features: Vec<GuildFeature>,
-    pub icon: Option<ImageHash>,
-    #[entity(id)]
-    pub id: Id<GuildMarker>,
-    pub large: bool,
-    pub name: String,
-    pub owner_id: Id<UserMarker>,
-}
-
-impl From<Guild> for GuildEntity {
-    fn from(guild: Guild) -> Self {
-        Self {
-            default_message_notifications: guild.default_message_notifications,
-            explicit_content_filter: guild.explicit_content_filter,
-            features: guild.features,
-            icon: guild.icon,
-            id: guild.id,
-            large: guild.large,
-            name: guild.name,
-            owner_id: guild.owner_id,
-        }
-    }
-}
+#[entity(
+    from = "twilight_model::guild::Guild",
+    id = ["id"],
+    include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
+)]
+pub struct GuildEntity;
