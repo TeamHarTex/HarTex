@@ -1024,6 +1024,7 @@ version = "0.4.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
+ "twilight-model",
 ]
 
 [[package]]
