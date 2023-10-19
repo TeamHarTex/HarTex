@@ -295,7 +295,7 @@ fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStrea
     }
 }
 
-fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> proc_macro2::TokenStream {
+fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStream {
     let name = &tree.name;
     let items = &tree.items;
     let children = tree
