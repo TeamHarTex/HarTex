@@ -21,6 +21,12 @@
  */
 
 #[derive(Debug, Clone)]
+pub struct Enum {
+    pub name: String,
+    pub generic_params: Vec<GenericParameter>,
+}
+
+#[derive(Debug, Clone)]
 pub struct Field {
     pub name: String,
     pub vis: String,

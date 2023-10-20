@@ -44,6 +44,7 @@ use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::Item;
+use syn::ItemEnum;
 use syn::ItemMod;
 use syn::ItemStruct;
 use syn::ItemUse;
@@ -244,6 +245,38 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
     }
 }
 
+fn generate_lazy_static_from_item_enum(item_enum: &ItemEnum) -> TokenStream {
+    let ident = &item_enum.ident;
+    let const_name = ident.to_string().to_case(Case::ScreamingSnake);
+    let const_ident = TokenStream::from_str(&const_name).unwrap();
+
+    let generic_params = item_enum
+        .generics
+        .params
+        .iter()
+        .filter_map(|generic_param| {
+            if let syn::GenericParam::Type(type_param) = generic_param {
+                let ident = &type_param.ident;
+
+                Some(quote! {
+                    crate::reflect::GenericParameter {
+                        name: stringify!(#ident).to_string()
+                    }
+                })
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+
+    quote! {
+        pub static ref #const_ident: crate::reflect::Enum = crate::reflect::Enum {
+            name: stringify!(#ident).to_string(),
+            generic_params: vec![#(#generic_params,)*],
+        };
+    }
+}
+
 fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStream {
     let ident = &item_struct.ident;
     let const_name = ident.to_string().to_case(Case::ScreamingSnake);
@@ -315,6 +348,17 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
         })
         .map(generate_lazy_static_from_item_struct)
         .collect::<Vec<_>>();
+    let enums = items
+        .iter()
+        .filter_map(|item| {
+            if let Item::Enum(item_enum) = item {
+                Some(item_enum)
+            } else {
+                None
+            }
+        })
+        .map(generate_lazy_static_from_item_enum)
+        .collect::<Vec<_>>();
 
     if nest {
         quote! {
@@ -324,6 +368,7 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
 
                 lazy_static! {
                     #(#structs)*
+                    #(#enums)*
                 }
 
                 #(#children)*
@@ -335,6 +380,7 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
 
             lazy_static! {
                 #(#structs)*
+                #(#enums)*
             }
 
             #(#children)*
