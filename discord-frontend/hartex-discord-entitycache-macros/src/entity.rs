@@ -372,18 +372,20 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
             return to_expand;
         }
 
-        let Some(fully_qualified) = metadata::ENUM_MAP.keys().find(|key| {
+        let fully_qualified = if let Some(found) = metadata::ENUM_MAP.keys().find(|key| {
             let index = key.rfind(':').unwrap();
             key[index + 1..] == to_expand
-        }) else {
-            let Some(fully_qualified) = metadata::STRUCT_MAP.keys().find(|key| {
+        }) {
+            found
+        } else {
+            let Some(found) = metadata::STRUCT_MAP.keys().find(|key| {
                 let index = key.rfind(':').unwrap();
                 key[index + 1..] == to_expand
             }) else {
                 return to_expand;
             };
 
-            Some(fully_qualified)
+            found
         };
 
         return (*fully_qualified).to_string();
