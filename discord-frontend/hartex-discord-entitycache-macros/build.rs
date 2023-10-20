@@ -48,7 +48,6 @@ use syn::Item;
 use syn::ItemEnum;
 use syn::ItemMod;
 use syn::ItemStruct;
-use syn::ItemUse;
 use syn::LitStr;
 use syn::Token;
 use syn::Visibility;
@@ -67,7 +66,6 @@ struct ModuleTree {
     children: Vec<ModuleTree>,
     items: Vec<Item>,
     name: Ident,
-    reexports: Vec<ItemUse>,
     visibility: Visibility,
 }
 
@@ -128,7 +126,6 @@ fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
         children: vec![],
         items: vec![],
         name: item_mod.ident.clone(),
-        reexports: vec![],
         visibility: item_mod.vis.clone(),
     };
 
@@ -162,9 +159,6 @@ fn build_module_tree_from_mod(item_mod: &ItemMod) -> ModuleTree {
                     }
                 }
             }
-            Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) => {
-                module_tree.reexports.push(item_use.clone());
-            }
             item => module_tree.items.push(item.clone()),
         });
 
@@ -192,7 +186,6 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
         children: vec![],
         items: vec![],
         name: Ident::new(module_name, Span::call_site()),
-        reexports: vec![],
         visibility: visibility.clone(),
     };
 
@@ -219,9 +212,6 @@ fn build_module_tree_from_file(path: &Path, visibility: &Visibility) -> ModuleTr
                         .push(build_module_tree_from_file(&mod_dir_file, &item_mod.vis));
                 }
             }
-        }
-        Item::Use(item_use) if matches!(item_use.vis, syn::Visibility::Public(_)) => {
-            module_tree.reexports.push(item_use.clone());
         }
         item => module_tree.items.push(item.clone()),
     });
