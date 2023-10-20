@@ -25,6 +25,7 @@
 #![deny(warnings)]
 #![allow(dead_code)]
 #![allow(clippy::expect_fun_call)]
+#![feature(let_chains)]
 
 use std::fs;
 use std::fs::File;
@@ -56,6 +57,12 @@ use zip::ZipArchive;
 #[cfg(feature = "discord_model_v_0_15_4")]
 const MODEL_CRATE_VERSION: &str = "0.15.4";
 
+#[derive(Copy, Clone, Eq, PartialEq)]
+enum ModuleTreeItemKind {
+    Enum,
+    Struct,
+}
+
 struct ModuleTree {
     children: Vec<ModuleTree>,
     items: Vec<Item>,
@@ -86,6 +93,7 @@ pub fn main() {
     );
 
     let metadata_from_module_tree = generate_metadata_from_module_tree(&module_tree, false);
+    let enum_metadata_map = generate_enum_metadata_map(&module_tree);
     let struct_metadata_map = generate_struct_metadata_map(&module_tree);
     let version_constant = generate_version_constant(MODEL_CRATE_VERSION);
 
@@ -102,6 +110,7 @@ pub fn main() {
 
         #metadata_from_module_tree
 
+        #enum_metadata_map
         #struct_metadata_map
     };
 
@@ -388,8 +397,42 @@ fn generate_metadata_from_module_tree(tree: &ModuleTree, nest: bool) -> TokenStr
     }
 }
 
+fn generate_enum_metadata_map(tree: &ModuleTree) -> TokenStream {
+    let paths = generate_module_path_from_tree("twilight_model", tree, ModuleTreeItemKind::Enum);
+    let entries = paths
+        .into_iter()
+        .map(|path| {
+            let path = format!("{}{}", &path[0..16], &path[21..]);
+            let key_literal = LitStr::new(&path, Span::call_site());
+            let path_parts: Vec<_> = path.split("::").collect();
+            let struct_name = path_parts.last().unwrap();
+            let value_path_name = format!(
+                "{}::{}",
+                &path[16..(path.len() - (struct_name.len() + 2))],
+                struct_name.to_case(Case::ScreamingSnake),
+            );
+            let value_path: syn::Path = syn::parse_str(&value_path_name).unwrap();
+
+            quote! {
+                map.insert(#key_literal, #value_path.deref());
+            }
+        })
+        .collect::<Vec<_>>();
+    quote! {
+        fn create_enum_map() -> HashMap<&'static str, &'static crate::reflect::Enum> {
+            let mut map = HashMap::new();
+            #(#entries)*
+            map
+        }
+
+        lazy_static::lazy_static! {
+            pub(crate) static ref ENUM_MAP: HashMap<&'static str, &'static crate::reflect::Enum> = create_enum_map();
+        }
+    }
+}
+
 fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
-    let paths = generate_module_path_from_tree("twilight_model", tree);
+    let paths = generate_module_path_from_tree("twilight_model", tree, ModuleTreeItemKind::Struct);
     let entries = paths
         .into_iter()
         .map(|path| {
@@ -422,21 +465,29 @@ fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
     }
 }
 
-fn generate_module_path_from_tree(base_path: &str, tree: &ModuleTree) -> Vec<String> {
+fn generate_module_path_from_tree(
+    base_path: &str,
+    tree: &ModuleTree,
+    kind: ModuleTreeItemKind,
+) -> Vec<String> {
     let mut paths = vec![];
 
     // Construct the new base path
     let new_base_path = format!("{}::{}", base_path, tree.name);
 
     for item in &tree.items {
-        if let Item::Struct(s) = item {
+        if let Item::Struct(s) = item && kind == ModuleTreeItemKind::Struct {
             paths.push(format!("{}::{}", new_base_path, s.ident));
+        }
+
+        if let Item::Enum(e) = item && kind == ModuleTreeItemKind::Enum {
+            paths.push(format!("{}::{}", new_base_path, e.ident));
         }
     }
 
     // Recurse for child modules
     for child in &tree.children {
-        paths.extend(generate_module_path_from_tree(&new_base_path, child));
+        paths.extend(generate_module_path_from_tree(&new_base_path, child, kind));
     }
 
     paths
