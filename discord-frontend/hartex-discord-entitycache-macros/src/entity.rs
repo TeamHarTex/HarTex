@@ -43,7 +43,6 @@ const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
 ];
 
-// FIXME: this needs to be reimagined
 #[allow(dead_code)]
 #[allow(clippy::module_name_repetitions)]
 pub struct EntityMacroInput {
@@ -373,11 +372,20 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
             return to_expand;
         }
 
-        let Some(fully_qualified) = metadata::STRUCT_MAP.keys().find(|key| {
+        let fully_qualified = if let Some(found) = metadata::ENUM_MAP.keys().find(|key| {
             let index = key.rfind(':').unwrap();
             key[index + 1..] == to_expand
-        }) else {
-            return to_expand;
+        }) {
+            found
+        } else {
+            let Some(found) = metadata::STRUCT_MAP.keys().find(|key| {
+                let index = key.rfind(':').unwrap();
+                key[index + 1..] == to_expand
+            }) else {
+                return to_expand;
+            };
+
+            found
         };
 
         return (*fully_qualified).to_string();
