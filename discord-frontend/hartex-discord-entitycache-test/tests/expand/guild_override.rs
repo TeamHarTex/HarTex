@@ -20,8 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_entitycache_macros::entity;
+
 #[entity(
-    from = "twilight_model::user::User",
+    from = "twilight_model::guild::Guild",
     id = ["id"],
     include = ["default_message_notifications"],
     override = [
