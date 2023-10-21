@@ -24,9 +24,12 @@ use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
+use syn::bracketed;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::punctuated::Punctuated;
 use syn::spanned::Spanned;
+use syn::token::Bracket;
 use syn::Expr;
 use syn::ExprArray;
 use syn::ExprLit;
@@ -58,6 +61,10 @@ pub struct EntityMacroInput {
     equal2: Token![=],
     exclude_or_include_array: ExprArray,
     comma2: Option<Token![,]>,
+    override_ident: Option<Ident>,
+    equal4: Option<Token![=]>,
+    override_array: Option<OverrideArray>,
+    comma4: Option<Token![,]>,
 }
 
 impl Parse for EntityMacroInput {
@@ -75,6 +82,56 @@ impl Parse for EntityMacroInput {
             equal2: input.parse()?,
             exclude_or_include_array: input.parse()?,
             comma2: input.parse().ok(),
+            override_ident: input.parse().ok(),
+            equal4: input.parse().ok(),
+            override_array: input.parse().ok(),
+            comma4: input.parse().ok(),
+        })
+    }
+}
+
+struct OverrideArray {
+    bracket_token: Bracket,
+    elements: Punctuated<OverrideArrayElement, Token![,]>,
+}
+
+impl Parse for OverrideArray {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        let content;
+        let bracket_token = bracketed!(content in input);
+        let mut elements = Punctuated::new();
+
+        while !content.is_empty() {
+            let first = input.parse::<OverrideArrayElement>()?;
+            elements.push_value(first);
+
+            if content.is_empty() {
+                break;
+            }
+
+            let punct = input.parse()?;
+            elements.push_punct(punct);
+        }
+
+        Ok(Self {
+            bracket_token,
+            elements,
+        })
+    }
+}
+
+struct OverrideArrayElement {
+    unexpanded_type: LitStr,
+    colon: Token![:],
+    overridden_expansion: LitStr,
+}
+
+impl Parse for OverrideArrayElement {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            unexpanded_type: input.parse()?,
+            colon: input.parse()?,
+            overridden_expansion: input.parse()?,
         })
     }
 }
