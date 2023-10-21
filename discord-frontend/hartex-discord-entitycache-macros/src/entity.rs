@@ -430,7 +430,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     };
 
     let from_type = syn::parse_str::<Type>(type_key.as_str()).unwrap();
+
+    let attrs = item_struct.attrs.clone();
     Some(quote! {
+        #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*
         }
