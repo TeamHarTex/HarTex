@@ -23,7 +23,8 @@
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::quote;
+use quote::ToTokens;
 use syn::bracketed;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
@@ -61,9 +62,9 @@ pub struct EntityMacroInput {
     equal2: Token![=],
     exclude_or_include_array: ExprArray,
     comma2: Option<Token![,]>,
-    override_ident: Option<Ident>,
+    overrides_ident: Option<Ident>,
     equal4: Option<Token![=]>,
-    override_array: Option<OverrideArray>,
+    overrides_array: Option<OverrideArray>,
     comma4: Option<Token![,]>,
 }
 
@@ -82,9 +83,9 @@ impl Parse for EntityMacroInput {
             equal2: input.parse()?,
             exclude_or_include_array: input.parse()?,
             comma2: input.parse().ok(),
-            override_ident: input.parse().ok(),
+            overrides_ident: input.parse().ok(),
             equal4: input.parse().ok(),
-            override_array: input.parse().ok(),
+            overrides_array: input.parse().ok(),
             comma4: input.parse().ok(),
         })
     }
@@ -92,6 +93,7 @@ impl Parse for EntityMacroInput {
 
 #[derive(Clone)]
 struct OverrideArray {
+    #[allow(dead_code)]
     bracket_token: Bracket,
     elements: Punctuated<OverrideArrayElement, Token![,]>,
 }
@@ -124,6 +126,7 @@ impl Parse for OverrideArray {
 #[derive(Clone)]
 struct OverrideArrayElement {
     unexpanded_type: LitStr,
+    #[allow(dead_code)]
     colon: Token![:],
     overridden_expansion: LitStr,
 }
@@ -154,6 +157,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     if input.id_ident != "id" {
         input.id_ident.span().unwrap().error("expected `id`").emit();
+    }
+
+    if let Some(override_ident) = input.overrides_ident.clone() && override_ident != "override" {
+        override_ident.span().unwrap().error("expected `overrides`").emit();
     }
 
     let type_key = input.from_lit_str.value();
@@ -331,7 +338,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             if id_fields.contains(&field.name) {
                 let field_name = Ident::new(field.name.as_str(), Span::call_site());
 
-                let field_type = if let Some(override_array) = input.override_array.clone() && let Some(element) = override_array.elements.iter().find(|element| element.unexpanded_type.value() == field.ty.clone()) {
+                let field_type = if let Some(override_array) = input.overrides_array.clone()
+                    && let Some(element) = override_array.elements.iter()
+                    .find(|element| element.unexpanded_type.value() == field.ty.clone()) {
                     syn::parse_str::<Type>(element.overridden_expansion.value().as_str()).unwrap()
                 } else {
                     syn::parse_str::<Type>(
