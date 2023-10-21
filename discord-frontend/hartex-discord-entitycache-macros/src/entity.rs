@@ -90,6 +90,7 @@ impl Parse for EntityMacroInput {
     }
 }
 
+#[derive(Clone)]
 struct OverrideArray {
     bracket_token: Bracket,
     elements: Punctuated<OverrideArrayElement, Token![,]>,
@@ -120,6 +121,7 @@ impl Parse for OverrideArray {
     }
 }
 
+#[derive(Clone)]
 struct OverrideArrayElement {
     unexpanded_type: LitStr,
     colon: Token![:],
@@ -328,10 +330,14 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         .filter_map(|field| {
             if id_fields.contains(&field.name) {
                 let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                let field_type = syn::parse_str::<Type>(
-                    expand_fully_qualified_type_name(field.ty.clone()).as_str(),
-                )
-                .unwrap();
+
+                let field_type = if let Some(override_array) = input.override_array.clone() && let Some(element) = override_array.elements.iter().find(|element| element.unexpanded_type.value() == field.ty.clone()) {
+                    syn::parse_str::<Type>(element.overridden_expansion.value().as_str()).unwrap()
+                } else {
+                    syn::parse_str::<Type>(
+                        expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                    ).unwrap()
+                };
 
                 Some((
                     quote! {pub #field_name: #field_type},
