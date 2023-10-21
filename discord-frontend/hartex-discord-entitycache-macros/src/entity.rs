@@ -163,6 +163,24 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         override_ident.span().unwrap().error("expected `overrides`").emit();
     }
 
+    if input.overrides_ident.is_some() {
+        if input.equal4.is_some() && input.overrides_array.is_none() {
+            input
+                .equal4
+                .span()
+                .unwrap()
+                .error("expected overrides array")
+                .emit();
+        } else if input.equal4.is_none() {
+            input
+                .overrides_ident
+                .span()
+                .unwrap()
+                .error("expected `=` and overrides array")
+                .emit();
+        }
+    }
+
     let type_key = input.from_lit_str.value();
     if !metadata::STRUCT_MAP.contains_key(type_key.as_str()) {
         input
