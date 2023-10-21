@@ -20,19 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Guild Entities
+use hartex_discord_entitycache_macros::entity;
 
-use hartex_discord_entitycache_core::entity;
-
-#[allow(clippy::module_name_repetitions)]
 #[entity(
     from = "twilight_model::guild::Guild",
     id = ["id"],
-    include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
-    overrides = [
-        "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel",
-        "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
-        "GuildFeature": "twilight_model::guild::GuildFeature"
-    ],
+    include = ["default_message_notifications"],
+    override = [
+        "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel"
+    ]
 )]
-pub struct GuildEntity;
+pub struct GuildOverride;
+
+fn main() {}

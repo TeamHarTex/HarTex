@@ -23,10 +23,14 @@
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::quote;
+use quote::ToTokens;
+use syn::bracketed;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::punctuated::Punctuated;
 use syn::spanned::Spanned;
+use syn::token::Bracket;
 use syn::Expr;
 use syn::ExprArray;
 use syn::ExprLit;
@@ -58,6 +62,10 @@ pub struct EntityMacroInput {
     equal2: Token![=],
     exclude_or_include_array: ExprArray,
     comma2: Option<Token![,]>,
+    overrides_ident: Option<Ident>,
+    equal4: Option<Token![=]>,
+    overrides_array: Option<OverrideArray>,
+    comma4: Option<Token![,]>,
 }
 
 impl Parse for EntityMacroInput {
@@ -75,6 +83,60 @@ impl Parse for EntityMacroInput {
             equal2: input.parse()?,
             exclude_or_include_array: input.parse()?,
             comma2: input.parse().ok(),
+            overrides_ident: input.parse().ok(),
+            equal4: input.parse().ok(),
+            overrides_array: input.parse().ok(),
+            comma4: input.parse().ok(),
+        })
+    }
+}
+
+#[derive(Clone)]
+struct OverrideArray {
+    #[allow(dead_code)]
+    bracket_token: Bracket,
+    elements: Punctuated<OverrideArrayElement, Token![,]>,
+}
+
+impl Parse for OverrideArray {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        let content;
+        let bracket_token = bracketed!(content in input);
+        let mut elements = Punctuated::new();
+
+        while !content.is_empty() {
+            let first = content.parse::<OverrideArrayElement>()?;
+            elements.push_value(first);
+
+            if content.is_empty() {
+                break;
+            }
+
+            let punct = content.parse()?;
+            elements.push_punct(punct);
+        }
+
+        Ok(Self {
+            bracket_token,
+            elements,
+        })
+    }
+}
+
+#[derive(Clone)]
+struct OverrideArrayElement {
+    unexpanded_type: LitStr,
+    #[allow(dead_code)]
+    colon: Token![:],
+    overridden_expansion: LitStr,
+}
+
+impl Parse for OverrideArrayElement {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            unexpanded_type: input.parse()?,
+            colon: input.parse()?,
+            overridden_expansion: input.parse()?,
         })
     }
 }
@@ -95,6 +157,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     if input.id_ident != "id" {
         input.id_ident.span().unwrap().error("expected `id`").emit();
+    }
+
+    if let Some(override_ident) = input.overrides_ident.clone() && override_ident != "overrides" {
+        override_ident.span().unwrap().error("expected `overrides`").emit();
     }
 
     let type_key = input.from_lit_str.value();
@@ -222,7 +288,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     } else {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
                         let field_type = syn::parse_str::<Type>(
-                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                            expand_fully_qualified_type_name(
+                                field.ty.clone(),
+                                input.overrides_array.clone(),
+                            )
+                            .as_str(),
                         )
                         .unwrap();
 
@@ -240,7 +310,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     if fields.contains(&field.name) {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
                         let field_type = syn::parse_str::<Type>(
-                            expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                            expand_fully_qualified_type_name(
+                                field.ty.clone(),
+                                input.overrides_array.clone(),
+                            )
+                            .as_str(),
                         )
                         .unwrap();
 
@@ -271,8 +345,13 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         .filter_map(|field| {
             if id_fields.contains(&field.name) {
                 let field_name = Ident::new(field.name.as_str(), Span::call_site());
+
                 let field_type = syn::parse_str::<Type>(
-                    expand_fully_qualified_type_name(field.ty.clone()).as_str(),
+                    expand_fully_qualified_type_name(
+                        field.ty.clone(),
+                        input.overrides_array.clone(),
+                    )
+                    .as_str(),
                 )
                 .unwrap();
 
@@ -296,9 +375,12 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .find(|field| field.name == id_fields[0])
             .unwrap();
 
-        syn::parse_str::<Type>(expand_fully_qualified_type_name(field.ty.clone()).as_str())
-            .unwrap()
-            .to_token_stream()
+        syn::parse_str::<Type>(
+            expand_fully_qualified_type_name(field.ty.clone(), input.overrides_array.clone())
+                .as_str(),
+        )
+        .unwrap()
+        .to_token_stream()
     } else {
         let vec = id_fields
             .iter()
@@ -310,8 +392,14 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     .unwrap()
             })
             .map(|field| {
-                syn::parse_str::<Type>(expand_fully_qualified_type_name(field.ty.clone()).as_str())
-                    .unwrap()
+                syn::parse_str::<Type>(
+                    expand_fully_qualified_type_name(
+                        field.ty.clone(),
+                        input.overrides_array.clone(),
+                    )
+                    .as_str(),
+                )
+                .unwrap()
             })
             .collect::<Vec<_>>();
 
@@ -342,7 +430,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     };
 
     let from_type = syn::parse_str::<Type>(type_key.as_str()).unwrap();
+
+    let attrs = item_struct.attrs.clone();
     Some(quote! {
+        #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*
         }
@@ -361,7 +452,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     })
 }
 
-fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
+fn expand_fully_qualified_type_name(
+    mut to_expand: String,
+    overrides_array: Option<OverrideArray>,
+) -> String {
     to_expand = to_expand.replace(' ', "");
 
     let open_angle_brackets = to_expand.find('<');
@@ -370,6 +464,13 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
     if open_angle_brackets.is_none() && close_angle_brackets.is_none() {
         if PRELUDE_AND_PRIMITIVES.contains(&to_expand.as_str()) {
             return to_expand;
+        }
+
+        if let Some(override_array) = overrides_array.clone()
+            && let Some(element) = override_array.elements.iter()
+            .find(|element| element.unexpanded_type.value() == to_expand)
+        {
+            return element.overridden_expansion.value();
         }
 
         let fully_qualified = if let Some(found) = metadata::ENUM_MAP.keys().find(|key| {
@@ -393,9 +494,13 @@ fn expand_fully_qualified_type_name(mut to_expand: String) -> String {
 
     format!(
         "{}<{}>",
-        expand_fully_qualified_type_name(to_expand[0..open_angle_brackets.unwrap()].to_string()),
         expand_fully_qualified_type_name(
-            to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()].to_string()
+            to_expand[0..open_angle_brackets.unwrap()].to_string(),
+            overrides_array.clone(),
+        ),
+        expand_fully_qualified_type_name(
+            to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()].to_string(),
+            overrides_array,
         )
     )
 }
