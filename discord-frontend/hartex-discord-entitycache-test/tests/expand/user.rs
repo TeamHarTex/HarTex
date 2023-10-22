@@ -25,7 +25,8 @@ use hartex_discord_entitycache_macros::entity;
 #[entity(
     from = "twilight_model::user::User",
     id = ["id"],
-    include = ["accent_color", "avatar", "bot", "discriminator", "name"]
+    include = ["accent_color", "avatar", "bot", "discriminator", "name"],
+    extra = [],
 )]
 pub struct UserExpand;
 
