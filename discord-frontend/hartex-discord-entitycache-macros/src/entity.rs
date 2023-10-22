@@ -143,11 +143,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     }
 
     let type_key = input.from_lit_str.value();
-    if !metadata::STRUCT_MAP.contains_key(type_key.as_str()) {
-        input
-            .from_lit_str
-            .span()
-            .unwrap()
+    if !metadata::STRUCT_MAP.contains_key(&*type_key) {
+        (input.from_lit_str.span().unwrap())
             .error(format!("type `{type_key}` cannot be found"))
             .note(format!(
                 "the type metadata generated was for twilight-model version {}",
@@ -155,7 +152,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             ))
             .help("consider regenerating the metadata for a newer version if the type is recently added")
             .emit();
-
         return None;
     }
 
@@ -167,25 +163,18 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 lit: Lit::Str(lit_str),
                 ..
             }) => {
-                if type_metadata
-                    .fields
-                    .iter()
-                    .any(|field| field.name == lit_str.value())
-                {
+                if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
                     return Some(lit_str.value())
-                } else {
-                    lit_str
-                        .span()
-                        .unwrap()
-                        .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
-                        .note(format!(
-                            "the type metadata generated was for twilight-model version {}",
-                            metadata::CRATE_VERSION
-                        ))
-                        .help("consider regenerating the metadata for a newer version if the field is recently added")
-                        .emit();
-                    any_not_found = true;
                 }
+                lit_str.span().unwrap()
+                    .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+                    .note(format!(
+                        "the type metadata generated was for twilight-model version {}",
+                        metadata::CRATE_VERSION
+                    ))
+                    .help("consider regenerating the metadata for a newer version if the field is recently added")
+                    .emit();
+                any_not_found = true;
             }
             expr => expr.span().unwrap().warning("non-string expressions are ignored").emit(),
         }
@@ -193,7 +182,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     });
     let fields: Vec<_> = fields.collect();
 
-    let id_fields = input .id_array .elems .iter() .filter_map(|expr| {
+    let id_fields = input.id_array.elems.iter().filter_map(|expr| {
         match expr {
             Expr::Lit(ExprLit {
                 lit: Lit::Str(lit_str),
@@ -201,19 +190,16 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             }) => {
                 if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
                     return Some(lit_str.value())
-                } else {
-                    lit_str
-                        .span()
-                        .unwrap()
-                        .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
-                        .note(format!(
-                            "the type metadata generated was for twilight-model version {}",
-                            metadata::CRATE_VERSION
-                        ))
-                        .help("consider regenerating the metadata for a newer version if the field is recently added")
-                        .emit();
-                    any_not_found = true;
                 }
+                lit_str.span().unwrap()
+                    .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+                    .note(format!(
+                        "the type metadata generated was for twilight-model version {}",
+                        metadata::CRATE_VERSION
+                    ))
+                    .help("consider regenerating the metadata for a newer version if the field is recently added")
+                    .emit();
+                any_not_found = true;
             }
             expr => bail(expr, "non-string expressions are ignored")?,
         }
@@ -238,9 +224,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                         None
                     } else {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                        let field_type = syn::parse_str::<Type>(
-                            &*expand_fully_qualified_type_name(&field.ty, &input.overrides_array),
-                        )
+                        let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                            &field.ty,
+                            &input.overrides_array,
+                        ))
                         .unwrap();
 
                         Some((
@@ -256,9 +243,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .filter_map(|field| {
                     fields.iter().find(|&x| x == &field.name).map(|_| {
                         let field_name = Ident::new(&field.name, Span::call_site());
-                        let field_type = syn::parse_str::<Type>(
-                            &*expand_fully_qualified_type_name(&field.ty, &input.overrides_array),
-                        )
+                        let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                            &field.ty,
+                            &input.overrides_array,
+                        ))
                         .unwrap();
 
                         (
@@ -281,7 +269,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             id_fields.iter().find(|&x| x == &field.name).map(|_| {
                 let field_name = Ident::new(field.name.as_str(), Span::call_site());
 
-                let field_type = syn::parse_str::<Type>(&*expand_fully_qualified_type_name(
+                let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
                     &field.ty,
                     &input.overrides_array,
                 ))
@@ -299,25 +287,19 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     fields_assignments.append(&mut field_assignments_to_append);
 
     let type_tokens = if let [first] = &id_fields[..] {
-        let field = type_metadata
-            .fields
-            .iter()
+        let field = (type_metadata.fields.iter())
             .find(|field| &field.name == first)
             .unwrap();
 
-        syn::parse_str::<Type>(&*expand_fully_qualified_type_name(
+        let s = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
             &field.ty,
             &input.overrides_array,
-        ))
-        .unwrap()
-        .to_token_stream()
+        ));
+        s.unwrap().to_token_stream()
     } else {
-        let vec = id_fields
-            .iter()
+        let vec = (id_fields.iter())
             .map(|name| {
-                type_metadata
-                    .fields
-                    .iter()
+                (type_metadata.fields.iter())
                     .find(|field| &field.name == name)
                     .unwrap()
             })
@@ -335,12 +317,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         }
     };
 
-    let id_field_expr_tokens = if id_fields.len() == 1 {
-        let ident = Ident::new(&id_fields[0], Span::call_site()).to_token_stream();
+    let id_field_expr_tokens = if let [first] = &id_fields[..] {
+        let ident = Ident::new(first, Span::call_site()).to_token_stream();
         quote! { self.#ident }
     } else {
-        let vec = id_fields
-            .iter()
+        let vec = (id_fields.iter())
             .map(|name| {
                 let ident = Ident::new(name, Span::call_site()).to_token_stream();
                 quote! { self.#ident }
@@ -426,34 +407,28 @@ fn expand_fully_qualified_type_name(
     let open_angle_brackets = to_expand.find('<');
     let close_angle_brackets = to_expand.rfind('>');
 
-    if open_angle_brackets.or(close_angle_brackets).is_none() {
-        if PRELUDE_AND_PRIMITIVES.contains(&&*to_expand) {
-            return to_expand;
-        }
-
-        if let Some(element) = (overrides_array.as_ref())
-            .and_then(|arr| arr.elements.iter().find(|elm| elm.key.value() == to_expand))
-        {
-            return element.value.value();
-        }
-
-        let finder = |key: &&&str| key[key.rfind(':').unwrap() + 1..] == to_expand;
-
-        let fully_qualified = (metadata::ENUM_MAP.keys().find(finder))
-            .or_else(|| metadata::STRUCT_MAP.keys().find(finder));
-
-        return fully_qualified.map_or(to_expand, |s| s.to_string());
+    if open_angle_brackets.or(close_angle_brackets).is_some() {
+        let (left, right) = open_angle_brackets.zip(close_angle_brackets).unwrap();
+        return format!(
+            "{}<{}>",
+            expand_fully_qualified_type_name(&to_expand[0..left], overrides_array),
+            expand_fully_qualified_type_name(&to_expand[left + 1..right], overrides_array)
+        );
+    }
+    if PRELUDE_AND_PRIMITIVES.contains(&&*to_expand) {
+        return to_expand;
     }
 
-    format!(
-        "{}<{}>",
-        expand_fully_qualified_type_name(
-            &to_expand[0..open_angle_brackets.unwrap()],
-            overrides_array,
-        ),
-        expand_fully_qualified_type_name(
-            &to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()],
-            overrides_array,
-        )
-    )
+    if let Some(element) = (overrides_array.as_ref())
+        .and_then(|arr| arr.elements.iter().find(|elm| elm.key.value() == to_expand))
+    {
+        return element.value.value();
+    }
+
+    let finder = |key: &&&str| key[key.rfind(':').unwrap() + 1..] == to_expand;
+
+    let fully_qualified = (metadata::ENUM_MAP.keys().find(finder))
+        .or_else(|| metadata::STRUCT_MAP.keys().find(finder));
+
+    fully_qualified.map_or(to_expand, ToString::to_string)
 }
