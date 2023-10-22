@@ -165,10 +165,20 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     if input.id_ident != "id" {
         input.id_ident.span().unwrap().error("expected `id`").emit();
+
+        return None;
+    }
+
+    if input.extra_fields_ident != "extra" {
+        input.extra_fields_ident.span().unwrap().error("expected `extra`").emit();
+
+        return None;
     }
 
     if let Some(override_ident) = input.overrides_ident.clone() && override_ident != "overrides" {
         override_ident.span().unwrap().error("expected `overrides`").emit();
+
+        return None;
     }
 
     if input.overrides_ident.is_some() {
@@ -179,6 +189,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .unwrap()
                 .error("expected overrides array")
                 .emit();
+
+            return None;
         } else if input.equal4.is_none() {
             input
                 .overrides_ident
@@ -186,6 +198,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .unwrap()
                 .error("expected `=` and overrides array")
                 .emit();
+
+            return None;
         }
     }
 
