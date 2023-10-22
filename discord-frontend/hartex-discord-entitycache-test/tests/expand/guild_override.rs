@@ -26,6 +26,7 @@ use hartex_discord_entitycache_macros::entity;
     from = "twilight_model::guild::Guild",
     id = ["id"],
     include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
+    extra = [],
     overrides = [
         "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel",
         "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
