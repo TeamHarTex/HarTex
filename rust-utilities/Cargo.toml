@@ -4,6 +4,7 @@ members = [
     "hartex-errors",
     "hartex-kafka-utils",
     "hartex-log",
+    "hartex-macro-utils",
 ]
 
 resolver = "2"

@@ -879,6 +879,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex-macro-utils"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.38",
+]
+
+[[package]]
 name = "hartex_backend_models"
 version = "0.4.0"
 dependencies = [
@@ -1032,6 +1041,7 @@ name = "hartex_discord_entitycache_macros"
 version = "0.4.0"
 dependencies = [
  "convert_case",
+ "hartex-macro-utils",
  "itertools",
  "lazy_static",
  "proc-macro2",
