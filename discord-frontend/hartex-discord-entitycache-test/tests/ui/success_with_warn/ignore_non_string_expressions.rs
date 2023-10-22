@@ -22,7 +22,7 @@
 
 use hartex_discord_entitycache_macros::entity;
 
-#[entity(from = "twilight_model::channel::Channel", id = [], include = [true])]
+#[entity(from = "twilight_model::channel::Channel", id = [], include = [true], extra = [])]
 pub struct IgnoreNonStringExpressions;
 
 fn main() {}
