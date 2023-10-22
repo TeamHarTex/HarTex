@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_macro_utils::bail;
+use hartex_macro_utils::impl_parse;
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
@@ -47,9 +49,10 @@ const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
 ];
 
+impl_parse!(
 #[allow(dead_code)]
 #[allow(clippy::module_name_repetitions)]
-pub struct EntityMacroInput {
+pub struct EntityMacroInput where
     from_ident: Ident,
     equal1: Token![=],
     from_lit_str: LitStr,
@@ -65,39 +68,12 @@ pub struct EntityMacroInput {
     extra_fields_ident: Ident,
     equal5: Token![=],
     extra_fields_array: KeyValueArray,
-    comma2: Option<Token![,]>,
-    overrides_ident: Option<Ident>,
-    equal4: Option<Token![=]>,
-    overrides_array: Option<KeyValueArray>,
-    comma4: Option<Token![,]>,
-}
-
-impl Parse for EntityMacroInput {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(Self {
-            from_ident: input.parse()?,
-            equal1: input.parse()?,
-            from_lit_str: input.parse()?,
-            comma1: input.parse()?,
-            id_ident: input.parse()?,
-            equal3: input.parse()?,
-            id_array: input.parse()?,
-            comma3: input.parse()?,
-            exclude_or_include_ident: input.parse()?,
-            equal2: input.parse()?,
-            exclude_or_include_array: input.parse()?,
-            comma5: input.parse()?,
-            extra_fields_ident: input.parse()?,
-            equal5: input.parse()?,
-            extra_fields_array: input.parse()?,
-            comma2: input.parse().ok(),
-            overrides_ident: input.parse().ok(),
-            equal4: input.parse().ok(),
-            overrides_array: input.parse().ok(),
-            comma4: input.parse().ok(),
-        })
-    }
-}
+    comma2??: Token![,],
+    overrides_ident??: Ident,
+    equal4??: Token![=],
+    overrides_array??: KeyValueArray,
+    comma4??: Token![,],
+);
 
 #[derive(Clone)]
 struct KeyValueArray {
@@ -131,80 +107,38 @@ impl Parse for KeyValueArray {
     }
 }
 
+impl_parse!(
 #[derive(Clone)]
-struct KeyValueArrayElement {
+struct KeyValueArrayElement where
     key: LitStr,
-    #[allow(dead_code)]
     colon: Token![:],
     value: LitStr,
-}
-
-impl Parse for KeyValueArrayElement {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(Self {
-            key: input.parse()?,
-            colon: input.parse()?,
-            value: input.parse()?,
-        })
-    }
-}
+);
 
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::too_many_lines)]
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
-        input
-            .from_ident
-            .span()
-            .unwrap()
-            .error("expected `from`")
-            .emit();
-
-        return None;
+        bail(&input.from_ident, "expected `from`")?;
     }
 
     if input.id_ident != "id" {
-        input.id_ident.span().unwrap().error("expected `id`").emit();
-
-        return None;
+        bail(&input.from_ident, "expected `id`")?;
     }
 
     if input.extra_fields_ident != "extra" {
-        input
-            .extra_fields_ident
-            .span()
-            .unwrap()
-            .error("expected `extra`")
-            .emit();
-
-        return None;
+        bail(&input.extra_fields_ident, "expected `extra`")?;
     }
 
-    if let Some(override_ident) = input.overrides_ident.clone() && override_ident != "overrides" {
-        override_ident.span().unwrap().error("expected `overrides`").emit();
-
-        return None;
+    if let Some(id) = &input.overrides_ident && id != "overrides" {
+        bail(id, "expected `overrides`")?;
     }
 
-    if input.overrides_ident.is_some() {
-        if input.equal4.is_some() && input.overrides_array.is_none() {
-            input
-                .equal4
-                .span()
-                .unwrap()
-                .error("expected overrides array")
-                .emit();
-
-            return None;
-        } else if input.equal4.is_none() {
-            input
-                .overrides_ident
-                .span()
-                .unwrap()
-                .error("expected `=` and overrides array")
-                .emit();
-
-            return None;
+    if let Some(id) = &input.overrides_ident {
+        match (&input.equal4, &input.overrides_array) {
+            (equal4 @ Some(_), None) => bail(equal4, "expected overrides array")?,
+            (None, _) => bail(id, "expected `=` and overrides array")?,
+            _ => {}
         }
     }
 
@@ -225,17 +159,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         return None;
     }
 
-    let type_metadata = metadata::STRUCT_MAP
-        .get(type_key.as_str())
-        .copied()
-        .cloned()
-        .unwrap();
+    let type_metadata = metadata::STRUCT_MAP.get(&*type_key).copied().unwrap();
     let mut any_not_found = false;
-    let fields = input
-        .exclude_or_include_array
-        .elems
-        .iter()
-        .filter_map(|expr| match expr {
+    let fields = input.exclude_or_include_array.elems.iter().filter_map(|expr| {
+        match expr {
             Expr::Lit(ExprLit {
                 lit: Lit::Str(lit_str),
                 ..
@@ -245,7 +172,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     .iter()
                     .any(|field| field.name == lit_str.value())
                 {
-                    Some(lit_str.value())
+                    return Some(lit_str.value())
                 } else {
                     lit_str
                         .span()
@@ -258,36 +185,22 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                         .help("consider regenerating the metadata for a newer version if the field is recently added")
                         .emit();
                     any_not_found = true;
-
-                    None
                 }
             }
-            expr => {
-                expr.span()
-                    .unwrap()
-                    .warning("non-string expressions are ignored")
-                    .emit();
+            expr => expr.span().unwrap().warning("non-string expressions are ignored").emit(),
+        }
+        None
+    });
+    let fields: Vec<_> = fields.collect();
 
-                None
-            }
-        })
-        .collect::<Vec<_>>();
-
-    let id_fields = input
-        .id_array
-        .elems
-        .iter()
-        .filter_map(|expr| match expr {
+    let id_fields = input .id_array .elems .iter() .filter_map(|expr| {
+        match expr {
             Expr::Lit(ExprLit {
                 lit: Lit::Str(lit_str),
                 ..
             }) => {
-                if type_metadata
-                    .fields
-                    .iter()
-                    .any(|field| field.name == lit_str.value())
-                {
-                    Some(lit_str.value())
+                if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
+                    return Some(lit_str.value())
                 } else {
                     lit_str
                         .span()
@@ -300,20 +213,13 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                         .help("consider regenerating the metadata for a newer version if the field is recently added")
                         .emit();
                     any_not_found = true;
-
-                    None
                 }
             }
-            expr => {
-                expr.span()
-                    .unwrap()
-                    .warning("non-string expressions are ignored")
-                    .emit();
-
-                None
-            }
-        })
-        .collect::<Vec<_>>();
+            expr => bail(expr, "non-string expressions are ignored")?,
+        }
+        None
+    });
+    let id_fields = id_fields.collect::<Vec<_>>();
 
     if any_not_found {
         return None;
@@ -323,7 +229,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let item_struct_name = item_struct.ident.clone();
 
     let (mut fields_tokens, mut fields_assignments): (Vec<_>, Vec<_>) =
-        match input.exclude_or_include_ident.to_string().as_str() {
+        match &*input.exclude_or_include_ident.to_string() {
             "exclude" => type_metadata
                 .fields
                 .iter()
@@ -333,11 +239,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     } else {
                         let field_name = Ident::new(field.name.as_str(), Span::call_site());
                         let field_type = syn::parse_str::<Type>(
-                            expand_fully_qualified_type_name(
-                                field.ty.clone(),
-                                input.overrides_array.clone(),
-                            )
-                            .as_str(),
+                            &*expand_fully_qualified_type_name(&field.ty, &input.overrides_array),
                         )
                         .unwrap();
 
@@ -352,78 +254,61 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .fields
                 .iter()
                 .filter_map(|field| {
-                    if fields.contains(&field.name) {
-                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                    fields.iter().find(|&x| x == &field.name).map(|_| {
+                        let field_name = Ident::new(&field.name, Span::call_site());
                         let field_type = syn::parse_str::<Type>(
-                            expand_fully_qualified_type_name(
-                                field.ty.clone(),
-                                input.overrides_array.clone(),
-                            )
-                            .as_str(),
+                            &*expand_fully_qualified_type_name(&field.ty, &input.overrides_array),
                         )
                         .unwrap();
 
-                        Some((
+                        (
                             quote! {pub #field_name: #field_type},
                             quote! {#field_name: model.#field_name},
-                        ))
-                    } else {
-                        None
-                    }
+                        )
+                    })
                 })
                 .unzip(),
-            _ => {
-                input
-                    .exclude_or_include_ident
-                    .span()
-                    .unwrap()
-                    .error("expected `exclude` or `include`")
-                    .emit();
-
-                return None;
-            }
+            _ => bail(
+                &input.exclude_or_include_ident,
+                "expected `exclude` or `include`",
+            )?,
         };
 
     let (mut field_tokens_to_append, mut field_assignments_to_append) = type_metadata
         .fields
         .iter()
         .filter_map(|field| {
-            if id_fields.contains(&field.name) {
+            id_fields.iter().find(|&x| x == &field.name).map(|_| {
                 let field_name = Ident::new(field.name.as_str(), Span::call_site());
 
-                let field_type = syn::parse_str::<Type>(
-                    expand_fully_qualified_type_name(
-                        field.ty.clone(),
-                        input.overrides_array.clone(),
-                    )
-                    .as_str(),
-                )
+                let field_type = syn::parse_str::<Type>(&*expand_fully_qualified_type_name(
+                    &field.ty,
+                    &input.overrides_array,
+                ))
                 .unwrap();
 
-                Some((
+                (
                     quote! {pub #field_name: #field_type},
                     quote! {#field_name: model.#field_name},
-                ))
-            } else {
-                None
-            }
+                )
+            })
         })
         .unzip();
 
     fields_tokens.append(&mut field_tokens_to_append);
     fields_assignments.append(&mut field_assignments_to_append);
 
-    let type_tokens = if id_fields.len() == 1 {
+    let type_tokens = if let [first] = &id_fields[..] {
         let field = type_metadata
             .fields
             .iter()
-            .find(|field| field.name == id_fields[0])
+            .find(|field| &field.name == first)
             .unwrap();
 
-        syn::parse_str::<Type>(
-            expand_fully_qualified_type_name(field.ty.clone(), input.overrides_array.clone())
-                .as_str(),
-        )
+        syn::parse_str::<Type>(&*expand_fully_qualified_type_name(
+            &field.ty,
+            &input.overrides_array,
+        ))
         .unwrap()
         .to_token_stream()
     } else {
@@ -433,17 +318,14 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 type_metadata
                     .fields
                     .iter()
-                    .find(|field| field.name == name.clone())
+                    .find(|field| &field.name == name)
                     .unwrap()
             })
             .map(|field| {
-                syn::parse_str::<Type>(
-                    expand_fully_qualified_type_name(
-                        field.ty.clone(),
-                        input.overrides_array.clone(),
-                    )
-                    .as_str(),
-                )
+                syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                    &field.ty,
+                    &input.overrides_array,
+                ))
                 .unwrap()
             })
             .collect::<Vec<_>>();
@@ -455,36 +337,23 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     let id_field_expr_tokens = if id_fields.len() == 1 {
         let ident = Ident::new(&id_fields[0], Span::call_site()).to_token_stream();
-        quote::quote! {
-            self.#ident
-        }
+        quote! { self.#ident }
     } else {
         let vec = id_fields
             .iter()
             .map(|name| {
                 let ident = Ident::new(name, Span::call_site()).to_token_stream();
-                quote! {
-                    self.#ident
-                }
+                quote! { self.#ident }
             })
             .collect::<Vec<_>>();
 
-        quote! {
-            (#(#vec),*)
-        }
+        quote! { (#(#vec),*) }
     };
 
-    let attrs = item_struct.attrs.clone();
-    let from_type = syn::parse_str::<Type>(type_key.as_str()).unwrap();
+    let attrs = &item_struct.attrs;
+    let from_type = syn::parse_str::<Type>(&type_key).unwrap();
 
     if input.extra_fields_array.elements.empty_or_trailing() {
-        let from_type = from_type.clone();
-        let attrs = attrs.clone();
-        let fields_tokens = fields_tokens.clone();
-        let type_tokens = type_tokens.clone();
-        let id_field_expr_tokens = id_field_expr_tokens.clone();
-        let fields_assignments = fields_assignments.clone();
-
         return Some(quote! {
             #(#attrs)*
             #item_struct_vis struct #item_struct_name {
@@ -505,41 +374,27 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         });
     }
 
-    let (extra_fields_tokens, extra_fields_assignment_tokens): (Vec<_>, Vec<_>) = input
-        .extra_fields_array
-        .elements
-        .iter()
-        .map(|element| {
-            let ident = Ident::new(element.key.value().as_str(), Span::call_site());
-            let type_token = syn::parse_str::<Type>(
-                expand_fully_qualified_type_name(
-                    element.value.value(),
-                    input.overrides_array.clone(),
-                )
-                .as_str(),
-            )
-            .unwrap();
+    let fields = input.extra_fields_array.elements.iter().map(|element| {
+        let ident = Ident::new(&element.key.value(), Span::call_site());
+        let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+            &element.value.value(),
+            &input.overrides_array,
+        ))
+        .unwrap();
 
-            (quote! {#ident: #type_token}, quote! {#ident})
-        })
-        .unzip();
-    let extra_type_tokens = input
-        .extra_fields_array
-        .elements
-        .iter()
-        .map(|element| {
-            let type_token = syn::parse_str::<Type>(
-                expand_fully_qualified_type_name(
-                    element.value.value(),
-                    input.overrides_array.clone(),
-                )
-                .as_str(),
-            )
-            .unwrap();
+        (quote! {#ident: #type_token.unwrap()}, quote! {#ident})
+    });
+    let (extra_fields_tokens, extra_fields_assignment_tokens): (Vec<_>, Vec<_>) = fields.unzip();
+    let extra_type_tokens = input.extra_fields_array.elements.iter().map(|element| {
+        let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+            &element.value.value(),
+            &input.overrides_array,
+        ))
+        .unwrap();
 
-            quote! {#type_token}
-        })
-        .collect::<Vec<_>>();
+        quote! {#type_token}
+    });
+    let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
     Some(quote! {
         #(#attrs)*
@@ -563,53 +418,41 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 }
 
 fn expand_fully_qualified_type_name(
-    mut to_expand: String,
-    overrides_array: Option<KeyValueArray>,
+    to_expand: &str,
+    overrides_array: &Option<KeyValueArray>,
 ) -> String {
-    to_expand = to_expand.replace(' ', "");
+    let to_expand = to_expand.replace(' ', "");
 
     let open_angle_brackets = to_expand.find('<');
     let close_angle_brackets = to_expand.rfind('>');
 
-    if open_angle_brackets.is_none() && close_angle_brackets.is_none() {
-        if PRELUDE_AND_PRIMITIVES.contains(&to_expand.as_str()) {
+    if open_angle_brackets.or(close_angle_brackets).is_none() {
+        if PRELUDE_AND_PRIMITIVES.contains(&&*to_expand) {
             return to_expand;
         }
 
-        if let Some(override_array) = overrides_array.clone()
-            && let Some(element) = override_array.elements.iter()
-            .find(|element| element.key.value() == to_expand)
+        if let Some(element) = (overrides_array.as_ref())
+            .and_then(|arr| arr.elements.iter().find(|elm| elm.key.value() == to_expand))
         {
             return element.value.value();
         }
 
-        let fully_qualified = if let Some(found) = metadata::ENUM_MAP.keys().find(|key| {
-            let index = key.rfind(':').unwrap();
-            key[index + 1..] == to_expand
-        }) {
-            found
-        } else {
-            let Some(found) = metadata::STRUCT_MAP.keys().find(|key| {
-                let index = key.rfind(':').unwrap();
-                key[index + 1..] == to_expand
-            }) else {
-                return to_expand;
-            };
+        let finder = |key: &&&str| key[key.rfind(':').unwrap() + 1..] == to_expand;
 
-            found
-        };
+        let fully_qualified = (metadata::ENUM_MAP.keys().find(finder))
+            .or_else(|| metadata::STRUCT_MAP.keys().find(finder));
 
-        return (*fully_qualified).to_string();
+        return fully_qualified.map_or(to_expand, |s| s.to_string());
     }
 
     format!(
         "{}<{}>",
         expand_fully_qualified_type_name(
-            to_expand[0..open_angle_brackets.unwrap()].to_string(),
-            overrides_array.clone(),
+            &to_expand[0..open_angle_brackets.unwrap()],
+            overrides_array,
         ),
         expand_fully_qualified_type_name(
-            to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()].to_string(),
+            &to_expand[open_angle_brackets.unwrap() + 1..close_angle_brackets.unwrap()],
             overrides_array,
         )
     )
