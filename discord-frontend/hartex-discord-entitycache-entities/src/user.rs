@@ -27,5 +27,6 @@ use hartex_discord_entitycache_core::entity;
     from = "twilight_model::user::User",
     id = ["id"],
     include = ["bot"],
+    extra = [],
 )]
 pub struct UserEntity;
