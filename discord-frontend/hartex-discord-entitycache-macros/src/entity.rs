@@ -61,10 +61,14 @@ pub struct EntityMacroInput {
     exclude_or_include_ident: Ident,
     equal2: Token![=],
     exclude_or_include_array: ExprArray,
+    comma5: Token![,],
+    extra_fields_ident: Ident,
+    equal5: Token![=],
+    extra_fields_array: KeyValueArray,
     comma2: Option<Token![,]>,
     overrides_ident: Option<Ident>,
     equal4: Option<Token![=]>,
-    overrides_array: Option<OverrideArray>,
+    overrides_array: Option<KeyValueArray>,
     comma4: Option<Token![,]>,
 }
 
@@ -82,6 +86,10 @@ impl Parse for EntityMacroInput {
             exclude_or_include_ident: input.parse()?,
             equal2: input.parse()?,
             exclude_or_include_array: input.parse()?,
+            comma5: input.parse()?,
+            extra_fields_ident: input.parse()?,
+            equal5: input.parse()?,
+            extra_fields_array: input.parse()?,
             comma2: input.parse().ok(),
             overrides_ident: input.parse().ok(),
             equal4: input.parse().ok(),
@@ -92,20 +100,20 @@ impl Parse for EntityMacroInput {
 }
 
 #[derive(Clone)]
-struct OverrideArray {
+struct KeyValueArray {
     #[allow(dead_code)]
     bracket_token: Bracket,
-    elements: Punctuated<OverrideArrayElement, Token![,]>,
+    elements: Punctuated<KeyValueArrayElement, Token![,]>,
 }
 
-impl Parse for OverrideArray {
+impl Parse for KeyValueArray {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let content;
         let bracket_token = bracketed!(content in input);
         let mut elements = Punctuated::new();
 
         while !content.is_empty() {
-            let first = content.parse::<OverrideArrayElement>()?;
+            let first = content.parse::<KeyValueArrayElement>()?;
             elements.push_value(first);
 
             if content.is_empty() {
@@ -124,19 +132,19 @@ impl Parse for OverrideArray {
 }
 
 #[derive(Clone)]
-struct OverrideArrayElement {
-    unexpanded_type: LitStr,
+struct KeyValueArrayElement {
+    key: LitStr,
     #[allow(dead_code)]
     colon: Token![:],
-    overridden_expansion: LitStr,
+    value: LitStr,
 }
 
-impl Parse for OverrideArrayElement {
+impl Parse for KeyValueArrayElement {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            unexpanded_type: input.parse()?,
+            key: input.parse()?,
             colon: input.parse()?,
-            overridden_expansion: input.parse()?,
+            value: input.parse()?,
         })
     }
 }
@@ -157,10 +165,47 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     if input.id_ident != "id" {
         input.id_ident.span().unwrap().error("expected `id`").emit();
+
+        return None;
+    }
+
+    if input.extra_fields_ident != "extra" {
+        input
+            .extra_fields_ident
+            .span()
+            .unwrap()
+            .error("expected `extra`")
+            .emit();
+
+        return None;
     }
 
     if let Some(override_ident) = input.overrides_ident.clone() && override_ident != "overrides" {
         override_ident.span().unwrap().error("expected `overrides`").emit();
+
+        return None;
+    }
+
+    if input.overrides_ident.is_some() {
+        if input.equal4.is_some() && input.overrides_array.is_none() {
+            input
+                .equal4
+                .span()
+                .unwrap()
+                .error("expected overrides array")
+                .emit();
+
+            return None;
+        } else if input.equal4.is_none() {
+            input
+                .overrides_ident
+                .span()
+                .unwrap()
+                .error("expected `=` and overrides array")
+                .emit();
+
+            return None;
+        }
     }
 
     let type_key = input.from_lit_str.value();
@@ -408,7 +453,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         }
     };
 
-    let field_expr_tokens = if id_fields.len() == 1 {
+    let id_field_expr_tokens = if id_fields.len() == 1 {
         let ident = Ident::new(&id_fields[0], Span::call_site()).to_token_stream();
         quote::quote! {
             self.#ident
@@ -418,7 +463,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .iter()
             .map(|name| {
                 let ident = Ident::new(name, Span::call_site()).to_token_stream();
-                quote::quote! {
+                quote! {
                     self.#ident
                 }
             })
@@ -429,24 +474,89 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         }
     };
 
+    let attrs = item_struct.attrs.clone();
     let from_type = syn::parse_str::<Type>(type_key.as_str()).unwrap();
 
-    let attrs = item_struct.attrs.clone();
+    if input.extra_fields_array.elements.empty_or_trailing() {
+        let from_type = from_type.clone();
+        let attrs = attrs.clone();
+        let fields_tokens = fields_tokens.clone();
+        let type_tokens = type_tokens.clone();
+        let id_field_expr_tokens = id_field_expr_tokens.clone();
+        let fields_assignments = fields_assignments.clone();
+
+        return Some(quote! {
+            #(#attrs)*
+            #item_struct_vis struct #item_struct_name {
+                #(#fields_tokens),*
+            }
+            #[automatically_derived]
+            impl hartex_discord_entitycache_core::traits::Entity for #item_struct_name {
+                type Id = #type_tokens;
+                fn id(&self) -> <Self as hartex_discord_entitycache_core::traits::Entity>::Id {
+                    #id_field_expr_tokens
+                }
+            }
+            impl From<#from_type> for #item_struct_name {
+                fn from(model: #from_type) -> Self {
+                    Self { #(#fields_assignments),* }
+                }
+            }
+        });
+    }
+
+    let (extra_fields_tokens, extra_fields_assignment_tokens): (Vec<_>, Vec<_>) = input
+        .extra_fields_array
+        .elements
+        .iter()
+        .map(|element| {
+            let ident = Ident::new(element.key.value().as_str(), Span::call_site());
+            let type_token = syn::parse_str::<Type>(
+                expand_fully_qualified_type_name(
+                    element.value.value(),
+                    input.overrides_array.clone(),
+                )
+                .as_str(),
+            )
+            .unwrap();
+
+            (quote! {#ident: #type_token}, quote! {#ident})
+        })
+        .unzip();
+    let extra_type_tokens = input
+        .extra_fields_array
+        .elements
+        .iter()
+        .map(|element| {
+            let type_token = syn::parse_str::<Type>(
+                expand_fully_qualified_type_name(
+                    element.value.value(),
+                    input.overrides_array.clone(),
+                )
+                .as_str(),
+            )
+            .unwrap();
+
+            quote! {#type_token}
+        })
+        .collect::<Vec<_>>();
+
     Some(quote! {
         #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*
+            #(#extra_fields_tokens),*
         }
         #[automatically_derived]
         impl hartex_discord_entitycache_core::traits::Entity for #item_struct_name {
             type Id = #type_tokens;
             fn id(&self) -> <Self as hartex_discord_entitycache_core::traits::Entity>::Id {
-                #field_expr_tokens
+                #id_field_expr_tokens
             }
         }
-        impl From<#from_type> for #item_struct_name {
-            fn from(model: #from_type) -> Self {
-                Self { #(#fields_assignments),* }
+        impl From<(#(#extra_type_tokens),* #from_type)> for #item_struct_name {
+            fn from((#(#extra_fields_assignment_tokens),* model): (#(#extra_type_tokens),* #from_type)) -> Self {
+                Self { #(#fields_assignments),* #(#extra_fields_assignment_tokens),* }
             }
         }
     })
@@ -454,7 +564,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
 fn expand_fully_qualified_type_name(
     mut to_expand: String,
-    overrides_array: Option<OverrideArray>,
+    overrides_array: Option<KeyValueArray>,
 ) -> String {
     to_expand = to_expand.replace(' ', "");
 
@@ -468,9 +578,9 @@ fn expand_fully_qualified_type_name(
 
         if let Some(override_array) = overrides_array.clone()
             && let Some(element) = override_array.elements.iter()
-            .find(|element| element.unexpanded_type.value() == to_expand)
+            .find(|element| element.key.value() == to_expand)
         {
-            return element.overridden_expansion.value();
+            return element.value.value();
         }
 
         let fully_qualified = if let Some(found) = metadata::ENUM_MAP.keys().find(|key| {
