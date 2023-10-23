@@ -30,5 +30,8 @@ use hartex_discord_entitycache_core::entity;
     extra = [
         "guild_id": "Id<GuildMarker>",
     ],
+    overrides = [
+        "RoleFlags": "twilight_model::guild::RoleFlags"
+    ],
 )]
 pub struct RoleEntity;
