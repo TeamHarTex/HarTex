@@ -20,46 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::guild::Role;
-use hartex_discord_core::discord::model::guild::RoleFlags;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::marker::RoleMarker;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::entity;
-use hartex_discord_entitycache_core::Entity;
-
-#[allow(clippy::module_name_repetitions)]
-#[derive(Entity)]
-pub struct RoleEntity {
-    pub color: u32,
-    pub flags: RoleFlags,
-    #[entity(id)]
-    pub guild_id: Id<GuildMarker>,
-    pub hoist: bool,
-    pub icon: Option<ImageHash>,
-    #[entity(id)]
-    pub id: Id<RoleMarker>,
-    pub managed: bool,
-    pub mentionable: bool,
-    pub position: i64,
-}
-
-impl From<(Id<GuildMarker>, Role)> for RoleEntity {
-    fn from((guild_id, role): (Id<GuildMarker>, Role)) -> Self {
-        Self {
-            color: role.color,
-            flags: role.flags,
-            guild_id,
-            hoist: role.hoist,
-            icon: role.icon,
-            id: role.id,
-            managed: role.managed,
-            mentionable: role.mentionable,
-            position: role.position,
-        }
-    }
-}
 
 #[allow(clippy::module_name_repetitions)]
 #[entity(
@@ -70,4 +31,4 @@ impl From<(Id<GuildMarker>, Role)> for RoleEntity {
         "guild_id": "Id<GuildMarker>",
     ],
 )]
-pub struct NewRoleEntity;
+pub struct RoleEntity;
