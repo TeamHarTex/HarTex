@@ -143,7 +143,14 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     }
 
     let type_key = input.from_lit_str.value();
-    if !metadata::STRUCT_MAP.contains_key(&*type_key) {
+    let rfind_index = type_key.rfind(':').unwrap();
+    let end = &type_key[rfind_index + 1..];
+
+    let type_metadata = if let Some(key) =
+        metadata::STRUCT_MAP.keys().find(|key| key.ends_with(end))
+    {
+        metadata::STRUCT_MAP.get(&*key).copied().unwrap()
+    } else {
         (input.from_lit_str.span().unwrap())
             .error(format!("type `{type_key}` cannot be found"))
             .note(format!(
@@ -153,9 +160,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .help("consider regenerating the metadata for a newer version if the type is recently added")
             .emit();
         return None;
-    }
+    };
 
-    let type_metadata = metadata::STRUCT_MAP.get(&*type_key).copied().unwrap();
     let mut any_not_found = false;
     let fields = input.exclude_or_include_array.elems.iter().filter_map(|expr| {
         match expr {
