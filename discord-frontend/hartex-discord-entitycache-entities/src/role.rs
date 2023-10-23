@@ -26,6 +26,7 @@ use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
+use hartex_discord_entitycache_core::entity;
 use hartex_discord_entitycache_core::Entity;
 
 #[allow(clippy::module_name_repetitions)]
@@ -59,3 +60,14 @@ impl From<(Id<GuildMarker>, Role)> for RoleEntity {
         }
     }
 }
+
+#[allow(clippy::module_name_repetitions)]
+#[entity(
+    from = "twilight_model::guild::Role",
+    id = ["guild_id", "id"],
+    include = ["color", "flags", "hoist", "icon", "managed", "mentionable", "position"],
+    extra = [
+        "guild_id": "Id<GuildMarker>",
+    ],
+)]
+pub struct NewRoleEntity;

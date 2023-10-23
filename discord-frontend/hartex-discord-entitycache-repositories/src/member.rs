@@ -86,8 +86,8 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .collect::<Vec<_>>();
 
         Ok(MemberEntity {
-            guild_id,
             roles,
+            guild_id,
             user_id,
         })
     }
