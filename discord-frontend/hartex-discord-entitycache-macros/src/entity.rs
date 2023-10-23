@@ -150,7 +150,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let type_metadata = if let Some(key) =
         metadata::STRUCT_MAP.keys().find(|key| key.ends_with(end))
     {
-        metadata::STRUCT_MAP.get(&*key).copied().unwrap()
+        metadata::STRUCT_MAP.get(key).copied().unwrap()
     } else {
         (input.from_lit_str.span().unwrap())
             .error(format!("type `{type_key}` cannot be found"))
