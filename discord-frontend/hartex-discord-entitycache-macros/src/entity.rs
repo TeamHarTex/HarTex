@@ -195,8 +195,13 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 ..
             }) => {
                 if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
-                    return Some(lit_str.value())
+                    return Some(lit_str.value());
                 }
+
+                if input.extra_fields_array.elements.iter().any(|element| element.key.value() == lit_str.value()) {
+                    return Some(lit_str.value());
+                }
+
                 lit_str.span().unwrap()
                     .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
                     .note(format!(

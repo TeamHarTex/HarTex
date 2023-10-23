@@ -26,6 +26,7 @@ use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::Entity;
+use hartex_discord_entitycache_core::entity;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Entity)]
@@ -46,3 +47,15 @@ impl From<(Member, Id<GuildMarker>)> for MemberEntity {
         }
     }
 }
+
+#[allow(clippy::module_name_repetitions)]
+#[entity(
+    from = "twilight_model::guild::Member",
+    id = ["guild_id", "user_id"],
+    include = ["roles"],
+    extra = [
+        "guild_id": "Id<GuildMarker>",
+        "user_id": "Id<UserMarker>",
+    ],
+)]
+pub struct MemberEntity;
