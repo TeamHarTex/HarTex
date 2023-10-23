@@ -342,7 +342,6 @@ dependencies = [
 name = "hartex-macro-utils"
 version = "0.1.0"
 dependencies = [
- "proc-macro2",
  "quote",
  "syn 2.0.38",
 ]

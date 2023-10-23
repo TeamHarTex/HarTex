@@ -22,10 +22,12 @@
 
 #![feature(proc_macro_diagnostic)]
 
+use std::any::Any;
+
 use quote::ToTokens;
 use syn::spanned::Spanned;
 
-pub fn bail<T: ToTokens, A: std::any::Any>(token: &T, msg: &str) -> Option<A> {
+pub fn bail<T: ToTokens, A: Any>(token: &T, msg: &str) -> Option<A> {
     token.span().unwrap().error(msg).emit();
     None
 }
