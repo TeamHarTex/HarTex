@@ -43,6 +43,7 @@ use syn::Token;
 use syn::Type;
 
 use crate::metadata;
+use crate::reflect::Field;
 
 const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "&str",
@@ -144,7 +145,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     let type_key = input.from_lit_str.value();
     let rfind_index = type_key.rfind(':').unwrap();
-    let end = &type_key[rfind_index + 1..];
+    let end = &type_key[rfind_index..];
 
     let type_metadata = if let Some(key) =
         metadata::STRUCT_MAP.keys().find(|key| key.ends_with(end))
@@ -310,7 +311,12 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     } else {
         let vec = (id_fields.iter())
             .map(|name| {
-                (type_metadata.fields.iter())
+                (type_metadata.fields.iter().cloned())
+                    .chain(input.extra_fields_array.elements.iter().map(|element| Field {
+                        name: element.key.value(),
+                        vis: "pub".to_string(),
+                        ty: element.value.value(),
+                    }))
                     .find(|field| &field.name == name)
                     .unwrap()
             })
@@ -345,7 +351,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let attrs = &item_struct.attrs;
     let from_type = syn::parse_str::<Type>(&type_key).unwrap();
 
-    if input.extra_fields_array.elements.empty_or_trailing() {
+    if input.extra_fields_array.elements.is_empty() {
         return Some(quote! {
             #(#attrs)*
             #item_struct_vis struct #item_struct_name {
@@ -374,7 +380,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         ))
         .unwrap();
 
-        (quote! {#ident: #type_token.unwrap()}, quote! {#ident})
+        (quote! {pub #ident: #type_token}, quote! {#ident})
     });
     let (extra_fields_tokens, extra_fields_assignment_tokens): (Vec<_>, Vec<_>) = fields.unzip();
     let extra_type_tokens = input.extra_fields_array.elements.iter().map(|element| {
@@ -391,7 +397,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     Some(quote! {
         #(#attrs)*
         #item_struct_vis struct #item_struct_name {
-            #(#fields_tokens),*
+            #(#fields_tokens),*,
             #(#extra_fields_tokens),*
         }
         #[automatically_derived]
@@ -401,9 +407,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 #id_field_expr_tokens
             }
         }
-        impl From<(#(#extra_type_tokens),* #from_type)> for #item_struct_name {
-            fn from((#(#extra_fields_assignment_tokens),* model): (#(#extra_type_tokens),* #from_type)) -> Self {
-                Self { #(#fields_assignments),* #(#extra_fields_assignment_tokens),* }
+        impl From<(#(#extra_type_tokens),*, #from_type)> for #item_struct_name {
+            fn from((#(#extra_fields_assignment_tokens),*, model): (#(#extra_type_tokens),*, #from_type)) -> Self {
+                Self { #(#fields_assignments),*, #(#extra_fields_assignment_tokens),* }
             }
         }
     })
