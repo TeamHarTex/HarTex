@@ -91,6 +91,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-test/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-errors/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-cdn/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database-queries/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
@@ -104,6 +105,7 @@
       <excludeFolder url="file://$MODULE_DIR$/buildsystem/target" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/bors/target" />
+      <excludeFolder url="file://$MODULE_DIR$/database-queries/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
