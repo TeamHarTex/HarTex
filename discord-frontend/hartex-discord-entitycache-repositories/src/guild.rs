@@ -25,10 +25,9 @@
 use std::borrow::Cow;
 use std::env;
 
+use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
+use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::GuildFeature;
-use hartex_discord_core::discord::model::guild::{
-    DefaultMessageNotificationLevel, ExplicitContentFilter,
-};
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
