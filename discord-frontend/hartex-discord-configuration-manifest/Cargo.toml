@@ -13,6 +13,6 @@ rust-version = "1.75.0"
 [dependencies]
 hcl-rs = "0.16.6"
 miette = "5.10.0"
-serde = { version = "1.0.189", features = ["derive"] }
+serde = { version = "1.0.190", features = ["derive"] }
 
 [features]
