@@ -20,7 +20,7 @@ hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 dotenvy = "0.15.7"
-futures-util = "0.3.28"
+futures-util = "0.3.29"
 miette = { version = "5.10.0", features = ["fancy"] }
 octocrab = "0.31.2"
 reqwest-eventsource = { git = "https://github.com/TeamHarTex/reqwest-eventsource.git" }
