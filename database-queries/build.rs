@@ -21,5 +21,5 @@
  */
 
 pub fn main() {
-
+    dotenvy::dotenv().unwrap();
 }
