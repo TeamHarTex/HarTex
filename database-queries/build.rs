@@ -20,6 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
+use cornucopia::CodegenSettings;
+use postgres::Client;
+use postgres::NoTls;
+
 pub fn main() {
     dotenvy::dotenv().unwrap();
+
+    let queries_path = "queries";
+
+    let url = env::var("POSTGRES_PGSQL_URL").unwrap();
+    cornucopia::generate_live(
+        &mut Client::connect(&url, NoTls).unwrap(),
+        queries_path,
+        Some("generated/queries.rs"),
+        CodegenSettings {
+            derive_ser: false,
+            is_async: true,
+        }
+    ).unwrap();
 }
