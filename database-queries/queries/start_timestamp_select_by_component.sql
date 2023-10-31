@@ -2,6 +2,6 @@
 SELECT
     *
 FROM
-    public."StartTimestamps"
+    "APIBackend".public."StartTimestamps"
 WHERE
     "component" = :component;
