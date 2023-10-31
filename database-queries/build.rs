@@ -40,6 +40,7 @@ pub fn main() {
         CodegenSettings {
             derive_ser: false,
             is_async: true,
-        }
-    ).unwrap();
+        },
+    )
+    .unwrap();
 }
