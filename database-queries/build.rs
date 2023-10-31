@@ -30,6 +30,7 @@ pub fn main() {
     dotenvy::dotenv().unwrap();
 
     let queries_path = "queries";
+    println!("cargo:rerun-if-changed={queries_path}");
 
     let url = env::var("POSTGRES_PGSQL_URL").unwrap();
     cornucopia::generate_live(
