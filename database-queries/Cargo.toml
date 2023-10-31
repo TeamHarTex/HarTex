@@ -16,4 +16,4 @@ rust-version = "1.75.0"
 [build-dependencies]
 cornucopia = "0.9.0"
 dotenvy = "0.15.7"
-postgres = "0.19.4"
+postgres = "0.19.7"
