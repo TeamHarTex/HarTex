@@ -27,7 +27,9 @@ use postgres::Client;
 use postgres::NoTls;
 
 pub fn main() {
-    dotenvy::dotenv().unwrap();
+    if dotenvy::dotenv().is_err() {
+        return;
+    }
 
     let queries_path = "queries";
     println!("cargo:rerun-if-changed={queries_path}");
