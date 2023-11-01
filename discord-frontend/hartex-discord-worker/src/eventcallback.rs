@@ -36,11 +36,7 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use sqlx::postgres::PgConnection;
-use sqlx::postgres::PgTypeInfo;
 use sqlx::prelude::Connection;
-use sqlx::prelude::Executor;
-use sqlx::prelude::Statement;
 use sqlx::types::chrono::Utc;
 use tokio_postgres::NoTls;
 

@@ -30,7 +30,7 @@
 **/build
 
 **/downloaded
-**/generated/**.rs
+discord-frontend/hartex-discord-entitycache-macros/generated
 
 bors-data
 backend-data
