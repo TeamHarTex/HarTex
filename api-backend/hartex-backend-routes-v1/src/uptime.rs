@@ -61,12 +61,12 @@ pub async fn v1_post_uptime(
 
     let (client, _) = result.unwrap();
     let result = select_start_timestamp_by_component()
-        .bind(&client, data.0.component_name())
+        .bind(&client, &data.0.component_name())
         .one()
         .await;
 
     // FIXME: figure out whether the data is actually not found and return 404
-    if result.is_error() {
+    if result.is_err() {
         return (Status::InternalServerError, StatusFns::internal_server_error());
     }
     let data = result.unwrap();
