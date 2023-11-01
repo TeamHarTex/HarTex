@@ -23,29 +23,26 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
+
 use std::env;
 
 use hartex_backend_models_v1::uptime::UptimeQuery;
-use hartex_backend_models_v1::uptime::UptimeResponse;
 use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
+use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
 use rocket::http::Status;
 use rocket::post;
 use rocket::serde::json::Json;
 use serde_json::json;
 use serde_json::Value;
-use sqlx::postgres::PgConnection;
-use sqlx::postgres::PgTypeInfo;
-use sqlx::prelude::Connection;
-use sqlx::prelude::Executor;
-use sqlx::prelude::Statement;
-use sqlx::Error;
+use tokio_postgres::NoTls;
 
 use crate::RateLimitGuard;
 
 /// # `POST /uptime`
 ///
 /// Obtain the uptime of a certain component.
+#[allow(clippy::cast_sign_loss)]
 #[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 #[post("/uptime", data = "<data>")]
@@ -53,45 +50,36 @@ pub async fn v1_post_uptime(
     data: Json<UptimeQuery<'_>>,
     _ratelimit: RateLimiter<'_, RateLimitGuard>,
 ) -> (Status, Value) {
-    let connect_res = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap()).await;
-    if connect_res.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
+    let result = env::var("API_PGSQL_URL");
+    if result.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let mut connection = connect_res.unwrap();
-    let statement_res = connection
-        .prepare_with(
-            include_str!("../../../database-queries/start-timestamp/select-by-component.sql"),
-            &[PgTypeInfo::with_name("TEXT")],
-        )
-        .await;
-    if statement_res.is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
+    let result = tokio_postgres::connect(&result.unwrap(), NoTls).await;
+    if result.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let statement = statement_res.unwrap();
-    let response_res = statement
-        .query_as::<UptimeResponse>()
-        .bind(data.0.component_name())
-        .fetch_one(&mut connection)
+    let (client, _) = result.unwrap();
+    let result = select_start_timestamp_by_component()
+        .bind(&client, &data.0.component_name())
+        .one()
         .await;
 
-    if let Err(Error::RowNotFound) = &response_res {
-        return (Status::NotFound, StatusFns::not_found());
+    // FIXME: figure out whether the data is actually not found and return 404
+    if result.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
     }
+    let data = result.unwrap();
 
     (
         Status::Ok,
         json!({
             "code": 200,
             "message": "ok",
-            "data": response_res.unwrap(),
+            "data": {
+                "start_timestamp": data.timestamp.unix_timestamp() as u128
+            },
         }),
     )
 }

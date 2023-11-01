@@ -1024,7 +1024,6 @@ name = "hartex_backend_models_v1"
 version = "0.4.0"
 dependencies = [
  "serde",
- "sqlx",
 ]
 
 [[package]]
