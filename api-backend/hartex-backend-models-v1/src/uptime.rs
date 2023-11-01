@@ -26,12 +26,6 @@
 
 use serde::Deserialize;
 use serde::Serialize;
-use sqlx::postgres::PgRow;
-use sqlx::prelude::FromRow;
-use sqlx::prelude::Row;
-use sqlx::types::chrono::DateTime;
-use sqlx::types::chrono::Utc;
-use sqlx::Error;
 
 /// An uptime query.
 #[allow(clippy::module_name_repetitions)]
@@ -66,16 +60,5 @@ impl UptimeResponse {
     #[must_use]
     pub fn start_timestamp(&self) -> u128 {
         self.start_timestamp
-    }
-}
-
-impl<'r> FromRow<'r, PgRow> for UptimeResponse {
-    #[allow(clippy::cast_sign_loss)]
-    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
-        let timestamp: DateTime<Utc> = row.try_get("timestamp")?;
-
-        Ok(Self {
-            start_timestamp: timestamp.timestamp() as u128,
-        })
     }
 }
