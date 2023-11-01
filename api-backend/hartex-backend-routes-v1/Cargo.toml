@@ -15,11 +15,13 @@ hartex_backend_models_v1 = { path = "../hartex-backend-models-v1" }
 hartex_backend_ratelimiter = { path = "../hartex-backend-ratelimiter" }
 hartex_backend_status_util = { path = "../hartex-backend-status-util" }
 
+hartex_database_queries = { path = "../../database-queries" }
+
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 governor = { git = "https://github.com/antifuchs/governor.git" }
 rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master", features = ["json"] }
 serde_json = "1.0.108"
-sqlx = { version = "0.7.2", features = ["runtime-tokio-native-tls", "postgres"] }
+tokio-postgres = "0.7.10"
 
 [features]
