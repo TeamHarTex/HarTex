@@ -20,5 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[path = "../generated/queries.rs"]
-pub mod database;
+#[path = "../generated/api_backend.rs"]
+pub mod api_backend;
