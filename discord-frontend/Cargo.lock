@@ -1285,6 +1285,7 @@ dependencies = [
  "serde_scan",
  "sqlx",
  "time",
+ "tokio-postgres",
  "tracing",
 ]
 
@@ -2286,6 +2287,7 @@ dependencies = [
  "bytes",
  "fallible-iterator",
  "postgres-protocol",
+ "time",
 ]
 
 [[package]]
