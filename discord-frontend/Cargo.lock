@@ -1283,7 +1283,6 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_scan",
- "sqlx",
  "time",
  "tokio-postgres",
  "tracing",

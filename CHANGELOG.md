@@ -18,12 +18,15 @@
 
 ## Database Queries
 
+- **Changed:** rewritten in Rust
+
 ## Discord Frontend
 
 - **Added:** complete yet feature-incomplete implementation of the new `entity` macro
 - **Changed:** implemented version and type metadata for `twilight-model`
 - **Changed:** updated Rust Version to 1.75
 - **Removed:** removed deprecated `Entity` derive macro
+- **Removed:** phased out `sqlx` dependency after migration to generated database queries
 
 ## Localization Infrastructure
 
