@@ -60,9 +60,8 @@ pub async fn v1_post_uptime(
     }
 
     let (client, _) = result.unwrap();
-
     let result = select_start_timestamp_by_component()
-        .bind(client, data.0.component_name())
+        .bind(&client, data.0.component_name())
         .one()
         .await;
 
