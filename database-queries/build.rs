@@ -27,19 +27,22 @@ use postgres::Client;
 use postgres::NoTls;
 
 pub fn main() {
-    dotenvy::dotenv().unwrap();
+    if dotenvy::dotenv().is_err() {
+        return;
+    }
 
     let queries_path = "queries";
     println!("cargo:rerun-if-changed={queries_path}");
 
-    let url = env::var("POSTGRES_PGSQL_URL").unwrap();
+    let url = env::var("API_PGSQL_URL").unwrap();
     cornucopia::generate_live(
         &mut Client::connect(&url, NoTls).unwrap(),
         queries_path,
-        Some("generated/queries.rs"),
+        Some("generated/api_backend.rs"),
         CodegenSettings {
             derive_ser: false,
             is_async: true,
-        }
-    ).unwrap();
+        },
+    )
+    .unwrap();
 }

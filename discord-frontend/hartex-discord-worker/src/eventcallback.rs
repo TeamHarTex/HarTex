@@ -23,6 +23,7 @@
 use std::env;
 use std::time::Duration;
 
+use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
@@ -35,12 +36,8 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use sqlx::postgres::PgConnection;
-use sqlx::postgres::PgTypeInfo;
-use sqlx::prelude::Connection;
-use sqlx::prelude::Executor;
-use sqlx::prelude::Statement;
-use sqlx::types::chrono::Utc;
+use tokio_postgres::NoTls;
+use time::OffsetDateTime;
 
 /// Invoke a corresponding event callback for an event.
 #[allow(clippy::large_futures)]
@@ -102,24 +99,11 @@ pub async fn invoke(
                     ready.version
                 );
 
-                let mut connection = PgConnection::connect(&env::var("API_PGSQL_URL").unwrap())
-                    .await
-                    .into_diagnostic()?;
-                let statement = connection
-                        .prepare_with(
-                            include_str!("../../../database-queries/start-timestamp/insert-into-on-conflict-update.sql"),
-                            &[PgTypeInfo::with_name("TEXT"), PgTypeInfo::with_name("TIMESTAMPTZ")],
-                        )
-                        .await
-                    .into_diagnostic()?;
-
-                statement
-                    .query()
-                    .bind("HarTex Nightly")
-                    .bind(Utc::now())
-                    .execute(&mut connection)
-                    .await
-                    .into_diagnostic()?;
+                let url = env::var("API_PGSQL_URL").unwrap();
+                let (client, _) = tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
+                start_timestamp_upsert()
+                    .bind(client, &"HarTex Nightly", &OffsetDateTime::now_utc())
+                    .await;
 
                 Ok(())
             }

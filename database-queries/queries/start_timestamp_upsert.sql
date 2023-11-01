@@ -1,6 +1,6 @@
 --! start_timestamp_upsert
 INSERT INTO
-    public."StartTimestamps" ("component", "timestamp")
+    "APIBackend".public."StartTimestamps" ("component", "timestamp")
 VALUES (:component, :timestamp)
 ON CONFLICT ("component") DO UPDATE
     SET
