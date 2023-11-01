@@ -103,7 +103,8 @@ pub async fn invoke(
                 let (client, _) = tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
                 start_timestamp_upsert()
                     .bind(&client, &"HarTex Nightly", &OffsetDateTime::now_utc())
-                    .await;
+                    .await
+                    .into_diagnostic()?;
 
                 Ok(())
             }
