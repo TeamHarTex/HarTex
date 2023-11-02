@@ -1,0 +1,16 @@
+[package]
+name = "hartex_bors_dashboard"
+version = "0.4.0"
+edition = "2021"
+description = """
+HarTex bors dashboard website
+"""
+license = "AGPL-3.0-or-later"
+rust-version = "1.75.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+leptos = "0.5.2"
+
+[features]
