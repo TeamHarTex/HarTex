@@ -12,7 +12,9 @@
 
 ## Bors Buildbot
 
+- **Added:** initiated leptos-based `hartex-bors-dashboard`
 - **Changed:** updated Rust Version to 1.75
+- **Changed:** deprecated `hartex-bors-website`
 
 ## Buildsystem
 
