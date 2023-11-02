@@ -3,10 +3,10 @@ members = [
     "hartex-bors-commands",
     "hartex-bors-core",
     "hartex-bors-database",
+    "hartex-bors-dashboard",
     "hartex-bors-driver",
     "hartex-bors-github",
     "hartex-bors-permissions",
-    "hartex-bors-website",
 ]
 
 resolver = "2"
