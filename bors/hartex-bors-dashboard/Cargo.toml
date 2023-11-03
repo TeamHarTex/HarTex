@@ -12,5 +12,7 @@ rust-version = "1.75.0"
 
 [dependencies]
 leptos = "0.5.2"
+leptos_router = "0.5.2"
+stylers = "1.0.0-alpha"
 
 [features]
