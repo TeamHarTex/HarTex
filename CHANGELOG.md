@@ -1,8 +1,30 @@
-# [Next Version, Boron I](https://github.com/TeamHarTex/HarTex/compare/0.4.0...nightly)
+# [Next Version, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.0...nightly)
 
 > **x** contributors made contributions to this release
 
-> **y** commits since 2022-09-29
+> **y** commits since 2022-11-03
+
+## API Backend
+
+## Bors Buildbot
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.5.0, Boron I](https://github.com/TeamHarTex/HarTex/compare/0.4.0..0.5.0)
+
+> **2** contributors made contributions to this release
+
+> **272** commits since 2022-09-29
 
 ## API Backend
 
@@ -41,8 +63,6 @@
 
 - **Added:** new crate for macro utilities
 - **Changed:** updated Rust Version to 1.75
-
-## Web Frontend
 
 # [Version 0.4.0, Beryllium I (2023-09-29)](https://github.com/TeamHarTex/HarTex/compare/0.3.0..0.4.0)
 
