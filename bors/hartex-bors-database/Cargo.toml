@@ -15,7 +15,7 @@ hartex_bors_core = { path = "../hartex-bors-core" }
 
 chrono = { version = "0.4.31", features = ["clock"], default-features = false }
 miette = "5.10.0"
-octocrab = "0.31.2"
+octocrab = "0.32.0"
 sea-orm = { version = "0.12.4", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
 sea-orm-migration = { version = "0.12.4", features = ["runtime-tokio-native-tls", "sqlx-sqlite"] }
 serde = { version = "1.0.190", features = ["derive"] }
