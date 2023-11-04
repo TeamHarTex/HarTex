@@ -1,11 +1,8 @@
 export default defineNuxtConfig({
   app: {
     head: {
-      title: 'HarTex'
-    }
+      title: "HarTex",
+    },
   },
-  modules: [
-    '@nuxt/content',
-    '@unocss/nuxt',
-  ],
-})
+  modules: ["@hypernym/nuxt-gsap", "@nuxt/content", "@unocss/nuxt"],
+});
