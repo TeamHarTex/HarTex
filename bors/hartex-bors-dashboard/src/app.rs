@@ -21,19 +21,24 @@
  */
 
 use leptos::component;
-use leptos::IntoView;
+use leptos::logging;
 use leptos::view;
+use leptos::IntoView;
 use leptos_router::Route;
 use leptos_router::Router;
 use leptos_router::Routes;
 
+use crate::home::Home;
+
 #[component]
 pub fn App() -> impl IntoView {
+    logging::log!("rendering App component");
+
     view! {
         <Router>
             <main>
                 <Routes>
-                    <Route path="/" view=|| view! { <h1>Test</h1>} />
+                    <Route path="/" view=Home/>
                 </Routes>
             </main>
         </Router>
