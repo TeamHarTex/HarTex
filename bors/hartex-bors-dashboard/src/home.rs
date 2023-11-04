@@ -21,11 +21,14 @@
  */
 
 use leptos::component;
-use leptos::IntoView;
+use leptos::logging;
 use leptos::view;
+use leptos::IntoView;
 
 #[component]
 pub fn Home() -> impl IntoView {
+    logging::log!("rendering Home component");
+
     view! {
         <h1>Bors V2</h1>
     }
