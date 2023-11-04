@@ -51,23 +51,22 @@ pub fn create_bundle(
     requested: Option<LanguageIdentifier>,
     path: &[&str],
 ) -> miette::Result<types::LocalizationBundle> {
-    let fallback = langid!("en-US");
-    let locale = requested.unwrap_or(fallback);
+    let fallback = langid!("en-GB");
+    let locale = requested.unwrap_or(fallback.clone());
     let mut bundle = types::LocalizationBundle::new_concurrent(vec![locale.clone()]);
     // fix Discord timestamp formatting
     bundle.set_use_isolating(false);
 
     let mut localizations_root = PathBuf::from("../localization/locales");
     localizations_root.push(locale.to_string());
+
+    if !localizations_root.exists() {
+        bundle.locales = vec![fallback];
+        localizations_root = PathBuf::from("../localization/locales/en-GB");
+    }
+
     path.iter()
         .for_each(|segment| localizations_root.push(segment));
-
-    if !localizations_root.try_exists().into_diagnostic()? {
-        return Err(Report::msg(format!(
-            "localization root not found: {}",
-            localizations_root.to_string_lossy()
-        )));
-    }
 
     if !localizations_root.is_dir() {
         return Err(Report::msg(format!(

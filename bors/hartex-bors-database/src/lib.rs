@@ -42,6 +42,7 @@ mod select_enqueued_pr;
 mod select_pr;
 mod select_workflow;
 
+#[allow(clippy::missing_errors_doc)]
 pub async fn initialize_database(migrate: bool) -> miette::Result<DatabaseConnection> {
     let database = SqlxSqliteConnector::from_sqlx_sqlite_pool(
         SqlitePool::connect_with(

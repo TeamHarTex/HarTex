@@ -1,16 +1,16 @@
 [package]
 name = "hartex_kafka_utils"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 Macro utilities
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rdkafka = { version = "0.33.2", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
+rdkafka = { version = "0.34.0", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
 
 [features]

@@ -2,10 +2,12 @@
   "name": "latency",
   "description": "Obtain latency information",
   "name_localizations": {
+    "ja": "遅延",
     "zh-CN": "延迟",
     "zh-TW": "延遲"
   },
   "description_localizations": {
+    "ja": "遅延情報を取得",
     "zh-CN": "获取延迟信息",
     "zh-TW": "獲取延遲資訊"
   },

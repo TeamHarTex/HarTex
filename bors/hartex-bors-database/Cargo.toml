@@ -1,24 +1,24 @@
 [package]
 name = "hartex_bors_database"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 HarTex bors database driver
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 hartex_bors_core = { path = "../hartex-bors-core" }
 
-chrono = { version = "0.4.26", features = ["clock"], default-features = false }
+chrono = { version = "0.4.31", features = ["clock"], default-features = false }
 miette = "5.10.0"
-octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
-sea-orm = { version = "0.12.0-rc.4", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
-sea-orm-migration = { version = "0.12.0-rc.4", features = ["runtime-tokio-native-tls", "sqlx-sqlite"] }
-serde = { version = "1.0.171", features = ["derive"] }
-sqlx = { version = "0.6.3", features = ["runtime-tokio-native-tls", "sqlite"] }
+octocrab = "0.32.0"
+sea-orm = { version = "0.12.4", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
+sea-orm-migration = { version = "0.12.4", features = ["runtime-tokio-native-tls", "sqlx-sqlite"] }
+serde = { version = "1.0.190", features = ["derive"] }
+sqlx = { version = "0.7.2", features = ["runtime-tokio-native-tls", "sqlite"] }
 
 [features]

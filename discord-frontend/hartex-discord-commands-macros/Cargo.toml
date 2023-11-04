@@ -1,19 +1,19 @@
 [package]
 name = "hartex_discord_commands_macros"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 Macros for the command framework.
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-proc-macro2 = "1.0.66"
-quote = "1.0.31"
-syn = { version = "2.0.26", features = ["extra-traits", "full"] }
+proc-macro2 = "1.0.69"
+quote = "1.0.33"
+syn = { version = "2.0.38", features = ["extra-traits", "full"] }
 
 [features]
 

@@ -1,0 +1,98 @@
+{
+  "name": "info",
+  "description": "Information about a certain entity.",
+  "name_localizations": {
+    "ja": "情報",
+    "zh-CN": "信息",
+    "zh-TW": "資訊"
+  },
+  "description_localizations": {
+    "ja": "指定実体の情報。",
+    "zh-CN": "有关特定实体的信息。",
+    "zh-TW": "關於特定實體的資訊。"
+  },
+  "options": [
+    {
+      "name": "server",
+      "description": "Information about the current server.",
+      "name_localizations": {
+        "ja": "サーバー",
+        "zh-CN": "服务器",
+        "zh-TW": "伺服器"
+      },
+      "description_localizations": {
+        "ja": "このサーバーについて…",
+        "zh-CN": "关于当前服务器的信息。",
+        "zh-TW": "關於當前伺服器的資訊。"
+      },
+      "options": [
+        {
+          "name": "verbose",
+          "description": "Whether to display more detailed information in the returned embed.",
+          "name_localizations": {
+            "ja": "詳しく",
+            "zh-CN": "详细",
+            "zh-TW": "詳細"
+          },
+          "description_localizations": {
+            "ja": "もっと詳しい情報を？",
+            "zh-CN": "是否在返回的嵌入中显示更详细的信息。",
+            "zh-TW": "是否在返回的嵌入中顯示更多詳細資訊。"
+          },
+          "required": false,
+          "type": 5
+        }
+      ],
+      "type": 1
+    },
+    {
+      "name": "bot",
+      "description": "Runtime information of the bot.",
+      "name_localizations": {
+        "ja": "ボット",
+        "zh-CN": "机器人",
+        "zh-TW": "機器人"
+      },
+      "description_localizations": {
+        "ja": "ボットの運転情報。",
+        "zh-CN": "机器人的运行时信息。",
+        "zh-TW": "機器人的運行資訊。"
+      },
+      "type": 1
+    },
+    {
+      "name": "role",
+      "description": "Information about a specific role.",
+      "name_localizations": {
+        "ja": "ロール",
+        "zh-CN": "身份组",
+        "zh-TW": "身分組"
+      },
+      "description_localizations": {
+        "ja": "特定のロールについて…",
+        "zh-CN": "关于指定身份组的信息。",
+        "zh-TW": "關於特定身分組的資訊。"
+      },
+      "options": [
+        {
+          "name": "role",
+          "description": "The role to obtain information for.",
+          "name_localizations": {
+            "ja": "ロール",
+            "zh-CN": "身份组",
+            "zh-TW": "身分組"
+          },
+          "description_localizations": {
+            "ja": "どっちのロールの情報を？",
+            "zh-CN": "要获取信息的身份组。",
+            "zh-TW": "要獲取資訊的身分組。"
+          },
+          "required": true,
+          "type": 8
+        }
+      ],
+      "type": 1
+    }
+  ],
+  "type": 1
+}

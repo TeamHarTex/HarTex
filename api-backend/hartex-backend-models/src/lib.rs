@@ -54,7 +54,7 @@ where
         self.message
     }
 
-    /// The data of the reponse.
+    /// The data of the response.
     pub fn data(&self) -> T {
         self.data.clone()
     }

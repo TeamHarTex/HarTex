@@ -20,12 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Repositries
+//! # Entity Cache Repositories
 
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 
 pub mod guild;
+pub mod member;
+pub mod role;
+pub mod user;

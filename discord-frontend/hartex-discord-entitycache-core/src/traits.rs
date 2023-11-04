@@ -29,15 +29,17 @@ pub trait Entity {
     /// The identifier of the entity.
     type Id;
 
-    /// Returns the entity identifer.
+    /// Returns the entity identifier.
     fn id(&self) -> Self::Id;
 }
 
 /// A cache repository holding entities.
 pub trait Repository<T: Entity> {
     /// Retrieves an entity from the repository.
+    #[allow(async_fn_in_trait)]
     async fn get(&self, entity_id: T::Id) -> CacheResult<T>;
 
     /// Upserts an entity into the repository.
+    #[allow(async_fn_in_trait)]
     async fn upsert(&self, entity: T) -> CacheResult<()>;
 }

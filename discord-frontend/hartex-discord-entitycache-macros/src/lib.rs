@@ -27,22 +27,26 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(deprecated)]
+#![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
 use syn::parse_macro_input;
-use syn::DeriveInput;
+use syn::ItemStruct;
 
 mod entity;
+#[path = "../generated/metadata.rs"]
+mod metadata;
+mod reflect;
 
-/// Macro to derive the `Entity` trait.
-#[proc_macro_derive(Entity, attributes(entity))]
-pub fn derive_entity_trait(tokens: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(tokens as DeriveInput);
-    entity::expand_entity_derivation(&mut input)
-        .unwrap_or(TokenStream2::new())
+#[proc_macro_attribute]
+pub fn entity(tokens: TokenStream, item: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(tokens as entity::EntityMacroInput);
+    let struct_decl = parse_macro_input!(item as ItemStruct);
+    entity::implement_entity(&input, &struct_decl)
+        .unwrap_or_default()
         .into()
 }

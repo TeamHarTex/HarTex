@@ -1,0 +1,7 @@
+error: expected `=`
+  --> tests/ui/expected_equal1.rs:25:1
+   |
+25 | #[metadata(command_type)]
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the attribute macro `metadata` (in Nightly builds, run with -Z macro-backtrace for more info)

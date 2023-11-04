@@ -22,6 +22,7 @@
 
 use octocrab::models::pulls::PullRequest;
 
+#[must_use]
 pub fn auto_merge_commit_message(pr: &PullRequest, reviewer: &str) -> String {
     format!(
         "automatic merge of pull request #{} - {} r={reviewer}",

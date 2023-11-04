@@ -25,7 +25,6 @@ use std::pin::Pin;
 
 use chrono::DateTime as ChronoDateTime;
 use chrono::Utc;
-
 use hartex_bors_core::models::BorsApproveBuild;
 use hartex_bors_core::models::BorsBuild;
 use hartex_bors_core::models::BorsBuildStatus;
@@ -57,6 +56,7 @@ use sea_orm::TransactionTrait;
 use crate::entity;
 
 /// A SeaORM database client.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone)]
 pub struct SeaORMDatabaseClient {
     connection: DatabaseConnection,
@@ -64,6 +64,7 @@ pub struct SeaORMDatabaseClient {
 
 impl SeaORMDatabaseClient {
     /// Construct a new database client.
+    #[must_use]
     pub fn new(connection: DatabaseConnection) -> Self {
         Self { connection }
     }
@@ -166,16 +167,17 @@ impl DatabaseClient for SeaORMDatabaseClient {
             };
 
             match entity::repository::Entity::insert(repo)
-                .on_conflict(OnConflict::new().do_nothing().to_owned())
+                .on_conflict(OnConflict::new().do_nothing().clone())
                 .exec_without_returning(&self.connection)
                 .await
             {
                 Ok(_) | Err(DbErr::RecordNotInserted) => Ok(()),
-                Err(error) => return Err(error).into_diagnostic(),
+                Err(error) => Err(error).into_diagnostic(),
             }
         })
     }
 
+    #[allow(clippy::cast_possible_wrap)]
     fn create_workflow_with_approve_build<'a>(
         &'a self,
         approve_build: &'a BorsApproveBuild,
@@ -202,6 +204,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    #[allow(clippy::cast_possible_wrap)]
     fn create_workflow_with_try_build<'a>(
         &'a self,
         build: &'a BorsBuild,
@@ -376,6 +379,8 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::match_same_arms)]
     fn get_or_create_pull_request<'a>(
         &'a self,
         name: &'a GithubRepositoryName,
@@ -390,7 +395,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
                     .assignees
                     .as_ref()
                     .and_then(|authors| authors.first())
-                    .and_then(|author| Some(author.login.clone()))
+                    .map(|author| author.login.clone())
                     .unwrap_or_default()),
                 approved: Set(0),
                 title: Set(github_pr.title.clone().unwrap()),
@@ -404,7 +409,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
             };
 
             match entity::pull_request::Entity::insert(pr)
-                .on_conflict(OnConflict::new().do_nothing().to_owned())
+                .on_conflict(OnConflict::new().do_nothing().clone())
                 .exec_without_returning(&self.connection)
                 .await
             {
@@ -459,7 +464,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
 
             Ok(repositories
                 .into_iter()
-                .map(|repository| repository_from_database(repository))
+                .map(repository_from_database)
                 .collect())
         })
     }
@@ -504,6 +509,7 @@ impl DatabaseClient for SeaORMDatabaseClient {
         })
     }
 
+    #[allow(clippy::cast_possible_truncation)]
     fn unapprove_pull_request(
         &self,
         pr: u64,
@@ -603,6 +609,7 @@ fn build_from_database(model: entity::build::Model) -> BorsBuild {
     }
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn build_status_to_database(status: BorsBuildStatus) -> &'static str {
     match status {
         BorsBuildStatus::Pending => "pending",
@@ -612,6 +619,7 @@ fn build_status_to_database(status: BorsBuildStatus) -> &'static str {
     }
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn build_status_from_database(status: String) -> BorsBuildStatus {
     match status.as_str() {
         "pending" => BorsBuildStatus::Pending,
@@ -623,9 +631,10 @@ fn build_status_from_database(status: String) -> BorsBuildStatus {
 }
 
 fn datetime_from_database(datetime: DateTime) -> DateTimeUtc {
-    ChronoDateTime::from_utc(datetime, Utc)
+    ChronoDateTime::from_naive_utc_and_offset(datetime, Utc)
 }
 
+#[allow(clippy::cast_sign_loss)]
 fn enqueued_pr_from_database(
     enqueued_pr: entity::enqueued_pull_request::Model,
     pr: entity::pull_request::Model,
@@ -652,6 +661,7 @@ fn enqueued_pr_from_database(
     }
 }
 
+#[allow(clippy::cast_sign_loss)]
 fn pr_from_database(
     pr: entity::pull_request::Model,
     approve_build: Option<entity::approve_build::Model>,
@@ -679,6 +689,7 @@ fn repository_from_database(repository: entity::repository::Model) -> BorsReposi
     }
 }
 
+#[allow(clippy::cast_sign_loss)]
 // FIXME: workflows are either a try build or an approve build.
 fn workflow_from_database(
     workflow: entity::workflow::Model,
@@ -698,6 +709,7 @@ fn workflow_from_database(
     }
 }
 
+#[allow(clippy::match_same_arms)]
 fn workflow_status_from_database(workflow_status: &str) -> BorsWorkflowStatus {
     match workflow_status {
         "pending" => BorsWorkflowStatus::Pending,
@@ -707,6 +719,7 @@ fn workflow_status_from_database(workflow_status: &str) -> BorsWorkflowStatus {
     }
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn workflow_status_to_database(workflow_status: BorsWorkflowStatus) -> &'static str {
     match workflow_status {
         BorsWorkflowStatus::Pending => "pending",
@@ -723,6 +736,7 @@ fn workflow_type_from_database(workflow_type: &str) -> BorsWorkflowType {
     }
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn workflow_type_to_database(workflow_type: BorsWorkflowType) -> &'static str {
     match workflow_type {
         BorsWorkflowType::External => "external",

@@ -30,6 +30,3 @@ contributors-embed-global-admin-field-name=全域管理員 & 首席開發人員
 contributors-embed-front-dev-field-name=前端開發人員
 contributors-embed-translation-team-field-name=翻譯團隊
 contributors-embed-footer=這不是完整的名單（以保留更多螢幕空間）－但感謝所有做出貢獻的人！
--latency-initial-response = 你需要什麼嗎？
-latency-edited-response = {-latency-initial-response} 嗯，我的延遲是：`{$latency}毫秒`。
-uptime-response={$component} 啟動於 <t:{$timestamp}:R>

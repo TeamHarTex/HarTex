@@ -37,6 +37,9 @@ use tokio::sync::mpsc::Sender;
 use crate::permissions::check_permissions;
 
 /// Executes the approve command.
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub async fn approve_command<C: RepositoryClient>(
     repository: &GithubRepositoryState<C>,
     database: &dyn DatabaseClient,

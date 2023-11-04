@@ -1,0 +1,7 @@
+error: unexpected end of input, expected identifier
+  --> tests/ui/unexpected_end_of_input1.rs:25:1
+   |
+25 | #[metadata()]
+   | ^^^^^^^^^^^^^
+   |
+   = note: this error originates in the attribute macro `metadata` (in Nightly builds, run with -Z macro-backtrace for more info)

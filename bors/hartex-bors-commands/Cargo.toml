@@ -1,12 +1,12 @@
 [package]
 name = "hartex_bors_commands"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 HarTex bors database driver
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -19,6 +19,6 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 itertools = "0.11.0"
 miette = "5.10.0"
-tokio = { version = "1.29.1", features = ["time"] }
+tokio = { version = "1.33.0", features = ["time"] }
 
 [features]

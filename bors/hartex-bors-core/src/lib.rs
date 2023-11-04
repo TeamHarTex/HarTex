@@ -25,7 +25,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 
 use std::future::Future;
 use std::pin::Pin;
@@ -248,14 +247,18 @@ pub trait RepositoryClient {
     fn repository_name(&self) -> &GithubRepositoryName;
 
     /// Cancel workflows.
+    #[allow(async_fn_in_trait)]
     async fn cancel_workflows(&self, run_ids: Vec<RunId>) -> miette::Result<()>;
 
     /// Deletes a branch.
+    #[allow(async_fn_in_trait)]
     async fn delete_branch(&self, branch: &str) -> miette::Result<()>;
 
     /// Edit a speific comment.
+    #[allow(async_fn_in_trait)]
     async fn edit_comment(&self, comment_id: CommentId, text: &str) -> miette::Result<Comment>;
 
+    #[allow(async_fn_in_trait)]
     async fn get_checks_for_commit(
         &self,
         branch: &str,
@@ -263,15 +266,19 @@ pub trait RepositoryClient {
     ) -> miette::Result<Vec<Check>>;
 
     /// Gets a label by its name.
+    #[allow(async_fn_in_trait)]
     async fn get_label(&self, name: &str) -> miette::Result<Label>;
 
     /// Sets the labels of a pull request.
+    #[allow(async_fn_in_trait)]
     async fn set_labels_of_pull_request(&self, labels: Vec<String>, pr: u64) -> miette::Result<()>;
 
     /// Gets a pull request by its number.
+    #[allow(async_fn_in_trait)]
     async fn get_pull_request(&self, pr: u64) -> miette::Result<PullRequest>;
 
     /// Merges two branches together.
+    #[allow(async_fn_in_trait)]
     async fn merge_branches(
         &self,
         base: &str,
@@ -280,11 +287,14 @@ pub trait RepositoryClient {
     ) -> miette::Result<String>;
 
     /// Post a comment on a specific pull request.
+    #[allow(async_fn_in_trait)]
     async fn post_comment(&self, pr: u64, text: &str) -> miette::Result<Comment>;
 
     /// Get the revision of a branch.
+    #[allow(async_fn_in_trait)]
     async fn get_revision(&self, branch: &str) -> miette::Result<String>;
 
     /// Set a branch to a specific revision.
+    #[allow(async_fn_in_trait)]
     async fn set_branch_to_revision(&self, branch: &str, revision: &str) -> miette::Result<()>;
 }

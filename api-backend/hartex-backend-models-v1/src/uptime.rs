@@ -22,18 +22,13 @@
 
 //! # Uptime Models V1
 //!
-//! Models for the uptime API specifcation V1 of the backend.
+//! Models for the uptime API specification V1 of the backend.
 
 use serde::Deserialize;
 use serde::Serialize;
-use sqlx::postgres::PgRow;
-use sqlx::prelude::FromRow;
-use sqlx::prelude::Row;
-use sqlx::types::chrono::DateTime;
-use sqlx::types::chrono::Utc;
-use sqlx::Error;
 
 /// An uptime query.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, Serialize)]
 pub struct UptimeQuery<'a> {
     component_name: &'a str,
@@ -41,35 +36,29 @@ pub struct UptimeQuery<'a> {
 
 impl<'a> UptimeQuery<'a> {
     /// Create a new uptime query with the component name to search for.
+    #[must_use]
     pub fn new(component_name: &'a str) -> Self {
         Self { component_name }
     }
 
     /// The component name to search for in this uptime query.
+    #[must_use]
     pub fn component_name(&self) -> &'a str {
         self.component_name
     }
 }
 
 /// A response to an uptime query.
-#[derive(Clone, Deserialize)]
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct UptimeResponse {
     start_timestamp: u128,
 }
 
 impl UptimeResponse {
     /// The start timestamp of the uptime entry.
+    #[must_use]
     pub fn start_timestamp(&self) -> u128 {
         self.start_timestamp
-    }
-}
-
-impl<'r> FromRow<'r, PgRow> for UptimeResponse {
-    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
-        let timestamp: DateTime<Utc> = row.try_get("timestamp")?;
-
-        Ok(Self {
-            start_timestamp: timestamp.timestamp() as u128,
-        })
     }
 }

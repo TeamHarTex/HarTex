@@ -1,5 +1,0 @@
-error: expected identifier
-  --> tests/ui/expected_identifier.rs:27:14
-   |
-27 |     #[entity(=)]
-   |              ^

@@ -63,7 +63,7 @@ impl Display for UpdateBranchError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             Self::BranchNotFound(branch) => write!(f, "branch {branch} is not found"),
-            _ => write!(f, "unknown error"),
+            Self::Unknown => write!(f, "unknown error"),
         }
     }
 }
@@ -77,11 +77,11 @@ pub async fn set_branch_to_revision(
     commit_hash: String,
 ) -> miette::Result<()> {
     match update_branch(repository, name.clone(), commit_hash.clone()).await {
-        Ok(_) => Ok(()),
+        Ok(()) => Ok(()),
         Err(error) if let Some(error) = error.downcast_ref::<UpdateBranchError>()
             && error.is_branch_not_found() => {
             match create_branch(repository, name.clone(), commit_hash).await {
-                Ok(_) => Ok(()),
+                Ok(()) => Ok(()),
                 error => error,
             }
         },
@@ -113,18 +113,16 @@ pub async fn merge_branches(
     head: &str,
     commit_message: &str,
 ) -> miette::Result<String> {
-    let url = repository
-        .repository
-        .merges_url
-        .as_ref()
-        .map(|url| url.to_string())
-        .unwrap_or_else(|| {
+    let url = repository.repository.merges_url.as_ref().map_or_else(
+        || {
             format!(
                 "https://api.github.com/repos/{}/{}/merges",
                 repository.repository_name.owner(),
                 repository.repository_name.repository()
             )
-        });
+        },
+        ToString::to_string,
+    );
 
     let mut response = repository
         .client
