@@ -27,7 +27,8 @@ use hartex_errors::buildsystem::ProjectNotFound;
 use miette::Report;
 
 /// Runs the build command.
-pub fn build_command(matches: ArgMatches) -> miette::Result<()> {
+#[allow(clippy::module_name_repetitions)]
+pub fn build_command(matches: &ArgMatches) -> miette::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
 
     let project_names = matches.get_many::<String>("project").unwrap();

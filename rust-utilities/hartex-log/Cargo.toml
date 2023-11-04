@@ -1,17 +1,17 @@
 [package]
 name = "hartex_log"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 Logging facilities
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-log = "0.4.19"
+log = "0.4.20"
 log4rs = { git = "https://github.com/TeamHarTex/log4rs.git", branch = "master", default-features = false, features = ["console_appender"] }
 
 [features]

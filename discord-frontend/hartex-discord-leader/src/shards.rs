@@ -35,7 +35,7 @@ use hartex_discord_core::discord::model::gateway::presence::Status;
 use miette::IntoDiagnostic;
 
 /// Obtain a list of shards.
-pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue>) -> miette::Result<Vec<Shard>> {
+pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue + Send + Sync>) -> miette::Result<Vec<Shard>> {
     let bot_token = std::env::var("BOT_TOKEN").into_diagnostic()?;
 
     let shard_start_index = std::env::var("SHARDS_START_INDEX")

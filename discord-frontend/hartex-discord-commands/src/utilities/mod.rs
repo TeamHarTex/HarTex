@@ -23,6 +23,6 @@
 //! # The Utilities Plugin
 //!
 //! Command List:
-//! - serverinfo
+//! - info
 
-pub mod serverinfo;
+pub mod info;

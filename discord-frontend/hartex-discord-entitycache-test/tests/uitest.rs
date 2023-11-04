@@ -25,5 +25,6 @@ use trybuild::TestCases;
 #[test]
 pub fn ui() {
     let test_cases = TestCases::new();
-    test_cases.compile_fail("tests/ui/*.rs");
+    test_cases.compile_fail("tests/ui/fail/*.rs");
+    test_cases.pass("tests/ui/success_with_warn/*.rs")
 }

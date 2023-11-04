@@ -34,17 +34,17 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
 use syn::parse_macro_input;
-use syn::DeriveInput;
+use syn::ItemStruct;
 
 mod commandmetadata;
 
-/// Macro to derive the `CommandMetadata` trait.
-#[proc_macro_derive(CommandMetadata, attributes(metadata))]
-pub fn derive_command_metadata_trait(tokens: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(tokens as DeriveInput);
-    commandmetadata::expand_command_metadata_derivation(&mut input)
-        .unwrap_or(TokenStream2::new())
+/// Macro to implement the `CommandMetadata` trait.
+#[proc_macro_attribute]
+pub fn metadata(tokens: TokenStream, item: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(tokens as commandmetadata::MetadataMacroInput);
+    let struct_decl = parse_macro_input!(item as ItemStruct);
+    commandmetadata::implement_metadata(&input, &struct_decl)
+        .unwrap_or_default()
         .into()
 }

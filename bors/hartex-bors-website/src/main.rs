@@ -33,6 +33,7 @@
 use std::sync::LazyLock;
 
 use async_lock::OnceCell;
+use handlebars::DirectorySourceOptions;
 use handlebars::Handlebars;
 use hartex_bors_database::client::SeaORMDatabaseClient;
 use hartex_log::log;
@@ -49,13 +50,14 @@ pub(crate) static HANDLEBARS: LazyLock<Handlebars> = LazyLock::new(|| {
     let mut handlebars = Handlebars::new();
     handlebars.set_strict_mode(true);
     handlebars
-        .register_templates_directory(".hbs", "./bors/hartex-bors-website/templates")
+        .register_templates_directory("./bors/hartex-bors-website/templates", DirectorySourceOptions::default())
         .unwrap();
 
     handlebars
 });
 
 /// The entry point.
+#[allow(clippy::no_effect_underscore_binding)]
 #[rocket::main]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();

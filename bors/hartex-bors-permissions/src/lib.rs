@@ -25,7 +25,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 
 use std::future::Future;
 use std::pin::Pin;
@@ -49,6 +48,7 @@ pub struct BackendApiPermissionResolver {
 
 impl BackendApiPermissionResolver {
     /// Load the permission resolver
+    #[allow(clippy::missing_errors_doc)]
     pub async fn load(repository: GithubRepositoryName) -> miette::Result<Self> {
         let permissions = permissions::load(&repository).await?;
 

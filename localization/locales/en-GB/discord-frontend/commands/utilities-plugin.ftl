@@ -20,4 +20,31 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
-serverinfo-embed-title=Information about {$serverName}
+botinfo-embed-title=Runtime Information
+botinfo-embed-botstarted-field-name=Bot Started
+botinfo-embed-latency-field-name=Latency (Milliseconds)
+roleinfo-embed-description=Information of {$roleMention}
+roleinfo-embed-generalinfo-field-name=General Information
+roleinfo-embed-generalinfo-id-subfield-name=ID:
+serverinfo-embed-generalinfo-color-subfield-name=Colour:
+serverinfo-embed-generalinfo-field-name=General Information
+serverinfo-embed-generalinfo-id-subfield-name=ID:
+serverinfo-embed-generalinfo-created-subfield-name=Created:
+serverinfo-embed-generalinfo-owner-subfield-name=Owner:
+serverinfo-embed-generalinfo-enabled-features-subfield-name=Server Features:
+serverinfo-embed-channelinfo-field-name=Channel Information
+serverinfo-embed-channelinfo-categories-subfield-name=Categories:
+serverinfo-embed-channelinfo-textchannels-subfield-name=Text Channels:
+serverinfo-embed-channelinfo-voicechannels-subfield-name=Voice Channels:
+serverinfo-embed-channelinfo-announcementchannels-subfield-name=Announcement Channels:
+serverinfo-embed-channelinfo-stagechannels-subfield-name=Stage Channels:
+serverinfo-embed-channelinfo-forumchannels-subfield-name=Forum Channels:
+serverinfo-embed-memberinfo-field-name=Member Information
+serverinfo-embed-memberinfo-membercount-subfield-name=Member Count:
+serverinfo-embed-memberinfo-humancount-subfield-name=Human Count:
+serverinfo-embed-memberinfo-botcount-subfield-name=Bot Count:
+serverinfo-embed-roleinfo-field-name=Role Information
+serverinfo-embed-roleinfo-rolecount-subfield-name=Role Count:
+serverinfo-embed-flags-field-name=Flags
+serverinfo-embed-flags-large-subfield-name=Is Large Server:
+serverinfo-embed-flags-default-message-notifications-subfield-name=Default Message Notification Level:

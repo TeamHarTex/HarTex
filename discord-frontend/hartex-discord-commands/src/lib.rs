@@ -25,11 +25,11 @@
 //! This crate contains implementations of the commands. These are also categozied
 //! in modules in terms of the corresponding "plugin" they belong to.
 
+#![allow(deprecated)]
 #![allow(incomplete_features)]
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 
 pub mod general;
 pub mod utilities;

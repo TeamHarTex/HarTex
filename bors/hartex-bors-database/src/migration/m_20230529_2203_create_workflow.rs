@@ -75,14 +75,14 @@ impl MigrationTrait for Migration {
                             .col(Workflow::Build)
                             .col(Workflow::Url),
                     )
-                    .to_owned(),
+                    .clone(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Workflow::Table).to_owned())
+            .drop_table(Table::drop().table(Workflow::Table).clone())
             .await
     }
 }

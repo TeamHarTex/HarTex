@@ -30,6 +30,9 @@ use std::ops::Deref;
 use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
 
+pub mod localizable;
+pub mod markdown;
+
 /// A proxied Discord HTTP cliemt.
 pub static CLIENT: Lazy<Client> = Lazy::new(|| {
     Client::builder()

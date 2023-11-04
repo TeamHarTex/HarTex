@@ -37,6 +37,8 @@ use serde_json::Value;
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
 /// Obtain the list of users having the specified permission in a repository.
+#[allow(clippy::missing_panics_doc)]  // this function cannot panic
+#[allow(clippy::unused_async)]
 #[get("/bors/repositories/<repository>/permissions/<permission>")]
 pub async fn v1_repositories_repository_permissions_permissions(
     repository: String,
@@ -44,7 +46,7 @@ pub async fn v1_repositories_repository_permissions_permissions(
 ) -> (Status, Value) {
     log::trace!("attempting to retrieve permissions data");
     let result = File::open(format!(
-        "./backend-data/bors.{}.permissions.{}",
+        "../backend-data/bors.{}.permissions.{}",
         repository.to_lowercase(),
         permission.to_lowercase()
     ));
@@ -55,7 +57,7 @@ pub async fn v1_repositories_repository_permissions_permissions(
 
     let mut file = result.unwrap();
     let mut buffer = String::new();
-    if let Err(_) = file.read_to_string(&mut buffer) {
+    if file.read_to_string(&mut buffer).is_err() {
         return (
             Status::InternalServerError,
             StatusFns::internal_server_error(),

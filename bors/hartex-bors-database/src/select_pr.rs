@@ -66,7 +66,7 @@ impl SelectPullRequest {
         add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
         add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
 
-        let result = execute_query_one(&mut select, connection).await?;
+        let result = execute_query_one(&select, connection).await?;
 
         Ok(result.map(|response| {
             (
@@ -95,7 +95,7 @@ impl SelectPullRequest {
         add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
         add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
 
-        let result = execute_query_one(&mut select, connection).await?;
+        let result = execute_query_one(&select, connection).await?;
 
         Ok(result.map(|response| {
             (
@@ -126,7 +126,7 @@ impl SelectPullRequest {
         add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
         add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
 
-        let result = execute_query_one(&mut select, connection).await?;
+        let result = execute_query_one(&select, connection).await?;
 
         Ok(result.map(|response| {
             (
@@ -155,7 +155,7 @@ impl SelectPullRequest {
         add_columns_with_prefix::<_, approve_build::Entity>(&mut select, "approve_build");
         add_columns_with_prefix::<_, build::Entity>(&mut select, "build");
 
-        let result = execute_query_many(&mut select, connection).await?;
+        let result = execute_query_many(&select, connection).await?;
 
         Ok(result
             .iter()
@@ -206,7 +206,7 @@ fn add_columns_with_prefix<S: QueryTrait<QueryStatement = SelectStatement>, T: E
 }
 
 async fn execute_query_one(
-    select: &mut Select<pull_request::Entity>,
+    select: &Select<pull_request::Entity>,
     connection: &DatabaseConnection,
 ) -> miette::Result<Option<Response>> {
     select
@@ -223,7 +223,7 @@ async fn execute_query_one(
 }
 
 async fn execute_query_many(
-    select: &mut Select<pull_request::Entity>,
+    select: &Select<pull_request::Entity>,
     connection: &DatabaseConnection,
 ) -> miette::Result<Vec<Response>> {
     select

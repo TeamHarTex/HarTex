@@ -19,6 +19,7 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
+
 about-embed-description=HarTex 是一款开源且轻量的服务器管理机器人，为有复杂需求与大量机器人配置的社区服务器量身定制
 about-embed-footer=遇到问题？加入我们的社区服务器：{$inviteLink}.
 about-embed-github-repo-field-name=GitHub 项目地址：
@@ -29,6 +30,3 @@ contributors-embed-global-admin-field-name=全局管理员 & 首席开发人员
 contributors-embed-front-dev-field-name=前端开发人员
 contributors-embed-translation-team-field-name=翻译组
 contributors-embed-footer=这并不是一个完整的名单（保留更多的屏幕空间）但感谢所有的贡献者！
--latency-initial-response = 您需要什么吗？
-latency-edited-response = {-latency-initial-response} 哦，我的延迟为：`{$latency}毫秒`.
-uptime-response={$component} 在 <t:{$timestamp}:R> 启动.

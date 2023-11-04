@@ -22,8 +22,8 @@
 
 //! # The Contributors Command
 
+use hartex_discord_commands_core::metadata;
 use hartex_discord_commands_core::traits::Command;
-use hartex_discord_commands_core::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -38,11 +38,7 @@ use hartex_localization_core::handle_errors;
 use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
 
-#[derive(CommandMetadata)]
-#[metadata(command_type = 1)]
-#[metadata(interaction_only = true)]
-#[metadata(minimum_level = 0)]
-#[metadata(name = "contributors")]
+#[metadata(command_type = 1, interaction_only = true, name = "contributors")]
 pub struct Contributors;
 
 impl Command for Contributors {
@@ -73,18 +69,18 @@ impl Command for Contributors {
             .field(
                 EmbedFieldBuilder::new(
                     contributors_embed_global_admin_field_name,
-                    "HTGAzureX1212.#4937",
+                    "htgazurex1212.",
                 )
                 .build(),
             )
             .field(
-                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "Ariz#0288")
+                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "arizlunari")
                     .build(),
             )
             .field(
                 EmbedFieldBuilder::new(
                     contributors_embed_translation_team_field_name,
-                    "teddy#6071 (Locale: `zh-CN`)\n星曌#4316 (Locale: `zh-TW`)",
+                    "madonuko (Locale: `ja`)\nteddyji (Locale: `zh-CN`)\nxzihnago (Locale: `zh-TW`)",
                 )
                 .build(),
             )

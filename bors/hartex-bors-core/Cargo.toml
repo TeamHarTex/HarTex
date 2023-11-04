@@ -1,19 +1,19 @@
 [package]
 name = "hartex_bors_core"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 HarTex bors database driver
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 miette = "5.10.0"
-octocrab = { git = "https://github.com/TeamHarTex/octocrab.git" }
-sea-orm = { version = "0.12.0-rc.4", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
-tokio = { version = "1.29.1", features = ["sync"] }
+octocrab = "0.32.0"
+sea-orm = { version = "0.12.4", features = ["sqlx-sqlite", "runtime-tokio-native-tls", "macros"] }
+tokio = { version = "1.33.0", features = ["sync"] }
 
 [features]

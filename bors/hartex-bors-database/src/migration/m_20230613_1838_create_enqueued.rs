@@ -42,14 +42,14 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(Enqueued::Repository).string().not_null())
                     .col(ColumnDef::new(Enqueued::PullRequest).integer().not_null())
-                    .to_owned(),
+                    .clone(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Enqueued::Table).to_owned())
+            .drop_table(Table::drop().table(Enqueued::Table).clone())
             .await
     }
 }

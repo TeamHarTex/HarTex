@@ -58,14 +58,14 @@ impl MigrationTrait for Migration {
                             .col(Build::Branch)
                             .col(Build::CommitHash),
                     )
-                    .to_owned(),
+                    .clone(),
             )
             .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Build::Table).to_owned())
+            .drop_table(Table::drop().table(Build::Table).clone())
             .await
     }
 }

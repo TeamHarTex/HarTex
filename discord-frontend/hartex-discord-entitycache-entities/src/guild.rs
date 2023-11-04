@@ -22,24 +22,18 @@
 
 //! # Guild Entities
 
-use hartex_discord_core::discord::model::guild::Guild;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_entitycache_core::Entity;
+use hartex_discord_entitycache_core::entity;
 
 #[allow(clippy::module_name_repetitions)]
-#[derive(Entity)]
-pub struct GuildEntity {
-    #[entity(id)]
-    pub id: Id<GuildMarker>,
-    pub name: String,
-}
-
-impl From<Guild> for GuildEntity {
-    fn from(guild: Guild) -> Self {
-        Self {
-            id: guild.id,
-            name: guild.name,
-        }
-    }
-}
+#[entity(
+    from = "twilight_model::guild::Guild",
+    id = ["id"],
+    include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
+    extra = [],
+    overrides = [
+        "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel",
+        "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
+        "GuildFeature": "twilight_model::guild::GuildFeature"
+    ],
+)]
+pub struct GuildEntity;

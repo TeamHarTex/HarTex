@@ -29,6 +29,9 @@
 **/.gradle
 **/build
 
+**/downloaded
+discord-frontend/hartex-discord-entitycache-macros/generated
+
 bors-data
 backend-data
 hartexbuild.exe

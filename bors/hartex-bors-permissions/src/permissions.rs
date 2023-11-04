@@ -38,6 +38,7 @@ use miette::{IntoDiagnostic, Report};
 use crate::Permission;
 
 /// User permissions data structure.
+#[allow(clippy::module_name_repetitions)]
 pub struct UserPermissions {
     try_build_users: HashSet<String>,
     approve_users: HashSet<String>,
@@ -45,6 +46,7 @@ pub struct UserPermissions {
 
 impl UserPermissions {
     /// Checks whether a user has a certain permission.
+    #[must_use]
     pub fn user_has_permission(&self, username: &str, permission: Permission) -> bool {
         match permission {
             Permission::Approve => self.approve_users.contains(username),

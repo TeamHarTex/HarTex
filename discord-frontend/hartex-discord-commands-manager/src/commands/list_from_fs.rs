@@ -55,7 +55,10 @@ pub fn list_from_fs_command() -> miette::Result<()> {
         }
 
         let mut buffer = String::new();
-        File::open(entry.path()).into_diagnostic()?.read_to_string(&mut buffer).into_diagnostic()?;
+        File::open(entry.path())
+            .into_diagnostic()?
+            .read_to_string(&mut buffer)
+            .into_diagnostic()?;
 
         let result = serde_json::from_str::<CommandManagerCommand>(&buffer);
         let command = match result {
@@ -65,7 +68,10 @@ pub fn list_from_fs_command() -> miette::Result<()> {
                     "deserialization failed for file: {}",
                     entry.path().to_str().unwrap()
                 );
-                println!("{:?}", Err::<(), serde_json::Error>(error).into_diagnostic());
+                println!(
+                    "{:?}",
+                    Err::<(), serde_json::Error>(error).into_diagnostic()
+                );
                 log::warn!("skipping file due to above error");
 
                 continue;

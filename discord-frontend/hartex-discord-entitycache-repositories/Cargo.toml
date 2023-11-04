@@ -1,12 +1,12 @@
 [package]
 name = "hartex_discord_entitycache_repositories"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 The repository declarations of the repository cache middleware for HarTex.
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,6 +15,7 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-mo
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-entities" }
 
-redis = { version = "0.23.0", features = ["tokio-comp"] }
+redis = { version = "0.23.3", features = ["tokio-comp"] }
+serde_scan = "0.4.1"
 
 [features]

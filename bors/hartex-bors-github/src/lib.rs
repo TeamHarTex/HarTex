@@ -25,7 +25,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(async_fn_in_trait)]
 #![feature(if_let_guard)]
 #![feature(let_chains)]
 
@@ -83,6 +82,8 @@ pub struct GithubBorsState {
 
 impl GithubBorsState {
     /// Load the Github application state for bors.
+    #[allow(clippy::large_futures)]
+    #[allow(clippy::missing_errors_doc)]
     pub async fn load(
         application_id: AppId,
         database: SeaORMDatabaseClient,
@@ -227,17 +228,6 @@ impl RepositoryClient for GithubRepositoryClient {
         branch: &str,
         commit_hash: &str,
     ) -> miette::Result<Vec<Check>> {
-        let mut response = self
-            .client
-            ._get(format!(
-                "https://api.github.com/repos/{}/{}/commits/{}/check-suites",
-                self.repository_name.owner(),
-                self.repository_name.repository(),
-                commit_hash
-            ))
-            .await
-            .into_diagnostic()?;
-
         #[derive(Deserialize)]
         struct CheckSuitePayload<'a> {
             conclusion: Option<&'a str>,
@@ -249,6 +239,17 @@ impl RepositoryClient for GithubRepositoryClient {
             #[serde(borrow)]
             check_suites: Vec<CheckSuitePayload<'a>>,
         }
+
+        let mut response = self
+            .client
+            ._get(format!(
+                "https://api.github.com/repos/{}/{}/commits/{}/check-suites",
+                self.repository_name.owner(),
+                self.repository_name.repository(),
+                commit_hash
+            ))
+            .await
+            .into_diagnostic()?;
 
         let mut full = String::new();
         while let Some(result) = response.body_mut().data().await {
@@ -284,6 +285,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(suites)
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn get_label(&self, name: &str) -> miette::Result<Label> {
         self.client
             .issues(
@@ -295,6 +297,7 @@ impl RepositoryClient for GithubRepositoryClient {
             .into_diagnostic()
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn set_labels_of_pull_request(&self, labels: Vec<String>, pr: u64) -> miette::Result<()> {
         let mut response = self
             .client
@@ -323,6 +326,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(())
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn get_pull_request(&self, pr: u64) -> miette::Result<PullRequest> {
         self.client
             .pulls(
@@ -334,6 +338,7 @@ impl RepositoryClient for GithubRepositoryClient {
             .into_diagnostic()
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn merge_branches(
         &self,
         base: &str,
@@ -343,6 +348,7 @@ impl RepositoryClient for GithubRepositoryClient {
         operations::merge_branches(self, base, head, commit_message).await
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn post_comment(&self, pr: u64, text: &str) -> miette::Result<Comment> {
         self.client
             .issues(
@@ -354,6 +360,7 @@ impl RepositoryClient for GithubRepositoryClient {
             .into_diagnostic()
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn get_revision(&self, branch: &str) -> miette::Result<String> {
         let reference = self
             .client
@@ -372,6 +379,7 @@ impl RepositoryClient for GithubRepositoryClient {
         Ok(sha)
     }
 
+    #[allow(clippy::missing_errors_doc)]
     async fn set_branch_to_revision(&self, branch: &str, revision: &str) -> miette::Result<()> {
         operations::set_branch_to_revision(self, branch.to_string(), revision.to_string()).await
     }

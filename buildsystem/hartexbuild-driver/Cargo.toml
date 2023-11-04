@@ -1,12 +1,12 @@
 [package]
 name = "hartexbuild_driver"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 HarTex buildsystem binary
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.73.0"
+rust-version = "1.75.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,7 +15,7 @@ hartexbuild_hartexfile = { path = "../hartexbuild-hartexfile" }
 
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 
-clap = "4.3.12"
+clap = "4.4.7"
 miette = { version = "5.10.0", features = ["fancy"] }
 
 [features]
