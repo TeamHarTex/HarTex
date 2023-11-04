@@ -20,11 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::app::App;
+use leptos::component;
+use leptos::logging;
+use leptos::view;
+use leptos::IntoView;
 
-mod app;
-mod home;
+#[component]
+pub fn Home() -> impl IntoView {
+    logging::log!("rendering Home component");
 
-pub fn main() {
-    leptos::mount_to_body(App)
+    view! {
+        <h1>Bors V2</h1>
+    }
 }
