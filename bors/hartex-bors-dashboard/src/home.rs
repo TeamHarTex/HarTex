@@ -23,21 +23,10 @@
 use leptos::component;
 use leptos::IntoView;
 use leptos::view;
-use leptos_router::Route;
-use leptos_router::Router;
-use leptos_router::Routes;
-
-use crate::home::Home;
 
 #[component]
-pub fn App() -> impl IntoView {
+pub fn Home() -> impl IntoView {
     view! {
-        <Router>
-            <main>
-                <Routes>
-                    <Route path="home" view=Home/>
-                </Routes>
-            </main>
-        </Router>
+        <h1>Bors V2</h1>
     }
 }
