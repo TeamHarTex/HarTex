@@ -22,6 +22,20 @@
 
 use leptos::component;
 use leptos::IntoView;
+use leptos::view;
+use leptos_router::Route;
+use leptos_router::Router;
+use leptos_router::Routes;
 
 #[component]
-pub fn App() -> impl IntoView {}
+pub fn App() -> impl IntoView {
+    view! {
+        <Router>
+            <main>
+                <Routes>
+                    <Route path="/" view=|| view! { <h1>Test</h1>} />
+                </Routes>
+            </main>
+        </Router>
+    }
+}

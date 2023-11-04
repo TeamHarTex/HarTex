@@ -1540,7 +1540,7 @@
   dependencies:
     "@unocss/core" "0.57.2"
 
-"@unocss/preset-icons@0.57.2":
+"@unocss/preset-icons@0.57.2", "@unocss/preset-icons@^0.57.0":
   version "0.57.2"
   resolved "https://registry.yarnpkg.com/@unocss/preset-icons/-/preset-icons-0.57.2.tgz#0f6c2d420ef7ec9aaa3450e029e521ef8223f773"
   integrity sha512-LlKt83+QLVvbeCCOetq20t5iUnFA+8nIL4mc1bscdK0nyVqspkZkcM8F6uqRwHcMitEbReq1K5kS99qzwUieVQ==
