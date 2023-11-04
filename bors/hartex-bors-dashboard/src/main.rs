@@ -20,14 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use leptos::view;
-
 use crate::app::App;
 
 mod app;
+mod home;
 
 pub fn main() {
-    leptos::mount_to_body(|| view! {
-        <App/>
-    })
+    leptos::mount_to_body(App)
 }
