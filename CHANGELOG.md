@@ -8,6 +8,8 @@
 
 ## Bors Buildbot
 
+- **Changed:** updated `hartex-bors-dashboard` website
+
 ## Buildsystem
 
 ## Database Queries
@@ -19,6 +21,8 @@
 ## Rust Utilities
 
 ## Web Frontend
+
+- **Changed:** app components updated
 
 # [0.5.0, Boron I](https://github.com/TeamHarTex/HarTex/compare/0.4.0..0.5.0)
 
