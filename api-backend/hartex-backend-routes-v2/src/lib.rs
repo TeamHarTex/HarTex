@@ -20,28 +20,34 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # Uptime Routes
-///
-/// Routes interacting with the uptime API.
+//! # Backend API Routes V2
+//!
+//! Routes v2 for the backend API.
 
-use hartex_backend_models_v1::uptime::UptimeQuery;
-use hartex_backend_ratelimiter::RateLimiter;
-use rocket::post;
-use rocket::response::Redirect;
-use rocket::serde::json::Json;
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 
-use crate::RateLimitGuard;
+use governor::Quota;
+use hartex_backend_ratelimiter::limitable::Limitable;
+use hartex_log::log;
+use rocket::http::Method;
 
-/// # `POST /uptime`
-///
-/// Obtain the uptime of a certain component.
-#[allow(clippy::cast_sign_loss)]
-#[allow(clippy::missing_panics_doc)]  // this function cannot panic
-#[allow(clippy::module_name_repetitions)]
-#[post("/uptime", data = "<data>")]
-pub async fn v1_post_uptime(
-    data: Json<UptimeQuery<'_>>,
-    _ratelimit: RateLimiter<'_, RateLimitGuard>,
-) -> Redirect {
-    Redirect::moved("/api/v2/uptime")
+pub mod bors;
+pub mod uptime;
+
+/// A ratelimit guard for ratelimiting requests.
+pub struct RateLimitGuard;
+
+impl<'r> Limitable<'r> for RateLimitGuard {
+    fn evaluate_limit(method: Method, route: &str) -> Quota {
+        match (method, route) {
+            (Method::Post, hmm) => {
+                log::debug!("{hmm}");
+
+                Quota::per_second(Self::non_zero(1))
+            }
+            _ => Quota::per_second(Self::non_zero(1)),
+        }
+    }
 }

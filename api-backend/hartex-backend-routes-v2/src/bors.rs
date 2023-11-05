@@ -24,8 +24,15 @@
 //!
 //! Routes interacting with the bors API.
 
+use std::fs::File;
+use std::io::Read;
+
+use hartex_backend_status_util::StatusFns;
+use hartex_log::log;
 use rocket::get;
-use rocket::response::Redirect;
+use rocket::http::Status;
+use serde_json::json;
+use serde_json::Value;
 
 /// # `GET /bors/repository/<repository>/permissions/<permission>`
 ///
@@ -33,9 +40,40 @@ use rocket::response::Redirect;
 #[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::unused_async)]
 #[get("/bors/repositories/<repository>/permissions/<permission>")]
-pub async fn v1_repositories_repository_permissions_permissions(
+pub async fn v2_repositories_repository_permissions_permissions(
     repository: String,
     permission: String,
-) -> Redirect {
-    Redirect::moved(format!("/api/v2/bors/repositories/{repository}/permissions/{permission}"))
+) -> (Status, Value) {
+    log::trace!("attempting to retrieve permissions data");
+    let result = File::open(format!(
+        "../backend-data/bors.{}.permissions.{}",
+        repository.to_lowercase(),
+        permission.to_lowercase()
+    ));
+
+    if result.is_err() {
+        return (Status::NotFound, StatusFns::not_found());
+    }
+
+    let mut file = result.unwrap();
+    let mut buffer = String::new();
+    if file.read_to_string(&mut buffer).is_err() {
+        return (
+            Status::InternalServerError,
+            StatusFns::internal_server_error(),
+        );
+    }
+
+    let users = buffer.lines().collect::<Vec<_>>();
+
+    (
+        Status::Ok,
+        json!({
+            "code": 200,
+            "message": "ok",
+            "data": {
+                "github_users": users
+            }
+        }),
+    )
 }
