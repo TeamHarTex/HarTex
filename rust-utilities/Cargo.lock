@@ -349,7 +349,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "num_enum 0.7.1",
  "num_enum_derive 0.7.1",
@@ -360,7 +360,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "hartex_discord_core",
  "hartex_localization_core",
@@ -372,7 +372,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "miette",
  "thiserror",
@@ -380,14 +380,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "fluent-bundle",
  "intl-memoizer",
@@ -397,7 +397,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_macros"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -406,7 +406,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "log",
  "log4rs",
