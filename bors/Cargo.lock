@@ -1084,7 +1084,6 @@ name = "hartex_bors_dashboard"
 version = "0.4.0"
 dependencies = [
  "hartex_bors_core",
- "hartex_bors_database",
  "leptos",
  "leptos_router",
  "stylers",

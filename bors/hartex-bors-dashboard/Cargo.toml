@@ -12,7 +12,6 @@ rust-version = "1.75.0"
 
 [dependencies]
 hartex_bors_core = { path = "../hartex-bors-core" }
-hartex_bors_database = { path = "../hartex-bors-database" }
 
 leptos = { version = "0.5.2", features = ["csr", "nightly"] }
 leptos_router = { version = "0.5.2", features = ["csr", "nightly"] }
