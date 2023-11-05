@@ -25,7 +25,7 @@ use std::env;
 use std::str;
 
 use hartex_backend_models::Response;
-use hartex_backend_models_v1::bors::RepositoryPermissionsResponse;
+use hartex_backend_models_v2::bors::RepositoryPermissionsResponse;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
 use hyper::body::HttpBody;

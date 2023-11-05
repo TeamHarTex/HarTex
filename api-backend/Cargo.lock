@@ -817,7 +817,6 @@ version = "0.4.0"
 dependencies = [
  "dotenvy",
  "hartex_backend_ratelimiter",
- "hartex_backend_routes_v1",
  "hartex_backend_routes_v2",
  "hartex_backend_status_util",
  "hartex_errors",
@@ -830,13 +829,6 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.4.0"
-dependencies = [
- "serde",
-]
-
-[[package]]
-name = "hartex_backend_models_v1"
 version = "0.4.0"
 dependencies = [
  "serde",
@@ -858,21 +850,6 @@ dependencies = [
  "hartex_backend_status_util",
  "lazy_static",
  "rocket",
-]
-
-[[package]]
-name = "hartex_backend_routes_v1"
-version = "0.4.0"
-dependencies = [
- "governor",
- "hartex_backend_models_v1",
- "hartex_backend_ratelimiter",
- "hartex_backend_status_util",
- "hartex_database_queries",
- "hartex_log",
- "rocket",
- "serde_json",
- "tokio-postgres",
 ]
 
 [[package]]
