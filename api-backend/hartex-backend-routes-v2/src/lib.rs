@@ -30,7 +30,6 @@
 
 use governor::Quota;
 use hartex_backend_ratelimiter::limitable::Limitable;
-use hartex_log::log;
 use rocket::http::Method;
 
 pub mod bors;
