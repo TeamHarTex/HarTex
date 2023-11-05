@@ -24,15 +24,18 @@
 //!
 //! Routes interacting with the bors API.
 
-use std::fs::File;
-use std::io::Read;
+use std::env;
 
+use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
 use hartex_log::log;
 use rocket::get;
 use rocket::http::Status;
 use serde_json::json;
 use serde_json::Value;
+use tokio_postgres::NoTls;
+
+use crate::RateLimitGuard;
 
 /// # `GET /bors/repositories/<repository>/permissions/<permission>`
 ///
@@ -43,28 +46,21 @@ use serde_json::Value;
 pub async fn v2_repositories_repository_permissions_permissions(
     repository: String,
     permission: String,
+    _ratelimit: RateLimiter<'_, RateLimitGuard>,
 ) -> (Status, Value) {
     log::trace!("attempting to retrieve permissions data");
-    let result = File::open(format!(
-        "../backend-data/bors.{}.permissions.{}",
-        repository.to_lowercase(),
-        permission.to_lowercase()
-    ));
 
+    let result = env::var("API_PGSQL_URL");
     if result.is_err() {
-        return (Status::NotFound, StatusFns::not_found());
+        return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let mut file = result.unwrap();
-    let mut buffer = String::new();
-    if file.read_to_string(&mut buffer).is_err() {
-        return (
-            Status::InternalServerError,
-            StatusFns::internal_server_error(),
-        );
+    let result = tokio_postgres::connect(&result.unwrap(), NoTls).await;
+    if result.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let users = buffer.lines().collect::<Vec<_>>();
+    let (_, _) = result.unwrap();
 
     (
         Status::Ok,
@@ -72,7 +68,6 @@ pub async fn v2_repositories_repository_permissions_permissions(
             "code": 200,
             "message": "ok",
             "data": {
-                "github_users": users
             }
         }),
     )
