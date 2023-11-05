@@ -6,15 +6,21 @@
 
 ## API Backend
 
+- **Added:** introduced API v2
+- **Removed:** discontinued API v1
+
 ## Bors Buildbot
 
 - **Changed:** updated `hartex-bors-dashboard` website
+- **Changed:** migrated to API v2
 
 ## Buildsystem
 
 ## Database Queries
 
 ## Discord Frontend
+
+- **Changed:** migrated to API v2
 
 ## Localization Infrastructure
 
