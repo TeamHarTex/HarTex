@@ -26,7 +26,7 @@
 
 use std::env;
 
-use hartex_backend_models_v1::uptime::UptimeQuery;
+use hartex_backend_models_v2::uptime::UptimeQuery;
 use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
@@ -46,7 +46,7 @@ use crate::RateLimitGuard;
 #[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 #[post("/uptime", data = "<data>")]
-pub async fn v1_post_uptime(
+pub async fn v2_post_uptime(
     data: Json<UptimeQuery<'_>>,
     _ratelimit: RateLimiter<'_, RateLimitGuard>,
 ) -> (Status, Value) {

@@ -20,34 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Backend API Routes V1
+//! # Backend Models V2
 //!
-//! Routes v1 for the backend API.
+//! The models in the API specification V1 for the backend.
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use governor::Quota;
-use hartex_backend_ratelimiter::limitable::Limitable;
-use hartex_log::log;
-use rocket::http::Method;
-
 pub mod bors;
 pub mod uptime;
-
-/// A ratelimit guard for ratelimiting requests.
-pub struct RateLimitGuard;
-
-impl<'r> Limitable<'r> for RateLimitGuard {
-    fn evaluate_limit(method: Method, route: &str) -> Quota {
-        match (method, route) {
-            (Method::Post, hmm) => {
-                log::debug!("{hmm}");
-
-                Quota::per_second(Self::non_zero(1))
-            }
-            _ => Quota::per_second(Self::non_zero(1)),
-        }
-    }
-}

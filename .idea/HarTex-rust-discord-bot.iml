@@ -93,6 +93,8 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-cdn/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/database-queries/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bors/hartex-bors-dashboard/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models-v2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-routes-v2/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />

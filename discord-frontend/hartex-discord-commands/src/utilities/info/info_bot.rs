@@ -25,8 +25,8 @@ use std::str;
 use std::time::SystemTime;
 
 use hartex_backend_models::Response;
-use hartex_backend_models_v1::uptime::UptimeQuery;
-use hartex_backend_models_v1::uptime::UptimeResponse;
+use hartex_backend_models_v2::uptime::UptimeQuery;
+use hartex_backend_models_v2::uptime::UptimeResponse;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
@@ -58,7 +58,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
 
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = format!("http://{api_domain}/api/v1/uptime");
+    let uri = format!("http://{api_domain}/api/v2/uptime");
     let now = SystemTime::now();
 
     log::debug!("sending a request to {}", &uri);
