@@ -32,7 +32,7 @@ pub fn main() {
     }
 
     let api_backend_queries_path = "queries/api_backend";
-    println!("cargo:rerun-if-changed={queries_path}");
+    println!("cargo:rerun-if-changed={api_backend_queries_path}");
 
     let url = env::var("API_PGSQL_URL").unwrap();
     cornucopia::generate_live(
