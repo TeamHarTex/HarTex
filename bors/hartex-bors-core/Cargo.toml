@@ -1,6 +1,6 @@
 [package]
 name = "hartex_bors_core"
-version = "0.4.0"
+version = "0.5.1"
 edition = "2021"
 description = """
 HarTex bors database driver
