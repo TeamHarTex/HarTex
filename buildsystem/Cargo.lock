@@ -173,7 +173,7 @@ checksum = "6fb8d784f27acf97159b40fc4db5ecd8aa23b9ad5ef69cdd136d3bc80665f0c0"
 
 [[package]]
 name = "hartex_errors"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "miette",
  "thiserror",
@@ -181,7 +181,7 @@ dependencies = [
 
 [[package]]
 name = "hartexbuild_driver"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "clap",
  "hartex_errors",
@@ -191,7 +191,7 @@ dependencies = [
 
 [[package]]
 name = "hartexbuild_hartexfile"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "hartex_errors",
  "hcl-rs",
