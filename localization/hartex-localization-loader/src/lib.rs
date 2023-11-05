@@ -106,7 +106,8 @@ fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResource>> {
         }
 
         let content = fs::read_to_string(entry_handle.path()).into_diagnostic()?;
-        let resource = FluentResource::try_new(content).into_diagnostic()?;
+        // todo: handle errors better here
+        let resource = FluentResource::try_new(content).unwrap();
 
         loaded.push(resource);
     }
