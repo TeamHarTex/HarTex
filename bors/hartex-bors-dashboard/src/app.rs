@@ -37,14 +37,14 @@ use crate::DATABASE;
 pub fn App() -> impl IntoView {
     logging::log!("rendering App component");
 
-    leptos::spawn_local(|_| async {
+    leptos::spawn_local(|_| (async {
         let client = SeaORMDatabaseClient::new(
             hartex_bors_database::initialize_database(false)
                 .await
                 .unwrap(),
         );
         DATABASE.set(client).ok();
-    }());
+    })());
 
     leptos::provide_context(DatabaseClientContext(DATABASE.get().unwrap().clone()));
 
