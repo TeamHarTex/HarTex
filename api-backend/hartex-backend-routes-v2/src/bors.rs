@@ -42,6 +42,7 @@ use crate::RateLimitGuard;
 /// Obtain the list of users having the specified permission in a repository.
 #[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::unused_async)]
+#[allow(unused_variables)]
 #[get("/bors/repositories/<repository>/permissions/<permission>")]
 pub async fn v2_repositories_repository_permissions_permissions(
     repository: String,
