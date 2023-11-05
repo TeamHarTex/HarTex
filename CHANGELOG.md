@@ -16,6 +16,8 @@
 
 ## Localization Infrastructure
 
+- **Added:** added `hartex-localizations-bindings` and `hartex-localization-loader` crates
+
 ## Rust Utilities
 
 ## Web Frontend
