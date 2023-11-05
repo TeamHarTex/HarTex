@@ -69,8 +69,45 @@ impl LocalizationBundleHolder {
     }
 }
 
-fn load_bundle(_: PathBuf, _: LanguageIdentifier) -> miette::Result<LocalizationBundle> {
-    todo!()
+fn load_bundle(mut base_path: PathBuf, lang_ident: LanguageIdentifier) -> miette::Result<LocalizationBundle> {
+    let lang_name = lang_ident.to_string();
+    base_path.push(&lang_name);
+
+    let mut bundle = LocalizationBundle::new_concurrent(vec![lang_ident]);
+
+    for resource in load_resources(base_path)? {
+        bundle.add_resource_overriding(Arc::new(resource));
+    }
+
+    Ok(bundle)
+}
+
+fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResource>> {
+    let mut loaded = Vec::new();
+
+    let dir_handle = fs::read_dir(path).into_diagnostic()?;
+
+    for result in dir_handle {
+        let entry_handle = result.into_diagnostic()?;
+
+        let meta = entry_handle.file_type().into_diagnostic()?;
+        if meta.is_dir() {
+            continue;
+        }
+
+        let file_name = entry_handle.file_name();
+        let name = file_name.to_string_lossy();
+        if !name.ends_with(".ftl") {
+            continue;
+        }
+
+        let content = fs::read_to_string(entry_handle.path()).into_diagnostic()?;
+        let resource = FluentResource::try_new(content).into_diagnostic()?;
+
+        loaded.push(resource);
+    }
+
+    Ok(loaded)
 }
 
 type LocalizationBundle = FluentBundle<Arc<FluentResource>, ConcurrentIntlLangMemoizer>;
