@@ -44,7 +44,7 @@ pub fn App() -> impl IntoView {
                 .unwrap(),
         );
         DATABASE.set(client).ok();
-    });
+    }());
 
     leptos::provide_context(DatabaseClientContext(DATABASE.get().unwrap().clone()));
 
