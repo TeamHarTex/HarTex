@@ -349,7 +349,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "num_enum 0.7.1",
  "num_enum_derive 0.7.1",
@@ -360,7 +360,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_localization_core",
@@ -372,7 +372,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "miette",
  "thiserror",
@@ -380,14 +380,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "fluent-bundle",
  "intl-memoizer",
@@ -397,7 +397,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_macros"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -406,7 +406,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "log",
  "log4rs",
@@ -1476,13 +1476,13 @@ dependencies = [
 
 [[package]]
 name = "winapi-i686-pc-windows-gnu"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
 
 [[package]]
 name = "winapi-x86_64-pc-windows-gnu"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
