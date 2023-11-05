@@ -67,6 +67,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
+name = "hartex_localization_bindings"
+version = "0.5.1"
+dependencies = [
+ "fluent-bundle",
+ "fluent-syntax",
+ "intl-memoizer",
+ "miette",
+ "unic-langid",
+]
+
+[[package]]
 name = "hartex_localization_core"
 version = "0.5.1"
 dependencies = [
