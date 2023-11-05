@@ -34,13 +34,13 @@ use rocket::http::Status;
 use serde_json::json;
 use serde_json::Value;
 
-/// # `GET /bors/repository/<repository>/permissions/<permission>`
+/// # `GET /bors/repositories/<repository>/permissions/<permission>`
 ///
 /// Obtain the list of users having the specified permission in a repository.
 #[allow(clippy::missing_panics_doc)]  // this function cannot panic
 #[allow(clippy::unused_async)]
 #[get("/bors/repositories/<repository>/permissions/<permission>")]
-pub async fn v1_repositories_repository_permissions_permissions(
+pub async fn v2_repositories_repository_permissions_permissions(
     repository: String,
     permission: String,
 ) -> (Status, Value) {
