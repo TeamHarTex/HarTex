@@ -52,7 +52,8 @@ impl LocalizationBundleHolder {
                 continue;
             }
 
-            let lang_name = entry_handle.file_name().to_string_lossy();
+            let file_name = entry_handle.file_name();
+            let lang_name = file_name.to_string_lossy();
 
             let Ok(lang_ident) = lang_name.parse::<LanguageIdentifier>() else {
                 continue;
