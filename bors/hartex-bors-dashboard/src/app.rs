@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_bors_database::client::SeaORMDatabaseClient;
 use leptos::component;
 use leptos::logging;
 use leptos::view;
@@ -29,10 +30,23 @@ use leptos_router::Router;
 use leptos_router::Routes;
 
 use crate::home::Home;
+use crate::DatabaseClientContext;
+use crate::DATABASE;
 
 #[component]
 pub fn App() -> impl IntoView {
     logging::log!("rendering App component");
+
+    leptos::spawn_local(|_| async {
+        let client = SeaORMDatabaseClient::new(
+            hartex_bors_database::initialize_database(false)
+                .await
+                .unwrap(),
+        );
+        DATABASE.set(client).ok();
+    });
+
+    leptos::provide_context(DatabaseClientContext(DATABASE.get().unwrap().clone()));
 
     view! {
         <Router>
