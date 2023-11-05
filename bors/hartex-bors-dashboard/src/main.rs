@@ -23,7 +23,6 @@
 use std::sync::OnceLock;
 
 use hartex_bors_database::client::SeaORMDatabaseClient;
-use leptos::SignalGet;
 
 use crate::app::App;
 

@@ -39,7 +39,7 @@ pub fn Home() -> impl IntoView {
     logging::log!("rendering Home component");
 
     let context = leptos::expect_context::<DatabaseClientContext>();
-    let resource = Resource::once(|_| async { context.0.get_repositories().await });
+    let resource = Resource::once(|| async { context.0.get_repositories().await });
 
     let error_fallback = move |_: RwSignal<Errors>| {
         view! {
