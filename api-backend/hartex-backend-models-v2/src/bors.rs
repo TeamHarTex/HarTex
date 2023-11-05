@@ -20,28 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # Uptime Routes
-///
-/// Routes interacting with the uptime API.
+//! # Bors Models V1
+//!
+//! Models for the bors API specification V1 of the backend.
 
-use hartex_backend_models_v1::uptime::UptimeQuery;
-use hartex_backend_ratelimiter::RateLimiter;
-use rocket::post;
-use rocket::response::Redirect;
-use rocket::serde::json::Json;
+use serde::Deserialize;
 
-use crate::RateLimitGuard;
+/// A response to a repository permissions query.
+#[derive(Clone, Deserialize)]
+pub struct RepositoryPermissionsResponse {
+    github_users: Vec<String>,
+}
 
-/// # `POST /uptime`
-///
-/// Obtain the uptime of a certain component.
-#[allow(clippy::cast_sign_loss)]
-#[allow(clippy::missing_panics_doc)]  // this function cannot panic
-#[allow(clippy::module_name_repetitions)]
-#[post("/uptime", data = "<data>")]
-pub async fn v1_post_uptime(
-    data: Json<UptimeQuery<'_>>,
-    _ratelimit: RateLimiter<'_, RateLimitGuard>,
-) -> Redirect {
-    Redirect::moved("/api/v2/uptime")
+impl RepositoryPermissionsResponse {
+    /// The Github users having this specific permission.
+    #[must_use]
+    pub fn github_users(&self) -> &[String] {
+        self.github_users.as_ref()
+    }
 }

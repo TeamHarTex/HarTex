@@ -34,6 +34,8 @@
 use dotenvy::Error;
 use hartex_backend_routes_v1::bors::v1_repositories_repository_permissions_permissions;
 use hartex_backend_routes_v1::uptime::v1_post_uptime;
+use hartex_backend_routes_v2::bors::v2_repositories_repository_permissions_permissions;
+use hartex_backend_routes_v2::uptime::v2_post_uptime;
 use hartex_errors::dotenv;
 use hartex_log::log;
 use miette::IntoDiagnostic;
@@ -70,6 +72,13 @@ pub async fn main() -> miette::Result<()> {
             routes![
                 v1_post_uptime,
                 v1_repositories_repository_permissions_permissions,
+            ],
+        )
+        .mount(
+            "/api/v2",
+            routes![
+                v2_post_uptime,
+                v2_repositories_repository_permissions_permissions,
             ],
         )
         .register(
