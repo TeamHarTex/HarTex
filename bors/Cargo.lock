@@ -874,7 +874,7 @@ dependencies = [
 
 [[package]]
 name = "futures-intrusive"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d930c203dd0b6ff06e0201a4a2fe9149b43c684fd4420555b26d21b1a02956f"
 dependencies = [
@@ -1044,21 +1044,21 @@ checksum = "eabb4a44450da02c90444cf74558da904edde8fb4e9035a9a6a4e15445af0bd7"
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_backend_models_v2"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_bors_commands"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "hartex_bors_core",
  "hartex_bors_database",
@@ -1071,7 +1071,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_core"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "miette",
  "octocrab",
@@ -1081,7 +1081,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_dashboard"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "leptos",
  "leptos_router",
@@ -1090,7 +1090,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_database"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "chrono",
  "hartex_bors_core",
@@ -1104,7 +1104,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_driver"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "dotenvy",
  "futures-util",
@@ -1124,7 +1124,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_github"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "futures",
  "hartex_bors_core",
@@ -1144,7 +1144,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_permissions"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "hartex_backend_models",
  "hartex_backend_models_v2",
@@ -1158,7 +1158,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "miette",
  "thiserror",
@@ -1166,7 +1166,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "log",
  "log4rs",
@@ -1360,7 +1360,7 @@ dependencies = [
 
 [[package]]
 name = "hyper-tls"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d6183ddfa99b85da61a140bea0efc93fdf56ceaa041b37d553518030827f9905"
 dependencies = [
@@ -1396,7 +1396,7 @@ dependencies = [
 
 [[package]]
 name = "idna"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d20d6b07bfbc108882d88ed8e37d39636dcc260e15e30c45e6ba089610b917c"
 dependencies = [
@@ -1437,7 +1437,7 @@ dependencies = [
 
 [[package]]
 name = "interpolator"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "71dd52191aae121e8611f1e8dc3e324dd0dd1dee1e6dd91d10ee07a3cfb4d9d8"
 
@@ -2583,7 +2583,7 @@ dependencies = [
 
 [[package]]
 name = "reqwest-eventsource"
-version = "0.5.0"
+version = "0.5.1"
 source = "git+https://github.com/TeamHarTex/reqwest-eventsource.git#0eeb14f611a184346f18bb9bc894f886be217bf6"
 dependencies = [
  "eventsource-stream",
@@ -2917,7 +2917,7 @@ dependencies = [
 
 [[package]]
 name = "sea-query-binder"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "36bbb68df92e820e4d5aeb17b4acd5cc8b5d18b2c36a4dd6f4626aabfa7ab1b9"
 dependencies = [
@@ -3022,7 +3022,7 @@ dependencies = [
 
 [[package]]
 name = "serde-wasm-bindgen"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3b143e2833c57ab9ad3ea280d21fd34e285a42837aeb0ee301f4f41890fa00e"
 dependencies = [
@@ -3685,7 +3685,7 @@ dependencies = [
 
 [[package]]
 name = "system-configuration-sys"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a75fb188eb626b924683e3b95e3a48e63551fcfb51949de2f06a9d91dbee93c9"
 dependencies = [
@@ -4282,7 +4282,7 @@ dependencies = [
 
 [[package]]
 name = "winapi-i686-pc-windows-gnu"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
 
@@ -4297,7 +4297,7 @@ dependencies = [
 
 [[package]]
 name = "winapi-x86_64-pc-windows-gnu"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
