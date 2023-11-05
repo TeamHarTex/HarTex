@@ -525,7 +525,7 @@ checksum = "6fb8d784f27acf97159b40fc4db5ecd8aa23b9ad5ef69cdd136d3bc80665f0c0"
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "cornucopia",
  "cornucopia_async",

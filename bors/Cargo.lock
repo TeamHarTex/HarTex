@@ -1044,21 +1044,21 @@ checksum = "eabb4a44450da02c90444cf74558da904edde8fb4e9035a9a6a4e15445af0bd7"
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_backend_models_v2"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_bors_commands"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "hartex_bors_core",
  "hartex_bors_database",
@@ -1071,7 +1071,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_core"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "miette",
  "octocrab",
@@ -1081,7 +1081,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_dashboard"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "leptos",
  "leptos_router",
@@ -1090,7 +1090,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_database"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "chrono",
  "hartex_bors_core",
@@ -1104,7 +1104,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_driver"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "dotenvy",
  "futures-util",
@@ -1124,7 +1124,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_github"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "futures",
  "hartex_bors_core",
@@ -1144,7 +1144,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_bors_permissions"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "hartex_backend_models",
  "hartex_backend_models_v2",
@@ -1158,7 +1158,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "miette",
  "thiserror",
@@ -1166,7 +1166,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "log",
  "log4rs",
