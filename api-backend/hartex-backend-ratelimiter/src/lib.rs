@@ -109,9 +109,9 @@ where
 
                 match error {
                     LimitError::RequestRateLimited(_, _) => {
-                        Outcome::Failure((Status::TooManyRequests, error))
+                        Outcome::Error((Status::TooManyRequests, error))
                     }
-                    _ => Outcome::Failure((Status::BadRequest, error)),
+                    _ => Outcome::Error((Status::BadRequest, error)),
                 }
             }
         }
