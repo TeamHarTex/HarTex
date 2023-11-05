@@ -30,7 +30,6 @@
 
 use governor::Quota;
 use hartex_backend_ratelimiter::limitable::Limitable;
-use hartex_log::log;
 use rocket::http::Method;
 
 pub mod bors;
@@ -42,11 +41,8 @@ pub struct RateLimitGuard;
 impl<'r> Limitable<'r> for RateLimitGuard {
     fn evaluate_limit(method: Method, route: &str) -> Quota {
         match (method, route) {
-            (Method::Post, hmm) => {
-                log::debug!("{hmm}");
-
-                Quota::per_second(Self::non_zero(1))
-            }
+            (Method::Get, _) => Quota::per_second(Self::non_zero(1)),
+            (Method::Post, _) => Quota::per_second(Self::non_zero(1)),
             _ => Quota::per_second(Self::non_zero(1)),
         }
     }

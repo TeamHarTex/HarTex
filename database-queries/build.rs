@@ -31,13 +31,13 @@ pub fn main() {
         return;
     }
 
-    let queries_path = "queries";
-    println!("cargo:rerun-if-changed={queries_path}");
+    let api_backend_queries_path = "queries/api_backend";
+    println!("cargo:rerun-if-changed={api_backend_queries_path}");
 
     let url = env::var("API_PGSQL_URL").unwrap();
     cornucopia::generate_live(
         &mut Client::connect(&url, NoTls).unwrap(),
-        queries_path,
+        api_backend_queries_path,
         Some("generated/api_backend.rs"),
         CodegenSettings {
             derive_ser: false,
