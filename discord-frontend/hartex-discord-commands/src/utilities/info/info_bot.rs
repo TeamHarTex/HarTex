@@ -58,7 +58,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
 
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = format!("http://{api_domain}/api/v1/uptime");
+    let uri = format!("http://{api_domain}/api/v2/uptime");
     let now = SystemTime::now();
 
     log::debug!("sending a request to {}", &uri);
