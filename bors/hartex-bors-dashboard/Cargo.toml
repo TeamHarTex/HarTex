@@ -11,9 +11,6 @@ rust-version = "1.75.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_bors_core = { path = "../hartex-bors-core" }
-hartex_bors_database = { path = "../hartex-bors-database" }
-
 leptos = { version = "0.5.2", features = ["csr", "nightly"] }
 leptos_router = { version = "0.5.2", features = ["csr", "nightly"] }
 stylers = "1.0.0-alpha"
