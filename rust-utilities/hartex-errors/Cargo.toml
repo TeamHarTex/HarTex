@@ -1,6 +1,6 @@
 [package]
 name = "hartex_errors"
-version = "0.5.0"
+version = "0.4.0"
 edition = "2021"
 description = """
 Errors in HarTex. All are displayed in the console but some may appear on Discord.
