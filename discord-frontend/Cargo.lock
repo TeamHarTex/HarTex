@@ -466,7 +466,7 @@ dependencies = [
 
 [[package]]
 name = "cornucopia_async"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "38063b8553edf452cccc674f07b3b5e3144a24712e46647bfc357040f25fdc12"
 dependencies = [
@@ -478,7 +478,7 @@ dependencies = [
 
 [[package]]
 name = "cornucopia_client_core"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95a087271917ca54f32499539f3f44c8dc112ffea0f39f47d6cde075df8d2f18"
 dependencies = [
@@ -909,21 +909,21 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_backend_models_v2"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "cornucopia",
  "cornucopia_async",
@@ -938,14 +938,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_cdn"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
 ]
 
 [[package]]
 name = "hartex_discord_commands"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "futures",
  "hartex_backend_models",
@@ -966,7 +966,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_core"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_commands_macros",
  "hartex_discord_core",
@@ -975,7 +975,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_macros"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -984,7 +984,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_manager"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "clap",
  "hartex_discord_core",
@@ -1000,7 +1000,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_test"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_commands_core",
  "hartex_discord_commands_macros",
@@ -1011,7 +1011,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_manifest"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hcl-rs",
  "miette",
@@ -1020,7 +1020,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_test"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_configuration_manifest",
  "pretty_assertions",
@@ -1028,7 +1028,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "dotenvy",
  "num_enum 0.7.1",
@@ -1044,7 +1044,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_cacheupdaters"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1054,7 +1054,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_core"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_macros",
@@ -1063,7 +1063,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_entities"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1072,7 +1072,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_macros"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "convert_case",
  "hartex-macro-utils",
@@ -1087,7 +1087,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_repositories"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1098,7 +1098,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_test"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_macros",
@@ -1110,7 +1110,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_leader"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
@@ -1125,7 +1125,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_localization_core",
@@ -1137,7 +1137,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_worker"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "chrono",
  "futures-util",
@@ -1163,14 +1163,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "fluent-bundle",
  "intl-memoizer",
@@ -1180,7 +1180,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_macros"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1189,7 +1189,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "log",
  "log4rs",
@@ -1356,7 +1356,7 @@ dependencies = [
 
 [[package]]
 name = "hyper-tls"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d6183ddfa99b85da61a140bea0efc93fdf56ceaa041b37d553518030827f9905"
 dependencies = [
@@ -1369,7 +1369,7 @@ dependencies = [
 
 [[package]]
 name = "hyper-trust-dns"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0deaf08b5c5409c0c74011f696a82bdadae4c6d70b7a71edf8378b29bdd840bd"
 dependencies = [
@@ -1416,7 +1416,7 @@ dependencies = [
 
 [[package]]
 name = "idna"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d20d6b07bfbc108882d88ed8e37d39636dcc260e15e30c45e6ba089610b917c"
 dependencies = [
@@ -2680,7 +2680,7 @@ dependencies = [
 
 [[package]]
 name = "system-configuration-sys"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a75fb188eb626b924683e3b95e3a48e63551fcfb51949de2f06a9d91dbee93c9"
 dependencies = [
@@ -2925,7 +2925,7 @@ dependencies = [
 
 [[package]]
 name = "tokio-websockets"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6475b54c23ea1ed20e4ef66fe8ae4c66e6ccc714bfef2920c6165827b7904d34"
 dependencies = [
@@ -3180,7 +3180,7 @@ dependencies = [
 
 [[package]]
 name = "type-map"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "deb68604048ff8fa93347f02441e4487594adc20bb8a084f9e564d2b827a0a9f"
 dependencies = [
@@ -3479,7 +3479,7 @@ dependencies = [
 
 [[package]]
 name = "winapi-i686-pc-windows-gnu"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
 
@@ -3494,7 +3494,7 @@ dependencies = [
 
 [[package]]
 name = "winapi-x86_64-pc-windows-gnu"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
