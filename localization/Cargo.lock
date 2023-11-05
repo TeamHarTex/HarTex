@@ -68,7 +68,7 @@ checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "fluent-bundle",
  "intl-memoizer",
@@ -77,8 +77,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_localization_loader"
+version = "0.5.1"
+dependencies = [
+ "fluent-bundle",
+ "fluent-syntax",
+ "intl-memoizer",
+ "miette",
+ "unic-langid",
+]
+
+[[package]]
 name = "hartex_localization_macros"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -87,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_test"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "hartex_localization_core",
  "hartex_localization_macros",
