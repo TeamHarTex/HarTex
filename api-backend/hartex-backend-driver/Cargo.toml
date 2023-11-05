@@ -12,7 +12,6 @@ rust-version = "1.75.0"
 
 [dependencies]
 hartex_backend_ratelimiter = { path = "../hartex-backend-ratelimiter" }
-hartex_backend_routes_v1 = { path = "../hartex-backend-routes-v1" }
 hartex_backend_routes_v2 = { path = "../hartex-backend-routes-v2" }
 hartex_backend_status_util = { path = "../hartex-backend-status-util" }
 

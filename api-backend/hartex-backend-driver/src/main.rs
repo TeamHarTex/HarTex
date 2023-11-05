@@ -32,8 +32,6 @@
 #![deny(warnings)]
 
 use dotenvy::Error;
-use hartex_backend_routes_v1::bors::v1_repositories_repository_permissions_permissions;
-use hartex_backend_routes_v1::uptime::v1_post_uptime;
 use hartex_backend_routes_v2::bors::v2_repositories_repository_permissions_permissions;
 use hartex_backend_routes_v2::uptime::v2_post_uptime;
 use hartex_errors::dotenv;
@@ -67,13 +65,6 @@ pub async fn main() -> miette::Result<()> {
 
     log::debug!("igniting rocket");
     let rocket = rocket::custom(Config::figment().merge(("port", 8000)))
-        .mount(
-            "/api/v1",
-            routes![
-                v1_post_uptime,
-                v1_repositories_repository_permissions_permissions,
-            ],
-        )
         .mount(
             "/api/v2",
             routes![

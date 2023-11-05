@@ -25,8 +25,8 @@ use std::str;
 use std::time::SystemTime;
 
 use hartex_backend_models::Response;
-use hartex_backend_models_v1::uptime::UptimeQuery;
-use hartex_backend_models_v1::uptime::UptimeResponse;
+use hartex_backend_models_v2::uptime::UptimeQuery;
+use hartex_backend_models_v2::uptime::UptimeResponse;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
