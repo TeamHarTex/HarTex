@@ -20,10 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::sync::OnceLock;
+
+use hartex_bors_database::client::SeaORMDatabaseClient;
+use leptos::SignalGet;
+
 use crate::app::App;
 
 mod app;
 mod home;
+
+pub(crate) static DATABASE: OnceLock<SeaORMDatabaseClient> = OnceLock::new();
+
+#[derive(Clone)]
+pub(crate) struct DatabaseClientContext(pub(crate) SeaORMDatabaseClient);
 
 pub fn main() {
     leptos::mount_to_body(App)
