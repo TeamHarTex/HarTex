@@ -57,7 +57,7 @@ pub fn Home() -> impl IntoView {
         resource.and_then(|data| {
             data.iter()
                 .map(|repository| view! {
-                <li><a href={format!("queue/{}", repository.name.clone())}>{repository.name.clone()}</li>
+                <li><a href={format!("queue/{}", repository.name.clone())}>{repository.name.clone()}</a></li>
             })
                 .collect_view()
         })
