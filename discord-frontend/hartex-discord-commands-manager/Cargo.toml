@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_commands_manager"
-version = "0.5.1"
+version = "0.5.0"
 edition = "2021"
 description = """
 The commands manager of the bot.
@@ -17,7 +17,7 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 clap = "4.4.7"
 hyper = { version = "0.14.27", features = ["client", "http2"] }
-hyper-trust-dns = { version = "0.5.1", features = ["native-tls"] }
+hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 miette = { version = "5.10.0", features = ["fancy"] }
 owo-colors = "3.5.0"
 serde = { version = "1.0.190", features = ["derive"] }

@@ -68,7 +68,7 @@ checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "fluent-bundle",
  "intl-memoizer",
@@ -78,7 +78,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_macros"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -87,7 +87,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_test"
-version = "0.5.1"
+version = "0.5.0"
 dependencies = [
  "hartex_localization_core",
  "hartex_localization_macros",
@@ -344,7 +344,7 @@ dependencies = [
 
 [[package]]
 name = "type-map"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "deb68604048ff8fa93347f02441e4487594adc20bb8a084f9e564d2b827a0a9f"
 dependencies = [
@@ -418,7 +418,7 @@ dependencies = [
 
 [[package]]
 name = "winapi-i686-pc-windows-gnu"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
 
@@ -433,6 +433,6 @@ dependencies = [
 
 [[package]]
 name = "winapi-x86_64-pc-windows-gnu"
-version = "0.5.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"

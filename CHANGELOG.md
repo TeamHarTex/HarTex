@@ -1,30 +1,8 @@
-# [Next Version, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.1...nightly)
+# [Next Version, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.0...nightly)
 
 > **x** contributors made contributions to this release
 
 > **y** commits since 2022-11-03
-
-## API Backend
-
-## Bors Buildbot
-
-## Buildsystem
-
-## Database Queries
-
-## Discord Frontend
-
-## Localization Infrastructure
-
-## Rust Utilities
-
-## Web Frontend
-
-# [0.5.1, Boron II](https://github.com/TeamHarTex/HarTex/compare/0.5.0..0.5.1)
-
-> **1** contributor made contributions to this release
-
-> **48** commits since 2022-11-03
 
 ## API Backend
 
@@ -36,9 +14,17 @@
 - **Changed:** updated `hartex-bors-dashboard` website
 - **Changed:** migrated to API v2
 
+## Buildsystem
+
+## Database Queries
+
 ## Discord Frontend
 
 - **Changed:** migrated to API v2
+
+## Localization Infrastructure
+
+## Rust Utilities
 
 ## Web Frontend
 
