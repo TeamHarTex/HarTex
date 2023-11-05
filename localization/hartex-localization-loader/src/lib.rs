@@ -67,6 +67,10 @@ impl LocalizationBundleHolder {
             bundles,
         })
     }
+
+    pub fn get_bundle(&self, lang: &str) -> Option<&LocalizationBundle> {
+        self.bundles.get(lang)
+    }
 }
 
 fn load_bundle(mut base_path: PathBuf, lang_ident: LanguageIdentifier) -> miette::Result<LocalizationBundle> {
