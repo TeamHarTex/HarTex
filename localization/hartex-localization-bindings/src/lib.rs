@@ -34,6 +34,9 @@ use hartex_localization_loader::env::base_path;
 use hartex_localization_loader::load_resources;
 use proc_macro::Span;
 use proc_macro::TokenStream;
+use proc_macro2::Span as Span2;
+use quote::quote;
+use syn::LitStr;
 
 struct LocalizationNode<'a> {
     category: &'a str,
@@ -70,11 +73,72 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         return TokenStream::new();
     };
 
-    let _ = resources
+    let mut nodes = resources
         .iter()
         .flat_map(|resource| generate_nodes_for_resource(&resource.name, &resource.resource))
         .map(|node| (node.name.to_string(), node))
         .collect::<HashMap<_, _>>();
+
+    let messages = nodes
+        .iter()
+        .filter(|(_, node)| !node.term)
+        .map(|(name, _)| LitStr::new(name.as_str(), Span2::call_site()))
+        .collect::<Vec<_>>();
+    let message_count = messages.len();
+
+    let terms = nodes
+        .iter()
+        .filter(|(_, node)| node.term)
+        .map(|(name, _)| LitStr::new(name.as_str(), Span2::call_site()))
+        .collect::<Vec<_>>();
+    let term_count = terms.len();
+
+    loop {
+        let Some(dependency_name) = nodes
+            .iter()
+            .filter_map(|(_, node)| {
+                node.dependencies
+                    .iter()
+                    .next()
+                    .map(|dependency| dependency.to_string())
+            })
+            .next()
+        else {
+            break;
+        };
+
+        let Some((variables, dependencies)) = nodes
+            .get(dependency_name.as_str())
+            .map(|node| (node.variables.clone(), node.dependencies.clone()))
+        else {
+            panic!(
+                "encountered a dependency on localization node `{name}` but no such node was loaded"
+            );
+        };
+
+        for (name, node) in nodes
+            .iter_mut()
+            .filter(|(_, node)| node.dependencies.contains(dependency_name.as_str()))
+        {
+            if name.as_str() == dependency_name.as_str() {
+                panic!("Cyclic localization loop detected at node {name}!");
+            }
+
+            node.dependencies.remove(dependency_name.as_str());
+            node.variables.extend(variables.iter());
+            node.dependencies.extend(dependencies.iter());
+        }
+    }
+
+    let _ = quote! {
+        pub const MESSAGES: [&str; #message_count] = [#(#messages,)*];
+        pub const TERMS: [&str; #term_count] = [#(#terms,)*];
+
+        pub struct Localizer<'a> {
+            localizations: &'a hartex_localization_loader::LocalizationBundleHolder,
+            language: &'a str,
+        }
+    };
 
     TokenStream::new()
 }
@@ -117,8 +181,10 @@ fn process_expression<'a>(expression: &'a Expression<&'a str>, node: &mut Locali
     }
 }
 
-
-fn process_inline_expression<'a>(expression: &'a InlineExpression<&'a str>, node: &mut LocalizationNode<'a>) {
+fn process_inline_expression<'a>(
+    expression: &'a InlineExpression<&'a str>,
+    node: &mut LocalizationNode<'a>,
+) {
     match expression {
         InlineExpression::FunctionReference { .. } => unimplemented!(),
         InlineExpression::MessageReference { id, .. } => node.dependencies.insert(id.name),
