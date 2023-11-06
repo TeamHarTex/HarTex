@@ -187,9 +187,15 @@ fn process_inline_expression<'a>(
 ) {
     match expression {
         InlineExpression::FunctionReference { .. } => unimplemented!(),
-        InlineExpression::MessageReference { id, .. } => node.dependencies.insert(id.name),
-        InlineExpression::TermReference { id, .. } => node.dependencies.insert(id.name),
-        InlineExpression::VariableReference { id } => node.variables.insert(id.name),
+        InlineExpression::MessageReference { id, .. } => {
+            node.dependencies.insert(id.name);
+        }
+        InlineExpression::TermReference { id, .. } => {
+            node.dependencies.insert(id.name);
+        }
+        InlineExpression::VariableReference { id } => {
+            node.variables.insert(id.name);
+        }
         InlineExpression::Placeable { expression } => process_expression(expression, node),
         InlineExpression::StringLiteral { .. } | InlineExpression::NumberLiteral { .. } => (),
     };
