@@ -31,7 +31,7 @@ use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemoizer;
 use miette::IntoDiagnostic;
 use unic_langid::LanguageIdentifier;
 
-mod env;
+pub mod env;
 
 pub struct LocalizationBundleHolder {
     bundles: HashMap<String, LocalizationBundle>
@@ -86,7 +86,7 @@ fn load_bundle(mut base_path: PathBuf, lang_ident: LanguageIdentifier) -> miette
     Ok(bundle)
 }
 
-fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResource>> {
+pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResource>> {
     let mut loaded = Vec::new();
 
     let dir_handle = fs::read_dir(path).into_diagnostic()?;
