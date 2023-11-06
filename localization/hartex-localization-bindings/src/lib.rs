@@ -112,7 +112,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             .map(|node| (node.variables.clone(), node.dependencies.clone()))
         else {
             panic!(
-                "encountered a dependency on localization node `{name}` but no such node was loaded"
+                "encountered a dependency on localization node `{dependency_name}` but no such node was loaded"
             );
         };
 
