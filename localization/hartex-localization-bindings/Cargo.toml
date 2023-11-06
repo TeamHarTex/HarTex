@@ -17,6 +17,9 @@ fluent-bundle = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = 
 fluent-syntax = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 intl-memoizer = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 miette = "5.10.0"
+proc-macro2 = "1.0.69"
+quote = "1.0.33"
+syn = "2.0.39"
 unic-langid = { version = "0.9.1", features = ["macros"] }
 
 [lib]

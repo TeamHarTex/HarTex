@@ -75,6 +75,9 @@ dependencies = [
  "hartex_localization_loader",
  "intl-memoizer",
  "miette",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.39",
  "unic-langid",
 ]
 
