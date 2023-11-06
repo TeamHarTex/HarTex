@@ -138,6 +138,15 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             localizations: &'a hartex_localization_loader::LocalizationBundleHolder,
             language: &'a str,
         }
+
+        impl<'a> Localizer<'a> {
+            pub fn new(holder: &'a hartex_localization_loader::LocalizationBundleHolder, language: &'a str) -> Localizer<'a> {
+                Self {
+                    localizations: holder,
+                    language,
+                }
+            }
+        }
     };
 
     TokenStream::new()
