@@ -34,7 +34,12 @@ use unic_langid::LanguageIdentifier;
 pub mod env;
 
 pub struct LocalizationBundleHolder {
-    bundles: HashMap<String, LocalizationBundle>
+    bundles: HashMap<String, LocalizationBundle>,
+}
+
+pub struct FluentResourceWrapper {
+    pub name: String,
+    pub resource: Arc<FluentResource>,
 }
 
 impl LocalizationBundleHolder {
@@ -63,9 +68,7 @@ impl LocalizationBundleHolder {
             bundles.insert(lang_name.to_string(), bundle);
         }
 
-        Ok(Self {
-            bundles,
-        })
+        Ok(Self { bundles })
     }
 
     pub fn get_bundle(&self, lang: &str) -> Option<&LocalizationBundle> {
@@ -73,20 +76,23 @@ impl LocalizationBundleHolder {
     }
 }
 
-fn load_bundle(mut base_path: PathBuf, lang_ident: LanguageIdentifier) -> miette::Result<LocalizationBundle> {
+fn load_bundle(
+    mut base_path: PathBuf,
+    lang_ident: LanguageIdentifier,
+) -> miette::Result<LocalizationBundle> {
     let lang_name = lang_ident.to_string();
     base_path.push(&lang_name);
 
     let mut bundle = LocalizationBundle::new_concurrent(vec![lang_ident]);
 
     for resource in load_resources(base_path)? {
-        bundle.add_resource_overriding(Arc::new(resource));
+        bundle.add_resource_overriding(resource.resource);
     }
 
     Ok(bundle)
 }
 
-pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResource>> {
+pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResourceWrapper>> {
     let mut loaded = Vec::new();
 
     let dir_handle = fs::read_dir(path).into_diagnostic()?;
@@ -109,7 +115,10 @@ pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResource>> {
         // todo: handle errors better here
         let resource = FluentResource::try_new(content).unwrap();
 
-        loaded.push(resource);
+        loaded.push(FluentResourceWrapper {
+            name: name.strip_suffix(".ftl").unwrap().to_string(),
+            resource: Arc::new(resource),
+        });
     }
 
     Ok(loaded)
