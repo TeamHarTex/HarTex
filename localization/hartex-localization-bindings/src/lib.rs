@@ -63,7 +63,8 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     let Ok(resources) = load_resources(base_dir) else {
         Span::call_site()
             .error(format!(
-                "failed to load localization resources from folder: {base_dir}"
+                "failed to load localization resources from folder: {}",
+                base_dir.to_string_lossy(),
             ))
             .emit();
         return TokenStream::new();
@@ -123,7 +124,7 @@ fn process_inline_expression<'a>(expression: &'a InlineExpression<&'a str>, node
         InlineExpression::MessageReference { id, .. } => node.dependencies.insert(id.name),
         InlineExpression::TermReference { id, .. } => node.dependencies.insert(id.name),
         InlineExpression::VariableReference { id } => node.variables.insert(id.name),
-        PatternElement::Placeable { expression } => process_expression(expression, node),
+        InlineExpression::Placeable { expression } => process_expression(expression, node),
         InlineExpression::StringLiteral { .. } | InlineExpression::NumberLiteral { .. } => (),
     };
 }
