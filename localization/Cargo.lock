@@ -72,8 +72,12 @@ version = "0.5.1"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
+ "hartex_localization_loader",
  "intl-memoizer",
  "miette",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.39",
  "unic-langid",
 ]
 
