@@ -63,7 +63,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     let mut base_dir = base_path();
     base_dir.push("en-GB"); // todo: may not want to assume en-GB as default?
 
-    let Ok(resources) = load_resources(base_dir) else {
+    let Ok(resources) = load_resources(base_dir.clone()) else {
         Span::call_site()
             .error(format!(
                 "failed to load localization resources from folder: {}",
