@@ -14,6 +14,7 @@ rust-version = "1.75.0"
 hartex_localization_core = { path = "../hartex-localization-core" }
 
 [dev-dependencies]
+hartex_localization_bindings = { path = "../hartex-localization-bindings" }
 hartex_localization_core = { path = "../hartex-localization-core" }
 hartex_localization_macros = { path = "../hartex-localization-macros" }
 

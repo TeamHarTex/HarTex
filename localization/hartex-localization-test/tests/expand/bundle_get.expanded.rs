@@ -7,7 +7,7 @@ fn main() {
                 let res = ::alloc::fmt::format(
                     format_args!(
                         "key `{0}` not found for locale `{1}`",
-                        "bundle-get-test-message", bundle.locales[0],
+                        "bundle-get-test-message", bundle.locales[0]
                     ),
                 );
                 res
@@ -24,7 +24,7 @@ fn main() {
                 let res = ::alloc::fmt::format(
                     format_args!(
                         "key `{0}` not found for locale `{1}`", "bundle-get-test-term",
-                        bundle.locales[0],
+                        bundle.locales[0]
                     ),
                 );
                 res
