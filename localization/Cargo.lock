@@ -115,6 +115,7 @@ dependencies = [
 name = "hartex_localization_test"
 version = "0.5.1"
 dependencies = [
+ "hartex_localization_bindings",
  "hartex_localization_core",
  "hartex_localization_macros",
  "macrotest",

@@ -947,6 +947,7 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.5.1"
 dependencies = [
+ "fluent-syntax",
  "futures",
  "hartex_backend_models",
  "hartex_backend_models_v2",
@@ -956,10 +957,13 @@ dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_repositories",
  "hartex_discord_utils",
+ "hartex_localization_bindings",
  "hartex_localization_core",
+ "hartex_localization_loader",
  "hartex_localization_macros",
  "hartex_log",
  "hyper",
+ "lazy_static",
  "miette",
  "serde_json",
 ]
@@ -1169,10 +1173,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_localization_bindings"
+version = "0.5.1"
+dependencies = [
+ "fluent-bundle",
+ "fluent-syntax",
+ "hartex_localization_loader",
+ "intl-memoizer",
+ "miette",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.39",
+ "unic-langid",
+]
+
+[[package]]
 name = "hartex_localization_core"
 version = "0.5.1"
 dependencies = [
  "fluent-bundle",
+ "intl-memoizer",
+ "miette",
+ "unic-langid",
+]
+
+[[package]]
+name = "hartex_localization_loader"
+version = "0.5.1"
+dependencies = [
+ "fluent-bundle",
+ "fluent-syntax",
  "intl-memoizer",
  "miette",
  "unic-langid",

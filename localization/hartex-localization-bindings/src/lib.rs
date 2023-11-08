@@ -22,7 +22,8 @@
 
 #![feature(proc_macro_diagnostic)]
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
+use std::collections::HashSet;
 use std::sync::Arc;
 
 use fluent_bundle::FluentResource;
@@ -32,7 +33,6 @@ use fluent_syntax::ast::InlineExpression;
 use fluent_syntax::ast::PatternElement;
 use hartex_localization_loader::env::base_path;
 use hartex_localization_loader::load_resources;
-use proc_macro::Span;
 use proc_macro::TokenStream;
 use proc_macro2::Span as Span2;
 use quote::quote;
@@ -64,13 +64,10 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     base_dir.push("en-GB"); // todo: may not want to assume en-GB as default?
 
     let Ok(resources) = load_resources(base_dir.clone()) else {
-        Span::call_site()
-            .error(format!(
-                "failed to load localization resources from folder: {}",
-                base_dir.to_string_lossy(),
-            ))
-            .emit();
-        return TokenStream::new();
+        panic!(
+            "failed to load localization resources from folder: {}",
+            base_dir.to_string_lossy(),
+        );
     };
 
     let mut nodes = resources
@@ -121,7 +118,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             .filter(|(_, node)| node.dependencies.contains(dependency_name.as_str()))
         {
             if name.as_str() == dependency_name.as_str() {
-                panic!("Cyclic localization loop detected at node {name}!");
+                panic!("cyclic localization loop detected at node {name}");
             }
 
             node.dependencies.remove(dependency_name.as_str());
@@ -130,7 +127,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         }
     }
 
-    let _ = quote! {
+    let stream = quote! {
         pub const MESSAGES: [&str; #message_count] = [#(#messages,)*];
         pub const TERMS: [&str; #term_count] = [#(#terms,)*];
 
@@ -146,10 +143,43 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     language,
                 }
             }
+
+            pub fn validate_completeness_of_default_bundle() -> miette::Result<()> {
+                let mut base_dir = hartex_localization_loader::env::base_path();
+                base_dir.push("en-GB");
+
+                let resources = hartex_localization_loader::load_resources(base_dir)?;
+
+                let mut found_messages = std::collections::HashSet::<String>::new();
+                let mut found_terms = std::collections::HashSet::<String>::new();
+
+                resources.iter()
+                    .flat_map(|resource| resource.resource.entries())
+                    .for_each(|entry| {
+                        match entry {
+                            fluent_syntax::ast::Entry::Message(message) if message.value.is_some() => {
+                                found_messages.insert(message.id.name.to_string());
+                            }
+                            fluent_syntax::ast::Entry::Term(term) => {
+                                found_terms.insert(term.id.name.to_string());
+                            }
+                            _ => ()
+                    }
+                });
+
+                let missing_messages = MESSAGES.into_iter().filter(|name| !found_messages.contains(&name.to_string())).collect::<Vec<_>>();
+                let missing_terms = TERMS.into_iter().filter(|name| !found_terms.contains(&name.to_string())).collect::<Vec<_>>();
+
+                if missing_messages.is_empty() && missing_terms.is_empty()  {
+                    Ok(())
+                } else {
+                    Err(miette::Report::msg(format!("messages {} and terms {} are missing", missing_messages.join(","), missing_terms.join(","))))
+                }
+            }
         }
     };
 
-    TokenStream::new()
+    stream.into()
 }
 
 fn generate_nodes_for_resource<'a>(
