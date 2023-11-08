@@ -22,8 +22,6 @@
 
 #![feature(proc_macro_diagnostic)]
 
-pub use fluent_syntax;
-
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::sync::Arc;
