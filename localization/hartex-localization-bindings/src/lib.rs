@@ -157,10 +157,10 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     .flat_map(|resource| resource.resource.entries())
                     .for_each(|entry| {
                         match entry {
-                            hartex_localization_bindings::fluent_syntax::ast::Entry::Message(message) if message.value.is_some() => {
+                            fluent_syntax::ast::Entry::Message(message) if message.value.is_some() => {
                                 found_messages.insert(message.id.name.to_string());
                             }
-                            hartex_localization_bindings::fluent_syntax::ast::Entry::Term(term) => {
+                            fluent_syntax::ast::Entry::Term(term) => {
                                 found_terms.insert(term.id.name.to_string());
                             }
                             _ => ()
