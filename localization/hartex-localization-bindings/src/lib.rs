@@ -22,6 +22,8 @@
 
 #![feature(proc_macro_diagnostic)]
 
+pub use fluent_syntax;
+
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -145,7 +147,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             }
 
             pub fn validate_completeness_of_default_bundle() -> miette::Result<()> {
-                let mut base_dir = hartex_localization_loader::base_path();
+                let mut base_dir = hartex_localization_loader::env::base_path();
                 base_dir.push("en-GB");
 
                 let resources = hartex_localization_loader::load_resources(base_dir)?;
@@ -157,10 +159,10 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     .flat_map(|resource| resource.resource.entries())
                     .for_each(|entry| {
                         match entry {
-                            fluent_syntax::ast::Entry::Message(message) if message.value.is_some() => {
+                            hartex_localization_bindings::fluent_syntax::ast::Entry::Message(message) if message.value.is_some() => {
                                 found_messages.insert(message.id.name.to_string());
                             }
-                            fluent_syntax::ast::Entry::Term(term) => {
+                            hartex_localization_bindings::fluent_syntax::ast::Entry::Term(term) => {
                                 found_terms.insert(term.id.name.to_string());
                             }
                             _ => ()
@@ -173,7 +175,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                 if missing_messages.is_empty() && missing_terms.is_empty()  {
                     Ok(())
                 } else {
-                    Err(Report::msg(format!("messages {} and terms {} are missing", missing_messages.join(","), missing_terms.join(","))))
+                    Err(miette::Report::msg(format!("messages {} and terms {} are missing", missing_messages.join(","), missing_terms.join(","))))
                 }
             }
         }
