@@ -31,5 +31,16 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use hartex_localization_loader::LocalizationBundleHolder;
+use lazy_static::lazy_static;
+
 pub mod general;
 pub mod utilities;
+
+mod localization;
+
+lazy_static! {
+    static ref LOCALIZATION_HOLDER: LocalizationBundleHolder = {
+        LocalizationBundleHolder::load_localizations().unwrap()
+    };
+}
