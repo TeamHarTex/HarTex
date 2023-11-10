@@ -18,7 +18,7 @@ hartex_bors_permissions = { path = "../hartex-bors-permissions" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 futures = "0.3.29"
-http = "0.2.9"
+http = "0.2.10"
 http-body = "0.4.5"
 jsonwebtoken = "9.1.0"
 miette = "5.10.0"
