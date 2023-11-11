@@ -176,6 +176,24 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     Err(miette::Report::msg(format!("messages {} and terms {} are missing", missing_messages.join(","), missing_terms.join(","))))
                 }
             }
+
+            fn localize(&self, name: &str, term: bool, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
+                let bundle = self.lcoalizations.get_bundle(self.language);
+
+                let message = if term {
+                    bundle.get_term(name).unwrap()
+                } else {
+                    bundle.get_message(name).unwrap()
+                };
+                let mut errors = Vec::new();
+                let localized = message.format_pattern(message.value().unwrap(), arguments.as_ref(), &mut errors);
+
+                if errors.is_empty() {
+                    return Ok(localized.to_string());
+                }
+
+                Err(miette::Report::msg(format!("errors found: {}", errors.join(","))))
+            }
         }
     };
 
