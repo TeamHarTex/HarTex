@@ -178,7 +178,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             }
 
             fn localize(&self, name: &str, term: bool, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
-                let bundle = self.lcoalizations.get_bundle(self.language);
+                let bundle = self.localizations.get_bundle(self.language);
 
                 let message = if term {
                     bundle.get_term(name).unwrap()
