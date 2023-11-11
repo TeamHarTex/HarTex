@@ -177,14 +177,10 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                 }
             }
 
-            fn localize(&self, name: &str, term: bool, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
+            fn localize_message(&self, name: &str, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
                 let bundle = self.localizations.get_bundle(self.language);
 
-                let message = if term {
-                    bundle.get_term(name).unwrap()
-                } else {
-                    bundle.get_message(name).unwrap()
-                };
+                let message = bundle.get_message(name).unwrap();
                 let mut errors = Vec::new();
                 let localized = message.format_pattern(message.value().unwrap(), arguments.as_ref(), &mut errors);
 
@@ -192,7 +188,21 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     return Ok(localized.to_string());
                 }
 
-                Err(miette::Report::msg(format!("errors found: {}", errors.join(","))))
+                Err(miette::Report::msg(format!("errors found when localizing message: {}", errors.join(","))))
+            }
+
+            fn localize_term(&self, name: &str, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
+                let bundle = self.localizations.get_bundle(self.language);
+
+                let term = bundle.get_term(name).unwrap();
+                let mut errors = Vec::new();
+                let localized = term.format_pattern(term.value().unwrap(), arguments.as_ref(), &mut errors);
+
+                if errors.is_empty() {
+                    return Ok(localized.to_string());
+                }
+
+                Err(miette::Report::msg(format!("errors found when localizing term: {}", errors.join(","))))
             }
         }
     };
