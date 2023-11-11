@@ -18,8 +18,12 @@ time = "0.3.30"
 tokio-postgres = "0.7.10"
 postgres-types = { version = "0.2.6", features = ["with-time-0_3"]}
 
-
 [build-dependencies]
 cornucopia = "0.9.0"
 dotenvy = "0.15.7"
 postgres = "0.19.7"
+
+[profile.release]
+codegen-units = 1
+debug = true
+lto = "fat"
