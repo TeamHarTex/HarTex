@@ -182,7 +182,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
 
                 let message = bundle.get_message(name).unwrap();
                 let mut errors = Vec::new();
-                let localized = message.format_pattern(message.value().unwrap(), arguments.as_ref(), &mut errors);
+                let localized = bundle.format_pattern(message.value().unwrap(), arguments.as_ref(), &mut errors);
 
                 if errors.is_empty() {
                     return Ok(localized.to_string());
@@ -196,7 +196,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
 
                 let term = bundle.get_term(name).unwrap();
                 let mut errors = Vec::new();
-                let localized = term.format_pattern(term.value().unwrap(), arguments.as_ref(), &mut errors);
+                let localized = bundle.format_pattern(term.value().unwrap(), arguments.as_ref(), &mut errors);
 
                 if errors.is_empty() {
                     return Ok(localized.to_string());
