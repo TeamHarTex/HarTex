@@ -188,6 +188,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     return Ok(localized.to_string());
                 }
 
+                let errors = errors.iter().map(ToString::to_string).collect::<Vec<_>>();
                 Err(miette::Report::msg(format!("errors found when localizing message: {}", errors.join(","))))
             }
 
@@ -202,6 +203,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     return Ok(localized.to_string());
                 }
 
+                let errors = errors.iter().map(ToString::to_string).collect::<Vec<_>>();
                 Err(miette::Report::msg(format!("errors found when localizing term: {}", errors.join(","))))
             }
         }
