@@ -55,10 +55,14 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!();
     };
 
-    let roleinfo_embed_generalinfo_field_name = localizer.utilities_plugin_roleinfo_embed_generalinfo_field_name()?;
-    let roleinfo_embed_generalinfo_id_subfield_name = localizer.utilities_plugin_roleinfo_embed_generalinfo_id_subfield_name()?;
-    let roleinfo_embed_generalinfo_color_subfield_name = localizer.utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
-    let roleinfo_embed_description = localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
+    let roleinfo_embed_generalinfo_field_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_field_name()?;
+    let roleinfo_embed_generalinfo_id_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_id_subfield_name()?;
+    let roleinfo_embed_generalinfo_color_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
+    let roleinfo_embed_description =
+        localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
 
     let role = CachedRoleRepository
         .get((interaction.guild_id.unwrap(), role_id))
