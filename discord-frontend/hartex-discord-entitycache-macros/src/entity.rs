@@ -131,7 +131,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         bail(&input.extra_fields_ident, "expected `extra`")?;
     }
 
-    if let Some(id) = &input.overrides_ident && id != "overrides" {
+    if let Some(id) = &input.overrides_ident
+        && id != "overrides"
+    {
         bail(id, "expected `overrides`")?;
     }
 
@@ -312,11 +314,17 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         let vec = (id_fields.iter())
             .map(|name| {
                 (type_metadata.fields.iter().cloned())
-                    .chain(input.extra_fields_array.elements.iter().map(|element| Field {
-                        name: element.key.value(),
-                        vis: "pub".to_string(),
-                        ty: element.value.value(),
-                    }))
+                    .chain(
+                        input
+                            .extra_fields_array
+                            .elements
+                            .iter()
+                            .map(|element| Field {
+                                name: element.key.value(),
+                                vis: "pub".to_string(),
+                                ty: element.value.value(),
+                            }),
+                    )
                     .find(|field| &field.name == name)
                     .unwrap()
             })

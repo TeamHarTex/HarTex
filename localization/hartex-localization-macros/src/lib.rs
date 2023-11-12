@@ -38,6 +38,7 @@ mod expand_bundle_get_args;
 mod types;
 
 /// Obtain a value from a bundle using its key.
+#[deprecated(since = "0.5.1", note = "use the new localization API instead")]
 #[proc_macro]
 pub fn bundle_get(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as Parameters);
@@ -47,6 +48,7 @@ pub fn bundle_get(tokens: TokenStream) -> TokenStream {
 }
 
 /// Obtain a value from a bundle using its key, with arguments.
+#[deprecated(since = "0.5.1", note = "use the new localization API instead")]
 #[proc_macro]
 pub fn bundle_get_args(tokens: TokenStream) -> TokenStream {
     let parameters = parse_macro_input!(tokens as ParametersWithArgs);
