@@ -28,6 +28,7 @@ hartex_localization_macros = { path = "../../localization/hartex-localization-ma
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
+fluent-bundle = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 fluent-syntax = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 futures = "0.3.29"
 hyper = { version = "0.14.27", features = ["client", "http2"] }
