@@ -56,6 +56,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
+    let langid_locale = interaction.locale.clone().and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
 
@@ -84,6 +85,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_serverinfo_embed_generalinfo_enabled_features_subfield_name()?;
     let serverinfo_embed_generalinfo_field_name =
         localizer.utilities_plugin_serverinfo_embed_generalinfo_field_name()?;
+    let serverinfo_embed_channelinfo_field_name =
+        localizer.utilities_plugin_serverinfo_embed_channelinfo_field_name()?;
     let serverinfo_embed_channelinfo_categories_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_channelinfo_categories_subfield_name()?;
     let serverinfo_embed_channelinfo_textchannels_subfield_name =
@@ -112,8 +115,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_serverinfo_embed_flags_field_name()?;
     let serverinfo_embed_flags_large_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_flags_large_subfield_name()?;
-    let serverinfo_embed_flags_default_message_notification_level_subfield_name = localizer
-        .utilities_plugin_serverinfo_embed_flags_default_message_notification_level_subfield_name(
+    let serverinfo_embed_flags_default_message_notifications_subfield_name = localizer
+        .utilities_plugin_serverinfo_embed_flags_default_message_notifications_subfield_name(
         )?;
 
     let mut default_general_information = format!(
@@ -255,9 +258,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             format!(
                 "{} {}\n{} {}",
                 serverinfo_embed_flags_large_subfield_name,
-                guild.large.localize(locale.clone())?,
-                serverinfo_embed_flags_default_message_notification_level_subfield_name,
-                guild.large.localize(locale)?
+                guild.large.localize(langid_locale.clone())?,
+                serverinfo_embed_flags_default_message_notifications_subfield_name,
+                guild.default_message_notifications.localize(langid_locale)?
             ),
         ))
         .thumbnail(
