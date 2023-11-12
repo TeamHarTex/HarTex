@@ -4,7 +4,6 @@ members = [
     "hartex-localization-core",
     "hartex-localization-loader",
     "hartex-localization-macros",
-    "hartex-localization-test",
 ]
 
 resolver = "2"
