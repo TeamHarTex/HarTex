@@ -39,8 +39,8 @@ use quote::quote;
 use quote::TokenStreamExt;
 use syn::GenericParam;
 use syn::Ident;
-use syn::TypeParam;
 use syn::LitStr;
+use syn::TypeParam;
 
 struct LocalizationNode<'a> {
     category: &'a str,
@@ -67,65 +67,42 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     let mut base_dir = base_path();
     base_dir.push("en-GB"); // todo: may not want to assume en-GB as default?
 
-    let Ok(resources) = load_resources(base_dir.clone()) else {
-        panic!(
-            "failed to load localization resources from folder: {}",
-            base_dir.to_string_lossy(),
-        );
-    };
+    let resources = load_resources(base_dir.clone()).unwrap_or_else(|_| {
+        panic!("failed to load localization resources from folder: {base_dir:?}",)
+    });
 
-    let mut nodes = resources
-        .iter()
+    let mut nodes = (resources.iter())
         .flat_map(|resource| generate_nodes_for_resource(&resource.name, &resource.resource))
         .map(|node| (node.name.to_string(), node))
         .collect::<HashMap<_, _>>();
 
-    let messages = nodes
-        .iter()
-        .filter(|(_, node)| !node.term)
-        .map(|(name, _)| LitStr::new(name.as_str(), Span::call_site()))
+    let messages = (nodes.iter().filter(|(_, node)| !node.term))
+        .map(|(name, _)| LitStr::new(&*name, Span::call_site()))
         .collect::<Vec<_>>();
     let message_count = messages.len();
 
-    let terms = nodes
-        .iter()
-        .filter(|(_, node)| node.term)
-        .map(|(name, _)| LitStr::new(name.as_str(), Span::call_site()))
+    let terms = (nodes.iter().filter(|(_, node)| node.term))
+        .map(|(name, _)| LitStr::new(&*name, Span::call_site()))
         .collect::<Vec<_>>();
     let term_count = terms.len();
 
-    loop {
-        let Some(dependency_name) = nodes
-            .iter()
-            .filter_map(|(_, node)| {
-                node.dependencies
-                    .iter()
-                    .next()
-                    .map(|dependency| dependency.to_string())
-            })
-            .next()
-        else {
-            break;
-        };
-
-        let Some((variables, dependencies)) = nodes
-            .get(dependency_name.as_str())
-            .map(|node| (node.variables.clone(), node.dependencies.clone()))
-        else {
-            panic!(
+    while let Some(dependency_name) =
+        (nodes.iter()).find_map(|(_, node)| Some(node.dependencies.iter().next()?.to_string()))
+    {
+        let node = nodes
+            .get(&*dependency_name).unwrap_or_else(|| panic!(
                 "encountered a dependency on localization node `{dependency_name}` but no such node was loaded"
-            );
-        };
+            ));
+        let (variables, dependencies) = (node.variables.clone(), node.dependencies.clone());
 
-        for (name, node) in nodes
-            .iter_mut()
-            .filter(|(_, node)| node.dependencies.contains(dependency_name.as_str()))
+        for (name, node) in
+            (nodes.iter_mut()).filter(|(_, node)| node.dependencies.contains(&*dependency_name))
         {
-            if name.as_str() == dependency_name.as_str() {
+            if &*name == &*dependency_name {
                 panic!("cyclic localization loop detected at node {name}");
             }
 
-            node.dependencies.remove(dependency_name.as_str());
+            node.dependencies.remove(&*dependency_name);
             node.variables.extend(variables.iter());
             node.dependencies.extend(dependencies.iter());
         }
@@ -198,8 +175,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         }
     };
 
-    let no_generics_functions = nodes
-        .iter()
+    let no_generics_functions = (nodes.iter())
         .filter(|(_, node)| node.variables.is_empty() && !node.term)
         .map(|(name, node)| {
             let category = sanitize_name(node.category);
@@ -213,8 +189,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     self.localize(#name_lit, None)
                 }
             }
-        })
-        .collect::<Vec<_>>();
+        });
     let no_generics = quote::quote! {
         impl<'a> Localizer<'a> {
             #(#no_generics_functions)*
@@ -222,8 +197,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     };
     stream.append_all(no_generics);
 
-    let generics_functions = nodes
-        .iter()
+    let generics_functions = (nodes.iter())
         .filter(|(_, node)| !node.variables.is_empty() && !node.term)
         .map(|(name, node)| {
             let category = sanitize_name(node.category);
@@ -233,10 +207,13 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
 
             // todo: assumed that maximum 26 parameters are used
             let letters = ('A'..='Z').take(node.variables.len()).collect::<Vec<_>>();
-            let generic_parameters = letters
-                .iter()
-                .map(|letter| GenericParam::Type(TypeParam::from(Ident::new(&letter.to_string(), Span::call_site()))))
-                .collect::<Vec<_>>();
+            let generic_parameters = letters.iter().map(|letter| {
+                GenericParam::Type(TypeParam::from(Ident::new(
+                    &letter.to_string(),
+                    Span::call_site(),
+                )))
+            });
+            let generic_parameters = generic_parameters.collect::<Vec<_>>();
             let generics = quote::quote! {
                 <#(#generic_parameters),*>
             };
@@ -244,35 +221,33 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             let mut variables = node.variables.iter().collect::<Vec<_>>();
             variables.sort_unstable_by_key(|value| value.to_lowercase());
 
-            let (extra_arguments, argument_insertion): (Vec<_>, Vec<_>) = variables
-                .iter()
-                .enumerate()
-                .map(|(index, name)| {
-                    let sanitized_name = sanitize_name(name);
-                    let ident = Ident::new(&sanitized_name, Span::call_site());
-                    let corresponding_generic = Ident::new(&letters[index].to_string(), Span::call_site());
-                    let name_lit = LitStr::new(name, Span::call_site());
+            let (extra_arguments, argument_insertion): (Vec<_>, Vec<_>) =
+                (variables.iter().enumerate())
+                    .map(|(index, name)| {
+                        let sanitized_name = sanitize_name(name);
+                        let ident = Ident::new(&sanitized_name, Span::call_site());
+                        let corresponding_generic =
+                            Ident::new(&letters[index].to_string(), Span::call_site());
+                        let name_lit = LitStr::new(name, Span::call_site());
 
-                    (
-                        quote::quote! {
-                            #ident: #corresponding_generic
-                        },
-                        quote::quote! {
-                            arguments.set(#name_lit, #ident.into());
-                        }
-                    )
-                })
-                .unzip();
-            let where_clauses = letters
-                .iter()
-                .map(|letter| {
-                    let ident = Ident::new(&letter.to_string(), Span::call_site());
+                        (
+                            quote::quote! {
+                                #ident: #corresponding_generic
+                            },
+                            quote::quote! {
+                                arguments.set(#name_lit, #ident.into());
+                            },
+                        )
+                    })
+                    .unzip();
+            let where_clauses = letters.iter().map(|letter| {
+                let ident = Ident::new(&letter.to_string(), Span::call_site());
 
-                    quote::quote! {
-                        #ident: Into<fluent_bundle::FluentValue<'a>>
-                    }
-                })
-                .collect::<Vec<_>>();
+                quote::quote! {
+                    #ident: Into<fluent_bundle::FluentValue<'a>>
+                }
+            });
+            let where_clauses = where_clauses.collect::<Vec<_>>();
 
             quote::quote! {
                 #[inline]
@@ -300,26 +275,18 @@ fn generate_nodes_for_resource<'a>(
     parent: &'a str,
     resource: &'a Arc<FluentResource>,
 ) -> Vec<LocalizationNode<'a>> {
-    let mut nodes = Vec::new();
-
-    for entry in resource.entries() {
+    let nodes = resource.entries().filter_map(|entry| {
         let (name, pattern, term) = match entry {
-            Entry::Message(message) => {
-                let Some(pattern) = &message.value else {
-                    continue;
-                };
-                (message.id.name, pattern, false)
-            }
+            Entry::Message(message) => (message.id.name, message.value.as_ref()?, false),
             Entry::Term(term) => (term.id.name, &term.value, true),
-            _ => continue,
+            _ => return None,
         };
 
         let mut node = LocalizationNode::new(parent, name, term);
         process_pattern_elements(&pattern.elements, &mut node);
-        nodes.push(node);
-    }
-
-    nodes
+        Some(node)
+    });
+    nodes.collect()
 }
 
 fn process_expression<'a>(expression: &'a Expression<&'a str>, node: &mut LocalizationNode<'a>) {
@@ -327,9 +294,7 @@ fn process_expression<'a>(expression: &'a Expression<&'a str>, node: &mut Locali
         Expression::Inline(expression) => process_inline_expression(expression, node),
         Expression::Select { selector, variants } => {
             process_inline_expression(selector, node);
-            for variant in variants {
-                process_pattern_elements(&variant.value.elements, node);
-            }
+            (variants.iter()).for_each(|v| process_pattern_elements(&v.value.elements, node));
         }
     }
 }
@@ -359,9 +324,8 @@ fn process_pattern_elements<'a>(
     node: &mut LocalizationNode<'a>,
 ) {
     for element in elements {
-        match element {
-            PatternElement::Placeable { expression } => process_expression(expression, node),
-            PatternElement::TextElement { .. } => (),
+        if let PatternElement::Placeable { expression } = element {
+            process_expression(expression, node)
         }
     }
 }
