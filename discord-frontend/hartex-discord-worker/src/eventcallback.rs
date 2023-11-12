@@ -36,8 +36,8 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use tokio_postgres::NoTls;
 use time::OffsetDateTime;
+use tokio_postgres::NoTls;
 
 /// Invoke a corresponding event callback for an event.
 #[allow(clippy::large_futures)]
@@ -100,7 +100,9 @@ pub async fn invoke(
                 );
 
                 let url = env::var("API_PGSQL_URL").unwrap();
-                let (client, _) = tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
+                let (client, _) = tokio_postgres::connect(&url, NoTls)
+                    .await
+                    .into_diagnostic()?;
                 start_timestamp_upsert()
                     .bind(&client, &"HarTex Nightly", &OffsetDateTime::now_utc())
                     .await

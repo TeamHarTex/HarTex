@@ -39,8 +39,8 @@ use quote::quote;
 use quote::TokenStreamExt;
 use syn::GenericParam;
 use syn::Ident;
-use syn::TypeParam;
 use syn::LitStr;
+use syn::TypeParam;
 
 struct LocalizationNode<'a> {
     category: &'a str,
@@ -235,7 +235,12 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             let letters = ('A'..='Z').take(node.variables.len()).collect::<Vec<_>>();
             let generic_parameters = letters
                 .iter()
-                .map(|letter| GenericParam::Type(TypeParam::from(Ident::new(&letter.to_string(), Span::call_site()))))
+                .map(|letter| {
+                    GenericParam::Type(TypeParam::from(Ident::new(
+                        &letter.to_string(),
+                        Span::call_site(),
+                    )))
+                })
                 .collect::<Vec<_>>();
             let generics = quote::quote! {
                 <#(#generic_parameters),*>
@@ -250,7 +255,8 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                 .map(|(index, name)| {
                     let sanitized_name = sanitize_name(name);
                     let ident = Ident::new(&sanitized_name, Span::call_site());
-                    let corresponding_generic = Ident::new(&letters[index].to_string(), Span::call_site());
+                    let corresponding_generic =
+                        Ident::new(&letters[index].to_string(), Span::call_site());
                     let name_lit = LitStr::new(name, Span::call_site());
 
                     (
@@ -259,7 +265,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                         },
                         quote::quote! {
                             arguments.set(#name_lit, #ident.into());
-                        }
+                        },
                     )
                 })
                 .unzip();
