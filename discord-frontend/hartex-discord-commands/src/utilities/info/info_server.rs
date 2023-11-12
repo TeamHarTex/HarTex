@@ -45,10 +45,9 @@ use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
+
+use crate::localization::Localizer;
 
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
@@ -57,9 +56,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
-    let locale = interaction.locale.and_then(|locale| locale.parse().ok());
-
-    let bundle = create_bundle(locale.clone(), &["discord-frontend", "commands"])?;
+    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::Boolean(verbose) = options
         .iter()
@@ -76,48 +74,47 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .await
         .into_diagnostic()?;
 
-    bundle_get!(bundle."serverinfo-embed-generalinfo-field-name": message, out [serverinfo_embed_generalinfo_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-generalinfo-id-subfield-name": message, out [serverinfo_embed_generalinfo_id_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-generalinfo-created-subfield-name": message, out [serverinfo_embed_generalinfo_created_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-generalinfo-owner-subfield-name": message, out [serverinfo_embed_generalinfo_owner_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-generalinfo-enabled-features-subfield-name": message, out [serverinfo_embed_generalinfo_enabled_features_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-field-name": message, out [serverinfo_embed_channelinfo_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-categories-subfield-name": message, out [serverinfo_embed_channelinfo_categories_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-textchannels-subfield-name": message, out [serverinfo_embed_channelinfo_textchannels_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-voicechannels-subfield-name": message, out [serverinfo_embed_channelinfo_voicechannels_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-announcementchannels-subfield-name": message, out [serverinfo_embed_channelinfo_announcementchannels_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-stagechannels-subfield-name": message, out [serverinfo_embed_channelinfo_stagechannels_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-channelinfo-forumchannels-subfield-name": message, out [serverinfo_embed_channelinfo_forumchannels_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-memberinfo-field-name": message, out [serverinfo_embed_memberinfo_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-memberinfo-membercount-subfield-name": message, out [serverinfo_embed_memberinfo_membercount_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-memberinfo-humancount-subfield-name": message, out [serverinfo_embed_memberinfo_humancount_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-memberinfo-botcount-subfield-name": message, out [serverinfo_embed_memberinfo_botcount_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-roleinfo-field-name": message, out [serverinfo_embed_roleinfo_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-roleinfo-rolecount-subfield-name": message, out [serverinfo_embed_roleinfo_rolecount_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-flags-field-name": message, out [serverinfo_embed_flags_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-flags-large-subfield-name": message, out [serverinfo_embed_flags_large_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-flags-default-message-notification-level-subfield-name": message, out [serverinfo_embed_flags_default_message_notification_level_subfield_name, errors]);
-    handle_errors(errors)?;
+    let serverinfo_embed_generalinfo_id_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_generalinfo_id_subfield_name()?;
+    let serverinfo_embed_generalinfo_created_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_generalinfo_created_subfield_name()?;
+    let serverinfo_embed_generalinfo_owner_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_generalinfo_owner_subfield_name()?;
+    let serverinfo_embed_generalinfo_enabled_features_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_generalinfo_enabled_features_subfield_name()?;
+    let serverinfo_embed_generalinfo_field_name =
+        localizer.utilities_plugin_serverinfo_embed_generalinfo_field_name()?;
+    let serverinfo_embed_channelinfo_categories_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_channelinfo_categories_subfield_name()?;
+    let serverinfo_embed_channelinfo_textchannels_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_channelinfo_textchannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_voicechannels_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_channelinfo_voicechannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_announcementchannels_subfield_name = localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_announcementchannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_stagechannels_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_channelinfo_stagechannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_forumchannels_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_channelinfo_forumchannels_subfield_name()?;
+    let serverinfo_embed_memberinfo_field_name =
+        localizer.utilities_plugin_serverinfo_embed_memberinfo_field_name()?;
+    let serverinfo_embed_memberinfo_membercount_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_memberinfo_membercount_subfield_name()?;
+    let serverinfo_embed_memberinfo_humancount_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_memberinfo_humancount_subfield_name()?;
+    let serverinfo_embed_memberinfo_botcount_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_memberinfo_botcount_subfield_name()?;
+    let serverinfo_embed_roleinfo_field_name =
+        localizer.utilities_plugin_serverinfo_embed_roleinfo_field_name()?;
+    let serverinfo_embed_roleinfo_rolecount_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_roleinfo_rolecount_subfield_name()?;
+    let serverinfo_embed_flags_field_name =
+        localizer.utilities_plugin_serverinfo_embed_flags_field_name()?;
+    let serverinfo_embed_flags_large_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_flags_large_subfield_name()?;
+    let serverinfo_embed_flags_default_message_notification_level_subfield_name = localizer
+        .utilities_plugin_serverinfo_embed_flags_default_message_notification_level_subfield_name(
+        )?;
 
     let mut default_general_information = format!(
         "{} {}\n{} {}\n{} {}",
