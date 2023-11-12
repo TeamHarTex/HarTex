@@ -466,11 +466,15 @@ fn generate_module_path_from_tree(
     let new_base_path = format!("{}::{}", base_path, tree.name);
 
     for item in &tree.items {
-        if let Item::Struct(s) = item && kind == ModuleTreeItemKind::Struct {
+        if let Item::Struct(s) = item
+            && kind == ModuleTreeItemKind::Struct
+        {
             paths.push(format!("{}::{}", new_base_path, s.ident));
         }
 
-        if let Item::Enum(e) = item && kind == ModuleTreeItemKind::Enum {
+        if let Item::Enum(e) = item
+            && kind == ModuleTreeItemKind::Enum
+        {
             paths.push(format!("{}::{}", new_base_path, e.ident));
         }
     }
