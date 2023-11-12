@@ -30,6 +30,7 @@ use fluent_bundle::FluentResource;
 use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemoizer;
 use miette::IntoDiagnostic;
 use unic_langid::LanguageIdentifier;
+use walkdir::WalkDir;
 
 pub mod env;
 
@@ -47,12 +48,10 @@ impl LocalizationBundleHolder {
         let base_path = env::base_path();
         let mut bundles = HashMap::new();
 
-        let dir_handle = fs::read_dir(base_path.clone()).into_diagnostic()?;
-
-        for result in dir_handle {
+        for result in WalkDir::new(base_path.clone()) {
             let entry_handle = result.into_diagnostic()?;
 
-            let meta = entry_handle.file_type().into_diagnostic()?;
+            let meta = entry_handle.file_type();
             if !meta.is_dir() {
                 continue;
             }
@@ -95,12 +94,10 @@ fn load_bundle(
 pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResourceWrapper>> {
     let mut loaded = Vec::new();
 
-    let dir_handle = fs::read_dir(path).into_diagnostic()?;
-
-    for result in dir_handle {
+    for result in WalkDir::new(path) {
         let entry_handle = result.into_diagnostic()?;
 
-        let meta = entry_handle.file_type().into_diagnostic()?;
+        let meta = entry_handle.file_type();
         if meta.is_dir() {
             continue;
         }

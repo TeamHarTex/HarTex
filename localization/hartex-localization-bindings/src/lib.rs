@@ -205,7 +205,8 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             let name_lit = LitStr::new(name, Span::call_site());
 
             quote::quote! {
-                pub fn #ident(&self) -> String {
+                #[inline]
+                pub fn #ident(&self) -> miette::Result<String> {
                     self.localize(#name_lit, None)
                 }
             }
