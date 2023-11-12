@@ -36,9 +36,6 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
 use hartex_log::log;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
@@ -49,12 +46,12 @@ use hyper::Request;
 use miette::IntoDiagnostic;
 use miette::Report;
 
+use crate::localization::Localizer;
+
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);
-    let bundle = create_bundle(
-        interaction.locale.and_then(|locale| locale.parse().ok()),
-        &["discord-frontend", "commands"],
-    )?;
+    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
 
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
@@ -95,12 +92,11 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let data = response.data();
     let timestamp = data.start_timestamp();
 
-    bundle_get!(bundle."botinfo-embed-title": message, out [botinfo_embed_title, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."botinfo-embed-botstarted-field-name": message, out [botinfo_embed_botstarted_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."botinfo-embed-latency-field-name": message, out [botinfo_embed_latency_field_name, errors]);
-    handle_errors(errors)?;
+    let botinfo_embed_botstarted_field_name =
+        localizer.utilities_plugin_botinfo_embed_botstarted_field_name()?;
+    let botinfo_embed_latency_field_name =
+        localizer.utilities_plugin_botinfo_embed_latency_field_name()?;
+    let botinfo_embed_title = localizer.utilities_plugin_botinfo_embed_title()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
