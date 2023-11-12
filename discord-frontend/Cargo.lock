@@ -972,8 +972,8 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle 0.15.2 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
- "fluent-syntax 0.11.0 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
+ "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures",
  "hartex_backend_models",
  "hartex_backend_models_v2",
@@ -1232,6 +1232,7 @@ dependencies = [
  "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "miette",
  "unic-langid",
+ "walkdir",
 ]
 
 [[package]]
