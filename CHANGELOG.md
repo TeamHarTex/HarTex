@@ -14,9 +14,12 @@
 
 ## Discord Frontend
 
+- **Changed:** migrated the `/about` command to use the new localization API
+
 ## Localization Infrastructure
 
 - **Added:** added `hartex-localizations-bindings` and `hartex-localization-loader` crates
+- **Chanfed:** deprecated old `bundle_get` and `bundle_get_args` macros
 
 ## Rust Utilities
 
