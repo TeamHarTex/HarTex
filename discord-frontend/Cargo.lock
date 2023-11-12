@@ -947,6 +947,7 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.5.1"
 dependencies = [
+ "fluent-bundle",
  "fluent-syntax",
  "futures",
  "hartex_backend_models",
