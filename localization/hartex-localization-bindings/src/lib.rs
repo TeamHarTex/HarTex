@@ -34,8 +34,9 @@ use fluent_syntax::ast::PatternElement;
 use hartex_localization_loader::env::base_path;
 use hartex_localization_loader::load_resources;
 use proc_macro::TokenStream;
-use proc_macro2::Span as Span2;
+use proc_macro2::Span;
 use quote::quote;
+use quote::TokenStreamExt;
 use syn::LitStr;
 
 struct LocalizationNode<'a> {
@@ -79,14 +80,14 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     let messages = nodes
         .iter()
         .filter(|(_, node)| !node.term)
-        .map(|(name, _)| LitStr::new(name.as_str(), Span2::call_site()))
+        .map(|(name, _)| LitStr::new(name.as_str(), Span::call_site()))
         .collect::<Vec<_>>();
     let message_count = messages.len();
 
     let terms = nodes
         .iter()
         .filter(|(_, node)| node.term)
-        .map(|(name, _)| LitStr::new(name.as_str(), Span2::call_site()))
+        .map(|(name, _)| LitStr::new(name.as_str(), Span::call_site()))
         .collect::<Vec<_>>();
     let term_count = terms.len();
 
@@ -127,7 +128,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         }
     }
 
-    let stream = quote! {
+    let mut stream = quote! {
         pub const MESSAGES: [&str; #message_count] = [#(#messages,)*];
         pub const TERMS: [&str; #term_count] = [#(#terms,)*];
 
@@ -193,6 +194,29 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
             }
         }
     };
+
+    let no_generics_functions = nodes
+        .iter()
+        .filter(|(_, node)| node.variables.is_empty() && !node.term)
+        .map(|(name, node)| {
+            let category = sanitize_name(node.category);
+            let sanitized_name = sanitize_name(name);
+            let ident = quote::format_ident!("{category}_{sanitized_name}");
+            let name_lit = LitStr::new(name, Span::call_site());
+
+            quote::quote! {
+                pub fn #ident(&self) -> String {
+                    self.localize(#name_lit, None)
+                }
+            }
+        })
+        .collect::<Vec<_>>();
+    let no_generics = quote::quote! {
+        impl<'a> Localizer<'a> {
+            #(#no_generics_functions)*
+        }
+    };
+    stream.append_all(no_generics);
 
     stream.into()
 }
@@ -265,4 +289,8 @@ fn process_pattern_elements<'a>(
             PatternElement::TextElement { .. } => (),
         }
     }
+}
+
+fn sanitize_name(unsanitized: &str) -> String {
+    unsanitized.replace('-', "_").to_lowercase()
 }
