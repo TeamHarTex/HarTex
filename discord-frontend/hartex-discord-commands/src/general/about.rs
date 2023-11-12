@@ -50,12 +50,12 @@ impl Command for About {
             interaction.locale.unwrap_or_else(|| String::from("en-GB")),
         );
 
-        let about_embed_title = localizer.general_plugin_about_embed_title();
-        let about_embed_description = localizer.general_plugin_about_embed_description();
+        let about_embed_title = localizer.general_plugin_about_embed_title()?;
+        let about_embed_description = localizer.general_plugin_about_embed_description()?;
         let about_embed_github_repo_field_name =
-            localizer.general_plugin_about_embed_github_repo_field_name();
+            localizer.general_plugin_about_embed_github_repo_field_name()?;
         let about_embed_footer =
-            localizer.general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv");
+            localizer.general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
