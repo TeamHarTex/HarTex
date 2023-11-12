@@ -68,7 +68,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     base_dir.push("en-GB"); // todo: may not want to assume en-GB as default?
 
     let resources = load_resources(base_dir.clone()).unwrap_or_else(|_| {
-        panic!("failed to load localization resources from folder: {base_dir:?}",)
+        panic!("failed to load localization resources from folder: {base_dir:?}")
     });
 
     let mut nodes = (resources.iter())
@@ -213,7 +213,6 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     Span::call_site(),
                 )))
             });
-            let generic_parameters = generic_parameters.collect::<Vec<_>>();
             let generics = quote::quote! {
                 <#(#generic_parameters),*>
             };
@@ -247,7 +246,6 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                     #ident: Into<fluent_bundle::FluentValue<'a>>
                 }
             });
-            let where_clauses = where_clauses.collect::<Vec<_>>();
 
             quote::quote! {
                 #[inline]
