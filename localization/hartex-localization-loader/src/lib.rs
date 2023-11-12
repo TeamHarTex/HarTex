@@ -71,7 +71,9 @@ impl LocalizationBundleHolder {
     }
 
     pub fn get_bundle(&self, lang: &str) -> &LocalizationBundle {
-        self.bundles.get(lang).unwrap_or_else(|| self.get_bundle("en-GB"))
+        self.bundles
+            .get(lang)
+            .unwrap_or_else(|| self.get_bundle("en-GB"))
     }
 }
 

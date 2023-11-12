@@ -56,7 +56,9 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     }
 
     let mut uri = format!("https://discord.com/api/v10/applications/{application_id}/commands");
-    if let Some(flag) = matches.get_one::<bool>("with-localizations") && *flag {
+    if let Some(flag) = matches.get_one::<bool>("with-localizations")
+        && *flag
+    {
         uri.push_str("?with_localizations=true");
     }
 
