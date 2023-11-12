@@ -699,11 +699,27 @@ dependencies = [
 [[package]]
 name = "fluent-bundle"
 version = "0.15.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e242c601dec9711505f6d5bbff5bedd4b61b2469f2e8bb8e57ee7c9747a87ffd"
+dependencies = [
+ "fluent-langneg",
+ "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "intl_pluralrules",
+ "rustc-hash",
+ "self_cell",
+ "smallvec",
+ "unic-langid",
+]
+
+[[package]]
+name = "fluent-bundle"
+version = "0.15.2"
 source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#47802a7032f99e117c567377b417854ebdd9109e"
 dependencies = [
  "fluent-langneg",
- "fluent-syntax",
- "intl-memoizer",
+ "fluent-syntax 0.11.0 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
+ "intl-memoizer 0.5.1 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
  "intl_pluralrules",
  "rustc-hash",
  "self_cell",
@@ -718,6 +734,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c4ad0989667548f06ccd0e306ed56b61bd4d35458d54df5ec7587c0e8ed5e94"
 dependencies = [
  "unic-langid",
+]
+
+[[package]]
+name = "fluent-syntax"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0abed97648395c902868fee9026de96483933faa54ea3b40d652f7dfe61ca78"
+dependencies = [
+ "thiserror",
 ]
 
 [[package]]
@@ -947,8 +972,8 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle",
- "fluent-syntax",
+ "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures",
  "hartex_backend_models",
  "hartex_backend_models_v2",
@@ -1177,10 +1202,10 @@ dependencies = [
 name = "hartex_localization_bindings"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle",
- "fluent-syntax",
+ "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hartex_localization_loader",
- "intl-memoizer",
+ "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "miette",
  "proc-macro2",
  "quote",
@@ -1192,8 +1217,8 @@ dependencies = [
 name = "hartex_localization_core"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle",
- "intl-memoizer",
+ "fluent-bundle 0.15.2 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
+ "intl-memoizer 0.5.1 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
  "miette",
  "unic-langid",
 ]
@@ -1202,11 +1227,12 @@ dependencies = [
 name = "hartex_localization_loader"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle",
- "fluent-syntax",
- "intl-memoizer",
+ "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "miette",
  "unic-langid",
+ "walkdir",
 ]
 
 [[package]]
@@ -1488,9 +1514,19 @@ dependencies = [
 [[package]]
 name = "intl-memoizer"
 version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c310433e4a310918d6ed9243542a6b83ec1183df95dff8f23f87bb88a264a66f"
+dependencies = [
+ "type-map 0.4.0",
+ "unic-langid",
+]
+
+[[package]]
+name = "intl-memoizer"
+version = "0.5.1"
 source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#47802a7032f99e117c567377b417854ebdd9109e"
 dependencies = [
- "type-map",
+ "type-map 0.5.0",
  "unic-langid",
 ]
 
@@ -3207,6 +3243,15 @@ version = "0.15.3"
 source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#07db9d2607335ac138520705a2c70294c4e90ec6"
 dependencies = [
  "twilight-model",
+]
+
+[[package]]
+name = "type-map"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b6d3364c5e96cb2ad1603037ab253ddd34d7fb72a58bdddf4b7350760fc69a46"
+dependencies = [
+ "rustc-hash",
 ]
 
 [[package]]

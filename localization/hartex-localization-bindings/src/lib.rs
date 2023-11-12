@@ -34,8 +34,12 @@ use fluent_syntax::ast::PatternElement;
 use hartex_localization_loader::env::base_path;
 use hartex_localization_loader::load_resources;
 use proc_macro::TokenStream;
-use proc_macro2::Span as Span2;
+use proc_macro2::Span;
 use quote::quote;
+use quote::TokenStreamExt;
+use syn::GenericParam;
+use syn::Ident;
+use syn::TypeParam;
 use syn::LitStr;
 
 struct LocalizationNode<'a> {
@@ -79,14 +83,14 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     let messages = nodes
         .iter()
         .filter(|(_, node)| !node.term)
-        .map(|(name, _)| LitStr::new(name.as_str(), Span2::call_site()))
+        .map(|(name, _)| LitStr::new(name.as_str(), Span::call_site()))
         .collect::<Vec<_>>();
     let message_count = messages.len();
 
     let terms = nodes
         .iter()
         .filter(|(_, node)| node.term)
-        .map(|(name, _)| LitStr::new(name.as_str(), Span2::call_site()))
+        .map(|(name, _)| LitStr::new(name.as_str(), Span::call_site()))
         .collect::<Vec<_>>();
     let term_count = terms.len();
 
@@ -127,7 +131,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         }
     }
 
-    let stream = quote! {
+    let mut stream = quote! {
         pub const MESSAGES: [&str; #message_count] = [#(#messages,)*];
         pub const TERMS: [&str; #term_count] = [#(#terms,)*];
 
@@ -177,7 +181,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                 }
             }
 
-            fn localize_message(&self, name: &str, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
+            fn localize(&self, name: &str, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
                 let bundle = self.localizations.get_bundle(self.language);
 
                 let message = bundle.get_message(name).unwrap();
@@ -191,23 +195,103 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
                 let errors = errors.iter().map(ToString::to_string).collect::<Vec<_>>();
                 Err(miette::Report::msg(format!("errors found when localizing message: {}", errors.join(","))))
             }
-
-            fn localize_term(&self, name: &str, arguments: Option<fluent_bundle::FluentArgs<'a>>) -> miette::Result<String> {
-                let bundle = self.localizations.get_bundle(self.language);
-
-                let term = bundle.get_term(name).unwrap();
-                let mut errors = Vec::new();
-                let localized = bundle.format_pattern(term.value(), arguments.as_ref(), &mut errors);
-
-                if errors.is_empty() {
-                    return Ok(localized.to_string());
-                }
-
-                let errors = errors.iter().map(ToString::to_string).collect::<Vec<_>>();
-                Err(miette::Report::msg(format!("errors found when localizing term: {}", errors.join(","))))
-            }
         }
     };
+
+    let no_generics_functions = nodes
+        .iter()
+        .filter(|(_, node)| node.variables.is_empty() && !node.term)
+        .map(|(name, node)| {
+            let category = sanitize_name(node.category);
+            let sanitized_name = sanitize_name(name);
+            let ident = quote::format_ident!("{category}_{sanitized_name}");
+            let name_lit = LitStr::new(name, Span::call_site());
+
+            quote::quote! {
+                #[inline]
+                pub fn #ident(&self) -> miette::Result<String> {
+                    self.localize(#name_lit, None)
+                }
+            }
+        })
+        .collect::<Vec<_>>();
+    let no_generics = quote::quote! {
+        impl<'a> Localizer<'a> {
+            #(#no_generics_functions)*
+        }
+    };
+    stream.append_all(no_generics);
+
+    let generics_functions = nodes
+        .iter()
+        .filter(|(_, node)| !node.variables.is_empty() && !node.term)
+        .map(|(name, node)| {
+            let category = sanitize_name(node.category);
+            let sanitized_name = sanitize_name(name);
+            let ident = quote::format_ident!("{category}_{sanitized_name}");
+            let name_lit = LitStr::new(name, Span::call_site());
+
+            // todo: assumed that maximum 26 parameters are used
+            let letters = ('A'..='Z').take(node.variables.len()).collect::<Vec<_>>();
+            let generic_parameters = letters
+                .iter()
+                .map(|letter| GenericParam::Type(TypeParam::from(Ident::new(&letter.to_string(), Span::call_site()))))
+                .collect::<Vec<_>>();
+            let generics = quote::quote! {
+                <#(#generic_parameters),*>
+            };
+
+            let mut variables = node.variables.iter().collect::<Vec<_>>();
+            variables.sort_unstable_by_key(|value| value.to_lowercase());
+
+            let (extra_arguments, argument_insertion): (Vec<_>, Vec<_>) = variables
+                .iter()
+                .enumerate()
+                .map(|(index, name)| {
+                    let sanitized_name = sanitize_name(name);
+                    let ident = Ident::new(&sanitized_name, Span::call_site());
+                    let corresponding_generic = Ident::new(&letters[index].to_string(), Span::call_site());
+                    let name_lit = LitStr::new(name, Span::call_site());
+
+                    (
+                        quote::quote! {
+                            #ident: #corresponding_generic
+                        },
+                        quote::quote! {
+                            arguments.set(#name_lit, #ident.into());
+                        }
+                    )
+                })
+                .unzip();
+            let where_clauses = letters
+                .iter()
+                .map(|letter| {
+                    let ident = Ident::new(&letter.to_string(), Span::call_site());
+
+                    quote::quote! {
+                        #ident: Into<fluent_bundle::FluentValue<'a>>
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            quote::quote! {
+                #[inline]
+                pub fn #ident #generics(&self, #(#extra_arguments),*) -> miette::Result<String>
+                where #(#where_clauses),*
+                {
+                    let mut arguments = fluent_bundle::FluentArgs::new();
+                    #(#argument_insertion)*
+
+                    self.localize(#name_lit, Some(arguments))
+                }
+            }
+        });
+    let generics = quote::quote! {
+        impl<'a> Localizer<'a> {
+            #(#generics_functions)*
+        }
+    };
+    stream.append_all(generics);
 
     stream.into()
 }
@@ -280,4 +364,8 @@ fn process_pattern_elements<'a>(
             PatternElement::TextElement { .. } => (),
         }
     }
+}
+
+fn sanitize_name(unsanitized: &str) -> String {
+    unsanitized.replace('-', "_").to_lowercase()
 }
