@@ -33,11 +33,9 @@ use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
-use hartex_localization_macros::bundle_get_args;
 use miette::IntoDiagnostic;
+
+use crate::localization::Localizer;
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
@@ -45,10 +43,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
-    let bundle = create_bundle(
-        interaction.locale.and_then(|locale| locale.parse().ok()),
-        &["discord-frontend", "commands"],
-    )?;
+    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::Role(role_id) = options
         .iter()
@@ -59,16 +55,14 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!();
     };
 
-    bundle_get!(bundle."roleinfo-embed-generalinfo-field-name": message, out [roleinfo_embed_generalinfo_field_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."serverinfo-embed-generalinfo-color-subfield-name": message, out [roleinfo_embed_generalinfo_color_subfield_name, errors]);
-    handle_errors(errors)?;
-    bundle_get!(bundle."roleinfo-embed-generalinfo-id-subfield-name": message, out [roleinfo_embed_generalinfo_id_subfield_name, errors]);
-    handle_errors(errors)?;
-
-    let mention = role_id.mention().to_string();
-    bundle_get_args!(bundle."roleinfo-embed-description": message, out [roleinfo_embed_description, errors], args ["roleMention" to mention]);
-    handle_errors(errors)?;
+    let roleinfo_embed_generalinfo_field_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_field_name()?;
+    let roleinfo_embed_generalinfo_id_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_id_subfield_name()?;
+    let roleinfo_embed_generalinfo_color_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
+    let roleinfo_embed_description =
+        localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
 
     let role = CachedRoleRepository
         .get((interaction.guild_id.unwrap(), role_id))
