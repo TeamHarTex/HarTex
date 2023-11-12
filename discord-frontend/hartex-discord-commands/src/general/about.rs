@@ -34,11 +34,9 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
-use hartex_localization_macros::bundle_get_args;
 use miette::IntoDiagnostic;
+
+use crate::localization::Localizer;
 
 #[metadata(command_type = 1, interaction_only = true, name = "about")]
 pub struct About;
@@ -47,21 +45,18 @@ impl Command for About {
     #[allow(clippy::unused_async)]
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
-        let bundle = create_bundle(
-            interaction.locale.and_then(|locale| locale.parse().ok()),
-            &["discord-frontend", "commands"],
-        )?;
+        let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+        let localizer = Localizer::new(
+            &crate::LOCALIZATION_HOLDER,
+            &locale,
+        );
 
-        bundle_get!(bundle."about-embed-description": message, out [about_embed_description, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."about-embed-github-repo-field-name": message, out [about_embed_github_repo_field_name, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."about-embed-title": message, out [about_embed_title, errors]);
-        handle_errors(errors)?;
-
-        let invite_link = "https://discord.gg/Xu8453VBAv";
-        bundle_get_args!(bundle."about-embed-footer": message, out [about_embed_footer, errors], args ["inviteLink" to invite_link]);
-
+        let about_embed_title = localizer.general_plugin_about_embed_title()?;
+        let about_embed_description = localizer.general_plugin_about_embed_description()?;
+        let about_embed_github_repo_field_name =
+            localizer.general_plugin_about_embed_github_repo_field_name()?;
+        let about_embed_footer =
+            localizer.general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
