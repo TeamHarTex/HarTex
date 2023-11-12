@@ -77,12 +77,12 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         .collect::<HashMap<_, _>>();
 
     let messages = (nodes.iter().filter(|(_, node)| !node.term))
-        .map(|(name, _)| LitStr::new(&*name, Span::call_site()))
+        .map(|(name, _)| LitStr::new(name, Span::call_site()))
         .collect::<Vec<_>>();
     let message_count = messages.len();
 
     let terms = (nodes.iter().filter(|(_, node)| node.term))
-        .map(|(name, _)| LitStr::new(&*name, Span::call_site()))
+        .map(|(name, _)| LitStr::new(name, Span::call_site()))
         .collect::<Vec<_>>();
     let term_count = terms.len();
 
@@ -98,7 +98,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
         for (name, node) in
             (nodes.iter_mut()).filter(|(_, node)| node.dependencies.contains(&*dependency_name))
         {
-            if &*name == &*dependency_name {
+            if name == &*dependency_name {
                 panic!("cyclic localization loop detected at node {name}");
             }
 
