@@ -35,6 +35,8 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use miette::IntoDiagnostic;
 
+use crate::localization::Localizer;
+
 #[metadata(command_type = 1, interaction_only = true, name = "contributors")]
 pub struct Contributors;
 
