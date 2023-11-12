@@ -47,7 +47,7 @@ impl Command for About {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let localizer = Localizer::new(
             &crate::LOCALIZATION_HOLDER,
-            interaction.locale.unwrap_or_else(|| String::from("en-GB")),
+            &interaction.locale.unwrap_or_else(|| String::from("en-GB")),
         );
 
         let about_embed_title = localizer.general_plugin_about_embed_title()?;
