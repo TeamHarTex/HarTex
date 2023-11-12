@@ -13,9 +13,9 @@ rust-version = "1.75.0"
 [dependencies]
 hartex_localization_loader = { path = "../hartex-localization-loader" }
 
-fluent-bundle = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
-fluent-syntax = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
-intl-memoizer = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
+fluent-bundle = "0.15.2"
+fluent-syntax = "0.11.0"
+intl-memoizer = "0.5.1"
 miette = "5.10.0"
 proc-macro2 = "1.0.69"
 quote = "1.0.33"
