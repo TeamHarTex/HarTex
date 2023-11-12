@@ -40,7 +40,6 @@ pub mod utilities;
 mod localization;
 
 lazy_static! {
-    static ref LOCALIZATION_HOLDER: LocalizationBundleHolder = {
-        LocalizationBundleHolder::load_localizations().unwrap()
-    };
+    static ref LOCALIZATION_HOLDER: LocalizationBundleHolder =
+        LocalizationBundleHolder::load_localizations().unwrap();
 }
