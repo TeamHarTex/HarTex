@@ -14,7 +14,7 @@
 
 ## Discord Frontend
 
-- **Changed:** migrated the `/about` command to use the new localization API
+- **Changed:** migrated the commands to use the new localization API
 
 ## Localization Infrastructure
 
