@@ -33,10 +33,9 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
 use miette::IntoDiagnostic;
+
+use crate::localization::Localizer;
 
 #[metadata(command_type = 1, interaction_only = true, name = "contributors")]
 pub struct Contributors;
@@ -44,23 +43,19 @@ pub struct Contributors;
 impl Command for Contributors {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
-        let bundle = create_bundle(
-            interaction.locale.and_then(|locale| locale.parse().ok()),
-            &["discord-frontend", "commands"],
-        )?;
+        let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+        let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
 
-        bundle_get!(bundle."contributors-embed-title": message, out [contributors_embed_title, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."contributors-embed-description": message, out [contributors_embed_description, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."contributors-embed-global-admin-field-name": message, out [contributors_embed_global_admin_field_name, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."contributors-embed-front-dev-field-name": message, out [contributors_embed_front_dev_field_name, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."contributors-embed-translation-team-field-name": message, out [contributors_embed_translation_team_field_name, errors]);
-        handle_errors(errors)?;
-        bundle_get!(bundle."contributors-embed-footer": message, out [contributors_embed_footer, errors]);
-        handle_errors(errors)?;
+        let contributors_embed_title = localizer.general_plugin_contributors_embed_title()?;
+        let contributors_embed_description =
+            localizer.general_plugin_contributors_embed_description()?;
+        let contributors_embed_global_admin_field_name =
+            localizer.general_plugin_contributors_embed_global_admin_field_name()?;
+        let contributors_embed_front_dev_field_name =
+            localizer.general_plugin_contributors_embed_front_dev_field_name()?;
+        let contributors_embed_translation_team_field_name =
+            localizer.general_plugin_contributors_embed_translation_team_field_name()?;
+        let contributors_embed_footer = localizer.general_plugin_contributors_embed_footer()?;
 
         let embed = EmbedBuilder::new()
             .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
