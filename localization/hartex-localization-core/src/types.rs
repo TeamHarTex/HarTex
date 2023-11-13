@@ -26,7 +26,9 @@ use fluent_bundle::FluentResource;
 use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemozier;
 
 /// Localization arguments.
+#[deprecated(since = "0.5.1", note = "use the new localization API instead")]
 pub type LocalizationArgs<'args> = FluentArgs<'args>;
 
 /// A localization bundle.
+#[deprecated(since = "0.5.1", note = "use the new localization API instead")]
 pub type LocalizationBundle = FluentBundle<FluentResource, ConcurrentIntlLangMemozier>;
