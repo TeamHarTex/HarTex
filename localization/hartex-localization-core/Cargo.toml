@@ -11,6 +11,8 @@ rust-version = "1.76.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hartex_localization_bindings = { path = "../hartex-localization-bindings" }
+
 fluent-bundle = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 intl-memoizer = { git = "https://github.com/TeamHarTex/fluent-rs.git", branch = "main" }
 miette = "5.10.0"
