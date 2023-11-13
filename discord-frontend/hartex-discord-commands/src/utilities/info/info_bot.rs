@@ -36,6 +36,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
+use hartex_localization_core::Localizer;
 use hartex_log::log;
 use hyper::body::HttpBody;
 use hyper::header::ACCEPT;
@@ -45,8 +46,6 @@ use hyper::Method;
 use hyper::Request;
 use miette::IntoDiagnostic;
 use miette::Report;
-
-use crate::localization::Localizer;
 
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);

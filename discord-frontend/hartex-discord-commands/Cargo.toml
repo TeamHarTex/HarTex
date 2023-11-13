@@ -20,7 +20,6 @@ hartex_discord_commands_core = { path = "../hartex-discord-commands-core", featu
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_repositories = { path = "../hartex-discord-entitycache-repositories" }
 
-hartex_localization_bindings = { path = "../../localization/hartex-localization-bindings" }
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 hartex_localization_loader = { path = "../../localization/hartex-localization-loader" }
 hartex_localization_macros = { path = "../../localization/hartex-localization-macros" }

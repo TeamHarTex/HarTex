@@ -45,9 +45,8 @@ use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
+use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
-
-use crate::localization::Localizer;
 
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
