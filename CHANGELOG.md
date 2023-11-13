@@ -6,11 +6,19 @@
 
 ## API Backend
 
+- **Changed:** updated Rust Version to 1.76
+
 ## Bors Buildbot
+
+- **Changed:** updated Rust Version to 1.76
 
 ## Buildsystem
 
+- **Changed:** updated Rust Version to 1.76
+
 ## Database Queries
+
+- **Changed:** updated Rust Version to 1.76
 
 ## Discord Frontend
 
@@ -19,9 +27,12 @@
 ## Localization Infrastructure
 
 - **Added:** added `hartex-localizations-bindings` and `hartex-localization-loader` crates
-- **Chanfed:** deprecated old `bundle_get` and `bundle_get_args` macros
+- **Changed:** deprecated old `bundle_get` and `bundle_get_args` macros
+- **Changed:** updated Rust Version to 1.76
 
 ## Rust Utilities
+
+- **Changed:** updated Rust Version to 1.76
 
 ## Web Frontend
 
