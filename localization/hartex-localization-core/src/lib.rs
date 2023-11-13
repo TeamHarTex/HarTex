@@ -47,6 +47,7 @@ pub mod types;
 /// Create a localization bundle from its path.
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::missing_panics_doc)]
+#[deprecated(since = "0.5.1", note = "use the new localization API instead")]
 pub fn create_bundle(
     requested: Option<LanguageIdentifier>,
     path: &[&str],
@@ -99,6 +100,7 @@ pub fn create_bundle(
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::needless_pass_by_value)]
+#[deprecated(since = "0.5.1", note = "use the new localization API instead")]
 pub fn handle_errors(errors: Vec<FluentError>) -> miette::Result<()> {
     if errors.is_empty() {
         return Ok(());
