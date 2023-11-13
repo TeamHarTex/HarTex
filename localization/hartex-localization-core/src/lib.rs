@@ -108,3 +108,5 @@ pub fn handle_errors(errors: Vec<FluentError>) -> miette::Result<()> {
 
     Err(errors[0].clone()).into_diagnostic()
 }
+
+hartex_localization_bindings::generate_bindings!();
