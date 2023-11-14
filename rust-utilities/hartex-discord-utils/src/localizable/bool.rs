@@ -20,30 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
+use hartex_localization_core::LOCALIZATION_HOLDER;
+use hartex_localization_core::Localizer;
 use unic_langid::LanguageIdentifier;
 
 use crate::localizable::Localizable;
 
 impl Localizable for bool {
     fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String> {
-        let bundle = create_bundle(
-            locale,
-            &["discord-frontend"],
-        )?;
+        let locale = locale.map_or(String::from("en-GB"), |locale| locale.to_string());
+        let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-        if *self {
-            bundle_get!(bundle."boolean-true": message, out [boolean_true, errors]);
-            handle_errors(errors)?;
-
-            Ok(boolean_true.to_owned())
+        Ok(if *self {
+            localizer.general_boolean_true()?
         } else {
-            bundle_get!(bundle."boolean-false": message, out [boolean_false, errors]);
-            handle_errors(errors)?;
-
-            Ok(boolean_false.to_owned())
-        }
+            localizer.general_boolean_false()?
+        })
     }
 }

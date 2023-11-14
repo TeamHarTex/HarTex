@@ -32,11 +32,10 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use hartex_discord_utils::CLIENT;
 use miette::IntoDiagnostic;
-
-use crate::localization::Localizer;
 
 #[metadata(command_type = 1, interaction_only = true, name = "contributors")]
 pub struct Contributors;
@@ -45,7 +44,7 @@ impl Command for Contributors {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-        let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
+        let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
         let contributors_embed_title = localizer.general_plugin_contributors_embed_title()?;
         let contributors_embed_description =

@@ -960,10 +960,8 @@ dependencies = [
  "hartex_discord_entitycache_repositories",
  "hartex_discord_utils",
  "hartex_localization_core",
- "hartex_localization_macros",
  "hartex_log",
  "hyper",
- "lazy_static",
  "miette",
  "serde_json",
 ]
@@ -1133,7 +1131,6 @@ version = "0.5.1"
 dependencies = [
  "hartex_discord_core",
  "hartex_localization_core",
- "hartex_localization_macros",
  "miette",
  "once_cell",
  "unic-langid",
@@ -1196,6 +1193,7 @@ dependencies = [
  "hartex_localization_bindings",
  "hartex_localization_loader",
  "intl-memoizer",
+ "lazy_static",
  "miette",
  "unic-langid",
 ]
@@ -1210,15 +1208,6 @@ dependencies = [
  "miette",
  "unic-langid",
  "walkdir",
-]
-
-[[package]]
-name = "hartex_localization_macros"
-version = "0.5.1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.39",
 ]
 
 [[package]]

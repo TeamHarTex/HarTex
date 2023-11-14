@@ -33,6 +33,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use hartex_discord_utils::CLIENT;
 use miette::IntoDiagnostic;
@@ -44,7 +45,7 @@ impl Command for About {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
         let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-        let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
+        let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
         let about_embed_title = localizer.general_plugin_about_embed_title()?;
         let about_embed_description = localizer.general_plugin_about_embed_description()?;

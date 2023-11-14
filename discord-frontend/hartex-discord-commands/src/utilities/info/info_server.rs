@@ -45,6 +45,7 @@ use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
@@ -57,7 +58,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let langid_locale = interaction.locale.clone().and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-    let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
+    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::Boolean(verbose) = options
         .iter()
