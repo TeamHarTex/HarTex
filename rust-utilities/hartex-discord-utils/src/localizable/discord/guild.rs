@@ -22,9 +22,6 @@
 
 use unic_langid::LanguageIdentifier;
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
-use hartex_localization_core::create_bundle;
-use hartex_localization_core::handle_errors;
-use hartex_localization_macros::bundle_get;
 
 use crate::localizable::Localizable;
 
