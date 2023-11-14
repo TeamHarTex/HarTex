@@ -3,7 +3,6 @@ members = [
     "hartex-localization-bindings",
     "hartex-localization-core",
     "hartex-localization-loader",
-    "hartex-localization-macros",
 ]
 
 resolver = "2"

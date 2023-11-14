@@ -14,7 +14,6 @@ rust-version = "1.76.0"
 hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", features = ["discord-http", "discord-model"] }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
-hartex_localization_macros = { path = "../../localization/hartex-localization-macros" }
 
 miette = "5.10.0"
 once_cell = "1.18.0"

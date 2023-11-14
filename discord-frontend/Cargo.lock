@@ -703,23 +703,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e242c601dec9711505f6d5bbff5bedd4b61b2469f2e8bb8e57ee7c9747a87ffd"
 dependencies = [
  "fluent-langneg",
- "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "intl_pluralrules",
- "rustc-hash",
- "self_cell 0.10.3",
- "smallvec",
- "unic-langid",
-]
-
-[[package]]
-name = "fluent-bundle"
-version = "0.15.2"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#47802a7032f99e117c567377b417854ebdd9109e"
-dependencies = [
- "fluent-langneg",
- "fluent-syntax 0.11.0 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
- "intl-memoizer 0.5.1 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
+ "fluent-syntax",
+ "intl-memoizer",
  "intl_pluralrules",
  "rustc-hash",
  "self_cell 0.10.3",
@@ -741,14 +726,6 @@ name = "fluent-syntax"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c0abed97648395c902868fee9026de96483933faa54ea3b40d652f7dfe61ca78"
-dependencies = [
- "thiserror",
-]
-
-[[package]]
-name = "fluent-syntax"
-version = "0.11.0"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#47802a7032f99e117c567377b417854ebdd9109e"
 dependencies = [
  "thiserror",
 ]
@@ -972,8 +949,7 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-bundle",
  "futures",
  "hartex_backend_models",
  "hartex_backend_models_v2",
@@ -983,9 +959,7 @@ dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_repositories",
  "hartex_discord_utils",
- "hartex_localization_bindings",
  "hartex_localization_core",
- "hartex_localization_loader",
  "hartex_localization_macros",
  "hartex_log",
  "hyper",
@@ -1202,10 +1176,10 @@ dependencies = [
 name = "hartex_localization_bindings"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-bundle",
+ "fluent-syntax",
  "hartex_localization_loader",
- "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "intl-memoizer",
  "miette",
  "proc-macro2",
  "quote",
@@ -1217,8 +1191,11 @@ dependencies = [
 name = "hartex_localization_core"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle 0.15.2 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
- "intl-memoizer 0.5.1 (git+https://github.com/TeamHarTex/fluent-rs.git?branch=main)",
+ "fluent-bundle",
+ "fluent-syntax",
+ "hartex_localization_bindings",
+ "hartex_localization_loader",
+ "intl-memoizer",
  "miette",
  "unic-langid",
 ]
@@ -1227,9 +1204,9 @@ dependencies = [
 name = "hartex_localization_loader"
 version = "0.5.1"
 dependencies = [
- "fluent-bundle 0.15.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "fluent-syntax 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "intl-memoizer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fluent-bundle",
+ "fluent-syntax",
+ "intl-memoizer",
  "miette",
  "unic-langid",
  "walkdir",
@@ -1517,16 +1494,7 @@ version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c310433e4a310918d6ed9243542a6b83ec1183df95dff8f23f87bb88a264a66f"
 dependencies = [
- "type-map 0.4.0",
- "unic-langid",
-]
-
-[[package]]
-name = "intl-memoizer"
-version = "0.5.1"
-source = "git+https://github.com/TeamHarTex/fluent-rs.git?branch=main#47802a7032f99e117c567377b417854ebdd9109e"
-dependencies = [
- "type-map 0.5.0",
+ "type-map",
  "unic-langid",
 ]
 
@@ -3259,15 +3227,6 @@ name = "type-map"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6d3364c5e96cb2ad1603037ab253ddd34d7fb72a58bdddf4b7350760fc69a46"
-dependencies = [
- "rustc-hash",
-]
-
-[[package]]
-name = "type-map"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "deb68604048ff8fa93347f02441e4487594adc20bb8a084f9e564d2b827a0a9f"
 dependencies = [
  "rustc-hash",
 ]
