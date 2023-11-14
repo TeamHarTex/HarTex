@@ -25,4 +25,13 @@
 //! The localization-core crate provides core infrastructure for the implementation of
 //! localization.
 
+use hartex_localization_loader::LocalizationBundleHolder;
+use lazy_static::lazy_static;
+
 hartex_localization_bindings::generate_bindings!();
+
+lazy_static! {
+    pub static ref LOCALIZATION_HOLDER: LocalizationBundleHolder =
+        LocalizationBundleHolder::load_localizations().unwrap();
+}
+

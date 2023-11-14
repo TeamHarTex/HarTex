@@ -21,5 +21,5 @@
 #
 
 default-message-notification-level-all=全て
-default-message-notification-level-mention=メンション
+default-message-notification-level-mentions=メンション
 default-message-notification-level-unknown=不明

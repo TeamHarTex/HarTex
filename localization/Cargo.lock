@@ -71,6 +71,7 @@ dependencies = [
  "hartex_localization_bindings",
  "hartex_localization_loader",
  "intl-memoizer",
+ "lazy_static",
  "miette",
  "unic-langid",
 ]
@@ -85,15 +86,6 @@ dependencies = [
  "miette",
  "unic-langid",
  "walkdir",
-]
-
-[[package]]
-name = "hartex_localization_macros"
-version = "0.5.1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.39",
 ]
 
 [[package]]
@@ -114,6 +106,12 @@ checksum = "078ea7b7c29a2b4df841a7f6ac8775ff6074020c6776d48491ce2268e068f972"
 dependencies = [
  "unic-langid",
 ]
+
+[[package]]
+name = "lazy_static"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "miette"
