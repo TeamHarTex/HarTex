@@ -21,5 +21,5 @@
 #
 
 default-message-notification-level-all=All
-default-message-notification-level-mention=Mentions
+default-message-notification-level-mentions=Mentions
 default-message-notification-level-unknown=Unknown
