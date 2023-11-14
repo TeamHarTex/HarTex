@@ -36,6 +36,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use hartex_log::log;
 use hyper::body::HttpBody;
@@ -50,7 +51,7 @@ use miette::Report;
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-    let localizer = Localizer::new(&crate::LOCALIZATION_HOLDER, &locale);
+    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let client = Client::builder().build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
