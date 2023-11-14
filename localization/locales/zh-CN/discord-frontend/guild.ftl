@@ -21,5 +21,5 @@
 #
 
 default-message-notification-level-all=全部
-default-message-notification-level-mention=提及
+default-message-notification-level-mentions=提及
 default-message-notification-level-unknown=未知
