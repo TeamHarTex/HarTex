@@ -25,7 +25,7 @@ use std::path::PathBuf;
 
 pub fn base_path() -> PathBuf {
     let mut dir = env::current_dir().expect("failed to get current dir");
-    dir.push("../localization/locales");
+    dir.push("../locales");
 
     dir
 }
