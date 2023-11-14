@@ -21,7 +21,6 @@ hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" 
 hartex_discord_entitycache_repositories = { path = "../hartex-discord-entitycache-repositories" }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
-hartex_localization_macros = { path = "../../localization/hartex-localization-macros" }
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
