@@ -39,6 +39,7 @@ pub mod uptime;
 pub struct RateLimitGuard;
 
 impl<'r> Limitable<'r> for RateLimitGuard {
+    #[allow(clippy::match_same_arms)]
     fn evaluate_limit(method: Method, route: &str) -> Quota {
         match (method, route) {
             (Method::Get, _) => Quota::per_second(Self::non_zero(1)),

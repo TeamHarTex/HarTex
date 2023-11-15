@@ -59,6 +59,7 @@ impl MigrationTrait for Migration {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Iden)]
 enum Repository {
     Table,
