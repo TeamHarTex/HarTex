@@ -2,17 +2,20 @@
 
 <h1 align="center">HarTex</h1>
 
-> **Warning**
->
+> [!WARNING]
 > **Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
+> [!NOTE]
 > **Supported by [JetBrains](https://www.jetbrains.com/) through their [Open Source Licenses](https://www.jetbrains.com/community/opensource/#support) (they are amazing!)**
 
 **HarTex: Discord Server Management. Reimagined.**
 
+HarTex is a Discord bot for server administration and moderation; designed to be robust and with unparalleled flexibility to cater for various needs of different Discord servers.
+
 This is the main source code repository for HarTex. It contains various components of HarTex: its API backend, Bors buildbot, buildsystem, Discord frontend, localization infrastructure, utilities and the Web frontend.
 
-> **Note: this README is for *users* rather than *contributors*. If you wish to *contribute* to HarTex, you should read [CONTRIBUTING.md](./CONTRIBUTING.md) instead.**
+> [!NOTE]
+> **This README is for *users* rather than *contributors*. If you wish to *contribute* to HarTex, you should read [CONTRIBUTING.md](./CONTRIBUTING.md) instead.**
 
 ## Getting Started
 
