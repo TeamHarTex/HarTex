@@ -27,8 +27,10 @@
 ## Localization Infrastructure
 
 - **Added:** added `hartex-localizations-bindings` and `hartex-localization-loader` crates
-- **Changed:** deprecated old `bundle_get` and `bundle_get_args` macros
+- **Changed:** new API in `hartex-localization-core`
 - **Changed:** updated Rust Version to 1.76
+- **Removed:** removed old `bundle_get` and `bundle_get_args` macros
+- **Removed:** removed old types from `hartex-localization-core`
 
 ## Rust Utilities
 
