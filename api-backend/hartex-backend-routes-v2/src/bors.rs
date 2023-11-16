@@ -70,7 +70,7 @@ pub async fn v2_repositories_repository_permissions_permissions(
         _ => return (Status::NotFound, StatusFns::not_found()),
     };
     let result = select_user_by_repository_and_permissions()
-        .bind(&client, &repository, &[permission_enum])
+        .bind(&client, &repository, vec![permission_enum])
         .all()
         .await;
     if result.is_err() {
