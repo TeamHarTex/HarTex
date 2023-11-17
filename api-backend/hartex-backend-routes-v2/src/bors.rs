@@ -28,6 +28,8 @@ use std::env;
 
 use hartex_backend_ratelimiter::RateLimiter;
 use hartex_backend_status_util::StatusFns;
+use hartex_database_queries::api_backend::queries::bors_repository_permissions_select_user_by_repository_and_permissions::select_user_by_repository_and_permissions;
+use hartex_database_queries::api_backend::types::public::BorsRepositoryPermissions;
 use hartex_log::log;
 use rocket::get;
 use rocket::http::Status;
@@ -61,7 +63,19 @@ pub async fn v2_repositories_repository_permissions_permissions(
         return (Status::InternalServerError, StatusFns::internal_server_error());
     }
 
-    let (_, _) = result.unwrap();
+    let (client, _) = result.unwrap();
+    let permission_enum = match &*permission {
+        "review" => BorsRepositoryPermissions::review,
+        "try" => BorsRepositoryPermissions::r#try,
+        _ => return (Status::NotFound, StatusFns::not_found()),
+    };
+    let result = select_user_by_repository_and_permissions()
+        .bind(&client, &repository, &vec![permission_enum])
+        .all()
+        .await;
+    if result.is_err() {
+        return (Status::InternalServerError, StatusFns::internal_server_error());
+    }
 
     (
         Status::Ok,
@@ -69,6 +83,7 @@ pub async fn v2_repositories_repository_permissions_permissions(
             "code": 200,
             "message": "ok",
             "data": {
+                "users": result.unwrap(),
             }
         }),
     )
