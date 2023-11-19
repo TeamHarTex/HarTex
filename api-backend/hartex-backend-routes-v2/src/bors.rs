@@ -83,7 +83,7 @@ pub async fn v2_repositories_repository_permissions_permissions(
             "code": 200,
             "message": "ok",
             "data": {
-                "users": result.unwrap(),
+                "github_users": result.unwrap(),
             }
         }),
     )
