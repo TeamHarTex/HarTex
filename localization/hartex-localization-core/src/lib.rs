@@ -34,4 +34,3 @@ lazy_static! {
     pub static ref LOCALIZATION_HOLDER: LocalizationBundleHolder =
         LocalizationBundleHolder::load_localizations().unwrap();
 }
-
