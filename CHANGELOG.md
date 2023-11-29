@@ -11,6 +11,7 @@
 ## Bors Buildbot
 
 - **Changed:** updated Rust Version to 1.76
+- **Changed:** updated `hyper` crate to `1.0`
 
 ## Buildsystem
 
@@ -23,6 +24,7 @@
 ## Discord Frontend
 
 - **Changed:** migrated the commands to use the new localization API
+- **Changed:** updated `hyper` crate to `1.0`
 
 ## Localization Infrastructure
 

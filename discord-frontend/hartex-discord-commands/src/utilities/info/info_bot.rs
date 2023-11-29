@@ -39,12 +39,13 @@ use hartex_discord_utils::CLIENT;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use hartex_log::log;
-use hyper::body::HttpBody;
+use hyper::body::Body;
 use hyper::header::ACCEPT;
 use hyper::header::USER_AGENT;
-use hyper::Client;
 use hyper::Method;
 use hyper::Request;
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
 use miette::IntoDiagnostic;
 use miette::Report;
 
@@ -53,7 +54,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let client = Client::builder().build_http::<String>();
+    let client = Client::builder(TokioExecutor::new()).build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!("http://{api_domain}/api/v2/uptime");
     let now = SystemTime::now();

@@ -28,12 +28,14 @@ use hartex_backend_models::Response;
 use hartex_backend_models_v2::bors::RepositoryPermissionsResponse;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
-use hyper::body::HttpBody;
+use hyper::body::Body;
 use hyper::header::ACCEPT;
-use hyper::Client;
 use hyper::Method;
 use hyper::Request;
-use miette::{IntoDiagnostic, Report};
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
+use miette::IntoDiagnostic;
+use miette::Report;
 
 use crate::Permission;
 
@@ -72,7 +74,7 @@ async fn load_permissions_from_api(
     repository_name: &str,
     permission: Permission,
 ) -> miette::Result<HashSet<String>> {
-    let client = Client::builder().build_http::<String>();
+    let client = Client::builder(TokioExecutor::new()).build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!(
         "http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}"
