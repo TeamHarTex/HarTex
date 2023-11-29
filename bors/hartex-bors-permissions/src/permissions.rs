@@ -32,6 +32,8 @@ use hyper::body::Body;
 use hyper::header::ACCEPT;
 use hyper::Method;
 use hyper::Request;
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
 use miette::IntoDiagnostic;
 use miette::Report;
 
@@ -72,7 +74,7 @@ async fn load_permissions_from_api(
     repository_name: &str,
     permission: Permission,
 ) -> miette::Result<HashSet<String>> {
-    let client = Client::builder().build_http::<String>();
+    let client = Client::builder(TokioExecutor::new()).build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!(
         "http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}"
