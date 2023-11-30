@@ -1173,6 +1173,7 @@ dependencies = [
  "hartex_backend_models_v2",
  "hartex_bors_core",
  "hartex_log",
+ "http-body 1.0.0",
  "hyper 1.0.1",
  "hyper-util",
  "miette",
