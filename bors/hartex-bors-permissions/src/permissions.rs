@@ -28,13 +28,17 @@ use hartex_backend_models::Response;
 use hartex_backend_models_v2::bors::RepositoryPermissionsResponse;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
+use http_body_util::BodyExt;
+use http_body_util::Empty;
+use hyper::body::Bytes;
+use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
 use hyper::Method;
 use hyper::Request;
-use hyper_util::client::legacy::Client;
 use hyper_util::rt::TokioExecutor;
 use miette::IntoDiagnostic;
 use miette::Report;
+use tokio::net::TcpStream;
 
 use crate::Permission;
 
@@ -73,7 +77,6 @@ async fn load_permissions_from_api(
     repository_name: &str,
     permission: Permission,
 ) -> miette::Result<HashSet<String>> {
-    let client = Client::builder(TokioExecutor::new()).build_http::<String>();
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!(
         "http://{api_domain}/api/v1/bors/repositories/{repository_name}/permissions/{permission}"
@@ -81,30 +84,19 @@ async fn load_permissions_from_api(
 
     log::debug!("sending a request to {}", &uri);
 
+    let stream = TcpStream::connect(api_domain).await?;
+    let (mut sender, connection) = handshake(TokioExecutor::new(), stream).await?;
+
     let request = Request::builder()
         .uri(uri)
-        .method(Method::GET)
         .header(ACCEPT, "application/json")
-        .body(String::new())
+        .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
 
-    let mut response = client.request(request).await.into_diagnostic()?;
-    let mut full = String::new();
-    while let Some(result) = response.body_mut().data().await {
-        full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
-    }
-    if !response.status().is_success() {
-        log::error!("unsuccessful HTTP request, response: {full}");
+    let result = sender.send_request(request).await.into_diagnostic()?;
+    let body = result.collect().await.into_diagnostic()?.aggregate();
 
-        return Err(Report::msg(format!(
-            "unsuccessful HTTP request, with status code {}",
-            response.status()
-        )));
-    }
-
-    let response =
-        serde_json::from_str::<Response<RepositoryPermissionsResponse>>(&full).into_diagnostic()?;
-    let data = response.data();
+    let data: Response<RepositoryPermissionsResponse> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     Ok(HashSet::from_iter(data.github_users().to_vec()))
 }
