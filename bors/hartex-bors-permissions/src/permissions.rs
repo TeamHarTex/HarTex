@@ -28,7 +28,6 @@ use hartex_backend_models::Response;
 use hartex_backend_models_v2::bors::RepositoryPermissionsResponse;
 use hartex_bors_core::models::GithubRepositoryName;
 use hartex_log::log;
-use http_body::Body;
 use hyper::header::ACCEPT;
 use hyper::Method;
 use hyper::Request;
