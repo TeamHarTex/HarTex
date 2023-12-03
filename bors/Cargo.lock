@@ -1155,7 +1155,7 @@ dependencies = [
  "hartex_bors_permissions",
  "hartex_log",
  "http 0.2.11",
- "http-body 0.4.5",
+ "http-body 1.0.0",
  "jsonwebtoken",
  "miette",
  "octocrab",
