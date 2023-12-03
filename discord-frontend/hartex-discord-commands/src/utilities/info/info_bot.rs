@@ -39,7 +39,7 @@ use hartex_discord_utils::CLIENT;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use hartex_log::log;
-use hyper::body::Body;
+use http_body::Body;
 use hyper::header::ACCEPT;
 use hyper::header::USER_AGENT;
 use hyper::Method;
