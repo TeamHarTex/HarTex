@@ -1154,7 +1154,7 @@ dependencies = [
  "hartex_bors_database",
  "hartex_bors_permissions",
  "hartex_log",
- "http 0.2.11",
+ "http 1.0.0",
  "http-body 1.0.0",
  "jsonwebtoken",
  "miette",
