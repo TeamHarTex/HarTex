@@ -15,7 +15,7 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net"
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-clap = "4.4.10"
+clap = "4.4.11"
 hyper = { version = "1.0.1", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
 miette = { version = "5.10.0", features = ["fancy"] }
