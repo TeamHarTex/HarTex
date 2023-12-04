@@ -15,7 +15,7 @@ hartexbuild_hartexfile = { path = "../hartexbuild-hartexfile" }
 
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 
-clap = "4.4.10"
+clap = "4.4.11"
 miette = { version = "5.10.0", features = ["fancy"] }
 
 [features]
