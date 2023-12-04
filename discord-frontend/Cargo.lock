@@ -980,7 +980,6 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_localization_core",
  "hartex_log",
- "http-body 1.0.0",
  "hyper 1.0.1",
  "hyper-util",
  "miette",
