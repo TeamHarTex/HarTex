@@ -26,6 +26,7 @@ use std::env;
 use std::process::Command;
 
 use hartex_errors::buildsystem::AbnormalTermination;
+use hartex_errors::buildsystem::JstsCleanNotSupported;
 use hartex_errors::buildsystem::JstsTestNotSupported;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -67,6 +68,28 @@ impl Project {
                     command.env("RUSTFLAGS", "-g");
                 }
 
+                command.status().into_diagnostic()?.exit_ok()
+            }
+        };
+
+        result.map_err(|_| Report::from(AbnormalTermination))
+    }
+
+    /// Cleans the build artifacts of a project with its name.
+    pub fn clean(&self, name: String) -> miette::Result<()> {
+        let mut pwd = env::current_dir().into_diagnostic()?;
+        pwd.push(name.clone());
+
+        let result = match self.r#type {
+            ProjectType::JsTs => {
+                return Err(Report::from(JstsCleanNotSupported {
+                    src: name.clone(),
+                    err_span: (0, name.len()).into(),
+                }));
+            }
+            ProjectType::Rust => {
+                let mut command = Command::new("cargo");
+                command.arg("clean").current_dir(pwd.clone());
                 command.status().into_diagnostic()?.exit_ok()
             }
         };
