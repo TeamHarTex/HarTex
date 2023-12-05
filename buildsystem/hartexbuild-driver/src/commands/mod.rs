@@ -23,5 +23,6 @@
 //! # Commands
 
 pub mod build;
+pub mod clean;
 pub mod lint;
 pub mod test;
