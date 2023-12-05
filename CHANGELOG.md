@@ -15,6 +15,7 @@
 
 ## Buildsystem
 
+- **Added:** added `clean` command to clean build artifacts
 - **Changed:** updated Rust Version to 1.76
 
 ## Database Queries
