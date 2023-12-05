@@ -32,6 +32,9 @@ pub fn handle(matches: &ArgMatches) -> miette::Result<()> {
         Some(("build", subcommand_matches)) => {
             commands::build::build_command(subcommand_matches)
         }
+        Some(("clean", subcommand_mateches)) => {
+            commands::clean::clean_command(subcommand_mateches)
+        }
         Some(("lint", subcommand_matches)) => {
             commands::lint::lint_command(subcommand_matches)
         }
