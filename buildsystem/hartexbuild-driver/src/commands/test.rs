@@ -35,7 +35,7 @@ pub fn test_command(matches: &ArgMatches) -> miette::Result<()> {
     let len = project_names.len();
 
     for (i, project_name) in project_names.enumerate() {
-        println!("Testing {project_name} ({} / {})", i + 1, len);
+        println!("[{}/{len}] Testing {project_name}", i + 1);
 
         let Some(project) = file.projects.get(project_name) else {
             println!("{:?}", Report::from(ProjectNotFound {
