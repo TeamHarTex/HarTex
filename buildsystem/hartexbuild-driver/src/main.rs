@@ -44,6 +44,11 @@ pub fn main() -> miette::Result<()> {
                 .arg(Arg::new("project").required(true).action(ArgAction::Append)),
         )
         .subcommand(
+            Command::new("clean")
+                .about("Cleans specified projects.")
+                .arg(Arg::new("project").required(true).action(ArgAction::Append)),
+        )
+        .subcommand(
             Command::new("lint")
                 .about("Lints specified projects.")
                 .arg(Arg::new("project").required(true).action(ArgAction::Append)),
