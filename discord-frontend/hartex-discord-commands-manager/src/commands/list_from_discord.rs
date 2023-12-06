@@ -27,7 +27,9 @@ use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_log::log;
-use http_body_util::{BodyExt, Empty};
+use http_body_util::BodyExt;
+use http_body_util::Empty;
+use hyper::body::Buf;
 use hyper::body::Bytes;
 use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
@@ -36,6 +38,7 @@ use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
 use hyper_util::rt::TokioExecutor;
+use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use owo_colors::OwoColorize;
 
@@ -52,8 +55,12 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         token.insert_str(0, "Bot ");
     }
 
-    let stream = TcpStream::connect("https://discord.com").await.into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioExecutor::new(), stream).await.into_diagnostic()?;
+    let stream = TcpStream::connect("https://discord.com")
+        .await
+        .into_diagnostic()?;
+    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+        .await
+        .into_diagnostic()?;
 
     let mut uri = format!("https://discord.com/api/v10/applications/{application_id}/commands");
     if let Some(flag) = matches.get_one::<bool>("with-localizations")
