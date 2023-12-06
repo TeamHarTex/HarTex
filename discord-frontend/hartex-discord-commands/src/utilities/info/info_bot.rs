@@ -49,6 +49,7 @@ use hyper::Request;
 use hyper_util::rt::TokioExecutor;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
+use miette::Report;
 
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);
@@ -75,7 +76,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .header(ACCEPT, "application/json")
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) DiscordFrontend",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) DiscordFrontend",
         )
         .body(serde_json::to_string(&query).into_diagnostic()?)
         .into_diagnostic()?;
@@ -88,7 +89,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let latency = now.elapsed().into_diagnostic()?.as_millis();
 
     let data = response.data();
-    let timestamp = data.start_timestamp();
+    let timestamp = data.ok_or(Report::msg("failed to obtain uptime data"))?.start_timestamp();
 
     let botinfo_embed_botstarted_field_name =
         localizer.utilities_plugin_botinfo_embed_botstarted_field_name()?;
