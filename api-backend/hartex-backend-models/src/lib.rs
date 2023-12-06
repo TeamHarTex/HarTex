@@ -34,13 +34,13 @@ use serde::Deserialize;
 ///
 /// This is the object returned by a certain API endpoint.
 #[derive(Deserialize)]
-pub struct Response<'a, T> {
+pub struct Response<T> {
     code: u16,
-    message: &'a str,
+    message: String,
     data: T,
 }
 
-impl<'a, T> Response<'a, T>
+impl<'a, T> Response<T>
 where
     T: Clone + Deserialize<'a>,
 {
@@ -50,8 +50,8 @@ where
     }
 
     /// The message of the response.
-    pub fn message(&self) -> &'a str {
-        self.message
+    pub fn message(&self) -> String {
+        self.message.clone()
     }
 
     /// The data of the response.
