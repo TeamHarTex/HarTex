@@ -28,7 +28,14 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use axum::extract::FromRequestParts;
 use serde::Deserialize;
+
+#[derive(Copy, Clone, Debug)]
+pub enum APIVersion {
+    V1,
+    V2,
+}
 
 /// An API response object.
 ///

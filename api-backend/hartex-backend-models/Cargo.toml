@@ -11,6 +11,7 @@ rust-version = "1.76.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+axum = "0.7.2"
 serde = { version = "1.0.193", features = ["derive"] }
 
 [features]

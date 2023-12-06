@@ -899,7 +899,7 @@ dependencies = [
  "axum",
  "dotenvy",
  "hartex_backend_ratelimiter",
- "hartex_backend_routes_v2",
+ "hartex_backend_routes",
  "hartex_backend_status_util",
  "hartex_errors",
  "hartex_log",
@@ -910,12 +910,14 @@ dependencies = [
  "serde_json",
  "tokio",
  "tower-http",
+ "tower-service",
 ]
 
 [[package]]
 name = "hartex_backend_models"
 version = "0.5.1"
 dependencies = [
+ "axum",
  "serde",
 ]
 
@@ -938,7 +940,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_backend_routes_v2"
+name = "hartex_backend_routes"
 version = "0.5.1"
 dependencies = [
  "axum",
