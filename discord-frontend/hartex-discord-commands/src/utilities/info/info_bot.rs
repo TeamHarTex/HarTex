@@ -40,7 +40,7 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_log::log;
 use http_body_util::BodyExt;
-use http_body_util::Empty;
+use hyper::body::Buf;
 use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::USER_AGENT;
