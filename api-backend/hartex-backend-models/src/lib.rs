@@ -31,13 +31,14 @@
 use std::collections::HashMap;
 
 use axum::async_trait;
-use axum::RequestPartsExt;
 use axum::extract::FromRequestParts;
 use axum::extract::Path;
 use axum::http::request::Parts;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::response::Response as AxumResponse;
+use axum::Json;
+use axum::RequestPartsExt;
 use serde::Deserialize;
 
 #[derive(Copy, Clone, Debug)]
@@ -54,7 +55,8 @@ where
     type Rejection = AxumResponse;
 
     async fn from_request_parts(parts: &mut Parts, _: &S) -> Result<Self, Self::Rejection> {
-        let parameters: Path<HashMap<String, String>> = parts.extract().await.map_err(IntoResponse::into_response)?;
+        let parameters: Path<HashMap<String, String>> =
+            parts.extract().await.map_err(IntoResponse::into_response)?;
 
         let version = parameters
             .get("version")
@@ -75,7 +77,28 @@ where
 pub struct Response<T> {
     code: u16,
     message: String,
-    data: T,
+    data: Option<T>,
+}
+
+impl<'a, T> Response<T>
+where
+    T: Clone + Deserialize<'a>,
+{
+    pub fn internal_server_error() -> Json<Response<T>> {
+        Json(Self {
+            code: 500,
+            message: String::from("internal server error"),
+            data: None,
+        })
+    }
+
+    pub fn ok(value: T) -> Json<Response<T>> {
+        Json(Self {
+            code: 200,
+            message: String::from("ok"),
+            data: Some(value),
+        })
+    }
 }
 
 impl<'a, T> Response<T>
@@ -93,7 +116,7 @@ where
     }
 
     /// The data of the response.
-    pub fn data(&self) -> T {
+    pub fn data(&self) -> Option<T> {
         self.data.clone()
     }
 }
