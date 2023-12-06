@@ -28,13 +28,44 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::collections::HashMap;
+
+use axum::async_trait;
+use axum::RequestPartsExt;
 use axum::extract::FromRequestParts;
+use axum::extract::Path;
+use axum::http::request::Parts;
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
+use axum::response::Response as AxumResponse;
 use serde::Deserialize;
 
 #[derive(Copy, Clone, Debug)]
 pub enum APIVersion {
     V1,
     V2,
+}
+
+#[async_trait]
+impl<S> FromRequestParts<S> for APIVersion
+where
+    S: Send + Sync,
+{
+    type Rejection = AxumResponse;
+
+    async fn from_request_parts(parts: &mut Parts, _: &S) -> Result<Self, Self::Rejection> {
+        let parameters: Path<HashMap<String, String>> = parts.extract().await.map_err(IntoResponse::into_response)?;
+
+        let version = parameters
+            .get("version")
+            .ok_or_else(|| (StatusCode::NOT_FOUND, "version not specified").into_response())?;
+
+        match version.as_str() {
+            "v1" => Ok(APIVersion::V1),
+            "v2" => Ok(APIVersion::V2),
+            _ => Err((StatusCode::NOT_FOUND, "unknown version specified").into_response()),
+        }
+    }
 }
 
 /// An API response object.
