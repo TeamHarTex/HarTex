@@ -7,6 +7,7 @@
 ## API Backend
 
 - **Changed:** updated Rust Version to 1.76
+- **Changed:** changed `Response<T>` to allow `DeserializedOwned` requirements
 
 ## Bors Buildbot
 
@@ -24,7 +25,7 @@
 ## Discord Frontend
 
 - **Changed:** migrated the commands to use the new localization API
-- **Changed:** updated `hyper` crate to `1.0`
+- **Changed:** updated `hyper` crate to `1.0` and performed corresponding migrations
 
 ## Localization Infrastructure
 
