@@ -27,6 +27,7 @@ hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
 fluent-bundle = "0.15.2"
 futures = "0.3.29"
+http-body-util = "0.1.0"
 hyper = { version = "1.0.1", features = ["client", "http2"] }
 hyper-util = { version = "0.1.1", features = ["http2", "tokio"] }
 miette = "5.10.0"
