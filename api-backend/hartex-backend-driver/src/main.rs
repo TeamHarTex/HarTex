@@ -32,6 +32,7 @@
 #![deny(warnings)]
 
 use std::env;
+#[cfg(not(unix))]
 use std::future;
 use std::pin::pin;
 use std::pin::Pin;
