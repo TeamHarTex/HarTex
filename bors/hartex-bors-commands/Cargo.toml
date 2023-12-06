@@ -12,7 +12,6 @@ rust-version = "1.76.0"
 
 [dependencies]
 hartex_bors_core = { path = "../hartex-bors-core" }
-hartex_bors_database = { path = "../hartex-bors-database" }
 hartex_bors_github = { path = "../hartex-bors-github" }
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
