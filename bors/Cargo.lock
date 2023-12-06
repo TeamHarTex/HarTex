@@ -1084,7 +1084,6 @@ name = "hartex_bors_commands"
 version = "0.5.1"
 dependencies = [
  "hartex_bors_core",
- "hartex_bors_database",
  "hartex_bors_github",
  "hartex_log",
  "itertools 0.12.0",
