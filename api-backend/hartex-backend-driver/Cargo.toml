@@ -11,17 +11,20 @@ rust-version = "1.76.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_backend_ratelimiter = { path = "../hartex-backend-ratelimiter" }
-hartex_backend_routes_v2 = { path = "../hartex-backend-routes-v2" }
-hartex_backend_status_util = { path = "../hartex-backend-status-util" }
+hartex_backend_routes = { path = "../hartex-backend-routes" }
 
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
+axum = "0.7.2"
 dotenvy = "0.15.7"
+hyper = { version = "1.0.1", features = ["http2", "server"] }
+hyper-util = { version = "0.1.1", features = ["http2", "tokio"] }
 miette = { version = "5.10.0", features = ["fancy"] }
-rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master" }
 serde = "1.0.193"
 serde_json = "1.0.108"
+tokio = { version = "1.34.0", features = ["full"] }
+tower-http = { version = "0.5.0", features = ["timeout"] }
+tower-service = "0.3.2"
 
 [features]

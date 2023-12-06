@@ -20,23 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// # Limitables
-///
-/// A limitable is a route that can be ratelimited.
-use std::num::NonZeroU32;
+//! # Backend API Routes V2
+//!
+//! Routes v2 for the backend API.
 
-use governor::Quota;
-use rocket::http::Method;
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 
-/// Trait for ratelimiters that can be ratelimited to implement.
-pub trait Limitable<'r> {
-    /// Evaluate the limit for a specific route.
-    #[must_use]
-    fn evaluate_limit(method: Method, route: &str) -> Quota;
-
-    /// Create a nonzero u32 for quota.
-    #[must_use]
-    fn non_zero(i: u32) -> NonZeroU32 {
-        NonZeroU32::new(i).unwrap_or(NonZeroU32::new(1).unwrap())
-    }
-}
+pub mod uptime;
