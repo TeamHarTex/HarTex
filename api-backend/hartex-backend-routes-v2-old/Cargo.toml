@@ -1,5 +1,5 @@
 [package]
-name = "hartex_backend_routes_v2"
+name = "hartex_backend_routes_v2_old"
 version = "0.5.1"
 edition = "2021"
 description = """
@@ -19,7 +19,8 @@ hartex_database_queries = { path = "../../database-queries" }
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-axum = { version = "0.7.2", features = ["json"] }
+governor = { git = "https://github.com/antifuchs/governor.git" }
+rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master", features = ["json"] }
 serde_json = "1.0.108"
 tokio-postgres = "0.7.10"
 
