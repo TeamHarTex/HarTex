@@ -82,7 +82,8 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
 
     let result = sender.send_request(request).await.into_diagnostic()?;
     let body = result.collect().await.into_diagnostic()?.aggregate();
-    let response: Response<UptimeResponse> = serde_json::from_reader(body.reader()).into_diagnostic()?;
+    let response: Response<UptimeResponse> =
+        serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     let latency = now.elapsed().into_diagnostic()?.as_millis();
 

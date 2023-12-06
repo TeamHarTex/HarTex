@@ -24,7 +24,9 @@
 ///
 /// Routes interacting with the uptime API.
 
+use hartex_backend_models::APIVersion;
+
 /// # `POST /stats/uptime`
 ///
 /// Obtain the uptime of a certain component.
-pub async fn post_uptime() {}
+pub async fn post_uptime(_: APIVersion) {}
