@@ -37,6 +37,7 @@ use tokio_postgres::NoTls;
 /// # `POST /stats/uptime`
 ///
 /// Obtain the uptime of a certain component.
+#[allow(clippy::missing_panics_doc)]  // this function cannot panic
 pub async fn post_uptime(
     _: APIVersion,
     Json(query): Json<UptimeQuery<'_>>,
