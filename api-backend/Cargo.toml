@@ -3,9 +3,7 @@ members = [
     "hartex-backend-driver",
     "hartex-backend-models",
     "hartex-backend-models-v2",
-    "hartex-backend-ratelimiter",
     "hartex-backend-routes",
-    "hartex-backend-status-util",
 ]
 
 resolver = "2"
