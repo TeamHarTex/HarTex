@@ -10,8 +10,7 @@
 
 ## Bors Buildbot
 
-- **Changed:** updated Rust Version to 1.76
-- **Changed:** updated `hyper` crate to `1.0`
+- **Removed:** bors in-tree is now EOL
 
 ## Buildsystem
 
