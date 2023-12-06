@@ -26,6 +26,7 @@
 
 use std::env;
 
+use axum::http::StatusCode;
 use axum::Json;
 use hartex_backend_models::APIVersion;
 use hartex_backend_models::Response;
@@ -43,15 +44,15 @@ use tokio_postgres::NoTls;
 pub async fn post_uptime(
     _: APIVersion,
     Json(query): Json<UptimeQuery<'_>>,
-) -> Json<Response<UptimeResponse>> {
+) -> (StatusCode, Json<Response<UptimeResponse>>) {
     let result = env::var("API_PGSQL_URL");
     if result.is_err() {
-        return Response::internal_server_error();
+        return (StatusCode::INTERNAL_SERVER_ERROR, Response::internal_server_error());
     }
 
     let result = tokio_postgres::connect(&result.unwrap(), NoTls).await;
     if result.is_err() {
-        return Response::internal_server_error();
+        return (StatusCode::INTERNAL_SERVER_ERROR, Response::internal_server_error());
     }
 
     let (client, _) = result.unwrap();
@@ -62,9 +63,12 @@ pub async fn post_uptime(
 
     // FIXME: figure out whether the data is actually not found and return 404
     if result.is_err() {
-        return Response::internal_server_error();
+        return (StatusCode::INTERNAL_SERVER_ERROR, Response::internal_server_error());
     }
     let data = result.unwrap();
 
-    Response::ok(UptimeResponse::with_start_timestamp(data.timestamp.unix_timestamp() as u128))
+    (
+        StatusCode::OK,
+        Response::ok(UptimeResponse::with_start_timestamp(data.timestamp.unix_timestamp() as u128)),
+    )
 }
