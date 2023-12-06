@@ -21,7 +21,6 @@
  */
 
 use std::env;
-use std::str;
 use std::time::SystemTime;
 
 use hartex_backend_models::Response;
@@ -34,26 +33,35 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_log::log;
+use http_body_util::BodyExt;
+use hyper::body::Buf;
+use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
-use hyper_util::client::legacy::Client;
 use hyper_util::rt::TokioExecutor;
+use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
-use miette::Report;
 
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let client = Client::builder(TokioExecutor::new()).build_http::<String>();
+    let stream = TcpStream::connect("https://discord.com")
+        .await
+        .into_diagnostic()?;
+    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+        .await
+        .into_diagnostic()?;
+
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!("http://{api_domain}/api/v2/uptime");
     let now = SystemTime::now();
@@ -72,23 +80,12 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .body(serde_json::to_string(&query).into_diagnostic()?)
         .into_diagnostic()?;
 
-    let mut response = client.request(request).await.into_diagnostic()?;
-    let mut full = String::new();
-    while let Some(result) = response.body_mut().data().await {
-        full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
-    }
-    if !response.status().is_success() {
-        log::error!("unsuccessful HTTP request, response: {full}");
-
-        return Err(Report::msg(format!(
-            "unsuccessful HTTP request, with status code {}",
-            response.status()
-        )));
-    }
+    let result = sender.send_request(request).await.into_diagnostic()?;
+    let body = result.collect().await.into_diagnostic()?.aggregate();
+    let response: Response<UptimeResponse> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     let latency = now.elapsed().into_diagnostic()?.as_millis();
 
-    let response = serde_json::from_str::<Response<UptimeResponse>>(&full).into_diagnostic()?;
     let data = response.data();
     let timestamp = data.start_timestamp();
 
