@@ -4,7 +4,7 @@ members = [
     "hartex-backend-models",
     "hartex-backend-models-v2",
     "hartex-backend-ratelimiter",
-    "hartex-backend-routes-v2",
+    "hartex-backend-routes",
     "hartex-backend-status-util",
 ]
 

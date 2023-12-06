@@ -34,6 +34,7 @@
 use std::env;
 use std::future;
 use std::pin::pin;
+use std::pin::Pin;
 use std::time::Duration;
 
 use axum::routing::post;
@@ -43,15 +44,15 @@ use hartex_errors::dotenv;
 use hartex_log::log;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
-use hyper::service::HttpService;
 use hyper::Request;
 use hyper_util::rt::TokioExecutor;
 use hyper_util::rt::TokioIo;
-use miette::{IntoDiagnostic, Report};
+use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
 use tokio::signal;
 use tokio::sync::watch;
 use tower_http::timeout::TimeoutLayer;
+use tower_service::Service;
 
 /// # Entry Point
 ///
@@ -78,7 +79,7 @@ pub async fn main() -> miette::Result<()> {
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .route(
             "/api/:version/stats/uptime",
-            post(hartex_backend_routes_v2::uptime::post_uptime),
+            post(hartex_backend_routes::uptime::post_uptime),
         );
 
     let listener = TcpListener::bind(env::var("API_DOMAIN").into_diagnostic()?)
@@ -110,18 +111,18 @@ pub async fn main() -> miette::Result<()> {
 
             let connection = hyper::server::conn::http2::Builder::new(TokioExecutor::new())
                 .serve_connection(socket, hyper_service);
-            let mut pinned = pin!(connection);
+            let mut pinned: Pin<&mut _> = pin!(connection);
             loop {
                 tokio::select! {
                     result = pinned.as_mut() => {
-                        if let Err(error) = result.clone() {
-                            log::error!("failed to serve connection, see error below")
-                            println!("{}", Report::new(error));
+                        if result.is_err() {
+                            log::error!("failed to serve connection, see error below");
+                            println!("{}", result.into_diagnostic().unwrap_err());
                         }
                         break;
                     }
                     _ = shutdown() => {
-                        debug!("signal received, starting graceful shutdown");
+                        log::trace!("signal received, starting graceful shutdown");
                         pinned.as_mut().graceful_shutdown();
                     }
                 }
