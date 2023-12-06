@@ -43,7 +43,7 @@ use tokio_postgres::NoTls;
 #[allow(clippy::module_name_repetitions)]
 pub async fn post_uptime(
     _: APIVersion,
-    Json(query): Json<UptimeQuery<'_>>,
+    Json(query): Json<UptimeQuery>,
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
     let result = env::var("API_PGSQL_URL");
     if result.is_err() {
