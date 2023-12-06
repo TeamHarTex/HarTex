@@ -33,8 +33,8 @@ use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {

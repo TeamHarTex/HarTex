@@ -33,9 +33,9 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_localization_core::LOCALIZATION_HOLDER;
-use hartex_localization_core::Localizer;
 use hartex_discord_utils::CLIENT;
+use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 #[metadata(command_type = 1, interaction_only = true, name = "about")]
