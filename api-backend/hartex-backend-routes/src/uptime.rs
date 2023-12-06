@@ -39,7 +39,7 @@ use tokio_postgres::NoTls;
 /// Obtain the uptime of a certain component.
 pub async fn post_uptime(
     _: APIVersion,
-    Json(query): Json<UptimeQuery>,
+    Json(query): Json<UptimeQuery<'_>>,
 ) -> Json<Response<UptimeResponse>> {
     let result = env::var("API_PGSQL_URL");
     if result.is_err() {
