@@ -24,9 +24,15 @@
 ///
 /// Routes interacting with the uptime API.
 
+use axum::Json;
 use hartex_backend_models::APIVersion;
+use hartex_backend_models::Response;
+use hartex_backend_models_v2::uptime::UptimeQuery;
+use hartex_backend_models_v2::uptime::UptimeResponse;
 
 /// # `POST /stats/uptime`
 ///
 /// Obtain the uptime of a certain component.
-pub async fn post_uptime(_: APIVersion) {}
+pub async fn post_uptime(_: APIVersion, Json(_): Json<UptimeQuery>) -> Json<Response<UptimeResponse>> {
+    todo!()
+}
