@@ -28,4 +28,23 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use governor::Quota;
+use hartex_backend_ratelimiter::limitable::Limitable;
+use rocket::http::Method;
+
+pub mod bors;
 pub mod uptime;
+
+/// A ratelimit guard for ratelimiting requests.
+pub struct RateLimitGuard;
+
+impl<'r> Limitable<'r> for RateLimitGuard {
+    #[allow(clippy::match_same_arms)]
+    fn evaluate_limit(method: Method, route: &str) -> Quota {
+        match (method, route) {
+            (Method::Get, _) => Quota::per_second(Self::non_zero(1)),
+            (Method::Post, _) => Quota::per_second(Self::non_zero(1)),
+            _ => Quota::per_second(Self::non_zero(1)),
+        }
+    }
+}

@@ -31,24 +31,22 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::env;
+
+use axum::routing::post;
+use axum::Router;
 use dotenvy::Error;
-use hartex_backend_routes_v2::bors::v2_repositories_repository_permissions_permissions;
-use hartex_backend_routes_v2::uptime::v2_post_uptime;
 use hartex_errors::dotenv;
 use hartex_log::log;
 use miette::IntoDiagnostic;
-use rocket::catchers;
-use rocket::config::Config;
-use rocket::routes;
-
-mod catchers;
+use tokio::net::TcpListener;
 
 /// # Entry Point
 ///
 /// This is the entry point of the API backend for HarTex. This does the heavy lifting of building
 /// a Rocket server, igniting, and launching it.
 #[allow(clippy::no_effect_underscore_binding)]
-#[rocket::main]
+#[tokio::main]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
@@ -63,25 +61,16 @@ pub async fn main() -> miette::Result<()> {
         }
     }
 
-    log::debug!("igniting rocket");
-    let rocket = rocket::custom(Config::figment().merge(("port", 8000)))
-        .mount(
-            "/api/v2",
-            routes![
-                v2_post_uptime,
-                v2_repositories_repository_permissions_permissions,
-            ],
-        )
-        .register(
-            "/",
-            catchers![catchers::not_found, catchers::too_many_requests],
-        )
-        .ignite()
+    log::debug!("starting axum server");
+    let app = Router::new().route(
+        "/api/:version/stats/uptime",
+        post(hartex_backend_routes_v2::uptime::post_uptime),
+    );
+
+    let listener = TcpListener::bind(env::var("API_DOMAIN").into_diagnostic()?)
         .await
         .into_diagnostic()?;
 
-    log::debug!("launching rocket");
-    rocket.launch().await.into_diagnostic()?;
-
-    Ok(())
+    // todo: implement graceful shutdown
+    axum::serve(listener, app).await.into_diagnostic()
 }
