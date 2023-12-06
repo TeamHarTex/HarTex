@@ -70,7 +70,7 @@ pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
         .header(CONTENT_TYPE, "application/json")
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
         )
         .body(String::new())
         .into_diagnostic()?;
