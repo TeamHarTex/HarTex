@@ -40,6 +40,7 @@ use axum::response::Response as AxumResponse;
 use axum::Json;
 use axum::RequestPartsExt;
 use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Copy, Clone, Debug)]
 pub enum APIVersion {
@@ -73,7 +74,7 @@ where
 /// An API response object.
 ///
 /// This is the object returned by a certain API endpoint.
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Response<T> {
     code: u16,
     message: String,
