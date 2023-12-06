@@ -76,7 +76,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .header(AUTHORIZATION, token)
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
         )
         .body(Empty::<Bytes>::new())
         .into_diagnostic()?;

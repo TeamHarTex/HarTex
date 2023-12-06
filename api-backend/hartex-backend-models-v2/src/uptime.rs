@@ -56,6 +56,11 @@ pub struct UptimeResponse {
 }
 
 impl UptimeResponse {
+    #[must_use]
+    pub fn with_start_timestamp(start_timestamp: u128) -> Self {
+        Self { start_timestamp }
+    }
+
     /// The start timestamp of the uptime entry.
     #[must_use]
     pub fn start_timestamp(&self) -> u128 {
