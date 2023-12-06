@@ -32,14 +32,26 @@
 #![deny(warnings)]
 
 use std::env;
+use std::future;
+use std::pin::pin;
+use std::time::Duration;
 
 use axum::routing::post;
 use axum::Router;
 use dotenvy::Error;
 use hartex_errors::dotenv;
 use hartex_log::log;
-use miette::IntoDiagnostic;
+use hyper::body::Incoming;
+use hyper::service::service_fn;
+use hyper::service::HttpService;
+use hyper::Request;
+use hyper_util::rt::TokioExecutor;
+use hyper_util::rt::TokioIo;
+use miette::{IntoDiagnostic, Report};
 use tokio::net::TcpListener;
+use tokio::signal;
+use tokio::sync::watch;
+use tower_http::timeout::TimeoutLayer;
 
 /// # Entry Point
 ///
@@ -62,15 +74,94 @@ pub async fn main() -> miette::Result<()> {
     }
 
     log::debug!("starting axum server");
-    let app = Router::new().route(
-        "/api/:version/stats/uptime",
-        post(hartex_backend_routes_v2::uptime::post_uptime),
-    );
+    let app = Router::new()
+        .layer(TimeoutLayer::new(Duration::from_secs(30)))
+        .route(
+            "/api/:version/stats/uptime",
+            post(hartex_backend_routes_v2::uptime::post_uptime),
+        );
 
     let listener = TcpListener::bind(env::var("API_DOMAIN").into_diagnostic()?)
         .await
         .into_diagnostic()?;
 
-    // todo: implement graceful shutdown
-    axum::serve(listener, app).await.into_diagnostic()
+    let (close_tx, close_rx) = watch::channel(());
+
+    loop {
+        let (socket, remote_addr) = tokio::select! {
+            result = listener.accept() => {
+                result.unwrap()
+            }
+            _ = shutdown() => {
+                break;
+            }
+        };
+
+        log::trace!("accepted connection from {remote_addr}");
+
+        let service = app.clone();
+        let close_rx = close_rx.clone();
+
+        tokio::spawn(async move {
+            let socket = TokioIo::new(socket);
+
+            let hyper_service =
+                service_fn(move |request: Request<Incoming>| service.clone().call(request));
+
+            let connection = hyper::server::conn::http2::Builder::new(TokioExecutor::new())
+                .serve_connection(socket, hyper_service);
+            let mut pinned = pin!(connection);
+            loop {
+                tokio::select! {
+                    result = pinned.as_mut() => {
+                        if let Err(error) = result.clone() {
+                            log::error!("failed to serve connection, see error below")
+                            println!("{}", Report::new(error));
+                        }
+                        break;
+                    }
+                    _ = shutdown() => {
+                        debug!("signal received, starting graceful shutdown");
+                        pinned.as_mut().graceful_shutdown();
+                    }
+                }
+            }
+
+            log::trace!("connection from {remote_addr} closed");
+
+            drop(close_rx);
+        });
+    }
+
+    drop(close_rx);
+    drop(listener);
+
+    log::trace!("waiting for {} tasks to finish", close_tx.receiver_count());
+    close_tx.closed().await;
+
+    Ok(())
+}
+
+async fn shutdown() {
+    let ctrl_c = async {
+        signal::ctrl_c()
+            .await
+            .expect("failed to install ctrl+c handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
 }
