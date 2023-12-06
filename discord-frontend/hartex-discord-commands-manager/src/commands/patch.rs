@@ -23,20 +23,20 @@
 use std::env;
 use std::fs::File;
 use std::io::Read;
-use std::str;
 
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
+use hartex_discord_core::tokio::net::TcpStream;
 use hartex_log::log;
-use hyper::body::HttpBody;
+use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_TYPE;
 use hyper::header::USER_AGENT;
-use hyper::Client;
 use hyper::Method;
 use hyper::Request;
-use hyper_trust_dns::TrustDnsResolver;
+use hyper_util::rt::TokioExecutor;
+use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
 use walkdir::WalkDir;
@@ -88,8 +88,12 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
     let mut json = String::new();
     file.read_to_string(&mut json).into_diagnostic()?;
 
-    let client =
-        Client::builder().build(TrustDnsResolver::default().into_native_tls_https_connector());
+    let stream = TcpStream::connect("https://discord.com")
+        .await
+        .into_diagnostic()?;
+    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+        .await
+        .into_diagnostic()?;
 
     let application_id = env::var("APPLICATION_ID").into_diagnostic()?;
 
@@ -112,21 +116,7 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
         )
         .body(json)
         .into_diagnostic()?;
-    let mut response = client.request(request).await.into_diagnostic()?;
-    if !response.status().is_success() {
-        let mut full = String::new();
-        while let Some(result) = response.body_mut().data().await {
-            full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
-        }
-        log::error!("unsuccessful HTTP request, response: {full}");
-
-        return Err(Report::msg(format!(
-            "unsuccessful HTTP request, with status code {}",
-            response.status()
-        )));
-    }
-
-    log::info!("request succeeded: {}", response.status());
+    sender.send_request(request).await.into_diagnostic()?;
 
     Ok(())
 }
