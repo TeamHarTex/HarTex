@@ -16,7 +16,7 @@ hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", fea
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
 miette = "5.10.0"
-once_cell = "1.18.0"
+once_cell = "1.19.0"
 unic-langid = "0.9.3"
 
 [features]
