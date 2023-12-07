@@ -58,7 +58,8 @@ use tower_service::Service;
 /// # Entry Point
 ///
 /// This is the entry point of the API backend for HarTex. This does the heavy lifting of building
-/// a Rocket server, igniting, and launching it.
+/// an Axum server and starting it.
+#[allow(clippy::ignored_unit_patterns)]
 #[allow(clippy::no_effect_underscore_binding)]
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
