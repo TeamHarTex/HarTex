@@ -145,6 +145,7 @@ pub async fn main() -> miette::Result<()> {
     Ok(())
 }
 
+#[allow(clippy::ignored_unit_patterns)]
 async fn shutdown() {
     let ctrl_c = async {
         signal::ctrl_c()
