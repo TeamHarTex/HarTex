@@ -24,6 +24,7 @@ use tower_http::classify::MakeClassifier;
 
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
 
+#[derive(Clone, Copy, Debug)]
 pub struct Log4rsLayer<M,
     MakeMetadata = DefaultMakeMetadata,
 > {

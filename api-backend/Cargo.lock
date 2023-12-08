@@ -710,8 +710,11 @@ name = "hartex_backend_layers"
 version = "0.5.1"
 dependencies = [
  "http",
+ "http-body",
  "log",
+ "pin-project-lite",
  "tower-http",
+ "tower-service",
 ]
 
 [[package]]
