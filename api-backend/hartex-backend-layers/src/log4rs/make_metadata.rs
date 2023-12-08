@@ -62,7 +62,7 @@ impl Default for DefaultMakeMetadata {
 impl<B> MakeMetadata<B> for DefaultMakeMetadata {
     fn make_metadata(&mut self, _: Request<B>) -> Metadata {
         Metadata::builder()
-            .level(Level::Trace)
+            .level(self.level)
             .target("request")
             .build()
     }
