@@ -25,6 +25,7 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::Context;
 use std::task::Poll;
+use std::time::Instant;
 
 use http::Response;
 use http_body::Body;
@@ -38,6 +39,7 @@ pin_project! {
         #[pin]
         pub(crate) inner: F,
         pub(crate) classifier: C,
+        pub(crate) start: Instant,
     }
 }
 
