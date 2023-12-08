@@ -714,6 +714,7 @@ dependencies = [
  "log",
  "pin-project-lite",
  "tower-http",
+ "tower-layer",
  "tower-service",
 ]
 

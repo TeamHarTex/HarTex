@@ -21,15 +21,17 @@
  */
 
 use tower_http::classify::MakeClassifier;
+use tower_layer::Layer;
 
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
+use crate::log4rs::Log4rs;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Log4rsLayer<M,
-    MakeMetadata = DefaultMakeMetadata,
+    MakeMetadataT = DefaultMakeMetadata,
 > {
     pub(crate) make_classifier: M,
-    pub(crate) make_metadata: MakeMetadata,
+    pub(crate) make_metadata: MakeMetadataT,
 }
 
 impl<M> Log4rsLayer<M> {
@@ -40,6 +42,22 @@ impl<M> Log4rsLayer<M> {
         Self {
             make_classifier,
             make_metadata: DefaultMakeMetadata::new(),
+        }
+    }
+}
+
+impl<S, M, MakeMetadataT> Layer<S> for Log4rsLayer<M, MakeMetadataT>
+where
+    M: Clone,
+    MakeMetadataT: Clone,
+{
+    type Service = Log4rs<S, M, MakeMetadataT>;
+
+    fn layer(&self, inner: S) -> Self::Service {
+        Log4rs {
+            inner,
+            make_classifier: self.make_classifier.clone(),
+            make_metadata: self.make_metadata.clone(),
         }
     }
 }
