@@ -23,6 +23,7 @@
 use std::fmt::Display;
 use std::task::Context;
 use std::task::Poll;
+use std::time::Instant;
 
 use http::Request;
 use http::Response;
@@ -79,7 +80,16 @@ where
         self.inner.poll_ready(cx)
     }
 
-    fn call(&mut self, _: Request<RequestBodyT>) -> Self::Future {
-        todo!()
+    fn call(&mut self, request: Request<RequestBodyT>) -> Self::Future {
+        let start = Instant::now();
+        let classifier = self.make_classifier.make_classifier(&request);
+
+        let future = self.inner.call(request);
+
+        Log4rsResponseFuture {
+            inner: future,
+            classifier,
+            start,
+        }
     }
 }
