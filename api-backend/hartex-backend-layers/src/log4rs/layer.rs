@@ -22,8 +22,13 @@
 
 use tower_http::classify::MakeClassifier;
 
-pub struct Log4rsLayer<M> {
+use crate::log4rs::make_metadata::DefaultMakeMetadata;
+
+pub struct Log4rsLayer<M,
+    MakeMetadata = DefaultMakeMetadata,
+> {
     pub(crate) make_classifier: M,
+    pub(crate) make_metadata: MakeMetadata,
 }
 
 impl<M> Log4rsLayer<M> {
@@ -31,6 +36,9 @@ impl<M> Log4rsLayer<M> {
         where
             M: MakeClassifier,
     {
-        Self { make_classifier }
+        Self {
+            make_classifier,
+            make_metadata: DefaultMakeMetadata::new(),
+        }
     }
 }
