@@ -29,9 +29,11 @@ use http::Response;
 use http_body::Body;
 use tower_http::classify::MakeClassifier;
 use tower_service::Service;
-pub use layer::Log4rsLayer;
 
+use crate::log4rs::body::Log4rsResponseBody;
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
+
+pub use layer::Log4rsLayer;
 
 mod body;
 mod layer;
@@ -67,7 +69,7 @@ where
     M: MakeClassifier,
     M::Classifier: Clone,
 {
-    type Response = ();
+    type Response = Response<Log4rsResponseBody<ResponseBodyT, M::ClassifyEos>>;
     type Error = S::Error;
     type Future = ();
 
