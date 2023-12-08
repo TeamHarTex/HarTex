@@ -71,8 +71,8 @@ where
     type Error = S::Error;
     type Future = ();
 
-    fn poll_ready(&mut self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        todo!()
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx)
     }
 
     fn call(&mut self, _: Request<RequestBodyT>) -> Self::Future {
