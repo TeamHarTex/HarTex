@@ -23,7 +23,6 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
-
 use std::env;
 
 use axum::http::StatusCode;
@@ -39,7 +38,7 @@ use tokio_postgres::NoTls;
 ///
 /// Obtain the uptime of a certain component.
 #[allow(clippy::cast_sign_loss)]
-#[allow(clippy::missing_panics_doc)]  // this function cannot panic
+#[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 pub async fn post_uptime(
     _: APIVersion,
@@ -47,12 +46,18 @@ pub async fn post_uptime(
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
     let result = env::var("API_PGSQL_URL");
     if result.is_err() {
-        return (StatusCode::INTERNAL_SERVER_ERROR, Response::internal_server_error());
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
     }
 
     let result = tokio_postgres::connect(&result.unwrap(), NoTls).await;
     if result.is_err() {
-        return (StatusCode::INTERNAL_SERVER_ERROR, Response::internal_server_error());
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
     }
 
     let (client, _) = result.unwrap();
@@ -63,12 +68,17 @@ pub async fn post_uptime(
 
     // FIXME: figure out whether the data is actually not found and return 404
     if result.is_err() {
-        return (StatusCode::INTERNAL_SERVER_ERROR, Response::internal_server_error());
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
     }
     let data = result.unwrap();
 
     (
         StatusCode::OK,
-        Response::ok(UptimeResponse::with_start_timestamp(data.timestamp.unix_timestamp() as u128)),
+        Response::ok(UptimeResponse::with_start_timestamp(
+            data.timestamp.unix_timestamp() as u128,
+        )),
     )
 }

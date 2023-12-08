@@ -98,6 +98,7 @@
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-loader/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-routes-v2-old/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-routes/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-layers/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
