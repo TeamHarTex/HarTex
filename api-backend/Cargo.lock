@@ -700,8 +700,18 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+ "tower",
  "tower-http",
  "tower-service",
+]
+
+[[package]]
+name = "hartex_backend_layers"
+version = "0.5.1"
+dependencies = [
+ "http",
+ "log",
+ "tower-http",
 ]
 
 [[package]]

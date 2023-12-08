@@ -38,7 +38,9 @@ impl UptimeQuery {
     /// Create a new uptime query with the component name to search for.
     #[must_use]
     pub fn new(component_name: &str) -> Self {
-        Self { component_name: component_name.to_string() }
+        Self {
+            component_name: component_name.to_string(),
+        }
     }
 
     /// The component name to search for in this uptime query.
