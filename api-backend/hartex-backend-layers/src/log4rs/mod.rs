@@ -31,11 +31,13 @@ use tower_http::classify::MakeClassifier;
 use tower_service::Service;
 
 use crate::log4rs::body::Log4rsResponseBody;
+use crate::log4rs::future::Log4rsResponseFuture;
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
 
 pub use layer::Log4rsLayer;
 
 mod body;
+mod future;
 mod layer;
 mod make_metadata;
 
@@ -71,7 +73,7 @@ where
 {
     type Response = Response<Log4rsResponseBody<ResponseBodyT, M::ClassifyEos>>;
     type Error = S::Error;
-    type Future = ();
+    type Future = Log4rsResponseFuture<S::Future, M::Classifier>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.inner.poll_ready(cx)
