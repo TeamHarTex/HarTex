@@ -82,8 +82,8 @@ pub async fn main() -> miette::Result<()> {
     let app = Router::new()
         .layer(
             ServiceBuilder::new()
-                .layer(TimeoutLayer::new(Duration::from_secs(30)))
                 .layer(TraceLayer::new_for_http())
+                .layer(TimeoutLayer::new(Duration::from_secs(30)))
         )
         .route(
             "/api/:version/stats/uptime",
