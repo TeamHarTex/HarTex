@@ -23,33 +23,59 @@
 use std::fmt::Display;
 use std::pin::Pin;
 use std::task::Context;
+use std::task::ready;
 use std::task::Poll;
+use std::time::Instant;
 
 use http_body::Body;
 use http_body::Frame;
 use http_body::SizeHint;
 use pin_project_lite::pin_project;
 use tower_http::classify::ClassifyEos;
+use crate::log4rs::on_body_chunk::OnBodyChunk;
 
 pin_project! {
-    pub struct Log4rsResponseBody<B, C> {
+    pub struct Log4rsResponseBody<B, C, OnBodyChunkT> {
         #[pin]
         pub(crate) inner: B,
         pub(crate) classify_eos: C,
+        pub(crate) on_body_chunk: OnBodyChunkT,
+        pub(crate) start: Instant,
+        pub(crate) target: String,
     }
 }
 
-impl<B, C> Body for Log4rsResponseBody<B, C>
+impl<B, C, OnBodyChunkT> Body for Log4rsResponseBody<B, C, OnBodyChunkT>
 where
     B: Body,
     B::Error: Display + 'static,
     C: ClassifyEos,
+    OnBodyChunkT: OnBodyChunk<B::Data>,
 {
-    type Data = ();
-    type Error = ();
+    type Data = B::Data;
+    type Error = B::Error;
 
-    fn poll_frame(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
-        todo!()
+    fn poll_frame(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
+        let projected = self.project();
+        let result = ready!(projected.inner.poll_frame(cx));
+
+        let latency = projected.start.elapsed();
+        *projected.start = Instant::now();
+
+        match result {
+            Some(Ok(frame)) => {
+                let frame = match frame.into_data() {
+                    Ok(chunk) => {
+                        projected.on_body_chunk.on_body_chunk(&chunk, latency, &projected.target);
+                        Frame::data(chunk)
+                    }
+                    Err(frame) => frame
+                };
+
+                Poll::Ready(Some(Ok(frame)))
+            }
+            _ => Poll::Pending,
+        }
     }
 
     fn is_end_stream(&self) -> bool {

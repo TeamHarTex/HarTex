@@ -23,12 +23,14 @@
 use tower_http::classify::MakeClassifier;
 use tower_layer::Layer;
 
+use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
 use crate::log4rs::Log4rs;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Log4rsLayer<M,
     MakeMetadataT = DefaultMakeMetadata,
+    OnBodyChunkT = DefaultOnBodyChunk,
 > {
     pub(crate) make_classifier: M,
     pub(crate) make_metadata: MakeMetadataT,

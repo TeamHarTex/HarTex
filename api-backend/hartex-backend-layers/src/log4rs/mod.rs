@@ -34,6 +34,7 @@ use tower_service::Service;
 use crate::log4rs::body::Log4rsResponseBody;
 use crate::log4rs::future::Log4rsResponseFuture;
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
+use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
 
 pub use layer::Log4rsLayer;
 
@@ -41,12 +42,14 @@ mod body;
 mod future;
 mod layer;
 mod make_metadata;
+mod on_body_chunk;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Log4rs<S, M, MakeMetadata = DefaultMakeMetadata> {
+pub struct Log4rs<S, M, MakeMetadataT = DefaultMakeMetadata, OnBodyChunkT = DefaultOnBodyChunk> {
     pub(crate) inner: S,
     pub(crate) make_classifier: M,
-    pub(crate) make_metadata: MakeMetadata,
+    pub(crate) make_metadata: MakeMetadataT,
+    pub(crate) on_body_chunk: OnBodyChunkT,
 }
 
 impl<S, M> Log4rs<S, M> {
@@ -55,6 +58,7 @@ impl<S, M> Log4rs<S, M> {
             inner,
             make_classifier,
             make_metadata: DefaultMakeMetadata::new(),
+            on_body_chunk: DefaultOnBodyChunk::new(),
         }
     }
 
@@ -63,7 +67,7 @@ impl<S, M> Log4rs<S, M> {
     }
 }
 
-impl<S, M, RequestBodyT, ResponseBodyT> Service<Request<RequestBodyT>> for Log4rs<S, M>
+impl<S, M, RequestBodyT, ResponseBodyT, OnBodyChunkT> Service<Request<RequestBodyT>> for Log4rs<S, M>
 where
     S: Service<Request<RequestBodyT>, Response = Response<ResponseBodyT>>,
     RequestBodyT: Body,
@@ -72,9 +76,9 @@ where
     M: MakeClassifier,
     M::Classifier: Clone,
 {
-    type Response = Response<Log4rsResponseBody<ResponseBodyT, M::ClassifyEos>>;
+    type Response = Response<Log4rsResponseBody<ResponseBodyT, M::ClassifyEos, OnBodyChunkT>>;
     type Error = S::Error;
-    type Future = Log4rsResponseFuture<S::Future, M::Classifier>;
+    type Future = Log4rsResponseFuture<S::Future, M::Classifier, OnBodyChunkT>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.inner.poll_ready(cx)
@@ -88,8 +92,10 @@ where
 
         Log4rsResponseFuture {
             inner: future,
-            classifier,
+            classifier: Some(classifier),
             start,
+            on_body_chunk: Some(self.on_body_chunk.clone()),
+            target: "".to_string(),
         }
     }
 }
