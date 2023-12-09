@@ -23,12 +23,14 @@
 use tower_http::classify::MakeClassifier;
 use tower_layer::Layer;
 
-use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
 use crate::log4rs::make_metadata::DefaultMakeMetadata;
+use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
 use crate::log4rs::Log4rs;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Log4rsLayer<'a, M,
+pub struct Log4rsLayer<
+    'a,
+    M,
     MakeMetadataT = DefaultMakeMetadata,
     OnBodyChunkT = DefaultOnBodyChunk,
 > {
@@ -39,8 +41,8 @@ pub struct Log4rsLayer<'a, M,
 
 impl<'a, M> Log4rsLayer<'a, M> {
     pub fn new(make_classifier: M) -> Self
-        where
-            M: MakeClassifier,
+    where
+        M: MakeClassifier,
     {
         Self {
             make_classifier,
@@ -50,7 +52,8 @@ impl<'a, M> Log4rsLayer<'a, M> {
     }
 }
 
-impl<'a, S, M, MakeMetadataT, OnBodyChunkT> Layer<S> for Log4rsLayer<'a, M, MakeMetadataT, OnBodyChunkT>
+impl<'a, S, M, MakeMetadataT, OnBodyChunkT> Layer<S>
+    for Log4rsLayer<'a, M, MakeMetadataT, OnBodyChunkT>
 where
     M: Clone,
     MakeMetadataT: Clone,

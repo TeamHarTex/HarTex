@@ -22,8 +22,8 @@
 
 use std::fmt::Display;
 use std::pin::Pin;
-use std::task::Context;
 use std::task::ready;
+use std::task::Context;
 use std::task::Poll;
 use std::time::Instant;
 
@@ -33,6 +33,7 @@ use http_body::SizeHint;
 use log::Metadata;
 use pin_project::pin_project;
 use tower_http::classify::ClassifyEos;
+
 use crate::log4rs::on_body_chunk::OnBodyChunk;
 
 #[pin_project]
@@ -42,7 +43,7 @@ pub struct Log4rsResponseBody<'a, B, C, OnBodyChunkT> {
     pub(crate) classify_eos: C,
     pub(crate) on_body_chunk: OnBodyChunkT,
     pub(crate) start: Instant,
-    pub(crate) metadata: Metadata<'a>
+    pub(crate) metadata: Metadata<'a>,
 }
 
 impl<B, C, OnBodyChunkT> Body for Log4rsResponseBody<B, C, OnBodyChunkT>
@@ -55,7 +56,10 @@ where
     type Data = B::Data;
     type Error = B::Error;
 
-    fn poll_frame(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
+    fn poll_frame(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
         let projected = self.project();
         let result = ready!(projected.inner.poll_frame(cx));
 
@@ -66,10 +70,12 @@ where
             Some(Ok(frame)) => {
                 let frame = match frame.into_data() {
                     Ok(chunk) => {
-                        projected.on_body_chunk.on_body_chunk(&chunk, latency, &projected.metadata);
+                        projected
+                            .on_body_chunk
+                            .on_body_chunk(&chunk, latency, &projected.metadata);
                         Frame::data(chunk)
                     }
-                    Err(frame) => frame
+                    Err(frame) => frame,
                 };
 
                 Poll::Ready(Some(Ok(frame)))

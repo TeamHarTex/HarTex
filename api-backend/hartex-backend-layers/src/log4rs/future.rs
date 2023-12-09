@@ -46,8 +46,8 @@ pub struct Log4rsResponseFuture<'a, F, C, OnBodyChunkT> {
     pub(crate) metadata: Metadata<'a>,
 }
 
-
-impl<'a, FutureT, ResponseBodyT, E, C, OnBodyChunkT> Future for Log4rsResponseFuture<'a, FutureT, C, OnBodyChunkT>
+impl<'a, FutureT, ResponseBodyT, E, C, OnBodyChunkT> Future
+    for Log4rsResponseFuture<'a, FutureT, C, OnBodyChunkT>
 where
     FutureT: Future<Output = Result<Response<ResponseBodyT>, E>>,
     ResponseBodyT: Body,
@@ -56,7 +56,8 @@ where
     C: ClassifyResponse,
     OnBodyChunkT: OnBodyChunk<ResponseBodyT::Data>,
 {
-    type Output = Result<Response<Log4rsResponseBody<'a, ResponseBodyT, C::ClassifyEos, OnBodyChunkT>>, E>;
+    type Output =
+        Result<Response<Log4rsResponseBody<'a, ResponseBodyT, C::ClassifyEos, OnBodyChunkT>>, E>;
 
     fn poll(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<Self::Output> {
         todo!()

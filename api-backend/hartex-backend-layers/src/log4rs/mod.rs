@@ -28,6 +28,7 @@ use std::time::Instant;
 use http::Request;
 use http::Response;
 use http_body::Body;
+pub use layer::Log4rsLayer;
 use tower_http::classify::MakeClassifier;
 use tower_service::Service;
 
@@ -38,8 +39,6 @@ use crate::log4rs::make_metadata::MakeMetadata;
 use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
 use crate::log4rs::on_body_chunk::OnBodyChunk;
 
-pub use layer::Log4rsLayer;
-
 mod body;
 mod future;
 mod layer;
@@ -47,7 +46,8 @@ mod make_metadata;
 mod on_body_chunk;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Log4rs<'a, S, M, MakeMetadataT = DefaultMakeMetadata, OnBodyChunkT = DefaultOnBodyChunk> {
+pub struct Log4rs<'a, S, M, MakeMetadataT = DefaultMakeMetadata, OnBodyChunkT = DefaultOnBodyChunk>
+{
     pub(crate) inner: S,
     pub(crate) make_classifier: M,
     pub(crate) make_metadata: MakeMetadataT,
@@ -69,7 +69,8 @@ impl<'a, S, M> Log4rs<'a, S, M> {
     }
 }
 
-impl<'a, S, M, RequestBodyT, ResponseBodyT, MakeMetadataT, OnBodyChunkT> Service<Request<RequestBodyT>> for Log4rs<'a, S, M, MakeMetadataT, OnBodyChunkT>
+impl<'a, S, M, RequestBodyT, ResponseBodyT, MakeMetadataT, OnBodyChunkT>
+    Service<Request<RequestBodyT>> for Log4rs<'a, S, M, MakeMetadataT, OnBodyChunkT>
 where
     S: Service<Request<RequestBodyT>, Response = Response<ResponseBodyT>>,
     RequestBodyT: Body,
