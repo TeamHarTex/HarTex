@@ -29,24 +29,25 @@ use std::time::Instant;
 
 use http::Response;
 use http_body::Body;
-use pin_project_lite::pin_project;
+use log::Metadata;
+use pin_project::pin_project;
 use tower_http::classify::ClassifyResponse;
 
 use crate::log4rs::body::Log4rsResponseBody;
 use crate::log4rs::on_body_chunk::OnBodyChunk;
 
-pin_project! {
-    pub struct Log4rsResponseFuture<F, C, OnBodyChunkT> {
-        #[pin]
-        pub(crate) inner: F,
-        pub(crate) classifier: Option<C>,
-        pub(crate) start: Instant,
-        pub(crate) on_body_chunk: Option<OnBodyChunkT>,
-        pub(crate) target: String,
-    }
+#[pin_project]
+pub struct Log4rsResponseFuture<'a, F, C, OnBodyChunkT> {
+    #[pin]
+    pub(crate) inner: F,
+    pub(crate) classifier: Option<C>,
+    pub(crate) start: Instant,
+    pub(crate) on_body_chunk: Option<OnBodyChunkT>,
+    pub(crate) metadata: Metadata<'a>,
 }
 
-impl<FutureT, ResponseBodyT, E, C, OnBodyChunkT> Future for Log4rsResponseFuture<FutureT, C, OnBodyChunkT>
+
+impl<'a, FutureT, ResponseBodyT, E, C, OnBodyChunkT> Future for Log4rsResponseFuture<'a, FutureT, C, OnBodyChunkT>
 where
     FutureT: Future<Output = Result<Response<ResponseBodyT>, E>>,
     ResponseBodyT: Body,
@@ -55,11 +56,9 @@ where
     C: ClassifyResponse,
     OnBodyChunkT: OnBodyChunk<ResponseBodyT::Data>,
 {
-    type Output = Result<Response<Log4rsResponseBody<ResponseBodyT, C::ClassifyEos, OnBodyChunkT>>, E>;
+    type Output = Result<Response<Log4rsResponseBody<'a, ResponseBodyT, C::ClassifyEos, OnBodyChunkT>>, E>;
 
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-
-
+    fn poll(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<Self::Output> {
         todo!()
     }
 }

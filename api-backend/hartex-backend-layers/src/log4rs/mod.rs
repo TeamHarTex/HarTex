@@ -33,7 +33,7 @@ use tower_service::Service;
 
 use crate::log4rs::body::Log4rsResponseBody;
 use crate::log4rs::future::Log4rsResponseFuture;
-use crate::log4rs::make_metadata::DefaultMakeMetadata;
+use crate::log4rs::make_metadata::{DefaultMakeMetadata, MakeMetadata};
 use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
 
 pub use layer::Log4rsLayer;
@@ -45,14 +45,14 @@ mod make_metadata;
 mod on_body_chunk;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Log4rs<S, M, MakeMetadataT = DefaultMakeMetadata, OnBodyChunkT = DefaultOnBodyChunk> {
+pub struct Log4rs<'a, S, M, MakeMetadataT = DefaultMakeMetadata, OnBodyChunkT = DefaultOnBodyChunk> {
     pub(crate) inner: S,
     pub(crate) make_classifier: M,
     pub(crate) make_metadata: MakeMetadataT,
     pub(crate) on_body_chunk: OnBodyChunkT,
 }
 
-impl<S, M> Log4rs<S, M> {
+impl<'a, S, M> Log4rs<'a, S, M> {
     pub fn new(inner: S, make_classifier: M) -> Self {
         Self {
             inner,
@@ -67,7 +67,7 @@ impl<S, M> Log4rs<S, M> {
     }
 }
 
-impl<S, M, RequestBodyT, ResponseBodyT, OnBodyChunkT> Service<Request<RequestBodyT>> for Log4rs<S, M>
+impl<'a, S, M, RequestBodyT, ResponseBodyT, OnBodyChunkT> Service<Request<RequestBodyT>> for Log4rs<'a, S, M>
 where
     S: Service<Request<RequestBodyT>, Response = Response<ResponseBodyT>>,
     RequestBodyT: Body,
@@ -76,9 +76,9 @@ where
     M: MakeClassifier,
     M::Classifier: Clone,
 {
-    type Response = Response<Log4rsResponseBody<ResponseBodyT, M::ClassifyEos, OnBodyChunkT>>;
+    type Response = Response<Log4rsResponseBody<'a, ResponseBodyT, M::ClassifyEos, OnBodyChunkT>>;
     type Error = S::Error;
-    type Future = Log4rsResponseFuture<S::Future, M::Classifier, OnBodyChunkT>;
+    type Future = Log4rsResponseFuture<'a, S::Future, M::Classifier, OnBodyChunkT>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.inner.poll_ready(cx)
@@ -86,6 +86,8 @@ where
 
     fn call(&mut self, request: Request<RequestBodyT>) -> Self::Future {
         let start = Instant::now();
+
+        let metadata = self.make_metadata.make_metadata(&request);
         let classifier = self.make_classifier.make_classifier(&request);
 
         let future = self.inner.call(request);
@@ -95,7 +97,7 @@ where
             classifier: Some(classifier),
             start,
             on_body_chunk: Some(self.on_body_chunk.clone()),
-            target: "".to_string(),
+            metadata,
         }
     }
 }

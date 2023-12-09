@@ -22,22 +22,24 @@
 
 use std::time::Duration;
 
+use log::Metadata;
+
 pub trait OnBodyChunk<B> {
-    fn on_body_chunk(&mut self, chunk: &B, latency: Duration, target: &str);
+    fn on_body_chunk(&mut self, chunk: &B, latency: Duration, metadata: &Metadata);
 }
 
 impl<F, B> OnBodyChunk<B> for F
 where
-    F: FnMut(&B, Duration, &str),
+    F: FnMut(&B, Duration, &Metadata),
 {
-    fn on_body_chunk(&mut self, chunk: &B, latency: Duration, target: &str) {
-        self(chunk, latency, target)
+    fn on_body_chunk(&mut self, chunk: &B, latency: Duration, metadata: &Metadata) {
+        self(chunk, latency, metadata)
     }
 }
 
 impl<B> OnBodyChunk<B> for () {
     #[inline]
-    fn on_body_chunk(&mut self, _: &B, _: Duration, _: &str) {}
+    fn on_body_chunk(&mut self, _: &B, _: Duration, _: &Metadata) {}
 }
 
 #[derive(Clone, Debug, Default)]
@@ -51,5 +53,5 @@ impl DefaultOnBodyChunk {
 
 impl<B> OnBodyChunk<B> for DefaultOnBodyChunk {
     #[inline]
-    fn on_body_chunk(&mut self, _: &B, _: Duration, _: &str) {}
+    fn on_body_chunk(&mut self, _: &B, _: Duration, _: &Metadata) {}
 }
