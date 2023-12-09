@@ -28,15 +28,16 @@ use crate::log4rs::make_metadata::DefaultMakeMetadata;
 use crate::log4rs::Log4rs;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Log4rsLayer<M,
+pub struct Log4rsLayer<'a, M,
     MakeMetadataT = DefaultMakeMetadata,
     OnBodyChunkT = DefaultOnBodyChunk,
 > {
     pub(crate) make_classifier: M,
     pub(crate) make_metadata: MakeMetadataT,
+    pub(crate) on_body_chunk: OnBodyChunkT,
 }
 
-impl<M> Log4rsLayer<M> {
+impl<'a, M> Log4rsLayer<'a, M> {
     pub fn new(make_classifier: M) -> Self
         where
             M: MakeClassifier,
@@ -44,22 +45,25 @@ impl<M> Log4rsLayer<M> {
         Self {
             make_classifier,
             make_metadata: DefaultMakeMetadata::new(),
+            on_body_chunk: DefaultOnBodyChunk::new(),
         }
     }
 }
 
-impl<S, M, MakeMetadataT> Layer<S> for Log4rsLayer<M, MakeMetadataT>
+impl<'a, S, M, MakeMetadataT, OnBodyChunkT> Layer<S> for Log4rsLayer<'a, M, MakeMetadataT, OnBodyChunkT>
 where
     M: Clone,
     MakeMetadataT: Clone,
+    OnBodyChunkT: Clone,
 {
-    type Service = Log4rs<S, M, MakeMetadataT>;
+    type Service = Log4rs<'a, S, M, MakeMetadataT>;
 
     fn layer(&self, inner: S) -> Self::Service {
         Log4rs {
             inner,
             make_classifier: self.make_classifier.clone(),
             make_metadata: self.make_metadata.clone(),
+            on_body_chunk: self.on_body_chunk.clone(),
         }
     }
 }

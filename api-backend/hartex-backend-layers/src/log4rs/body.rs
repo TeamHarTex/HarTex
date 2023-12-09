@@ -30,19 +30,19 @@ use std::time::Instant;
 use http_body::Body;
 use http_body::Frame;
 use http_body::SizeHint;
-use pin_project_lite::pin_project;
+use log::Metadata;
+use pin_project::pin_project;
 use tower_http::classify::ClassifyEos;
 use crate::log4rs::on_body_chunk::OnBodyChunk;
 
-pin_project! {
-    pub struct Log4rsResponseBody<B, C, OnBodyChunkT> {
-        #[pin]
-        pub(crate) inner: B,
-        pub(crate) classify_eos: C,
-        pub(crate) on_body_chunk: OnBodyChunkT,
-        pub(crate) start: Instant,
-        pub(crate) target: String,
-    }
+#[pin_project]
+pub struct Log4rsResponseBody<'a, B, C, OnBodyChunkT> {
+    #[pin]
+    pub(crate) inner: B,
+    pub(crate) classify_eos: C,
+    pub(crate) on_body_chunk: OnBodyChunkT,
+    pub(crate) start: Instant,
+    pub(crate) metadata: Metadata<'a>
 }
 
 impl<B, C, OnBodyChunkT> Body for Log4rsResponseBody<B, C, OnBodyChunkT>
@@ -66,7 +66,7 @@ where
             Some(Ok(frame)) => {
                 let frame = match frame.into_data() {
                     Ok(chunk) => {
-                        projected.on_body_chunk.on_body_chunk(&chunk, latency, &projected.target);
+                        projected.on_body_chunk.on_body_chunk(&chunk, latency, &projected.metadata);
                         Frame::data(chunk)
                     }
                     Err(frame) => frame

@@ -25,7 +25,7 @@ use log::Level;
 use log::Metadata;
 
 pub trait MakeMetadata<B> {
-    fn make_metadata(&mut self, request: Request<B>) -> Metadata;
+    fn make_metadata(&mut self, request: &Request<B>) -> Metadata;
 }
 
 #[derive(Clone, Debug)]
@@ -60,7 +60,7 @@ impl Default for DefaultMakeMetadata {
 }
 
 impl<B> MakeMetadata<B> for DefaultMakeMetadata {
-    fn make_metadata(&mut self, _: Request<B>) -> Metadata {
+    fn make_metadata(&mut self, _: &Request<B>) -> Metadata {
         Metadata::builder()
             .level(self.level)
             .target("request")
