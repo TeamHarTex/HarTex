@@ -54,6 +54,7 @@ use tokio::signal;
 use tokio::sync::watch;
 use tower::ServiceBuilder;
 use tower_http::timeout::TimeoutLayer;
+use tower_http::trace::TraceLayer;
 use tower_service::Service;
 
 /// # Entry Point
@@ -79,7 +80,11 @@ pub async fn main() -> miette::Result<()> {
 
     log::debug!("starting axum server");
     let app = Router::new()
-        .layer(ServiceBuilder::new().layer(TimeoutLayer::new(Duration::from_secs(30))))
+        .layer(
+            ServiceBuilder::new()
+                .layer(TimeoutLayer::new(Duration::from_secs(30)))
+                .layer(TraceLayer::new_for_http())
+        )
         .route(
             "/api/:version/stats/uptime",
             post(hartex_backend_routes::uptime::post_uptime),
