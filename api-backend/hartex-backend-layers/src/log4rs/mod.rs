@@ -33,8 +33,10 @@ use tower_service::Service;
 
 use crate::log4rs::body::Log4rsResponseBody;
 use crate::log4rs::future::Log4rsResponseFuture;
-use crate::log4rs::make_metadata::{DefaultMakeMetadata, MakeMetadata};
+use crate::log4rs::make_metadata::DefaultMakeMetadata;
+use crate::log4rs::make_metadata::MakeMetadata;
 use crate::log4rs::on_body_chunk::DefaultOnBodyChunk;
+use crate::log4rs::on_body_chunk::OnBodyChunk;
 
 pub use layer::Log4rsLayer;
 
@@ -67,7 +69,7 @@ impl<'a, S, M> Log4rs<'a, S, M> {
     }
 }
 
-impl<'a, S, M, RequestBodyT, ResponseBodyT, OnBodyChunkT> Service<Request<RequestBodyT>> for Log4rs<'a, S, M>
+impl<'a, S, M, RequestBodyT, ResponseBodyT, MakeMetadataT, OnBodyChunkT> Service<Request<RequestBodyT>> for Log4rs<'a, S, M, MakeMetadataT, OnBodyChunkT>
 where
     S: Service<Request<RequestBodyT>, Response = Response<ResponseBodyT>>,
     RequestBodyT: Body,
@@ -75,6 +77,8 @@ where
     ResponseBodyT::Error: Display + 'static,
     M: MakeClassifier,
     M::Classifier: Clone,
+    MakeMetadataT: MakeMetadata<RequestBodyT>,
+    OnBodyChunkT: OnBodyChunk<ResponseBodyT::Data> + Clone,
 {
     type Response = Response<Log4rsResponseBody<'a, ResponseBodyT, M::ClassifyEos, OnBodyChunkT>>;
     type Error = S::Error;
