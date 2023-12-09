@@ -33,27 +33,33 @@ use pin_project_lite::pin_project;
 use tower_http::classify::ClassifyResponse;
 
 use crate::log4rs::body::Log4rsResponseBody;
+use crate::log4rs::on_body_chunk::OnBodyChunk;
 
 pin_project! {
-    pub struct Log4rsResponseFuture<F, C> {
+    pub struct Log4rsResponseFuture<F, C, OnBodyChunkT> {
         #[pin]
         pub(crate) inner: F,
-        pub(crate) classifier: C,
+        pub(crate) classifier: Option<C>,
         pub(crate) start: Instant,
+        pub(crate) on_body_chunk: Option<OnBodyChunkT>,
+        pub(crate) target: String,
     }
 }
 
-impl<FutureT, ResponseBodyT, E, C> Future for Log4rsResponseFuture<FutureT, C>
+impl<FutureT, ResponseBodyT, E, C, OnBodyChunkT> Future for Log4rsResponseFuture<FutureT, C, OnBodyChunkT>
 where
     FutureT: Future<Output = Result<Response<ResponseBodyT>, E>>,
     ResponseBodyT: Body,
     ResponseBodyT::Error: Display + 'static,
     E: Display + 'static,
     C: ClassifyResponse,
+    OnBodyChunkT: OnBodyChunk<ResponseBodyT::Data>,
 {
-    type Output = Result<Response<Log4rsResponseBody<ResponseBodyT, C::ClassifyEos>>, E>;
+    type Output = Result<Response<Log4rsResponseBody<ResponseBodyT, C::ClassifyEos, OnBodyChunkT>>, E>;
 
-    fn poll(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<Self::Output> {
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+
+
         todo!()
     }
 }
