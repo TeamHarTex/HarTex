@@ -46,7 +46,6 @@ use hartex_log::log;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
 use hyper::Request;
-use hyper_util::rt::TokioExecutor;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
@@ -83,16 +82,16 @@ pub async fn main() -> miette::Result<()> {
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())
-                .layer(TimeoutLayer::new(Duration::from_secs(30)))
+                .layer(TimeoutLayer::new(Duration::from_secs(30))),
         )
         .route(
             "/api/:version/stats/uptime",
             post(hartex_backend_routes::uptime::post_uptime),
         );
 
-    let listener = TcpListener::bind(env::var("API_DOMAIN").into_diagnostic()?)
-        .await
-        .into_diagnostic()?;
+    let domain = env::var("API_DOMAIN").into_diagnostic()?;
+    let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
+    log::debug!("listening on {domain}");
 
     let (close_tx, close_rx) = watch::channel(());
 
@@ -117,15 +116,15 @@ pub async fn main() -> miette::Result<()> {
             let hyper_service =
                 service_fn(move |request: Request<Incoming>| service.clone().call(request));
 
-            let connection = hyper::server::conn::http2::Builder::new(TokioExecutor::new())
-                .serve_connection(socket, hyper_service);
+            let connection =
+                hyper::server::conn::http1::Builder::new().serve_connection(socket, hyper_service);
             let mut pinned: Pin<&mut _> = pin!(connection);
             loop {
                 tokio::select! {
                     result = pinned.as_mut() => {
                         if result.is_err() {
                             log::error!("failed to serve connection, see error below");
-                            println!("{}", result.into_diagnostic().unwrap_err());
+                            println!("{:?}", result.into_diagnostic().unwrap_err());
                         }
                         break;
                     }
