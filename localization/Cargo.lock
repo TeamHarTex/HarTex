@@ -58,7 +58,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -73,7 +73,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -87,7 +87,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",

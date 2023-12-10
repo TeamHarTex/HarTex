@@ -23,16 +23,19 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
-use std::env;
 
+use axum::extract::State;
 use axum::http::StatusCode;
 use axum::Json;
+use bb8_postgres::bb8::Pool;
+use bb8_postgres::tokio_postgres::GenericClient;
+use bb8_postgres::tokio_postgres::NoTls;
+use bb8_postgres::PostgresConnectionManager;
 use hartex_backend_models::APIVersion;
 use hartex_backend_models::Response;
 use hartex_backend_models_v2::uptime::UptimeQuery;
 use hartex_backend_models_v2::uptime::UptimeResponse;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
-use tokio_postgres::NoTls;
 
 /// # `POST /stats/uptime`
 ///
@@ -42,9 +45,10 @@ use tokio_postgres::NoTls;
 #[allow(clippy::module_name_repetitions)]
 pub async fn post_uptime(
     _: APIVersion,
+    State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeQuery>,
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
-    let result = env::var("API_PGSQL_URL");
+    let result = pool.get().await;
     if result.is_err() {
         return (
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -52,17 +56,11 @@ pub async fn post_uptime(
         );
     }
 
-    let result = tokio_postgres::connect(&result.unwrap(), NoTls).await;
-    if result.is_err() {
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
-    }
+    let connection = result.unwrap();
+    let client = connection.client();
 
-    let (client, _) = result.unwrap();
     let result = select_start_timestamp_by_component()
-        .bind(&client, &query.component_name())
+        .bind(client, &query.component_name())
         .one()
         .await;
 
