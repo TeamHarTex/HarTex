@@ -1,13 +1,38 @@
-# [Next Version, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.1...nightly)
+# [Next Version, Nitrogen I](https://github.com/TeamHarTex/HarTex/compare/0.6.0...nightly)
 
-> **x** contributors made contributions to this release
+> **1** contributor made contributions to this release
 
-> **y** commits since 2022-11-05
+> **336** commits since 2022-11-05
 
 ## API Backend
 
+## Bors Buildbot
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.6.0, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.1..0.6.0)
+
+> **1** contributor made contributions to this release
+
+> **336** commits since 2022-11-05
+
+## API Backend
+
+- **Added:** added `hartex-backend-layers` crate
 - **Changed:** updated Rust Version to 1.76
 - **Changed:** changed `Response<T>` to allow `DeserializedOwned` requirements
+- **Changed:** initiated and partial migration to `axum`
+- **Changed:** leverage parallel rustc compilation frontend
 
 ## Bors Buildbot
 
@@ -17,27 +42,32 @@
 
 - **Added:** added `clean` command to clean build artifacts
 - **Changed:** updated Rust Version to 1.76
+- **Changed:** leverage parallel rustc compilation frontend
 
 ## Database Queries
 
 - **Changed:** updated Rust Version to 1.76
+- **Changed:** leverage parallel rustc compilation frontend
 
 ## Discord Frontend
 
 - **Changed:** migrated the commands to use the new localization API
 - **Changed:** updated `hyper` crate to `1.0` and performed corresponding migrations
+- **Changed:** leverage parallel rustc compilation frontend
 
 ## Localization Infrastructure
 
 - **Added:** added `hartex-localizations-bindings` and `hartex-localization-loader` crates
 - **Changed:** new API in `hartex-localization-core`
 - **Changed:** updated Rust Version to 1.76
+- **Changed:** leverage parallel rustc compilation frontend
 - **Removed:** removed old `bundle_get` and `bundle_get_args` macros
 - **Removed:** removed old types from `hartex-localization-core`
 
 ## Rust Utilities
 
 - **Changed:** updated Rust Version to 1.76
+- **Changed:** leverage parallel rustc compilation frontend
 
 ## Web Frontend
 
