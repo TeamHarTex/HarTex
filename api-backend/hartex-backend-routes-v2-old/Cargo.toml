@@ -1,6 +1,6 @@
 [package]
 name = "hartex_backend_routes_v2_old"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 Backend routes (API v1)
