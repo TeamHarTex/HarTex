@@ -2,7 +2,7 @@
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2022-12-10
+> **y** commits since 2023-12-10
 
 ## API Backend
 
@@ -24,7 +24,7 @@
 
 > **1** contributor made contributions to this release
 
-> **339** commits since 2022-11-05
+> **339** commits since 2023-11-05
 
 ## API Backend
 
@@ -73,7 +73,7 @@
 
 > **1** contributor made contributions to this release
 
-> **57** commits since 2022-11-03
+> **57** commits since 2023-11-03
 
 ## API Backend
 
@@ -97,7 +97,7 @@
 
 > **2** contributors made contributions to this release
 
-> **272** commits since 2022-09-29
+> **272** commits since 2023-09-29
 
 ## API Backend
 
@@ -141,7 +141,7 @@
 
 > **4** contributors made contributions to this release
 
-> **321** commits since 2022-08-23
+> **321** commits since 2023-08-23
 
 ## API Backend
 

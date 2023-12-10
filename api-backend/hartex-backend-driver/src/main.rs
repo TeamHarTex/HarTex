@@ -40,6 +40,9 @@ use std::time::Duration;
 
 use axum::routing::post;
 use axum::Router;
+use bb8_postgres::bb8::Pool;
+use bb8_postgres::tokio_postgres::NoTls;
+use bb8_postgres::PostgresConnectionManager;
 use dotenvy::Error;
 use hartex_errors::dotenv;
 use hartex_log::log;
@@ -77,6 +80,12 @@ pub async fn main() -> miette::Result<()> {
         }
     }
 
+    let api_pgsql_url = env::var("API_PGSQL_URL").into_diagnostic()?;
+
+    log::debug!("building database connection pool");
+    let manager = PostgresConnectionManager::new_from_stringlike(api_pgsql_url, NoTls).into_diagnostic()?;
+    let pool = Pool::builder().build(manager).await.into_diagnostic()?;
+
     log::debug!("starting axum server");
     let app = Router::new()
         .layer(
@@ -87,7 +96,8 @@ pub async fn main() -> miette::Result<()> {
         .route(
             "/api/:version/stats/uptime",
             post(hartex_backend_routes::uptime::post_uptime),
-        );
+        )
+        .with_state(pool);
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;

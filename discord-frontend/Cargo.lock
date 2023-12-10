@@ -992,7 +992,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "axum",
  "serde",
@@ -1000,14 +1000,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models_v2"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "cornucopia",
  "cornucopia_async",
@@ -1022,14 +1022,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_cdn"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_core",
 ]
 
 [[package]]
 name = "hartex_discord_commands"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "futures",
@@ -1052,7 +1052,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_core"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_commands_macros",
  "hartex_discord_core",
@@ -1061,7 +1061,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_macros"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1070,7 +1070,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_manager"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "clap",
  "hartex_discord_core",
@@ -1088,7 +1088,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_test"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_commands_core",
  "hartex_discord_commands_macros",
@@ -1099,7 +1099,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_manifest"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hcl-rs",
  "miette",
@@ -1108,7 +1108,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_test"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_configuration_manifest",
  "pretty_assertions",
@@ -1116,7 +1116,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "dotenvy",
  "num_enum 0.7.1",
@@ -1132,7 +1132,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_cacheupdaters"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1142,7 +1142,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_core"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_macros",
@@ -1151,7 +1151,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_entities"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1160,7 +1160,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_macros"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "convert_case",
  "hartex-macro-utils",
@@ -1175,7 +1175,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_repositories"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1186,7 +1186,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_test"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_macros",
@@ -1198,7 +1198,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_leader"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
@@ -1213,7 +1213,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_localization_core",
@@ -1224,7 +1224,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_worker"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "chrono",
  "futures-util",
@@ -1250,14 +1250,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1272,7 +1272,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1286,7 +1286,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1298,7 +1298,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "log",
  "log4rs",
