@@ -1,8 +1,8 @@
 # [Next Version, Nitrogen I](https://github.com/TeamHarTex/HarTex/compare/0.6.0...nightly)
 
-> **1** contributor made contributions to this release
+> **x** contributor made contributions to this release
 
-> **336** commits since 2022-11-05
+> **y** commits since 2022-11-05
 
 ## API Backend
 
@@ -24,7 +24,7 @@
 
 > **1** contributor made contributions to this release
 
-> **336** commits since 2022-11-05
+> **337** commits since 2022-11-05
 
 ## API Backend
 
@@ -68,8 +68,6 @@
 
 - **Changed:** updated Rust Version to 1.76
 - **Changed:** leverage parallel rustc compilation frontend
-
-## Web Frontend
 
 # [0.5.1, Boron II](https://github.com/TeamHarTex/HarTex/compare/0.5.0..0.5.1)
 
