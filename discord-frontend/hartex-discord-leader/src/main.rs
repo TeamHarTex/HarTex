@@ -76,7 +76,6 @@ pub async fn main() -> miette::Result<()> {
         .into_diagnostic()?;
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
-        .compression_type(CompressionType::Lz4)
         .group_id("com.github.teamhartex.hartex.inbound.gateway.command.consumer")
         .create::<StreamConsumer>()
         .into_diagnostic()?;
