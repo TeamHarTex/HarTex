@@ -27,6 +27,9 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(int_roundings)]
+
+use std::time::Instant;
 
 use clap::Arg;
 use clap::ArgAction;
@@ -57,11 +60,44 @@ pub fn main() -> miette::Result<()> {
             Command::new("test")
                 .about("Tests specified projects.")
                 .arg(Arg::new("project").required(true).action(ArgAction::Append)),
+        )
+        .subcommand(
+            Command::new("update")
+                .about("Updates dependencies of specified projects.")
+                .arg(Arg::new("project").required(true).action(ArgAction::Append)),
         );
 
     let matches = command.get_matches();
 
+    let now = Instant::now();
     cmdline::handle(&matches)?;
+
+    let duration = now.elapsed();
+    let mut seconds = duration.as_secs();
+
+    let mut minutes = seconds.div_floor(60);
+    seconds %= 60;
+
+    let mut hours = minutes.div_floor(60);
+    minutes %= 60;
+
+    let days = hours.div_floor(24);
+    hours %= 24;
+
+    let mut output = String::from("Tasks finished in ");
+    if days > 0 {
+        output += &*format!("{days}d ");
+    }
+    if hours > 0 {
+        output += &*format!("{hours}h ");
+    }
+    if minutes > 0 {
+        output += &*format!("{minutes}m ");
+    }
+
+    output += &*format!("{seconds}s ");
+
+    println!("{output}");
 
     Ok(())
 }

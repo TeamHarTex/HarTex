@@ -45,7 +45,10 @@ pub fn test_command(matches: &ArgMatches) -> miette::Result<()> {
             continue;
         };
 
-        project.test(project_name.clone())?;
+        if let Err(error) = project.test(project_name.clone()) {
+            println!("{error:?}");
+            continue;
+        }
     }
 
     Ok(())

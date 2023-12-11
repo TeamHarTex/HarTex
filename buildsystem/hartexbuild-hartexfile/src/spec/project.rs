@@ -28,6 +28,7 @@ use std::process::Command;
 use hartex_errors::buildsystem::AbnormalTermination;
 use hartex_errors::buildsystem::JstsCleanNotSupported;
 use hartex_errors::buildsystem::JstsTestNotSupported;
+use hartex_errors::buildsystem::JstsUpdateNotSupported;
 use miette::IntoDiagnostic;
 use miette::Report;
 use serde::Deserialize;
@@ -137,6 +138,33 @@ impl Project {
             ProjectType::Rust => {
                 let mut command = Command::new("cargo");
                 command.arg("nextest").arg("run").current_dir(pwd.clone());
+                command.status().into_diagnostic()?.exit_ok()
+            }
+        };
+
+        result.map_err(|_| Report::from(AbnormalTermination))
+    }
+
+    /// Updates the dependencies of a project with its name.
+    pub fn update(&self, name: String) -> miette::Result<()> {
+        let mut pwd = env::current_dir().into_diagnostic()?;
+        pwd.push(name.clone());
+
+        let result = match self.r#type {
+            ProjectType::JsTs => {
+                return Err(Report::from(JstsUpdateNotSupported {
+                    src: name.clone(),
+                    err_span: (0, name.len()).into(),
+                }));
+            }
+            ProjectType::Rust => {
+                let mut command = Command::new("cargo");
+                command.arg("update").current_dir(pwd.clone());
+                command.status().into_diagnostic()?;
+
+
+                let mut command = Command::new("cargo");
+                command.arg("upgrade").arg("--to-lockfile").current_dir(pwd.clone());
                 command.status().into_diagnostic()?.exit_ok()
             }
         };
