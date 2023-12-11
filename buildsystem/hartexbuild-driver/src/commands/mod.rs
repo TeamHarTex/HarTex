@@ -26,3 +26,4 @@ pub mod build;
 pub mod clean;
 pub mod lint;
 pub mod test;
+pub mod update;
