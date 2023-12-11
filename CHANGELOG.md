@@ -10,6 +10,9 @@
 
 ## Buildsystem
 
+- **Added:** added `update` commands to update dependencies of (a) project(s)
+- **Added:** added task completion duration
+
 ## Database Queries
 
 ## Discord Frontend
