@@ -20,22 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Lint Command
-
 use clap::ArgMatches;
-use hartex_errors::buildsystem::ProjectNotFound;
 use miette::Report;
+use hartex_errors::buildsystem::ProjectNotFound;
 
-/// Runs the lint command.
 #[allow(clippy::module_name_repetitions)]
-pub fn lint_command(matches: &ArgMatches) -> miette::Result<()> {
+pub fn update_command(matches: &ArgMatches) -> miette::Result<()> {
     let file = hartexbuild_hartexfile::from_manifest()?;
 
     let project_names = matches.get_many::<String>("project").unwrap();
     let len = project_names.len();
 
     for (i, project_name) in project_names.enumerate() {
-        println!("[{}/{len}] Linting {project_name}", i + 1);
+        println!("[{}/{len}] Updating {project_name}", i + 1);
 
         let Some(project) = file.projects.get(project_name) else {
             println!("{:?}", Report::from(ProjectNotFound {
@@ -45,7 +42,7 @@ pub fn lint_command(matches: &ArgMatches) -> miette::Result<()> {
             continue;
         };
 
-        if let Err(error) = project.lint(project_name.clone()) {
+        if let Err(error) = project.update(project_name.clone()) {
             println!("{error:?}");
             continue;
         }

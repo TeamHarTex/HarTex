@@ -41,6 +41,9 @@ pub fn handle(matches: &ArgMatches) -> miette::Result<()> {
         Some(("test", subcommand_matches)) => {
             commands::test::test_command(subcommand_matches)
         }
+        Some(("update", subcommand_matches)) => {
+            commands::update::update_command(subcommand_matches)
+        }
         _ => Ok(()),
     }
 }

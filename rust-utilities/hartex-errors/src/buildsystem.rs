@@ -53,7 +53,7 @@ pub struct JstsTestNotSupported {
 pub struct AbnormalTermination;
 
 #[derive(Debug, Diagnostic, Error)]
-#[diagnostic(code("E0004: buildsystem::jsts_clean_not_supported"))]
+#[diagnostic(code("E0005: buildsystem::jsts_clean_not_supported"))]
 #[error("cleaning is currently not supported for jsts projects")]
 pub struct JstsCleanNotSupported {
     #[source_code]
@@ -61,3 +61,15 @@ pub struct JstsCleanNotSupported {
     #[label("this is a jsts project")]
     pub err_span: SourceSpan,
 }
+
+
+#[derive(Debug, Diagnostic, Error)]
+#[diagnostic(code("E0006: buildsystem::jsts_clean_not_supported"))]
+#[error("updating is currently not supported for jsts projects")]
+pub struct JstsUpdateNotSupported {
+    #[source_code]
+    pub src: String,
+    #[label("this is a jsts project")]
+    pub err_span: SourceSpan,
+}
+
