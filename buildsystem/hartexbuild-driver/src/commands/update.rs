@@ -20,30 +20,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Command Line Handling
-
 use clap::ArgMatches;
+use miette::Report;
+use hartex_errors::buildsystem::ProjectNotFound;
 
-use crate::commands;
+#[allow(clippy::module_name_repetitions)]
+pub fn update_command(matches: &ArgMatches) -> miette::Result<()> {
+    let file = hartexbuild_hartexfile::from_manifest()?;
 
-/// Handle a command line command with the matches.
-pub fn handle(matches: &ArgMatches) -> miette::Result<()> {
-    match matches.subcommand() {
-        Some(("build", subcommand_matches)) => {
-            commands::build::build_command(subcommand_matches)
-        }
-        Some(("clean", subcommand_mateches)) => {
-            commands::clean::clean_command(subcommand_mateches)
-        }
-        Some(("lint", subcommand_matches)) => {
-            commands::lint::lint_command(subcommand_matches)
-        }
-        Some(("test", subcommand_matches)) => {
-            commands::test::test_command(subcommand_matches)
-        }
-        Some(("update", subcommand_matches)) => {
-            commands::update::update_command(subcommand_matches)
-        }
-        _ => Ok(()),
+    let project_names = matches.get_many::<String>("project").unwrap();
+    let len = project_names.len();
+
+    for (i, project_name) in project_names.enumerate() {
+        println!("[{}/{len}] Updating {project_name}", i + 1);
+
+        let Some(project) = file.projects.get(project_name) else {
+            println!("{:?}", Report::from(ProjectNotFound {
+                src: project_name.clone(),
+                err_span: (0, project_name.len()).into()
+            }));
+            continue;
+        };
+
+        project.update(project_name.clone())?;
     }
+
+    Ok(())
 }

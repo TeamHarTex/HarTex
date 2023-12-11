@@ -57,6 +57,11 @@ pub fn main() -> miette::Result<()> {
             Command::new("test")
                 .about("Tests specified projects.")
                 .arg(Arg::new("project").required(true).action(ArgAction::Append)),
+        )
+        .subcommand(
+            Command::new("update")
+                .about("Updates dependencies of specified projects.")
+                .arg(Arg::new("project").required(true).action(ArgAction::Append)),
         );
 
     let matches = command.get_matches();
