@@ -45,7 +45,10 @@ pub fn lint_command(matches: &ArgMatches) -> miette::Result<()> {
             continue;
         };
 
-        project.lint(project_name.clone())?;
+        if let Err(error) = project.lint(project_name.clone()) {
+            println!("{error:?}");
+            continue;
+        }
     }
 
     Ok(())
