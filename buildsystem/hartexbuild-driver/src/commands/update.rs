@@ -42,7 +42,10 @@ pub fn update_command(matches: &ArgMatches) -> miette::Result<()> {
             continue;
         };
 
-        project.update(project_name.clone())?;
+        if let Err(error) = project.update(project_name.clone()) {
+            println!("{error:?}");
+            continue;
+        }
     }
 
     Ok(())
