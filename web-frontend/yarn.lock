@@ -663,9 +663,9 @@
     gsap "^3.12.2"
 
 "@iconify-json/carbon@^1.1.19":
-  version "1.1.25"
-  resolved "https://registry.yarnpkg.com/@iconify-json/carbon/-/carbon-1.1.25.tgz#edcf7c613457534fd2e880ac9dc34f7e79c38b85"
-  integrity sha512-0fKlVoqAkVIpnwYAp36Q8fok2/VVnenremJJwJJsfRecAPhPiRUp9V98aQKkinvN9s3nqKXvKXrypOvqAlS00w==
+  version "1.1.26"
+  resolved "https://registry.yarnpkg.com/@iconify-json/carbon/-/carbon-1.1.26.tgz#5fc3c32cba6dbe3bf8ac5e8ce326289a3fb79ed3"
+  integrity sha512-0y6JstqPCsjEiUuyTTdHE7Wd9gGlxzH2dEfvKUJe5E741qRgLlIipVdBoCkOtbyAT92WEcU8BNfDaC585OCC8w==
   dependencies:
     "@iconify/types" "*"
 
