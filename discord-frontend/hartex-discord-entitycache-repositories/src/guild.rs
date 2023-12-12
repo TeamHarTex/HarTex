@@ -22,7 +22,6 @@
 
 //! # Guild Repository
 
-use std::borrow::Cow;
 use std::env;
 
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
@@ -85,53 +84,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         })
     }
 
-    async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
-
-        if let Some(icon) = entity.icon {
-            connection
-                .set(format!("guild:{}:icon", entity.id), icon.to_string())
-                .await?;
-        }
-
-        connection
-            .set(
-                format!("guild:{}:default_message_notifications", entity.id),
-                u8::from(entity.default_message_notifications),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:explicit_content_filter", entity.id),
-                u8::from(entity.explicit_content_filter),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:features", entity.id),
-                entity
-                    .features
-                    .into_iter()
-                    .map(Into::into)
-                    .collect::<Vec<Cow<'static, str>>>()
-                    .join(","),
-            )
-            .await?;
-        connection
-            .set(format!("guild:{}:large", entity.id), entity.large)
-            .await?;
-        connection
-            .set(format!("guild:{}:name", entity.id), entity.name)
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:owner_id", entity.id),
-                entity.owner_id.get(),
-            )
-            .await?;
-
+    async fn upsert(&self, _: GuildEntity) -> CacheResult<()> {
         Ok(())
     }
 }
