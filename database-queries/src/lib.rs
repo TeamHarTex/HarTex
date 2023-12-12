@@ -22,3 +22,5 @@
 
 #[path = "../generated/api_backend.rs"]
 pub mod api_backend;
+#[path = "../generated/discord_frontend.rs"]
+pub mod discord_frontend;
