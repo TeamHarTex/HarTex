@@ -20,7 +20,7 @@ miette = "5.10.0"
 proc-macro2 = "1.0.70"
 quote = "1.0.33"
 syn = "2.0.41"
-unic-langid = { version = "0.9.3", features = ["macros"] }
+unic-langid = { version = "0.9.4", features = ["macros"] }
 
 [lib]
 name = "hartex_localization_bindings"
