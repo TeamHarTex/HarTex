@@ -24,6 +24,7 @@
 
 use std::env;
 
+use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::GuildFeature;
@@ -36,7 +37,6 @@ use hartex_discord_entitycache_entities::guild::GuildEntity;
 use redis::AsyncCommands;
 use redis::Client;
 use tokio_postgres::NoTls;
-use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 
 /// Repository for guild entities.
 pub struct CachedGuildRepository;
@@ -86,10 +86,21 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         })
     }
 
-    async fn upsert(&self, _: GuildEntity) -> CacheResult<()> {
-        let (_, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+    async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
-        todo!()
+        cached_guild_upsert().bind(
+            &client,
+            &entity.default_message_notifications.into(),
+            &entity.explicit_content_filter.into(),
+            &entity.features.iter().map(|feature| feature.into()),
+            &entity.icon,
+            &entity.large,
+            &entity.name,
+            &entity.owner_id,
+            &entity.id
+        ).await
+            .into_diagnostic()?;
 
         Ok(())
     }
