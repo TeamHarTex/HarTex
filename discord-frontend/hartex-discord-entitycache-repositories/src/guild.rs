@@ -35,6 +35,8 @@ use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
 use redis::AsyncCommands;
 use redis::Client;
+use tokio_postgres::NoTls;
+use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 
 /// Repository for guild entities.
 pub struct CachedGuildRepository;
@@ -85,6 +87,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     }
 
     async fn upsert(&self, _: GuildEntity) -> CacheResult<()> {
+        let (_, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+
+        todo!()
+
         Ok(())
     }
 }
