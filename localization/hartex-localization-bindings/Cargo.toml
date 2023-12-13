@@ -19,7 +19,7 @@ intl-memoizer = "0.5.1"
 miette = "5.10.0"
 proc-macro2 = "1.0.70"
 quote = "1.0.33"
-syn = "2.0.40"
+syn = "2.0.41"
 unic-langid = { version = "0.9.3", features = ["macros"] }
 
 [lib]
