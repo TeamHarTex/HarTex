@@ -1,4 +1,4 @@
---! cached_guild_upsert : (default_message_notifications, explicit_content_filter, featurs, icon?, large, name, owner_id, id)
+--! cached_guild_upsert (default_message_notifications, explicit_content_filter, features, icon?, large, name, owner_id, id)
 INSERT INTO
     "DiscordFrontendNightly".public."CachedGuilds" ("default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id", "id")
 VALUES (:default_message_notifications, :explicit_content_filter, :features, :icon, :large, :name, :owner_id, :id)
