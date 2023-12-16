@@ -91,16 +91,15 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
         cached_guild_upsert().bind(
             &client,
-            &entity.default_message_notifications.into(),
-            &entity.explicit_content_filter.into(),
+            &(entity.default_message_notifications.into() as i32),
+            &(entity.explicit_content_filter.into() as i32),
             &entity.features.iter().map(|feature| feature.into()),
             &entity.icon,
             &entity.large,
             &entity.name,
-            &entity.owner_id,
-            &entity.id
-        ).await
-            .into_diagnostic()?;
+            &entity.owner_id.to_string(),
+            &entity.id.to_string()
+        ).await?;
 
         Ok(())
     }
