@@ -29,6 +29,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 
 use redis::RedisError;
+use tokio_postgres::Error as PostgresError;
 
 /// A cache error..
 #[allow(clippy::module_name_repetitions)]
@@ -38,6 +39,8 @@ pub enum CacheError {
     Env(VarError),
     /// A redis error occurred.
     Redis(RedisError),
+    ///
+    Postgres(PostgresError),
 }
 
 impl Display for CacheError {
@@ -45,6 +48,7 @@ impl Display for CacheError {
         match self {
             Self::Env(error) => writeln!(f, "env error: {error}"),
             Self::Redis(error) => writeln!(f, "redis error: {error}"),
+            Self::Postgres(error) => writeln!(f, "postgres error: {error}"),
         }
     }
 }
