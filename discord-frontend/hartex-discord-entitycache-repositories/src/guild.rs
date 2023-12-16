@@ -22,6 +22,7 @@
 
 //! # Guild Repository
 
+use std::borrow::Cow;
 use std::env;
 
 use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
@@ -93,7 +94,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             &client,
             &(<DefaultMessageNotificationLevel as Into<u8>>::into(entity.default_message_notifications) as i32),
             &(<ExplicitContentFilter as Into<u8>>::into(entity.explicit_content_filter) as i32),
-            &entity.features.iter().map(|feature| feature.into()).collect::<Vec<String>>(),
+            &entity.features.iter().map(|feature| feature.clone().into()).collect::<Vec<Cow<'static, str>>>(),
             &entity.icon.map(|hash| hash.to_string()),
             &entity.large,
             &entity.name,
