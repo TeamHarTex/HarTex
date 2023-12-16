@@ -93,7 +93,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             &client,
             &(<DefaultMessageNotificationLevel as Into<u8>>::into(entity.default_message_notifications) as i32),
             &(<ExplicitContentFilter as Into<u8>>::into(entity.explicit_content_filter) as i32),
-            &entity.features.iter().map(|feature| feature.into()).collect::<Vec<_>>(),
+            &entity.features.iter().map(|feature| feature.into()).collect::<Vec<String>>(),
             &entity.icon.map(|hash| hash.to_string()),
             &entity.large,
             &entity.name,
