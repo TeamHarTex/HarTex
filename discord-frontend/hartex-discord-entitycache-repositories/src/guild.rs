@@ -91,8 +91,8 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
         cached_guild_upsert().bind(
             &client,
-            &(entity.default_message_notifications.into() as i32),
-            &(entity.explicit_content_filter.into() as i32),
+            &(<DefaultMessageNotificationLevel as Into<u8>>::into(entity.default_message_notifications) as i32),
+            &(<ExplicitContentFilter as Into<u8>>::into(entity.explicit_content_filter) as i32),
             &entity.features.iter().map(|feature| feature.into()).collect::<Vec<_>>(),
             &entity.icon.map(|hash| hash.to_string()),
             &entity.large,
