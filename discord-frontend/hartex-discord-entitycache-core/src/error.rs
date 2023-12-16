@@ -37,10 +37,10 @@ use tokio_postgres::Error as PostgresError;
 pub enum CacheError {
     /// Error related to environment variables.
     Env(VarError),
+    /// A postgres error occurred.
+    Postgres(PostgresError),
     /// A redis error occurred.
     Redis(RedisError),
-    ///
-    Postgres(PostgresError),
 }
 
 impl Display for CacheError {
@@ -54,6 +54,12 @@ impl Display for CacheError {
 }
 
 impl Error for CacheError {}
+
+impl From<PostgresError> for CacheError {
+    fn from(error: PostgresError) -> Self {
+        Self::Postgres(error)
+    }
+}
 
 impl From<RedisError> for CacheError {
     fn from(error: RedisError) -> Self {
