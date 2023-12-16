@@ -1138,6 +1138,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_macros",
  "redis",
+ "tokio-postgres",
 ]
 
 [[package]]
