@@ -92,8 +92,8 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
         cached_guild_upsert().bind(
             &client,
-            &(<DefaultMessageNotificationLevel as Into<u8>>::into(entity.default_message_notifications) as i32),
-            &(<ExplicitContentFilter as Into<u8>>::into(entity.explicit_content_filter) as i32),
+            &i32::from(<DefaultMessageNotificationLevel as Into<u8>>::into(entity.default_message_notifications)),
+            &i32::from(<ExplicitContentFilter as Into<u8>>::into(entity.explicit_content_filter)),
             &entity.features.iter().map(|feature| feature.clone().into()).collect::<Vec<Cow<'static, str>>>(),
             &entity.icon.map(|hash| hash.to_string()),
             &entity.large,
