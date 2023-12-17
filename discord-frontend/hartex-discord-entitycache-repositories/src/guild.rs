@@ -43,6 +43,7 @@ use tokio_postgres::NoTls;
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
+    #[allow(clippy::cast_possible_truncation)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
         let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
@@ -53,7 +54,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 data.default_message_notifications as u8,
             ),
             explicit_content_filter: ExplicitContentFilter::from(data.explicit_content_filter as u8),
-            features: data.features.iter().cloned().map(|feature| GuildFeature::from(feature)).collect(),
+            features: data.features.iter().cloned().map(GuildFeature::from).collect(),
             icon: data.icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
             large: data.large,
