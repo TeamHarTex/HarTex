@@ -23,6 +23,7 @@
 use std::env;
 use std::str::FromStr;
 
+use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
@@ -33,6 +34,7 @@ use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
 use redis::AsyncCommands;
 use redis::Client;
+use tokio_postgres::NoTls;
 
 pub struct CachedMemberRepository;
 
@@ -93,29 +95,15 @@ impl Repository<MemberEntity> for CachedMemberRepository {
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
-        connection
-            .set(
-                format!(
-                    "guild:{}:member:{}:user_id",
-                    entity.guild_id, entity.user_id
-                ),
-                entity.user_id.get(),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:member:{}:roles", entity.guild_id, entity.user_id),
-                entity
-                    .roles
-                    .into_iter()
-                    .map(|id| id.to_string())
-                    .collect::<Vec<String>>()
-                    .join(","),
-            )
-            .await?;
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+
+        cached_member_upsert()
+            .bind(
+                &client,
+                &entity.user_id.to_string(),
+                &entity.guild_id.to_string(),
+                &entity.roles.iter().map(|role| role.to_string()).collect::<Vec<_>>(),
+            ).await?;
 
         Ok(())
     }

@@ -103,7 +103,7 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedGuildUpsertStmt
     tokio_postgres::Error>> + Send + 'a>>
     { Box::pin(self.bind(client, &params.default_message_notifications,&params.explicit_content_filter,&params.features,&params.icon,&params.large,&params.name,&params.owner_id,&params.id,)) }
 }}pub mod cached_member_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedMemberUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::ArraySql<Item = T3>,> { pub user_id: T1,pub guild_id: T2,pub roles: Option<T4>,}pub fn cached_member_upsert() -> CachedMemberUpsertStmt
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedMemberUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::ArraySql<Item = T3>,> { pub user_id: T1,pub guild_id: T2,pub roles: T4,}pub fn cached_member_upsert() -> CachedMemberUpsertStmt
 { CachedMemberUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontendNightly\".public.\"CachedMembers\" (\"user_id\", \"guild_id\", \"roles\")
 VALUES ($1, $2, $3)
 ON CONFLICT (\"user_id\", \"guild_id\") DO UPDATE
@@ -116,7 +116,7 @@ cornucopia_async::StringSql,T2:
 cornucopia_async::StringSql,T3:
 cornucopia_async::StringSql,T4:
 cornucopia_async::ArraySql<Item = T3>,>(&'a mut self, client: &'a  C,
-user_id: &'a T1,guild_id: &'a T2,roles: &'a Option<T4>,) -> Result<u64, tokio_postgres::Error>
+user_id: &'a T1,guild_id: &'a T2,roles: &'a T4,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
     client.execute(stmt, &[user_id,guild_id,roles,]).await
