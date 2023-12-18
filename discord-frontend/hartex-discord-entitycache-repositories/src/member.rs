@@ -102,7 +102,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
                 &client,
                 &entity.user_id.to_string(),
                 &entity.guild_id.to_string(),
-                &entity.roles.iter().map(|role| role.to_string()).collect::<Vec<_>>(),
+                &entity.roles.iter().map(ToString::to_string).collect::<Vec<_>>(),
             ).await?;
 
         Ok(())
