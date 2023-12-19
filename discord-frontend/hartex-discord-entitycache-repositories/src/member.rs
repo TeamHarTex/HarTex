@@ -23,9 +23,9 @@
 use std::env;
 use std::str::FromStr;
 
+use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -41,6 +41,7 @@ pub struct CachedMemberRepository;
 impl CachedMemberRepository {
     #[allow(clippy::missing_errors_doc)]
     #[allow(clippy::missing_panics_doc)]
+    #[deprecated(since = "0.7.0")]
     pub async fn member_ids_in_guild(
         &self,
         guild_id: Id<GuildMarker>,
@@ -76,21 +77,17 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
-        let roles = connection
-            .get::<String, String>(format!("guild:{guild_id}:member:{user_id}:roles"))
-            .await?
-            .split(',')
-            .map(|str| Id::<RoleMarker>::from_str(str).unwrap())
-            .collect::<Vec<_>>();
+        let data = cached_member_select_by_user_id_and_guild_id()
+            .bind(&client, &user_id.to_string(), &guild_id.to_string())
+            .one()
+            .await?;
 
         Ok(MemberEntity {
-            roles,
-            guild_id,
-            user_id,
+            roles: data.roles.into_iter().map(|role| Id::from_str(&role).unwrap()).collect(),
+            guild_id: Id::from_str(&data.guild_id).unwrap(),
+            user_id: Id::from_str(&data.user_id).unwrap(),
         })
     }
 
