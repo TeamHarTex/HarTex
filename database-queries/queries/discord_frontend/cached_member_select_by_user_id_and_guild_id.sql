@@ -1,4 +1,4 @@
---! cached_member_select_by_guild_id_and_user_id : (user_id, guild_id, roles)
+--! cached_member_select_by_user_id_and_guild_id : (user_id, guild_id, roles)
 SELECT
     *
 FROM
