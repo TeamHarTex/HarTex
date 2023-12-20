@@ -68,6 +68,8 @@ impl CachedRoleRepository {
 }
 
 impl Repository<RoleEntity> for CachedRoleRepository {
+    #[allow(clippy::cast_lossless)]
+    #[allow(clippy::cast_possible_truncation)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
         let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
@@ -89,6 +91,8 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         })
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
         let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
