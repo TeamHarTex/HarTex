@@ -315,4 +315,93 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedRoleUpsertStmt
     CachedRoleUpsertParams<T1,T2,T3,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
     { Box::pin(self.bind(client, &params.color,&params.icon,&params.id,&params.guild_id,&params.flags,&params.hoist,&params.managed,&params.mentionable,&params.position,)) }
+}}pub mod cached_user_select_by_id
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedUserSelectById
+{ pub id : String,pub bot : bool,}pub struct CachedUserSelectByIdBorrowed<'a> { pub id : &'a str,pub bot : bool,}
+impl<'a> From<CachedUserSelectByIdBorrowed<'a>> for CachedUserSelectById
+{
+    fn from(CachedUserSelectByIdBorrowed { id,bot,}: CachedUserSelectByIdBorrowed<'a>) ->
+    Self { Self { id: id.into(),bot,} }
+}pub struct CachedUserSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
+{
+    client: &'a  C, params:
+    [&'a (dyn postgres_types::ToSql + Sync); N], stmt: &'a mut
+    cornucopia_async::private::Stmt, extractor: fn(&tokio_postgres::Row) -> CachedUserSelectByIdBorrowed,
+    mapper: fn(CachedUserSelectByIdBorrowed) -> T,
+} impl<'a, C, T:'a, const N: usize> CachedUserSelectByIdQuery<'a, C, T, N> where C:
+GenericClient
+{
+    pub fn map<R>(self, mapper: fn(CachedUserSelectByIdBorrowed) -> R) ->
+    CachedUserSelectByIdQuery<'a,C,R,N>
+    {
+        CachedUserSelectByIdQuery
+        {
+            client: self.client, params: self.params, stmt: self.stmt,
+            extractor: self.extractor, mapper,
+        }
+    } pub async fn one(self) -> Result<T, tokio_postgres::Error>
+    {
+        let stmt = self.stmt.prepare(self.client).await?; let row =
+        self.client.query_one(stmt, &self.params).await?;
+        Ok((self.mapper)((self.extractor)(&row)))
+    } pub async fn all(self) -> Result<Vec<T>, tokio_postgres::Error>
+    { self.iter().await?.try_collect().await } pub async fn opt(self) ->
+    Result<Option<T>, tokio_postgres::Error>
+    {
+        let stmt = self.stmt.prepare(self.client).await?;
+        Ok(self.client.query_opt(stmt, &self.params)
+        .await?.map(|row| (self.mapper)((self.extractor)(&row))))
+    } pub async fn iter(self,) -> Result<impl futures::Stream<Item = Result<T,
+    tokio_postgres::Error>> + 'a, tokio_postgres::Error>
+    {
+        let stmt = self.stmt.prepare(self.client).await?; let it =
+        self.client.query_raw(stmt,
+        cornucopia_async::private::slice_iter(&self.params)) .await?
+        .map(move |res|
+        res.map(|row| (self.mapper)((self.extractor)(&row)))) .into_stream();
+        Ok(it)
+    }
+}pub fn cached_user_select_by_id() -> CachedUserSelectByIdStmt
+{ CachedUserSelectByIdStmt(cornucopia_async::private::Stmt::new("SELECT
+    *
+FROM
+    \"DiscordFrontendNightly\".public.\"CachedUsers\"
+WHERE
+    \"id\" = $1")) } pub struct
+CachedUserSelectByIdStmt(cornucopia_async::private::Stmt); impl CachedUserSelectByIdStmt
+{ pub fn bind<'a, C:
+GenericClient,T1:
+cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
+id: &'a T1,) -> CachedUserSelectByIdQuery<'a,C,
+CachedUserSelectById, 1>
+{
+    CachedUserSelectByIdQuery
+    {
+        client, params: [id,], stmt: &mut self.0, extractor:
+        |row| { CachedUserSelectByIdBorrowed { id: row.get(0),bot: row.get(1),} }, mapper: |it| { <CachedUserSelectById>::from(it) },
+    }
+} }}pub mod cached_user_upsert
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedUserUpsertParams<T1: cornucopia_async::StringSql,> { pub id: T1,pub bot: bool,}pub fn cached_user_upsert() -> CachedUserUpsertStmt
+{ CachedUserUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontendNightly\".public.\"CachedUsers\" (id, bot)
+VALUES ($1, $2)
+ON CONFLICT (\"id\") DO UPDATE
+    SET
+        \"bot\" = $2")) } pub struct
+CachedUserUpsertStmt(cornucopia_async::private::Stmt); impl CachedUserUpsertStmt
+{ pub async fn bind<'a, C:
+GenericClient,T1:
+cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
+id: &'a T1,bot: &'a bool,) -> Result<u64, tokio_postgres::Error>
+{
+    let stmt = self.0.prepare(client).await?;
+    client.execute(stmt, &[id,bot,]).await
+} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,>
+cornucopia_async::Params<'a, CachedUserUpsertParams<T1,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+tokio_postgres::Error>> + Send + 'a>>, C> for CachedUserUpsertStmt
+{
+    fn
+    params(&'a mut self, client: &'a  C, params: &'a
+    CachedUserUpsertParams<T1,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    tokio_postgres::Error>> + Send + 'a>>
+    { Box::pin(self.bind(client, &params.id,&params.bot,)) }
 }}}

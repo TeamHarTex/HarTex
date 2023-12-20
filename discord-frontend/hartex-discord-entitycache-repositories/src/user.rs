@@ -22,34 +22,33 @@
 
 use std::env;
 
+use hartex_database_queries::discord_frontend::queries::cached_user_select_by_id::cached_user_select_by_id;
+use hartex_database_queries::discord_frontend::queries::cached_user_upsert::cached_user_upsert;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::user::UserEntity;
-use redis::AsyncCommands;
-use redis::Client;
+use tokio_postgres::NoTls;
 
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
     async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
-        let bot = connection
-            .get::<String, bool>(format!("user:{id}:bot"))
+        let data = cached_user_select_by_id()
+            .bind(&client, &id.to_string())
+            .one()
             .await?;
 
-        Ok(UserEntity { bot, id })
+        Ok(UserEntity { bot: data.bot, id })
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
-        connection
-            .set(format!("user:{}:bot", entity.id), entity.bot)
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+
+        cached_user_upsert()
+            .bind(&client, &entity.id.to_string(), &entity.bot)
             .await?;
 
         Ok(())
