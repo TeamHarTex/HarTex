@@ -19,5 +19,5 @@ hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macr
 
 macrotest = { git = "https://github.com/TeamHarTex/macrotest.git", branch = "master" }
 rustversion = "1.0.14"
-trybuild = "1.0.85"
+trybuild = "1.0.86"
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next" }
