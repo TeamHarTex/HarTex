@@ -22,6 +22,8 @@
 
 use std::env;
 
+use hartex_database_queries::discord_frontend::queries::cached_role_select_by_id_and_guild_id::cached_role_select_by_id_and_guild_id;
+use hartex_database_queries::discord_frontend::queries::cached_role_upsert::cached_role_upsert;
 use hartex_discord_core::discord::model::guild::RoleFlags;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
@@ -31,9 +33,9 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
-use redis::AsyncCommands;
 use redis::Client;
 use serde_scan::scan;
+use tokio_postgres::NoTls;
 
 pub struct CachedRoleRepository;
 
@@ -67,95 +69,42 @@ impl CachedRoleRepository {
 
 impl Repository<RoleEntity> for CachedRoleRepository {
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
-        let color = connection
-            .get::<String, u32>(format!("guild:{guild_id}:role:{id}:color"))
-            .await?;
-        let flags = connection
-            .get::<String, u64>(format!("guild:{guild_id}:role:{id}:flags"))
-            .await?;
-        let hoist = connection
-            .get::<String, bool>(format!("guild:{guild_id}:role:{id}:hoist"))
-            .await?;
-        let icon = connection
-            .get::<String, Option<String>>(format!("guild:{guild_id}:role:{id}:icon"))
-            .await?;
-        let managed = connection
-            .get::<String, bool>(format!("guild:{guild_id}:role:{id}:managed"))
-            .await?;
-        let mentionable = connection
-            .get::<String, bool>(format!("guild:{guild_id}:role:{id}:mentionable"))
-            .await?;
-        let position = connection
-            .get::<String, i64>(format!("guild:{guild_id}:role:{id}:position"))
+        let data = cached_role_select_by_id_and_guild_id()
+            .bind(&client, &id.to_string(), &guild_id.to_string())
+            .one()
             .await?;
 
         Ok(RoleEntity {
-            color,
-            flags: RoleFlags::from_bits_truncate(flags),
+            color: data.color as u32,
+            flags: RoleFlags::from_bits_truncate(data.flags as u64),
             guild_id,
-            hoist,
-            icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
+            hoist: data.hoist,
+            icon: data.icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
-            managed,
-            mentionable,
-            position,
+            managed: data.managed,
+            mentionable: data.mentionable,
+            position: data.position as i64,
         })
     }
 
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
-        if let Some(icon) = entity.icon {
-            connection
-                .set(
-                    format!("guild:{}:role:{}:icon", entity.guild_id, entity.id),
-                    icon.to_string(),
-                )
-                .await?;
-        }
-
-        connection
-            .set(
-                format!("guild:{}:role:{}:color", entity.guild_id, entity.id),
-                entity.color,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:flags", entity.guild_id, entity.id),
-                entity.flags.bits(),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:hoist", entity.guild_id, entity.id),
-                entity.hoist,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:managed", entity.guild_id, entity.id),
-                entity.managed,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:mentionable", entity.guild_id, entity.id),
-                entity.mentionable,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:position", entity.guild_id, entity.id),
-                entity.position,
-            )
-            .await?;
+        cached_role_upsert()
+            .bind(
+                &client,
+                &(entity.color as i64),
+                &entity.icon.map(|hash| hash.to_string()), 
+                &entity.id.to_string(), 
+                &entity.guild_id.to_string(), 
+                &(entity.flags.bits() as i32), 
+                &entity.hoist, 
+                &entity.managed, 
+                &entity.mentionable, 
+                &(entity.position as i32)
+            ).await?;
 
         Ok(())
     }
