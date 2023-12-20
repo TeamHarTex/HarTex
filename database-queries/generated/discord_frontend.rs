@@ -207,4 +207,35 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedMemberUpsertStmt
     CachedMemberUpsertParams<T1,T2,T3,T4,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
     { Box::pin(self.bind(client, &params.user_id,&params.guild_id,&params.roles,)) }
+}}pub mod cached_role_upsert
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedRoleUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,> { pub icon: Option<T1>,pub id: T2,pub guild_id: T3,pub flags: i32,pub hoist: bool,pub managed: bool,pub mentionable: bool,pub position: i32,}pub fn cached_role_upsert() -> CachedRoleUpsertStmt
+{ CachedRoleUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontendNightly\".public.\"CachedRoles\" (\"icon\", \"id\", \"guild_id\", \"flags\", \"hoist\", \"managed\", \"mentionable\", \"position\")
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+ON CONFLICT (\"id\", \"guild_id\") DO UPDATE
+    SET
+        \"icon\" = $1,
+        \"flags\" = $4,
+        \"hoist\" = $5,
+        \"managed\" = $6,
+        \"mentionable\" = $7,
+        \"position\" = $8")) } pub struct
+CachedRoleUpsertStmt(cornucopia_async::private::Stmt); impl CachedRoleUpsertStmt
+{ pub async fn bind<'a, C:
+GenericClient,T1:
+cornucopia_async::StringSql,T2:
+cornucopia_async::StringSql,T3:
+cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
+icon: &'a Option<T1>,id: &'a T2,guild_id: &'a T3,flags: &'a i32,hoist: &'a bool,managed: &'a bool,mentionable: &'a bool,position: &'a i32,) -> Result<u64, tokio_postgres::Error>
+{
+    let stmt = self.0.prepare(client).await?;
+    client.execute(stmt, &[icon,id,guild_id,flags,hoist,managed,mentionable,position,]).await
+} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,>
+cornucopia_async::Params<'a, CachedRoleUpsertParams<T1,T2,T3,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+tokio_postgres::Error>> + Send + 'a>>, C> for CachedRoleUpsertStmt
+{
+    fn
+    params(&'a mut self, client: &'a  C, params: &'a
+    CachedRoleUpsertParams<T1,T2,T3,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    tokio_postgres::Error>> + Send + 'a>>
+    { Box::pin(self.bind(client, &params.icon,&params.id,&params.guild_id,&params.flags,&params.hoist,&params.managed,&params.mentionable,&params.position,)) }
 }}}
