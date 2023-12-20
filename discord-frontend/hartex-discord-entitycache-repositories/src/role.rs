@@ -22,6 +22,7 @@
 
 use std::env;
 
+use hartex_database_queries::discord_frontend::queries::cached_role_upsert::cached_role_upsert;
 use hartex_discord_core::discord::model::guild::RoleFlags;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
@@ -34,6 +35,7 @@ use hartex_discord_entitycache_entities::role::RoleEntity;
 use redis::AsyncCommands;
 use redis::Client;
 use serde_scan::scan;
+use tokio_postgres::NoTls;
 
 pub struct CachedRoleRepository;
 
@@ -107,55 +109,20 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     }
 
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
 
-        if let Some(icon) = entity.icon {
-            connection
-                .set(
-                    format!("guild:{}:role:{}:icon", entity.guild_id, entity.id),
-                    icon.to_string(),
-                )
-                .await?;
-        }
-
-        connection
-            .set(
-                format!("guild:{}:role:{}:color", entity.guild_id, entity.id),
-                entity.color,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:flags", entity.guild_id, entity.id),
-                entity.flags.bits(),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:hoist", entity.guild_id, entity.id),
-                entity.hoist,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:managed", entity.guild_id, entity.id),
-                entity.managed,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:mentionable", entity.guild_id, entity.id),
-                entity.mentionable,
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:role:{}:position", entity.guild_id, entity.id),
-                entity.position,
-            )
-            .await?;
+        cached_role_upsert()
+            .bind(
+                &client,
+                &entity.icon.map(|hash| hash.to_string()), 
+                &entity.id.to_string(), 
+                &entity.guild_id.to_string(), 
+                &(entity.flags.bits() as i32), 
+                &entity.hoist, 
+                &entity.managed, 
+                &entity.mentionable, 
+                &(entity.position as i32)
+            ).await?;
 
         Ok(())
     }
