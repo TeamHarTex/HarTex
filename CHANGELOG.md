@@ -17,6 +17,8 @@
 
 ## Discord Frontend
 
+- **Changed:** migrated cache repositories to PostgreSQL
+
 ## Localization Infrastructure
 
 ## Rust Utilities
