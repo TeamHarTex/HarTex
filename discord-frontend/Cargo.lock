@@ -1071,7 +1071,7 @@ dependencies = [
  "hyper-trust-dns",
  "hyper-util",
  "miette",
- "owo-colors",
+ "owo-colors 4.0.0",
  "serde",
  "serde_json",
  "walkdir",
@@ -1861,7 +1861,7 @@ dependencies = [
  "is-terminal",
  "miette-derive",
  "once_cell",
- "owo-colors",
+ "owo-colors 3.5.0",
  "supports-color",
  "supports-hyperlinks",
  "supports-unicode",
@@ -2060,6 +2060,12 @@ name = "owo-colors"
 version = "3.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c1b04fb49957986fdce4d6ee7a65027d55d4b6d2265e5848bbb507b58ccfdb6f"
+
+[[package]]
+name = "owo-colors"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "caff54706df99d2a78a5a4e3455ff45448d81ef1bb63c22cd14052ca0e993a3f"
 
 [[package]]
 name = "parking_lot"
@@ -2273,9 +2279,9 @@ checksum = "dc375e1527247fe1a97d8b7156678dfe7c1af2fc075c9a4db3690ecd2a148068"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.70"
+version = "1.0.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b"
+checksum = "75cb1540fadbd5b8fbccc4dddad2734eba435053f725621c070711a14bb5f4b8"
 dependencies = [
  "unicode-ident",
 ]
