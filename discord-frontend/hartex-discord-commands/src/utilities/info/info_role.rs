@@ -63,6 +63,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
     let roleinfo_embed_description =
         localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
+    let roleinfo_embed_attributes_field_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_field_name()?;
 
     let role = CachedRoleRepository
         .get((interaction.guild_id.unwrap(), role_id))
@@ -80,6 +82,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 roleinfo_embed_generalinfo_color_subfield_name,
                 role.color,
             ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            format!("{roleinfo_embed_attributes_field_name}"),
+            ""
         ))
         .build();
 
