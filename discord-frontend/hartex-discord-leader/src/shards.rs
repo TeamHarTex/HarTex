@@ -38,9 +38,7 @@ use hartex_discord_utils::TOKEN;
 use miette::IntoDiagnostic;
 
 /// Obtain a list of shards.
-pub async fn obtain(
-    queue: &Arc<dyn Queue + Send + Sync>,
-) -> miette::Result<Vec<Shard>> {
+pub async fn obtain(queue: &Arc<dyn Queue + Send + Sync>) -> miette::Result<Vec<Shard>> {
     let config = Config::new(TOKEN.deref().clone(), Intents::all());
 
     Ok(

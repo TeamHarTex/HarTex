@@ -20,10 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
 use std::pin::Pin;
 use std::str::FromStr;
 
+use hartex_database_queries::discord_frontend::queries::cached_member_select_by_guild_id::cached_member_select_by_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
@@ -34,8 +34,6 @@ use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
 use hartex_discord_utils::DATABASE_POOL;
-use redis::AsyncCommands;
-use redis::Client;
 use tokio_postgres::GenericClient;
 
 pub struct CachedMemberRepository;
@@ -48,29 +46,19 @@ impl CachedMemberRepository {
         &self,
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<UserMarker>>> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut sync_connection = client.get_connection()?;
-        let keys = redis::cmd("SCAN")
-            .cursor_arg(0)
-            .arg("MATCH")
-            .arg(format!("guild:{guild_id}:member:*:user_id"))
-            .arg("COUNT")
-            .arg("1000")
-            .clone()
-            .iter::<String>(&mut sync_connection)?
-            .collect::<Vec<_>>();
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
-        let mut members = Vec::new();
+        let members = cached_member_select_by_guild_id()
+            .bind(client, &guild_id.to_string())
+            .all()
+            .await?;
 
-        let mut connection = client.get_tokio_connection().await?;
-        for key in keys {
-            let id = connection.get::<String, u64>(key).await?;
-
-            members.push(Id::new_checked(id).expect("id is zero (unexpected and unreachable)"));
-        }
-
-        Ok(members)
+        Ok(members
+            .into_iter()
+            .map(|member| Id::<UserMarker>::from_str(&member.user_id).unwrap())
+            .collect())
     }
 }
 
