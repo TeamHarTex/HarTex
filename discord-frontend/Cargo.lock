@@ -1229,9 +1229,11 @@ version = "0.6.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
+ "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",
  "miette",
+ "once_cell",
  "rdkafka",
  "serde_json",
  "serde_scan",
