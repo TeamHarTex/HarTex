@@ -195,6 +195,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let roles = CachedRoleRepository
         .role_ids_in_guild(guild.id)
+        .await
         .into_diagnostic()?;
 
     let embed = EmbedBuilder::new()
