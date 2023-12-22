@@ -274,11 +274,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedMemberUpsertStmt
     { Box::pin(self.bind(client, &params.user_id,&params.guild_id,&params.roles,)) }
 }}pub mod cached_role_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedRoleSelectByGuildId
-{ pub icon : String,pub guild_id : String,pub id : String,pub flags : i32,pub hoist : bool,pub managed : bool,pub mentionable : bool,pub position : i32,pub color : i64,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub icon : &'a str,pub guild_id : &'a str,pub id : &'a str,pub flags : i32,pub hoist : bool,pub managed : bool,pub mentionable : bool,pub position : i32,pub color : i64,}
+{ pub icon : Option<String>,pub guild_id : String,pub id : String,pub flags : i32,pub hoist : bool,pub managed : bool,pub mentionable : bool,pub position : i32,pub color : i64,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub icon : Option<&'a str>,pub guild_id : &'a str,pub id : &'a str,pub flags : i32,pub hoist : bool,pub managed : bool,pub mentionable : bool,pub position : i32,pub color : i64,}
 impl<'a> From<CachedRoleSelectByGuildIdBorrowed<'a>> for CachedRoleSelectByGuildId
 {
     fn from(CachedRoleSelectByGuildIdBorrowed { icon,guild_id,id,flags,hoist,managed,mentionable,position,color,}: CachedRoleSelectByGuildIdBorrowed<'a>) ->
-    Self { Self { icon: icon.into(),guild_id: guild_id.into(),id: id.into(),flags,hoist,managed,mentionable,position,color,} }
+    Self { Self { icon: icon.map(|v| v.into()),guild_id: guild_id.into(),id: id.into(),flags,hoist,managed,mentionable,position,color,} }
 }pub struct CachedRoleSelectByGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
