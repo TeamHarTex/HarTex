@@ -89,7 +89,9 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let latency = now.elapsed().into_diagnostic()?.as_millis();
 
     let data = response.data();
-    let timestamp = data.ok_or(Report::msg("failed to obtain uptime data"))?.start_timestamp();
+    let timestamp = data
+        .ok_or(Report::msg("failed to obtain uptime data"))?
+        .start_timestamp();
 
     let botinfo_embed_botstarted_field_name =
         localizer.utilities_plugin_botinfo_embed_botstarted_field_name()?;

@@ -62,7 +62,6 @@ pub struct JstsCleanNotSupported {
     pub err_span: SourceSpan,
 }
 
-
 #[derive(Debug, Diagnostic, Error)]
 #[diagnostic(code("E0006: buildsystem::jsts_clean_not_supported"))]
 #[error("updating is currently not supported for jsts projects")]
@@ -72,4 +71,3 @@ pub struct JstsUpdateNotSupported {
     #[label("this is a jsts project")]
     pub err_span: SourceSpan,
 }
-

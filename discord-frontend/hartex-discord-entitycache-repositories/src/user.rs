@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
+use std::pin::Pin;
 
 use hartex_database_queries::discord_frontend::queries::cached_user_select_by_id::cached_user_select_by_id;
 use hartex_database_queries::discord_frontend::queries::cached_user_upsert::cached_user_upsert;
@@ -28,16 +28,19 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::user::UserEntity;
-use tokio_postgres::NoTls;
+use hartex_discord_utils::DATABASE_POOL;
+use tokio_postgres::GenericClient;
 
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
     async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
         let data = cached_user_select_by_id()
-            .bind(&client, &id.to_string())
+            .bind(client, &id.to_string())
             .one()
             .await?;
 
@@ -45,10 +48,12 @@ impl Repository<UserEntity> for CachedUserRepository {
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
         cached_user_upsert()
-            .bind(&client, &entity.id.to_string(), &entity.bot)
+            .bind(client, &entity.id.to_string(), &entity.bot)
             .await?;
 
         Ok(())
