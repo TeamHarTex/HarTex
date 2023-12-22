@@ -20,9 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
 use std::pin::Pin;
+use std::str::FromStr;
 
+use hartex_database_queries::discord_frontend::queries::cached_role_select_by_guild_id::cached_role_select_by_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_role_select_by_id_and_guild_id::cached_role_select_by_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_role_upsert::cached_role_upsert;
 use hartex_discord_core::discord::model::guild::RoleFlags;
@@ -35,8 +36,6 @@ use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
 use hartex_discord_utils::DATABASE_POOL;
-use redis::Client;
-use serde_scan::scan;
 use tokio_postgres::GenericClient;
 
 pub struct CachedRoleRepository;
@@ -44,28 +43,17 @@ pub struct CachedRoleRepository;
 impl CachedRoleRepository {
     #[allow(clippy::missing_errors_doc)]
     #[allow(clippy::missing_panics_doc)]
-    pub fn role_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<RoleMarker>>> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut sync_connection = client.get_connection()?;
-        let keys = redis::cmd("SCAN")
-            .cursor_arg(0)
-            .arg("MATCH")
-            .arg(format!("guild:{guild_id}:role:*:name"))
-            .arg("COUNT")
-            .arg("1000")
-            .clone()
-            .iter::<String>(&mut sync_connection)?
-            .collect::<Vec<_>>();
+    pub async fn role_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<RoleMarker>>> {
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
-        Ok(keys
-            .iter()
-            .map(|key| {
-                let (_, role_id): (u64, u64) = scan!("guild:{}:role:{}:name" <- key).unwrap();
+        let roles = cached_role_select_by_guild_id()
+            .bind(client, &guild_id.to_string())
+            .all()
+            .await?;
 
-                Id::new_checked(role_id).expect("unreachable")
-            })
-            .collect())
+        Ok(roles.into_iter().map(|role| Id::<RoleMarker>::from_str(&role.id).unwrap()).collect())
     }
 }
 
