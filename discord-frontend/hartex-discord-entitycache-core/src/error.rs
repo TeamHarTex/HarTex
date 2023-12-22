@@ -28,6 +28,7 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
+use bb8::RunError;
 use redis::RedisError;
 use tokio_postgres::Error as PostgresError;
 
@@ -35,6 +36,7 @@ use tokio_postgres::Error as PostgresError;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum CacheError {
+    Bb8(RunError<PostgresError>),
     /// Error related to environment variables.
     Env(VarError),
     /// A postgres error occurred.
@@ -46,6 +48,7 @@ pub enum CacheError {
 impl Display for CacheError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Bb8(error) => writeln!(f, "bb8 postgres error: {error}"),
             Self::Env(error) => writeln!(f, "env error: {error}"),
             Self::Redis(error) => writeln!(f, "redis error: {error}"),
             Self::Postgres(error) => writeln!(f, "postgres error: {error}"),
@@ -54,6 +57,12 @@ impl Display for CacheError {
 }
 
 impl Error for CacheError {}
+
+impl From<RunError<PostgresError>> for CacheError {
+    fn from(error: RunError<PostgresError>) -> Self {
+        Self::Bb8(error)
+    }
+}
 
 impl From<PostgresError> for CacheError {
     fn from(error: PostgresError) -> Self {

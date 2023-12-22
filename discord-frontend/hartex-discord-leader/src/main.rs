@@ -40,10 +40,13 @@ use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::time;
+use hartex_discord_utils::CLIENT;
+use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use once_cell::sync::Lazy;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::producer::FutureProducer;
@@ -60,6 +63,9 @@ pub async fn main() -> miette::Result<()> {
 
     log::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
+
+    Lazy::force(&CLIENT);
+    Lazy::force(&TOKEN);
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
         .into_diagnostic()?
@@ -83,16 +89,12 @@ pub async fn main() -> miette::Result<()> {
     consumer.subscribe(&[&topic]).into_diagnostic()?;
 
     log::trace!("building clusters");
-    let num_shards = env::var("NUM_SHARDS")
-        .into_diagnostic()?
-        .parse::<u32>()
-        .into_diagnostic()?;
     let queue = queue::obtain()?;
-    let mut shards = shards::obtain(num_shards, &queue)?;
+    let mut shards = shards::obtain(&queue).await?;
 
     let (tx, rx) = watch::channel(false);
 
-    log::trace!("launching {num_shards} shard(s)");
+    log::trace!("launching {} shard(s)", shards.len());
     let mut rx = rx.clone();
 
     tokio::spawn(async move {

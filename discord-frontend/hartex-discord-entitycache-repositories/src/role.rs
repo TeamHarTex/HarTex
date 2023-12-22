@@ -21,6 +21,7 @@
  */
 
 use std::env;
+use std::pin::Pin;
 
 use hartex_database_queries::discord_frontend::queries::cached_role_select_by_id_and_guild_id::cached_role_select_by_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_role_upsert::cached_role_upsert;
@@ -33,9 +34,10 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
+use hartex_discord_utils::DATABASE_POOL;
 use redis::Client;
 use serde_scan::scan;
-use tokio_postgres::NoTls;
+use tokio_postgres::GenericClient;
 
 pub struct CachedRoleRepository;
 
@@ -71,10 +73,12 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_lossless)]
     #[allow(clippy::cast_possible_truncation)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
         let data = cached_role_select_by_id_and_guild_id()
-            .bind(&client, &id.to_string(), &guild_id.to_string())
+            .bind(client, &id.to_string(), &guild_id.to_string())
             .one()
             .await?;
 
@@ -83,7 +87,9 @@ impl Repository<RoleEntity> for CachedRoleRepository {
             flags: RoleFlags::from_bits_truncate(data.flags as u64),
             guild_id,
             hoist: data.hoist,
-            icon: data.icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
+            icon: data
+                .icon
+                .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
             managed: data.managed,
             mentionable: data.mentionable,
@@ -94,21 +100,24 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
         cached_role_upsert()
             .bind(
-                &client,
+                client,
                 &(entity.color as i64),
-                &entity.icon.map(|hash| hash.to_string()), 
-                &entity.id.to_string(), 
-                &entity.guild_id.to_string(), 
-                &(entity.flags.bits() as i32), 
-                &entity.hoist, 
-                &entity.managed, 
-                &entity.mentionable, 
-                &(entity.position as i32)
-            ).await?;
+                &entity.icon.map(|hash| hash.to_string()),
+                &entity.id.to_string(),
+                &entity.guild_id.to_string(),
+                &(entity.flags.bits() as i32),
+                &entity.hoist,
+                &entity.managed,
+                &entity.mentionable,
+                &(entity.position as i32),
+            )
+            .await?;
 
         Ok(())
     }

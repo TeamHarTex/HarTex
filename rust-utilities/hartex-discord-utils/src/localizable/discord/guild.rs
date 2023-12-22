@@ -20,10 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use unic_langid::LanguageIdentifier;
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
+use unic_langid::LanguageIdentifier;
 
 use crate::localizable::Localizable;
 
@@ -33,15 +33,9 @@ impl Localizable for DefaultMessageNotificationLevel {
         let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
         Ok(match self {
-            Self::All => {
-                localizer.guild_default_message_notification_level_all()?
-            }
-            Self::Mentions => {
-                localizer.guild_default_message_notification_level_mentions()?
-            }
-            _ => {
-                localizer.guild_default_message_notification_level_unknown()?
-            }
+            Self::All => localizer.guild_default_message_notification_level_all()?,
+            Self::Mentions => localizer.guild_default_message_notification_level_mentions()?,
+            _ => localizer.guild_default_message_notification_level_unknown()?,
         })
     }
 }

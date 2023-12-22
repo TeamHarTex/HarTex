@@ -128,6 +128,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bddcadddf5e9015d310179a59bb28c4d4b9920ad0f11e8e14dbadf654890c9a6"
 
 [[package]]
+name = "async-once-cell"
+version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9338790e78aa95a416786ec8389546c4b6a1dfc3dc36071ed9518a9413a542eb"
+
+[[package]]
 name = "async-trait"
 version = "0.1.75"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -240,6 +246,31 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2f2139706359229bfa8f19142ac1155b4b80beafb7a60471ac5dd109d4a19778"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "bb8"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98b4b0f25f18bcdc3ac72bdb486ed0acf7e185221fd4dc985bc15db5800b0ba2"
+dependencies = [
+ "async-trait",
+ "futures-channel",
+ "futures-util",
+ "parking_lot",
+ "tokio",
+]
+
+[[package]]
+name = "bb8-postgres"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56ac82c42eb30889b5c4ee4763a24b8c566518171ebea648cd7e3bc532c60680"
+dependencies = [
+ "async-trait",
+ "bb8",
+ "tokio",
+ "tokio-postgres",
 ]
 
 [[package]]
@@ -1135,6 +1166,7 @@ dependencies = [
 name = "hartex_discord_entitycache_core"
 version = "0.6.0"
 dependencies = [
+ "bb8",
  "hartex_discord_core",
  "hartex_discord_entitycache_macros",
  "redis",
@@ -1173,6 +1205,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_entities",
+ "hartex_discord_utils",
  "redis",
  "serde_scan",
  "tokio-postgres",
@@ -1196,9 +1229,11 @@ version = "0.6.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
+ "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",
  "miette",
+ "once_cell",
  "rdkafka",
  "serde_json",
  "serde_scan",
@@ -1209,10 +1244,13 @@ dependencies = [
 name = "hartex_discord_utils"
 version = "0.6.0"
 dependencies = [
+ "async-once-cell",
+ "bb8-postgres",
  "hartex_discord_core",
  "hartex_localization_core",
  "miette",
  "once_cell",
+ "tokio-postgres",
  "unic-langid",
 ]
 
