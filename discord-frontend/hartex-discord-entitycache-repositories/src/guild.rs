@@ -23,11 +23,11 @@
 //! # Guild Repository
 
 use std::borrow::Cow;
-use std::env;
+use std::pin::Pin;
 use std::str::FromStr;
 
-use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 use hartex_database_queries::discord_frontend::queries::cached_guild_select_by_id::cached_guild_select_by_id;
+use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::GuildFeature;
@@ -37,7 +37,8 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
-use tokio_postgres::NoTls;
+use hartex_discord_utils::DATABASE_POOL;
+use tokio_postgres::GenericClient;
 
 /// Repository for guild entities.
 pub struct CachedGuildRepository;
@@ -46,38 +47,65 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
-        let data = cached_guild_select_by_id().bind(&client, &id.to_string()).one().await?;
+        let data = cached_guild_select_by_id()
+            .bind(client, &id.to_string())
+            .one()
+            .await?;
 
         Ok(GuildEntity {
             default_message_notifications: DefaultMessageNotificationLevel::from(
                 data.default_message_notifications as u8,
             ),
-            explicit_content_filter: ExplicitContentFilter::from(data.explicit_content_filter as u8),
-            features: data.features.iter().cloned().map(GuildFeature::from).collect(),
-            icon: data.icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
+            explicit_content_filter: ExplicitContentFilter::from(
+                data.explicit_content_filter as u8,
+            ),
+            features: data
+                .features
+                .iter()
+                .cloned()
+                .map(GuildFeature::from)
+                .collect(),
+            icon: data
+                .icon
+                .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
             large: data.large,
             name: data.name,
-            owner_id: Id::from_str(&data.owner_id).expect("id is zero (unexpected and unreachable)"),
+            owner_id: Id::from_str(&data.owner_id)
+                .expect("id is zero (unexpected and unreachable)"),
         })
     }
 
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
-        cached_guild_upsert().bind(
-            &client,
-            &i32::from(<DefaultMessageNotificationLevel as Into<u8>>::into(entity.default_message_notifications)),
-            &i32::from(<ExplicitContentFilter as Into<u8>>::into(entity.explicit_content_filter)),
-            &entity.features.iter().map(|feature| feature.clone().into()).collect::<Vec<Cow<'static, str>>>(),
-            &entity.icon.map(|hash| hash.to_string()),
-            &entity.large,
-            &entity.name,
-            &entity.owner_id.to_string(),
-            &entity.id.to_string()
-        ).await?;
+        cached_guild_upsert()
+            .bind(
+                client,
+                &i32::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
+                    entity.default_message_notifications,
+                )),
+                &i32::from(<ExplicitContentFilter as Into<u8>>::into(
+                    entity.explicit_content_filter,
+                )),
+                &entity
+                    .features
+                    .iter()
+                    .map(|feature| feature.clone().into())
+                    .collect::<Vec<Cow<'static, str>>>(),
+                &entity.icon.map(|hash| hash.to_string()),
+                &entity.large,
+                &entity.name,
+                &entity.owner_id.to_string(),
+                &entity.id.to_string(),
+            )
+            .await?;
 
         Ok(())
     }
