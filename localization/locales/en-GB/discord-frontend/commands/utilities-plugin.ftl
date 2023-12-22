@@ -27,6 +27,7 @@ roleinfo-embed-description=Information of {$roleMention}
 roleinfo-embed-generalinfo-field-name=General Information
 roleinfo-embed-generalinfo-id-subfield-name=ID:
 roleinfo-embed-generalinfo-color-subfield-name=Colour:
+roleinfo-embed-attributes-field-name=Attribute
 serverinfo-embed-generalinfo-field-name=General Information
 serverinfo-embed-generalinfo-id-subfield-name=ID:
 serverinfo-embed-generalinfo-created-subfield-name=Created:
