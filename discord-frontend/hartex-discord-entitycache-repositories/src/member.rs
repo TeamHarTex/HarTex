@@ -21,6 +21,7 @@
  */
 
 use std::env;
+use std::pin::Pin;
 use std::str::FromStr;
 
 use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
@@ -32,9 +33,10 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
+use hartex_discord_utils::DATABASE_POOL;
 use redis::AsyncCommands;
 use redis::Client;
-use tokio_postgres::NoTls;
+use tokio_postgres::GenericClient;
 
 pub struct CachedMemberRepository;
 
@@ -77,30 +79,43 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
         let data = cached_member_select_by_user_id_and_guild_id()
-            .bind(&client, &user_id.to_string(), &guild_id.to_string())
+            .bind(client, &user_id.to_string(), &guild_id.to_string())
             .one()
             .await?;
 
         Ok(MemberEntity {
-            roles: data.roles.into_iter().map(|role| Id::from_str(&role).unwrap()).collect(),
+            roles: data
+                .roles
+                .into_iter()
+                .map(|role| Id::from_str(&role).unwrap())
+                .collect(),
             guild_id: Id::from_str(&data.guild_id).unwrap(),
             user_id: Id::from_str(&data.user_id).unwrap(),
         })
     }
 
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
-        let (client, _) = tokio_postgres::connect(&env::var("HARTEX_NIGHTLY_PGSQL_URL")?, NoTls).await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
         cached_member_upsert()
             .bind(
-                &client,
+                client,
                 &entity.user_id.to_string(),
                 &entity.guild_id.to_string(),
-                &entity.roles.iter().map(ToString::to_string).collect::<Vec<_>>(),
-            ).await?;
+                &entity
+                    .roles
+                    .iter()
+                    .map(ToString::to_string)
+                    .collect::<Vec<_>>(),
+            )
+            .await?;
 
         Ok(())
     }

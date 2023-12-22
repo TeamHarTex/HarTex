@@ -17,6 +17,8 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-mo
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-entities" }
 
+hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
+
 redis = { version = "0.24.0", features = ["tokio-comp"] }
 serde_scan = "0.4.1"
 tokio-postgres = "0.7.10"
