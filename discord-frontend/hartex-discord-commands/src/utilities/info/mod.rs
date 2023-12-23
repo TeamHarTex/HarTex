@@ -29,6 +29,7 @@ use hartex_discord_core::discord::model::application::interaction::InteractionDa
 mod info_bot;
 mod info_role;
 mod info_server;
+mod info_user;
 
 #[metadata(command_type = 1, interaction_only = true, name = "info")]
 pub struct Info;
@@ -51,6 +52,7 @@ impl Command for Info {
             "bot" => info_bot::execute(interaction, subcommand.clone()).await,
             "role" => info_role::execute(interaction, subcommand.clone()).await,
             "server" => info_server::execute(interaction, subcommand.clone()).await,
+            "user" => info_user::execute(interaction, subcommand.clone()).await,
             _ => unreachable!(),
         }
     }
