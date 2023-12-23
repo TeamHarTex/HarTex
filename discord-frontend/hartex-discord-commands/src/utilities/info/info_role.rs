@@ -72,6 +72,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_roleinfo_embed_attributes_field_name()?;
     let roleinfo_embed_attributes_hoist_subfield_name =
         localizer.utilities_plugin_roleinfo_embed_attributes_hoist_subfield_name()?;
+    let roleinfo_embed_attributes_managed_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_managed_subfield_name()?;
+    let roleinfo_embed_attributes_mentionable_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_mentionable_subfield_name()?;
 
     let role = CachedRoleRepository
         .get((interaction.guild_id.unwrap(), role_id))
@@ -93,9 +97,13 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .field(EmbedFieldBuilder::new(
             format!("{roleinfo_embed_attributes_field_name}"),
             format!(
-                "{} {}",
+                "{} {}\n{} {}\n{} {}",
                 roleinfo_embed_attributes_hoist_subfield_name,
-                role.hoist.localize(langid_locale)?,
+                role.hoist.localize(langid_locale.clone())?,
+                roleinfo_embed_attributes_managed_subfield_name,
+                role.managed.localize(langid_locale.clone())?,
+                roleinfo_embed_attributes_mentionable_subfield_name,
+                role.mentionable.localize(langid_locale)?,
             ),
         ))
         .build();
