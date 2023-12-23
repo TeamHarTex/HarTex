@@ -92,6 +92,19 @@
         }
       ],
       "type": 1
+    },
+    {
+      "name": "user",
+      "description": "Information about a specific user.",
+      "options": [
+        {
+          "name": "user",
+          "description": "The user obtain information for.",
+          "required": true,
+          "type": 6
+        }
+      ],
+      "type": 1
     }
   ],
   "type": 1
