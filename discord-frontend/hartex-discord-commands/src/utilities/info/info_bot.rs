@@ -57,7 +57,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = format!("http://{}/api/v2/uptime", api_domain.clone());
+    let uri = format!("http://{}/api/v2/stats/uptime", api_domain.clone());
     let now = SystemTime::now();
 
     let stream = TcpStream::connect(api_domain)
@@ -88,6 +88,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
+    log::debug!("deserializing result");
     let body = result.collect().await.into_diagnostic()?.aggregate();
     let response: Response<UptimeResponse> =
         serde_json::from_reader(body.reader()).into_diagnostic()?;
