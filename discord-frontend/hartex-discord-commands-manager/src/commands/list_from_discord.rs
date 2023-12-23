@@ -21,22 +21,25 @@
  */
 
 use std::env;
-use std::str;
 
 use clap::ArgMatches;
 use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
+use hartex_discord_core::tokio::net::TcpStream;
 use hartex_log::log;
-use hyper::body::HttpBody;
+use http_body_util::BodyExt;
+use http_body_util::Empty;
+use hyper::body::Buf;
+use hyper::body::Bytes;
+use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::USER_AGENT;
-use hyper::Client;
 use hyper::Method;
 use hyper::Request;
-use hyper_trust_dns::TrustDnsResolver;
+use hyper_util::rt::TokioExecutor;
+use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
-use miette::Report;
 use owo_colors::OwoColorize;
 
 /// List commands from discord.
@@ -45,15 +48,19 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     log::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    let client =
-        Client::builder().build(TrustDnsResolver::default().into_native_tls_https_connector());
-
     let application_id = env::var("APPLICATION_ID").into_diagnostic()?;
 
     let mut token = env::var("BOT_TOKEN").into_diagnostic()?;
     if !token.starts_with("Bot ") {
         token.insert_str(0, "Bot ");
     }
+
+    let stream = TcpStream::connect("https://discord.com")
+        .await
+        .into_diagnostic()?;
+    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+        .await
+        .into_diagnostic()?;
 
     let mut uri = format!("https://discord.com/api/v10/applications/{application_id}/commands");
     if let Some(flag) = matches.get_one::<bool>("with-localizations")
@@ -69,25 +76,14 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .header(AUTHORIZATION, token)
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.1.0) CommandsManager",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
         )
-        .body(String::new())
+        .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
-    let mut response = client.request(request).await.into_diagnostic()?;
-    let mut full = String::new();
-    while let Some(result) = response.body_mut().data().await {
-        full.push_str(str::from_utf8(&result.into_diagnostic()?).into_diagnostic()?);
-    }
-    if !response.status().is_success() {
-        log::error!("unsuccessful HTTP request, response: {full}");
+    let result = sender.send_request(request).await.into_diagnostic()?;
+    let body = result.collect().await.into_diagnostic()?.aggregate();
+    let commands: Vec<Command> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
-        return Err(Report::msg(format!(
-            "unsuccessful HTTP request, with status code {}",
-            response.status()
-        )));
-    }
-
-    let commands = serde_json::from_str::<Vec<Command>>(&full).into_diagnostic()?;
     for command in commands {
         println!();
         println!(

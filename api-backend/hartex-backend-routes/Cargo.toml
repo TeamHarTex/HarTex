@@ -1,0 +1,25 @@
+[package]
+name = "hartex_backend_routes"
+version = "0.6.0"
+edition = "2021"
+description = """
+Backend routes (API v1)
+"""
+license = "AGPL-3.0-or-later"
+rust-version = "1.76.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+hartex_backend_models = { path = "../hartex-backend-models" }
+hartex_backend_models_v2 = { path = "../hartex-backend-models-v2" }
+
+hartex_database_queries = { path = "../../database-queries" }
+
+hartex_log = { path = "../../rust-utilities/hartex-log" }
+
+axum = { version = "0.7.2", features = ["json", "macros"] }
+bb8-postgres = "0.8.1"
+serde_json = "1.0.108"
+
+[features]

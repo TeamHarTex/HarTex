@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::ops::Deref;
 use std::sync::Arc;
 
 use hartex_discord_core::discord::gateway::queue::Queue;
@@ -32,24 +33,16 @@ use hartex_discord_core::discord::model::gateway::payload::outgoing::update_pres
 use hartex_discord_core::discord::model::gateway::presence::Activity;
 use hartex_discord_core::discord::model::gateway::presence::ActivityType;
 use hartex_discord_core::discord::model::gateway::presence::Status;
+use hartex_discord_utils::CLIENT;
+use hartex_discord_utils::TOKEN;
 use miette::IntoDiagnostic;
 
 /// Obtain a list of shards.
-pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue + Send + Sync>) -> miette::Result<Vec<Shard>> {
-    let bot_token = std::env::var("BOT_TOKEN").into_diagnostic()?;
+pub async fn obtain(queue: &Arc<dyn Queue + Send + Sync>) -> miette::Result<Vec<Shard>> {
+    let config = Config::new(TOKEN.deref().clone(), Intents::all());
 
-    let shard_start_index = std::env::var("SHARDS_START_INDEX")
-        .into_diagnostic()?
-        .parse::<u32>()
-        .into_diagnostic()?;
-    let config = Config::new(bot_token, Intents::all());
-
-    Ok(stream::create_bucket(
-        shard_start_index,
-        1,
-        num_shards,
-        config,
-        |shard_id, builder| {
+    Ok(
+        stream::create_recommended(CLIENT.deref(), config, |shard_id, builder| {
             builder
                 .event_types(EventTypeFlags::all())
                 .presence(UpdatePresencePayload {
@@ -77,7 +70,9 @@ pub fn obtain(num_shards: u32, queue: &Arc<dyn Queue + Send + Sync>) -> miette::
                 })
                 .queue(queue.clone())
                 .build()
-        },
+        })
+        .await
+        .into_diagnostic()?
+        .collect::<Vec<_>>(),
     )
-    .collect::<Vec<_>>())
 }

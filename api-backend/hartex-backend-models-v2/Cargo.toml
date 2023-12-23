@@ -1,6 +1,6 @@
 [package]
 name = "hartex_backend_models_v2"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 Backend routes (API v1)
@@ -11,6 +11,6 @@ rust-version = "1.76.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0.192", features = ["derive"] }
+serde = { version = "1.0.193", features = ["derive"] }
 
 [features]

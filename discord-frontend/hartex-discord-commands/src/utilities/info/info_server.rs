@@ -45,8 +45,8 @@ use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 #[allow(clippy::too_many_lines)]
@@ -56,7 +56,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
-    let langid_locale = interaction.locale.clone().and_then(|locale| locale.parse().ok());
+    let langid_locale = interaction
+        .locale
+        .clone()
+        .and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
@@ -116,8 +119,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let serverinfo_embed_flags_large_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_flags_large_subfield_name()?;
     let serverinfo_embed_flags_default_message_notifications_subfield_name = localizer
-        .utilities_plugin_serverinfo_embed_flags_default_message_notifications_subfield_name(
-        )?;
+        .utilities_plugin_serverinfo_embed_flags_default_message_notifications_subfield_name()?;
 
     let mut default_general_information = format!(
         "{} {}\n{} {}\n{} {}",
@@ -193,9 +195,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let roles = CachedRoleRepository
         .role_ids_in_guild(guild.id)
+        .await
         .into_diagnostic()?;
 
-    let embed = EmbedBuilder::new()
+    let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
@@ -260,14 +263,20 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 serverinfo_embed_flags_large_subfield_name,
                 guild.large.localize(langid_locale.clone())?,
                 serverinfo_embed_flags_default_message_notifications_subfield_name,
-                guild.default_message_notifications.localize(langid_locale)?
+                guild
+                    .default_message_notifications
+                    .localize(langid_locale)?
             ),
         ))
-        .thumbnail(
-            ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?,
-        )
-        .title(guild.name)
-        .validate()
+        .title(guild.name);
+
+    if let Some(icon) = guild.icon {
+        builder = builder.thumbnail(
+            ImageSource::url(Cdn::guild_icon(guild.id, icon)).into_diagnostic()?,
+        );
+    }
+
+    let embed = builder.validate()
         .into_diagnostic()?
         .build();
 

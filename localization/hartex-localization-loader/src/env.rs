@@ -28,8 +28,10 @@ pub fn base_path() -> PathBuf {
 
     if dir.ends_with("localization") {
         dir.push("locales");
-    } else {
+    } else if dir.ends_with("hartex-localization-core") {
         dir.push("../locales");
+    } else {
+        dir.push("../localization/locales");
     }
 
     dir
