@@ -129,7 +129,9 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
         )
         .body(json)
         .into_diagnostic()?;
-    sender.send_request(request).await.into_diagnostic()?;
+    let result = sender.send_request(request).await.into_diagnostic()?;
+
+    log::info!("received response with status {}", result.status());
 
     Ok(())
 }
