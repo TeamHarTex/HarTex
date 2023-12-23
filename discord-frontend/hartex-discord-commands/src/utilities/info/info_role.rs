@@ -26,16 +26,18 @@ use hartex_discord_core::discord::model::application::interaction::application_c
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, ImageSource};
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
+use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
+use hartex_discord_cdn::Cdn;
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
@@ -43,6 +45,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
+    let langid_locale = interaction
+        .locale
+        .clone()
+        .and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
@@ -65,12 +71,21 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
     let roleinfo_embed_attributes_field_name =
         localizer.utilities_plugin_roleinfo_embed_attributes_field_name()?;
+    let roleinfo_embed_attributes_hoist_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_hoist_subfield_name()?;
+    let roleinfo_embed_attributes_managed_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_managed_subfield_name()?;
+    let roleinfo_embed_attributes_mentionable_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_mentionable_subfield_name()?;
+    let roleinfo_embed_attributes_position_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_position_subfield_name()?;
 
     let role = CachedRoleRepository
         .get((interaction.guild_id.unwrap(), role_id))
         .await
         .into_diagnostic()?;
-    let embed = EmbedBuilder::new()
+
+    let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .description(roleinfo_embed_description)
         .field(EmbedFieldBuilder::new(
@@ -85,8 +100,27 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         ))
         .field(EmbedFieldBuilder::new(
             format!("{roleinfo_embed_attributes_field_name}"),
-            ""
-        ))
+            format!(
+                "{} {}\n{} {}\n{} {}\n{} {}",
+                roleinfo_embed_attributes_hoist_subfield_name,
+                role.hoist.localize(langid_locale.clone())?,
+                roleinfo_embed_attributes_managed_subfield_name,
+                role.managed.localize(langid_locale.clone())?,
+                roleinfo_embed_attributes_mentionable_subfield_name,
+                role.mentionable.localize(langid_locale)?,
+                roleinfo_embed_attributes_position_subfield_name,
+                role.position,
+            ),
+        ));
+
+    if let Some(icon) = role.icon {
+        builder = builder.thumbnail(
+            ImageSource::url(Cdn::role_icon(role.id, icon)).into_diagnostic()?,
+        );
+    }
+
+    let embed = builder.validate()
+        .into_diagnostic()?
         .build();
 
     interaction_client

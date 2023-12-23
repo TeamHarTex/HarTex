@@ -198,7 +198,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .await
         .into_diagnostic()?;
 
-    let embed = EmbedBuilder::new()
+    let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
@@ -268,11 +268,15 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                     .localize(langid_locale)?
             ),
         ))
-        .thumbnail(
-            ImageSource::url(Cdn::guild_icon(guild.id, guild.icon.unwrap())).into_diagnostic()?,
-        )
-        .title(guild.name)
-        .validate()
+        .title(guild.name);
+
+    if let Some(icon) = guild.icon {
+        builder = builder.thumbnail(
+            ImageSource::url(Cdn::guild_icon(guild.id, icon)).into_diagnostic()?,
+        );
+    }
+
+    let embed = builder.validate()
         .into_diagnostic()?
         .build();
 
