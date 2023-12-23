@@ -271,14 +271,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .title(guild.name);
 
     if let Some(icon) = guild.icon {
-        builder = builder.thumbnail(
-            ImageSource::url(Cdn::guild_icon(guild.id, icon)).into_diagnostic()?,
-        );
+        builder =
+            builder.thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, icon)).into_diagnostic()?);
     }
 
-    let embed = builder.validate()
-        .into_diagnostic()?
-        .build();
+    let embed = builder.validate().into_diagnostic()?.build();
 
     interaction_client
         .create_response(

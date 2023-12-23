@@ -6,7 +6,7 @@
 
 ## API Backend
 
-## Bors Buildbot
+- **Changed:** use database pools for database queries
 
 ## Buildsystem
 
@@ -18,10 +18,16 @@
 ## Discord Frontend
 
 - **Changed:** migrated cache repositories to PostgreSQL
+- **Changed:** completed `/info role` command
+- **Changed:** use database pools for database queries
 
 ## Localization Infrastructure
 
+- **Fixed:** fixed path related bugs when running the bot and looking for the localization bundles
+
 ## Rust Utilities
+
+- **Added:** added database pool
 
 ## Web Frontend
 
