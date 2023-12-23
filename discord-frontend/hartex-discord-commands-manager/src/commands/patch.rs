@@ -27,6 +27,7 @@ use std::io::Read;
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::net::TcpStream;
+use hartex_discord_core::tokio::task::spawn;
 use hartex_log::log;
 use hyper::client::conn::http2::handshake;
 use hyper::header::ACCEPT;
@@ -35,6 +36,7 @@ use hyper::header::CONTENT_TYPE;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
+use hyper::Uri;
 use hyper_util::rt::TokioExecutor;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
@@ -88,12 +90,23 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
     let mut json = String::new();
     file.read_to_string(&mut json).into_diagnostic()?;
 
-    let stream = TcpStream::connect("https://discord.com")
+    log::trace!("making tcp connection");
+    let uri = "https://discord.com".parse::<Uri>().into_diagnostic()?;
+    let host = uri.host().expect("uri has no host");
+    let port = uri.port_u16().unwrap_or(443);
+
+    let stream = TcpStream::connect(format!("{host}:{port}"))
         .await
         .into_diagnostic()?;
-    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+    let (mut sender, connection) = handshake(TokioExecutor::new(), TokioIo::new(stream))
         .await
         .into_diagnostic()?;
+
+    spawn(async move {
+        if let Err(err) = connection.await {
+            log::error!("TCP connection failed: {:?}", err);
+        }
+    });
 
     let application_id = env::var("APPLICATION_ID").into_diagnostic()?;
 
@@ -102,6 +115,7 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
         token.insert_str(0, "Bot ");
     }
 
+    log::trace!("sending request");
     let request = Request::builder()
         .uri(format!(
             "https://discord.com/api/v10/applications/{application_id}/commands/{command_id}"
