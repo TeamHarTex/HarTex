@@ -23,6 +23,15 @@
 botinfo-embed-title=運行情報
 botinfo-embed-botstarted-field-name=起動済み
 botinfo-embed-latency-field-name=遅延（ms）
+roleinfo-embed-description={$roleMention}の情報
+roleinfo-embed-generalinfo-field-name=一般情報
+roleinfo-embed-generalinfo-id-subfield-name=ID：
+roleinfo-embed-generalinfo-color-subfield-name=色：
+roleinfo-embed-attributes-field-name=属性
+roleinfo-embed-attributes-hoist-subfield-name=別にロールメンバーを表示：
+roleinfo-embed-attributes-managed-subfield-name=被管者：
+roleinfo-embed-attributes-mentionable-subfield-name=メンション可能：
+roleinfo-embed-attributes-position-subfield-name=位置：
 serverinfo-embed-generalinfo-field-name=一般情報
 serverinfo-embed-generalinfo-id-subfield-name=ID：
 serverinfo-embed-generalinfo-created-subfield-name=作成日時：
