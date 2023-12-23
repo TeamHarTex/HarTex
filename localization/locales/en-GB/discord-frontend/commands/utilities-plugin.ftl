@@ -31,6 +31,7 @@ roleinfo-embed-attributes-field-name=Attributes
 roleinfo-embed-attributes-hoist-subfield-name=Hoist:
 roleinfo-embed-attributes-managed-subfield-name=Managed:
 roleinfo-embed-attributes-mentionable-subfield-name=Mentionable:
+roleinfo-embed-attributes-position-subfield-name=Position:
 serverinfo-embed-generalinfo-field-name=General Information
 serverinfo-embed-generalinfo-id-subfield-name=ID:
 serverinfo-embed-generalinfo-created-subfield-name=Created:
