@@ -25,6 +25,7 @@
 #![deny(warnings)]
 
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 
@@ -36,6 +37,18 @@ impl Cdn {
     #[must_use]
     pub fn guild_icon(guild_id: Id<GuildMarker>, icon: ImageHash) -> String {
         let mut url = format!("{}icons/{guild_id}/{icon}", Self::URL_BASE);
+        if icon.is_animated() {
+            url.push_str(".gif");
+        } else {
+            url.push_str(".png");
+        }
+
+        url
+    }
+
+    #[must_use]
+    pub fn role_icon(role_id: Id<RoleMarker>, icon: ImageHash) -> String {
+        let mut url = format!("{}icons/{role_id}/{icon}", Self::URL_BASE);
         if icon.is_animated() {
             url.push_str(".gif");
         } else {
