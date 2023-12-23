@@ -29,7 +29,7 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_log::log;
-use hyper::client::conn::http2::handshake;
+use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_TYPE;
@@ -37,7 +37,6 @@ use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
 use hyper::Uri;
-use hyper_util::rt::TokioExecutor;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -98,7 +97,7 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
     let stream = TcpStream::connect(format!("{host}:{port}"))
         .await
         .into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+    let (mut sender, connection) = handshake(TokioIo::new(stream))
         .await
         .into_diagnostic()?;
 
@@ -126,7 +125,7 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
         .header(CONTENT_TYPE, "application/json")
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.6.0) CommandsManager",
         )
         .body(json)
         .into_diagnostic()?;
