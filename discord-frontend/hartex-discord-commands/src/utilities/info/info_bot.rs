@@ -34,6 +34,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::tokio::net::TcpStream;
+use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
@@ -41,12 +42,11 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_log::log;
 use http_body_util::BodyExt;
 use hyper::body::Buf;
-use hyper::client::conn::http2::handshake;
+use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
-use hyper_util::rt::TokioExecutor;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -56,16 +56,22 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let stream = TcpStream::connect("https://discord.com")
+    let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
+    let uri = format!("http://{}/api/v2/uptime", api_domain.clone());
+    let now = SystemTime::now();
+
+    let stream = TcpStream::connect(api_domain)
         .await
         .into_diagnostic()?;
-    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+    let (mut sender, connection) = handshake(TokioIo::new(stream))
         .await
         .into_diagnostic()?;
 
-    let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = format!("http://{api_domain}/api/v2/uptime");
-    let now = SystemTime::now();
+    spawn(async move {
+        if let Err(err) = connection.await {
+            log::error!("TCP connection failed: {:?}", err);
+        }
+    });
 
     log::debug!("sending a request to {}", &uri);
 
@@ -76,7 +82,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .header(ACCEPT, "application/json")
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) DiscordFrontend",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.6.0) DiscordFrontend",
         )
         .body(serde_json::to_string(&query).into_diagnostic()?)
         .into_diagnostic()?;
