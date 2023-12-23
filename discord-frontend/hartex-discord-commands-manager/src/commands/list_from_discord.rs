@@ -26,18 +26,19 @@ use clap::ArgMatches;
 use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::net::TcpStream;
+use hartex_discord_core::tokio::task::spawn;
 use hartex_log::log;
 use http_body_util::BodyExt;
 use http_body_util::Empty;
 use hyper::body::Buf;
 use hyper::body::Bytes;
-use hyper::client::conn::http2::handshake;
+use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
-use hyper_util::rt::TokioExecutor;
+use hyper::Uri;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use owo_colors::OwoColorize;
@@ -55,12 +56,23 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         token.insert_str(0, "Bot ");
     }
 
-    let stream = TcpStream::connect("https://discord.com")
+    log::trace!("making tcp connection");
+    let uri = "https://discord.com".parse::<Uri>().into_diagnostic()?;
+    let host = uri.host().expect("uri has no host");
+    let port = uri.port_u16().unwrap_or(443);
+
+    let stream = TcpStream::connect(format!("{host}:{port}"))
         .await
         .into_diagnostic()?;
-    let (mut sender, _) = handshake(TokioExecutor::new(), TokioIo::new(stream))
+    let (mut sender, connection) = handshake(TokioIo::new(stream))
         .await
         .into_diagnostic()?;
+
+    spawn(async move {
+        if let Err(err) = connection.await {
+            log::error!("TCP connection failed: {:?}", err);
+        }
+    });
 
     let mut uri = format!("https://discord.com/api/v10/applications/{application_id}/commands");
     if let Some(flag) = matches.get_one::<bool>("with-localizations")
@@ -76,11 +88,13 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .header(AUTHORIZATION, token)
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.6.0) CommandsManager",
         )
         .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
     let result = sender.send_request(request).await.into_diagnostic()?;
+    log::info!("received response with status {}", result.status());
+
     let body = result.collect().await.into_diagnostic()?.aggregate();
     let commands: Vec<Command> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
