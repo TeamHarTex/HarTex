@@ -44,11 +44,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
-    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let langid_locale = interaction
         .locale
         .clone()
         .and_then(|locale| locale.parse().ok());
+    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::Role(role_id) = options
