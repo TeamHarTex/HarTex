@@ -63,7 +63,9 @@ impl LocalizationBundleHolder {
                 continue;
             };
 
-            let bundle = load_bundle(base_path.clone(), lang_ident)?;
+            let Ok(bundle) = load_bundle(base_path.clone(), lang_ident) else {
+                continue;
+            };
             bundles.insert(lang_name.to_string(), bundle);
         }
 

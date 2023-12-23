@@ -35,7 +35,7 @@ pub fn lint_command(matches: &ArgMatches) -> miette::Result<()> {
     let len = project_names.len();
 
     for (i, project_name) in project_names.enumerate() {
-        println!("Linting {project_name} ({} / {})", i + 1, len);
+        println!("[{}/{len}] Linting {project_name}", i + 1);
 
         let Some(project) = file.projects.get(project_name) else {
             println!("{:?}", Report::from(ProjectNotFound {
@@ -45,7 +45,10 @@ pub fn lint_command(matches: &ArgMatches) -> miette::Result<()> {
             continue;
         };
 
-        project.lint(project_name.clone())?;
+        if let Err(error) = project.lint(project_name.clone()) {
+            println!("{error:?}");
+            continue;
+        }
     }
 
     Ok(())

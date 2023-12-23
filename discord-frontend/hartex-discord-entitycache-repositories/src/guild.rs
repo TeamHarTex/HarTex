@@ -23,8 +23,11 @@
 //! # Guild Repository
 
 use std::borrow::Cow;
-use std::env;
+use std::pin::Pin;
+use std::str::FromStr;
 
+use hartex_database_queries::discord_frontend::queries::cached_guild_select_by_id::cached_guild_select_by_id;
+use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::GuildFeature;
@@ -34,101 +37,73 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
-use redis::AsyncCommands;
-use redis::Client;
+use hartex_discord_utils::DATABASE_POOL;
+use tokio_postgres::GenericClient;
 
 /// Repository for guild entities.
 pub struct CachedGuildRepository;
 
 impl Repository<GuildEntity> for CachedGuildRepository {
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
-        let default_message_notifications = connection
-            .get::<String, u8>(format!("guild:{id}:default_message_notifications"))
-            .await?;
-        let explicit_content_filter = connection
-            .get::<String, u8>(format!("guild:{id}:explicit_content_filter"))
-            .await?;
-        let features = connection
-            .get::<String, String>(format!("guild:{id}:features"))
-            .await?
-            .split(',')
-            .map(|str| GuildFeature::from(str.to_string()))
-            .collect::<Vec<_>>();
-        let icon = connection
-            .get::<String, Option<String>>(format!("guild:{id}:icon"))
-            .await?;
-        let large = connection
-            .get::<String, bool>(format!("guild:{id}:large"))
-            .await?;
-        let name = connection
-            .get::<String, String>(format!("guild:{id}:name"))
-            .await?;
-        let owner_id = connection
-            .get::<String, u64>(format!("guild:{id}:owner_id"))
+        let data = cached_guild_select_by_id()
+            .bind(client, &id.to_string())
+            .one()
             .await?;
 
         Ok(GuildEntity {
             default_message_notifications: DefaultMessageNotificationLevel::from(
-                default_message_notifications,
+                data.default_message_notifications as u8,
             ),
-            explicit_content_filter: ExplicitContentFilter::from(explicit_content_filter),
-            features,
-            icon: icon.map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
+            explicit_content_filter: ExplicitContentFilter::from(
+                data.explicit_content_filter as u8,
+            ),
+            features: data
+                .features
+                .iter()
+                .cloned()
+                .map(GuildFeature::from)
+                .collect(),
+            icon: data
+                .icon
+                .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
-            large,
-            name,
-            owner_id: Id::new_checked(owner_id).expect("id is zero (unexpected and unreachable)"),
+            large: data.large,
+            name: data.name,
+            owner_id: Id::from_str(&data.owner_id)
+                .expect("id is zero (unexpected and unreachable)"),
         })
     }
 
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
-        let pass = env::var("DOCKER_REDIS_REQUIREPASS")?;
-        let client = Client::open(format!("redis://:{pass}@127.0.0.1/"))?;
-        let mut connection = client.get_tokio_connection().await?;
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
 
-        if let Some(icon) = entity.icon {
-            connection
-                .set(format!("guild:{}:icon", entity.id), icon.to_string())
-                .await?;
-        }
-
-        connection
-            .set(
-                format!("guild:{}:default_message_notifications", entity.id),
-                u8::from(entity.default_message_notifications),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:explicit_content_filter", entity.id),
-                u8::from(entity.explicit_content_filter),
-            )
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:features", entity.id),
-                entity
+        cached_guild_upsert()
+            .bind(
+                client,
+                &i32::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
+                    entity.default_message_notifications,
+                )),
+                &i32::from(<ExplicitContentFilter as Into<u8>>::into(
+                    entity.explicit_content_filter,
+                )),
+                &entity
                     .features
-                    .into_iter()
-                    .map(Into::into)
-                    .collect::<Vec<Cow<'static, str>>>()
-                    .join(","),
-            )
-            .await?;
-        connection
-            .set(format!("guild:{}:large", entity.id), entity.large)
-            .await?;
-        connection
-            .set(format!("guild:{}:name", entity.id), entity.name)
-            .await?;
-        connection
-            .set(
-                format!("guild:{}:owner_id", entity.id),
-                entity.owner_id.get(),
+                    .iter()
+                    .map(|feature| feature.clone().into())
+                    .collect::<Vec<Cow<'static, str>>>(),
+                &entity.icon.map(|hash| hash.to_string()),
+                &entity.large,
+                &entity.name,
+                &entity.owner_id.to_string(),
+                &entity.id.to_string(),
             )
             .await?;
 

@@ -1,6 +1,6 @@
 [package]
 name = "hartex_localization_core"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 Localization infrastructure for HarTex.
@@ -19,6 +19,6 @@ fluent-syntax = "0.11.0"
 intl-memoizer = "0.5.1"
 lazy_static = "1.4.0"
 miette = "5.10.0"
-unic-langid = { version = "0.9.1", features = ["macros"] }
+unic-langid = { version = "0.9.4", features = ["macros"] }
 
 [features]

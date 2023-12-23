@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_commands"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 Commands for the bot.
@@ -15,7 +15,7 @@ hartex_backend_models = { path = "../../api-backend/hartex-backend-models" }
 hartex_backend_models_v2 = { path = "../../api-backend/hartex-backend-models-v2" }
 
 hartex_discord_cdn = { path = "../hartex-discord-cdn" }
-hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-http", "discord-mention", "discord-model", "discord-util", "discord-util-builder", "discord-util-snowflake"] }
+hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "discord-http", "discord-mention", "discord-model", "discord-util", "discord-util-builder", "discord-util-snowflake"] }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core", features = ["derive"] }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_repositories = { path = "../hartex-discord-entitycache-repositories" }
@@ -27,7 +27,9 @@ hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
 fluent-bundle = "0.15.2"
 futures = "0.3.29"
-hyper = { version = "0.14.27", features = ["client", "http2"] }
+http-body-util = "0.1.0"
+hyper = { version = "1.1.0", features = ["client", "http2"] }
+hyper-util = { version = "0.1.2", features = ["http2", "tokio"] }
 miette = "5.10.0"
 serde_json = "1.0.108"
 

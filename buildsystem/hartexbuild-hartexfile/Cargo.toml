@@ -1,6 +1,6 @@
 [package]
 name = "hartexbuild_hartexfile"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 HarTexfile specification for HarTex buildsystem
@@ -14,7 +14,7 @@ rust-version = "1.76.0"
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 
 miette = "5.10.0"
-serde = { version = "1.0.192", features = ["derive"] }
+serde = { version = "1.0.193", features = ["derive"] }
 hcl-rs = "0.16.6"
 
 [features]

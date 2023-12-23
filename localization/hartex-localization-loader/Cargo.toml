@@ -1,6 +1,6 @@
 [package]
 name = "hartex_localization_loader"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 Localization loader for HarTex.
@@ -15,7 +15,7 @@ fluent-bundle = "0.15.2"
 fluent-syntax = "0.11.0"
 intl-memoizer = "0.5.1"
 miette = "5.10.0"
-unic-langid = { version = "0.9.1", features = ["macros"] }
+unic-langid = { version = "0.9.4", features = ["macros"] }
 walkdir = "2.4.0"
 
 [features]

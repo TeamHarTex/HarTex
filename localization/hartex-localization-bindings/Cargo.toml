@@ -1,6 +1,6 @@
 [package]
 name = "hartex_localization_bindings"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 Localization bindings for HarTex.
@@ -17,10 +17,10 @@ fluent-bundle = "0.15.2"
 fluent-syntax = "0.11.0"
 intl-memoizer = "0.5.1"
 miette = "5.10.0"
-proc-macro2 = "1.0.69"
+proc-macro2 = "1.0.71"
 quote = "1.0.33"
-syn = "2.0.39"
-unic-langid = { version = "0.9.1", features = ["macros"] }
+syn = "2.0.42"
+unic-langid = { version = "0.9.4", features = ["macros"] }
 
 [lib]
 name = "hartex_localization_bindings"

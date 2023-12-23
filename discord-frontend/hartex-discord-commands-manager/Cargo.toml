@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_commands_manager"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 description = """
 The commands manager of the bot.
@@ -15,12 +15,14 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net"
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-clap = "4.4.8"
-hyper = { version = "0.14.27", features = ["client", "http2"] }
+clap = "4.4.11"
+hyper = { version = "1.1.0", features = ["client", "http2"] }
 hyper-trust-dns = { version = "0.5.0", features = ["native-tls"] }
+hyper-util = { version = "0.1.2", features = ["http2", "tokio"] }
+http-body-util = "0.1.0"
 miette = { version = "5.10.0", features = ["fancy"] }
-owo-colors = "3.5.0"
-serde = { version = "1.0.192", features = ["derive"] }
+owo-colors = "4.0.0"
+serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
 walkdir = "2.4.0"
 

@@ -24,11 +24,19 @@
 //!
 //! Various useful Discord utilities.
 
+#![feature(const_async_blocks)]
+#![feature(type_alias_impl_trait)]
+
 use std::env;
+use std::future::Future;
 use std::ops::Deref;
 
+use async_once_cell::Lazy as AsyncLazy;
+use bb8_postgres::bb8::Pool;
+use bb8_postgres::PostgresConnectionManager;
 use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
+use tokio_postgres::NoTls;
 
 pub mod localizable;
 pub mod markdown;
@@ -40,6 +48,19 @@ pub static CLIENT: Lazy<Client> = Lazy::new(|| {
         .proxy(String::from("localhost:3000"), true)
         .ratelimiter(None)
         .build()
+});
+
+pub type PostgresPool = Pool<PostgresConnectionManager<NoTls>>;
+pub type DatabasePoolFuture = impl Future<Output = PostgresPool>;
+pub static DATABASE_POOL: AsyncLazy<
+    PostgresPool,
+    DatabasePoolFuture,
+> = AsyncLazy::new(async {
+    let hartex_pgsql_url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
+
+    let manager = PostgresConnectionManager::new_from_stringlike(hartex_pgsql_url, NoTls).unwrap();
+
+    Pool::builder().build(manager).await.unwrap()
 });
 
 /// The bot token used for logging in to the Discord gateway and sending HTTP requests.
