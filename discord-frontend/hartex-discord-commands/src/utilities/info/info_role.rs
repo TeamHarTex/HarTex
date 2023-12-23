@@ -31,6 +31,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
+use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
@@ -44,6 +45,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let langid_locale = interaction
+        .locale
+        .clone()
+        .and_then(|locale| locale.parse().ok());
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::Role(role_id) = options
@@ -65,6 +70,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
     let roleinfo_embed_attributes_field_name =
         localizer.utilities_plugin_roleinfo_embed_attributes_field_name()?;
+    let roleinfo_embed_attributes_hoist_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_attributes_hoist_subfield_name()?;
 
     let role = CachedRoleRepository
         .get((interaction.guild_id.unwrap(), role_id))
@@ -85,7 +92,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         ))
         .field(EmbedFieldBuilder::new(
             format!("{roleinfo_embed_attributes_field_name}"),
-            ""
+            format!(
+                "{} {}",
+                roleinfo_embed_attributes_hoist_subfield_name,
+                role.hoist.localize(langid_locale)?,
+            ),
         ))
         .build();
 
