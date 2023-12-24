@@ -35,6 +35,7 @@ use hyper::body::Bytes;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
+use hyper::header::CONTENT_LENGTH;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
@@ -81,6 +82,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         uri.push_str("?with_localizations=true");
     }
 
+    log::trace!("sending request");
     let request = Request::builder()
         .uri(uri)
         .method(Method::GET)
@@ -90,6 +92,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
             USER_AGENT,
             "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.6.0) CommandsManager",
         )
+        .header(CONTENT_LENGTH, 0)
         .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
     let result = sender.send_request(request).await.into_diagnostic()?;
