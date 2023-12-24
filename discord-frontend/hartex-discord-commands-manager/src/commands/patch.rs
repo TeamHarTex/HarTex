@@ -29,7 +29,9 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_log::log;
+use http_body_util::BodyExt;
 use http_body_util::Full;
+use hyper::body::Buf;
 use hyper::body::Bytes;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
@@ -43,6 +45,7 @@ use hyper::Uri;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
+use minify::json::minify;
 use walkdir::WalkDir;
 
 /// Patch a command.
@@ -117,8 +120,9 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
         token.insert_str(0, "Bot ");
     }
 
-    log::trace!("sending request");
-    let bytes = Bytes::from(json);
+    let bytes = Bytes::from(minify(&json));
+
+    log::trace!("sending request with body {:?}", bytes.clone());
     let request = Request::builder()
         .uri(format!(
             "https://discord.com/api/v10/applications/{application_id}/commands/{command_id}"
@@ -137,6 +141,10 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
     let result = sender.send_request(request).await.into_diagnostic()?;
 
     log::info!("received response with status {}", result.status());
+    let body = result.collect().await.into_diagnostic()?.aggregate();
+    let mut string = String::new();
+    body.reader().read_to_string(&mut string).into_diagnostic()?;
+    log::info!("response body: {string:?}");
 
     Ok(())
 }
