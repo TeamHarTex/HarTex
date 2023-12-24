@@ -116,8 +116,9 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
         token.insert_str(0, "Bot ");
     }
 
-    log::trace!("sending request");
     let bytes = Bytes::from(json);
+
+    log::trace!("sending request with body {:?}", bytes.clone());
     let request = Request::builder()
         .uri(format!(
             "https://discord.com/api/v10/applications/{application_id}/commands"
