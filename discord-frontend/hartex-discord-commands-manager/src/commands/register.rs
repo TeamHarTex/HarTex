@@ -29,9 +29,12 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_log::log;
+use http_body_util::Full;
+use hyper::body::Bytes;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
+use hyper::header::CONTENT_LENGTH;
 use hyper::header::CONTENT_TYPE;
 use hyper::header::USER_AGENT;
 use hyper::Method;
@@ -113,6 +116,9 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
         token.insert_str(0, "Bot ");
     }
 
+    let bytes = Bytes::from(json);
+
+    log::trace!("sending request with body {:?}", bytes.clone());
     let request = Request::builder()
         .uri(format!(
             "https://discord.com/api/v10/applications/{application_id}/commands"
@@ -121,11 +127,12 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
         .header(ACCEPT, "application/json")
         .header(AUTHORIZATION, token)
         .header(CONTENT_TYPE, "application/json")
+        .header(CONTENT_LENGTH, bytes.len())
         .header(
             USER_AGENT,
             "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
         )
-        .body(json)
+        .body(Full::<Bytes>::new(bytes))
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
