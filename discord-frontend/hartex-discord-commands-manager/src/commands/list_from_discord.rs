@@ -21,6 +21,7 @@
  */
 
 use std::env;
+use std::io::Read;
 
 use clap::ArgMatches;
 use hartex_discord_core::discord::model::application::command::Command;
@@ -98,7 +99,16 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     let result = sender.send_request(request).await.into_diagnostic()?;
     log::info!("received response with status {}", result.status());
 
-    let body = result.collect().await.into_diagnostic()?.aggregate();
+    if !result.status().is_success() {
+        let body = result.into_body().collect().await.into_diagnostic()?.aggregate();
+        let mut string = String::new();
+        body.reader().read_to_string(&mut string).into_diagnostic()?;
+        log::info!("response body: {string:?}");
+
+        return Ok(());
+    }
+
+    let body = result.into_body().collect().await.into_diagnostic()?.aggregate();
     let commands: Vec<Command> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     for command in commands {
