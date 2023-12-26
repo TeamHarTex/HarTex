@@ -141,7 +141,7 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
     let result = sender.send_request(request).await.into_diagnostic()?;
 
     log::info!("received response with status {}", result.status());
-    let body = result.collect().await.into_diagnostic()?.aggregate();
+    let body = result.into_body().collect().await.into_diagnostic()?.aggregate();
     let mut string = String::new();
     body.reader().read_to_string(&mut string).into_diagnostic()?;
     log::info!("response body: {string:?}");
