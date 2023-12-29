@@ -26,8 +26,8 @@ use std::io::Read;
 
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
+use hartex_discord_utils::hyper::tls_stream;
 use hartex_log::log;
 use http_body_util::Full;
 use hyper::body::Bytes;
@@ -36,10 +36,10 @@ use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_LENGTH;
 use hyper::header::CONTENT_TYPE;
+use hyper::header::HOST;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
-use hyper::Uri;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -92,16 +92,8 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
     file.read_to_string(&mut json).into_diagnostic()?;
 
     log::trace!("making tcp connection");
-    let uri = "https://discord.com".parse::<Uri>().into_diagnostic()?;
-    let host = uri.host().expect("uri has no host");
-    let port = uri.port_u16().unwrap_or(443);
-
-    let stream = TcpStream::connect(format!("{host}:{port}"))
-        .await
-        .into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioIo::new(stream))
-        .await
-        .into_diagnostic()?;
+    let stream = tls_stream().await?;
+    let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {
@@ -120,10 +112,9 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
 
     log::trace!("sending request with body {:?}", bytes.clone());
     let request = Request::builder()
-        .uri(format!(
-            "https://discord.com/api/v10/applications/{application_id}/commands"
-        ))
+        .uri(format!("/api/v10/applications/{application_id}/commands"))
         .method(Method::POST)
+        .header(HOST, "discord.com")
         .header(ACCEPT, "application/json")
         .header(AUTHORIZATION, token)
         .header(CONTENT_TYPE, "application/json")

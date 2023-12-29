@@ -11,7 +11,7 @@ rust-version = "1.77.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", features = ["discord-http", "discord-model"] }
+hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", features = ["async-net", "async-runtime", "discord-http", "discord-model"] }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
@@ -20,6 +20,8 @@ bb8-postgres = "0.8.1"
 miette = "5.10.0"
 once_cell = "1.19.0"
 tokio-postgres = "0.7.10"
+tokio-rustls = { version = "0.25.0", features = ["ring"] }
 unic-langid = "0.9.4"
+webpki-roots = "0.26.0"
 
 [features]
