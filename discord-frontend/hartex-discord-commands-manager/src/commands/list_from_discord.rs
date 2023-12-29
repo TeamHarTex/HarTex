@@ -24,7 +24,6 @@ use std::env;
 use std::io::Read;
 
 use clap::ArgMatches;
-use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::hyper::tls_stream;
@@ -43,7 +42,8 @@ use hyper::Method;
 use hyper::Request;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
-use owo_colors::OwoColorize;
+
+use crate::model::command::CommandManagerCommand;
 
 /// List commands from discord.
 #[allow(clippy::module_name_repetitions)]
@@ -69,9 +69,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     });
 
     let mut uri = format!("/api/v10/applications/{application_id}/commands");
-    if let Some(flag) = matches.get_one::<bool>("with-localizations")
-        && *flag
-    {
+    if matches.get_flag("with-localizations") {
         uri.push_str("?with_localizations=true");
     }
 
@@ -114,21 +112,11 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .await
         .into_diagnostic()?
         .aggregate();
-    let commands: Vec<Command> = serde_json::from_reader(body.reader()).into_diagnostic()?;
+
+    let commands: Vec<CommandManagerCommand> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     for command in commands {
-        println!();
-        println!(
-            "{}{}",
-            "Command ID: ".bold(),
-            command.id.unwrap().bright_cyan()
-        );
-        println!("{}{}", "Command Name: ".bold(), command.name.bright_cyan());
-        println!(
-            "{}{}",
-            "Command Description: ".bold(),
-            command.description.bright_cyan()
-        );
+        println!("{command}");
     }
 
     Ok(())
