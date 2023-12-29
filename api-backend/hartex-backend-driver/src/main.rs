@@ -95,7 +95,8 @@ pub async fn main() -> miette::Result<()> {
         )
         .route(
             "/api/:version/stats/uptime",
-            post(hartex_backend_routes::uptime::post_uptime),
+            post(hartex_backend_routes::uptime::post_uptime)
+                .patch(hartex_backend_routes::uptime::patch_uptime),
         )
         .with_state(pool);
 
