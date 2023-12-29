@@ -1264,6 +1264,7 @@ version = "0.6.0"
 dependencies = [
  "chrono",
  "futures-util",
+ "hartex_backend_models_v2",
  "hartex_database_queries",
  "hartex_discord_commands",
  "hartex_discord_commands_core",
@@ -1273,6 +1274,8 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",
+ "hyper 1.1.0",
+ "hyper-util",
  "miette",
  "once_cell",
  "rdkafka",
