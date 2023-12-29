@@ -60,12 +60,8 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
     let uri = format!("http://{}/api/v2/stats/uptime", api_domain.clone());
     let now = SystemTime::now();
 
-    let stream = TcpStream::connect(api_domain)
-        .await
-        .into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioIo::new(stream))
-        .await
-        .into_diagnostic()?;
+    let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
+    let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {

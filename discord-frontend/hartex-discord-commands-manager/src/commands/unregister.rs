@@ -24,8 +24,8 @@ use std::env;
 
 use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
+use hartex_discord_utils::hyper::tls_stream;
 use hartex_log::log;
 use http_body_util::Empty;
 use hyper::body::Bytes;
@@ -33,10 +33,10 @@ use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_LENGTH;
+use hyper::header::HOST;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
-use hyper::Uri;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 
@@ -49,16 +49,8 @@ pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
     let command_id = matches.get_one::<String>("command-id").unwrap().clone();
 
     log::trace!("making tcp connection");
-    let uri = "https://discord.com".parse::<Uri>().into_diagnostic()?;
-    let host = uri.host().expect("uri has no host");
-    let port = uri.port_u16().unwrap_or(443);
-
-    let stream = TcpStream::connect(format!("{host}:{port}"))
-        .await
-        .into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioIo::new(stream))
-        .await
-        .into_diagnostic()?;
+    let stream = tls_stream().await?;
+    let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {
@@ -76,9 +68,10 @@ pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
     log::trace!("sending request");
     let request = Request::builder()
         .uri(format!(
-            "https://discord.com/api/v10/applications/{application_id}/commands/{command_id}"
+            "/api/v10/applications/{application_id}/commands/{command_id}"
         ))
         .method(Method::DELETE)
+        .header(HOST, "discord.com")
         .header(ACCEPT, "application/json")
         .header(AUTHORIZATION, token)
         .header(CONTENT_LENGTH, 0)
