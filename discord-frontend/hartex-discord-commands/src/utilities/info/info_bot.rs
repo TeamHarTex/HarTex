@@ -44,7 +44,7 @@ use http_body_util::BodyExt;
 use hyper::body::Buf;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
-use hyper::header::USER_AGENT;
+use hyper::header::CONTENT_TYPE;
 use hyper::Method;
 use hyper::Request;
 use hyper_util::rt::TokioIo;
@@ -76,10 +76,7 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
         .uri(uri)
         .method(Method::POST)
         .header(ACCEPT, "application/json")
-        .header(
-            USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.6.0) DiscordFrontend",
-        )
+        .header(CONTENT_TYPE, "application/json")
         .body(serde_json::to_string(&query).into_diagnostic()?)
         .into_diagnostic()?;
 
