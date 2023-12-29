@@ -28,5 +28,4 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-pub mod bors;
 pub mod uptime;
