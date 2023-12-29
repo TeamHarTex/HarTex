@@ -45,6 +45,8 @@ use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use owo_colors::OwoColorize;
 
+use crate::model::command::CommandManagerCommand;
+
 /// List commands from discord.
 #[allow(clippy::module_name_repetitions)]
 pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()> {
@@ -69,7 +71,8 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     });
 
     let mut uri = format!("/api/v10/applications/{application_id}/commands");
-    if matches.get_flag("with-localizations") {
+    let with_localizations = matches.get_flag("with-localizations");
+    if with_localizations {
         uri.push_str("?with_localizations=true");
     }
 
@@ -112,6 +115,16 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .await
         .into_diagnostic()?
         .aggregate();
+    if with_localizations {
+        let commands: Vec<CommandManagerCommand> = serde_json::from_reader(body.reader()).into_diagnostic()?;
+
+        for command in commands {
+            println!("{command}");
+        }
+
+        return Ok(());
+    }
+
     let commands: Vec<Command> = serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     for command in commands {
