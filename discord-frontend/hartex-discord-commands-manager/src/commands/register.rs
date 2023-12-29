@@ -130,7 +130,7 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
         .header(CONTENT_LENGTH, bytes.len())
         .header(
             USER_AGENT,
-            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.5.1) CommandsManager",
+            "DiscordBot (https://github.com/TeamHarTex/HarTex, v0.6.0) CommandsManager",
         )
         .body(Full::<Bytes>::new(bytes))
         .into_diagnostic()?;
