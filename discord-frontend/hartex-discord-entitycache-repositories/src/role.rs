@@ -60,6 +60,7 @@ impl CachedRoleRepository {
 impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_lossless)]
     #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
@@ -85,6 +86,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         })
     }
 
+    #[allow(clippy::cast_lossless)]
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
