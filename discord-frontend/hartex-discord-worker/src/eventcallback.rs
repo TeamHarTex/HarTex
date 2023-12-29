@@ -125,13 +125,13 @@ pub async fn invoke(
                 let query = UptimeUpdate::new("HarTex Nightly", duration.as_secs() as u128);
                 let request = Request::builder()
                     .uri(uri)
-                    .method(Method::POST)
+                    .method(Method::PATCH)
                     .header(ACCEPT, "application/json")
                     .header(CONTENT_TYPE, "application/json")
                     .body(serde_json::to_string(&query).into_diagnostic()?)
                     .into_diagnostic()?;
 
-                let result = sender.send_request(request).await.into_diagnostic()?;
+                sender.send_request(request).await.into_diagnostic()?;
 
                 Ok(())
             }
