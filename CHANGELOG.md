@@ -7,27 +7,35 @@
 ## API Backend
 
 - **Changed:** use database pools for database queries
+- **Changed:** bumped `rust-version` to 1.77.0
 
 ## Buildsystem
 
 - **Added:** added `update` commands to update dependencies of (a) project(s)
 - **Added:** added task completion duration
+- **Changed:** bumped `rust-version` to 1.77.0
 
 ## Database Queries
+
+- **Added:** added various queries for cache usage
+- **Changed:** bumped `rust-version` to 1.77.0
 
 ## Discord Frontend
 
 - **Changed:** migrated cache repositories to PostgreSQL
 - **Changed:** completed `/info role` command
 - **Changed:** use database pools for database queries
+- **Changed:** bumped `rust-version` to 1.77.0
 
 ## Localization Infrastructure
 
 - **Fixed:** fixed path related bugs when running the bot and looking for the localization bundles
+- **Changed:** bumped `rust-version` to 1.77.0
 
 ## Rust Utilities
 
 - **Added:** added database pool
+- **Changed:** bumped `rust-version` to 1.77.0
 
 ## Web Frontend
 
