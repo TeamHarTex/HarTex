@@ -26,6 +26,7 @@
 - **Changed:** completed `/info role` command
 - **Changed:** use database pools for database queries
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Fixed:** fixed the requests sent by command manager
 
 ## Localization Infrastructure
 
