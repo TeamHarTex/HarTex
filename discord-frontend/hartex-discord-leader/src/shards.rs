@@ -42,7 +42,7 @@ pub async fn obtain(queue: &Arc<dyn Queue + Send + Sync>) -> miette::Result<Vec<
     let config = Config::new(TOKEN.deref().clone(), Intents::all());
 
     Ok(
-        stream::create_recommended(&*CLIENT, config, |shard_id, builder| {
+        stream::create_recommended(&CLIENT, config, |shard_id, builder| {
             builder
                 .event_types(EventTypeFlags::all())
                 .presence(UpdatePresencePayload {
