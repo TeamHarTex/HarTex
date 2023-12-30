@@ -113,7 +113,8 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .into_diagnostic()?
         .aggregate();
 
-    let commands: Vec<CommandManagerCommand> = serde_json::from_reader(body.reader()).into_diagnostic()?;
+    let commands: Vec<CommandManagerCommand> =
+        serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     for command in commands {
         println!("{command}");

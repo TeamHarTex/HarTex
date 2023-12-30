@@ -114,6 +114,12 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_serverinfo_embed_roleinfo_field_name()?;
     let serverinfo_embed_roleinfo_rolecount_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_roleinfo_rolecount_subfield_name()?;
+    let serverinfo_embed_nitroinfo_field_name =
+        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_name()?;
+    let serverinfo_embed_nitroinfo_boostlevel_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_boostlevel_subfield_name()?;
+    let serverinfo_embed_nitroinfo_boosts_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_boosts_subfield_name()?;
     let serverinfo_embed_flags_field_name =
         localizer.utilities_plugin_serverinfo_embed_flags_field_name()?;
     let serverinfo_embed_flags_large_subfield_name =
@@ -256,18 +262,36 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 roles.len(),
             ),
         ))
-        .field(EmbedFieldBuilder::new(
-            serverinfo_embed_flags_field_name,
-            format!(
-                "{} {}\n{} {}",
-                serverinfo_embed_flags_large_subfield_name,
-                guild.large.localize(langid_locale.clone())?,
-                serverinfo_embed_flags_default_message_notifications_subfield_name,
-                guild
-                    .default_message_notifications
-                    .localize(langid_locale)?
-            ),
-        ))
+        .field(
+            EmbedFieldBuilder::new(
+                format!(
+                    "<:nitroBoost:1190566150963200030> {serverinfo_embed_nitroinfo_field_name}"
+                ),
+                format!(
+                    "{} {}\n{} {}",
+                    serverinfo_embed_nitroinfo_boostlevel_subfield_name,
+                    guild.premium_tier.localize(langid_locale.clone())?,
+                    serverinfo_embed_nitroinfo_boosts_subfield_name,
+                    guild.premium_subscription_count.unwrap_or_default(),
+                ),
+            )
+            .inline(),
+        )
+        .field(
+            EmbedFieldBuilder::new(
+                serverinfo_embed_flags_field_name,
+                format!(
+                    "{} {}\n{} {}",
+                    serverinfo_embed_flags_large_subfield_name,
+                    guild.large.localize(langid_locale.clone())?,
+                    serverinfo_embed_flags_default_message_notifications_subfield_name,
+                    guild
+                        .default_message_notifications
+                        .localize(langid_locale)?
+                ),
+            )
+            .inline(),
+        )
         .title(guild.name);
 
     if let Some(icon) = guild.icon {
