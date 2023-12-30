@@ -2,7 +2,7 @@
 SELECT
     *
 FROM
-    "DiscordFrontendNightly".public."CachedRoles"
+    "DiscordFrontend"."Nightly"."CachedRoles"
 WHERE
     "id" = :id AND
     "guild_id" = :guild_id;
