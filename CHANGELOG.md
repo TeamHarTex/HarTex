@@ -6,6 +6,7 @@
 
 ## API Backend
 
+- **Added:** added `PATCH /stats/uptime` API
 - **Changed:** use database pools for database queries
 - **Changed:** bumped `rust-version` to 1.77.0
 
@@ -22,20 +23,28 @@
 
 ## Discord Frontend
 
+- **Added:** added framework for `/info user` command
 - **Changed:** migrated cache repositories to PostgreSQL
 - **Changed:** completed `/info role` command
 - **Changed:** use database pools for database queries
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Changed:** implemented nitro boosting information to `/info server` command
+- **Changed:** imlpemented nitro boosting related fields to guild entity
+- **Fixed:** fixed the `/info bot` command
 - **Fixed:** fixed the requests sent by command manager
+- **Fixed:** fixed the `--with-localizations` flag in the command manager
 
 ## Localization Infrastructure
 
+- **Added:** added various localizatoin entries for more features
 - **Fixed:** fixed path related bugs when running the bot and looking for the localization bundles
 - **Changed:** bumped `rust-version` to 1.77.0
 
 ## Rust Utilities
 
 - **Added:** added database pool
+- **Added:** added functionality to create a TCP stream with TLS for use with hyper to use HTTPS
+- **Added:** make a twilight `PremiumTier` localizable
 - **Changed:** bumped `rust-version` to 1.77.0
 
 ## Web Frontend
