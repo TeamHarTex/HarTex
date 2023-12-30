@@ -114,6 +114,12 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_serverinfo_embed_roleinfo_field_name()?;
     let serverinfo_embed_roleinfo_rolecount_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_roleinfo_rolecount_subfield_name()?;
+    let serverinfo_embed_nitroinfo_field_name =
+        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_name()?;
+    let serverinfo_embed_nitroinfo_boostlevel_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_boostlevel_subfield_name()?;
+    let serverinfo_embed_nitroinfo_boosts_subfield_name =
+        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_boosts_subfield_name()?;
     let serverinfo_embed_flags_field_name =
         localizer.utilities_plugin_serverinfo_embed_flags_field_name()?;
     let serverinfo_embed_flags_large_subfield_name =
@@ -254,6 +260,16 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 "{} {}",
                 serverinfo_embed_roleinfo_rolecount_subfield_name,
                 roles.len(),
+            ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            format!("<:nitroBoost:1190566150963200030> {serverinfo_embed_nitroinfo_field_name}"),
+            format!(
+                "{} {}\n{} {}",
+                serverinfo_embed_nitroinfo_boostlevel_subfield_name,
+                guild.premium_tier,
+                serverinfo_embed_nitroinfo_boosts_subfield_name,
+                guild.premium_subscription_count.unwrap_or_default(),
             ),
         ))
         .field(EmbedFieldBuilder::new(
