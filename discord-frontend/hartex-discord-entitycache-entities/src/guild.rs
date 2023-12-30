@@ -28,12 +28,13 @@ use hartex_discord_entitycache_core::entity;
 #[entity(
     from = "twilight_model::guild::Guild",
     id = ["id"],
-    include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
+    include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "premium_subscription_count", "premium_tier", "owner_id"],
     extra = [],
     overrides = [
         "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel",
         "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
-        "GuildFeature": "twilight_model::guild::GuildFeature"
+        "GuildFeature": "twilight_model::guild::GuildFeature",
+        "PremiumTier": "twilight_model::guild::PremiumTier",
     ],
 )]
 pub struct GuildEntity;

@@ -2,6 +2,6 @@
 SELECT
     *
 FROM
-    "DiscordFrontendNightly".public."CachedMembers"
+    "DiscordFrontend"."Nightly"."CachedMembers"
 WHERE
     "guild_id" = :guild_id;
