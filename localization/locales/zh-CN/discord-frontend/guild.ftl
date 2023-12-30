@@ -23,3 +23,8 @@
 default-message-notification-level-all=全部
 default-message-notification-level-mentions=提及
 default-message-notification-level-unknown=未知
+premium-tier-none=无
+premium-tier-one=等级 1
+premium-tier-two=等级 2
+premium-tier-three=等级 3
+premium-tier-unknown=未知等级
