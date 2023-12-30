@@ -31,6 +31,7 @@ use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cac
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::GuildFeature;
+use hartex_discord_core::discord::model::guild::PremiumTier;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -77,6 +78,8 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             name: data.name,
             owner_id: Id::from_str(&data.owner_id)
                 .expect("id is zero (unexpected and unreachable)"),
+            premium_subscription_count: data.premium_subscription_count.map(|id| id as u64),
+            premium_tier: PremiumTier::from(data.premium_tier as u8),
         })
     }
 
@@ -104,6 +107,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 &entity.name,
                 &entity.owner_id.to_string(),
                 &entity.id.to_string(),
+                &entity.premium_subscription_count.map(|id| id as i64),
+                &i32::from(<PremiumTier as Into<u8>>::into(
+                    entity.premium_tier,
+                )),
             )
             .await?;
 
