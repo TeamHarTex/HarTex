@@ -100,7 +100,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             ),
         ))
         .field(EmbedFieldBuilder::new(
-            format!("{roleinfo_embed_attributes_field_name}"),
+            roleinfo_embed_attributes_field_name,
             format!(
                 "{} {}\n{} {}\n{} {}\n{} {}",
                 roleinfo_embed_attributes_hoist_subfield_name,
