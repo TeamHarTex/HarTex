@@ -43,7 +43,10 @@ pub struct CachedRoleRepository;
 impl CachedRoleRepository {
     #[allow(clippy::missing_errors_doc)]
     #[allow(clippy::missing_panics_doc)]
-    pub async fn role_ids_in_guild(&self, guild_id: Id<GuildMarker>) -> CacheResult<Vec<Id<RoleMarker>>> {
+    pub async fn role_ids_in_guild(
+        &self,
+        guild_id: Id<GuildMarker>,
+    ) -> CacheResult<Vec<Id<RoleMarker>>> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
         let client = pooled.client();
@@ -53,13 +56,17 @@ impl CachedRoleRepository {
             .all()
             .await?;
 
-        Ok(roles.into_iter().map(|role| Id::<RoleMarker>::from_str(&role.id).unwrap()).collect())
+        Ok(roles
+            .into_iter()
+            .map(|role| Id::<RoleMarker>::from_str(&role.id).unwrap())
+            .collect())
     }
 }
 
 impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_lossless)]
     #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
@@ -85,6 +92,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
         })
     }
 
+    #[allow(clippy::cast_lossless)]
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {

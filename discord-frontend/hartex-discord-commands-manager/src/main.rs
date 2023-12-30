@@ -55,7 +55,7 @@ pub async fn main() -> miette::Result<()> {
                         .long("with-localizations")
                         .short('w')
                         .num_args(0)
-                        .action(ArgAction::Set),
+                        .action(ArgAction::SetTrue),
                 ),
         )
         .subcommand(

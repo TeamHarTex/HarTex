@@ -23,6 +23,7 @@
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
+#[allow(clippy::unused_async)]
 pub async fn execute(_: Interaction, _: CommandDataOption) -> miette::Result<()> {
     Ok(())
 }
