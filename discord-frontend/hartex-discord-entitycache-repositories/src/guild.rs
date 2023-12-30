@@ -83,6 +83,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         })
     }
 
+    #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
