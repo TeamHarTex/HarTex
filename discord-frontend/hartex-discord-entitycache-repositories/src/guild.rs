@@ -109,9 +109,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 &entity.owner_id.to_string(),
                 &entity.id.to_string(),
                 &entity.premium_subscription_count.map(|id| id as i64),
-                &i32::from(<PremiumTier as Into<u8>>::into(
-                    entity.premium_tier,
-                )),
+                &i32::from(<PremiumTier as Into<u8>>::into(entity.premium_tier)),
             )
             .await?;
 
