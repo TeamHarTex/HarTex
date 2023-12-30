@@ -47,6 +47,7 @@ use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
 
 /// Invoke a corresponding event callback for an event.
+#[allow(clippy::cast_lossless)]
 #[allow(clippy::large_futures)]
 pub async fn invoke(
     event: GatewayEvent,

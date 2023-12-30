@@ -43,6 +43,7 @@ use time::OffsetDateTime;
 /// # `PATCH /stats/uptime`
 ///
 /// Update the uptime of a certain component.
+#[allow(clippy::cast_possible_truncation)]
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
