@@ -201,7 +201,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
-            format!("<:community:1131779566000681062> {serverinfo_embed_generalinfo_field_name}"),
+            format!("<:community:1190564037428252763> {serverinfo_embed_generalinfo_field_name}"),
             default_general_information,
         ))
         .field(
