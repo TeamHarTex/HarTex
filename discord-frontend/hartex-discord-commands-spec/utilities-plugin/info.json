@@ -96,10 +96,22 @@
     {
       "name": "user",
       "description": "Information about a specific user.",
+      "name_localizations": {
+        "zh-CN": "用户"
+      },
+      "description_localizations": {
+        "zh-CN": "关于指定用户的信息。"
+      },
       "options": [
         {
           "name": "user",
           "description": "The user obtain information for.",
+          "name_localizations": {
+            "zh-CN": "用户"
+          },
+          "description_localizations": {
+            "zh-CN": "要获取信息的用户。"
+          },
           "required": true,
           "type": 6
         }
