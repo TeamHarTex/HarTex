@@ -97,20 +97,24 @@
       "name": "user",
       "description": "Information about a specific user.",
       "name_localizations": {
+        "zh-TW": "使用者",
         "zh-CN": "用户"
       },
       "description_localizations": {
-        "zh-CN": "关于指定用户的信息。"
+        "zh-CN": "关于指定用户的信息。",
+        "zh-TW": "關於特定使用者的資訊。"
       },
       "options": [
         {
           "name": "user",
           "description": "The user obtain information for.",
           "name_localizations": {
-            "zh-CN": "用户"
+            "zh-CN": "用户",
+            "zh-TW": "使用者"
           },
           "description_localizations": {
-            "zh-CN": "要获取信息的用户。"
+            "zh-CN": "要获取信息的用户。",
+            "zh-TW": "要獲取資訊的使用者。"
           },
           "required": true,
           "type": 6
