@@ -22,24 +22,32 @@
 
 use std::env;
 use std::time::Duration;
+use std::time::SystemTime;
 
-use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
+use hartex_backend_models_v2::uptime::UptimeUpdate;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::OpCode;
+use hartex_discord_core::tokio::net::TcpStream;
+use hartex_discord_core::tokio::spawn;
 use hartex_log::log;
+use hyper::client::conn::http1::handshake;
+use hyper::header::ACCEPT;
+use hyper::header::CONTENT_TYPE;
+use hyper::Method;
+use hyper::Request;
+use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use time::OffsetDateTime;
-use tokio_postgres::NoTls;
 
 /// Invoke a corresponding event callback for an event.
+#[allow(clippy::cast_lossless)]
 #[allow(clippy::large_futures)]
 pub async fn invoke(
     event: GatewayEvent,
@@ -99,14 +107,35 @@ pub async fn invoke(
                     ready.version
                 );
 
-                let url = env::var("API_PGSQL_URL").unwrap();
-                let (client, _) = tokio_postgres::connect(&url, NoTls)
-                    .await
+                let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
+                let uri = format!("http://{}/api/v2/stats/uptime", api_domain.clone());
+                let now = SystemTime::now();
+                let duration = now
+                    .duration_since(SystemTime::UNIX_EPOCH)
                     .into_diagnostic()?;
-                start_timestamp_upsert()
-                    .bind(&client, &"HarTex Nightly", &OffsetDateTime::now_utc())
-                    .await
+
+                let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
+                let (mut sender, connection) =
+                    handshake(TokioIo::new(stream)).await.into_diagnostic()?;
+
+                spawn(async move {
+                    if let Err(err) = connection.await {
+                        log::error!("TCP connection failed: {:?}", err);
+                    }
+                });
+
+                log::debug!("sending a request to {}", &uri);
+
+                let query = UptimeUpdate::new("HarTex Nightly", duration.as_secs() as u128);
+                let request = Request::builder()
+                    .uri(uri)
+                    .method(Method::PATCH)
+                    .header(ACCEPT, "application/json")
+                    .header(CONTENT_TYPE, "application/json")
+                    .body(serde_json::to_string(&query).into_diagnostic()?)
                     .into_diagnostic()?;
+
+                sender.send_request(request).await.into_diagnostic()?;
 
                 Ok(())
             }

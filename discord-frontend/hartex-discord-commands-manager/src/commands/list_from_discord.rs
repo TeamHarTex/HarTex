@@ -24,10 +24,9 @@ use std::env;
 use std::io::Read;
 
 use clap::ArgMatches;
-use hartex_discord_core::discord::model::application::command::Command;
 use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
+use hartex_discord_utils::hyper::tls_stream;
 use hartex_log::log;
 use http_body_util::BodyExt;
 use http_body_util::Empty;
@@ -37,13 +36,14 @@ use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_LENGTH;
+use hyper::header::HOST;
 use hyper::header::USER_AGENT;
 use hyper::Method;
 use hyper::Request;
-use hyper::Uri;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
-use owo_colors::OwoColorize;
+
+use crate::model::command::CommandManagerCommand;
 
 /// List commands from discord.
 #[allow(clippy::module_name_repetitions)]
@@ -59,16 +59,8 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     }
 
     log::trace!("making tcp connection");
-    let uri = "https://discord.com".parse::<Uri>().into_diagnostic()?;
-    let host = uri.host().expect("uri has no host");
-    let port = uri.port_u16().unwrap_or(443);
-
-    let stream = TcpStream::connect(format!("{host}:{port}"))
-        .await
-        .into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioIo::new(stream))
-        .await
-        .into_diagnostic()?;
+    let stream = tls_stream().await?;
+    let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {
@@ -76,10 +68,8 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         }
     });
 
-    let mut uri = format!("https://discord.com/api/v10/applications/{application_id}/commands");
-    if let Some(flag) = matches.get_one::<bool>("with-localizations")
-        && *flag
-    {
+    let mut uri = format!("/api/v10/applications/{application_id}/commands");
+    if matches.get_flag("with-localizations") {
         uri.push_str("?with_localizations=true");
     }
 
@@ -87,6 +77,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     let request = Request::builder()
         .uri(uri)
         .method(Method::GET)
+        .header(HOST, "discord.com")
         .header(ACCEPT, "application/json")
         .header(AUTHORIZATION, token)
         .header(
@@ -100,30 +91,33 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
     log::info!("received response with status {}", result.status());
 
     if !result.status().is_success() {
-        let body = result.into_body().collect().await.into_diagnostic()?.aggregate();
+        let body = result
+            .into_body()
+            .collect()
+            .await
+            .into_diagnostic()?
+            .aggregate();
         let mut string = String::new();
-        body.reader().read_to_string(&mut string).into_diagnostic()?;
+        body.reader()
+            .read_to_string(&mut string)
+            .into_diagnostic()?;
         log::info!("response body: {string:?}");
 
         return Ok(());
     }
 
-    let body = result.into_body().collect().await.into_diagnostic()?.aggregate();
-    let commands: Vec<Command> = serde_json::from_reader(body.reader()).into_diagnostic()?;
+    let body = result
+        .into_body()
+        .collect()
+        .await
+        .into_diagnostic()?
+        .aggregate();
+
+    let commands: Vec<CommandManagerCommand> =
+        serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     for command in commands {
-        println!();
-        println!(
-            "{}{}",
-            "Command ID: ".bold(),
-            command.id.unwrap().bright_cyan()
-        );
-        println!("{}{}", "Command Name: ".bold(), command.name.bright_cyan());
-        println!(
-            "{}{}",
-            "Command Description: ".bold(),
-            command.description.bright_cyan()
-        );
+        println!("{command}");
     }
 
     Ok(())

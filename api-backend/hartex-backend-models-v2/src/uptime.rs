@@ -69,3 +69,32 @@ impl UptimeResponse {
         self.start_timestamp
     }
 }
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Clone, Deserialize, Serialize)]
+pub struct UptimeUpdate {
+    component_name: String,
+    start_timestamp: u128,
+}
+
+impl UptimeUpdate {
+    #[must_use]
+    pub fn new(component_name: impl Into<String>, start_timestamp: u128) -> Self {
+        Self {
+            component_name: component_name.into(),
+            start_timestamp,
+        }
+    }
+
+    /// The component name of the uptime update.
+    #[must_use]
+    pub fn component_name(&self) -> &str {
+        self.component_name.as_str()
+    }
+
+    /// The start timestamp of the uptime update.
+    #[must_use]
+    pub fn start_timestamp(&self) -> u128 {
+        self.start_timestamp
+    }
+}

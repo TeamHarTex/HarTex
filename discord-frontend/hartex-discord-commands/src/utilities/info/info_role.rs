@@ -27,8 +27,8 @@ use hartex_discord_core::discord::model::application::interaction::application_c
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -100,7 +100,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             ),
         ))
         .field(EmbedFieldBuilder::new(
-            format!("{roleinfo_embed_attributes_field_name}"),
+            roleinfo_embed_attributes_field_name,
             format!(
                 "{} {}\n{} {}\n{} {}\n{} {}",
                 roleinfo_embed_attributes_hoist_subfield_name,

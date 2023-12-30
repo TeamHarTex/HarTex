@@ -16,7 +16,7 @@ hartex_backend_routes = { path = "../hartex-backend-routes" }
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-axum = "0.7.2"
+axum = "0.7.3"
 bb8-postgres = "0.8.1"
 dotenvy = "0.15.7"
 hyper = { version = "1.1.0", features = ["http1", "server"] }

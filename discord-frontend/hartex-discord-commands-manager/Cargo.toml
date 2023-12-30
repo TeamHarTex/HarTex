@@ -13,6 +13,7 @@ rust-version = "1.77.0"
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "async-runtime", "discord-model", "environment"] }
 
+hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 clap = "4.4.12"

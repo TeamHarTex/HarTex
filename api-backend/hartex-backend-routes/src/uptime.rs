@@ -35,7 +35,58 @@ use hartex_backend_models::APIVersion;
 use hartex_backend_models::Response;
 use hartex_backend_models_v2::uptime::UptimeQuery;
 use hartex_backend_models_v2::uptime::UptimeResponse;
+use hartex_backend_models_v2::uptime::UptimeUpdate;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
+use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
+use time::OffsetDateTime;
+
+/// # `PATCH /stats/uptime`
+///
+/// Update the uptime of a certain component.
+#[allow(clippy::cast_possible_truncation)]
+#[allow(clippy::cast_sign_loss)]
+#[allow(clippy::missing_panics_doc)] // this function cannot panic
+#[allow(clippy::module_name_repetitions)]
+pub async fn patch_uptime(
+    _: APIVersion,
+    State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
+    Json(query): Json<UptimeUpdate>,
+) -> (StatusCode, Json<Response<()>>) {
+    let result = pool.get().await;
+    if result.is_err() {
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
+    }
+
+    let connection = result.unwrap();
+    let client = connection.client();
+
+    let Ok(timestamp) = OffsetDateTime::from_unix_timestamp(query.start_timestamp() as i64) else {
+        // FIXME: return a better status code as the timestamp is out of range if this branch is reached
+        // just 500 for now
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
+    };
+    let result = start_timestamp_upsert()
+        .bind(client, &query.component_name(), &timestamp)
+        .await;
+
+    if result.is_err() {
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
+    }
+
+    (
+        StatusCode::OK,
+        Response::ok(()),
+    )
+}
 
 /// # `POST /stats/uptime`
 ///

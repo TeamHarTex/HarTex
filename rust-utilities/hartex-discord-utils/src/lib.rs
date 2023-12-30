@@ -38,6 +38,7 @@ use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
 use tokio_postgres::NoTls;
 
+pub mod hyper;
 pub mod localizable;
 pub mod markdown;
 
@@ -52,10 +53,7 @@ pub static CLIENT: Lazy<Client> = Lazy::new(|| {
 
 pub type PostgresPool = Pool<PostgresConnectionManager<NoTls>>;
 pub type DatabasePoolFuture = impl Future<Output = PostgresPool>;
-pub static DATABASE_POOL: AsyncLazy<
-    PostgresPool,
-    DatabasePoolFuture,
-> = AsyncLazy::new(async {
+pub static DATABASE_POOL: AsyncLazy<PostgresPool, DatabasePoolFuture> = AsyncLazy::new(async {
     let hartex_pgsql_url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
 
     let manager = PostgresConnectionManager::new_from_stringlike(hartex_pgsql_url, NoTls).unwrap();
