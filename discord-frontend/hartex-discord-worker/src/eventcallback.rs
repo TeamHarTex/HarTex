@@ -110,10 +110,13 @@ pub async fn invoke(
                 let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
                 let uri = format!("http://{}/api/v2/stats/uptime", api_domain.clone());
                 let now = SystemTime::now();
-                let duration = now.duration_since(SystemTime::UNIX_EPOCH).into_diagnostic()?;
+                let duration = now
+                    .duration_since(SystemTime::UNIX_EPOCH)
+                    .into_diagnostic()?;
 
                 let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
-                let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
+                let (mut sender, connection) =
+                    handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
                 spawn(async move {
                     if let Err(err) = connection.await {
