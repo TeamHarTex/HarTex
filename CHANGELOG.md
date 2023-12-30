@@ -9,17 +9,20 @@
 - **Added:** added `PATCH /stats/uptime` API
 - **Changed:** use database pools for database queries
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Changed:** increment copyright year to 2024
 
 ## Buildsystem
 
 - **Added:** added `update` commands to update dependencies of (a) project(s)
 - **Added:** added task completion duration
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Changed:** increment copyright year to 2024
 
 ## Database Queries
 
 - **Added:** added various queries for cache usage
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Changed:** increment copyright year to 2024
 
 ## Discord Frontend
 
@@ -33,12 +36,14 @@
 - **Fixed:** fixed the `/info bot` command
 - **Fixed:** fixed the requests sent by command manager
 - **Fixed:** fixed the `--with-localizations` flag in the command manager
+- **Changed:** increment copyright year to 2024
 
 ## Localization Infrastructure
 
 - **Added:** added various localizatoin entries for more features
 - **Fixed:** fixed path related bugs when running the bot and looking for the localization bundles
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Changed:** increment copyright year to 2024
 
 ## Rust Utilities
 
@@ -46,8 +51,11 @@
 - **Added:** added functionality to create a TCP stream with TLS for use with hyper to use HTTPS
 - **Added:** make a twilight `PremiumTier` localizable
 - **Changed:** bumped `rust-version` to 1.77.0
+- **Changed:** increment copyright year to 2024
 
 ## Web Frontend
+
+- **Changed:** increment copyright year to 2024
 
 # [0.6.0, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.1..0.6.0)
 
