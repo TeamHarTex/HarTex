@@ -267,7 +267,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             format!(
                 "{} {}\n{} {}",
                 serverinfo_embed_nitroinfo_boostlevel_subfield_name,
-                guild.premium_tier,
+                guild.premium_tier.localize(langid_locale.clone())?,
                 serverinfo_embed_nitroinfo_boosts_subfield_name,
                 guild.premium_subscription_count.unwrap_or_default(),
             ),
