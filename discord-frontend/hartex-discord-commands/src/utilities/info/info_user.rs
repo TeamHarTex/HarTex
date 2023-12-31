@@ -23,9 +23,15 @@
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
+use miette::IntoDiagnostic;
 
 #[allow(clippy::unused_async)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
@@ -33,11 +39,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!()
     };
 
-    let _ = CLIENT.interaction(interaction.application_id);
+    let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let CommandOptionValue::User(_) = options
+    let CommandOptionValue::User(user_id) = options
         .iter()
         .find(|option| option.name.as_str() == "user")
         .map_or(
@@ -47,6 +53,29 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     else {
         unreachable!()
     };
+
+    let embed = EmbedBuilder::new()
+        .color(0x41_A0_DE)
+        .field(EmbedFieldBuilder::new("User ID", user_id.to_string()))
+        .validate()
+        .into_diagnostic()?
+        .build();
+
+    interaction_client
+        .create_response(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse {
+                kind: InteractionResponseType::ChannelMessageWithSource,
+                data: Some(
+                    InteractionResponseDataBuilder::new()
+                        .embeds(vec![embed])
+                        .build(),
+                ),
+            },
+        )
+        .await
+        .into_diagnostic()?;
 
     Ok(())
 }
