@@ -210,91 +210,72 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             format!("<:community:1190564037428252763> {serverinfo_embed_generalinfo_field_name}"),
             default_general_information,
         ))
-        .field(
-            EmbedFieldBuilder::new(
-                format!(
-                    "<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"
-                ),
-                format!(
-                    "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
-                    "<:category:1131915276980600872>",
-                    serverinfo_embed_channelinfo_categories_subfield_name,
-                    category_count,
-                    "<:textChannel:1131860470488375316>",
-                    serverinfo_embed_channelinfo_textchannels_subfield_name,
-                    text_count,
-                    "<:voiceChannel:1131908258945318923>",
-                    serverinfo_embed_channelinfo_voicechannels_subfield_name,
-                    voice_count,
-                    "<:announcement:1131923904324186296>",
-                    serverinfo_embed_channelinfo_announcementchannels_subfield_name,
-                    announcement_count,
-                    "<:stage:1131926172574421032>",
-                    serverinfo_embed_channelinfo_stagechannels_subfield_name,
-                    stage_count,
-                    "<:forum:1131928666176241735>",
-                    serverinfo_embed_channelinfo_forumchannels_subfield_name,
-                    forum_count,
-                ),
-            )
-            .inline(),
-        )
-        .field(
-            EmbedFieldBuilder::new(
-                format!("<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"),
-                format!(
-                    "{} {}\n{} {}\n{} {}",
-                    serverinfo_embed_memberinfo_membercount_subfield_name,
-                    members.len(),
-                    serverinfo_embed_memberinfo_humancount_subfield_name,
-                    humans,
-                    serverinfo_embed_memberinfo_botcount_subfield_name,
-                    members.len() - humans,
-                ),
-            )
-            .inline(),
-        )
-        .field(
-            EmbedFieldBuilder::new(
-                format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
-                format!(
-                    "{} {}",
-                    serverinfo_embed_roleinfo_rolecount_subfield_name,
-                    roles.len(),
-                ),
-            )
-            .inline(),
-        )
-        .field(
-            EmbedFieldBuilder::new(
-                format!(
-                    "<:nitroBoost:1190566150963200030> {serverinfo_embed_nitroinfo_field_name}"
-                ),
-                format!(
-                    "{} {}\n{} {}",
-                    serverinfo_embed_nitroinfo_boostlevel_subfield_name,
-                    guild.premium_tier.localize(langid_locale.clone())?,
-                    serverinfo_embed_nitroinfo_boosts_subfield_name,
-                    guild.premium_subscription_count.unwrap_or_default(),
-                ),
-            )
-            .inline(),
-        )
-        .field(
-            EmbedFieldBuilder::new(
-                serverinfo_embed_flags_field_name,
-                format!(
-                    "{} {}\n{} {}",
-                    serverinfo_embed_flags_large_subfield_name,
-                    guild.large.localize(langid_locale.clone())?,
-                    serverinfo_embed_flags_default_message_notifications_subfield_name,
-                    guild
-                        .default_message_notifications
-                        .localize(langid_locale)?
-                ),
-            )
-            .inline(),
-        )
+        .field(EmbedFieldBuilder::new(
+            format!("<:channels:1131857444809752576> {serverinfo_embed_channelinfo_field_name}"),
+            format!(
+                "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
+                "<:category:1131915276980600872>",
+                serverinfo_embed_channelinfo_categories_subfield_name,
+                category_count,
+                "<:textChannel:1131860470488375316>",
+                serverinfo_embed_channelinfo_textchannels_subfield_name,
+                text_count,
+                "<:voiceChannel:1131908258945318923>",
+                serverinfo_embed_channelinfo_voicechannels_subfield_name,
+                voice_count,
+                "<:announcement:1131923904324186296>",
+                serverinfo_embed_channelinfo_announcementchannels_subfield_name,
+                announcement_count,
+                "<:stage:1131926172574421032>",
+                serverinfo_embed_channelinfo_stagechannels_subfield_name,
+                stage_count,
+                "<:forum:1131928666176241735>",
+                serverinfo_embed_channelinfo_forumchannels_subfield_name,
+                forum_count,
+            ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            format!("<:members:1132582503157334016> {serverinfo_embed_memberinfo_field_name}"),
+            format!(
+                "{} {}\n{} {}\n{} {}",
+                serverinfo_embed_memberinfo_membercount_subfield_name,
+                members.len(),
+                serverinfo_embed_memberinfo_humancount_subfield_name,
+                humans,
+                serverinfo_embed_memberinfo_botcount_subfield_name,
+                members.len() - humans,
+            ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
+            format!(
+                "{} {}",
+                serverinfo_embed_roleinfo_rolecount_subfield_name,
+                roles.len(),
+            ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            format!("<:nitroBoost:1190566150963200030> {serverinfo_embed_nitroinfo_field_name}"),
+            format!(
+                "{} {}\n{} {}",
+                serverinfo_embed_nitroinfo_boostlevel_subfield_name,
+                guild.premium_tier.localize(langid_locale.clone())?,
+                serverinfo_embed_nitroinfo_boosts_subfield_name,
+                guild.premium_subscription_count.unwrap_or_default(),
+            ),
+        ))
+        .field(EmbedFieldBuilder::new(
+            serverinfo_embed_flags_field_name,
+            format!(
+                "{} {}\n{} {}",
+                serverinfo_embed_flags_large_subfield_name,
+                guild.large.localize(langid_locale.clone())?,
+                serverinfo_embed_flags_default_message_notifications_subfield_name,
+                guild
+                    .default_message_notifications
+                    .localize(langid_locale)?
+            ),
+        ))
         .title(guild.name);
 
     if let Some(icon) = guild.icon {
