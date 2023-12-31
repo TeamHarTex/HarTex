@@ -55,4 +55,4 @@ serverinfo-embed-nitroinfo-field-boostlevel-subfield-name=レベル：
 serverinfo-embed-nitroinfo-field-boosts-subfield-name=何回：
 serverinfo-embed-flags-field-name=フラグ
 serverinfo-embed-flags-large-subfield-name=鯖は大きいか：
-serverinfo-embed-flags-default-message-notifications-subfield-name=デフォルトメッセージ通知レベル：
+serverinfo-embed-flags-default-message-notifications-subfield-name=標準通知設定レベル：
