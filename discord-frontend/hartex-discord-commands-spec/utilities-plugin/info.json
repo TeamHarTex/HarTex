@@ -117,7 +117,7 @@
           },
           "description_localizations": {
             "ja": "どちら様？",
-            "zh-CN": "要获取信息的用户。",
+            "zh-CN": "要获取信息的用户。如果未指定，则返回当前用户的信息。",
             "zh-TW": "要獲取資訊的使用者。"
           },
           "required": false,
