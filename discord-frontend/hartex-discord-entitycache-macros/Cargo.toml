@@ -13,14 +13,14 @@ rust-version = "1.77.0"
 [dependencies]
 itertools = "0.12.0"
 lazy_static = "1.4.0"
-proc-macro2 = "1.0.71"
+proc-macro2 = "1.0.72"
 quote = "1.0.33"
 syn = { version = "2.0.43", features = ["extra-traits", "full"] }
 hartex-macro-utils = { version = "0.1.0", path = "../../rust-utilities/hartex-macro-utils" }
 
 [build-dependencies]
 convert_case = "0.6.0"
-proc-macro2 = "1.0.71"
+proc-macro2 = "1.0.72"
 quote = "1.0.33"
 reqwest = { version = "0.11.23", features = ["blocking"] }
 syn = { version = "2.0.43", features = ["extra-traits", "full"] }
