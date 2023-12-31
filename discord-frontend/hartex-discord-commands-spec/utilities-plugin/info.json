@@ -109,7 +109,7 @@
       "options": [
         {
           "name": "user",
-          "description": "The user obtain information for.",
+          "description": "The user obtain information for. If not specified, information for the current user is returned.",
           "name_localizations": {
             "ja": "ユーザー",
             "zh-CN": "用户",
@@ -120,7 +120,7 @@
             "zh-CN": "要获取信息的用户。",
             "zh-TW": "要獲取資訊的使用者。"
           },
-          "required": true,
+          "required": false,
           "type": 6
         }
       ],
