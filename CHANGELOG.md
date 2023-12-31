@@ -1,8 +1,28 @@
-# [Next Version, Nitrogen I](https://github.com/TeamHarTex/HarTex/compare/0.6.0...nightly)
+# [Next Versoin, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2023-12-10
+> **y** commits since 2024-01-01
+
+## API Backend
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.7.0, Nitrogen I](https://github.com/TeamHarTex/HarTex/compare/0.6.0..0.7.0)
+
+> **4** contributor made contributions to this release
+
+> **360** commits since 2023-12-10
 
 ## API Backend
 
