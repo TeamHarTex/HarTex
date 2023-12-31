@@ -21,7 +21,7 @@
         "zh-TW": "伺服器"
       },
       "description_localizations": {
-        "ja": "このサーバーについて…",
+        "ja": "このサーバーの情報。",
         "zh-CN": "关于当前服务器的信息。",
         "zh-TW": "關於當前伺服器的資訊。"
       },
@@ -35,7 +35,7 @@
             "zh-TW": "詳細"
           },
           "description_localizations": {
-            "ja": "もっと詳しい情報を？",
+            "ja": "情報はもっと詳しく？",
             "zh-CN": "是否在返回的嵌入中显示更详细的信息。",
             "zh-TW": "是否在返回的嵌入中顯示更多詳細資訊。"
           },
@@ -69,7 +69,7 @@
         "zh-TW": "身分組"
       },
       "description_localizations": {
-        "ja": "特定のロールについて…",
+        "ja": "特定のロールの情報。",
         "zh-CN": "关于指定身份组的信息。",
         "zh-TW": "關於特定身分組的資訊。"
       },
@@ -83,7 +83,7 @@
             "zh-TW": "身分組"
           },
           "description_localizations": {
-            "ja": "どっちのロールの情報を？",
+            "ja": "どっちのロール？",
             "zh-CN": "要获取信息的身份组。",
             "zh-TW": "要獲取資訊的身分組。"
           },
@@ -97,10 +97,12 @@
       "name": "user",
       "description": "Information about a specific user.",
       "name_localizations": {
+        "ja": "ユーザー",
         "zh-TW": "使用者",
         "zh-CN": "用户"
       },
       "description_localizations": {
+        "ja": "特定のユーザーの情報。",
         "zh-CN": "关于指定用户的信息。",
         "zh-TW": "關於特定使用者的資訊。"
       },
@@ -109,10 +111,12 @@
           "name": "user",
           "description": "The user obtain information for.",
           "name_localizations": {
+            "ja": "ユーザー",
             "zh-CN": "用户",
             "zh-TW": "使用者"
           },
           "description_localizations": {
+            "ja": "どちら様？",
             "zh-CN": "要获取信息的用户。",
             "zh-TW": "要獲取資訊的使用者。"
           },
