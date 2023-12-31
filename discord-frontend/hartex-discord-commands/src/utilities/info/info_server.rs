@@ -254,14 +254,17 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             )
             .inline(),
         )
-        .field(EmbedFieldBuilder::new(
-            format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
-            format!(
-                "{} {}",
-                serverinfo_embed_roleinfo_rolecount_subfield_name,
-                roles.len(),
-            ),
-        ))
+        .field(
+            EmbedFieldBuilder::new(
+                format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
+                format!(
+                    "{} {}",
+                    serverinfo_embed_roleinfo_rolecount_subfield_name,
+                    roles.len(),
+                ),
+            )
+            .inline(),
+        )
         .field(
             EmbedFieldBuilder::new(
                 format!(
