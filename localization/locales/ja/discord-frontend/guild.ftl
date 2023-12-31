@@ -23,3 +23,8 @@
 default-message-notification-level-all=全て
 default-message-notification-level-mentions=メンション
 default-message-notification-level-unknown=不明
+premium-tier-none=なし
+premium-tier-one=レベル１
+premium-tier-two=レベル２
+premium-tier-three=レベル３
+premium-tier-unknown=不明
