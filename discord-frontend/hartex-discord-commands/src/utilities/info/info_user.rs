@@ -21,9 +21,32 @@
  */
 
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
+use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_utils::CLIENT;
+use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 
 #[allow(clippy::unused_async)]
-pub async fn execute(_: Interaction, _: CommandDataOption) -> miette::Result<()> {
+pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
+    let CommandOptionValue::SubCommand(options) = option.value else {
+        unreachable!()
+    };
+
+    let _ = CLIENT.interaction(interaction.application_id);
+    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
+
+    let CommandOptionValue::User(_) = options
+        .iter()
+        .find(|option| option.name.as_str() == "user")
+        .map_or(
+            CommandOptionValue::User(interaction.member.unwrap().user.unwrap().id),
+            |option| option.value.clone(),
+        )
+    else {
+        unreachable!()
+    };
+
     Ok(())
 }
