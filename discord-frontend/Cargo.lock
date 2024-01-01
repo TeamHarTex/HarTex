@@ -117,9 +117,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.77"
+version = "1.0.78"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9d19de80eff169429ac1e9f48fffb163916b448a44e8e046186232046d9e1f9"
+checksum = "ca87830a3e3fb156dc96cfbd31cb620265dd053be734723f22b760d6cc3c3051"
 
 [[package]]
 name = "arc-swap"
@@ -135,9 +135,9 @@ checksum = "9338790e78aa95a416786ec8389546c4b6a1dfc3dc36071ed9518a9413a542eb"
 
 [[package]]
 name = "async-trait"
-version = "0.1.75"
+version = "0.1.76"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fdf6721fb0140e4f897002dd086c06f6c27775df19cfe1fccb21181a48fd2c98"
+checksum = "531b97fb4cd3dfdce92c35dedbfdc1f0b9d8091c8ca943d6dae340ef5012d514"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -658,9 +658,9 @@ dependencies = [
 
 [[package]]
 name = "deranged"
-version = "0.3.10"
+version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8eb30d70a07a3b04884d2677f06bec33509dc67ca60d92949e5535352d3191dc"
+checksum = "b42b6fa04a440b495c8b04d0e71b707c585f83cb9cb28cf8cd0d976c315e31b4"
 dependencies = [
  "powerfmt",
 ]
@@ -1016,7 +1016,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "axum",
  "serde",
@@ -1024,14 +1024,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models_v2"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "cornucopia",
  "cornucopia_async",
@@ -1046,14 +1046,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_cdn"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_core",
 ]
 
 [[package]]
 name = "hartex_discord_commands"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "fluent-bundle",
  "futures",
@@ -1076,7 +1076,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_core"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_commands_macros",
  "hartex_discord_core",
@@ -1085,7 +1085,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_macros"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1094,7 +1094,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_manager"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "clap",
  "hartex_discord_core",
@@ -1114,7 +1114,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_test"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_commands_core",
  "hartex_discord_commands_macros",
@@ -1125,7 +1125,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_manifest"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hcl-rs",
  "miette",
@@ -1134,7 +1134,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_test"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_configuration_manifest",
  "pretty_assertions",
@@ -1142,7 +1142,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "dotenvy",
  "num_enum 0.7.1",
@@ -1158,7 +1158,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_cacheupdaters"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1168,7 +1168,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_core"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "bb8",
  "hartex_discord_core",
@@ -1179,7 +1179,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_entities"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1188,7 +1188,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_macros"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "convert_case",
  "hartex-macro-utils",
@@ -1203,7 +1203,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_repositories"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_database_queries",
  "hartex_discord_core",
@@ -1217,7 +1217,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_test"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_macros",
@@ -1229,7 +1229,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_leader"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
@@ -1246,7 +1246,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "async-once-cell",
  "bb8-postgres",
@@ -1262,7 +1262,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_worker"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "chrono",
  "futures-util",
@@ -1291,14 +1291,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1313,7 +1313,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1327,7 +1327,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1339,7 +1339,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.6.0"
+version = "0.7.1"
 dependencies = [
  "log",
  "log4rs",
@@ -1604,9 +1604,9 @@ dependencies = [
 
 [[package]]
 name = "iana-time-zone"
-version = "0.1.58"
+version = "0.1.59"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8326b86b6cff230b97d0d312a6c40a60726df3332e721f72a1b035f451663b20"
+checksum = "b6a67363e2aa4443928ce15e57ebae94fd8949958fd1223c4cfc0cd473ad7539"
 dependencies = [
  "android_system_properties",
  "core-foundation-sys",
@@ -1821,7 +1821,7 @@ checksum = "a94d21414c1f4a51209ad204c1776a3d0765002c76c6abcb602a6f09f1e881c7"
 [[package]]
 name = "log4rs"
 version = "1.3.0"
-source = "git+https://github.com/TeamHarTex/log4rs.git?branch=master#97c13470f261c79f15b1a3ffd4de38baee3a64b6"
+source = "git+https://github.com/TeamHarTex/log4rs.git?branch=master#58b92c82ae868985aeed7851df131b6d8eeb6e1c"
 dependencies = [
  "anyhow",
  "arc-swap",
@@ -3051,18 +3051,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.52"
+version = "1.0.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83a48fd946b02c0a526b2e9481c8e2a17755e47039164a86c4070446e3a4614d"
+checksum = "b2cd5904763bad08ad5513ddbb12cf2ae273ca53fa9f68e843e236ec6dfccc09"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.52"
+version = "1.0.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7fbe9b594d6568a6a1443250a7e67d80b74e1e96f6d1715e1e21cc1888291d3"
+checksum = "3dcf4a824cce0aeacd6f38ae6f24234c8e80d68632338ebaa1443b5df9e29e19"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3429,7 +3429,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.15.4"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "bitflags 2.4.1",
  "fastrand",
@@ -3448,7 +3448,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.15.4"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "tokio",
  "tracing",
@@ -3457,7 +3457,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.15.4"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "brotli",
  "fastrand",
@@ -3476,7 +3476,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.15.3"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "futures-util",
  "tokio",
@@ -3486,7 +3486,7 @@ dependencies = [
 [[package]]
 name = "twilight-mention"
 version = "0.15.3"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "twilight-model",
 ]
@@ -3494,7 +3494,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.15.4"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "bitflags 2.4.1",
  "serde",
@@ -3506,7 +3506,7 @@ dependencies = [
 [[package]]
 name = "twilight-util"
 version = "0.15.4"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "twilight-model",
  "twilight-validate",
@@ -3515,7 +3515,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.15.3"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#0fbb8b9f06d076c45dd6042921644d10d5a33c80"
+source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#d2951b625684b08ccd34448cc3e0e7fd5b913e53"
 dependencies = [
  "twilight-model",
 ]
@@ -3851,11 +3851,11 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "windows-core"
-version = "0.51.1"
+version = "0.52.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1f8cf84f35d2db49a46868f947758c7a1138116f7fac3bc844f43ade1292e64"
+checksum = "33ab640c8d7e35bf8ba19b884ba838ceb4fba93a4e8c65a9059d08afcfc683d9"
 dependencies = [
- "windows-targets 0.48.5",
+ "windows-targets 0.52.0",
 ]
 
 [[package]]

@@ -34,7 +34,6 @@ use std::time::Duration;
 
 use futures_util::future;
 use hartex_discord_core::discord::gateway::CloseFrame;
-use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
@@ -90,7 +89,7 @@ pub async fn main() -> miette::Result<()> {
 
     log::trace!("building clusters");
     let queue = queue::obtain()?;
-    let mut shards = shards::obtain(&queue).await?;
+    let mut shards = shards::obtain(queue).await?;
 
     let (tx, rx) = watch::channel(false);
 
@@ -101,7 +100,7 @@ pub async fn main() -> miette::Result<()> {
         tokio::select! {
             _ = kafka::handle(shards.iter_mut(), producer.clone(), consumer) => {},
             _ = rx.changed() => {
-                future::join_all(shards.iter_mut().map(|shard: &mut Shard| shard.close(CloseFrame::RESUME))).await;
+                future::join_all(shards.iter_mut().map(|shard| shard.close(CloseFrame::RESUME))).await;
             },
         }
     });

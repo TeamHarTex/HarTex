@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::Arc;
 use std::time::Duration;
 
 use hartex_discord_core::discord::gateway::queue::Queue;
@@ -34,6 +33,21 @@ use hartex_discord_core::tokio::sync::oneshot::Sender;
 use hartex_discord_core::tokio::time::sleep;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+
+#[derive(Clone, Debug)]
+pub enum BotQueue {
+    Local(LocalQueue),
+    LargeBot(LargeBotQueue),
+}
+
+impl Queue for BotQueue {
+    fn enqueue(&self, id: u32) -> Receiver<()> {
+        match self {
+            Self::Local(local) => local.enqueue(id),
+            Self::LargeBot(large_bot) => large_bot.enqueue(id),
+        }
+    }
+}
 
 /// A local queue.
 #[allow(clippy::module_name_repetitions)]
@@ -65,7 +79,7 @@ impl Queue for LocalQueue {
 
 /// A queue for large bots.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct LargeBotQueue(Vec<UnboundedSender<Sender<()>>>);
 
 impl LargeBotQueue {
@@ -107,7 +121,7 @@ async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duratio
 }
 
 /// Obtain a queue to use for the startup of the bot.
-pub fn obtain() -> miette::Result<Arc<dyn Queue + Send + Sync>> {
+pub fn obtain() -> miette::Result<BotQueue> {
     let concurrency = std::env::var("SHARD_CONCURRENCY")
         .into_diagnostic()?
         .parse::<usize>()
@@ -119,9 +133,9 @@ pub fn obtain() -> miette::Result<Arc<dyn Queue + Send + Sync>> {
             .into_diagnostic()?,
     );
 
-    if concurrency == 1 {
-        Ok(Arc::new(LocalQueue::new(wait)))
+    Ok(if concurrency == 1 {
+        BotQueue::Local(LocalQueue::new(wait))
     } else {
-        Ok(Arc::new(LargeBotQueue::new(concurrency, wait)))
-    }
+        BotQueue::LargeBot(LargeBotQueue::new(concurrency, wait))
+    })
 }

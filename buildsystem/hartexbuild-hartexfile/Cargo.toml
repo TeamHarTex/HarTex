@@ -1,6 +1,6 @@
 [package]
 name = "hartexbuild_hartexfile"
-version = "0.6.0"
+version = "0.7.1"
 edition = "2021"
 description = """
 HarTexfile specification for HarTex buildsystem
