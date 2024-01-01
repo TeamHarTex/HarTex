@@ -25,6 +25,7 @@ use std::str;
 use std::time::Duration;
 
 use futures_util::StreamExt;
+use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
@@ -42,11 +43,14 @@ use rdkafka::Message;
 use serde_scan::scan;
 
 /// Handle inbound AND outbound messages.
-pub async fn handle(
-    shards: impl Iterator<Item = &mut Shard> + Send,
+pub async fn handle<'a, Q>(
+    shards: impl Iterator<Item = &'a mut Shard<Q>> + Send,
     producer: FutureProducer,
     consumer: StreamConsumer,
-) -> miette::Result<()> {
+) -> miette::Result<()>
+where
+    Q: Queue + Send + Sync + Sized + 'a,
+{
     let shards = shards.collect::<Vec<_>>();
     let senders = shards
         .iter()
@@ -62,10 +66,13 @@ pub async fn handle(
     Ok(())
 }
 
-async fn inbound(
-    mut stream: ShardMessageStream<'_>,
+async fn inbound<Q>(
+    mut stream: ShardMessageStream<'_, Q>,
     producer: FutureProducer,
-) -> miette::Result<()> {
+) -> miette::Result<()>
+where
+    Q: Queue + Send + Sync + Sized,
+{
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
     while let Some((shard, result)) = stream.next().await {

@@ -21,14 +21,14 @@
  */
 
 use std::ops::Deref;
-use std::sync::Arc;
 
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::stream;
-use hartex_discord_core::discord::gateway::Config;
+use hartex_discord_core::discord::gateway::ConfigBuilder;
 use hartex_discord_core::discord::gateway::EventTypeFlags;
 use hartex_discord_core::discord::gateway::Intents;
 use hartex_discord_core::discord::gateway::Shard;
+use hartex_discord_core::discord::gateway::ShardId;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
 use hartex_discord_core::discord::model::gateway::presence::Activity;
 use hartex_discord_core::discord::model::gateway::presence::ActivityType;
@@ -38,39 +38,48 @@ use hartex_discord_utils::TOKEN;
 use miette::IntoDiagnostic;
 
 /// Obtain a list of shards.
-pub async fn obtain(queue: &Arc<dyn Queue + Send + Sync>) -> miette::Result<Vec<Shard>> {
-    let config = Config::new(TOKEN.deref().clone(), Intents::all());
+pub async fn obtain<Q>(queue: Q) -> miette::Result<Vec<Shard<Q>>>
+where
+    Q: Queue + Clone + Send + Sync + Sized,
+{
+    let config = ConfigBuilder::new(TOKEN.deref().clone(), Intents::all())
+        .queue(queue.clone())
+        .build();
 
     Ok(
-        stream::create_recommended(&CLIENT, config, |shard_id, builder| {
-            builder
-                .event_types(EventTypeFlags::all())
-                .presence(UpdatePresencePayload {
-                    activities: vec![Activity {
-                        application_id: None,
-                        assets: None,
-                        buttons: vec![],
-                        created_at: None,
-                        details: None,
-                        emoji: None,
-                        flags: None,
-                        id: None,
-                        instance: None,
-                        kind: ActivityType::Watching,
-                        name: format!("development | shard {}", shard_id.number()),
-                        party: None,
-                        secrets: None,
-                        state: None,
-                        timestamps: None,
-                        url: None,
-                    }],
-                    afk: false,
-                    since: None,
-                    status: Status::Online,
-                })
-                .queue(queue.clone())
-                .build()
-        })
+        stream::create_recommended::<_, Q>(
+            &CLIENT,
+            config,
+            |shard_id: ShardId, builder: ConfigBuilder<Q>| {
+                builder
+                    .event_types(EventTypeFlags::all())
+                    .presence(UpdatePresencePayload {
+                        activities: vec![Activity {
+                            application_id: None,
+                            assets: None,
+                            buttons: vec![],
+                            created_at: None,
+                            details: None,
+                            emoji: None,
+                            flags: None,
+                            id: None,
+                            instance: None,
+                            kind: ActivityType::Watching,
+                            name: format!("development | shard {}", shard_id.number()),
+                            party: None,
+                            secrets: None,
+                            state: None,
+                            timestamps: None,
+                            url: None,
+                        }],
+                        afk: false,
+                        since: None,
+                        status: Status::Online,
+                    })
+                    .queue((&queue).clone())
+                    .build()
+            },
+        )
         .await
         .into_diagnostic()?
         .collect::<Vec<_>>(),
