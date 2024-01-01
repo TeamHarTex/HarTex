@@ -76,7 +76,7 @@ where
                         since: None,
                         status: Status::Online,
                     })
-                    .queue((&queue).clone())
+                    .queue(queue.clone())
                     .build()
             },
         )
