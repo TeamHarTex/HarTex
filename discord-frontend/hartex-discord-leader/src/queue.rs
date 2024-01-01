@@ -34,6 +34,7 @@ use hartex_discord_core::tokio::time::sleep;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub enum BotQueue {
     Local(LocalQueue),
