@@ -1,4 +1,4 @@
-# [Next Versoin, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.0...nightly)
+# [Next Version, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1...nightly)
 
 > **x** contributor made contributions to this release
 
@@ -17,6 +17,16 @@
 ## Rust Utilities
 
 ## Web Frontend
+
+# [0.7.1, Nitrogen II](https://github.com/TeamHarTex/HarTex/compare/0.7.0..0.7.1)
+
+> **1** contributor made contributions to this release
+
+> **11** commits since 2024-01-01
+
+## Discord Frontend
+
+- **Changed:** de-`Arc` the bot gateway queue as per changes in twilight
 
 # [0.7.0, Nitrogen I](https://github.com/TeamHarTex/HarTex/compare/0.6.0..0.7.0)
 
