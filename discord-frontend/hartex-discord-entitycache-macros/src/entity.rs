@@ -439,8 +439,21 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     });
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
-    let function_decls = input.relates_array.elements.iter().map(|_| quote! {});
-    let function_decls: Vec<_> = function_decls.collect();
+    let mut function_decls = Vec::new();
+    for element in &input.relates_array.elements {
+        if !["multiple", "unique"].contains(&element.unique_or_multiple.to_string().as_str()) {
+            bail(
+                &element.unique_or_multiple,
+                "expected either `multiple` or `unique`",
+            )?;
+        }
+
+        if element.via != "via" {
+            bail(&element.via, "expected `via`")?;
+        }
+
+        function_decls.push(quote! {})
+    }
 
     Some(quote! {
         #(#attrs)*
