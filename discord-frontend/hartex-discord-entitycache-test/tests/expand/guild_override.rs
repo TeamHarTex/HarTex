@@ -32,6 +32,7 @@ use hartex_discord_entitycache_macros::entity;
         "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
         "GuildFeature": "twilight_model::guild::GuildFeature"
     ],
+    relates = [],
 )]
 pub struct GuildOverride;
 
