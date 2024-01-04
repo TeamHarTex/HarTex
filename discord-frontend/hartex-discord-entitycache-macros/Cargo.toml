@@ -15,7 +15,7 @@ itertools = "0.12.0"
 lazy_static = "1.4.0"
 proc-macro2 = "1.0.74"
 quote = "1.0.35"
-syn = { version = "2.0.46", features = ["extra-traits", "full"] }
+syn = { version = "2.0.47", features = ["extra-traits", "full"] }
 hartex-macro-utils = { version = "0.1.0", path = "../../rust-utilities/hartex-macro-utils" }
 
 [build-dependencies]
@@ -23,7 +23,7 @@ convert_case = "0.6.0"
 proc-macro2 = "1.0.74"
 quote = "1.0.35"
 reqwest = { version = "0.11.23", features = ["blocking"] }
-syn = { version = "2.0.46", features = ["extra-traits", "full"] }
+syn = { version = "2.0.47", features = ["extra-traits", "full"] }
 zip = { version = "0.6.6" }
 
 [features]
