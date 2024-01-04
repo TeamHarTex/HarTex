@@ -452,6 +452,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             bail(&element.via, "expected `via`")?;
         }
 
+        if element.unique_or_multiple == "multiple" {}
+
+        if element.unique_or_multiple == "unique" {}
+
         function_decls.push(quote! {})
     }
 
