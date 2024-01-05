@@ -1,92 +1,80 @@
 <template>
-  <div class="navbar">
-    <NuxtLink class="title" to="/">
-      hartex/<Transition @enter="onEnter" @leave="onLeave" :css="false">
-        <span v-if="suffix()" :key="suffix()">{{ suffix() }}</span>
-      </Transition>
-    </NuxtLink>
-    <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
-      <div class="i-carbon-logo-github"></div>
-    </NuxtLink>
-  </div>
+  <nav ref="navbar">
+    <NuxtLink class="brand" to="/">hartex</NuxtLink>
+    <div class="links">
+      <NuxtLink to="/" target="_blank">
+        <div class="i-carbon-notebook-reference"></div>
+      </NuxtLink>
+      <NuxtLink to="/" target="_blank">
+        <div class="i-carbon-logo-discord"></div>
+      </NuxtLink>
+      <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
+        <div class="i-carbon-logo-github"></div>
+      </NuxtLink>
+    </div>
+  </nav>
 </template>
 
 <style scoped lang="postcss">
-.navbar {
-  @apply sticky top-0 opacity-0;
-  @apply px-18 py-12 text-3xl;
-  @apply flex justify-between items-center;
+nav {
+  @apply fixed flex justify-between items-center;
+  @apply w-full px-80 py-12 transition-opacity;
 }
 
-.navbar .title {
-  @apply font-600;
+nav .brand {
+  @apply text-4xl font-500;
 }
 
-.navbar span {
-  @apply inline-block;
+nav .links {
+  @apply flex;
 }
 
-@screen lt-md {
-  .navbar {
-    @apply px-12;
-  }
+nav .links a {
+  @apply text-3xl mx-3;
+}
+
+nav .links a:first-child {
+  @apply ml-0;
+}
+
+nav .links a:last-child {
+  @apply mr-0;
 }
 </style>
 
 <script setup lang="ts">
-const { $gsap } = useNuxtApp();
+const navbar: Ref<HTMLElement | null> = ref(null);
 
-const route = useRoute();
+let showNavbar = true;
+let lastScrollPosition = 0;
 
-function suffix() {
-  switch (route.name) {
-    case "blog-slug": {
-      return "blog";
-    }
+onMounted(() => {
+  window.addEventListener('scroll', onScroll);
+});
 
-    case "docs-slug": {
-      return "docs";
+function onScroll() {
+  const currentScrollPosition = window.scrollY;
+
+  if (currentScrollPosition < 0) {
+    return;
+  }
+
+  if (Math.abs(currentScrollPosition - lastScrollPosition) < 30) {
+    return
+  }
+
+  showNavbar = currentScrollPosition < lastScrollPosition;
+
+  lastScrollPosition = currentScrollPosition;
+
+  if (navbar.value) {
+    if (!showNavbar) {
+      navbar.value.style.opacity = "0";
+      navbar.value.style.pointerEvents = 'none';
+    } else {
+      navbar.value.style.opacity = "100";
+      navbar.value.style.pointerEvents = 'auto';
     }
   }
 }
-
-function onEnter(el: any, done: any) {
-  $gsap.fromTo(
-    el,
-    {
-      opacity: 0,
-      y: -30,
-    },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 0.3,
-      delay: 0.3,
-      onComplete: done,
-    }
-  );
-}
-
-function onLeave(el: any, done: any) {
-  $gsap.to(el, {
-    opacity: 0,
-    duration: 0.3,
-    onComplete: done,
-  });
-}
-
-onMounted(() => {
-  $gsap.fromTo(
-    ".navbar",
-    {
-      y: -30,
-    },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 0.3,
-      delay: 0.6,
-    }
-  );
-});
 </script>

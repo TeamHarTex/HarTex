@@ -22,18 +22,22 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <template>
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage/>
   </NuxtLayout>
 </template>
 
 <style lang="postcss">
 * {
-  @apply p-0 m-0;
-  @apply font-sans outline-none border-box;
+  @apply m-0 p-0 box-border;
+  @apply font-sans outline-none;
 }
 
 a {
-  @apply decoration-none text-tertiary;
+  @apply decoration-none text-tertiary transition-colors;
+}
+
+a:hover {
+  @apply text-secondary;
 }
 
 body {
@@ -41,7 +45,11 @@ body {
 }
 
 main {
-  @apply mx-18;
+  @apply px-80;
+}
+
+section {
+  @apply min-h-xl;
 }
 
 @screen lt-md {
@@ -50,3 +58,24 @@ main {
   }
 }
 </style>
+
+<script setup lang="ts">
+import Lenis from '@studio-freight/lenis'
+
+function
+initLenis() {
+  const lenis = new Lenis();
+
+  function raf(time: any) {
+    lenis.raf(time);
+
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf)
+}
+
+onMounted(() => {
+  initLenis();
+})
+</script>
