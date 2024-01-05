@@ -27,6 +27,7 @@ use hartex_discord_entitycache_macros::entity;
     id = [],
     exclude = ["nonexistent_field"],
     extra = [],
+    overrides = [],
     relates = [],
 )]
 pub struct NonexistentFieldOrOlderVersion;
