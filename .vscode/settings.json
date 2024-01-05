@@ -7,5 +7,6 @@
         ".\\rust-utilities\\Cargo.toml",
     ],
     "rust-analyzer.showUnlinkedFileNotification": false,
-    "rust-analyzer.imports.merge.glob": false
+    "rust-analyzer.imports.merge.glob": false,
+    "editor.fontSize": 13
 }
