@@ -20,6 +20,7 @@ export default defineConfig({
       provider: "fontshare",
       fonts: {
         sans: "Satoshi",
+        serif: "Sentient",
       },
     }),
   ],

@@ -21,8 +21,9 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-  <Navbar />
+  <Navbar/>
   <main>
-    <slot />
+    <slot/>
   </main>
+  <Footer/>
 </template>
