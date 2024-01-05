@@ -31,5 +31,7 @@ use hartex_discord_entitycache_core::entity;
         "guild_id": "Id<GuildMarker>",
         "user_id": "Id<UserMarker>",
     ],
+    overrides = [],
+    relates = [],
 )]
 pub struct MemberEntity;

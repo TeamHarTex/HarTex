@@ -69,11 +69,15 @@ pub struct EntityMacroInput where
     extra_fields_ident: Ident,
     equal5: Token![=],
     extra_fields_array: KeyValueArray,
-    comma2??: Token![,],
-    overrides_ident??: Ident,
-    equal4??: Token![=],
-    overrides_array??: KeyValueArray,
-    comma4??: Token![,],
+    comma2: Token![,],
+    overrides_ident: Ident,
+    equal4: Token![=],
+    overrides_array: KeyValueArray,
+    comma4: Token![,],
+    relates_idents: Ident,
+    equal6: Token![=],
+    relates_array: RelatesArray,
+    comma6??: Token![,],
 );
 
 #[derive(Clone)]
@@ -116,6 +120,49 @@ struct KeyValueArrayElement where
     value: LitStr,
 );
 
+#[derive(Clone)]
+struct RelatesArray {
+    #[allow(dead_code)]
+    bracket_token: Bracket,
+    #[allow(dead_code)]
+    elements: Punctuated<RelatesArrayElement, Token![,]>,
+}
+
+impl Parse for RelatesArray {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        let content;
+        let bracket_token = bracketed!(content in input);
+        let mut elements = Punctuated::new();
+
+        while !content.is_empty() {
+            let first = content.parse::<RelatesArrayElement>()?;
+            elements.push_value(first);
+
+            if content.is_empty() {
+                break;
+            }
+
+            let punct = content.parse()?;
+            elements.push_punct(punct);
+        }
+
+        Ok(Self {
+            bracket_token,
+            elements,
+        })
+    }
+}
+
+impl_parse!(
+#[derive(Clone)]
+struct RelatesArrayElement where
+    unique_or_multiple: Ident,
+    name: LitStr,
+    colon: Token![:],
+    via: Ident,
+    value: LitStr,
+);
+
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::too_many_lines)]
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
@@ -131,18 +178,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         bail(&input.extra_fields_ident, "expected `extra`")?;
     }
 
-    if let Some(id) = &input.overrides_ident
-        && id != "overrides"
-    {
-        bail(id, "expected `overrides`")?;
-    }
-
-    if let Some(id) = &input.overrides_ident {
-        match (&input.equal4, &input.overrides_array) {
-            (equal4 @ Some(_), None) => bail(equal4, "expected overrides array")?,
-            (None, _) => bail(id, "expected `=` and overrides array")?,
-            _ => {}
-        }
+    if input.overrides_ident != "overrides" {
+        bail(&input.overrides_ident, "expected `overrides`")?;
     }
 
     let type_key = input.from_lit_str.value();
@@ -402,11 +439,34 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     });
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
+    let mut function_decls = Vec::new();
+    for element in &input.relates_array.elements {
+        if !["multiple", "unique"].contains(&element.unique_or_multiple.to_string().as_str()) {
+            bail(
+                &element.unique_or_multiple,
+                "expected either `multiple` or `unique`",
+            )?;
+        }
+
+        if element.via != "via" {
+            bail(&element.via, "expected `via`")?;
+        }
+
+        if element.unique_or_multiple == "multiple" {}
+
+        if element.unique_or_multiple == "unique" {}
+
+        function_decls.push(quote! {})
+    }
+
     Some(quote! {
         #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*,
             #(#extra_fields_tokens),*
+        }
+        impl #item_struct_name {
+            #(#function_decls)*
         }
         #[automatically_derived]
         impl hartex_discord_entitycache_core::traits::Entity for #item_struct_name {
@@ -423,10 +483,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     })
 }
 
-fn expand_fully_qualified_type_name(
-    to_expand: &str,
-    overrides_array: &Option<KeyValueArray>,
-) -> String {
+fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueArray) -> String {
     let to_expand = to_expand.replace(' ', "");
 
     let open_angle_brackets = to_expand.find('<');
@@ -444,8 +501,10 @@ fn expand_fully_qualified_type_name(
         return to_expand;
     }
 
-    if let Some(element) = (overrides_array.as_ref())
-        .and_then(|arr| arr.elements.iter().find(|elm| elm.key.value() == to_expand))
+    if let Some(element) = overrides_array
+        .elements
+        .iter()
+        .find(|elm| elm.key.value() == to_expand)
     {
         return element.value.value();
     }

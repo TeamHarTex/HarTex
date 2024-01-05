@@ -28,5 +28,7 @@ use hartex_discord_entitycache_core::entity;
     id = ["id"],
     include = ["bot"],
     extra = [],
+    overrides = [],
+    relates = [],
 )]
 pub struct UserEntity;

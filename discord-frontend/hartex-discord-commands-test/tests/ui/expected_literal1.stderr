@@ -2,6 +2,9 @@ error: unexpected end of input, expected literal
   --> tests/ui/expected_literal1.rs:25:1
    |
 25 | #[metadata(command_type =)]
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ in this procedural macro expansion
    |
-   = note: this error originates in the attribute macro `metadata` (in Nightly builds, run with -Z macro-backtrace for more info)
+  ::: $WORKSPACE/hartex-discord-commands-macros/src/lib.rs
+   |
+   | pub fn metadata(tokens: TokenStream, item: TokenStream) -> TokenStream {
+   | ---------------------------------------------------------------------- in this expansion of `#[metadata]`

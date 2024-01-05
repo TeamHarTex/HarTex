@@ -33,5 +33,6 @@ use hartex_discord_entitycache_core::entity;
     overrides = [
         "RoleFlags": "twilight_model::guild::RoleFlags"
     ],
+    relates = [],
 )]
 pub struct RoleEntity;

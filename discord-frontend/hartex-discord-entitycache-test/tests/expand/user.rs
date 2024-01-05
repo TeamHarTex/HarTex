@@ -27,6 +27,8 @@ use hartex_discord_entitycache_macros::entity;
     id = ["id"],
     include = ["accent_color", "avatar", "bot", "discriminator", "name"],
     extra = [],
+    overrides = [],
+    relates = [],
 )]
 pub struct UserExpand;
 
