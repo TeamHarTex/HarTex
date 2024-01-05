@@ -9,6 +9,7 @@ pub struct GuildOverride {
     pub owner_id: twilight_model::id::Id<twilight_model::id::marker::UserMarker>,
     pub id: twilight_model::id::Id<twilight_model::id::marker::GuildMarker>,
 }
+impl GuildOverride {}
 #[automatically_derived]
 impl hartex_discord_entitycache_core::traits::Entity for GuildOverride {
     type Id = twilight_model::id::Id<twilight_model::id::marker::GuildMarker>;
