@@ -27,6 +27,7 @@ use hartex_discord_entitycache_macros::entity;
     id = [],
     include = [true],
     extra = [],
+    overrides = [],
     relates = [],
 )]
 pub struct IgnoreNonStringExpressions;
