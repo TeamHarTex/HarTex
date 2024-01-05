@@ -46,6 +46,8 @@ use hartex_discord_entitycache_core::entity;
         "GuildFeature": "twilight_model::guild::GuildFeature",
         "PremiumTier": "twilight_model::guild::PremiumTier",
     ],
-    relates = [],
+    relates = [
+        multiple "Member": via "id",
+    ],
 )]
 pub struct GuildEntity;
