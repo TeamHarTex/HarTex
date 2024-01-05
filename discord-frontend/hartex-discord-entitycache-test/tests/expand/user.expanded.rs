@@ -7,6 +7,7 @@ pub struct UserExpand {
     pub name: String,
     pub id: twilight_model::id::Id<twilight_model::id::marker::UserMarker>,
 }
+impl UserExpand {}
 #[automatically_derived]
 impl hartex_discord_entitycache_core::traits::Entity for UserExpand {
     type Id = twilight_model::id::Id<twilight_model::id::marker::UserMarker>;
