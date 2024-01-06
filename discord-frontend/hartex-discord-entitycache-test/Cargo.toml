@@ -17,7 +17,10 @@ hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" 
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core", features = ["derive"] }
 hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros" }
 
+hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
+
 macrotest = { git = "https://github.com/TeamHarTex/macrotest.git", branch = "master" }
 rustversion = "1.0.14"
+tokio-postgres = "0.7.10"
 trybuild = "1.0.88"
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next" }

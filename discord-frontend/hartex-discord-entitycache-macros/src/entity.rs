@@ -20,8 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+
+use convert_case::Case;
+use convert_case::Casing;
 use hartex_macro_utils::bail;
 use hartex_macro_utils::impl_parse;
+use pluralizer::pluralize;
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
@@ -48,6 +53,13 @@ use crate::reflect::Field;
 const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "&str",
     "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
+];
+
+const VALID_ENTITIES: [(&str, &str); 4] = [
+    ("GuildEntity", "crate::guild::GuildEntity"),
+    ("MemberEntity", "crate::member::MemberEntity"),
+    ("RoleEntity", "crate::role::RoleEntity"),
+    ("UserEntity", "crate::user::UserEntity"),
 ];
 
 impl_parse!(
@@ -409,15 +421,49 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             bail(&element.via, "expected `via`")?;
         }
 
-        if element.unique_or_multiple == "multiple" {}
+        let hashmap = VALID_ENTITIES.into_iter().collect::<HashMap<_, _>>();
 
-        if element.unique_or_multiple == "unique" {}
+        if !hashmap
+            .keys()
+            .any(|name| name == &element.name.value().as_str())
+        {
+            bail(&element.name, "unknown entity name")?;
+        }
 
-        function_decls.push(quote! {});
+        let entity = element.name.value();
+        let cased_entity = entity.to_case(Case::Snake);
+        let first: &str = cased_entity.split('_').next().unwrap();
+
+        let ret_type = syn::parse_str::<Type>(hashmap.get(entity.as_str()).unwrap()).unwrap();
+
+        let function = if element.unique_or_multiple == "multiple" {
+            let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
+
+            quote! {
+                async fn #ident() -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                    todo!()
+                }
+            }
+        } else if element.unique_or_multiple == "unique" {
+            let ident = Ident::new(first, Span::call_site());
+
+            quote! {
+                async fn #ident() -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                    todo!()
+                }
+            }
+        } else {
+            unreachable!()
+        };
+
+        function_decls.push(quote! {#function});
     }
 
     if input.extra_fields_array.elements.is_empty() {
         return Some(quote! {
+            use hartex_discord_utils::DATABASE_POOL;
+            use tokio_postgres::GenericClient;
+
             #(#attrs)*
             #item_struct_vis struct #item_struct_name {
                 #(#fields_tokens),*
@@ -463,6 +509,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
     Some(quote! {
+        use hartex_discord_utils::DATABASE_POOL;
+        use tokio_postgres::GenericClient;
+
         #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*,
