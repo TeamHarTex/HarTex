@@ -270,6 +270,25 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     });
     let id_fields = id_fields.collect::<Vec<_>>();
 
+    input.relates_array.elements.iter().for_each(|element| {
+        if !vec![fields.clone(), id_fields.clone()]
+            .concat()
+            .contains(&element.value.value())
+        {
+            element
+                .value
+                .span()
+                .unwrap()
+                .error(format!(
+                    "field `{}` cannot be found in type `{type_key}`",
+                    element.value.value()
+                ))
+                .emit();
+
+            any_not_found = true;
+        }
+    });
+
     if any_not_found {
         return None;
     }
@@ -440,7 +459,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
             quote! {
-                async fn #ident() -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                async fn #ident(&self) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
                     todo!()
                 }
             }
@@ -448,7 +467,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             let ident = Ident::new(first, Span::call_site());
 
             quote! {
-                async fn #ident() -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                async fn #ident(&self) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
                     todo!()
                 }
             }
