@@ -271,14 +271,18 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let id_fields = id_fields.collect::<Vec<_>>();
 
     input.relates_array.elements.iter().for_each(|element| {
-        if !type_metadata.fields.iter().any(|field| field.name == element.name.value()) {
-            element.value.span().unwrap()
-                .error(format!("field `{}` cannot be found in type `{type_key}`", element.value.value()))
-                .note(format!(
-                    "the type metadata generated was for twilight-model version {}",
-                    metadata::CRATE_VERSION
+        if !vec![fields.clone(), id_fields.clone()]
+            .concat()
+            .contains(&element.value.value())
+        {
+            element
+                .value
+                .span()
+                .unwrap()
+                .error(format!(
+                    "field `{}` cannot be found in type `{type_key}`",
+                    element.value.value()
                 ))
-                .help("consider regenerating the metadata for a newer version if the field is recently added")
                 .emit();
 
             any_not_found = true;
