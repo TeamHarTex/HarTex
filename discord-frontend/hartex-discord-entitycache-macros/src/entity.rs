@@ -50,6 +50,8 @@ const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
 ];
 
+const VALID_ENTITIES: [&str; 4] = ["GuildEntity", "MemberEntity", "RoleEntity", "UserEntity"];
+
 impl_parse!(
 #[allow(dead_code)]
 #[allow(clippy::module_name_repetitions)]
@@ -407,6 +409,10 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
         if element.via != "via" {
             bail(&element.via, "expected `via`")?;
+        }
+
+        if !VALID_ENTITIES.contains(&element.name.value().as_str()) {
+            bail(&element.name, "unknown entity name")?;
         }
 
         if element.unique_or_multiple == "multiple" {}
