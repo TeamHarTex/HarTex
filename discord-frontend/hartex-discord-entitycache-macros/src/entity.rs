@@ -20,8 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use convert_case::Case;
+use convert_case::Casing;
 use hartex_macro_utils::bail;
 use hartex_macro_utils::impl_parse;
+use pluralizer::pluralize;
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
@@ -415,15 +418,34 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             bail(&element.name, "unknown entity name")?;
         }
 
-        if element.unique_or_multiple == "multiple" {}
+        let entity = element.name.value();
+        let cased_entity = entity.to_case(Case::Snake);
+        let first: &str = cased_entity.split("_").next().unwrap();
 
-        if element.unique_or_multiple == "unique" {}
+        let function = if element.unique_or_multiple == "multiple" {
+            let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
-        function_decls.push(quote! {});
+            quote! {
+                async fn #ident() {}
+            }
+        } else if element.unique_or_multiple == "unique" {
+            let ident = Ident::new(first, Span::call_site());
+
+            quote! {
+                async fn #ident() {}
+            }
+        } else {
+            unreachable!()
+        };
+
+        function_decls.push(quote! {#function});
     }
 
     if input.extra_fields_array.elements.is_empty() {
         return Some(quote! {
+            use hartex_discord_utils::DATABASE_POOL;
+            use tokio_postgres::GenericClient;
+
             #(#attrs)*
             #item_struct_vis struct #item_struct_name {
                 #(#fields_tokens),*
@@ -469,6 +491,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
     Some(quote! {
+        use hartex_discord_utils::DATABASE_POOL;
+        use tokio_postgres::GenericClient;
+
         #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*,
