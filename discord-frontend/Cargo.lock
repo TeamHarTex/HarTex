@@ -1235,6 +1235,7 @@ dependencies = [
  "hartex_discord_utils",
  "macrotest",
  "rustversion",
+ "tokio-postgres",
  "trybuild",
  "twilight-model",
 ]
