@@ -1232,6 +1232,7 @@ version = "0.7.1"
 dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_macros",
+ "hartex_discord_utils",
  "macrotest",
  "rustversion",
  "trybuild",
