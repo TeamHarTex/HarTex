@@ -34,7 +34,7 @@ use hartex_discord_entitycache_core::entity;
         "RoleFlags": "twilight_model::guild::RoleFlags"
     ],
     relates = [
-        unique "Guild": via "guild_id",
+        unique "GuildEntity": via "guild_id",
     ],
 )]
 pub struct RoleEntity;
