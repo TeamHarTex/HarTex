@@ -272,8 +272,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     input.relates_array.elements.iter().for_each(|element| {
         if !type_metadata.fields.iter().any(|field| field.name == element.name.value()) {
-            element.name.span().unwrap()
-                .error(format!("field `{}` cannot be found in type `{type_key}`", element.name.value()))
+            element.value.span().unwrap()
+                .error(format!("field `{}` cannot be found in type `{type_key}`", element.value.value()))
                 .note(format!(
                     "the type metadata generated was for twilight-model version {}",
                     metadata::CRATE_VERSION
