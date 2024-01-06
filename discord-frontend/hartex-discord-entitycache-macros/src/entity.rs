@@ -432,7 +432,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
         let entity = element.name.value();
         let cased_entity = entity.to_case(Case::Snake);
-        let first: &str = cased_entity.split("_").next().unwrap();
+        let first: &str = cased_entity.split('_').next().unwrap();
 
         let ret_type = syn::parse_str::<Type>(hashmap.get(entity.as_str()).unwrap()).unwrap();
 
