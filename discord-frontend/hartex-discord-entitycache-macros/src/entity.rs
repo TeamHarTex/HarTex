@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+
 use convert_case::Case;
 use convert_case::Casing;
 use hartex_macro_utils::bail;
@@ -53,7 +55,12 @@ const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
 ];
 
-const VALID_ENTITIES: [&str; 4] = ["GuildEntity", "MemberEntity", "RoleEntity", "UserEntity"];
+const VALID_ENTITIES: [(&str, &str); 4] = [
+    ("GuildEntity", "crate::guild::GuildEntity"),
+    ("MemberEntity", "crate::member::MemberEntity"),
+    ("RoleEntity", "crate::role::RoleEntity"),
+    ("UserEntity", "crate::user::UserEntity"),
+];
 
 impl_parse!(
 #[allow(dead_code)]
@@ -414,7 +421,12 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             bail(&element.via, "expected `via`")?;
         }
 
-        if !VALID_ENTITIES.contains(&element.name.value().as_str()) {
+        let hashmap = VALID_ENTITIES.into_iter().collect::<HashMap<_, _>>();
+
+        if !hashmap
+            .keys()
+            .any(|name| name == &element.name.value().as_str())
+        {
             bail(&element.name, "unknown entity name")?;
         }
 
@@ -422,17 +434,23 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         let cased_entity = entity.to_case(Case::Snake);
         let first: &str = cased_entity.split("_").next().unwrap();
 
+        let ret_type = syn::parse_str::<Type>(hashmap.get(entity.as_str()).unwrap()).unwrap();
+
         let function = if element.unique_or_multiple == "multiple" {
             let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
             quote! {
-                async fn #ident() {}
+                async fn #ident() -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                    todo!()
+                }
             }
         } else if element.unique_or_multiple == "unique" {
             let ident = Ident::new(first, Span::call_site());
 
             quote! {
-                async fn #ident() {}
+                async fn #ident() -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                    todo!()
+                }
             }
         } else {
             unreachable!()
