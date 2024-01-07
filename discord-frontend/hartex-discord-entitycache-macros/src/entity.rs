@@ -526,6 +526,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     let pooled = pinned.get().await?;
                     let client = pooled.client();
 
+                    #full_query_function_call
+
                     todo!()
                 }
             }
