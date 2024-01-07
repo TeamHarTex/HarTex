@@ -72,6 +72,10 @@ pub struct EntityMacroInput where
     equal1: Token![=],
     from_lit_str: LitStr,
     comma1: Token![,],
+    assume_ident: Ident,
+    equal7: Token![=],
+    assume_lits: ExprArray,
+    comma7: Token![,],
     id_ident: Ident,
     equal3: Token![=],
     id_array: ExprArray,
@@ -185,6 +189,10 @@ struct RelatesArrayElement where
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
     if input.from_ident != "from" {
         bail(&input.from_ident, "expected `from`")?;
+    }
+
+    if input.assume_ident != "assume" {
+        bail(&input.assume_ident, "expected `assume`")?;
     }
 
     if input.id_ident != "id" {
@@ -538,7 +546,36 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         function_decls.push(quote! {#function});
     }
 
+    let assumed_extra_impls = input
+        .assume_lits
+        .elems
+        .iter()
+        .filter_map(|expr| match expr {
+            Expr::Lit(ExprLit {
+                lit: Lit::Str(lit_str),
+                ..
+            }) => Some(lit_str.value()),
+            _ => None,
+        });
+
     if input.extra_fields_array.elements.is_empty() {
+        let extra = assumed_extra_impls
+            .map(|str| {
+                let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
+                let ident_pascal = Ident::new(&str.to_case(Case::Pascal), Span::call_site());
+                let full_ident =
+                    quote! {hartex_database_queries::discord_frontend::queries::#ident_snake::#ident_pascal};
+
+                quote! {
+                    impl From<#full_ident> for #item_struct_name {
+                        fn from(model: #full_ident) -> Self {
+                            Self { #(#fields_assignments),* }
+                        }
+                    }
+                }
+            })
+            .collect::<Vec<_>>();
+
         return Some(quote! {
             use tokio_postgres::GenericClient;
 
@@ -561,6 +598,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     Self { #(#fields_assignments),* }
                 }
             }
+            #(#extra)*
         });
     }
 
@@ -586,6 +624,29 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     });
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
+    let extra_model_assigment_tokens = extra_fields_assignment_tokens
+        .iter()
+        .map(|stream| {
+            quote! {#stream: model.#stream}
+        })
+        .collect::<Vec<_>>();
+    let extra = assumed_extra_impls
+        .map(|str| {
+            let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
+            let ident_pascal = Ident::new(&str.to_case(Case::Pascal), Span::call_site());
+            let full_ident =
+                quote! {hartex_database_queries::discord_frontend::queries::#ident_snake::#ident_pascal};
+
+            quote! {
+                impl From<#full_ident> for #item_struct_name {
+                    fn from(model: #full_ident) -> Self {
+                        Self { #(#fields_assignments),*, #(#extra_model_assigment_tokens),* }
+                    }
+                }
+            }
+        })
+        .collect::<Vec<_>>();
+
     Some(quote! {
         use tokio_postgres::GenericClient;
 
@@ -609,6 +670,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 Self { #(#fields_assignments),*, #(#extra_fields_assignment_tokens),* }
             }
         }
+        #(#extra)*
     })
 }
 
