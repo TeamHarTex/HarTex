@@ -276,7 +276,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let id_fields = id_fields.collect::<Vec<_>>();
 
     input.relates_array.elements.iter().for_each(|element| {
-        if !vec![fields.clone(), id_fields.clone()]
+        if ![fields.clone(), id_fields.clone()]
             .concat()
             .contains(&element.value.value())
         {
