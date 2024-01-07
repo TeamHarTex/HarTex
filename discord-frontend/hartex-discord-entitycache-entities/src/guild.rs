@@ -27,6 +27,7 @@ use hartex_discord_entitycache_core::entity;
 #[allow(clippy::module_name_repetitions)]
 #[entity(
     from = "twilight_model::guild::Guild",
+    assume = ["CachedGuildSelectById"],
     id = ["id"],
     include = [
         "default_message_notifications",
