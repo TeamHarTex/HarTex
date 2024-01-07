@@ -23,23 +23,51 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <template>
   <header>
     <h1>
-      Discord servers' management,<br/>
+      Discord server management,<br/>
       <span>reimagined</span>.
     </h1>
   </header>
   <section>
     <div class="features">
       <div class="feature first">
+        <h2>Flexible configurations:</h2>
+        <div class="whitespace"></div>
+        <ul>
+          <li>...</li>
+          <li>...</li>
+          <li>...</li>
+        </ul>
       </div>
       <div class="feature second">
+        <h2>Ticket system</h2>
+        <div class="i-carbon-ticket"></div>
       </div>
       <div class="feature third">
+        <h2>
+          Any questions?<br />
+          Join our
+          <NuxtLink to="https://discord.com/invite/Xu8453VBAv"
+            class="inline-btn"
+            target="_blank">Discord</NuxtLink>!
+        </h2>
+        <div class="i-carbon-share-knowledge"></div>
       </div>
       <div class="feature forth">
+        <h2>Leveling system</h2>
+        <div class="i-carbon-increase-level"></div>
       </div>
       <div class="feature fifth">
+        <h2>Starboard</h2>
+        <div class="i-carbon-star"></div>
       </div>
       <div class="feature sixth">
+        <h2>Robust moderation features:</h2>
+        <div class="whitespace"></div>
+        <ul>
+          <li>Infraction database</li>
+          <li>...</li>
+          <li>...</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -48,46 +76,48 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <style scoped lang="postcss">
 header {
   @apply h-4xl flex items-center justify-center;
-}
 
-header h1 {
-  @apply text-6xl font-500 text-center;
-}
+  h1 {
+    @apply text-6xl font-500 text-center;
 
-header h1 span {
-  @apply text-secondary font-serif;
+    span {
+      @apply text-secondary font-serif;
+    }
+  }
 }
 
 .features {
   @apply grid grid-cols-4 gap-2xl;
-}
 
-.features .feature {
-  @apply flex h-70 rounded-lg;
-  @apply bg-tertiary text-primary;
-}
+  .feature {
+    @apply flex flex-col h-80 rounded-lg;
+    @apply bg-tertiary text-primary p-12;
+  }
 
-.first {
-  grid-area: 1 / 1 / 2 / 3;
-}
+  .first {
+    grid-area: 1 / 1 / 2 / 3;
+  }
 
-.second {
-  grid-area: 1 / 3 / 2 / 4;
-}
+  .sixth {
+    grid-area: 2 / 3 / 3 / 5;
+  }
 
-.third {
-  grid-area: 1 / 4 / 2 / 5;
-}
+  .first, .sixth {
+    h2 {
+      @apply text-3xl;
+    }
 
-.forth {
-  grid-area: 2 / 1 / 3 / 2;
-}
+    ul {
+      @apply flex-1 list-none text-2xl;
+    }
+  }
 
-.fifth {
-  grid-area: 2 / 2 / 3 / 3;
-}
+  .second, .third, .forth, .fifth {
+    @apply items-center justify-center text-center;
 
-.sixth {
-  grid-area: 2 / 3 / 3 / 5;
+    div {
+      @apply text-5xl mt-8;
+    }
+  }
 }
 </style>

@@ -5,7 +5,7 @@
       <NuxtLink to="/" target="_blank">
         <div class="i-carbon-notebook-reference"></div>
       </NuxtLink>
-      <NuxtLink to="/" target="_blank">
+      <NuxtLink to="https://discord.com/invite/Xu8453VBAv" target="_blank">
         <div class="i-carbon-logo-discord"></div>
       </NuxtLink>
       <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
@@ -18,27 +18,27 @@
 <style scoped lang="postcss">
 nav {
   @apply fixed flex justify-between items-center;
-  @apply w-full px-80 py-12 transition-opacity;
-}
+  @apply w-full py-18 transition-opacity;
 
-nav .brand {
-  @apply text-4xl font-500;
-}
+  .brand {
+    @apply text-4xl font-600;
+  }
 
-nav .links {
-  @apply flex;
-}
+  .links {
+    @apply flex;
 
-nav .links a {
-  @apply text-3xl mx-3;
-}
+    a {
+      @apply text-3xl mx-3;
+    }
 
-nav .links a:first-child {
-  @apply ml-0;
-}
+    a:first-child {
+      @apply ml-0;
+    }
 
-nav .links a:last-child {
-  @apply mr-0;
+    a:last-child {
+      @apply mr-0;
+    }
+  }
 }
 </style>
 

@@ -27,6 +27,10 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 </template>
 
 <style lang="postcss">
+::selection {
+  @apply bg-secondary text-primary;
+}
+
 * {
   @apply m-0 p-0 box-border;
   @apply font-sans outline-none;
@@ -44,18 +48,20 @@ body {
   @apply bg-primary text-tertiary;
 }
 
-main {
-  @apply px-80;
+main, nav, footer {
+  @apply px-20 sm:px-20 md:px-30 lg:px-40 xl:px-60 2xl:px-80;
 }
 
 section {
   @apply min-h-xl;
 }
 
-@screen lt-md {
-  main {
-    @apply mx-12;
-  }
+.inline-btn {
+  @apply text-primary underline;
+}
+
+.whitespace {
+  @apply py-4;
 }
 </style>
 
