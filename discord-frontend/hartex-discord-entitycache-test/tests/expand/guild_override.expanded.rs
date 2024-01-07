@@ -1,5 +1,4 @@
 use hartex_discord_entitycache_macros::entity;
-use hartex_discord_utils::DATABASE_POOL;
 use tokio_postgres::GenericClient;
 pub struct GuildOverride {
     pub default_message_notifications: twilight_model::guild::DefaultMessageNotificationLevel,
