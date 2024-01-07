@@ -33,8 +33,8 @@ use hartex_discord_entitycache_core::entity;
     ],
     overrides = [],
     relates = [
-        unique "GuildEntity": via "guild_id",
-        unique "UserEntity": via "user_id",
+        unique "GuildEntity": via "guild_id" as "id",
+        // unique "UserEntity": via "user_id" as "id",
     ],
 )]
 pub struct MemberEntity;
