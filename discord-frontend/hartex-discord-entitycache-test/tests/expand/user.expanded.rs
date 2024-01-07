@@ -1,5 +1,4 @@
 use hartex_discord_entitycache_macros::entity;
-use hartex_discord_utils::DATABASE_POOL;
 use tokio_postgres::GenericClient;
 pub struct UserExpand {
     pub accent_color: Option<u32>,
