@@ -20,21 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_entitycache_core::entity;
-
-#[allow(clippy::module_name_repetitions)]
-#[entity(
-    from = "twilight_model::guild::Member",
-    id = ["guild_id", "user_id"],
-    include = ["roles"],
-    extra = [
-        "guild_id": "Id<GuildMarker>",
-        "user_id": "Id<UserMarker>",
-    ],
-    overrides = [],
-    relates = [
-        unique "GuildEntity": via "guild_id" as "id",
-        // unique "UserEntity": via "user_id" as "id",
-    ],
-)]
-pub struct MemberEntity;
+// This file is a sample configuration for the per-guild configuration of HarTex.
+// This sample may change as the data structures and manifest evolves.

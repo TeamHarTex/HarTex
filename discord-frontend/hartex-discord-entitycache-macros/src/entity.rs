@@ -26,12 +26,14 @@ use convert_case::Case;
 use convert_case::Casing;
 use hartex_macro_utils::bail;
 use hartex_macro_utils::impl_parse;
+use itertools::Itertools;
 use pluralizer::pluralize;
 use proc_macro2::Ident;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
+use quote::TokenStreamExt;
 use syn::bracketed;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
@@ -172,7 +174,10 @@ struct RelatesArrayElement where
     name: LitStr,
     colon: Token![:],
     via: Ident,
+    // FIXME: may need to generalize for more than one fields
     value: LitStr,
+    r#as: Token![as],
+    as_value: LitStr,
 );
 
 #[allow(clippy::module_name_repetitions)]
@@ -271,7 +276,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let id_fields = id_fields.collect::<Vec<_>>();
 
     input.relates_array.elements.iter().for_each(|element| {
-        if !vec![fields.clone(), id_fields.clone()]
+        if ![fields.clone(), id_fields.clone()]
             .concat()
             .contains(&element.value.value())
         {
@@ -427,6 +432,19 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let attrs = &item_struct.attrs;
     let from_type = syn::parse_str::<Type>(&type_key).unwrap();
 
+    let fields_for_function_decls = type_metadata
+        .fields
+        .iter()
+        .map(|field| (field.name.clone(), field.ty.clone()))
+        .merge(
+            input
+                .extra_fields_array
+                .elements
+                .iter()
+                .map(|element| (element.key.value(), element.value.value())),
+        )
+        .collect::<HashMap<_, _>>();
+
     let mut function_decls = Vec::new();
     for element in &input.relates_array.elements {
         if !["multiple", "unique"].contains(&element.unique_or_multiple.to_string().as_str()) {
@@ -453,21 +471,61 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         let cased_entity = entity.to_case(Case::Snake);
         let first: &str = cased_entity.split('_').next().unwrap();
 
+        // FIXME: may need to generalize for multiple fields
+        let (param_decl, param_name) = {
+            let name = Ident::new(element.value.value().as_str(), Span::call_site());
+
+            let ty = fields_for_function_decls
+                .get(element.value.value().as_str())
+                .unwrap();
+            let ty = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                ty,
+                &input.overrides_array,
+            ))
+            .unwrap();
+
+            (quote! {#name: #ty}, name)
+        };
         let ret_type = syn::parse_str::<Type>(hashmap.get(entity.as_str()).unwrap()).unwrap();
+
+        let query_function_name =
+            make_query_function_name(first, element.as_value.value().as_str());
+        // FIXME: bad assumption of always calling .to_string() here (mostly just that should suffice, but...)
+        let mut full_query_function_call = quote! {
+            let data = hartex_database_queries::discord_frontend::queries::#query_function_name::#query_function_name().bind(client, &#param_name.to_string())
+        };
 
         let function = if element.unique_or_multiple == "multiple" {
             let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
+            full_query_function_call.append_all(quote! {
+                .all().await?;
+            });
+
             quote! {
-                async fn #ident(&self) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                    let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
+                    let pooled = pinned.get().await?;
+                    let client = pooled.client();
+
+                    #full_query_function_call
+
                     todo!()
                 }
             }
         } else if element.unique_or_multiple == "unique" {
             let ident = Ident::new(first, Span::call_site());
 
+            full_query_function_call.append_all(quote! {
+                .one().await?;
+            });
+
             quote! {
-                async fn #ident(&self) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                    let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
+                    let pooled = pinned.get().await?;
+                    let client = pooled.client();
+
                     todo!()
                 }
             }
@@ -480,7 +538,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     if input.extra_fields_array.elements.is_empty() {
         return Some(quote! {
-            use hartex_discord_utils::DATABASE_POOL;
             use tokio_postgres::GenericClient;
 
             #(#attrs)*
@@ -528,7 +585,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
 
     Some(quote! {
-        use hartex_discord_utils::DATABASE_POOL;
         use tokio_postgres::GenericClient;
 
         #(#attrs)*
@@ -586,4 +642,15 @@ fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueA
         .or_else(|| metadata::STRUCT_MAP.keys().find(finder));
 
     fully_qualified.map_or(to_expand, ToString::to_string)
+}
+
+// FIXME: may need to generalize for multiple fields
+fn make_query_function_name(target_entity: &str, by_field: &str) -> Ident {
+    let name = format!(
+        "cached_{}_select_by_{}",
+        target_entity.to_lowercase(),
+        by_field.to_lowercase()
+    );
+
+    Ident::new(&name, Span::call_site())
 }

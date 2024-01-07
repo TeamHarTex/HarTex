@@ -1189,6 +1189,7 @@ dependencies = [
 name = "hartex_discord_entitycache_entities"
 version = "0.7.1"
 dependencies = [
+ "hartex_database_queries",
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
  "hartex_discord_utils",
