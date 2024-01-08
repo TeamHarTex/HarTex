@@ -41,6 +41,7 @@ mod entity;
 #[path = "../generated/metadata.rs"]
 mod metadata;
 mod reflect;
+mod typeext;
 
 #[proc_macro_attribute]
 pub fn entity(tokens: TokenStream, item: TokenStream) -> TokenStream {
