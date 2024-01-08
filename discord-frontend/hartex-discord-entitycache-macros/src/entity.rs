@@ -613,21 +613,26 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
         make_field_decl_and_assignments(ident, type_token)
     });
-    let (
-        extra_fields_tokens,
-        extra_fields_assignment_tokens,
-        extra_fields_assignment_tokens_with_necessary_casts,
-    ): (Vec<_>, Vec<_>, Vec<_>) = fields.multiunzip();
-    let extra_type_tokens = input.extra_fields_array.elements.iter().map(|element| {
-        let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-            &element.value.value(),
-            &input.overrides_array,
-        ))
-        .unwrap();
+    let (extra_fields_tokens, _, extra_fields_assignment_tokens_with_necessary_casts): (
+        Vec<_>,
+        Vec<_>,
+        Vec<_>,
+    ) = fields.multiunzip();
+    let (extra_fields_tokens2, extra_type_tokens): (Vec<_>, Vec<_>) = input
+        .extra_fields_array
+        .elements
+        .iter()
+        .map(|element| {
+            let ident = Ident::new(&element.key.value(), Span::call_site());
+            let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                &element.value.value(),
+                &input.overrides_array,
+            ))
+            .unwrap();
 
-        quote! {#type_token}
-    });
-    let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
+            (quote! {#ident}, quote! {#type_token})
+        })
+        .multiunzip();
     let extra = assumed_extra_impls
         .map(|str| {
             let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
@@ -664,8 +669,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             }
         }
         impl From<(#(#extra_type_tokens),*, #from_type)> for #item_struct_name {
-            fn from((#(#extra_fields_assignment_tokens),*, model): (#(#extra_type_tokens),*, #from_type)) -> Self {
-                Self { #(#fields_assignments),*, #(#extra_fields_assignment_tokens),* }
+            fn from((#(#extra_fields_tokens2),*, model): (#(#extra_type_tokens),*, #from_type)) -> Self {
+                Self { #(#fields_assignments),*, #(#extra_fields_tokens2),* }
             }
         }
         #(#extra)*
@@ -742,6 +747,12 @@ fn make_field_decl_and_assignments(
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
             quote! {#field_name: model.#field_name.iter().cloned().map(From::from).collect()},
+        )
+    } else if field_type.is_vec_of("Id") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name.iter().map(|str| std::str::FromStr::from_str(str).unwrap()).collect()},
         )
     } else {
         (
