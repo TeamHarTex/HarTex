@@ -519,7 +519,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
                     #full_query_function_call
 
-                    todo!()
+                    Ok(data.into_iter().map(|thing| #ret_type::from(thing)).collect())
                 }
             }
         } else if element.unique_or_multiple == "unique" {
@@ -537,7 +537,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
                     #full_query_function_call
 
-                    todo!()
+                    Ok(#ret_type::from(data))
                 }
             }
         } else {
