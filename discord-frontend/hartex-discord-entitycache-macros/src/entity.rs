@@ -51,6 +51,7 @@ use syn::Type;
 
 use crate::metadata;
 use crate::reflect::Field;
+use crate::typeext::TypeExt;
 
 const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "&str",
@@ -309,55 +310,56 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let item_struct_vis = item_struct.vis.clone();
     let item_struct_name = item_struct.ident.clone();
 
-    let (mut fields_tokens, mut fields_assignments): (Vec<_>, Vec<_>) =
-        match &*input.exclude_or_include_ident.to_string() {
-            "exclude" => type_metadata
-                .fields
-                .iter()
-                .filter_map(|field| {
-                    if fields.contains(&field.name) {
-                        None
-                    } else {
-                        let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                        let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                            &field.ty,
-                            &input.overrides_array,
-                        ))
-                        .unwrap();
+    let (mut fields_tokens, mut fields_assignments, mut field_assignments_with_necessary_casts): (
+        Vec<_>,
+        Vec<_>,
+        Vec<_>,
+    ) = match &*input.exclude_or_include_ident.to_string() {
+        "exclude" => type_metadata
+            .fields
+            .iter()
+            .filter_map(|field| {
+                if fields.contains(&field.name) {
+                    None
+                } else {
+                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
+                    let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                        &field.ty,
+                        &input.overrides_array,
+                    ))
+                    .unwrap();
 
-                        Some((
-                            quote! {#field_name: #field_type},
-                            quote! {#field_name: model.#field_name},
-                        ))
-                    }
+                    Some(make_field_decl_and_assignments(field_name, field_type))
+                }
+            })
+            .multiunzip(),
+        "include" => type_metadata
+            .fields
+            .iter()
+            .filter_map(|field| {
+                fields.iter().find(|&x| x == &field.name).map(|_| {
+                    let field_name = Ident::new(&field.name, Span::call_site());
+                    let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
+                        &field.ty,
+                        &input.overrides_array,
+                    ))
+                    .unwrap();
+
+                    make_field_decl_and_assignments(field_name, field_type)
                 })
-                .unzip(),
-            "include" => type_metadata
-                .fields
-                .iter()
-                .filter_map(|field| {
-                    fields.iter().find(|&x| x == &field.name).map(|_| {
-                        let field_name = Ident::new(&field.name, Span::call_site());
-                        let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                            &field.ty,
-                            &input.overrides_array,
-                        ))
-                        .unwrap();
+            })
+            .multiunzip(),
+        _ => bail(
+            &input.exclude_or_include_ident,
+            "expected `exclude` or `include`",
+        )?,
+    };
 
-                        (
-                            quote! {pub #field_name: #field_type},
-                            quote! {#field_name: model.#field_name},
-                        )
-                    })
-                })
-                .unzip(),
-            _ => bail(
-                &input.exclude_or_include_ident,
-                "expected `exclude` or `include`",
-            )?,
-        };
-
-    let (mut field_tokens_to_append, mut field_assignments_to_append) = type_metadata
+    let (
+        mut field_tokens_to_append,
+        mut field_assignments_to_append,
+        mut field_assignments_to_append_with_necessary_casts,
+    ): (Vec<_>, Vec<_>, Vec<_>) = type_metadata
         .fields
         .iter()
         .filter_map(|field| {
@@ -370,16 +372,15 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 ))
                 .unwrap();
 
-                (
-                    quote! {pub #field_name: #field_type},
-                    quote! {#field_name: model.#field_name},
-                )
+                make_field_decl_and_assignments(field_name, field_type)
             })
         })
-        .unzip();
+        .multiunzip();
 
     fields_tokens.append(&mut field_tokens_to_append);
     fields_assignments.append(&mut field_assignments_to_append);
+    field_assignments_with_necessary_casts
+        .append(&mut field_assignments_to_append_with_necessary_casts);
 
     let type_tokens = if let [first] = &id_fields[..] {
         let field = (type_metadata.fields.iter())
@@ -569,7 +570,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 quote! {
                     impl From<#full_ident> for #item_struct_name {
                         fn from(model: #full_ident) -> Self {
-                            Self { #(#fields_assignments),* }
+                            Self { #(#field_assignments_with_necessary_casts),* }
                         }
                     }
                 }
@@ -610,9 +611,13 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         ))
         .unwrap();
 
-        (quote! {pub #ident: #type_token}, quote! {#ident})
+        make_field_decl_and_assignments(ident, type_token)
     });
-    let (extra_fields_tokens, extra_fields_assignment_tokens): (Vec<_>, Vec<_>) = fields.unzip();
+    let (
+        extra_fields_tokens,
+        extra_fields_assignment_tokens,
+        extra_fields_assignment_tokens_with_necessary_casts,
+    ): (Vec<_>, Vec<_>, Vec<_>) = fields.multiunzip();
     let extra_type_tokens = input.extra_fields_array.elements.iter().map(|element| {
         let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
             &element.value.value(),
@@ -623,13 +628,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         quote! {#type_token}
     });
     let extra_type_tokens: Vec<_> = extra_type_tokens.collect();
-
-    let extra_model_assigment_tokens = extra_fields_assignment_tokens
-        .iter()
-        .map(|stream| {
-            quote! {#stream: model.#stream}
-        })
-        .collect::<Vec<_>>();
     let extra = assumed_extra_impls
         .map(|str| {
             let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
@@ -640,7 +638,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             quote! {
                 impl From<#full_ident> for #item_struct_name {
                     fn from(model: #full_ident) -> Self {
-                        Self { #(#fields_assignments),*, #(#extra_model_assigment_tokens),* }
+                        Self { #(#field_assignments_with_necessary_casts),*, #(#extra_fields_assignment_tokens_with_necessary_casts),* }
                     }
                 }
             }
@@ -706,6 +704,52 @@ fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueA
         .or_else(|| metadata::STRUCT_MAP.keys().find(finder));
 
     fully_qualified.map_or(to_expand, ToString::to_string)
+}
+
+fn make_field_decl_and_assignments(
+    field_name: Ident,
+    field_type: Type,
+) -> (TokenStream, TokenStream, TokenStream) {
+    if field_type.is_enum("DefaultMessageNotificationLevel")
+        || field_type.is_enum("ExplicitContentFilter")
+        || field_type.is_enum("PremiumTier")
+    {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: #field_type::from(model.#field_name as u8)},
+        )
+    } else if field_type.is_id() {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: std::str::FromStr::from_str(&model.#field_name).unwrap()},
+        )
+    } else if field_type.is_option_of("ImageHash") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name.as_deref().map(|str| std::str::FromStr::from_str(str).unwrap())},
+        )
+    } else if field_type.is_option_of("u64") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name.map(|i| i as u64)},
+        )
+    } else if field_type.is_vec_of("GuildFeature") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name.iter().cloned().map(From::from).collect()},
+        )
+    } else {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name},
+        )
+    }
 }
 
 // FIXME: may need to generalize for multiple fields
