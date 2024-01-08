@@ -26,6 +26,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
       Discord server management,<br/>
       <span>reimagined</span>.
     </h1>
+    <NuxtLink class="primary-btn">Invite HarTex to your server</NuxtLink>
   </header>
   <section>
     <div class="features">
@@ -75,10 +76,10 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     <h2>Want to contribute or support HarTex?</h2>
     <div class="whitespace"></div>
     <div class="links">
-      <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
+      <NuxtLink class="primary-btn" to="https://github.com/TeamHarTex/HarTex" target="_blank">
         Github
       </NuxtLink>
-      <NuxtLink to="https://opencollective.com/HarTex" target="_blank">
+      <NuxtLink class="primary-btn" to="https://opencollective.com/HarTex" target="_blank">
         Open Collective
       </NuxtLink>
     </div>
@@ -87,7 +88,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <style scoped lang="postcss">
 header {
-  @apply h-[95vh] flex items-center justify-center;
+  @apply h-[95vh] flex flex-col items-center justify-center;
 
   h1 {
     @apply text-6xl font-500 text-center;
@@ -95,6 +96,14 @@ header {
     span {
       @apply text-secondary font-serif;
     }
+  }
+
+  .primary-btn {
+    @apply mt-20 cursor-not-allowed opacity-50;
+  }
+
+  .primary-btn:hover {
+    @apply bg-primary text-tertiary;
   }
 }
 
@@ -142,15 +151,6 @@ header {
 
   .links {
     @apply flex;
-
-    a {
-      @apply mx-6 px-4 py-2 text-2xl;
-      @apply border-solid border-rd border-1;
-    }
-
-    a:hover {
-      @apply bg-secondary text-primary;
-    }
 
     a:first-child {
       @apply ml-0;
