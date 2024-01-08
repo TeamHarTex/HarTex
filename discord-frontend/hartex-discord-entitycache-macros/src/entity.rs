@@ -329,7 +329,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     ))
                     .unwrap();
 
-                    Some(make_field_decl_and_assignments(field_name, field_type))
+                    Some(make_field_decl_and_assignments(&field_name, &field_type))
                 }
             })
             .multiunzip(),
@@ -345,7 +345,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     ))
                     .unwrap();
 
-                    make_field_decl_and_assignments(field_name, field_type)
+                    make_field_decl_and_assignments(&field_name, &field_type)
                 })
             })
             .multiunzip(),
@@ -372,7 +372,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 ))
                 .unwrap();
 
-                make_field_decl_and_assignments(field_name, field_type)
+                make_field_decl_and_assignments(&field_name, &field_type)
             })
         })
         .multiunzip();
@@ -611,7 +611,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         ))
         .unwrap();
 
-        make_field_decl_and_assignments(ident, type_token)
+        make_field_decl_and_assignments(&ident, &type_token)
     });
     let (extra_fields_tokens, _, extra_fields_assignment_tokens_with_necessary_casts): (
         Vec<_>,
@@ -712,8 +712,8 @@ fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueA
 }
 
 fn make_field_decl_and_assignments(
-    field_name: Ident,
-    field_type: Type,
+    field_name: &Ident,
+    field_type: &Type,
 ) -> (TokenStream, TokenStream, TokenStream) {
     if field_type.is_enum("DefaultMessageNotificationLevel")
         || field_type.is_enum("ExplicitContentFilter")
