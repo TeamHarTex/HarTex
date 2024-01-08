@@ -20,38 +20,96 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use syn::GenericArgument;
+use syn::PathArguments;
 use syn::Type;
 
 pub trait TypeExt {
-    fn is_default_message_notification_level(&self) -> bool;
-
-    fn is_explicit_content_filter(&self) -> bool;
+    fn is_enum(&self, name: &str) -> bool;
 
     fn is_id(&self) -> bool;
 
-    fn is_option_of(&self, option_of: Type) -> bool;
+    fn is_option_of(&self, option_of: &str) -> bool;
 
-    fn is_vec_of(&self, vec_of: Type) -> bool;
+    fn is_vec_of(&self, vec_of: &str) -> bool;
 }
 
 impl TypeExt for Type {
-    fn is_default_message_notification_level(&self) -> bool {
-        todo!()
-    }
+    fn is_enum(&self, name: &str) -> bool {
+        let Type::Path(path) = self else {
+            return false;
+        };
 
-    fn is_explicit_content_filter(&self) -> bool {
-        todo!()
+        let last = path.path.segments.last().unwrap();
+        last.ident == name && last.arguments.is_none()
     }
 
     fn is_id(&self) -> bool {
-        todo!()
+        let Type::Path(path) = self else {
+            return false;
+        };
+
+        let last = path.path.segments.last().unwrap();
+        last.ident == "Id"
     }
 
-    fn is_option_of(&self, option_of: Type) -> bool {
-        todo!()
+    fn is_option_of(&self, option_of: &str) -> bool {
+        let Type::Path(path) = self else {
+            return false;
+        };
+
+        let last = path.path.segments.last().unwrap();
+        if last.ident != "Option" {
+            return false;
+        }
+
+        let PathArguments::AngleBracketed(angle_bracketed) = last.arguments.clone() else {
+            return false;
+        };
+
+        if angle_bracketed.args.is_empty() || angle_bracketed.args.len() > 1 {
+            return false;
+        }
+
+        let GenericArgument::Type(first) = angle_bracketed.args.first().unwrap() else {
+            return false;
+        };
+
+        let Type::Path(path) = first else {
+            return false;
+        };
+
+        let last = path.path.segments.last().unwrap();
+        last.ident == option_of
     }
 
-    fn is_vec_of(&self, vec_of: Type) -> bool {
-        todo!()
+    fn is_vec_of(&self, vec_of: &str) -> bool {
+        let Type::Path(path) = self else {
+            return false;
+        };
+
+        let last = path.path.segments.last().unwrap();
+        if last.ident != "Vec" {
+            return false;
+        }
+
+        let PathArguments::AngleBracketed(angle_bracketed) = last.arguments.clone() else {
+            return false;
+        };
+
+        if angle_bracketed.args.is_empty() || angle_bracketed.args.len() > 1 {
+            return false;
+        }
+
+        let GenericArgument::Type(first) = angle_bracketed.args.first().unwrap() else {
+            return false;
+        };
+
+        let Type::Path(path) = first else {
+            return false;
+        };
+
+        let last = path.path.segments.last().unwrap();
+        last.ident == vec_of
     }
 }
