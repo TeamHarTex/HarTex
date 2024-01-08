@@ -53,7 +53,15 @@ main, nav, footer {
 }
 
 section {
-  @apply min-h-xl;
+  @apply min-h-xl my-9xl;
+}
+
+section:first-of-type {
+  @apply mt-0;
+}
+
+section:last-of-type {
+  @apply mb-0;
 }
 
 .inline-btn {

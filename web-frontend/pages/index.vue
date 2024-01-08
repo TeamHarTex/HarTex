@@ -33,9 +33,9 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
         <h2>Flexible configurations:</h2>
         <div class="whitespace"></div>
         <ul>
-          <li>...</li>
-          <li>...</li>
-          <li>...</li>
+          <li>Comprehensive API,</li>
+          <li>Example,</li>
+          <li>... and much more</li>
         </ul>
       </div>
       <div class="feature second">
@@ -64,18 +64,30 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
         <h2>Robust moderation features:</h2>
         <div class="whitespace"></div>
         <ul>
-          <li>Infraction database</li>
-          <li>...</li>
-          <li>...</li>
+          <li>Infraction database,</li>
+          <li>Example,</li>
+          <li>... and much more</li>
         </ul>
       </div>
+    </div>
+  </section>
+  <section class="contribute">
+    <h2>Want to contribute or support HarTex?</h2>
+    <div class="whitespace"></div>
+    <div class="links">
+      <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
+        Github
+      </NuxtLink>
+      <NuxtLink to="https://opencollective.com/HarTex" target="_blank">
+        Open Collective
+      </NuxtLink>
     </div>
   </section>
 </template>
 
 <style scoped lang="postcss">
 header {
-  @apply h-4xl flex items-center justify-center;
+  @apply h-[95vh] flex items-center justify-center;
 
   h1 {
     @apply text-6xl font-500 text-center;
@@ -117,6 +129,35 @@ header {
 
     div {
       @apply text-5xl mt-8;
+    }
+  }
+}
+
+.contribute {
+  @apply flex flex-col items-center justify-center;
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  .links {
+    @apply flex;
+
+    a {
+      @apply mx-6 px-4 py-2 text-2xl;
+      @apply border-solid border-rd border-1;
+    }
+
+    a:hover {
+      @apply bg-secondary text-primary;
+    }
+
+    a:first-child {
+      @apply ml-0;
+    }
+
+    a:last-child {
+      @apply mr-0;
     }
   }
 }
