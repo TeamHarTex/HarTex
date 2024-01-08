@@ -37,7 +37,8 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 }
 
 a {
-  @apply decoration-none text-tertiary transition-colors;
+  @apply decoration-none select-none;
+  @apply text-tertiary transition-colors;
 }
 
 a:hover {
@@ -53,8 +54,25 @@ main, nav, footer {
 }
 
 section {
-  @apply min-h-xl;
+  @apply min-h-xl my-9xl;
 }
+
+section:first-of-type {
+  @apply mt-0;
+}
+
+section:last-of-type {
+  @apply mb-0;
+}
+
+.primary-btn {
+      @apply mx-6 px-4 py-2 text-2xl;
+      @apply border-solid border-rd border-1;
+    }
+
+    .primary-btn:hover {
+      @apply bg-secondary text-primary;
+    }
 
 .inline-btn {
   @apply text-primary underline;
