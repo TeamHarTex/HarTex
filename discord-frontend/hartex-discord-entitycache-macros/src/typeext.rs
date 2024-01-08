@@ -20,34 +20,38 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Macros
-//!
-//! Useful macros for the entity cache.
+use syn::Type;
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![allow(deprecated)]
-#![feature(let_chains)]
-#![feature(proc_macro_diagnostic)]
+pub trait TypeExt {
+    fn is_default_message_notification_level(&self) -> bool;
 
-extern crate proc_macro;
+    fn is_explicit_content_filter(&self) -> bool;
 
-use proc_macro::TokenStream;
-use syn::parse_macro_input;
-use syn::ItemStruct;
+    fn is_id(&self) -> bool;
 
-mod entity;
-#[path = "../generated/metadata.rs"]
-mod metadata;
-mod reflect;
-mod typeext;
+    fn is_option_of(&self, option_of: Type) -> bool;
 
-#[proc_macro_attribute]
-pub fn entity(tokens: TokenStream, item: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(tokens as entity::EntityMacroInput);
-    let struct_decl = parse_macro_input!(item as ItemStruct);
-    entity::implement_entity(&input, &struct_decl)
-        .unwrap_or_default()
-        .into()
+    fn is_vec_of(&self, vec_of: Type) -> bool;
+}
+
+impl TypeExt for Type {
+    fn is_default_message_notification_level(&self) -> bool {
+        todo!()
+    }
+
+    fn is_explicit_content_filter(&self) -> bool {
+        todo!()
+    }
+
+    fn is_id(&self) -> bool {
+        todo!()
+    }
+
+    fn is_option_of(&self, option_of: Type) -> bool {
+        todo!()
+    }
+
+    fn is_vec_of(&self, vec_of: Type) -> bool {
+        todo!()
+    }
 }
