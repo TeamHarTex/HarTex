@@ -512,7 +512,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             });
 
             quote! {
-                async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
                     let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
                     let pooled = pinned.get().await?;
                     let client = pooled.client();
@@ -530,7 +530,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             });
 
             quote! {
-                async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
                     let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
                     let pooled = pinned.get().await?;
                     let client = pooled.client();
