@@ -19,31 +19,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-use hcl::eval::FuncArgs;
-use hcl::Number;
-use hcl::Value;
-use serde::Deserialize;
-use serde::Serialize;
-
-/// Appearance of HarTex in the server.
-#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
-pub struct Appearance {
-    /// Nickname of the bot user in the server.
-    pub nickname: Option<String>,
-    /// The role colour of the bot's integration role.
-    pub role_colour: Option<u32>,
-}
-
-pub(crate) fn hcl_rgb_function(args: FuncArgs) -> Result<Value, String> {
-    let r = args[0].as_number().unwrap();
-    let g = args[1].as_number().unwrap();
-    let b = args[2].as_number().unwrap();
-
-    Ok(Value::Number(Number::from(u32::from_be_bytes([
-        r.as_u64().unwrap() as u8,
-        g.as_u64().unwrap() as u8,
-        b.as_u64().unwrap() as u8,
-        0,
-    ]))))
-}
