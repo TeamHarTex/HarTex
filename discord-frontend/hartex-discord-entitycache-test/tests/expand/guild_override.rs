@@ -24,6 +24,7 @@ use hartex_discord_entitycache_macros::entity;
 
 #[entity(
     from = "twilight_model::guild::Guild",
+    assume = [],
     id = ["id"],
     include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
     extra = [],
