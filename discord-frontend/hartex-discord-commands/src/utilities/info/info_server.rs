@@ -39,7 +39,6 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
-use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::localizable::Localizable;
@@ -173,6 +172,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let mut features_vec = guild
         .features
+        .clone()
         .into_iter()
         .map(Into::into)
         .collect::<Vec<Cow<'static, str>>>();
@@ -184,13 +184,14 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             output
         });
 
-    let members = CachedMemberRepository
-        .member_ids_in_guild(guild.id)
-        .await
-        .into_diagnostic()?;
-    let users = future::try_join_all(members.iter().map(|id| CachedUserRepository.get(*id)))
-        .await
-        .into_diagnostic()?;
+    let members = guild.members(guild.id).await.into_diagnostic()?;
+    let users = future::try_join_all(
+        members
+            .iter()
+            .map(|member| CachedUserRepository.get(member.user_id)),
+    )
+    .await
+    .into_diagnostic()?;
     let humans = users.iter().filter(|user| !user.bot).count();
 
     if verbose {
