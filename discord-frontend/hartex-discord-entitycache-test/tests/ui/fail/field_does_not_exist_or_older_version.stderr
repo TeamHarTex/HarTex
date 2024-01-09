@@ -1,5 +1,5 @@
 error: field `nonexistent_field` cannot be found in type `twilight_model::channel::Channel`
-  --> tests/ui/fail/field_does_not_exist_or_older_version.rs:28:16
+  --> tests/ui/fail/field_does_not_exist_or_older_version.rs:29:16
    |
 28 |     exclude = ["nonexistent_field"],
    |                ^^^^^^^^^^^^^^^^^^^
