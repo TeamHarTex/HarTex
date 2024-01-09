@@ -12,11 +12,16 @@
 
 ## Discord Frontend
 
+- **Added:** added more conversions to entity macro
+- **Added:** added inter-entity relations to entity macro
+
 ## Localization Infrastructure
 
 ## Rust Utilities
 
 ## Web Frontend
+
+- **Added:** reimplementation of the main page
 
 # [0.7.1, Nitrogen II](https://github.com/TeamHarTex/HarTex/compare/0.7.0..0.7.1)
 
