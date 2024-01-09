@@ -24,6 +24,7 @@ use hartex_discord_entitycache_macros::entity;
 
 #[entity(
     from = "twilight_model::DoesNotExistOrOlderVersion",
+    assume = [],
     id = [],
     include = [],
     extra = [],
