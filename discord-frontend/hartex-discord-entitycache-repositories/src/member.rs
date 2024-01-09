@@ -23,11 +23,8 @@
 use std::pin::Pin;
 use std::str::FromStr;
 
-use hartex_database_queries::discord_frontend::queries::cached_member_select_by_guild_id::cached_member_select_by_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
@@ -37,30 +34,6 @@ use hartex_discord_utils::DATABASE_POOL;
 use tokio_postgres::GenericClient;
 
 pub struct CachedMemberRepository;
-
-impl CachedMemberRepository {
-    #[allow(clippy::missing_errors_doc)]
-    #[allow(clippy::missing_panics_doc)]
-    #[deprecated(since = "0.7.0")]
-    pub async fn member_ids_in_guild(
-        &self,
-        guild_id: Id<GuildMarker>,
-    ) -> CacheResult<Vec<Id<UserMarker>>> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        let members = cached_member_select_by_guild_id()
-            .bind(client, &guild_id.to_string())
-            .all()
-            .await?;
-
-        Ok(members
-            .into_iter()
-            .map(|member| Id::<UserMarker>::from_str(&member.user_id).unwrap())
-            .collect())
-    }
-}
 
 impl Repository<MemberEntity> for CachedMemberRepository {
     async fn get(
