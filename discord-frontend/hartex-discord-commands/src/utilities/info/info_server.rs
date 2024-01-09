@@ -40,7 +40,6 @@ use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
-use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -188,7 +187,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let users = future::try_join_all(
         members
             .iter()
-            .map(|member| CachedUserRepository.get(member.user_id)),
+            .map(|member| member.user(member.user_id)),
     )
     .await
     .into_diagnostic()?;
