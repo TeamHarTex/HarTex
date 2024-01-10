@@ -7,7 +7,6 @@ members = [
     "hartex-discord-commands-manager",
     "hartex-discord-commands-test",
     "hartex-discord-configuration-librune",
-    "hartex-discord-configuration-runecli",
     "hartex-discord-core",
     "hartex-discord-entitycache-cacheupdaters",
     "hartex-discord-entitycache-core",
