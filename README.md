@@ -2,6 +2,8 @@
 
 <h1 align="center">HarTex</h1>
 
+[![Latest Release](https://img.shields.io/github/v/release/TeamHarTex/HarTex?sort=date&logo=github&label=latest&style=for-the-badge)](https://github.com/TeamHarTex/HarTex/releases/latest)
+
 > [!WARNING]
 > **Being incredibly a work in progress and under rapid development, HarTex should be used, for now, with caution.**
 
@@ -12,10 +14,18 @@
 
 HarTex is a Discord bot for server administration and moderation; designed to be robust and with unparalleled flexibility to cater for various needs of different Discord servers.
 
-This is the main source code repository for HarTex. It contains various components of HarTex: its API backend, Bors buildbot, buildsystem, Discord frontend, localization infrastructure, utilities and the Web frontend.
+This is the main source code repository for HarTex. It contains various components of HarTex: its API backend, buildsystem, Discord frontend, localization infrastructure, utilities and the Web frontend.
 
 > [!NOTE]
 > **This README is for *users* rather than *contributors*. If you wish to *contribute* to HarTex, you should read [CONTRIBUTING.md](./CONTRIBUTING.md) instead.**
+>
+> **Please also see [SECURITY.md](./SECURITY.md) for our security policy.**
+
+### Community
+
+[![discord](https://img.shields.io/discord/886101109331075103?logo=discord&style=for-the-badge)](https://discord.gg/Xu8453VBAv)
+
+We have a dedicated [Discord server](https://discord.gg/Xu8453VBAv)! If you have any questions or ideas, or is it the case that you want to express your thoughts, you're welcome to join the server!
 
 ## Getting Started
 
@@ -23,16 +33,14 @@ The simplest way to use HarTex is to use the publicly hosted instance of it. We 
 
 Announcements will be made as we progress through finishing the basic functionality of the bot and approaching public testing.
 
-## Self-hosting
+## Building and Self-hosting
 
 If you are interested in using HarTex at an early stage, then you may host your own instance of HarTex. Documentation for
 which will be added at a later date.
 
-## Community
-
-We have a dedicated [Discord server](https://discord.gg/Xu8453VBAv)! The Discord server is primarily about Team HaTex, but we also provide support for HarTex as well as answering questions. Feel free to join us!
-
 ## License
+
+[![License](https://img.shields.io/github/license/TeamHarTex/HarTex?logo=github&style=for-the-badge)](LICENSE)
 
 <img src="meta/images/agplv3.svg" align="right" width=225x alt="AGPLv3">
 

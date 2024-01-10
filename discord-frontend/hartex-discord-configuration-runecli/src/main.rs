@@ -20,19 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use serde::Deserialize;
-use serde::Serialize;
+use rune::cli::Entry;
 
-/// Plugins configuration.
-#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
-pub struct Plugins {
-    /// Configuration for the utilities plugin.
-    pub utilities: Option<UtilitiesPlugin>,
-}
-
-/// Configuration for the utilities plugin.
-#[derive(Debug, Deserialize, Serialize, Eq, PartialEq)]
-pub struct UtilitiesPlugin {
-    #[serde(default)]
-    pub enabled: bool,
+pub fn main() {
+    Entry::new()
+        .about(format_args!(
+            "Rune: HarTex Edition {}",
+            env!("CARGO_PKG_VERSION")
+        ))
+        .run();
 }
