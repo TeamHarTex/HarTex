@@ -21,6 +21,7 @@
  */
 
 use rune::cli::Entry;
+use rune::Context;
 
 pub fn main() {
     Entry::new()
@@ -28,5 +29,6 @@ pub fn main() {
             "Rune: HarTex Edition {}",
             env!("CARGO_PKG_VERSION")
         ))
+        .context(&mut |_| Ok(Context::default()))
         .run();
 }
