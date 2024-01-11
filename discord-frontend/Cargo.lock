@@ -1217,11 +1217,15 @@ dependencies = [
 [[package]]
 name = "hartex_discord_configuration_librune"
 version = "0.7.1"
+dependencies = [
+ "rune",
+]
 
 [[package]]
 name = "hartex_discord_configuration_runecli"
 version = "0.7.1"
 dependencies = [
+ "hartex_discord_configuration_librune",
  "rune",
 ]
 
