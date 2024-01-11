@@ -91,7 +91,7 @@ header {
   @apply h-[95vh] flex flex-col items-center justify-center;
 
   h1 {
-    @apply text-6xl font-500 text-center;
+    @apply text-5xl md:text-6xl font-500 text-center;
 
     span {
       @apply text-secondary font-serif;
@@ -108,7 +108,7 @@ header {
 }
 
 .features {
-  @apply grid grid-cols-4 gap-2xl;
+  @apply grid grid-cols-1 xl:grid-cols-4 gap-2xl;
 
   .feature {
     @apply flex flex-col h-80 rounded-lg;
@@ -119,13 +119,17 @@ header {
     grid-area: 1 / 1 / 2 / 3;
   }
 
+  .third {
+    @apply hidden xl:flex;
+  }
+
   .sixth {
     grid-area: 2 / 3 / 3 / 5;
   }
 
   .first, .sixth {
     h2 {
-      @apply text-3xl;
+      @apply text-2xl md:text-3xl;
     }
 
     ul {
@@ -140,24 +144,34 @@ header {
       @apply text-5xl mt-8;
     }
   }
+
+  @media only screen and (max-width: 1024px) {
+    .first, .sixth {
+      grid-area: auto;
+    }
+  }
 }
 
 .contribute {
   @apply flex flex-col items-center justify-center;
 
   h2 {
-    @apply text-3xl;
+    @apply text-center text-2xl md:text-3xl;
   }
 
   .links {
-    @apply flex;
+    @apply flex flex-col md:flex-row;
+
+    a {
+      @apply my-4 md:my-0;
+    }
 
     a:first-child {
-      @apply ml-0;
+      @apply md:ml-0;
     }
 
     a:last-child {
-      @apply mr-0;
+      @apply mb-0 md:mr-0;
     }
   }
 }
