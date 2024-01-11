@@ -20,4 +20,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod hartex;
+use rune::Any;
+use rune::ContextError;
+use rune::Module;
+
+pub fn module() -> Result<Module, ContextError> {
+    let mut module = Module::with_crate_item("hartexconf", ["colour"])?;
+
+    module.ty::<Colour>()?;
+    module.function_meta(Colour::raw)?;
+    module.function_meta(Colour::rgb)?;
+
+    Ok(module)
+}
+
+#[derive(Any)]
+#[rune(item = ::hartexconf::colour)]
+pub struct Colour(pub u32);
+
+impl Colour {
+    #[rune::function(path = Self::raw)]
+    fn raw(colour: u32) -> Colour {
+        Self(colour)
+    }
+
+    #[rune::function(path = Self::rgb)]
+    fn rgb(r: u8, g: u8, b: u8) -> Colour {
+        Self((r as u32) << 16 | (g as u32) << 8 | (b as u32))
+    }
+}
