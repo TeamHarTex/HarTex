@@ -2,11 +2,13 @@
     "rust-analyzer.linkedProjects": [
         "./api-backend/Cargo.toml",
         "./buildsystem/Cargo.toml",
+        "./database-queries/Cargo.toml",
         "./discord-frontend/Cargo.toml",
         "./localization/Cargo.toml",
-        "./rust-utilities/Cargo.toml",
+        "./rust-utilities/Cargo.toml"
     ],
     "rust-analyzer.showUnlinkedFileNotification": false,
     "rust-analyzer.imports.merge.glob": false,
-    "editor.fontSize": 13
+    "editor.fontSize": 13,
+    "rune.server.cargoPackage": "discord-frontend/hartex_discord_configuration_runecli"
 }
