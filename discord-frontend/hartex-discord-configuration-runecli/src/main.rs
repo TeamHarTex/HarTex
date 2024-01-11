@@ -21,6 +21,7 @@
  */
 
 use hartex_discord_configuration_librune::hartex::colour;
+use hartex_discord_configuration_librune::hartex::plugin;
 use rune::cli::Entry;
 use rune::Context;
 
@@ -33,6 +34,7 @@ pub fn main() {
         .context(&mut |_| {
             let mut context = Context::default();
             context.install(colour::module()?)?;
+            context.install(plugin::module()?)?;
 
             Ok(context)
         })

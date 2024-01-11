@@ -20,5 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod colour;
-pub mod plugin;
+use rune::Any;
+use rune::ContextError;
+use rune::Module;
+
+pub fn module() -> Result<Module, ContextError> {
+    let mut module = Module::with_crate_item("hartexconf", ["plugin"])?;
+
+    module.ty::<Plugin>()?;
+
+    Ok(module)
+}
+
+#[derive(Any)]
+#[rune(item = ::hartexconf::plugin)]
+pub struct Plugin;
