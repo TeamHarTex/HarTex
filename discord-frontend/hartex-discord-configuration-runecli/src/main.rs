@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_configuration_librune::hartex::colour;
 use rune::cli::Entry;
 use rune::Context;
 
@@ -29,6 +30,11 @@ pub fn main() {
             "Rune: HarTex Edition {}",
             env!("CARGO_PKG_VERSION")
         ))
-        .context(&mut |_| Ok(Context::default()))
+        .context(&mut |_| {
+            let mut context = Context::default();
+            context.install(colour::module()?)?;
+
+            Ok(context)
+        })
         .run();
 }
