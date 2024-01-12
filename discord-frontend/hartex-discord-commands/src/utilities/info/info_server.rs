@@ -184,13 +184,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         });
 
     let members = guild.members(guild.id).await.into_diagnostic()?;
-    let users = future::try_join_all(
-        members
-            .iter()
-            .map(|member| member.user(member.user_id)),
-    )
-    .await
-    .into_diagnostic()?;
+    let users = future::try_join_all(members.iter().map(|member| member.user(member.user_id)))
+        .await
+        .into_diagnostic()?;
     let humans = users.iter().filter(|user| !user.bot).count();
 
     if verbose {
