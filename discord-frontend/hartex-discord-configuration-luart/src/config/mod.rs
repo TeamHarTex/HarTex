@@ -20,29 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod config;
+use rlua::Context;
+use rlua::Error;
+use rlua::FromLuaMulti;
+use rlua::MultiValue;
 
-use rlua::Lua;
-use rlua::Result;
-use rlua::StdLib;
+pub struct Configuration;
 
-pub fn evaluate_config(_: &str) -> Result<()> {
-    Lua::new_with(StdLib::BASE)
-        .context(|ctx| {
-            let globals = ctx.globals();
-            globals.set("VERSION", 10)?;
+impl<'lua> FromLuaMulti<'lua> for Configuration {
+    fn from_lua_multi(values: MultiValue<'lua>, lua: Context<'lua>) -> rlua::Result<Self> {
+        if values.is_empty() {
+            return Err(Error::ExternalError(String::from("multi value is empty").into()));
+        }
 
-            let hartexconf_table = ctx.create_table()?;
-            let hartexconf_colour_table = ctx.create_table()?;
-            let hartexconf_colour_rgb_function = ctx.create_function(|_, colour: u32| {
-                Ok(colour)
-            })?;
-            hartexconf_colour_table.set("rgb", hartexconf_colour_rgb_function)?;
-
-            hartexconf_table.set("colour", hartexconf_colour_table)?;
-
-            globals.set("hartexconf", hartexconf_table)?;
-
-            Ok(())
-        })
+        Ok(Self)
+    }
 }
