@@ -18,17 +18,17 @@
 <style scoped lang="postcss">
 nav {
   @apply fixed flex justify-between items-center;
-  @apply w-full py-18 transition-opacity;
+  @apply w-full py-12 md:py-18 transition-opacity;
 
   .brand {
-    @apply text-4xl font-600;
+    @apply text-3xl md:text-4xl font-600;
   }
 
   .links {
     @apply flex;
 
     a {
-      @apply text-3xl mx-3;
+      @apply mt-1 text-3xl mx-3;
     }
 
     a:first-child {

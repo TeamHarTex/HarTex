@@ -38,7 +38,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 a {
   @apply decoration-none select-none;
-  @apply text-tertiary transition-colors;
+  @apply text-tertiary text-center transition-colors;
 }
 
 a:hover {
@@ -50,7 +50,7 @@ body {
 }
 
 main, nav, footer {
-  @apply px-20 sm:px-20 md:px-30 lg:px-40 xl:px-60 2xl:px-80;
+  @apply px-10 sm:px-20 md:px-30 lg:px-40 xl:px-60 2xl:px-80;
 }
 
 section {
@@ -66,13 +66,13 @@ section:last-of-type {
 }
 
 .primary-btn {
-      @apply mx-6 px-4 py-2 text-2xl;
-      @apply border-solid border-rd border-1;
-    }
+  @apply mx-6 px-4 py-2 text-lg md:text-2xl;
+  @apply border-solid border-rd border-1;
+}
 
-    .primary-btn:hover {
-      @apply bg-secondary text-primary;
-    }
+.primary-btn:hover {
+  @apply bg-secondary text-primary;
+}
 
 .inline-btn {
   @apply text-primary underline;
@@ -86,8 +86,7 @@ section:last-of-type {
 <script setup lang="ts">
 import Lenis from '@studio-freight/lenis'
 
-function
-initLenis() {
+function initLenis() {
   const lenis = new Lenis();
 
   function raf(time: any) {
@@ -96,7 +95,7 @@ initLenis() {
     requestAnimationFrame(raf);
   }
 
-  requestAnimationFrame(raf)
+  requestAnimationFrame(raf);
 }
 
 onMounted(() => {
