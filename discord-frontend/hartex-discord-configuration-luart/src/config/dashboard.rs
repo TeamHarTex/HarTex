@@ -21,14 +21,33 @@
  */
 
 use rlua::Context;
+use rlua::Error;
 use rlua::FromLua;
 use rlua::Result;
 use rlua::Value;
 
-pub struct Dashboard;
+pub struct Dashboard {
+    pub admins: Vec<String>,
+    pub editors: Vec<String>,
+    pub viewers: Vec<String>,
+}
 
 impl<'lua> FromLua<'lua> for Dashboard {
     fn from_lua(lua_value: Value<'lua>, lua: Context<'lua>) -> Result<Self> {
-        Ok(Self)
+        let Value::Table(table) = lua_value else {
+            return Err(Error::ExternalError(
+                String::from("mismatched value type").into(),
+            ));
+        };
+
+        let admins: Vec<String> = table.get("admins")?;
+        let editors: Vec<String> = table.get("editors")?;
+        let viewers: Vec<String> = table.get("viewers")?;
+
+        Ok(Self {
+            admins,
+            editors,
+            viewers,
+        })
     }
 }
