@@ -8,6 +8,6 @@
 <style scoped lang="postcss">
 footer {
   @apply flex flex-col items-center justify-center;
-  @apply text-center py-24;
+  @apply text-center text-sm md:text-lg py-12 md:py-18;
 }
 </style>
