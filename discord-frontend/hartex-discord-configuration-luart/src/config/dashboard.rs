@@ -35,8 +35,8 @@ pub struct Dashboard {
 impl<'lua> FromLua<'lua> for Dashboard {
     fn from_lua(lua_value: Value<'lua>, lua: Context<'lua>) -> Result<Self> {
         let Value::Table(table) = lua_value else {
-            return Err(Error::ExternalError(
-                String::from("mismatched value type").into(),
+            return Err(Error::RuntimeError(
+                String::from("mismatched value type"),
             ));
         };
 

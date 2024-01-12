@@ -38,14 +38,14 @@ pub struct Configuration {
 impl<'lua> FromLuaMulti<'lua> for Configuration {
     fn from_lua_multi(values: MultiValue<'lua>, lua: Context<'lua>) -> rlua::Result<Self> {
         if values.is_empty() {
-            return Err(Error::ExternalError(
-                String::from("multi value is empty").into(),
+            return Err(Error::RuntimeError(
+                String::from("multi value is empty"),
             ));
         }
 
         let Value::Table(value) = values.into_iter().next().unwrap() else {
-            return Err(Error::ExternalError(
-                String::from("mismatched value type").into(),
+            return Err(Error::RuntimeError(
+                String::from("mismatched value type"),
             ));
         };
 
