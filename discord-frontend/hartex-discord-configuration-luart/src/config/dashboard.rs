@@ -28,21 +28,19 @@ use rlua::Value;
 
 pub struct Dashboard {
     pub admins: Vec<String>,
-    pub editors: Vec<String>,
-    pub viewers: Vec<String>,
+    pub editors: Option<Vec<String>>,
+    pub viewers: Option<Vec<String>>,
 }
 
 impl<'lua> FromLua<'lua> for Dashboard {
     fn from_lua(lua_value: Value<'lua>, lua: Context<'lua>) -> Result<Self> {
         let Value::Table(table) = lua_value else {
-            return Err(Error::RuntimeError(
-                String::from("mismatched value type"),
-            ));
+            return Err(Error::RuntimeError(String::from("mismatched value type")));
         };
 
         let admins: Vec<String> = table.get("admins")?;
-        let editors: Vec<String> = table.get("editors")?;
-        let viewers: Vec<String> = table.get("viewers")?;
+        let editors: Option<Vec<String>> = table.get("editors")?;
+        let viewers: Option<Vec<String>> = table.get("viewers")?;
 
         Ok(Self {
             admins,
