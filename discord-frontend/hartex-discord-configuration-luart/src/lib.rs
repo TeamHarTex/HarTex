@@ -20,4 +20,27 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod hartex;
+use rlua::Lua;
+use rlua::Result;
+use rlua::StdLib;
+
+pub fn evaluate_config(_: &str) -> Result<()> {
+    Lua::new_with(StdLib::BASE)
+        .context(|ctx| {
+            let globals = ctx.globals();
+            globals.set("VERSION", 10)?;
+
+            let hartexconf_table = ctx.create_table()?;
+            let hartexconf_colour_table = ctx.create_table()?;
+            let hartexconf_colour_rgb_function = ctx.create_function(|_, colour: u32| {
+                Ok(colour)
+            })?;
+            hartexconf_colour_table.set("rgb", hartexconf_colour_rgb_function)?;
+
+            hartexconf_table.set("colour", hartexconf_colour_table)?;
+
+            globals.set("hartexconf", hartexconf_table)?;
+
+            Ok(())
+        })
+}
