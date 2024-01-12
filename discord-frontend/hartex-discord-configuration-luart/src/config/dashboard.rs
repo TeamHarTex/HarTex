@@ -20,26 +20,34 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod config;
-
-use rlua::Lua;
+use rlua::Context;
+use rlua::Error;
+use rlua::FromLua;
 use rlua::Result;
-use rlua::StdLib;
+use rlua::Value;
 
-pub fn evaluate_config(_: &str) -> Result<()> {
-    Lua::new_with(StdLib::BASE).context(|ctx| {
-        let globals = ctx.globals();
-        globals.set("VERSION", 10)?;
+pub struct Dashboard {
+    pub admins: Vec<String>,
+    pub editors: Vec<String>,
+    pub viewers: Vec<String>,
+}
 
-        let hartexconf_table = ctx.create_table()?;
-        let hartexconf_colour_table = ctx.create_table()?;
-        let hartexconf_colour_rgb_function = ctx.create_function(|_, colour: u32| Ok(colour))?;
-        hartexconf_colour_table.set("rgb", hartexconf_colour_rgb_function)?;
+impl<'lua> FromLua<'lua> for Dashboard {
+    fn from_lua(lua_value: Value<'lua>, lua: Context<'lua>) -> Result<Self> {
+        let Value::Table(table) = lua_value else {
+            return Err(Error::RuntimeError(
+                String::from("mismatched value type"),
+            ));
+        };
 
-        hartexconf_table.set("colour", hartexconf_colour_table)?;
+        let admins: Vec<String> = table.get("admins")?;
+        let editors: Vec<String> = table.get("editors")?;
+        let viewers: Vec<String> = table.get("viewers")?;
 
-        globals.set("hartexconf", hartexconf_table)?;
-
-        Ok(())
-    })
+        Ok(Self {
+            admins,
+            editors,
+            viewers,
+        })
+    }
 }
