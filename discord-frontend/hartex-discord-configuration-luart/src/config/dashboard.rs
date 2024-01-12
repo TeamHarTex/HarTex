@@ -28,8 +28,8 @@ use rlua::Value;
 
 pub struct Dashboard {
     pub admins: Vec<String>,
-    pub editors: Vec<String>,
-    pub viewers: Vec<String>,
+    pub editors: Option<Vec<String>>,
+    pub viewers: Option<Vec<String>>,
 }
 
 impl<'lua> FromLua<'lua> for Dashboard {
@@ -39,8 +39,8 @@ impl<'lua> FromLua<'lua> for Dashboard {
         };
 
         let admins: Vec<String> = table.get("admins")?;
-        let editors: Vec<String> = table.get("editors")?;
-        let viewers: Vec<String> = table.get("viewers")?;
+        let editors: Option<Vec<String>> = table.get("editors")?;
+        let viewers: Option<Vec<String>> = table.get("viewers")?;
 
         Ok(Self {
             admins,
