@@ -40,5 +40,7 @@ pub fn evaluate_config(_: &str) -> Result<()> {
             hartexconf_table.set("colour", hartexconf_colour_table)?;
 
             globals.set("hartexconf", hartexconf_table)?;
-        })?
+
+            Ok(())
+        })
 }
