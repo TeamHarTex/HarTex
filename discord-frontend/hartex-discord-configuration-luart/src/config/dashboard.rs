@@ -20,36 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 use rlua::Context;
-use rlua::Error;
 use rlua::FromLua;
-use rlua::FromLuaMulti;
-use rlua::MultiValue;
+use rlua::Result;
 use rlua::Value;
 
-use crate::config::dashboard::Dashboard;
+pub struct Dashboard;
 
-pub mod dashboard;
-
-pub struct Configuration {
-    pub dashboard: Dashboard,
-}
-
-impl<'lua> FromLuaMulti<'lua> for Configuration {
-    fn from_lua_multi(values: MultiValue<'lua>, lua: Context<'lua>) -> rlua::Result<Self> {
-        if values.is_empty() {
-            return Err(Error::ExternalError(String::from("multi value is empty").into()));
-        }
-
-        let Value::Table(value) = values.into_iter().next().unwrap() else {
-            return Err(Error::ExternalError(String::from("mismatched value type").into()));
-        };
-
-        let dashboard = Dashboard::from_lua(value.get("database")?, lua)?;
-
-        Ok(Self {
-            dashboard
-        })
+impl<'lua> FromLua<'lua> for Dashboard {
+    fn from_lua(lua_value: Value<'lua>, lua: Context<'lua>) -> Result<Self> {
+        Ok(Self)
     }
 }
