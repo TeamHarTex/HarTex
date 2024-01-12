@@ -28,11 +28,14 @@ use rlua::MultiValue;
 use rlua::Result;
 use rlua::Value;
 
+use crate::config::appearance::Appearance;
 use crate::config::dashboard::Dashboard;
 
+pub mod appearance;
 pub mod dashboard;
 
 pub struct Configuration {
+    pub appearance: Option<Appearance>,
     pub dashboard: Dashboard,
 }
 
@@ -46,8 +49,12 @@ impl<'lua> FromLuaMulti<'lua> for Configuration {
             return Err(Error::RuntimeError(String::from("mismatched value type")));
         };
 
-        let dashboard = Dashboard::from_lua(value.get("database")?, lua)?;
+        let appearance = value.get("appearance")?;
+        let dashboard = value.get("database")?;
 
-        Ok(Self { dashboard })
+        Ok(Self {
+            dashboard,
+            appearance,
+        })
     }
 }
