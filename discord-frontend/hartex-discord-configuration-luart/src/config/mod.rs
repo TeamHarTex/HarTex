@@ -25,6 +25,7 @@ use rlua::Error;
 use rlua::FromLua;
 use rlua::FromLuaMulti;
 use rlua::MultiValue;
+use rlua::Result;
 use rlua::Value;
 
 use crate::config::dashboard::Dashboard;
@@ -36,7 +37,7 @@ pub struct Configuration {
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {
-    fn from_lua_multi(values: MultiValue<'lua>, lua: Context<'lua>) -> rlua::Result<Self> {
+    fn from_lua_multi(values: MultiValue<'lua>, lua: Context<'lua>) -> Result<Self> {
         if values.is_empty() {
             return Err(Error::RuntimeError(String::from("multi value is empty")));
         }
