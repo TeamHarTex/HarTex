@@ -1,9 +1,9 @@
 [package]
-name = "hartex_discord_configuration_runecli"
+name = "hartex_discord_configuration_luart"
 version = "0.7.1"
 edition = "2021"
 description = """
-Rune CLI for HarTex's configuration API
+The worker component of the bot.
 """
 license = "AGPL-3.0-or-later"
 rust-version = "1.77.0"
@@ -11,6 +11,6 @@ rust-version = "1.77.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_configuration_librune = { path = "../hartex-discord-configuration-librune" }
+rlua = "0.19.7"
 
-rune = { version = "0.13.1", features = ["cli"] }
+[features]
