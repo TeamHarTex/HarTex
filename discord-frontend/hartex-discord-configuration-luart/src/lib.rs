@@ -24,7 +24,7 @@ use rlua::Lua;
 use rlua::Result;
 use rlua::StdLib;
 
-pub fn evaluate_config(config: &str) -> Result<()> {
+pub fn evaluate_config(_: &str) -> Result<()> {
     Lua::new_with(StdLib::BASE)
         .context(|ctx| {
             let globals = ctx.globals();
@@ -40,7 +40,5 @@ pub fn evaluate_config(config: &str) -> Result<()> {
             hartexconf_table.set("colour", hartexconf_colour_table)?;
 
             globals.set("hartexconf", hartexconf_table)?;
-
-            ctx.load(config).eval()
         })?
 }
