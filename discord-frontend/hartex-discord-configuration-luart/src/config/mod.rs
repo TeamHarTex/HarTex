@@ -59,8 +59,8 @@ impl<'lua> FromLuaMulti<'lua> for Configuration {
         let dashboard = value.get("dashboard")?;
 
         Ok(Self {
-            dashboard,
             appearance,
+            dashboard,
         })
     }
 }
