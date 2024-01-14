@@ -59,7 +59,14 @@ pub fn parse_test() {
     let expected = expect![r#"
 Configuration {
     appearance: Some(
-        Appearance,
+        Appearance {
+            colour: Some(
+                7769829,
+            ),
+            nickname: Some(
+                "HarTex Nightly",
+            ),
+        },
     ),
     dashboard: Dashboard {
         admins: [
