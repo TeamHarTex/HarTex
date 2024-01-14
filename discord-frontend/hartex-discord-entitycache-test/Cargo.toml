@@ -22,5 +22,5 @@ hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 macrotest = { git = "https://github.com/TeamHarTex/macrotest.git", branch = "master" }
 rustversion = "1.0.14"
 tokio-postgres = "0.7.10"
-trybuild = "1.0.88"
+trybuild = "1.0.89"
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next" }
