@@ -25,10 +25,11 @@ use rlua::FromLua;
 use rlua::Result;
 use rlua::Value;
 
+#[derive(Debug)]
 pub struct Appearance;
 
 impl<'lua> FromLua<'lua> for Appearance {
-    fn from_lua(lua_value: Value<'lua>, lua: Context<'lua>) -> Result<Self> {
+    fn from_lua(_: Value<'lua>, _: Context<'lua>) -> Result<Self> {
         Ok(Self)
     }
 }

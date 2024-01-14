@@ -13,4 +13,7 @@ rust-version = "1.77.0"
 [dependencies]
 rlua = "0.19.7"
 
+[dev-dependencies]
+expect-test = "1.4.1"
+
 [features]
