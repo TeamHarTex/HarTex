@@ -103,6 +103,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-runecli/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-luart/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-luart/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />

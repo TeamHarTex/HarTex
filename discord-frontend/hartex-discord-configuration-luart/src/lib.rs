@@ -20,13 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 pub mod config;
 
 use rlua::Lua;
 use rlua::Result;
 use rlua::StdLib;
 
-pub fn evaluate_config(_: &str) -> Result<()> {
+use crate::config::Configuration;
+
+pub fn evaluate_config(config: &str) -> Result<Configuration> {
     Lua::new_with(StdLib::BASE).context(|ctx| {
         let globals = ctx.globals();
         globals.set("VERSION", 10)?;
@@ -40,6 +46,6 @@ pub fn evaluate_config(_: &str) -> Result<()> {
 
         globals.set("hartexconf", hartexconf_table)?;
 
-        Ok(())
+        ctx.load(config).eval()
     })
 }
