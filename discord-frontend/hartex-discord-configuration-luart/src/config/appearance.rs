@@ -21,15 +21,32 @@
  */
 
 use rlua::Context;
+use rlua::Error;
 use rlua::FromLua;
 use rlua::Result;
 use rlua::Value;
 
 #[derive(Debug)]
-pub struct Appearance;
+pub struct Appearance {
+    pub colour: Option<u32>,
+    pub nickname: Option<String>,
+}
 
 impl<'lua> FromLua<'lua> for Appearance {
-    fn from_lua(_: Value<'lua>, _: Context<'lua>) -> Result<Self> {
-        Ok(Self)
+    fn from_lua(lua_value: Value<'lua>, _: Context<'lua>) -> Result<Self> {
+        let Value::Table(table) = lua_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "Appearance: mismatched value type, exoected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let colour = table.get("colour")?;
+        let nickname = table.get("nickname")?;
+
+        Ok(Self {
+            colour,
+            nickname,
+        })
     }
 }
