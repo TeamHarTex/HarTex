@@ -22,7 +22,6 @@
 
 use rlua::Context;
 use rlua::Error;
-use rlua::FromLua;
 use rlua::FromLuaMulti;
 use rlua::MultiValue;
 use rlua::Result;
@@ -34,23 +33,30 @@ use crate::config::dashboard::Dashboard;
 pub mod appearance;
 pub mod dashboard;
 
+#[derive(Debug)]
 pub struct Configuration {
     pub appearance: Option<Appearance>,
     pub dashboard: Dashboard,
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {
-    fn from_lua_multi(values: MultiValue<'lua>, lua: Context<'lua>) -> Result<Self> {
+    fn from_lua_multi(values: MultiValue<'lua>, _: Context<'lua>) -> Result<Self> {
         if values.is_empty() {
-            return Err(Error::RuntimeError(String::from("multi value is empty")));
+            return Err(Error::RuntimeError(String::from(
+                "Configuration: multi value is empty",
+            )));
         }
 
-        let Value::Table(value) = values.into_iter().next().unwrap() else {
-            return Err(Error::RuntimeError(String::from("mismatched value type")));
+        let next_value = values.into_iter().next().unwrap();
+        let Value::Table(value) = next_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "Configuration: mismatched value type, exoected table, found: {}",
+                next_value.type_name()
+            )));
         };
 
         let appearance = value.get("appearance")?;
-        let dashboard = value.get("database")?;
+        let dashboard = value.get("dashboard")?;
 
         Ok(Self {
             dashboard,
