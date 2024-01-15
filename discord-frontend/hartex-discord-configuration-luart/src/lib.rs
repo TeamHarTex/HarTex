@@ -32,6 +32,7 @@ use rlua::StdLib;
 
 use crate::config::Configuration;
 
+#[allow(clippy::missing_errors_doc)]
 pub fn evaluate_config(config: &str) -> Result<Configuration> {
     Lua::new_with(StdLib::BASE).context(|ctx| {
         let globals = ctx.globals();
