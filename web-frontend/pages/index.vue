@@ -26,7 +26,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
       Discord server management,<br/>
       <span>reimagined</span>.
     </h1>
-    <NuxtLink class="primary-btn">Invite HarTex to your server</NuxtLink>
+    <NuxtLink class="primary-btn">Add to Discord</NuxtLink>
   </header>
   <section>
     <div class="features">
@@ -73,11 +73,11 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     </div>
   </section>
   <section class="contribute">
-    <h2>Want to contribute or support HarTex?</h2>
+    <h2>Want to contribute to or support HarTex?</h2>
     <div class="whitespace"></div>
     <div class="links">
       <NuxtLink class="primary-btn" to="https://github.com/TeamHarTex/HarTex" target="_blank">
-        Github
+        GitHub
       </NuxtLink>
       <NuxtLink class="primary-btn" to="https://opencollective.com/HarTex" target="_blank">
         Open Collective
@@ -91,7 +91,7 @@ header {
   @apply h-[95vh] flex flex-col items-center justify-center;
 
   h1 {
-    @apply text-5xl md:text-6xl font-500 text-center;
+    @apply text-5xl md:text-6xl 5xl:text-8xl font-500 text-center;
 
     span {
       @apply text-secondary font-serif;
@@ -129,19 +129,23 @@ header {
 
   .first, .sixth {
     h2 {
-      @apply text-2xl md:text-3xl;
+      @apply text-2xl md:text-3xl 5xl:text-4xl;
     }
 
     ul {
-      @apply flex-1 list-none text-2xl;
+      @apply flex-1 list-none text-2xl 5xl:text-3xl;
     }
   }
 
   .second, .third, .forth, .fifth {
     @apply items-center justify-center text-center;
 
+    h2 {
+      @apply text-xl md:text-2xl 5xl:text-3xl;
+    }
+
     div {
-      @apply text-5xl mt-8;
+      @apply text-5xl 5xl:text-8xl mt-8;
     }
   }
 
@@ -156,7 +160,7 @@ header {
   @apply flex flex-col items-center justify-center;
 
   h2 {
-    @apply text-center text-2xl md:text-3xl;
+    @apply text-center text-2xl md:text-3xl 5xl:text-5xl;
   }
 
   .links {

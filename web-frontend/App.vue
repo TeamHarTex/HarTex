@@ -66,7 +66,7 @@ section:last-of-type {
 }
 
 .primary-btn {
-  @apply mx-6 px-4 py-2 text-lg md:text-2xl;
+  @apply mx-6 px-4 py-2 text-lg md:text-2xl 5xl:text-3xl;
   @apply border-solid border-rd border-1;
 }
 
