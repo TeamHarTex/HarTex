@@ -86,6 +86,9 @@ Configuration {
             ],
         ),
     },
+    plugins: Some(
+        Plugins,
+    ),
 }
 "#];
 

@@ -29,14 +29,17 @@ use rlua::Value;
 
 use crate::config::appearance::Appearance;
 use crate::config::dashboard::Dashboard;
+use crate::config::plugins::Plugins;
 
 pub mod appearance;
 pub mod dashboard;
+pub mod plugins;
 
 #[derive(Debug)]
 pub struct Configuration {
     pub appearance: Option<Appearance>,
     pub dashboard: Dashboard,
+    pub plugins: Option<Plugins>,
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {
@@ -57,10 +60,12 @@ impl<'lua> FromLuaMulti<'lua> for Configuration {
 
         let appearance = value.get("appearance")?;
         let dashboard = value.get("dashboard")?;
+        let plugins = value.get("plugins")?;
 
         Ok(Self {
             appearance,
             dashboard,
+            plugins,
         })
     }
 }
