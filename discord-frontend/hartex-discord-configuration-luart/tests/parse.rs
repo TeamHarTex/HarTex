@@ -87,7 +87,13 @@ Configuration {
         ),
     },
     plugins: Some(
-        Plugins,
+        Plugins {
+            utilities: Some(
+                UtilitiesPlugin {
+                    enabled: true,
+                },
+            ),
+        },
     ),
 }
 "#];
