@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 use rlua::Context;
 use rlua::Error;
 use rlua::FromLua;
