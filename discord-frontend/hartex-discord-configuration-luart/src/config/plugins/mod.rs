@@ -20,15 +20,33 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 use rlua::Context;
+use rlua::Error;
 use rlua::FromLua;
 use rlua::Value;
+use crate::config::plugins::utilities::UtilitiesPlugin;
+
+pub mod utilities;
 
 #[derive(Debug)]
-pub struct Plugins;
+pub struct Plugins {
+    pub utilities: Option<UtilitiesPlugin>,
+}
 
 impl<'lua> FromLua<'lua> for Plugins {
-    fn from_lua(_: Value<'lua>, _: Context<'lua>) -> rlua::Result<Self> {
-        Ok(Self)
+    fn from_lua(lua_value: Value<'lua>, _: Context<'lua>) -> rlua::Result<Self> {
+        let Value::Table(table) = lua_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "Dashboard: mismatched value type, exoected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let utilities = table.get("utilities")?;
+
+        Ok(Self {
+            utilities,
+        })
     }
 }
