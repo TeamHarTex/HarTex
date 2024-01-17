@@ -4,5 +4,5 @@ export default defineNuxtConfig({
       title: "HarTex",
     },
   },
-  modules: ["@hypernym/nuxt-gsap", "@unocss/nuxt"],
+  modules: ["@hypernym/nuxt-gsap", "@unocss/nuxt", "@vueuse/nuxt"],
 });
