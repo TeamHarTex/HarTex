@@ -21,7 +21,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-  <div class="card">
+  <div class="card" ref="card">
     <h2>{{ heading }}</h2>
     <slot/>
   </div>
@@ -31,11 +31,27 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 .card {
   @apply flex flex-col h-80 rounded-lg;
   @apply bg-tertiary text-primary p-12;
+
+  transform: v-bind(cardTransform);
+  transition: transform 0.5s ease-out;
 }
 </style>
 
 <script setup lang="ts">
 defineProps({
   heading: String
+});
+
+const card = ref(null);
+
+const {elementX, elementY, elementHeight, elementWidth, isOutside} = useMouseInElement(card);
+
+const cardTransform = computed(() => {
+  const maxRotation = 20;
+
+  const rX = (maxRotation / 2 - (elementY.value / elementHeight.value) * maxRotation).toFixed(2);
+  const rY = (maxRotation / 2 - (elementX.value / elementWidth.value) * maxRotation).toFixed(2);
+
+  return isOutside.value ? '' : `perspective(${elementWidth.value}px) rotateX(${rX}deg) rotateY(${rY}deg)`;
 });
 </script>
