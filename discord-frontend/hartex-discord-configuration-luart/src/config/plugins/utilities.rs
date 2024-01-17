@@ -25,6 +25,7 @@ use rlua::Error;
 use rlua::FromLua;
 use rlua::Value;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub struct UtilitiesPlugin {
     pub enabled: bool,
