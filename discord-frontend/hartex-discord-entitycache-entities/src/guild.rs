@@ -38,7 +38,8 @@ use hartex_discord_entitycache_core::entity;
         "name",
         "premium_subscription_count",
         "premium_tier",
-        "owner_id"
+        "owner_id",
+        "verification_level"
     ],
     extra = [],
     overrides = [
@@ -46,6 +47,7 @@ use hartex_discord_entitycache_core::entity;
         "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
         "GuildFeature": "twilight_model::guild::GuildFeature",
         "PremiumTier": "twilight_model::guild::PremiumTier",
+        "VerificationLevel": "twilight_model::guild::VerificationLevel"
     ],
     relates = [
         multiple "MemberEntity": via "id" as "guild_id",
