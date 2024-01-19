@@ -94,10 +94,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
         cached_guild_upsert()
             .bind(
                 client,
-                &i32::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
+                &i16::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
                     entity.default_message_notifications,
                 )),
-                &i32::from(<ExplicitContentFilter as Into<u8>>::into(
+                &i16::from(<ExplicitContentFilter as Into<u8>>::into(
                     entity.explicit_content_filter,
                 )),
                 &entity
@@ -111,8 +111,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 &entity.owner_id.to_string(),
                 &entity.id.to_string(),
                 &entity.premium_subscription_count.map(|id| id as i64),
-                &i32::from(<PremiumTier as Into<u8>>::into(entity.premium_tier)),
-                &i32::from(<VerificationLevel as Into<u8>>::into(entity.verification_level)),
+                &i16::from(<PremiumTier as Into<u8>>::into(entity.premium_tier)),
+                &i16::from(<VerificationLevel as Into<u8>>::into(
+                    entity.verification_level,
+                )),
             )
             .await?;
 
