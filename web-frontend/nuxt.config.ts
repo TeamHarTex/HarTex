@@ -5,4 +5,14 @@ export default defineNuxtConfig({
     },
   },
   modules: ["@hypernym/nuxt-gsap", "@unocss/nuxt", "@vueuse/nuxt"],
+  gsap: {
+    extraPlugins: {
+      scrollTrigger: true
+    }
+  },
+  devtools: {
+    timeline: {
+      enabled: true
+    }
+  }
 });
