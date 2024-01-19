@@ -5,7 +5,7 @@
 #[allow(unused_imports)] #[allow(dead_code)] pub mod queries
 { pub mod cached_guild_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedGuildSelectById
-{ pub default_message_notifications : i32,pub explicit_content_filter : i32,pub features : Vec<String>,pub icon : Option<String>,pub large : bool,pub name : String,pub owner_id : String,pub id : String,pub premium_subscription_count : Option<i64>,pub premium_tier : i32,pub verification_level : i32,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i32,pub explicit_content_filter : i32,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub large : bool,pub name : &'a str,pub owner_id : &'a str,pub id : &'a str,pub premium_subscription_count : Option<i64>,pub premium_tier : i32,pub verification_level : i32,}
+{ pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : Vec<String>,pub icon : Option<String>,pub large : bool,pub name : String,pub owner_id : String,pub id : String,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub large : bool,pub name : &'a str,pub owner_id : &'a str,pub id : &'a str,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}
 impl<'a> From<CachedGuildSelectByIdBorrowed<'a>> for CachedGuildSelectById
 {
     fn from(CachedGuildSelectByIdBorrowed { default_message_notifications,explicit_content_filter,features,icon,large,name,owner_id,id,premium_subscription_count,premium_tier,verification_level,}: CachedGuildSelectByIdBorrowed<'a>) ->
@@ -69,7 +69,7 @@ CachedGuildSelectById, 1>
         |row| { CachedGuildSelectByIdBorrowed { default_message_notifications: row.get(0),explicit_content_filter: row.get(1),features: row.get(2),icon: row.get(3),large: row.get(4),name: row.get(5),owner_id: row.get(6),id: row.get(7),premium_subscription_count: row.get(8),premium_tier: row.get(9),verification_level: row.get(10),} }, mapper: |it| { <CachedGuildSelectById>::from(it) },
     }
 } }}pub mod cached_guild_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedGuildUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,> { pub default_message_notifications: i32,pub explicit_content_filter: i32,pub features: T2,pub icon: Option<T3>,pub large: bool,pub name: T4,pub owner_id: T5,pub id: T6,pub premium_subscription_count: Option<i64>,pub premium_tier: i32,pub verification_level: i32,}pub fn cached_guild_upsert() -> CachedGuildUpsertStmt
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedGuildUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,> { pub default_message_notifications: i16,pub explicit_content_filter: i16,pub features: T2,pub icon: Option<T3>,pub large: bool,pub name: T4,pub owner_id: T5,pub id: T6,pub premium_subscription_count: Option<i64>,pub premium_tier: i16,pub verification_level: i16,}pub fn cached_guild_upsert() -> CachedGuildUpsertStmt
 { CachedGuildUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO
     \"DiscordFrontend\".\"Nightly\".\"CachedGuilds\" (\"default_message_notifications\", \"explicit_content_filter\", \"features\", \"icon\", \"large\", \"name\", \"owner_id\", \"id\", \"premium_subscription_count\", \"premium_tier\", \"verification_level\")
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
@@ -94,7 +94,7 @@ cornucopia_async::StringSql,T4:
 cornucopia_async::StringSql,T5:
 cornucopia_async::StringSql,T6:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-default_message_notifications: &'a i32,explicit_content_filter: &'a i32,features: &'a T2,icon: &'a Option<T3>,large: &'a bool,name: &'a T4,owner_id: &'a T5,id: &'a T6,premium_subscription_count: &'a Option<i64>,premium_tier: &'a i32,verification_level: &'a i32,) -> Result<u64, tokio_postgres::Error>
+default_message_notifications: &'a i16,explicit_content_filter: &'a i16,features: &'a T2,icon: &'a Option<T3>,large: &'a bool,name: &'a T4,owner_id: &'a T5,id: &'a T6,premium_subscription_count: &'a Option<i64>,premium_tier: &'a i16,verification_level: &'a i16,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
     client.execute(stmt, &[default_message_notifications,explicit_content_filter,features,icon,large,name,owner_id,id,premium_subscription_count,premium_tier,verification_level,]).await
