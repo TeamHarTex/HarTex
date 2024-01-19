@@ -56,3 +56,4 @@ serverinfo-embed-nitroinfo-field-boosts-subfield-name=加成：
 serverinfo-embed-flags-field-name=旗標
 serverinfo-embed-flags-large-subfield-name=是否為大型伺服器：
 serverinfo-embed-flags-default-message-notifications-subfield-name=預設訊息通知等級：
+serverinfo-embed-flags-verification-level-subfield-name=驗證等級：
