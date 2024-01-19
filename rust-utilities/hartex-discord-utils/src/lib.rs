@@ -24,6 +24,9 @@
 //!
 //! Various useful Discord utilities.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(const_async_blocks)]
 #![feature(type_alias_impl_trait)]
 
