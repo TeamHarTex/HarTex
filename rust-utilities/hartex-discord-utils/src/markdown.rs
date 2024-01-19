@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[allow(clippy::module_name_repetitions)]
 pub trait MarkdownStyle {
     #[must_use]
     fn discord_bold(self) -> Self;
