@@ -27,4 +27,4 @@ premium-tier-none=无
 premium-tier-one=等级 1
 premium-tier-two=等级 2
 premium-tier-three=等级 3
-premium-tier-unknown=未知等级
+premium-tier-unknown=未知
