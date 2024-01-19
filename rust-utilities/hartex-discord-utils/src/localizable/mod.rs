@@ -26,5 +26,6 @@ mod bool;
 mod discord;
 
 pub trait Localizable {
+    #[allow(clippy::missing_errors_doc)]
     fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String>;
 }
