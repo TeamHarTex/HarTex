@@ -33,7 +33,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
   @apply bg-tertiary text-primary p-12;
 
   transform: v-bind(cardTransform);
-  transition: transform 0.5s ease-out;
+  transition: transform 0.314s ease-out;
 }
 </style>
 
@@ -47,7 +47,7 @@ const card = ref(null);
 const {elementX, elementY, elementHeight, elementWidth, isOutside} = useMouseInElement(card);
 
 const cardTransform = computed(() => {
-  const maxRotation = 5;
+  const maxRotation = Math.PI * 2;
 
   const rX = (maxRotation / 2 - (elementY.value / elementHeight.value) * maxRotation).toFixed(2);
   const rY = (maxRotation / 2 - (elementX.value / elementWidth.value) * maxRotation).toFixed(2);
