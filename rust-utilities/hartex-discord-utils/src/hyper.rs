@@ -31,6 +31,7 @@ use tokio_rustls::rustls::RootCertStore;
 use tokio_rustls::TlsConnector;
 use webpki_roots::TLS_SERVER_ROOTS;
 
+#[allow(clippy::missing_errors_doc)]
 pub async fn tls_stream() -> miette::Result<TlsStream<TcpStream>> {
     let mut root_cert_store = RootCertStore::empty();
     root_cert_store.extend(TLS_SERVER_ROOTS.iter().cloned());

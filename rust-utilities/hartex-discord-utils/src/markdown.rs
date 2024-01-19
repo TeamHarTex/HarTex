@@ -20,17 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[allow(clippy::module_name_repetitions)]
 pub trait MarkdownStyle {
+    #[must_use]
     fn discord_bold(self) -> Self;
 
+    #[must_use]
     fn discord_inline_code(self) -> Self;
 
+    #[must_use]
     fn discord_italic(self) -> Self;
 
+    #[must_use]
     fn discord_relative_timestamp(self) -> Self;
 
+    #[must_use]
     fn discord_underline(self) -> Self;
 
+    #[must_use]
     fn discord_strikethrough(self) -> Self;
 }
 
