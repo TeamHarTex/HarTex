@@ -23,6 +23,8 @@
 default-message-notification-level-all=All
 default-message-notification-level-mentions=Mentions
 default-message-notification-level-unknown=Unknown
+mfa-level-none=None
+mfa-level-elevated=Elevated
 premium-tier-none=None
 premium-tier-one=Level 1
 premium-tier-two=Level 2

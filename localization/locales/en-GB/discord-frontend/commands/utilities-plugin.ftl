@@ -56,4 +56,5 @@ serverinfo-embed-nitroinfo-field-boosts-subfield-name=Boosts:
 serverinfo-embed-flags-field-name=Flags
 serverinfo-embed-flags-large-subfield-name=Is Large Server:
 serverinfo-embed-flags-default-message-notifications-subfield-name=Default Message Notification Level:
+serverinfo-embed-flags-mfa-level-subfield-name=MFA Level:
 serverinfo-embed-flags-verification-level-subfield-name=Verification Level:
