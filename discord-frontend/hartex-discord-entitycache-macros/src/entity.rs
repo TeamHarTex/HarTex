@@ -717,6 +717,7 @@ fn make_field_decl_and_assignments(
 ) -> (TokenStream, TokenStream, TokenStream) {
     if field_type.is_enum("DefaultMessageNotificationLevel")
         || field_type.is_enum("ExplicitContentFilter")
+        || field_type.is_enum("MfaLevel")
         || field_type.is_enum("PremiumTier")
         || field_type.is_enum("VerificationLevel")
     {
