@@ -22,6 +22,7 @@
 
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::PremiumTier;
+use hartex_discord_core::discord::model::guild::VerificationLevel;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use unic_langid::LanguageIdentifier;
@@ -51,6 +52,22 @@ impl Localizable for PremiumTier {
             Self::Tier1 => localizer.guild_premium_tier_one()?,
             Self::Tier2 => localizer.guild_premium_tier_two()?,
             Self::Tier3 => localizer.guild_premium_tier_three()?,
+            _ => localizer.guild_premium_tier_unknown()?,
+        })
+    }
+}
+
+impl Localizable for VerificationLevel {
+    fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String> {
+        let locale = locale.map_or(String::from("en-GB"), |locale| locale.to_string());
+        let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
+
+        Ok(match self {
+            Self::None => localizer.guild_verification_level_none()?,
+            Self::Low => localizer.guild_verification_level_low()?,
+            Self::Medium => localizer.guild_verification_level_medium()?,
+            Self::High => localizer.guild_verification_level_high()?,
+            Self::VeryHigh => localizer.guild_verification_level_very_high()?,
             _ => localizer.guild_premium_tier_unknown()?,
         })
     }
