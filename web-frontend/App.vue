@@ -84,21 +84,7 @@ section:last-of-type {
 </style>
 
 <script setup lang="ts">
-import Lenis from '@studio-freight/lenis'
-
-function initLenis() {
-  const lenis = new Lenis();
-
-  function raf(time: any) {
-    lenis.raf(time);
-
-    requestAnimationFrame(raf);
-  }
-
-  requestAnimationFrame(raf);
-}
-
 onMounted(() => {
-  initLenis();
-})
+  useSmoothScroll();
+});
 </script>
