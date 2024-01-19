@@ -718,6 +718,7 @@ fn make_field_decl_and_assignments(
     if field_type.is_enum("DefaultMessageNotificationLevel")
         || field_type.is_enum("ExplicitContentFilter")
         || field_type.is_enum("PremiumTier")
+        || field_type.is_enum("VerificationLevel")
     {
         (
             quote! {pub #field_name: #field_type},
