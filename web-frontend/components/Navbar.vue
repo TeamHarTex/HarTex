@@ -39,7 +39,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <style scoped lang="postcss">
 nav {
-  @apply fixed flex justify-between items-center;
+  @apply fixed flex justify-between items-center z-99;
   @apply w-full py-12 md:py-18 transition-opacity;
 
   .brand {
