@@ -275,7 +275,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                     .default_message_notifications
                     .localize(langid_locale.clone())?,
                 serverinfo_embed_flags_mfa_level_subfield_name,
-                "",
+                guild.mfa_level.localize(langid_locale.clone())?,
                 serverinfo_embed_flags_verification_level_subfield_name,
                 guild.verification_level.localize(langid_locale)?,
             ),
