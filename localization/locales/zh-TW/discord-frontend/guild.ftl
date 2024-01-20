@@ -23,6 +23,9 @@
 default-message-notification-level-all=所有
 default-message-notification-level-mentions=提及
 default-message-notification-level-unknown=未知
+mfa-level-none=無
+mfa-level-elevated=需要
+mfa-level-unknown=未知
 premium-tier-none=無
 premium-tier-one=等級 1
 premium-tier-two=等級 2
