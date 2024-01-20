@@ -27,7 +27,6 @@ explicit-content-filter-members-without-roles=Members Without Roles
 explicit-content-filter-all-members=All Members
 mfa-level-none=None
 mfa-level-elevated=Elevated
-mfa-level-unknown=Unknown
 premium-tier-none=None
 premium-tier-one=Level 1
 premium-tier-two=Level 2
