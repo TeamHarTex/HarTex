@@ -35,5 +35,5 @@ verification-level-none=None
 verification-level-low=Low
 verification-level-medium=Medium
 verification-level-high=High
-verification-level-very-high=Very High
+verification-level-very-high=Highest
 verification-level-unknown=Unknown
