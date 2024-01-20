@@ -22,3 +22,4 @@
 
 boolean-true=Yes
 boolean-false=No
+enum-unknown=Unknown

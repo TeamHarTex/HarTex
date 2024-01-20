@@ -22,3 +22,4 @@
 
 boolean-true=はい
 boolean-false=いいえ
+enum-unknown=不明
