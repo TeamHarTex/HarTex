@@ -38,7 +38,7 @@ impl Localizable for DefaultMessageNotificationLevel {
         Ok(match self {
             Self::All => localizer.guild_default_message_notification_level_all()?,
             Self::Mentions => localizer.guild_default_message_notification_level_mentions()?,
-            _ => localizer.guild_default_message_notification_level_unknown()?,
+            _ => localizer.general_enum_unknown()?,
         })
     }
 }
@@ -51,7 +51,7 @@ impl Localizable for MfaLevel {
         Ok(match self {
             Self::None => localizer.guild_mfa_level_none()?,
             Self::Elevated => localizer.guild_mfa_level_elevated()?,
-            _ => localizer.guild_mfa_level_unknown()?,
+            _ => localizer.general_enum_unknown()?,
         })
     }
 }
@@ -66,7 +66,7 @@ impl Localizable for PremiumTier {
             Self::Tier1 => localizer.guild_premium_tier_one()?,
             Self::Tier2 => localizer.guild_premium_tier_two()?,
             Self::Tier3 => localizer.guild_premium_tier_three()?,
-            _ => localizer.guild_premium_tier_unknown()?,
+            _ => localizer.general_enum_unknown()?,
         })
     }
 }
@@ -82,7 +82,7 @@ impl Localizable for VerificationLevel {
             Self::Medium => localizer.guild_verification_level_medium()?,
             Self::High => localizer.guild_verification_level_high()?,
             Self::VeryHigh => localizer.guild_verification_level_very_high()?,
-            _ => localizer.guild_premium_tier_unknown()?,
+            _ => localizer.general_enum_unknown()?,
         })
     }
 }
