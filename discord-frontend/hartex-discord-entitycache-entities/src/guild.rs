@@ -35,6 +35,7 @@ use hartex_discord_entitycache_core::entity;
         "features",
         "icon",
         "large",
+        "mfa_level",
         "name",
         "premium_subscription_count",
         "premium_tier",
@@ -46,6 +47,7 @@ use hartex_discord_entitycache_core::entity;
         "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel",
         "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
         "GuildFeature": "twilight_model::guild::GuildFeature",
+        "MfaLevel": "twilight_model::guild::MfaLevel",
         "PremiumTier": "twilight_model::guild::PremiumTier",
         "VerificationLevel": "twilight_model::guild::VerificationLevel"
     ],
