@@ -9,6 +9,4 @@
     ],
     "rust-analyzer.showUnlinkedFileNotification": false,
     "rust-analyzer.imports.merge.glob": false,
-    "editor.fontSize": 13,
-    "rune.server.cargoPackage": "discord-frontend/hartex_discord_configuration_runecli"
 }

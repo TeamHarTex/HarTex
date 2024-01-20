@@ -124,6 +124,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_serverinfo_embed_flags_large_subfield_name()?;
     let serverinfo_embed_flags_default_message_notifications_subfield_name = localizer
         .utilities_plugin_serverinfo_embed_flags_default_message_notifications_subfield_name()?;
+    let serverinfo_embed_flags_explicit_content_filter_subfield_name = localizer
+        .utilities_plugin_serverinfo_embed_flags_explicit_content_filter_subfield_name()?;
     let serverinfo_embed_flags_mfa_level_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_flags_mfa_level_subfield_name()?;
     let serverinfo_embed_flags_verification_level_subfield_name =
@@ -267,13 +269,15 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .field(EmbedFieldBuilder::new(
             serverinfo_embed_flags_field_name,
             format!(
-                "{} {}\n{} {}\n{} {}\n{} {}",
+                "{} {}\n{} {}\n{} {}\n{} {}\n{} {}",
                 serverinfo_embed_flags_large_subfield_name,
                 guild.large.localize(langid_locale.clone())?,
                 serverinfo_embed_flags_default_message_notifications_subfield_name,
                 guild
                     .default_message_notifications
                     .localize(langid_locale.clone())?,
+                serverinfo_embed_flags_explicit_content_filter_subfield_name,
+                guild.explicit_content_filter.localize(langid_locale.clone())?,
                 serverinfo_embed_flags_mfa_level_subfield_name,
                 guild.mfa_level.localize(langid_locale.clone())?,
                 serverinfo_embed_flags_verification_level_subfield_name,

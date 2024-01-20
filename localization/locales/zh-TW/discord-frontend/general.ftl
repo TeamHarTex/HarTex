@@ -22,3 +22,4 @@
 
 boolean-true=是
 boolean-false=否
+enum-unknown=未知
