@@ -23,6 +23,9 @@
 default-message-notification-level-all=全部
 default-message-notification-level-mentions=提及
 default-message-notification-level-unknown=未知
+mfa-level-none=无
+mfa-level-elevated=需要
+mfa-level-unknown=未知
 premium-tier-none=无
 premium-tier-one=等级 1
 premium-tier-two=等级 2
@@ -32,5 +35,5 @@ verification-level-none=无
 verification-level-low=低
 verification-level-medium=中
 verification-level-high=高
-verification-level-very-high=极高
+verification-level-very-high=最高
 verification-level-unknown=未知
