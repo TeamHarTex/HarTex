@@ -22,6 +22,8 @@
 
 default-message-notification-level-all=全て
 default-message-notification-level-mentions=メンション
+mfa-level-none=なし
+mfa-level-elevated=必要
 premium-tier-none=なし
 premium-tier-one=レベル１
 premium-tier-two=レベル２
@@ -30,4 +32,4 @@ verification-level-none=なし
 verification-level-low=低
 verification-level-medium=中
 verification-level-high=高
-verification-level-very-high=すごく高
+verification-level-very-high=最高
