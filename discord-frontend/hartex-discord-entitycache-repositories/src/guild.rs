@@ -31,6 +31,7 @@ use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cac
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::GuildFeature;
+use hartex_discord_core::discord::model::guild::MfaLevel;
 use hartex_discord_core::discord::model::guild::PremiumTier;
 use hartex_discord_core::discord::model::guild::VerificationLevel;
 use hartex_discord_core::discord::model::id::Id;
@@ -76,6 +77,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
             id,
             large: data.large,
+            mfa_level: MfaLevel::from(data.mfa_level as u8),
             name: data.name,
             owner_id: Id::from_str(&data.owner_id)
                 .expect("id is zero (unexpected and unreachable)"),
@@ -110,6 +112,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 &entity.name,
                 &entity.owner_id.to_string(),
                 &entity.id.to_string(),
+                &i16::from(<MfaLevel as Into<u8>>::into(entity.mfa_level)),
                 &entity.premium_subscription_count.map(|id| id as i64),
                 &i16::from(<PremiumTier as Into<u8>>::into(entity.premium_tier)),
                 &i16::from(<VerificationLevel as Into<u8>>::into(
