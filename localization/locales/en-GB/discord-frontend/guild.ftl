@@ -22,7 +22,9 @@
 
 default-message-notification-level-all=All
 default-message-notification-level-mentions=Mentions
-default-message-notification-level-unknown=Unknown
+explicit-content-filter-disabled=Disabled
+explicit-content-filter-members-without-roles=Members Without Roles
+explicit-content-filter-all-members=All Members
 mfa-level-none=None
 mfa-level-elevated=Elevated
 mfa-level-unknown=Unknown
@@ -30,10 +32,8 @@ premium-tier-none=None
 premium-tier-one=Level 1
 premium-tier-two=Level 2
 premium-tier-three=Level 3
-premium-tier-unknown=Unknown
 verification-level-none=None
 verification-level-low=Low
 verification-level-medium=Medium
 verification-level-high=High
 verification-level-very-high=Highest
-verification-level-unknown=Unknown
