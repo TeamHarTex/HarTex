@@ -1,5 +1,6 @@
 import argparse
 import sys
+import os
 
 from time import time
 
@@ -13,7 +14,7 @@ def parse_args(argv):
 
 
 def bootstrap(args):
-    pass
+    root = os.path.abspath(os.path.join(__file__, '../..'))
 
 
 def main():
