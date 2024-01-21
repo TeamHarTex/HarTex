@@ -18,6 +18,7 @@
 - **Added:** added inter-entity relations to entity macro
 - **Changed:** migrated to Lua configuration
 - **Changed:** modified cached guild entity fields
+- **Changed:** modified cached user entity fields
 - **Changed:** updated `/info server` command to add extra information
 
 ## Localization Infrastructure
