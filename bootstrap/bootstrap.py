@@ -25,6 +25,9 @@ def main():
     args = parse_args(sys.argv)
     help_triggered = args.help or len(sys.argv) == 1
 
+    if help_triggered:
+        eprint("NOTE: Building bootstrap before processing help.")
+
     status = 0
     success = "successfully"
 
