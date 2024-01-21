@@ -44,7 +44,13 @@ impl Repository<UserEntity> for CachedUserRepository {
             .one()
             .await?;
 
-        Ok(UserEntity { bot: data.bot, id })
+        Ok(UserEntity {
+            bot: data.bot,
+            id,
+            discriminator: data.discriminator.parse().unwrap(),
+            global_name: data.global_name,
+            name: data.name,
+        })
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
@@ -53,7 +59,14 @@ impl Repository<UserEntity> for CachedUserRepository {
         let client = pooled.client();
 
         cached_user_upsert()
-            .bind(client, &entity.id.to_string(), &entity.bot)
+            .bind(
+                client,
+                &entity.id.to_string(),
+                &entity.bot,
+                &entity.name,
+                &entity.discriminator.to_string(),
+                &entity.global_name
+            )
             .await?;
 
         Ok(())
