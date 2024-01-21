@@ -11,7 +11,7 @@ rust-version = "1.77.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rlua = "0.19.7"
+rlua = "0.19.8"
 
 [dev-dependencies]
 expect-test = "1.4.1"
