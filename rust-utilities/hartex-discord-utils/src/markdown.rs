@@ -43,26 +43,26 @@ pub trait MarkdownStyle {
 
 impl MarkdownStyle for String {
     fn discord_bold(self) -> Self {
-        format!("**{}**", self)
+        format!("**{self}**")
     }
 
     fn discord_inline_code(self) -> Self {
-        format!("`{}`", self)
+        format!("`{self}`")
     }
 
     fn discord_italic(self) -> Self {
-        format!("*{}*", self)
+        format!("*{self}*")
     }
 
     fn discord_relative_timestamp(self) -> Self {
-        format!("<t:{}:R>", self)
+        format!("<t:{self}:R>")
     }
 
     fn discord_underline(self) -> Self {
-        format!("__{}__", self)
+        format!("__{self}__")
     }
 
     fn discord_strikethrough(self) -> Self {
-        format!("~~{}~~", self)
+        format!("~~{self}~~")
     }
 }
