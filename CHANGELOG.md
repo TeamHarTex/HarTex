@@ -10,14 +10,23 @@
 
 ## Database Queries
 
+- **Changed:** updated database queries
+
 ## Discord Frontend
 
 - **Added:** added more conversions to entity macro
 - **Added:** added inter-entity relations to entity macro
+- **Changed:** migrated to Lua configuration
+- **Changed:** modified cached guild entity fields
+- **Changed:** updated `/info server` command to add extra information
 
 ## Localization Infrastructure
 
+- **Added:** added more localization keys
+
 ## Rust Utilities
+
+- **Added:** added more types to be localizable
 
 ## Web Frontend
 
