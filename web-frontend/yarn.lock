@@ -485,9 +485,9 @@
     gsap "^3.12.2"
 
 "@iconify-json/carbon@^1.1.27":
-  version "1.1.27"
-  resolved "https://registry.yarnpkg.com/@iconify-json/carbon/-/carbon-1.1.27.tgz#03f4ce339fe033a26fc11936cc522392a75aa618"
-  integrity sha512-tJVXv9+D9cjU5HcaY+8J0awv9AL/Mjo9MWR/fxHfHFPP/iokjPBEgq4jOBDGNe8W0k/BTrVI3zpgZjLoi6RNGg==
+  version "1.1.28"
+  resolved "https://registry.yarnpkg.com/@iconify-json/carbon/-/carbon-1.1.28.tgz#ff399fcf81b46972aef26c660ce9a8f41cbeb94b"
+  integrity sha512-tg+h0i+69JrIqUpQva2Mt611KdLMeCyibqS7lIqaMRXJgnalHtdqDcdZAKCSLb/hTbkJHyk0NCpQSYJ3f/v51w==
   dependencies:
     "@iconify/types" "*"
 
