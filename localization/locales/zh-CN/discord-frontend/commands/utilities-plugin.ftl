@@ -56,5 +56,6 @@ serverinfo-embed-nitroinfo-field-boosts-subfield-name=助力：
 serverinfo-embed-flags-field-name=标记
 serverinfo-embed-flags-large-subfield-name=是否为大型服务器：
 serverinfo-embed-flags-default-message-notifications-subfield-name=默认消息通知等级：
+serverinfo-embed-flags-explicit-content-filter-subfield-name=露骨内容过滤器：
 serverinfo-embed-flags-mfa-level-subfield-name=多重要素验证等级：
 serverinfo-embed-flags-verification-level-subfield-name=验证等级：
