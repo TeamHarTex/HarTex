@@ -9,7 +9,7 @@ def parse_args(argv):
 
     parser.add_argument("-h", "--help", action="store_true")
 
-    return parser.parse_known_args(args)[0]
+    return parser.parse_known_args(argv)[0]
 
 
 def bootstrap(args):
@@ -26,7 +26,7 @@ def main():
     help_triggered = args.help or len(sys.argv) == 1
 
     if help_triggered:
-        eprint("NOTE: Building bootstrap before processing help.")
+        print("NOTE: Building bootstrap before processing help.")
 
     status = 0
     success = "successfully"
@@ -42,7 +42,7 @@ def main():
         success_word = "unsuccessfully"
 
     if not help_triggered:
-        eprint(f"Build completed {success} in {str(datetime.timedelta(seconds=int(time() - start)))}. Exit code: {status}")
+        print(f"Build completed {success} in {str(datetime.timedelta(seconds=int(time() - start)))}. Exit code: {status}")
     sys.exit(status)
 
     pass
