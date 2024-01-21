@@ -715,6 +715,16 @@ fn make_field_decl_and_assignments(
     field_name: &Ident,
     field_type: &Type,
 ) -> (TokenStream, TokenStream, TokenStream) {
+    // Field name special case
+    if field_name == "discriminator" {
+        return (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name.parse().unwrap()},
+        );
+    }
+
+    // Field type special case
     if field_type.is_enum("DefaultMessageNotificationLevel")
         || field_type.is_enum("ExplicitContentFilter")
         || field_type.is_enum("MfaLevel")

@@ -27,7 +27,12 @@ use hartex_discord_entitycache_core::entity;
     from = "twilight_model::user::User",
     assume = ["CachedUserSelectById"],
     id = ["id"],
-    include = ["bot"],
+    include = [
+        "bot",
+        "discriminator",
+        "global_name",
+        "name",
+    ],
     extra = [],
     overrides = [],
     relates = [],
