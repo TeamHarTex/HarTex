@@ -20,6 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fs;
+use std::io;
+use std::io::BufRead;
+use std::io::Write;
+use std::path::PathBuf;
+use std::process::exit;
+
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -34,7 +41,62 @@ pub enum SetupProfile {
 impl Step for SetupProfile {
     type Output = ();
 
-    fn run_config(_: RunConfig<'_>) {}
+    fn run_config(run: RunConfig<'_>) {
+        let path = &run
+            .builder
+            .config
+            .config_path
+            .clone()
+            .unwrap_or(PathBuf::from("hartex.conf"));
+        if path.exists() {
+            eprintln!();
+            eprintln!(
+                "WARN: a configuration file already exists at {}",
+                path.canonicalize()
+                    .expect("failed to canonicalize path")
+                    .display()
+            );
+
+            match question_bool("Do you wish to override the existing configuration, to allow the setup process to continue?", false) {
+                Ok(true) => fs::remove_file(path).expect("failed to remove file"),
+                _ => {
+                    println!("Setup cancelled. Exiting.");
+                    exit(1);
+                }
+            }
+        }
+    }
 
     fn run(self, _: &Builder<'_>) -> Self::Output {}
+}
+
+fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
+    let default_text = if default { "(Y/n)" } else { "(y/N)" };
+    writeln!(io::stdout().lock(), "{prompt} {default_text}")?;
+
+    let _ = io::stdout().flush()?;
+    let input = readln()?;
+
+    writeln!(io::stdout().lock())?;
+
+    if input.is_empty() {
+        Ok(default)
+    } else {
+        match &*input.to_lowercase() {
+            "y" => Ok(true),
+            "n" => Ok(false),
+            _ => Ok(default),
+        }
+    }
+}
+
+fn readln() -> io::Result<String> {
+    let stdin = io::stdin();
+    let locked = stdin.lock();
+    let mut lines = locked.lines();
+
+    lines.next().transpose()?.ok_or(io::Error::new(
+        io::ErrorKind::Uncategorized,
+        "failed to read from stdin",
+    ))
 }

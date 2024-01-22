@@ -22,6 +22,7 @@
 
 #![feature(absolute_path)]
 #![feature(let_chains)]
+#![feature(io_error_uncategorized)]
 
 pub mod build;
 pub mod builder;
