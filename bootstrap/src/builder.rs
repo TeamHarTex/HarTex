@@ -20,9 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(absolute_path)]
-#![feature(let_chains)]
+use std::ops::Deref;
 
-pub mod build;
-pub mod builder;
-pub mod config;
+use crate::build::Build;
+
+pub struct Builder<'build> {
+    pub build: &'build Build,
+}
+
+impl<'build> Builder<'build> {
+    pub fn new(build: &'build Build) -> Self {
+        Self {
+            build,
+        }
+    }
+
+    pub fn run_cli(&self) {}
+}
+
+impl<'build> Deref for Builder<'build> {
+    type Target = Build;
+
+    fn deref(&self) -> &Self::Target {
+        self.build
+    }
+}
