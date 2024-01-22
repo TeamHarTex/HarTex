@@ -37,9 +37,7 @@ impl BuildKind {
     pub fn steps(&self) -> Vec<StepDescriptor> {
         match self {
             Self::Build => vec![],
-            Self::Setup => vec![
-                StepDescriptor::from::<setup::SetupProfile>(*self)
-            ],
+            Self::Setup => vec![StepDescriptor::from::<setup::SetupProfile>(*self)],
         }
     }
 }
