@@ -54,7 +54,7 @@ impl Config {
             let content = fs::read_to_string(path)
                 .expect(&format!("configuration file not found: {}", path.display()));
 
-            serde_ini::from_str(&content).unwrap_or_else(|error| {
+            toml::from_str(&content).unwrap_or_else(|error| {
                 eprintln!(
                     "failed to parse configuration file {}: {error}",
                     path.display()
