@@ -130,10 +130,10 @@ impl Step for SetupProfile {
                     exit(1);
                 }
             }
-
-            eprintln!();
         }
 
+        println!();
+        
         let profile = interactive_profile().expect("failed to obtain profile");
         run.builder.run_step(profile);
     }
