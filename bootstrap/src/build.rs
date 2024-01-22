@@ -20,9 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(absolute_path)]
-#![feature(let_chains)]
+use crate::builder::Builder;
+use crate::config::Config;
 
-pub mod build;
-pub mod builder;
-pub mod config;
+pub struct Build {
+    pub config: Config,
+}
+
+impl Build {
+    pub fn new(config: Config) -> Self {
+        Self {
+            config,
+        }
+    }
+
+    pub fn build(&self) {
+        Builder::new(self).run_cli();
+    }
+}
