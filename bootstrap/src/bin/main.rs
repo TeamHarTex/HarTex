@@ -54,7 +54,8 @@ pub fn main() {
 
         _lock_guard = match lock.try_write() {
             Ok(mut lock) => {
-                lock.write(&process::id().to_string().as_ref()).expect("failed to write process id to lockfile");
+                lock.write(&process::id().to_string().as_ref())
+                    .expect("failed to write process id to lockfile");
                 lock
             }
             error => {
@@ -62,7 +63,8 @@ pub fn main() {
                 println!("WARNING: build directory locked by process {process_id}");
 
                 let mut lock = lock.write().expect("failed to get write lock on lockfile");
-                lock.write(&process::id().to_string().as_ref()).expect("failed to write process id to lockfile");
+                lock.write(&process::id().to_string().as_ref())
+                    .expect("failed to write process id to lockfile");
                 lock
             }
         }

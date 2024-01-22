@@ -21,5 +21,6 @@
  */
 
 #![feature(absolute_path)]
+#![feature(let_chains)]
 
 pub mod config;
