@@ -22,7 +22,9 @@
 
 default-message-notification-level-all=所有
 default-message-notification-level-mentions=提及
-default-message-notification-level-unknown=未知
+explicit-content-filter-disabled=停用
+explicit-content-filter-members-without-roles=無身分組成員
+explicit-content-filter-all-members=所有成員
 mfa-level-none=無
 mfa-level-elevated=需要
 premium-tier-none=無
