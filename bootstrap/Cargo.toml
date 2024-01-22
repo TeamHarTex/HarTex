@@ -11,6 +11,8 @@ rust-version = "1.77.0"
 [dependencies]
 clap = { version = "4.4.18", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
 fd-lock = "4.0.2"
+serde = { version = "1.0.195", features = ["derive"] }
+serde_ini = "0.2.0"
 
 [[bin]]
 name = "bootstrap"
