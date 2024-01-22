@@ -26,6 +26,7 @@ import sys
 import os
 
 from builder import HarTexBuild
+from cmdrunner import run_cmd
 from time import time
 
 
@@ -42,6 +43,12 @@ def bootstrap(args):
     sys.stdout.flush()
     build.build_bootstrap()
     sys.stdout.flush()
+
+    args = [build.bootstrap_binpath()]
+    args.extend(sys.argv[1:])
+
+    env = os.environ.copy()
+    run_cmd(args, is_bootstrap=True, env=env)
 
 
 def parse_args(argv):

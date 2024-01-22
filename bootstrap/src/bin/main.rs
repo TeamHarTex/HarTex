@@ -20,4 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+pub fn main() {
+    println!("Hello world");
+}
