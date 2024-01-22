@@ -33,6 +33,7 @@ use std::str::FromStr;
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
+use crate::config::Config;
 
 #[derive(Clone, Copy)]
 pub enum SetupProfile {
@@ -133,12 +134,14 @@ impl Step for SetupProfile {
         }
 
         println!();
-        
+
         let profile = interactive_profile().expect("failed to obtain profile");
         run.builder.run_step(profile);
     }
 
-    fn run(self, _: &Builder<'_>) -> Self::Output {}
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        setup_profile(&builder.build.config, self);
+    }
 }
 
 pub fn interactive_profile() -> io::Result<SetupProfile> {
@@ -186,6 +189,8 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
 
     Ok(profile)
 }
+
+pub fn setup_profile(_: &Config, _: SetupProfile) {}
 
 fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
     let default_text = if default { "(Y/n)" } else { "(y/N)" };
