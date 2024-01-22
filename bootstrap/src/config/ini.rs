@@ -24,15 +24,20 @@ use serde::Deserialize;
 
 #[derive(Default, Deserialize)]
 pub struct IniConfig {
-    pub build: Option<Build>,
+    pub build: Option<IniBuild>,
+    pub rust: Option<IniRust>,
 }
 
 #[derive(Default, Deserialize)]
-pub struct Build {
+pub struct IniBuild {
+    pub output_dir: Option<String>,
+}
+
+#[derive(Default, Deserialize)]
+pub struct IniRust {
     pub codegen_units: Option<u32>,
     #[serde(default)]
-    pub include_debug_infp: bool,
+    pub debug: bool,
     pub opt_level: Option<u32>,
-    pub output_dir: Option<String>,
     pub parallel_threads: Option<u32>,
 }
