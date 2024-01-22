@@ -20,16 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod flags;
+use clap::Parser;
+use clap::Subcommand;
 
-pub struct Config;
-
-impl Config {
-    pub fn parse_from_args(args: &[String]) -> Self {
-        Self::parse_from_args_inner(args)
-    }
-
-    fn parse_from_args_inner(args: &[String]) -> Self {
-        Self
-    }
+#[derive(Parser)]
+#[clap(
+    override_usage = "x.py <subcommand> [options]"
+)]
+pub struct Flags {
+    #[command(subcommand)]
+    pub subcommand: BootstrapSubcommand,
 }
+
+#[derive(Clone, Debug, Subcommand)]
+pub enum BootstrapSubcommand {}
