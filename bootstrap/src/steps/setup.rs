@@ -20,10 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(absolute_path)]
-#![feature(let_chains)]
+use crate::builder::Builder;
+use crate::builder::RunConfig;
+use crate::builder::Step;
 
-pub mod build;
-pub mod builder;
-pub mod config;
-pub mod steps;
+pub enum SetupProfile {
+    All,
+    Distribution,
+    Localization,
+    None,
+}
+
+impl Step for SetupProfile {
+    type Output = ();
+
+    fn run_config(_: RunConfig<'_>) {}
+
+    fn run(self, _: &Builder<'_>) -> Self::Output {}
+}
