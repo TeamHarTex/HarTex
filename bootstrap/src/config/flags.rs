@@ -54,6 +54,8 @@ impl Flags {
 
 #[derive(Clone, Debug, Subcommand)]
 pub enum BootstrapSubcommand {
+    /// Compile a specified list of projects.
+    Build,
     /// Setup the development enrivonment.
     Setup,
 }
