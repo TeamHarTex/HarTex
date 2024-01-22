@@ -20,6 +20,9 @@ You should have received a copy of the GNU Affero General Public License along
 with HarTex. If not, see <https://www.gnu.org/licenses/>.
 """
 
+import os
+
+from cmdrunner import run_cmd
 from configparser import ConfigParser
 
 
@@ -29,7 +32,28 @@ class HarTexBuild(object):
         self.conf.read_string(conf)
 
         self.output_dir = self.get_conf(section="build", option="output-dir") or "build"
-    
+        self.root = os.path.abspath(os.path.join(__file__, "../.."))
+
+    def build_bootstrap(self):
+        env = os.environ.copy()
+        if "GITHUB_ACTIONS" in env:
+            print("::group::Building bootstrap")
+        else:
+            print("INFO: Building bootstrap")
+
+        args = self.build_bootstrap_cmd(env)
+        run_cmd(args, env=env)
+
+        if "GITHUB_ACTIONS" in  env:
+            print("::endgroup::")
+
+    def build_bootstrap_cmd(self, env):
+        env["CARGO_TARGET_DIR"] = os.path.join(self.output_dir, "bootstrap")
+        
+        args = ["cargo", "build", "--manifest-path", os.path.join(self.root, "bootstrap/Cargo.toml")]
+
+        return args
+
     def get_conf(self, section="", option=""):
         try:
             return self.conf.get(section, option)
