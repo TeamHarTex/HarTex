@@ -20,20 +20,37 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use self::flags::Flags;
+use std::iter;
 
-pub mod flags;
+use clap::Parser;
+use clap::Subcommand;
 
-pub struct Config;
+#[derive(Parser)]
+#[clap(
+    override_usage = "x.py <subcommand> [options]",
+    disable_help_subcommand(true),
+    about = "",
+    next_line_help(false)
+)]
+pub struct Flags {
+    #[command(subcommand)]
+    pub subcommand: BootstrapSubcommand,
+    /// Arguments passed to the subcommand.
+    #[arg(global(true), last(true), value_name = "args")]
+    pub subcommand_args: Vec<String>,
+}
 
-impl Config {
+impl Flags {
     pub fn parse_from_args(args: &[String]) -> Self {
-        Self::parse_from_args_inner(args)
-    }
+        let first = String::from("x.py");
+        let iter = iter::once(&first).chain(args.iter());
 
-    fn parse_from_args_inner(args: &[String]) -> Self {
-        let _ = Flags::parse_from_args(args);
-
-        Self
+        Self::parse_from(iter)
     }
+}
+
+#[derive(Clone, Debug, Subcommand)]
+pub enum BootstrapSubcommand {
+    /// Setup the development enrivonment.
+    Setup,
 }
