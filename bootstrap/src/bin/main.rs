@@ -22,6 +22,9 @@
 
 use std::env;
 
+use bootstrap::config::Config;
+
 pub fn main() {
-    let _ = env::args().skip(1).collect::<Vec<_>>();
+    let args = env::args().skip(1).collect::<Vec<_>>();
+    let _ = Config::parse_from_args(&args);
 }
