@@ -20,22 +20,88 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fmt;
+use std::fmt::Display;
 use std::fs;
 use std::io;
 use std::io::BufRead;
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::exit;
+use std::str::FromStr;
 
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+#[derive(Clone, Copy)]
 pub enum SetupProfile {
-    All,
-    Distribution,
+    ApiBackend,
+    DiscordFrontend,
+    Hosting,
     Localization,
+    WebFrontend,
     None,
+}
+
+impl SetupProfile {
+    pub fn purpose(&self) -> String {
+        match self {
+            Self::ApiBackend => "Contribute to the API backend",
+            Self::DiscordFrontend => "Contribute to the Discord frontend",
+            Self::Hosting => "Host an instance of HarTex",
+            Self::Localization => "Contribute to the localization infastructure",
+            Self::WebFrontend => "Contribute to the web frontend",
+            Self::None => "Do not modify `hartex.conf`",
+        }
+        .to_string()
+    }
+
+    pub fn variants() -> impl Iterator<Item = Self> {
+        [
+            Self::ApiBackend,
+            Self::DiscordFrontend,
+            Self::Hosting,
+            Self::Localization,
+            Self::WebFrontend,
+            Self::None,
+        ]
+        .iter()
+        .copied()
+    }
+
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::ApiBackend => "api",
+            Self::DiscordFrontend => "discord",
+            Self::Hosting => "hosting",
+            Self::Localization => "localization",
+            Self::WebFrontend => "web",
+            Self::None => "none",
+        }
+    }
+}
+
+impl Display for SetupProfile {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+impl FromStr for SetupProfile {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "api" => Ok(Self::ApiBackend),
+            "discord" => Ok(Self::DiscordFrontend),
+            "hosting" => Ok(Self::Hosting),
+            "localization" => Ok(Self::Localization),
+            "web" => Ok(Self::WebFrontend),
+            "none" => Ok(Self::None),
+            _ => Err(format!("unknown setup profile: {s}")),
+        }
+    }
 }
 
 impl Step for SetupProfile {
@@ -64,10 +130,61 @@ impl Step for SetupProfile {
                     exit(1);
                 }
             }
+
+            eprintln!();
         }
+
+        let profile = interactive_profile().expect("failed to obtain profile");
+        run.builder.run_step(profile);
     }
 
     fn run(self, _: &Builder<'_>) -> Self::Output {}
+}
+
+pub fn interactive_profile() -> io::Result<SetupProfile> {
+    fn options() -> impl Iterator<Item = ((String, String), SetupProfile)> {
+        ('a'..)
+            .zip(1..)
+            .map(|(letter, number)| (letter.to_string(), number.to_string()))
+            .zip(SetupProfile::variants())
+    }
+
+    fn parse_profile(input: &str) -> Result<SetupProfile, String> {
+        let input = input.trim().to_lowercase();
+        for ((letter, number), profile) in options() {
+            if input == letter || input == number {
+                return Ok(profile);
+            }
+        }
+
+        input.parse()
+    }
+
+    println!("Welcome to the HarTex project! What do you want to do with x.py?");
+
+    for ((letter, _), profile) in options() {
+        println!("{letter}) {profile}: {}", profile.purpose());
+    }
+
+    let profile = loop {
+        let choice = question_str("Please choose one from above: ")?;
+
+        if choice.is_empty() {
+            eprintln!("Unexpected choice. Please retry.");
+            continue;
+        }
+
+        break match parse_profile(&choice) {
+            Ok(profile) => profile,
+            Err(err) => {
+                eprintln!("ERROR: {err}. Please retry.");
+                eprintln!("NOTE: press Ctrl+C to exit");
+                continue;
+            }
+        };
+    };
+
+    Ok(profile)
 }
 
 fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
@@ -86,6 +203,13 @@ fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
             _ => Ok(default),
         }
     }
+}
+
+fn question_str(prompt: &str) -> io::Result<String> {
+    write!(io::stdout().lock(), "{prompt} ")?;
+
+    let _ = io::stdout().flush()?;
+    readln()
 }
 
 fn readln() -> io::Result<String> {
