@@ -20,9 +20,18 @@ You should have received a copy of the GNU Affero General Public License along
 with HarTex. If not, see <https://www.gnu.org/licenses/>.
 """
 
+from configparser import ConfigParser
+
 
 class HarTexBuild(object):
     def __init__(self, conf="", args=None):
-        pass
+        self.conf = ConfigParser()
+        self.conf.read_string(conf)
 
-    pass
+        self.output_dir = self.get_conf(section="build", option="output-dir") or "build"
+    
+    def get_conf(self, section="", option=""):
+        try:
+            return self.conf.get(section, option)
+        except:
+            return None
