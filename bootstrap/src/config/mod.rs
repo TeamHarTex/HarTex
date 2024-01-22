@@ -28,6 +28,7 @@ use std::process::exit;
 
 use self::flags::BootstrapSubcommand;
 use self::flags::Flags;
+use self::ini::IniBuild;
 use self::ini::IniConfig;
 
 pub mod flags;
@@ -64,12 +65,7 @@ impl Config {
         config.bypass_fs_lock = flags.bypass_fs_lock;
         config.subcommand = flags.subcommand;
 
-        if !config.output_dir.is_absolute() {
-            config.output_dir = absolute(&config.output_dir)
-                .expect("failed to resolve absolute path of output directory");
-        }
-
-        let _ = if let Some(config_path) = config.config_path.clone()
+        let ini = if let Some(config_path) = config.config_path.clone()
             && !config_path.exists()
         {
             config.config_path.replace(config.root.join(config_path));
@@ -77,6 +73,17 @@ impl Config {
         } else {
             IniConfig::default()
         };
+
+        let IniBuild {
+            output_dir
+        } = ini.build.unwrap_or_default();
+        
+        config.output_dir = output_dir.map_or(PathBuf::from("hartex.conf"), PathBuf::from);
+        
+        if !config.output_dir.is_absolute() {
+            config.output_dir = absolute(&config.output_dir)
+                .expect("failed to resolve absolute path of output directory");
+        }
 
         config
     }
