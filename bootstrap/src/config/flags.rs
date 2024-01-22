@@ -27,14 +27,17 @@ use clap::Subcommand;
 
 #[derive(Parser)]
 #[clap(
-    about = "",
-    disable_help_subcommand(true),
-    next_line_help(false),
     override_usage = "x.py <subcommand> [options]",
+    disable_help_subcommand(true),
+    about = "",
+    next_line_help(false)
 )]
 pub struct Flags {
     #[command(subcommand)]
     pub subcommand: BootstrapSubcommand,
+    /// Arguments passed to the subcommand.
+    #[arg(global(true), last(true), value_name = "args")]
+    pub subcommand_args: Vec<String>,
 }
 
 impl Flags {
@@ -47,4 +50,7 @@ impl Flags {
 }
 
 #[derive(Clone, Debug, Subcommand)]
-pub enum BootstrapSubcommand {}
+pub enum BootstrapSubcommand {
+    /// Setup the development enrivonment.
+    Setup,
+}
