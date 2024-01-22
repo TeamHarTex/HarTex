@@ -29,9 +29,7 @@ pub struct Build {
 
 impl Build {
     pub fn new(config: Config) -> Self {
-        Self {
-            config,
-        }
+        Self { config }
     }
 
     pub fn build(&self) {
