@@ -20,16 +20,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::iter;
+
 use clap::Parser;
 use clap::Subcommand;
 
 #[derive(Parser)]
 #[clap(
-    override_usage = "x.py <subcommand> [options]"
+    about = "",
+    disable_help_subcommand(true),
+    next_line_help(false),
+    override_usage = "x.py <subcommand> [options]",
 )]
 pub struct Flags {
     #[command(subcommand)]
     pub subcommand: BootstrapSubcommand,
+}
+
+impl Flags {
+    pub fn parse_from_args(args: &[String]) -> Self {
+        let first = String::from("x.py");
+        let iter = iter::once(&first).chain(args.iter());
+
+        Self::parse_from(iter)
+    }
 }
 
 #[derive(Clone, Debug, Subcommand)]

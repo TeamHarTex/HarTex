@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use self::flags::Flags;
+
 pub mod flags;
 
 pub struct Config;
@@ -30,6 +32,8 @@ impl Config {
     }
 
     fn parse_from_args_inner(args: &[String]) -> Self {
+        let _ = Flags::parse_from_args(args);
+
         Self
     }
 }
