@@ -72,12 +72,10 @@ impl Step for SetupProfile {
 
 fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
     let default_text = if default { "(Y/n)" } else { "(y/N)" };
-    writeln!(io::stdout().lock(), "{prompt} {default_text}")?;
+    write!(io::stdout().lock(), "{prompt} {default_text} ")?;
 
     let _ = io::stdout().flush()?;
     let input = readln()?;
-
-    writeln!(io::stdout().lock())?;
 
     if input.is_empty() {
         Ok(default)

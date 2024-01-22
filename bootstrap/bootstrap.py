@@ -81,7 +81,7 @@ def main():
             status = error.code
         else:
             status = 1
-            eprint(error)
+            print(error)
         success = "unsuccessfully"
 
     if not help_triggered:
