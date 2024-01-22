@@ -8,6 +8,8 @@
 
 ## Buildsystem
 
+- **Added:** added x.py and related bootstrap barebones
+
 ## Database Queries
 
 - **Changed:** updated database queries

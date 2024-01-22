@@ -33,5 +33,6 @@
 discord-frontend/hartex-discord-entitycache-macros/generated
 
 backend-data
+hartex.conf
 hartexbuild
 hartexbuild.exe
