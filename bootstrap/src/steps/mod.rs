@@ -20,11 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(absolute_path)]
-#![feature(let_chains)]
-#![feature(io_error_uncategorized)]
-
-pub mod build;
-pub mod builder;
-pub mod config;
-pub mod steps;
+pub mod setup;
