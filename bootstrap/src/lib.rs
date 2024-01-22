@@ -20,4 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(absolute_path)]
+
 pub mod config;

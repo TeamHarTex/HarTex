@@ -20,11 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::path::absolute;
+use std::path::PathBuf;
+
 use self::flags::Flags;
 
 pub mod flags;
 
-pub struct Config;
+pub struct Config {
+    pub bypass_fs_lock: bool,
+    pub output_dir: PathBuf,
+}
 
 impl Config {
     pub fn parse_from_args(args: &[String]) -> Self {
@@ -32,8 +38,25 @@ impl Config {
     }
 
     fn parse_from_args_inner(args: &[String]) -> Self {
-        let _ = Flags::parse_from_args(args);
+        let flags = Flags::parse_from_args(args);
+        let mut config = Self::default();
 
-        Self
+        config.bypass_fs_lock = flags.bypass_fs_lock;
+
+        if !config.output_dir.is_absolute() {
+            config.output_dir = absolute(&config.output_dir)
+                .expect("failed to resolve absolute path of output directory");
+        }
+
+        config
+    }
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            bypass_fs_lock: false,
+            output_dir: PathBuf::from("build"),
+        }
     }
 }
