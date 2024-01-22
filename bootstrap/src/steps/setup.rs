@@ -170,7 +170,7 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
     }
 
     let profile = loop {
-        let choice = question_str("Please choose one from above: ")?;
+        let choice = question_str("Please choose one from above:")?;
 
         if choice.is_empty() {
             eprintln!("Unexpected choice. Please retry.");
@@ -190,7 +190,21 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
     Ok(profile)
 }
 
-pub fn setup_profile(_: &Config, _: SetupProfile) {}
+pub fn setup_profile(config: &Config, profile: SetupProfile) {
+    println!();
+    println!("INFO: using profile {profile}");
+    println!("INFO: copying `bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`");
+
+    fs::copy(
+        config
+            .root
+            .join(format!("bootstrap/profiles/hartex.{profile}.conf")),
+        config.root.join("hartex.conf"),
+    )
+    .expect("failed to copy files");
+
+    println!("INFO: Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.");
+}
 
 fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
     let default_text = if default { "(Y/n)" } else { "(y/N)" };
