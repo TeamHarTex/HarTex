@@ -39,6 +39,10 @@ def bootstrap(args):
     
     build = HarTexBuild(conf=conf, args=args)
 
+    sys.stdout.flush()
+    build.build_bootstrap()
+    sys.stdout.flush()
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(add_help=False)
@@ -46,10 +50,6 @@ def parse_args(argv):
     parser.add_argument("-h", "--help", action="store_true")
 
     return parser.parse_known_args(argv)[0]
-
-
-def run_cmd():
-    pass
 
 
 def main():
