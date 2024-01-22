@@ -33,11 +33,41 @@ pub struct IniBuild {
     pub output_dir: Option<String>,
 }
 
-#[derive(Default, Deserialize)]
+#[derive(Deserialize)]
 pub struct IniRust {
-    pub codegen_units: Option<u32>,
-    #[serde(default)]
+    #[serde(default = "rust_default_codegen_units")]
+    pub codegen_units: u32,
+    #[serde(default = "rust_default_debug")]
     pub debug: bool,
-    pub opt_level: Option<u32>,
-    pub parallel_threads: Option<u32>,
+    #[serde(default = "rust_default_opt_level")]
+    pub opt_level: u32,
+    #[serde(default = "rust_default_parallel_threads")]
+    pub parallel_threads: u32,
+}
+
+impl Default for IniRust {
+    fn default() -> Self {
+        Self {
+            codegen_units: 1,
+            debug: true,
+            opt_level: 3,
+            parallel_threads: 8,
+        }
+    }
+}
+
+fn rust_default_codegen_units() -> u32 {
+    1
+}
+
+fn rust_default_debug() -> bool {
+    true
+}
+
+fn rust_default_opt_level() -> u32 {
+    3
+}
+
+fn rust_default_parallel_threads() -> u32 {
+    8
 }
