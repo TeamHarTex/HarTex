@@ -69,7 +69,7 @@ def main():
     help_triggered = args.help or len(sys.argv) == 1
 
     if help_triggered:
-        print("NOTE: Building bootstrap before processing help.")
+        print("NOTE: Building bootstrap before processing help command.")
 
     status = 0
     success = "successfully"

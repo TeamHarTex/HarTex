@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+
 pub fn main() {
-    println!("Hello world");
+    let _ = env::args().skip(1).collect::<Vec<_>>();
 }
