@@ -33,11 +33,11 @@ def bootstrap(args):
     root = os.path.abspath(os.path.join(__file__, "../.."))
     conf = ''
 
-    if os.path.exists(root.join("hartex.conf")):
-        with open(root.join("hartex.conf")) as file:
+    if os.path.exists(os.path.join(root, "hartex.conf")):
+        with open(os.path.join(root, "hartex.conf")) as file:
             conf = file.read()
     
-    build = HarTexBuild(conf, args)
+    build = HarTexBuild(conf=conf, args=args)
 
 
 def parse_args(argv):
@@ -75,7 +75,7 @@ def main():
         else:
             status = 1
             eprint(error)
-        success_word = "unsuccessfully"
+        success = "unsuccessfully"
 
     if not help_triggered:
         print(f"Build completed {success} in {str(datetime.timedelta(seconds=int(time() - start)))}. Exit code: {status}")
