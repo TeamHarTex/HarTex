@@ -35,6 +35,9 @@ use clap::Subcommand;
 pub struct Flags {
     #[command(subcommand)]
     pub subcommand: BootstrapSubcommand,
+    /// Whether to bypass locking the build process. This flag is rarely used.
+    #[arg(global(true), long)]
+    pub bypass_fs_lock: bool,
     /// Arguments passed to the subcommand.
     #[arg(global(true), last(true), value_name = "args")]
     pub subcommand_args: Vec<String>,
@@ -51,6 +54,8 @@ impl Flags {
 
 #[derive(Clone, Debug, Subcommand)]
 pub enum BootstrapSubcommand {
+    /// Compile a specified list of projects.
+    Build,
     /// Setup the development enrivonment.
     Setup,
 }
