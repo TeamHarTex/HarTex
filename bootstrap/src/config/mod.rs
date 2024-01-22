@@ -20,11 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::path::absolute;
+use std::path::PathBuf;
+
+use self::flags::BootstrapSubcommand;
 use self::flags::Flags;
 
 pub mod flags;
 
-pub struct Config;
+pub struct Config {
+    pub bypass_fs_lock: bool,
+    pub config_path: Option<PathBuf>,
+    pub output_dir: PathBuf,
+    pub root: PathBuf,
+    pub subcommand: BootstrapSubcommand,
+}
 
 impl Config {
     pub fn parse_from_args(args: &[String]) -> Self {
@@ -32,8 +42,37 @@ impl Config {
     }
 
     fn parse_from_args_inner(args: &[String]) -> Self {
-        let _ = Flags::parse_from_args(args);
+        let flags = Flags::parse_from_args(args);
+        let mut config = Self::default();
 
-        Self
+        config.bypass_fs_lock = flags.bypass_fs_lock;
+        config.subcommand = flags.subcommand;
+
+        if !config.output_dir.is_absolute() {
+            config.output_dir = absolute(&config.output_dir)
+                .expect("failed to resolve absolute path of output directory");
+        }
+
+        if let Some(config_path) = config.config_path.clone()
+            && !config_path.exists()
+        {
+            config.config_path.replace(config.root.join(config_path));
+        }
+
+        config
+    }
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+
+        Self {
+            bypass_fs_lock: false,
+            config_path: Some(PathBuf::from("config.toml")),
+            output_dir: PathBuf::from("build"),
+            root: manifest_dir.parent().unwrap().to_owned(),
+            subcommand: BootstrapSubcommand::Build,
+        }
     }
 }

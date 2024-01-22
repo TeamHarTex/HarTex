@@ -20,4 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(absolute_path)]
+#![feature(let_chains)]
+
 pub mod config;
