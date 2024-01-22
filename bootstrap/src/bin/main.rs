@@ -26,6 +26,7 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::process;
 
+use bootstrap::build::Build;
 use bootstrap::config::flags::BootstrapSubcommand;
 use bootstrap::config::Config;
 use fd_lock::RwLock;
@@ -75,4 +76,6 @@ pub fn main() {
         println!("WARN: no `hartex.conf` configuration file is found, using default configuration");
         println!("HELP: consider running `./x.py setup` or copying `hartex.example.conf` by running `cp hartex.example.conf hartex.conf`")
     }
+
+    Build::new(config).build();
 }
