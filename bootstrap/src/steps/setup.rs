@@ -120,7 +120,6 @@ impl Step for SetupProfile {
             .clone()
             .unwrap_or(PathBuf::from("hartex.conf"));
         if path.exists() {
-            eprintln!();
             eprintln!(
                 "WARN: a configuration file already exists at {}",
                 path.canonicalize()
@@ -136,8 +135,6 @@ impl Step for SetupProfile {
                 }
             }
         }
-
-        println!();
 
         let profile = interactive_profile().expect("failed to obtain profile");
         run.builder.run_step(profile);
@@ -191,7 +188,6 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
 }
 
 pub fn setup_profile(config: &Config, profile: SetupProfile) {
-    println!();
     println!("INFO: using profile {profile}");
     println!("INFO: copying `bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`");
 

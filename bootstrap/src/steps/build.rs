@@ -150,7 +150,14 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
     }
 
     command.current_dir(pwd);
-    command.env("CARGO_TARGET_DIR", builder.config.root.join(builder.config.output_dir.clone()).join(project));
+    command.env(
+        "CARGO_TARGET_DIR",
+        builder
+            .config
+            .root
+            .join(builder.config.output_dir.clone())
+            .join(project),
+    );
     command.env("RUSTFLAGS", rustflags);
 
     println!("INFO: Building {project} project");

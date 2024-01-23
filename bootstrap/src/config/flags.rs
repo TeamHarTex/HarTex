@@ -56,6 +56,8 @@ impl Flags {
 pub enum BootstrapSubcommand {
     /// Compile a specified list of projects.
     Build,
+    /// Cleans build artifact directory.
+    Clean,
     /// Setup the development enrivonment.
     Setup,
 }
