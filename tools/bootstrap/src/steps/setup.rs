@@ -128,7 +128,10 @@ impl Step for SetupProfile {
                     .display()
             );
 
-            match question_bool("Do you wish to delete the existing configuration and replace it?", false) {
+            match question_bool(
+                "Do you wish to delete the existing configuration and replace it?",
+                false,
+            ) {
                 Ok(true) => fs::remove_file(path).expect("failed to remove file"),
                 _ => {
                     println!("Operation cancelled. Skipping.");
