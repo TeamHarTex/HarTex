@@ -45,12 +45,19 @@ pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>)
                 while let Some(component) = components.next() {
                     match component {
                         Component::RootDir => continue,
-                        Component::Normal(component) if component != config.root.file_name().unwrap() => continue,
+                        Component::Normal(component)
+                            if component != config.root.file_name().unwrap() =>
+                        {
+                            continue
+                        }
                         _ => break,
                     }
                 }
 
-                let mut out_dir = config.root.join(config.build_dir.clone()).join(env!("TESTSUITE_TARGET"));
+                let mut out_dir = config
+                    .root
+                    .join(config.build_dir.clone())
+                    .join(env!("TESTSUITE_TARGET"));
                 components.for_each(|component| out_dir = out_dir.join(component));
 
                 if !out_dir.exists() {
