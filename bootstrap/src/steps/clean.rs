@@ -137,7 +137,11 @@ impl Step for CleanUtilities {
 }
 
 fn clean(project: &'static str, builder: &Builder<'_>) {
-    let dir = builder.config.root.join(builder.config.output_dir.clone()).join(project);
+    let dir = builder
+        .config
+        .root
+        .join(builder.config.output_dir.clone())
+        .join(project);
 
     println!("INFO: deleting {}", dir.display());
     if !dir.exists() {
