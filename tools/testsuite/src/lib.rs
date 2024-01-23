@@ -24,10 +24,6 @@
 
 extern crate test;
 
-use std::sync::Arc;
-
-use config::Config;
-
 pub mod config;
 pub mod flags;
 pub mod tests;

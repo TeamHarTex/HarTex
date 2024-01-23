@@ -20,17 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::sync::Arc;
+ use hartex_discord_commands_macros::metadata;
 
-use testsuite::config::Config;
-use testsuite::flags::Flags;
-use testsuite::tests::run_tests;
-
-pub fn main() {
-    let args = env::args().skip(1).collect::<Vec<_>>();
-    let flags = Flags::parse_from_args(&args);
-    let config = Config::from_flags(flags);
-
-    run_tests(Arc::new(config));
-}
+ #[metadata(command_type)]
+ pub struct ExpectedEqual1;
+ 

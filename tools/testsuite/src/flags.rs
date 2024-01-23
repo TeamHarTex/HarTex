@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::iter;
+
 use clap::Parser;
 
 #[derive(Parser)]
