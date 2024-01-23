@@ -26,12 +26,14 @@ use std::ops::Deref;
 use crate::build::Build;
 use crate::config::flags::BootstrapSubcommand;
 use crate::steps::build;
+use crate::steps::check;
 use crate::steps::clean;
 use crate::steps::setup;
 
 #[derive(Clone, Copy)]
 pub enum BuildKind {
     Build,
+    Check,
     Clean,
     Setup,
 }
@@ -45,6 +47,13 @@ impl BuildKind {
                 StepDescriptor::from::<build::Discord>(*self),
                 StepDescriptor::from::<build::Localization>(*self),
                 StepDescriptor::from::<build::Utilities>(*self),
+            ],
+            Self::Check => vec![
+                StepDescriptor::from::<check::CheckApi>(*self),
+                StepDescriptor::from::<check::CheckDatabase>(*self),
+                StepDescriptor::from::<check::CheckDiscord>(*self),
+                StepDescriptor::from::<check::CheckLocalization>(*self),
+                StepDescriptor::from::<check::CheckUtilities>(*self),
             ],
             Self::Clean => vec![
                 StepDescriptor::from::<clean::CleanApi>(*self),
@@ -67,6 +76,7 @@ impl<'build> Builder<'build> {
     pub fn new(build: &'build Build) -> Self {
         let kind = match build.config.subcommand {
             BootstrapSubcommand::Build => BuildKind::Build,
+            BootstrapSubcommand::Check => BuildKind::Check,
             BootstrapSubcommand::Clean => BuildKind::Clean,
             BootstrapSubcommand::Setup => BuildKind::Setup,
         };
