@@ -20,20 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::process::exit;
-use std::process::Command;
+use std::fs;
 
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
-pub struct Api;
+pub struct CleanApi;
 
-impl Step for Api {
+impl Step for CleanApi {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_cargo_project("api-backend", builder);
+        clean("api-backend", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -44,18 +43,18 @@ impl Step for Api {
             .contains(&String::from("api-backend"))
             || run.builder.config.subcommand_args.is_empty()
         {
-            run.builder.run_step(Api);
+            run.builder.run_step(CleanApi);
         }
     }
 }
 
-pub struct Database;
+pub struct CleanDatabase;
 
-impl Step for Database {
+impl Step for CleanDatabase {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_cargo_project("database-queries", builder);
+        clean("database-queries", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -66,18 +65,18 @@ impl Step for Database {
             .contains(&String::from("database-queries"))
             || run.builder.config.subcommand_args.is_empty()
         {
-            run.builder.run_step(Database);
+            run.builder.run_step(CleanDatabase);
         }
     }
 }
 
-pub struct Discord;
+pub struct CleanDiscord;
 
-impl Step for Discord {
+impl Step for CleanDiscord {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_cargo_project("discord-frontend", builder);
+        clean("discord-frontend", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -88,18 +87,18 @@ impl Step for Discord {
             .contains(&String::from("discord-frontend"))
             || run.builder.config.subcommand_args.is_empty()
         {
-            run.builder.run_step(Discord);
+            run.builder.run_step(CleanDiscord);
         }
     }
 }
 
-pub struct Localization;
+pub struct CleanLocalization;
 
-impl Step for Localization {
+impl Step for CleanLocalization {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_cargo_project("localization", builder);
+        clean("localization", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -110,18 +109,18 @@ impl Step for Localization {
             .contains(&String::from("localization"))
             || run.builder.config.subcommand_args.is_empty()
         {
-            run.builder.run_step(Localization);
+            run.builder.run_step(CleanLocalization);
         }
     }
 }
 
-pub struct Utilities;
+pub struct CleanUtilities;
 
-impl Step for Utilities {
+impl Step for CleanUtilities {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_cargo_project("rust-utilities", builder);
+        clean("rust-utilities", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -132,37 +131,19 @@ impl Step for Utilities {
             .contains(&String::from("rust-utilities"))
             || run.builder.config.subcommand_args.is_empty()
         {
-            run.builder.run_step(Utilities);
+            run.builder.run_step(CleanUtilities);
         }
     }
 }
 
-pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
-    let pwd = builder.config.root.join(project);
+fn clean(project: &'static str, builder: &Builder<'_>) {
+    let dir = builder.config.root.join(builder.config.output_dir.clone()).join(project);
 
-    let mut command = Command::new("cargo");
-    command.arg("build");
-
-    let mut rustflags = format!("-C opt-level={}", builder.config.opt_level);
-
-    if builder.config.debug {
-        rustflags.push_str(" -g");
+    println!("INFO: deleting {}", dir.display());
+    if !dir.exists() {
+        println!("WARN: directory {} does not exist, skipping", dir.display());
+        return;
     }
 
-    command.current_dir(pwd);
-    command.env(
-        "CARGO_TARGET_DIR",
-        builder
-            .config
-            .root
-            .join(builder.config.output_dir.clone())
-            .join(project),
-    );
-    command.env("RUSTFLAGS", rustflags);
-
-    println!("INFO: Building {project} project");
-    let status = command.status().expect("failed to get status");
-    if !status.success() {
-        exit(status.code().unwrap_or(1));
-    }
+    fs::remove_dir_all(dir).expect("failed to remove directory");
 }
