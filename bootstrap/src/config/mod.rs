@@ -21,6 +21,7 @@
  */
 
 use std::fs;
+use std::mem;
 use std::path::absolute;
 use std::path::Path;
 use std::path::PathBuf;
@@ -39,6 +40,7 @@ pub struct Config {
     pub config_path: Option<PathBuf>,
     pub root: PathBuf,
     pub subcommand: BootstrapSubcommand,
+    pub subcommand_args: Vec<String>,
 
     pub output_dir: PathBuf,
 
@@ -65,11 +67,12 @@ impl Config {
     }
 
     fn parse_from_args_inner(args: &[String], get_ini: impl Fn(&Path) -> IniConfig) -> Self {
-        let flags = Flags::parse_from_args(args);
+        let mut flags = Flags::parse_from_args(args);
         let mut config = Self::default();
 
         config.bypass_fs_lock = flags.bypass_fs_lock;
         config.subcommand = flags.subcommand;
+        config.subcommand_args = mem::take(&mut flags.subcommand_args);
 
         if config.config_path.is_none() {
             config.config_path.replace(config.root.join("hartex.conf"));
@@ -113,6 +116,7 @@ impl Default for Config {
             config_path: None,
             root: manifest_dir.parent().unwrap().to_owned(),
             subcommand: BootstrapSubcommand::Build,
+            subcommand_args: Vec::new(),
 
             output_dir: PathBuf::from("build"),
 
