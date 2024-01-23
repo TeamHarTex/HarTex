@@ -25,6 +25,7 @@ use std::ops::Deref;
 
 use crate::build::Build;
 use crate::config::flags::BootstrapSubcommand;
+use crate::steps::build;
 use crate::steps::setup;
 
 #[derive(Clone, Copy)]
@@ -36,7 +37,7 @@ pub enum BuildKind {
 impl BuildKind {
     pub fn steps(&self) -> Vec<StepDescriptor> {
         match self {
-            Self::Build => vec![],
+            Self::Build => vec![StepDescriptor::from::<build::Api>(*self)],
             Self::Setup => vec![StepDescriptor::from::<setup::SetupProfile>(*self)],
         }
     }
@@ -107,7 +108,7 @@ impl StepDescriptor {
 pub trait Step {
     type Output;
 
-    fn run_config(_: RunConfig<'_>);
-
     fn run(self, builder: &Builder<'_>) -> Self::Output;
+
+    fn run_config(_: RunConfig<'_>);
 }

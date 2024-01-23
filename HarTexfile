@@ -12,6 +12,14 @@ project buildsystem {
     include-debug-info = true
 }
 
+project bootstrap {
+    type = "rust"
+
+    profile = "release"
+    include-debug-info = true
+}
+
+
 project database-queries {
     type = "rust"
 
