@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(let_chains)]
 #![feature(test)]
 
 extern crate test;
