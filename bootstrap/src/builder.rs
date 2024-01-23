@@ -28,6 +28,7 @@ use crate::config::flags::BootstrapSubcommand;
 use crate::steps::build;
 use crate::steps::check;
 use crate::steps::clean;
+use crate::steps::clippy;
 use crate::steps::setup;
 
 #[derive(Clone, Copy)]
@@ -63,7 +64,12 @@ impl BuildKind {
                 StepDescriptor::from::<clean::CleanLocalization>(*self),
                 StepDescriptor::from::<clean::CleanUtilities>(*self),
             ],
-            Self::Clippy => vec![],
+            Self::Clippy => vec![
+                StepDescriptor::from::<clippy::ClippyApi>(*self),
+                StepDescriptor::from::<clippy::ClippyDatabase>(*self),
+                StepDescriptor::from::<clippy::ClippyDiscord>(*self),
+                StepDescriptor::from::<clippy::ClippyLocalization>(*self),
+                StepDescriptor::from::<clippy::ClippyUtilities>(*self),],
             Self::Setup => vec![
                 StepDescriptor::from::<setup::SetupProfile>(*self),
                 StepDescriptor::from::<setup::ConfigureVscode>(*self),
