@@ -26,6 +26,7 @@ use crate::flags::Flags;
 
 #[derive(Clone)]
 pub struct Config {
+    pub build_dir: PathBuf,
     pub root: PathBuf,
     pub ui: bool,
 }
@@ -33,11 +34,10 @@ pub struct Config {
 impl Config {
     pub fn from_flags(flags: Flags) -> Self {
         let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        let root = manifest_dir.parent().unwrap().parent().unwrap().to_owned();
-        let tests_root = root.join("tests");
 
         Self {
-            root: tests_root,
+            build_dir: flags.build_dir,
+            root: manifest_dir.parent().unwrap().parent().unwrap().to_owned(),
             ui: flags.ui,
         }
     }

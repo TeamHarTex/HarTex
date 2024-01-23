@@ -156,6 +156,7 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
             .config
             .root
             .join(builder.config.output_dir.clone())
+            .join(env!("BOOTSTRAP_TARGET"))
             .join(project),
     );
     command.env("RUSTFLAGS", rustflags);

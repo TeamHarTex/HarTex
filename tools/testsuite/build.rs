@@ -21,16 +21,9 @@
  */
 
 use std::env;
-use std::sync::Arc;
-
-use testsuite::config::Config;
-use testsuite::flags::Flags;
-use testsuite::tests::run_tests;
 
 pub fn main() {
-    let args = env::args().skip(1).collect::<Vec<_>>();
-    let flags = Flags::parse_from_args(&args);
-    let config = Config::from_flags(flags);
+    let target = env::var("TARGET").expect("cannot find build target");
 
-    run_tests(Arc::new(config));
+    println!("cargo:rustc-env=TESTSUITE_TARGET={target}");
 }

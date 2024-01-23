@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::iter;
+use std::path::PathBuf;
+
 use clap::Parser;
 
 #[derive(Parser)]
@@ -30,6 +33,9 @@ use clap::Parser;
     next_line_help(false)
 )]
 pub struct Flags {
+    /// Output directory of test results from a test run.
+    #[arg(long)]
+    pub build_dir: PathBuf,
     /// Whether to run UI tests.
     #[arg(global(true), long)]
     pub ui: bool,
