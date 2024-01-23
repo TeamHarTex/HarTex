@@ -27,7 +27,6 @@ use std::io;
 use std::io::BufRead;
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::exit;
 use std::str::FromStr;
 
 use crate::builder::Builder;
