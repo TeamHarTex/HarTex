@@ -20,134 +20,133 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
- use std::process::exit;
- use std::process::Command;
- 
- use crate::builder::Builder;
- use crate::builder::RunConfig;
- use crate::builder::Step;
- 
- pub struct ClippyApi;
- 
- impl Step for ClippyApi {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         clippy_cargo_project("api-backend", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("api-backend"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(ClippyApi);
-         }
-     }
- }
- 
- pub struct ClippyDatabase;
- 
- impl Step for ClippyDatabase {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         clippy_cargo_project("database-queries", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("database-queries"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(ClippyDatabase);
-         }
-     }
- }
- 
- pub struct ClippyDiscord;
- 
- impl Step for ClippyDiscord {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         clippy_cargo_project("discord-frontend", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("discord-frontend"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(ClippyDiscord);
-         }
-     }
- }
- 
- pub struct ClippyLocalization;
- 
- impl Step for ClippyLocalization {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         clippy_cargo_project("localization", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("localization"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(ClippyLocalization);
-         }
-     }
- }
- 
- pub struct ClippyUtilities;
- 
- impl Step for ClippyUtilities {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         clippy_cargo_project("rust-utilities", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("rust-utilities"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(ClippyUtilities);
-         }
-     }
- }
- 
- fn clippy_cargo_project(project: &'static str, builder: &Builder<'_>) {
-     let pwd = builder.config.root.join(project);
- 
-     let mut command = Command::new("cargo");
-     command.arg("clippy");
-     command.current_dir(pwd);
- 
-     println!("INFO: Clippying {project} project");
-     let status = command.status().expect("failed to get status");
-     if !status.success() {
-         exit(status.code().unwrap_or(1));
-     }
- }
- 
+use std::process::exit;
+use std::process::Command;
+
+use crate::builder::Builder;
+use crate::builder::RunConfig;
+use crate::builder::Step;
+
+pub struct ClippyApi;
+
+impl Step for ClippyApi {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clippy_cargo_project("api-backend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("api-backend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(ClippyApi);
+        }
+    }
+}
+
+pub struct ClippyDatabase;
+
+impl Step for ClippyDatabase {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clippy_cargo_project("database-queries", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("database-queries"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(ClippyDatabase);
+        }
+    }
+}
+
+pub struct ClippyDiscord;
+
+impl Step for ClippyDiscord {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clippy_cargo_project("discord-frontend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("discord-frontend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(ClippyDiscord);
+        }
+    }
+}
+
+pub struct ClippyLocalization;
+
+impl Step for ClippyLocalization {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clippy_cargo_project("localization", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("localization"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(ClippyLocalization);
+        }
+    }
+}
+
+pub struct ClippyUtilities;
+
+impl Step for ClippyUtilities {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clippy_cargo_project("rust-utilities", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("rust-utilities"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(ClippyUtilities);
+        }
+    }
+}
+
+fn clippy_cargo_project(project: &'static str, builder: &Builder<'_>) {
+    let pwd = builder.config.root.join(project);
+
+    let mut command = Command::new("cargo");
+    command.arg("clippy");
+    command.current_dir(pwd);
+
+    println!("INFO: Clippying {project} project");
+    let status = command.status().expect("failed to get status");
+    if !status.success() {
+        exit(status.code().unwrap_or(1));
+    }
+}

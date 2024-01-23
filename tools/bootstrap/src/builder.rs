@@ -69,7 +69,8 @@ impl BuildKind {
                 StepDescriptor::from::<clippy::ClippyDatabase>(*self),
                 StepDescriptor::from::<clippy::ClippyDiscord>(*self),
                 StepDescriptor::from::<clippy::ClippyLocalization>(*self),
-                StepDescriptor::from::<clippy::ClippyUtilities>(*self),],
+                StepDescriptor::from::<clippy::ClippyUtilities>(*self),
+            ],
             Self::Setup => vec![
                 StepDescriptor::from::<setup::SetupProfile>(*self),
                 StepDescriptor::from::<setup::ConfigureVscode>(*self),
