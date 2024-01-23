@@ -33,7 +33,7 @@ impl Step for Api {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_project("api-backend", builder);
+        build_cargo_project("api-backend", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -49,7 +49,95 @@ impl Step for Api {
     }
 }
 
-pub fn build_project(project: &'static str, builder: &Builder<'_>) {
+pub struct Database;
+
+impl Step for Database {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        build_cargo_project("database-queries", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("database-queries"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(Api);
+        }
+    }
+}
+
+pub struct Discord;
+
+impl Step for Discord {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        build_cargo_project("discord-frontend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("discord-frontend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(Discord);
+        }
+    }
+}
+
+pub struct Localization;
+
+impl Step for Localization {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        build_cargo_project("localization", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("localization"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(Localization);
+        }
+    }
+}
+
+pub struct Utilities;
+
+impl Step for Utilities {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        build_cargo_project("rust-utilities", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("rust-utilities"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(Utilities);
+        }
+    }
+}
+
+pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
     let pwd = builder.config.root.join(project);
 
     let mut command = Command::new("cargo");
