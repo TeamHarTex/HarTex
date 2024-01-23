@@ -35,6 +35,8 @@ use crate::builder::RunConfig;
 use crate::builder::Step;
 use crate::config::Config;
 
+const VSCODE_SETTINGS: &'static str = include_str!("../../config/vscode-settings.json");
+
 #[derive(Clone, Copy)]
 pub enum SetupProfile {
     ApiBackend,
@@ -127,7 +129,7 @@ impl Step for SetupProfile {
                     .display()
             );
 
-            match question_bool("Do you wish to override the existing configuration, to allow the setup process to continue?", false) {
+            match question_bool("Do you wish to delete the existing configuration, to allow the setup process to continue?", false) {
                 Ok(true) => fs::remove_file(path).expect("failed to remove file"),
                 _ => {
                     println!("Setup cancelled. Exiting.");
@@ -200,6 +202,65 @@ pub fn setup_profile(config: &Config, profile: SetupProfile) {
     .expect("failed to copy files");
 
     println!("INFO: Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.");
+}
+
+pub struct ConfigureVscode;
+
+impl Step for ConfigureVscode {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        setup_vscode_config(builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        let vscode_config = run.builder.config.root.join(".vscode/settings.json");
+        if vscode_config.exists() {
+            eprintln!(
+                "WARN: a vscode configuration file already exists at {}",
+                vscode_config
+                    .canonicalize()
+                    .expect("failed to canonicalize path")
+                    .display()
+            );
+
+            match question_bool("Do you wish to delete and replace it?", false) {
+                Ok(true) => fs::remove_file(vscode_config).expect("failed to remove file"),
+                _ => {
+                    println!("Operation cancelled. Exiting.");
+                    exit(1);
+                }
+            }
+        }
+
+        println!("INFO: Preview of the recommended vscode configuration file is as follows");
+        println!("{VSCODE_SETTINGS}");
+
+        match question_bool("Do you wish to continue?", true) {
+            Ok(true) => run.builder.run_step(ConfigureVscode),
+            _ => {
+                println!("Operation cancelled. Exiting.");
+                exit(1);
+            }
+        }
+    }
+}
+
+pub fn setup_vscode_config(builder: &Builder<'_>) {
+    println!("INFO: writing new `.vscode/settings.json`");
+
+    let vscode_dir = builder.config.root.join(".vscode");
+    if !vscode_dir.exists() {
+        fs::create_dir(vscode_dir).expect("failed to create directory");
+    }
+
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .open(builder.build.config.root.join(".vscode/settings.json"))
+        .expect("failed to open file");
+    file.write(VSCODE_SETTINGS.as_bytes())
+        .expect("failed to write to file");
 }
 
 fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {

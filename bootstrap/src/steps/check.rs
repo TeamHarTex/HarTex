@@ -20,124 +20,124 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
- use std::process::Command;
- use std::process::exit;
+use std::process::exit;
+use std::process::Command;
 
- use crate::builder::Builder;
- use crate::builder::RunConfig;
- use crate::builder::Step;
- 
- pub struct CheckApi;
- 
- impl Step for CheckApi {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         check("api-backend", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("api-backend"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(CheckApi);
-         }
-     }
- }
- 
- pub struct CheckDatabase;
- 
- impl Step for CheckDatabase {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         check("database-queries", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("database-queries"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(CheckDatabase);
-         }
-     }
- }
- 
- pub struct CheckDiscord;
- 
- impl Step for CheckDiscord {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         check("discord-frontend", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("discord-frontend"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(CheckDiscord);
-         }
-     }
- }
- 
- pub struct CheckLocalization;
- 
- impl Step for CheckLocalization {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         check("localization", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("localization"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(CheckLocalization);
-         }
-     }
- }
- 
- pub struct CheckUtilities;
- 
- impl Step for CheckUtilities {
-     type Output = ();
- 
-     fn run(self, builder: &Builder<'_>) -> Self::Output {
-         check("rust-utilities", builder);
-     }
- 
-     fn run_config(run: RunConfig<'_>) {
-         if run
-             .builder
-             .config
-             .subcommand_args
-             .contains(&String::from("rust-utilities"))
-             || run.builder.config.subcommand_args.is_empty()
-         {
-             run.builder.run_step(CheckUtilities);
-         }
-     }
- }
+use crate::builder::Builder;
+use crate::builder::RunConfig;
+use crate::builder::Step;
 
- fn check(project: &'static str, builder: &Builder<'_>) {
+pub struct CheckApi;
+
+impl Step for CheckApi {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        check("api-backend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("api-backend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CheckApi);
+        }
+    }
+}
+
+pub struct CheckDatabase;
+
+impl Step for CheckDatabase {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        check("database-queries", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("database-queries"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CheckDatabase);
+        }
+    }
+}
+
+pub struct CheckDiscord;
+
+impl Step for CheckDiscord {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        check("discord-frontend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("discord-frontend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CheckDiscord);
+        }
+    }
+}
+
+pub struct CheckLocalization;
+
+impl Step for CheckLocalization {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        check("localization", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("localization"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CheckLocalization);
+        }
+    }
+}
+
+pub struct CheckUtilities;
+
+impl Step for CheckUtilities {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        check("rust-utilities", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("rust-utilities"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CheckUtilities);
+        }
+    }
+}
+
+fn check(project: &'static str, builder: &Builder<'_>) {
     let pwd = builder.config.root.join(project);
 
     let mut command = Command::new("cargo");
