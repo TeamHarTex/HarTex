@@ -38,6 +38,9 @@ pub struct Flags {
     /// Whether to bypass locking the build process. This flag is rarely used.
     #[arg(global(true), long)]
     pub bypass_fs_lock: bool,
+    /// Produce JSON output for `x.py check`.
+    #[arg(global(true), long)]
+    pub json: bool,
     /// Arguments passed to the subcommand.
     #[arg(global(true), last(true), value_name = "args")]
     pub subcommand_args: Vec<String>,
@@ -60,6 +63,8 @@ pub enum BootstrapSubcommand {
     Check,
     /// Cleans build artifact directory for a specified list of projects.
     Clean,
+    /// Runs `cargo clippy` on a specified list of projects.
+    Clippy,
     /// Setup the development enrivonment.
     Setup,
 }
