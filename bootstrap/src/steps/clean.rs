@@ -20,4 +20,130 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct Clean;
+use std::fs;
+
+use crate::builder::Builder;
+use crate::builder::RunConfig;
+use crate::builder::Step;
+
+pub struct CleanApi;
+
+impl Step for CleanApi {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clean("api-backend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("api-backend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CleanApi);
+        }
+    }
+}
+
+pub struct CleanDatabase;
+
+impl Step for CleanDatabase {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clean("database-queries", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("database-queries"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CleanDatabase);
+        }
+    }
+}
+
+pub struct CleanDiscord;
+
+impl Step for CleanDiscord {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clean("discord-frontend", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("discord-frontend"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CleanDiscord);
+        }
+    }
+}
+
+pub struct CleanLocalization;
+
+impl Step for CleanLocalization {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clean("localization", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("localization"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CleanLocalization);
+        }
+    }
+}
+
+pub struct CleanUtilities;
+
+impl Step for CleanUtilities {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        clean("rust-utilities", builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("rust-utilities"))
+            || run.builder.config.subcommand_args.is_empty()
+        {
+            run.builder.run_step(CleanUtilities);
+        }
+    }
+}
+
+fn clean(project: &'static str, builder: &Builder<'_>) {
+    let dir = builder.config.root.join(builder.config.output_dir.clone()).join(project);
+
+    println!("INFO: deleting {}", dir.display());
+    if !dir.exists() {
+        println!("WARN: directory {} does not exist, skipping", dir.display());
+        return;
+    }
+
+    fs::remove_dir_all(dir).expect("failed to remove directory");
+}
