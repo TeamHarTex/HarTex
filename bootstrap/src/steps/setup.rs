@@ -108,6 +108,10 @@ impl FromStr for SetupProfile {
 impl Step for SetupProfile {
     type Output = ();
 
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        setup_profile(&builder.build.config, self);
+    }
+
     fn run_config(run: RunConfig<'_>) {
         let path = &run
             .builder
@@ -137,10 +141,6 @@ impl Step for SetupProfile {
 
         let profile = interactive_profile().expect("failed to obtain profile");
         run.builder.run_step(profile);
-    }
-
-    fn run(self, builder: &Builder<'_>) -> Self::Output {
-        setup_profile(&builder.build.config, self);
     }
 }
 
