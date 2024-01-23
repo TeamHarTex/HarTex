@@ -142,6 +142,11 @@ fn check_cargo_project(project: &'static str, builder: &Builder<'_>) {
 
     let mut command = Command::new("cargo");
     command.arg("check");
+
+    if builder.config.output_json {
+        command.args(["--message-format", "json"]);
+    }
+
     command.current_dir(pwd);
 
     println!("INFO: Checking {project} project");
