@@ -20,25 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::PathBuf;
+use std::env;
 
-use crate::flags::Flags;
+pub fn main() {
+    let target = env::var("TARGET").expect("cannot find build target");
 
-#[derive(Clone)]
-pub struct Config {
-    pub build_dir: PathBuf,
-    pub root: PathBuf,
-    pub ui: bool,
-}
-
-impl Config {
-    pub fn from_flags(flags: Flags) -> Self {
-        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-
-        Self {
-            build_dir: flags.build_dir,
-            root: manifest_dir.parent().unwrap().parent().unwrap().to_owned(),
-            ui: flags.ui,
-        }
-    }
+    println!("cargo:rustc-env=TESTSUITE_TARGET={target}");
 }

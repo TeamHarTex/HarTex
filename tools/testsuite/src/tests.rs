@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fs;
+use std::path::Component;
 use std::sync::Arc;
 
 use walkdir::WalkDir;
@@ -28,7 +30,7 @@ use crate::config::Config;
 
 pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
     if config.ui {
-        let search_dir = config.root.join("ui");
+        let search_dir = config.root.join("tests/ui");
         let walkdir = WalkDir::new(search_dir)
             .same_file_system(true)
             .sort_by_file_name();
@@ -38,7 +40,22 @@ pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>)
             let metadata = entry.metadata().expect("failed to get entry metadata");
 
             if metadata.is_dir() {
-                println!("{}", entry.path().display());
+                let mut components = entry.path().components();
+
+                while let Some(component) = components.next() {
+                    match component {
+                        Component::RootDir => continue,
+                        Component::Normal(component) if component != config.root.file_name().unwrap() => continue,
+                        _ => break,
+                    }
+                }
+
+                let mut out_dir = config.root.join(config.build_dir.clone()).join(env!("TESTSUITE_TARGET"));
+                components.for_each(|component| out_dir = out_dir.join(component));
+
+                if !out_dir.exists() {
+                    fs::create_dir_all(out_dir).expect("failed to create directories");
+                }
             }
         }
     }
