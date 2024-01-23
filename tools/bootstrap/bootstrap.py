@@ -31,7 +31,7 @@ from time import time
 
 
 def bootstrap(args):
-    root = os.path.abspath(os.path.join(__file__, "../.."))
+    root = os.path.abspath(os.path.join(__file__, "../../.."))
     conf = ''
 
     if os.path.exists(os.path.join(root, "hartex.conf")):

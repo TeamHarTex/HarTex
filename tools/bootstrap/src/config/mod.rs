@@ -117,7 +117,7 @@ impl Default for Config {
             bypass_fs_lock: false,
             config_path: None,
             output_json: false,
-            root: manifest_dir.parent().unwrap().to_owned(),
+            root: manifest_dir.parent().unwrap().parent().unwrap().to_owned(),
             subcommand: BootstrapSubcommand::Build,
             subcommand_args: Vec::new(),
 
