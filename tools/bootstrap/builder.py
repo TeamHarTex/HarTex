@@ -32,7 +32,7 @@ class HarTexBuild(object):
         self.conf.read_string(conf)
 
         self.output_dir = self.get_conf(section="build", option="output-dir") or "build"
-        self.root = os.path.abspath(os.path.join(__file__, "../.."))
+        self.root = os.path.abspath(os.path.join(__file__, "../../.."))
 
     def build_bootstrap(self):
         env = os.environ.copy()
@@ -50,7 +50,7 @@ class HarTexBuild(object):
     def build_bootstrap_cmd(self, env):
         env["CARGO_TARGET_DIR"] = os.path.join(self.output_dir, "bootstrap")
         
-        args = ["cargo", "build", "--manifest-path", os.path.join(self.root, "bootstrap/Cargo.toml")]
+        args = ["cargo", "build", "--manifest-path", os.path.join(self.root, "tools/bootstrap/Cargo.toml")]
 
         return args
 
