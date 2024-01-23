@@ -129,11 +129,11 @@ impl Step for SetupProfile {
                     .display()
             );
 
-            match question_bool("Do you wish to delete the existing configuration, to allow the setup process to continue?", false) {
+            match question_bool("Do you wish to delete the existing configuration and replace it?", false) {
                 Ok(true) => fs::remove_file(path).expect("failed to remove file"),
                 _ => {
-                    println!("Setup cancelled. Exiting.");
-                    exit(1);
+                    println!("Operation cancelled. Skipping.");
+                    return;
                 }
             }
         }
@@ -227,8 +227,8 @@ impl Step for ConfigureVscode {
             match question_bool("Do you wish to delete and replace it?", false) {
                 Ok(true) => fs::remove_file(vscode_config).expect("failed to remove file"),
                 _ => {
-                    println!("Operation cancelled. Exiting.");
-                    exit(1);
+                    println!("Operation cancelled. Skipping");
+                    return;
                 }
             }
         }
@@ -239,8 +239,8 @@ impl Step for ConfigureVscode {
         match question_bool("Do you wish to continue?", true) {
             Ok(true) => run.builder.run_step(ConfigureVscode),
             _ => {
-                println!("Operation cancelled. Exiting.");
-                exit(1);
+                println!("Operation cancelled. Skipping.");
+                return;
             }
         }
     }
