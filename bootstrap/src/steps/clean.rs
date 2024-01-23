@@ -20,6 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod build;
-pub mod clean;
-pub mod setup;
+pub struct Clean;
