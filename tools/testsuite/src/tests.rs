@@ -32,6 +32,15 @@ pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>)
         let walkdir = WalkDir::new(search_dir)
             .same_file_system(true)
             .sort_by_file_name();
+
+        for result in walkdir {
+            let entry = result.expect("failed to get entry");
+            let metadata = entry.metadata().expect("failed to get entry metadata");
+
+            if metadata.is_dir() {
+                println!("{}", entry.path().display());
+            }
+        }
     }
 }
 
