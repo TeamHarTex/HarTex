@@ -20,7 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {}
+use std::sync::Arc;
+
+use walkdir::WalkDir;
+
+use crate::config::Config;
+
+pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
+    if config.ui {
+        let search_dir = config.root.join("ui");
+        let walkdir = WalkDir::new(search_dir)
+            .same_file_system(true)
+            .sort_by_file_name();
+    }
+}
 
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
