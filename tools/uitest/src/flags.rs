@@ -20,16 +20,26 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
+use clap::Parser;
 
-use uitest::config::Config;
-use uitest::flags::Flags;
-use uitest::run_tests;
+#[derive(Parser)]
+#[clap(
+    override_usage = "uitest [options]",
+    disable_help_subcommand(true),
+    about = "",
+    next_line_help(false)
+)]
+pub struct Flags {
+    /// Whether to run UI tests.
+    #[arg(global(true), long)]
+    pub ui: bool,
+}
 
-pub fn main() {
-    let args = env::args().skip(1).collect::<Vec<_>>();
-    let flags = Flags::parse_from_args(&args);
-    let config = Config::from_flags(flags);
+impl Flags {
+    pub fn parse_from_args(args: &[String]) -> Self {
+        let first = String::from("uitest");
+        let iter = iter::once(&first).chain(args.iter());
 
-    run_tests(Arc::new(config));
+        Self::parse_from(iter)
+    }
 }

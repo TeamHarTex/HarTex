@@ -19,3 +19,12 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use std::sync::Arc;
+
+use config::Config;
+
+pub mod config;
+pub mod flags;
+
+pub fn run_tests(_: Arc<Config>) {}

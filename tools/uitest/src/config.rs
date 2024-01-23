@@ -20,16 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
+use std::path::PathBuf;
 
-use uitest::config::Config;
-use uitest::flags::Flags;
-use uitest::run_tests;
+use crate::flags::Flags;
 
-pub fn main() {
-    let args = env::args().skip(1).collect::<Vec<_>>();
-    let flags = Flags::parse_from_args(&args);
-    let config = Config::from_flags(flags);
+pub struct Config {
+    pub root: PathBuf,
+    pub ui: bool,
+}
 
-    run_tests(Arc::new(config));
+impl Config {
+    pub fn from_flags(flags: Flags) -> Self {
+        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+
+        Self {
+            root: manifest_dir.parent().unwrap().parent().unwrap().to_owned(),
+            ui: flags.ui,
+        }
+    }
 }
