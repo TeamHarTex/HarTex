@@ -37,7 +37,13 @@ pub enum BuildKind {
 impl BuildKind {
     pub fn steps(&self) -> Vec<StepDescriptor> {
         match self {
-            Self::Build => vec![StepDescriptor::from::<build::Api>(*self)],
+            Self::Build => vec![
+                StepDescriptor::from::<build::Api>(*self),
+                StepDescriptor::from::<build::Database>(*self),
+                StepDescriptor::from::<build::Discord>(*self),
+                StepDescriptor::from::<build::Localization>(*self),
+                StepDescriptor::from::<build::Utilities>(*self),
+            ],
             Self::Setup => vec![StepDescriptor::from::<setup::SetupProfile>(*self)],
         }
     }
