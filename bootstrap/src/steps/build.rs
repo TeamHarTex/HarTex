@@ -66,7 +66,7 @@ impl Step for Database {
             .contains(&String::from("database-queries"))
             || run.builder.config.subcommand_args.is_empty()
         {
-            run.builder.run_step(Api);
+            run.builder.run_step(Database);
         }
     }
 }
