@@ -22,13 +22,24 @@
 
 use std::fs;
 use std::path::Component;
+use std::path::Path;
 use std::sync::Arc;
 
+use test::ShouldPanic;
+use test::TestDesc;
+use test::TestDescAndFn;
+use test::TestFn;
+use test::TestType;
 use walkdir::WalkDir;
 
 use crate::config::Config;
 
-pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
+pub fn run_tests(config: Arc<Config>) {
+    let mut tests = Vec::new();
+    discover_tests(config, &mut tests);
+}
+
+fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
     if config.ui {
         let search_dir = config.root.join("tests/ui");
         let walkdir = WalkDir::new(search_dir)
@@ -64,11 +75,38 @@ pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>)
                     fs::create_dir_all(out_dir).expect("failed to create directories");
                 }
             }
+
+            if metadata.is_symlink() {
+                continue;
+            }
+
+            match entry.path().extension() {
+                Some(extension) if extension != "rs" | None => continue,
+                _ => (),
+            }
+
+            tests.push(make_test(config.clone(), entry.path()));
         }
     }
 }
 
-pub fn run_tests(config: Arc<Config>) {
-    let mut tests = Vec::new();
-    discover_tests(config, &mut tests);
+fn make_test(_: Arc<Config>, _: &Path) -> TestDescAndFn {
+    // TODO: populate actual values
+    TestDescAndFn {
+        desc: TestDesc {
+            name: "",
+            ignore: false,
+            ignore_message: "",
+            source_file: "",
+            start_line: 0,
+            start_col: 0,
+            end_line: 0,
+            end_col: 0,
+            should_panic: ShouldPanic::No,
+            compile_fail: false,
+            no_run: false,
+            test_type: TestType::IntegrationTest,
+        },
+        testfn: TestFn::StaticTestFn(|| Ok(())),
+    }
 }
