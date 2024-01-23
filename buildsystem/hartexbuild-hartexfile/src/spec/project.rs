@@ -164,7 +164,7 @@ impl Project {
 
 
                 let mut command = Command::new("cargo");
-                command.arg("upgrade").arg("--to-lockfile").current_dir(pwd.clone());
+                command.arg("upgrade").arg("--locked").current_dir(pwd.clone());
                 command.status().into_diagnostic()?.exit_ok()
             }
         };
