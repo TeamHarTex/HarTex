@@ -64,6 +64,15 @@ pub fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>)
                     fs::create_dir_all(out_dir).expect("failed to create directories");
                 }
             }
+
+            if metadata.is_symlink() {
+                continue;
+            }
+
+            match entry.path().extension() {
+                Some(extension) if extension != "rs" | None => continue,
+                _ => (),
+            }
         }
     }
 }
