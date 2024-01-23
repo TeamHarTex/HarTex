@@ -32,7 +32,7 @@ jobs:
   TestDiscordFrontend:
     name: discord-frontend - Test
     needs:
-      - BuildDiscordFrontend
+      - BuildAll
     runs-on: ubuntu-latest
 
     steps:
