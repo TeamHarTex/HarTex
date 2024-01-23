@@ -141,6 +141,7 @@ fn clean(project: &'static str, builder: &Builder<'_>) {
         .config
         .root
         .join(builder.config.output_dir.clone())
+        .join(env!("BOOTSTRAP_TARGET"))
         .join(project);
 
     println!("INFO: deleting {}", dir.display());
