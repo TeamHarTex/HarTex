@@ -33,7 +33,7 @@ impl Step for CheckApi {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        check("api-backend", builder);
+        check_cargo_project("api-backend", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -55,7 +55,7 @@ impl Step for CheckDatabase {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        check("database-queries", builder);
+        check_cargo_project("database-queries", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -77,7 +77,7 @@ impl Step for CheckDiscord {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        check("discord-frontend", builder);
+        check_cargo_project("discord-frontend", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -99,7 +99,7 @@ impl Step for CheckLocalization {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        check("localization", builder);
+        check_cargo_project("localization", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -121,7 +121,7 @@ impl Step for CheckUtilities {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        check("rust-utilities", builder);
+        check_cargo_project("rust-utilities", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -137,7 +137,7 @@ impl Step for CheckUtilities {
     }
 }
 
-fn check(project: &'static str, builder: &Builder<'_>) {
+fn check_cargo_project(project: &'static str, builder: &Builder<'_>) {
     let pwd = builder.config.root.join(project);
 
     let mut command = Command::new("cargo");
