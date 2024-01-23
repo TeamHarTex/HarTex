@@ -144,7 +144,7 @@
     command.arg("check");
     command.current_dir(pwd);
 
-    println!("INFO: checking {project} project");
+    println!("INFO: Checking {project} project");
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));
