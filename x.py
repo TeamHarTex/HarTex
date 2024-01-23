@@ -42,7 +42,7 @@ changed.
 This message can be suppressed by setting `HARTEX_IGNORE_OLD_PYTHON=1`.""")
 
     pwd = os.path.dirname(os.path.abspath(__file__))
-    sys.path.insert(0, os.path.join(os.path.join(pwd, "tools"), "bootstrap"))
+    sys.path.insert(0, os.path.join(pwd, "tools/bootstrap"))
 
     import bootstrap
     bootstrap.main()
