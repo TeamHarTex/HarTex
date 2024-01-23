@@ -5,14 +5,16 @@
     "rust-analyzer.cargo.buildScripts.overrideCommand": [
         "python3",
         "x.py",
-        "check"
+        "check",
+        "--json"
     ],
     "rust-analyzer.check.invocationLocation": "root",
     "rust-analyzer.check.invocationStrategy": "once",
     "rust-analyzer.check.overrideCommand": [
         "python3",
         "x.py",
-        "check"
+        "check",
+        "--json"
     ],
     "rust-analyzer.imports.granularity.group": "item",
     "rust-analyzer.imports.merge.glob": false,

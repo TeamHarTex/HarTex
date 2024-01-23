@@ -38,6 +38,7 @@ pub mod ini;
 pub struct Config {
     pub bypass_fs_lock: bool,
     pub config_path: Option<PathBuf>,
+    pub output_json: bool,
     pub root: PathBuf,
     pub subcommand: BootstrapSubcommand,
     pub subcommand_args: Vec<String>,
@@ -71,6 +72,7 @@ impl Config {
         let mut config = Self::default();
 
         config.bypass_fs_lock = flags.bypass_fs_lock;
+        config.output_json = flags.json;
         config.subcommand = flags.subcommand;
         config.subcommand_args = mem::take(&mut flags.subcommand_args);
 
@@ -114,6 +116,7 @@ impl Default for Config {
         Self {
             bypass_fs_lock: false,
             config_path: None,
+            output_json: false,
             root: manifest_dir.parent().unwrap().to_owned(),
             subcommand: BootstrapSubcommand::Build,
             subcommand_args: Vec::new(),

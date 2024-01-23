@@ -35,6 +35,7 @@ pub enum BuildKind {
     Build,
     Check,
     Clean,
+    Clippy,
     Setup,
 }
 
@@ -62,6 +63,7 @@ impl BuildKind {
                 StepDescriptor::from::<clean::CleanLocalization>(*self),
                 StepDescriptor::from::<clean::CleanUtilities>(*self),
             ],
+            Self::Clippy => vec![],
             Self::Setup => vec![
                 StepDescriptor::from::<setup::SetupProfile>(*self),
                 StepDescriptor::from::<setup::ConfigureVscode>(*self),
@@ -81,6 +83,7 @@ impl<'build> Builder<'build> {
             BootstrapSubcommand::Build => BuildKind::Build,
             BootstrapSubcommand::Check => BuildKind::Check,
             BootstrapSubcommand::Clean => BuildKind::Clean,
+            BootstrapSubcommand::Clippy => BuildKind::Clippy,
             BootstrapSubcommand::Setup => BuildKind::Setup,
         };
 
