@@ -62,7 +62,10 @@ impl BuildKind {
                 StepDescriptor::from::<clean::CleanLocalization>(*self),
                 StepDescriptor::from::<clean::CleanUtilities>(*self),
             ],
-            Self::Setup => vec![StepDescriptor::from::<setup::SetupProfile>(*self)],
+            Self::Setup => vec![
+                StepDescriptor::from::<setup::SetupProfile>(*self),
+                StepDescriptor::from::<setup::ConfigureVscode>(*self),
+            ],
         }
     }
 }
