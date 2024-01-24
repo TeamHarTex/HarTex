@@ -29,6 +29,7 @@ use test::ShouldPanic;
 use test::TestDesc;
 use test::TestDescAndFn;
 use test::TestFn;
+use test::TestName;
 use test::TestType;
 use walkdir::WalkDir;
 
@@ -81,7 +82,8 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
             }
 
             match entry.path().extension() {
-                Some(extension) if extension != "rs" | None => continue,
+                Some(extension) if extension != "rs" => continue,
+                None => continue,
                 _ => (),
             }
 
@@ -90,13 +92,18 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
     }
 }
 
-fn make_test(_: Arc<Config>, _: &Path) -> TestDescAndFn {
+fn make_test(config: Arc<Config>, path: &Path) -> TestDescAndFn {
+    let relative_path = path
+        .strip_prefix(config.root.clone())
+        .expect("failed to strip path prefix");
+    println!("{}", relative_path.display());
+
     // TODO: populate actual values
     TestDescAndFn {
         desc: TestDesc {
-            name: "",
+            name: TestName::DynTestName(format!("[] {}", relative_path.display())),
             ignore: false,
-            ignore_message: "",
+            ignore_message: None,
             source_file: "",
             start_line: 0,
             start_col: 0,
@@ -105,7 +112,7 @@ fn make_test(_: Arc<Config>, _: &Path) -> TestDescAndFn {
             should_panic: ShouldPanic::No,
             compile_fail: false,
             no_run: false,
-            test_type: TestType::IntegrationTest,
+            test_type: TestType::Unknown,
         },
         testfn: TestFn::StaticTestFn(|| Ok(())),
     }

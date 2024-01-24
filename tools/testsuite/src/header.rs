@@ -20,12 +20,35 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(let_chains)]
-#![feature(test)]
+use std::fmt;
+use std::fmt::Display;
+use std::io;
+use std::path::Path;
 
-extern crate test;
+pub struct Header {
+    pub testsuite_type: TestsuiteType,
+    pub testsuite_outcome: TestsuiteOutcome,
+}
 
-pub mod config;
-pub mod flags;
-pub mod header;
-pub mod tests;
+pub enum TestsuiteType {
+    Ui,
+    Unknown
+}
+
+impl Display for TestsuiteType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Ui => f.write_str("ui"),
+            Self::Unknown => f.write_str("unknown"),
+        }
+    }
+}
+
+pub enum TestsuiteOutcome {
+    CompileFail,
+    Unknown,
+}
+
+pub fn parse_header(file_path: &Path) -> io::Result<Header, io::Error> {
+    todo!()
+}
