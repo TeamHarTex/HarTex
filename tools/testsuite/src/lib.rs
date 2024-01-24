@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![feature(io_error_uncategorized)]
 #![feature(let_chains)]
 #![feature(test)]
 

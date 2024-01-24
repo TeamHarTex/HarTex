@@ -35,6 +35,7 @@ use walkdir::WalkDir;
 
 use crate::config::Config;
 use crate::header;
+use crate::header::TestsuiteOutcome;
 
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
@@ -102,14 +103,21 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
     println!("{}", relative_path.display());
 
     let Ok(header) = header::parse_header(path) else {
-        eprintln!("WARN: test file {} does not have a valid test file header, ignoring", path.display());
+        eprintln!(
+            "WARN: test file {} does not have a valid test file header, ignoring",
+            path.display()
+        );
         return None;
     };
 
     // TODO: populate actual values
     Some(TestDescAndFn {
         desc: TestDesc {
-            name: TestName::DynTestName(format!("[] {}", relative_path.display())),
+            name: TestName::DynTestName(format!(
+                "[{}] {}",
+                header.testsuite_type,
+                relative_path.display()
+            )),
             ignore: false,
             ignore_message: None,
             source_file: "",
@@ -118,7 +126,7 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
             end_line: 0,
             end_col: 0,
             should_panic: ShouldPanic::No,
-            compile_fail: false,
+            compile_fail: header.testsuite_outcome == TestsuiteOutcome::CompileFail,
             no_run: false,
             test_type: TestType::Unknown,
         },
