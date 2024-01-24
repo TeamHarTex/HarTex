@@ -29,10 +29,13 @@ use test::ShouldPanic;
 use test::TestDesc;
 use test::TestDescAndFn;
 use test::TestFn;
+use test::TestName;
 use test::TestType;
 use walkdir::WalkDir;
 
 use crate::config::Config;
+use crate::header;
+use crate::header::TestsuiteOutcome;
 
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
@@ -81,32 +84,52 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
             }
 
             match entry.path().extension() {
-                Some(extension) if extension != "rs" | None => continue,
+                Some(extension) if extension != "rs" => continue,
+                None => continue,
                 _ => (),
             }
 
-            tests.push(make_test(config.clone(), entry.path()));
+            if let Some(test) = make_test(config.clone(), entry.path()) {
+                tests.push(test);
+            }
         }
     }
 }
 
-fn make_test(_: Arc<Config>, _: &Path) -> TestDescAndFn {
+fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
+    let relative_path = path
+        .strip_prefix(config.root.clone())
+        .expect("failed to strip path prefix");
+    println!("{}", relative_path.display());
+
+    let Ok(header) = header::parse_header(path) else {
+        eprintln!(
+            "WARN: test file {} does not have a valid test file header, ignoring",
+            path.display()
+        );
+        return None;
+    };
+
     // TODO: populate actual values
-    TestDescAndFn {
+    Some(TestDescAndFn {
         desc: TestDesc {
-            name: "",
+            name: TestName::DynTestName(format!(
+                "[{}] {}",
+                header.testsuite_type,
+                relative_path.display()
+            )),
             ignore: false,
-            ignore_message: "",
+            ignore_message: None,
             source_file: "",
             start_line: 0,
             start_col: 0,
             end_line: 0,
             end_col: 0,
             should_panic: ShouldPanic::No,
-            compile_fail: false,
+            compile_fail: header.testsuite_outcome == TestsuiteOutcome::CompileFail,
             no_run: false,
-            test_type: TestType::IntegrationTest,
+            test_type: TestType::Unknown,
         },
         testfn: TestFn::StaticTestFn(|| Ok(())),
-    }
+    })
 }
