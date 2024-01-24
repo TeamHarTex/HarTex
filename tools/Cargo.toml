@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "bootstrap",
+    "testsuite"
+]
+
+resolver = "2"
+
+[profile.release]
+codegen-units = 1
+debug = true
+lto = "fat"
