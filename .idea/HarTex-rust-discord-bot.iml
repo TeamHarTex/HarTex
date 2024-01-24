@@ -104,6 +104,8 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-runecli/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-luart/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-luart/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tools/bootstrap/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tools/testsuite/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
@@ -118,6 +120,8 @@
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/bors/target" />
       <excludeFolder url="file://$MODULE_DIR$/database-queries/target" />
+      <excludeFolder url="file://$MODULE_DIR$/tools/bootstrap/target" />
+      <excludeFolder url="file://$MODULE_DIR$/tools/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
