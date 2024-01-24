@@ -34,6 +34,7 @@ use test::TestType;
 use walkdir::WalkDir;
 
 use crate::config::Config;
+use crate::header;
 
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
@@ -87,19 +88,26 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
                 _ => (),
             }
 
-            tests.push(make_test(config.clone(), entry.path()));
+            if let Some(test) = make_test(config.clone(), entry.path()) {
+                tests.push(test);
+            }
         }
     }
 }
 
-fn make_test(config: Arc<Config>, path: &Path) -> TestDescAndFn {
+fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
     let relative_path = path
         .strip_prefix(config.root.clone())
         .expect("failed to strip path prefix");
     println!("{}", relative_path.display());
 
+    let Ok(header) = header::parse_header(path) else {
+        eprintln!("WARN: test file {} does not have a valid test file header, ignoring", path.display());
+        return None;
+    };
+
     // TODO: populate actual values
-    TestDescAndFn {
+    Some(TestDescAndFn {
         desc: TestDesc {
             name: TestName::DynTestName(format!("[] {}", relative_path.display())),
             ignore: false,
@@ -115,5 +123,5 @@ fn make_test(config: Arc<Config>, path: &Path) -> TestDescAndFn {
             test_type: TestType::Unknown,
         },
         testfn: TestFn::StaticTestFn(|| Ok(())),
-    }
+    })
 }
