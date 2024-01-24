@@ -28,15 +28,43 @@ use std::path::Path;
 use std::str::FromStr;
 
 pub struct Header {
+    pub testsuite_ignore: TestsuiteIgnore,
     pub testsuite_type: TestsuiteType,
     pub testsuite_outcome: TestsuiteOutcome,
 }
 
 impl Header {
-    pub fn new(r#type: TestsuiteType, outcome: TestsuiteOutcome) -> Self {
+    pub fn new(ignore: TestsuiteIgnore, r#type: TestsuiteType, outcome: TestsuiteOutcome) -> Self {
         Self {
+            testsuite_ignore: ignore,
             testsuite_type: r#type,
             testsuite_outcome: outcome,
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+pub enum TestsuiteIgnore {
+    Always,
+    Never,
+}
+
+impl Display for TestsuiteIgnore {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Always => f.write_str("always"),
+            Self::Never => f.write_str("never"),
+        }
+    }
+}
+
+impl FromStr for TestsuiteIgnore {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "always" => Ok(Self::Always),
+            _ => Ok(Self::Never),
         }
     }
 }
@@ -89,7 +117,10 @@ pub fn parse_header(file_path: &Path) -> io::Result<Header> {
     let mut lines = content.lines();
 
     if lines.clone().peekable().peek().is_none() {
-        return Err(io::Error::new(io::ErrorKind::UnexpectedEof, "unexpected end of file"));
+        return Err(io::Error::new(
+            io::ErrorKind::UnexpectedEof,
+            "unexpected end of file",
+        ));
     }
 
     // check first line for the `==BEGIN TESTSUITE DECL==`
@@ -102,7 +133,11 @@ pub fn parse_header(file_path: &Path) -> io::Result<Header> {
         ));
     }
 
-    let mut header = Header::new(TestsuiteType::Unknown, TestsuiteOutcome::Unknown);
+    let mut header = Header::new(
+        TestsuiteIgnore::Never,
+        TestsuiteType::Unknown,
+        TestsuiteOutcome::Unknown,
+    );
 
     while let Some(line) = lines.next()
         && line != "// ==END TESTSUITE DECL=="
@@ -123,6 +158,9 @@ pub fn parse_header(file_path: &Path) -> io::Result<Header> {
         }
 
         match parts[1] {
+            "testsuite-ignore:" => {
+                header.testsuite_ignore = TestsuiteIgnore::from_str(parts[2]).unwrap()
+            }
             "testsuite-type:" => header.testsuite_type = TestsuiteType::from_str(parts[2]).unwrap(),
             "testsuite-outcome:" => {
                 header.testsuite_outcome = TestsuiteOutcome::from_str(parts[2]).unwrap()
