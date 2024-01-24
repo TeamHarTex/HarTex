@@ -119,7 +119,7 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
                 relative_path.display()
             )),
             ignore: false,
-            ignore_message: None,
+            ignore_message: header.testsuite_ignoremsg,
             source_file: "",
             start_line: 0,
             start_col: 0,
