@@ -25,8 +25,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
- use hartex_discord_commands_macros::metadata;
+use hartex_discord_commands_macros::metadata;
 
- #[metadata(command_type)]
- pub struct ExpectedEqual1;
+#[metadata(command_type)]
+pub struct ExpectedEqual1;
  

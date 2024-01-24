@@ -29,6 +29,7 @@ use std::str::FromStr;
 
 pub struct Header {
     pub testsuite_ignore: TestsuiteIgnore,
+    pub testsuite_ignoremsg: Option<&'static str>,
     pub testsuite_type: TestsuiteType,
     pub testsuite_outcome: TestsuiteOutcome,
 }
@@ -37,6 +38,7 @@ impl Header {
     pub fn new(ignore: TestsuiteIgnore, r#type: TestsuiteType, outcome: TestsuiteOutcome) -> Self {
         Self {
             testsuite_ignore: ignore,
+            testsuite_ignoremsg: None,
             testsuite_type: r#type,
             testsuite_outcome: outcome,
         }
@@ -160,6 +162,16 @@ pub fn parse_header(file_path: &Path) -> io::Result<Header> {
         match parts[1] {
             "testsuite-ignore:" => {
                 header.testsuite_ignore = TestsuiteIgnore::from_str(parts[2]).unwrap()
+            }
+            "testsuite-ignoremsg:" => {
+                // the ignore reason of the test must be a &'static str, so memory is to be leaked
+                // in order to create such a value
+                //
+                // this won't grow indefinitely, so it is fine, given that the header is only parsed
+                // at the start of the execution of the testsuite
+                header
+                    .testsuite_ignoremsg
+                    .replace(&*Box::leak(parts[2].to_string().into_boxed_str()));
             }
             "testsuite-type:" => header.testsuite_type = TestsuiteType::from_str(parts[2]).unwrap(),
             "testsuite-outcome:" => {
