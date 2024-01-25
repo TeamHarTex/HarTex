@@ -1,8 +1,11 @@
 error: expected `=`
-  --> tests/ui/discord-frontend/command_macro_expected_equal.rs:30:1
+  --> tests/ui/discord-frontend/command_macro/command_macro_expected_equal_2.rs:30:1
    |
-LL | #[hartex_discord_commands_macros::metadata(command_type)]
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+LL | / #[hartex_discord_commands_macros::metadata(
+LL | |     command_type = 1,
+LL | |     interaction_only
+LL | | )]
+   | |__^
    |
    = note: this error originates in the attribute macro `hartex_discord_commands_macros::metadata` (in Nightly builds, run with -Z macro-backtrace for more info)
 

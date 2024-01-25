@@ -27,7 +27,11 @@
 
 extern crate hartex_discord_commands_macros;
 
-#[hartex_discord_commands_macros::metadata(command_type)]
-pub struct ExpectedEqual1;
+#[hartex_discord_commands_macros::metadata(
+    command_type = 1,
+    interaction_only = "true",
+    name = "foo"
+)]
+pub struct ExpectedBooleanLiteral;
 
 fn main() {}
