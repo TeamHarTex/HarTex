@@ -20,14 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(io_error_uncategorized)]
-#![feature(let_chains)]
-#![feature(test)]
+use crate::config::Config;
 
-extern crate test;
+pub struct TestContext<'test> {
+    pub config: &'test Config,
+}
 
-pub mod config;
-pub mod flags;
-pub mod header;
-pub mod testrunner;
-pub mod tests;
+impl<'test> TestContext<'test> {
+    pub fn new(config: &'test Config) -> Self {
+        Self { config }
+    }
+
+    pub fn run_ui_test(&self) {}
+}
