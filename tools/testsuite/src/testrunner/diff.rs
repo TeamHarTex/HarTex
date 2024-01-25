@@ -23,6 +23,8 @@
 use std::fmt;
 use std::fmt::Display;
 
+use console::style;
+use console::Style;
 use similar::ChangeTag;
 use similar::TextDiff;
 
@@ -50,26 +52,31 @@ pub fn compare_lines_and_render_if_needed(left: &str, right: &str) -> bool {
 
         for op in group {
             diff.iter_inline_changes(op).for_each(|change| {
-                let sign = match change.tag() {
+                let (sign, display) = match change.tag() {
                     ChangeTag::Delete => {
                         count += 1;
-                        "-"
-                    }
+                        ("-", Style::new().red())
+                    },
                     ChangeTag::Insert => {
                         count += 1;
-                        "+"
-                    }
-                    ChangeTag::Equal => " ",
+                        ("+", Style::new().green())
+                    },
+                    ChangeTag::Equal => (" ", Style::new().dim()),
                 };
 
                 to_print.push_str(&format!(
-                    "{}{} |{sign}",
-                    DiffLine(change.old_index()),
-                    DiffLine(change.new_index()),
+                    "{}{} |{}",
+                    style(DiffLine(change.old_index())).dim(),
+                    style(DiffLine(change.new_index())).dim(),
+                    display.apply_to(sign).bold(),
                 ));
 
-                change.iter_strings_lossy().for_each(|(_, value)| {
-                    to_print.push_str(&format!("{value}"));
+                change.iter_strings_lossy().for_each(|(emphasized, value)| {
+                    if emphasized {
+                        to_print.push_str(&format!("{}", display.apply_to(value).underlined()));
+                    } else {
+                        to_print.push_str(&format!("{}", display.apply_to(value)));
+                    }
                 });
             });
         }

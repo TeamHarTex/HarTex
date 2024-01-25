@@ -27,7 +27,9 @@
 
 extern crate hartex_discord_commands_macros;
 
-#[hartex_discord_commands_macros::metadata(command_type)]
+#[hartex_discord_commands_macros::metadata(
+    command_type
+)]
 pub struct ExpectedEqual1;
 
 fn main() {}
