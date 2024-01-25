@@ -47,6 +47,7 @@ pub struct Flags {
 }
 
 impl Flags {
+    #[must_use]
     pub fn parse_from_args(args: &[String]) -> Self {
         let first = String::from("x.py");
         let iter = iter::once(&first).chain(args.iter());
