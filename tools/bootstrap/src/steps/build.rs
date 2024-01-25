@@ -137,6 +137,8 @@ impl Step for Utilities {
     }
 }
 
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
     let pwd = builder.config.root.join(project);
 

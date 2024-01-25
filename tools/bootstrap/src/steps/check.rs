@@ -27,6 +27,7 @@ use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct CheckApi;
 
 impl Step for CheckApi {
@@ -49,6 +50,7 @@ impl Step for CheckApi {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct CheckDatabase;
 
 impl Step for CheckDatabase {
@@ -71,6 +73,7 @@ impl Step for CheckDatabase {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct CheckDiscord;
 
 impl Step for CheckDiscord {
@@ -93,6 +96,7 @@ impl Step for CheckDiscord {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct CheckLocalization;
 
 impl Step for CheckLocalization {
@@ -115,6 +119,7 @@ impl Step for CheckLocalization {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct CheckUtilities;
 
 impl Step for CheckUtilities {
@@ -137,6 +142,8 @@ impl Step for CheckUtilities {
     }
 }
 
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
 fn check_cargo_project(project: &'static str, builder: &Builder<'_>) {
     let pwd = builder.config.root.join(project);
 
