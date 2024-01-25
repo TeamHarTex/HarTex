@@ -53,6 +53,7 @@ pub struct Config {
 
 impl Config {
     #[must_use]
+    #[allow(clippy::expect_fun_call)]
     #[allow(clippy::missing_panics_doc)]
     pub fn parse_from_args(args: &[String]) -> Self {
         Self::parse_from_args_inner(args, |path| {
@@ -70,6 +71,7 @@ impl Config {
     }
 
     #[must_use]
+    #[allow(clippy::field_reassign_with_default)]
     #[allow(clippy::missing_panics_doc)]
     fn parse_from_args_inner(args: &[String], get_ini: impl Fn(&Path) -> IniConfig) -> Self {
         let mut flags = Flags::parse_from_args(args);
