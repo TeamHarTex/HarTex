@@ -30,6 +30,7 @@ use crate::steps::check;
 use crate::steps::clean;
 use crate::steps::clippy;
 use crate::steps::setup;
+use crate::steps::test;
 
 #[derive(Clone, Copy)]
 pub enum BuildKind {
@@ -38,6 +39,7 @@ pub enum BuildKind {
     Clean,
     Clippy,
     Setup,
+    Test,
 }
 
 impl BuildKind {
@@ -76,6 +78,10 @@ impl BuildKind {
                 StepDescriptor::from::<setup::SetupProfile>(*self),
                 StepDescriptor::from::<setup::ConfigureVscode>(*self),
             ],
+            Self::Test => vec![
+                StepDescriptor::from::<test::BuildTestsuiteTool>(*self),
+                StepDescriptor::from::<test::RunUiTests>(*self),
+            ],
         }
     }
 }
@@ -94,6 +100,7 @@ impl<'build> Builder<'build> {
             BootstrapSubcommand::Clean => BuildKind::Clean,
             BootstrapSubcommand::Clippy => BuildKind::Clippy,
             BootstrapSubcommand::Setup => BuildKind::Setup,
+            BootstrapSubcommand::Test => BuildKind::Test,
         };
 
         Self { build, kind }

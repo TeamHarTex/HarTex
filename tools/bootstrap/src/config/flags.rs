@@ -68,4 +68,6 @@ pub enum BootstrapSubcommand {
     Clippy,
     /// Setup the development enrivonment.
     Setup,
+    /// Runs specified tests.
+    Test,
 }
