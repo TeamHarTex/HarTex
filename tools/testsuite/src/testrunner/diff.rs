@@ -56,11 +56,11 @@ pub fn compare_lines_and_render_if_needed(left: &str, right: &str) -> bool {
                     ChangeTag::Delete => {
                         count += 1;
                         ("-", Style::new().red())
-                    },
+                    }
                     ChangeTag::Insert => {
                         count += 1;
                         ("+", Style::new().green())
-                    },
+                    }
                     ChangeTag::Equal => (" ", Style::new().dim()),
                 };
 
