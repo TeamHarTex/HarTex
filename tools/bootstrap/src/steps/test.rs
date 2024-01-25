@@ -37,6 +37,7 @@ impl Step for BuildTestsuiteTool {
     }
 }
 
+#[allow(clippy::missing_panics_doc)]
 fn build_testsuite_tool(builder: &Builder<'_>) {
     let pwd = builder.config.root.join("tools/testsuite");
 
@@ -61,6 +62,35 @@ fn build_testsuite_tool(builder: &Builder<'_>) {
     command.env("RUSTFLAGS", rustflags);
 
     println!("INFO: Building testsuite tool before running tests");
+    let status = command.status().expect("failed to get status");
+    if !status.success() {
+        exit(status.code().unwrap_or(1));
+    }
+}
+
+pub struct RunUiTests;
+
+impl Step for RunUiTests {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        run_ui_tests(builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        if run.builder.config.subcommand_args.contains(&String::from("--ui")) {
+            run.builder.run_step(RunUiTests);
+        }
+    }
+}
+
+#[allow(clippy::missing_panics_doc)]
+fn run_ui_tests(builder: &Builder<'_>) {
+    let mut command = Command::new("./build/testsuite/debug/testsuite");
+    command.args(&builder.config.subcommand_args);
+    command.current_dir(&builder.config.root);
+
+    println!("INFO: Running testsuite tool");
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));
