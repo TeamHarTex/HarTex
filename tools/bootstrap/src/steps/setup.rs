@@ -36,6 +36,7 @@ use crate::config::Config;
 
 const VSCODE_SETTINGS: &str = include_str!("../../config/vscode-settings.json");
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Copy)]
 pub enum SetupProfile {
     ApiBackend,
@@ -47,6 +48,7 @@ pub enum SetupProfile {
 }
 
 impl SetupProfile {
+    #[must_use]
     pub fn purpose(&self) -> String {
         match self {
             Self::ApiBackend => "Contribute to the API backend",
@@ -72,6 +74,7 @@ impl SetupProfile {
         .copied()
     }
 
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::ApiBackend => "api",
@@ -113,6 +116,7 @@ impl Step for SetupProfile {
         setup_profile(&builder.build.config, self);
     }
 
+    #[allow(clippy::single_match_else)]
     fn run_config(run: RunConfig<'_>) {
         let path = &run
             .builder
@@ -145,6 +149,7 @@ impl Step for SetupProfile {
     }
 }
 
+#[allow(clippy::missing_errors_doc)]
 pub fn interactive_profile() -> io::Result<SetupProfile> {
     fn options() -> impl Iterator<Item = ((String, String), SetupProfile)> {
         ('a'..)
@@ -191,6 +196,8 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
     Ok(profile)
 }
 
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub fn setup_profile(config: &Config, profile: SetupProfile) {
     println!("INFO: using profile {profile}");
     println!("INFO: copying `bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`");
