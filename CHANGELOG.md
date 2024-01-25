@@ -9,6 +9,9 @@
 ## Buildsystem
 
 - **Added:** added x.py and related bootstrap barebones
+- **Added:** added x.py commands
+- **Added:** sample configuration files
+- **Removed:** removed old buildsystem
 
 ## Database Queries
 
@@ -22,6 +25,7 @@
 - **Changed:** modified cached guild entity fields
 - **Changed:** modified cached user entity fields
 - **Changed:** updated `/info server` command to add extra information
+- **Changed:** migrated some tests to the new testing infrastructure
 
 ## Localization Infrastructure
 
