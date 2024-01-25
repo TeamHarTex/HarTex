@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(io_error_uncategorized)]
 #![feature(let_chains)]
 #![feature(test)]
@@ -29,4 +32,5 @@ extern crate test;
 pub mod config;
 pub mod flags;
 pub mod header;
+pub mod testrunner;
 pub mod tests;

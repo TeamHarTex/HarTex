@@ -22,27 +22,39 @@
 
 use std::fs;
 use std::path::Component;
-use std::path::Path;
+use std::path::PathBuf;
 use std::sync::Arc;
 
+use test::ColorConfig;
+use test::Options;
+use test::OutputFormat;
+use test::RunIgnored;
 use test::ShouldPanic;
 use test::TestDesc;
 use test::TestDescAndFn;
 use test::TestFn;
 use test::TestName;
+use test::TestOpts;
 use test::TestType;
 use walkdir::WalkDir;
 
 use crate::config::Config;
 use crate::header;
 use crate::header::TestsuiteOutcome;
+use crate::testrunner;
 
+#[allow(clippy::module_name_repetitions)]
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
     discover_tests(config, &mut tests);
+
+    let options = make_test_options();
+    let _ = test::run_tests_console(&options, tests);
 }
 
-fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::needless_pass_by_value)]
+fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
     if config.ui {
         let search_dir = config.root.join("tests/ui");
         let walkdir = WalkDir::new(search_dir)
@@ -56,7 +68,7 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
             if metadata.is_dir() {
                 let mut components = entry.path().components();
 
-                while let Some(component) = components.next() {
+                for component in components.by_ref() {
                     match component {
                         Component::RootDir => continue,
                         Component::Normal(component)
@@ -89,20 +101,21 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
                 _ => (),
             }
 
-            if let Some(test) = make_test(config.clone(), entry.path()) {
+            if let Some(test) = make_test(config.clone(), entry.path().to_path_buf()) {
                 tests.push(test);
             }
         }
     }
 }
 
-fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
+#[allow(clippy::needless_pass_by_value)]
+fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
     let relative_path = path
-        .strip_prefix(config.root.clone())
+        .strip_prefix(&config.root)
         .expect("failed to strip path prefix");
     println!("{}", relative_path.display());
 
-    let Ok(header) = header::parse_header(path) else {
+    let Ok(header) = header::parse_header(&path) else {
         eprintln!(
             "WARN: test file {} does not have a valid test file header, ignoring",
             path.display()
@@ -110,7 +123,7 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
         return None;
     };
 
-    // TODO: populate actual values
+    let testrunner_config = config.clone();
     Some(TestDescAndFn {
         desc: TestDesc {
             name: TestName::DynTestName(format!(
@@ -130,6 +143,33 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
             no_run: false,
             test_type: TestType::Unknown,
         },
-        testfn: TestFn::StaticTestFn(|| Ok(())),
+        testfn: TestFn::DynTestFn(Box::new(move || {
+            testrunner::run(testrunner_config, path);
+            Ok(())
+        })),
     })
+}
+
+fn make_test_options() -> TestOpts {
+    TestOpts {
+        list: false,
+        filters: vec![],
+        filter_exact: false,
+        force_run_in_process: false,
+        exclude_should_panic: false,
+        run_ignored: RunIgnored::No,
+        run_tests: true,
+        bench_benchmarks: false,
+        logfile: None,
+        nocapture: false,
+        color: ColorConfig::AlwaysColor,
+        format: OutputFormat::Pretty,
+        shuffle: false,
+        shuffle_seed: None,
+        test_threads: None,
+        skip: vec![],
+        time_options: None,
+        fail_fast: false,
+        options: Options::new(),
+    }
 }
