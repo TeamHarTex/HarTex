@@ -1,0 +1,8 @@
+error: expected boolean
+  --> tests/ui/discord-frontend/command_macro/command_macro_expected_boolean_literal.rs:32:24
+   |
+LL |     interaction_only = "true",
+   |                        ^^^^^^
+
+error: aborting due to 1 previous error
+
