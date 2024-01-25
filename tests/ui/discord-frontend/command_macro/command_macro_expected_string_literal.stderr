@@ -1,0 +1,8 @@
+error: expected string
+  --> tests/ui/discord-frontend/command_macro/command_macro_expected_string_literal.rs:33:12
+   |
+LL |     name = 394
+   |            ^^^
+
+error: aborting due to 1 previous error
+

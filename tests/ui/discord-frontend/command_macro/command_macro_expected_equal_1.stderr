@@ -1,0 +1,12 @@
+error: expected `=`
+  --> tests/ui/discord-frontend/command_macro/command_macro_expected_equal_1.rs:30:1
+   |
+LL | / #[hartex_discord_commands_macros::metadata(
+LL | |     command_type
+LL | | )]
+   | |__^
+   |
+   = note: this error originates in the attribute macro `hartex_discord_commands_macros::metadata` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to 1 previous error
+
