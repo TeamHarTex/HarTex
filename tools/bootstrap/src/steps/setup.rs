@@ -222,6 +222,7 @@ impl Step for ConfigureVscode {
         setup_vscode_config(builder);
     }
 
+    #[allow(clippy::single_match_else)]
     fn run_config(run: RunConfig<'_>) {
         let vscode_config = run.builder.config.root.join(".vscode/settings.json");
         if vscode_config.exists() {
@@ -249,12 +250,14 @@ impl Step for ConfigureVscode {
             Ok(true) => run.builder.run_step(ConfigureVscode),
             _ => {
                 println!("Operation cancelled. Skipping.");
-                return;
             }
         }
     }
 }
 
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::unused_io_amount)]
 pub fn setup_vscode_config(builder: &Builder<'_>) {
     println!("INFO: writing new `.vscode/settings.json`");
 
@@ -276,7 +279,7 @@ fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
     let default_text = if default { "(Y/n)" } else { "(y/N)" };
     write!(io::stdout().lock(), "{prompt} {default_text} ")?;
 
-    let _ = io::stdout().flush()?;
+    io::stdout().flush()?;
     let input = readln()?;
 
     if input.is_empty() {
@@ -293,7 +296,7 @@ fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
 fn question_str(prompt: &str) -> io::Result<String> {
     write!(io::stdout().lock(), "{prompt} ")?;
 
-    let _ = io::stdout().flush()?;
+    io::stdout().flush()?;
     readln()
 }
 
