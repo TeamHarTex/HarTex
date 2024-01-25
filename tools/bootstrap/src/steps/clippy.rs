@@ -27,6 +27,7 @@ use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct ClippyApi;
 
 impl Step for ClippyApi {
@@ -49,6 +50,7 @@ impl Step for ClippyApi {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct ClippyDatabase;
 
 impl Step for ClippyDatabase {
@@ -71,6 +73,7 @@ impl Step for ClippyDatabase {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct ClippyDiscord;
 
 impl Step for ClippyDiscord {
@@ -93,6 +96,7 @@ impl Step for ClippyDiscord {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct ClippyLocalization;
 
 impl Step for ClippyLocalization {
@@ -115,6 +119,7 @@ impl Step for ClippyLocalization {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 pub struct ClippyUtilities;
 
 impl Step for ClippyUtilities {
@@ -137,6 +142,8 @@ impl Step for ClippyUtilities {
     }
 }
 
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
 fn clippy_cargo_project(project: &'static str, builder: &Builder<'_>) {
     let pwd = builder.config.root.join(project);
 
