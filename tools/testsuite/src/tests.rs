@@ -113,7 +113,6 @@ fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
     let relative_path = path
         .strip_prefix(&config.root)
         .expect("failed to strip path prefix");
-    println!("{}", relative_path.display());
 
     let Ok(header) = header::parse_header(&path) else {
         eprintln!(
