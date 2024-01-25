@@ -25,3 +25,4 @@ pub mod check;
 pub mod clean;
 pub mod clippy;
 pub mod setup;
+pub mod test;
