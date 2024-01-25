@@ -32,6 +32,8 @@ pub struct Config {
 }
 
 impl Config {
+    #[allow(clippy::missing_panics_doc)]
+    #[must_use]
     pub fn from_flags(flags: Flags) -> Self {
         let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
