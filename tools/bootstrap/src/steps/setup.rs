@@ -34,7 +34,7 @@ use crate::builder::RunConfig;
 use crate::builder::Step;
 use crate::config::Config;
 
-const VSCODE_SETTINGS: &'static str = include_str!("../../config/vscode-settings.json");
+const VSCODE_SETTINGS: &str = include_str!("../../config/vscode-settings.json");
 
 #[derive(Clone, Copy)]
 pub enum SetupProfile {

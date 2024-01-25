@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(absolute_path)]
 #![feature(let_chains)]
 #![feature(io_error_uncategorized)]

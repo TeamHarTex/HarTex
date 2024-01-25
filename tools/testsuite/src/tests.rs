@@ -65,7 +65,7 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
             if metadata.is_dir() {
                 let mut components = entry.path().components();
 
-                while let Some(component) = components.next() {
+                for component in components.by_ref() {
                     match component {
                         Component::RootDir => continue,
                         Component::Normal(component)
