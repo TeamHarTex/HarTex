@@ -21,6 +21,8 @@
  */
 
 use std::fs;
+use std::fs::OpenOptions;
+use std::io::Write;
 use std::panic;
 use std::path::Component;
 use std::path::Path;
@@ -45,6 +47,7 @@ impl<'test> TestContext<'test> {
     }
 
     #[allow(clippy::missing_panics_doc)]
+    #[allow(clippy::unused_io_amount)]
     pub fn run_ui_test(&self) {
         let from_test = self
             .path
@@ -92,10 +95,33 @@ impl<'test> TestContext<'test> {
 
         let mut expected_path = self.path.to_path_buf();
         expected_path.set_extension("stderr");
-        let expected_str = fs::read_to_string(expected_path)
-            .expect("failed to read file");
+        let expected_str = fs::read_to_string(&expected_path).expect("failed to read file");
 
-        if !diff::compare_lines_and_render_if_needed(&output_str, &expected_str) {
+        if !diff::compare_lines_and_render_if_needed(&expected_str, &output_str) {
+            let expected_from_test = expected_path
+                .strip_prefix(&self.config.root)
+                .expect("failed to extract relative path");
+            let write_path = self.config.root.join(
+                self.config
+                    .build_dir
+                    .join(env!("TESTSUITE_TARGET"))
+                    .join(expected_from_test),
+            );
+
+            let mut file = OpenOptions::new()
+                .create(true)
+                .write(true)
+                .open(&write_path)
+                .expect("failed to open file");
+            file.write(output_str.as_bytes())
+                .expect("failed to write to file");
+
+            println!("Actual output differed from the expected.");
+            println!(
+                "The actual output has been written to {}",
+                write_path.display()
+            );
+
             panic::resume_unwind(Box::new(()));
         }
     }
