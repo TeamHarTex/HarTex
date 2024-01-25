@@ -1144,17 +1144,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_discord_commands_test"
-version = "0.7.1"
-dependencies = [
- "hartex_discord_commands_core",
- "hartex_discord_commands_macros",
- "macrotest",
- "rustversion",
- "trybuild",
-]
-
-[[package]]
 name = "hartex_discord_configuration_luart"
 version = "0.7.1"
 dependencies = [
