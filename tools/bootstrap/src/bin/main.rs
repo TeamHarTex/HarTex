@@ -31,6 +31,7 @@ use bootstrap::config::flags::BootstrapSubcommand;
 use bootstrap::config::Config;
 use fd_lock::RwLock;
 
+#[allow(clippy::unused_io_amount)]
 pub fn main() {
     let args = env::args().skip(1).collect::<Vec<_>>();
     let config = Config::parse_from_args(&args);
@@ -56,7 +57,7 @@ pub fn main() {
 
         _lock_guard = match lock.try_write() {
             Ok(mut lock) => {
-                lock.write(&process::id().to_string().as_ref())
+                lock.write(process::id().to_string().as_ref())
                     .expect("failed to write process id to lockfile");
                 lock
             }
@@ -65,7 +66,7 @@ pub fn main() {
                 println!("WARN: build directory locked by process {process_id}");
 
                 let mut lock = lock.write().expect("failed to get write lock on lockfile");
-                lock.write(&process::id().to_string().as_ref())
+                lock.write(process::id().to_string().as_ref())
                     .expect("failed to write process id to lockfile");
                 lock
             }

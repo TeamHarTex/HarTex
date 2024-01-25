@@ -20,33 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::iter;
 use std::path::PathBuf;
+use std::sync::Arc;
 
-use clap::Parser;
+use crate::config::Config;
+use crate::testrunner::context::TestContext;
 
-#[derive(Parser)]
-#[clap(
-    override_usage = "uitest [options]",
-    disable_help_subcommand(true),
-    about = "",
-    next_line_help(false)
-)]
-pub struct Flags {
-    /// Output directory of test results from a test run.
-    #[arg(long)]
-    pub build_dir: PathBuf,
-    /// Whether to run UI tests.
-    #[arg(global(true), long)]
-    pub ui: bool,
-}
+mod context;
+mod diff;
 
-impl Flags {
-    #[must_use]
-    pub fn parse_from_args(args: &[String]) -> Self {
-        let first = String::from("uitest");
-        let iter = iter::once(&first).chain(args.iter());
+#[allow(clippy::needless_pass_by_value)]
+pub fn run(config: Arc<Config>, path: PathBuf) {
+    let context = TestContext::new(&config, &path);
 
-        Self::parse_from(iter)
+    if config.ui {
+        context.run_ui_test();
     }
 }

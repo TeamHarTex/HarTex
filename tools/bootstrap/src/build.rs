@@ -28,6 +28,7 @@ pub struct Build {
 }
 
 impl Build {
+    #[must_use]
     pub fn new(config: Config) -> Self {
         Self { config }
     }
