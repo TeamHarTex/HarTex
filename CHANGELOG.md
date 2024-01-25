@@ -9,7 +9,7 @@
 ## Buildsystem
 
 - **Added:** added x.py and related bootstrap barebones
-- **Added:** added x.py commands
+- **Added:** added various x.py commands
 - **Added:** sample configuration files
 - **Removed:** removed old buildsystem
 
