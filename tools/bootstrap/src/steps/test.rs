@@ -20,8 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::process::{Command, exit};
 use crate::builder::{Builder, RunConfig, Step};
+use std::process::{exit, Command};
 
 pub struct BuildTestsuiteTool;
 
@@ -78,7 +78,12 @@ impl Step for RunUiTests {
     }
 
     fn run_config(run: RunConfig<'_>) {
-        if run.builder.config.subcommand_args.contains(&String::from("--ui")) {
+        if run
+            .builder
+            .config
+            .subcommand_args
+            .contains(&String::from("--ui"))
+        {
             run.builder.run_step(RunUiTests);
         }
     }
