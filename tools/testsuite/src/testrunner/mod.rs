@@ -29,6 +29,7 @@ use crate::testrunner::context::TestContext;
 mod context;
 mod diff;
 
+#[allow(clippy::needless_pass_by_value)]
 pub fn run(config: Arc<Config>, path: PathBuf) {
     let context = TestContext::new(&config, &path);
 

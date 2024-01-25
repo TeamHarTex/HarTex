@@ -29,12 +29,14 @@ use std::process::Command;
 use crate::config::Config;
 use crate::testrunner::diff;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct TestContext<'test> {
     pub config: &'test Config,
     pub path: &'test Path,
 }
 
 impl<'test> TestContext<'test> {
+    #[must_use]
     pub fn new(config: &'test Config, test_path: &'test Path) -> Self {
         Self {
             config,
@@ -42,6 +44,7 @@ impl<'test> TestContext<'test> {
         }
     }
 
+    #[allow(clippy::missing_panics_doc)]
     pub fn run_ui_test(&self) {
         let from_test = self
             .path

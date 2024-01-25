@@ -43,6 +43,7 @@ use crate::header;
 use crate::header::TestsuiteOutcome;
 use crate::testrunner;
 
+#[allow(clippy::module_name_repetitions)]
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
     discover_tests(config, &mut tests);
@@ -51,6 +52,8 @@ pub fn run_tests(config: Arc<Config>) {
     let _ = test::run_tests_console(&options, tests);
 }
 
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::needless_pass_by_value)]
 fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
     if config.ui {
         let search_dir = config.root.join("tests/ui");
@@ -105,6 +108,7 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
     }
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
     let relative_path = path
         .strip_prefix(&config.root)
