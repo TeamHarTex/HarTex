@@ -41,6 +41,7 @@ pub enum BuildKind {
 }
 
 impl BuildKind {
+    #[must_use]
     pub fn steps(&self) -> Vec<StepDescriptor> {
         match self {
             Self::Build => vec![
@@ -85,6 +86,7 @@ pub struct Builder<'build> {
 }
 
 impl<'build> Builder<'build> {
+    #[must_use]
     pub fn new(build: &'build Build) -> Self {
         let kind = match build.config.subcommand {
             BootstrapSubcommand::Build => BuildKind::Build,
@@ -131,6 +133,7 @@ pub struct StepDescriptor {
 }
 
 impl StepDescriptor {
+    #[must_use]
     pub fn from<S: Step>(kind: BuildKind) -> Self {
         Self {
             name: type_name::<S>(),
@@ -140,7 +143,7 @@ impl StepDescriptor {
     }
 
     pub fn run(&self, builder: &Builder<'_>) {
-        (self.run_config)(RunConfig { builder })
+        (self.run_config)(RunConfig { builder });
     }
 }
 

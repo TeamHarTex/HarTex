@@ -22,17 +22,20 @@
 
 use serde::Deserialize;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Default, Deserialize)]
 pub struct IniConfig {
     pub build: Option<IniBuild>,
     pub rust: Option<IniRust>,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Default, Deserialize)]
 pub struct IniBuild {
     pub output_dir: Option<String>,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize)]
 pub struct IniRust {
     #[serde(default = "rust_default_codegen_units")]
@@ -56,18 +59,22 @@ impl Default for IniRust {
     }
 }
 
+#[must_use]
 fn rust_default_codegen_units() -> u32 {
     1
 }
 
+#[must_use]
 fn rust_default_debug() -> bool {
     true
 }
 
+#[must_use]
 fn rust_default_opt_level() -> u32 {
     3
 }
 
+#[must_use]
 fn rust_default_parallel_threads() -> u32 {
     8
 }
