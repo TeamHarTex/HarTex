@@ -21,11 +21,13 @@
  */
 
 use std::fs;
+use std::panic;
 use std::path::Component;
 use std::path::Path;
 use std::process::Command;
 
 use crate::config::Config;
+use crate::testrunner::diff;
 
 pub struct TestContext<'test> {
     pub config: &'test Config,
@@ -89,5 +91,9 @@ impl<'test> TestContext<'test> {
         expected_path.set_extension("stderr");
         let expected_str = fs::read_to_string(expected_path)
             .expect("failed to read file");
+
+        if !diff::compare_lines_and_render_if_needed(&output_str, &expected_str) {
+            panic::resume_unwind(Box::new(()));
+        }
     }
 }

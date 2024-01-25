@@ -27,11 +27,12 @@ use crate::config::Config;
 use crate::testrunner::context::TestContext;
 
 mod context;
+mod diff;
 
 pub fn run(config: Arc<Config>, path: PathBuf) {
     let context = TestContext::new(&config, &path);
 
     if config.ui {
-        return context.run_ui_test();
+        context.run_ui_test();
     }
 }
