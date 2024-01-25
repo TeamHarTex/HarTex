@@ -20,16 +20,74 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fs;
+use std::path::Component;
+use std::path::Path;
+use std::process::Command;
+
 use crate::config::Config;
 
 pub struct TestContext<'test> {
     pub config: &'test Config,
+    pub path: &'test Path,
 }
 
 impl<'test> TestContext<'test> {
-    pub fn new(config: &'test Config) -> Self {
-        Self { config }
+    pub fn new(config: &'test Config, test_path: &'test Path) -> Self {
+        Self {
+            config,
+            path: test_path,
+        }
     }
 
-    pub fn run_ui_test(&self) {}
+    pub fn run_ui_test(&self) {
+        let from_test = self
+            .path
+            .strip_prefix(&self.config.root)
+            .expect("failed to extract relative path");
+        let workspace_test = from_test
+            .strip_prefix("tests/ui")
+            .expect("failed to extract workspace path");
+
+        let Component::Normal(workspace) = workspace_test
+            .components()
+            .next()
+            .expect("unexpected end of path")
+        else {
+            unreachable!()
+        };
+
+        let mut command = Command::new("rustc");
+        command.arg(from_test);
+
+        // rustc codegen flags
+        command.args([
+            "-Ccodegen-units=1",
+            "-Cstrip=debuginfo",
+            "-Zthreads=1",
+            "-Zui-testing",
+            "-Zdeduplicate-diagnostics=no",
+            "-Zwrite-long-types-to-disk=no",
+        ]);
+
+        // library search path
+        command.arg(format!(
+            "-L all={}",
+            self.config
+                .build_dir
+                .join(env!("TESTSUITE_TARGET"))
+                .join(workspace)
+                .join("debug")
+                .display()
+        ));
+
+        command.current_dir(&self.config.root);
+        let output = command.output().expect("failed to get output");
+        let output_str = String::from_utf8(output.stderr).expect("invalid utf-8 detected");
+
+        let mut expected_path = self.path.to_path_buf();
+        expected_path.set_extension("stderr");
+        let expected_str = fs::read_to_string(expected_path)
+            .expect("failed to read file");
+    }
 }

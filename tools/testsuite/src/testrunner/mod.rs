@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::path::PathBuf;
 use std::sync::Arc;
 
 use crate::config::Config;
@@ -27,8 +28,8 @@ use crate::testrunner::context::TestContext;
 
 mod context;
 
-pub fn run(config: Arc<Config>) {
-    let context = TestContext::new(&config);
+pub fn run(config: Arc<Config>, path: PathBuf) {
+    let context = TestContext::new(&config, &path);
 
     if config.ui {
         return context.run_ui_test();
