@@ -79,8 +79,9 @@ impl<'test> TestContext<'test> {
         ]);
 
         // library search path
+        command.arg("-L");
         command.arg(format!(
-            "-L all={}",
+            "all={}",
             self.config
                 .build_dir
                 .join(env!("TESTSUITE_TARGET"))
@@ -90,6 +91,8 @@ impl<'test> TestContext<'test> {
         ));
 
         command.current_dir(&self.config.root);
+        println!("command: {command:?}");
+
         let output = command.output().expect("failed to get output");
         let output_str = String::from_utf8(output.stderr).expect("invalid utf-8 detected");
 
