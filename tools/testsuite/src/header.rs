@@ -35,6 +35,7 @@ pub struct Header {
 }
 
 impl Header {
+    #[must_use]
     pub fn new(ignore: TestsuiteIgnore, r#type: TestsuiteType, outcome: TestsuiteOutcome) -> Self {
         Self {
             testsuite_ignore: ignore,
@@ -114,6 +115,10 @@ impl FromStr for TestsuiteOutcome {
     }
 }
 
+#[allow(clippy::match_on_vec_items)]
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
 pub fn parse_header(file_path: &Path) -> io::Result<Header> {
     let content = fs::read_to_string(file_path)?;
     let mut lines = content.lines();
@@ -161,7 +166,7 @@ pub fn parse_header(file_path: &Path) -> io::Result<Header> {
 
         match parts[1] {
             "testsuite-ignore:" => {
-                header.testsuite_ignore = TestsuiteIgnore::from_str(parts[2]).unwrap()
+                header.testsuite_ignore = TestsuiteIgnore::from_str(parts[2]).unwrap();
             }
             "testsuite-ignoremsg:" => {
                 // the ignore reason of the test must be a &'static str, so memory is to be leaked
@@ -175,7 +180,7 @@ pub fn parse_header(file_path: &Path) -> io::Result<Header> {
             }
             "testsuite-type:" => header.testsuite_type = TestsuiteType::from_str(parts[2]).unwrap(),
             "testsuite-outcome:" => {
-                header.testsuite_outcome = TestsuiteOutcome::from_str(parts[2]).unwrap()
+                header.testsuite_outcome = TestsuiteOutcome::from_str(parts[2]).unwrap();
             }
             _ => (),
         }
