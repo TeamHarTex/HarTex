@@ -162,7 +162,7 @@ fn make_test_options() -> TestOpts {
         logfile: None,
         nocapture: false,
         color: ColorConfig::AlwaysColor,
-        format: OutputFormat::Pretty,
+        format: OutputFormat::Terse,
         shuffle: false,
         shuffle_seed: None,
         test_threads: None,
