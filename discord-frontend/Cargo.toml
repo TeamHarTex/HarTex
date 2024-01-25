@@ -5,7 +5,6 @@ members = [
     "hartex-discord-commands-core",
     "hartex-discord-commands-macros",
     "hartex-discord-commands-manager",
-    "hartex-discord-commands-test",
     'hartex-discord-configuration-luart',
     "hartex-discord-core",
     "hartex-discord-entitycache-cacheupdaters",
