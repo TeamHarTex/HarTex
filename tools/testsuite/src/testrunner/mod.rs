@@ -20,14 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(io_error_uncategorized)]
-#![feature(let_chains)]
-#![feature(test)]
+use std::sync::Arc;
 
-extern crate test;
+use crate::config::Config;
+use crate::testrunner::context::TestContext;
 
-pub mod config;
-pub mod flags;
-pub mod header;
-pub mod testrunner;
-pub mod tests;
+mod context;
+
+pub fn run(config: Arc<Config>) {
+    let context = TestContext::new(&config);
+
+    if config.ui {
+        return context.run_ui_test();
+    }
+}

@@ -36,13 +36,14 @@ use walkdir::WalkDir;
 use crate::config::Config;
 use crate::header;
 use crate::header::TestsuiteOutcome;
+use crate::testrunner;
 
 pub fn run_tests(config: Arc<Config>) {
     let mut tests = Vec::new();
     discover_tests(config, &mut tests);
 }
 
-fn discover_tests(config: Arc<Config>, tests: &mut Vec<test::TestDescAndFn>) {
+fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
     if config.ui {
         let search_dir = config.root.join("tests/ui");
         let walkdir = WalkDir::new(search_dir)
@@ -110,7 +111,7 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
         return None;
     };
 
-    // TODO: populate actual values
+    let testrunner_config = config.clone();
     Some(TestDescAndFn {
         desc: TestDesc {
             name: TestName::DynTestName(format!(
@@ -130,6 +131,9 @@ fn make_test(config: Arc<Config>, path: &Path) -> Option<TestDescAndFn> {
             no_run: false,
             test_type: TestType::Unknown,
         },
-        testfn: TestFn::StaticTestFn(|| Ok(())),
+        testfn: TestFn::DynTestFn(Box::new(move || {
+            testrunner::run(testrunner_config);
+            Ok(())
+        })),
     })
 }
