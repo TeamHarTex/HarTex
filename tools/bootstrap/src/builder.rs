@@ -80,6 +80,7 @@ impl BuildKind {
             ],
             Self::Test => vec![
                 StepDescriptor::from::<test::BuildTestsuiteTool>(*self),
+                StepDescriptor::from::<test::RunUiTests>(*self),
             ],
         }
     }
