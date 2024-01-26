@@ -36,7 +36,7 @@ use hartex_discord_entitycache_macros::entity;
     include = [],
     extra = [],
     overrides = [],
-    relates = [],
+    relates = []
 )]
 pub struct TypeDoesNotExistOrOlderVersion;
 
