@@ -244,7 +244,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let item_struct_name = item_struct.ident.clone();
     let maker = |field: &Field| {
         let field_name = Ident::new(&field.name, Span::call_site());
-        make_field_decl_and_assignments(&field_name, &type_of(&field.ty, &input))
+        make_field_decl_and_assignments(&field_name, &type_of(&field.ty, input))
     };
 
     macro_rules! filterer {
@@ -292,7 +292,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .find(|field| &field.name == first)
             .unwrap();
 
-        type_of(&field.ty, &input).to_token_stream()
+        type_of(&field.ty, input).to_token_stream()
     } else {
         let vec = id_fields.iter().map(|name| {
             (type_metadata.fields.iter().cloned())
@@ -306,7 +306,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 .find(|field| &field.name == name)
                 .unwrap()
         });
-        let vec = (vec.map(|field| type_of(&field.ty, &input))).collect::<Vec<_>>();
+        let vec = (vec.map(|field| type_of(&field.ty, input))).collect::<Vec<_>>();
 
         quote! {
             (#(#vec),*)
@@ -360,16 +360,16 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
         // FIXME: may need to generalize for multiple fields
         let (param_decl, param_name) = {
-            let name = Ident::new(&*element.value.value(), Span::call_site());
+            let name = Ident::new(&element.value.value(), Span::call_site());
 
             let ty = (fields_for_function_decls.get(&*element.value.value())).unwrap();
-            let ty = type_of(ty, &input);
+            let ty = type_of(ty, input);
 
             (quote! {#name: #ty}, name)
         };
         let ret_type = syn::parse_str::<Type>(hashmap.get(&*entity).unwrap()).unwrap();
 
-        let query_function_name = make_query_function_name(first, &*element.as_value.value());
+        let query_function_name = make_query_function_name(first, &element.as_value.value());
         // FIXME: bad assumption of always calling .to_string() here (mostly just that should suffice, but...)
         let mut full_query_function_call = quote! {
             let data = hartex_database_queries::discord_frontend::queries::#query_function_name::#query_function_name().bind(client, &#param_name.to_string())
@@ -473,7 +473,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     let fields = input.extra_fields_array.elements.iter().map(|element| {
         let ident = Ident::new(&element.key.value(), Span::call_site());
-        make_field_decl_and_assignments(&ident, &type_of(&element.value.value(), &input))
+        make_field_decl_and_assignments(&ident, &type_of(&element.value.value(), input))
     });
     let (extra_fields_tokens, _, extra_fields_assignment_tokens_with_necessary_casts): (
         Vec<_>,
@@ -484,7 +484,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         (input.extra_fields_array.elements.iter())
             .map(|element| {
                 let ident = Ident::new(&element.key.value(), Span::call_site());
-                let type_token = &type_of(&element.value.value(), &input);
+                let type_token = &type_of(&element.value.value(), input);
 
                 (quote! {#ident}, quote! {#type_token})
             })
