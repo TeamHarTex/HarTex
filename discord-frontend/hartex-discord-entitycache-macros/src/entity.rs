@@ -134,7 +134,7 @@ struct RelatesArrayElement where
     as_value: LitStr,
 );
 
-fn type_of(ty: &str, input: &EntityMacroInput) -> syn::Type {
+fn type_of(ty: &str, input: &EntityMacroInput) -> Type {
     syn::parse_str(&expand_fully_qualified_type_name(
         ty,
         &input.overrides_array,
