@@ -25,17 +25,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_entitycache_macros::entity;
+extern crate hartex_discord_commands_macros;
 
-#[entity(
-    from = "twilight_model::channel::Channel",
-    assume = [],
-    id = [],
-    exclude = ["nonexistent_field"],
-    extra = [],
-    overrides = [],
-    relates = [],
+#[hartex_discord_commands_macros::metadata(
+    command_type = 1,
+    interaction_only = true
 )]
-pub struct NonexistentFieldOrOlderVersion;
+pub struct ExpectedComma2;
 
 fn main() {}

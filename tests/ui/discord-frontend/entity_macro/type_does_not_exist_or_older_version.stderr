@@ -1,0 +1,11 @@
+error: type `twilight_model::TypeDoesNotExistOrOlderVersion` cannot be found
+  --> tests/ui/discord-frontend/entity_macro/type_does_not_exist_or_older_version.rs:33:12
+   |
+LL |     from = "twilight_model::TypeDoesNotExistOrOlderVersion",
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: the type metadata generated was for twilight-model version 0.15.4
+   = help: consider regenerating the metadata for a newer version if the type is recently added
+
+error: aborting due to 1 previous error
+

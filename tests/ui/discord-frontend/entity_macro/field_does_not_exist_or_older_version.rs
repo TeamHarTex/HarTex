@@ -25,6 +25,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate hartex_discord_entitycache_macros;
+
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
@@ -34,8 +36,8 @@ use hartex_discord_entitycache_macros::entity;
     exclude = ["nonexistent_field"],
     extra = [],
     overrides = [],
-    relates = [],
+    relates = []
 )]
-pub struct NonexistentFieldOrOlderVersion;
+pub struct FieldDoesNotExistOrOlderVersion;
 
 fn main() {}
