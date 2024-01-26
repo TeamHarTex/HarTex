@@ -25,17 +25,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate hartex_discord_entitycache_macros;
+
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from = "twilight_model::channel::Channel",
+    from = "twilight_model::TypeDoesNotExistOrOlderVersion",
     assume = [],
     id = [],
-    exclude = ["nonexistent_field"],
+    include = [],
     extra = [],
     overrides = [],
-    relates = [],
+    relates = []
 )]
-pub struct NonexistentFieldOrOlderVersion;
+pub struct TypeDoesNotExistOrOlderVersion;
 
 fn main() {}
