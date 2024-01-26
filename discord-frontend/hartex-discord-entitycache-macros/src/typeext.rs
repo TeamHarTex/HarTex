@@ -59,28 +59,15 @@ impl TypeExt for Type {
         };
 
         let last = path.path.segments.last().unwrap();
-        if last.ident != "Option" {
-            return false;
+
+        if last.ident == "Option"
+            && let PathArguments::AngleBracketed(angle_bracketed) = &last.arguments
+            && let Some(GenericArgument::Type(Type::Path(path))) = angle_bracketed.args.first()
+        {
+            let last = path.path.segments.last().unwrap();
+            return last.ident == option_of;
         }
-
-        let PathArguments::AngleBracketed(angle_bracketed) = last.arguments.clone() else {
-            return false;
-        };
-
-        if angle_bracketed.args.is_empty() || angle_bracketed.args.len() > 1 {
-            return false;
-        }
-
-        let GenericArgument::Type(first) = angle_bracketed.args.first().unwrap() else {
-            return false;
-        };
-
-        let Type::Path(path) = first else {
-            return false;
-        };
-
-        let last = path.path.segments.last().unwrap();
-        last.ident == option_of
+        false
     }
 
     fn is_vec_of(&self, vec_of: &str) -> bool {
@@ -89,27 +76,13 @@ impl TypeExt for Type {
         };
 
         let last = path.path.segments.last().unwrap();
-        if last.ident != "Vec" {
-            return false;
+        if last.ident == "Vec"
+            && let PathArguments::AngleBracketed(angle_bracketed) = &last.arguments
+            && let Some(GenericArgument::Type(Type::Path(path))) = angle_bracketed.args.first()
+        {
+            let last = path.path.segments.last().unwrap();
+            return last.ident == vec_of;
         }
-
-        let PathArguments::AngleBracketed(angle_bracketed) = last.arguments.clone() else {
-            return false;
-        };
-
-        if angle_bracketed.args.is_empty() || angle_bracketed.args.len() > 1 {
-            return false;
-        }
-
-        let GenericArgument::Type(first) = angle_bracketed.args.first().unwrap() else {
-            return false;
-        };
-
-        let Type::Path(path) = first else {
-            return false;
-        };
-
-        let last = path.path.segments.last().unwrap();
-        last.ident == vec_of
+        false
     }
 }

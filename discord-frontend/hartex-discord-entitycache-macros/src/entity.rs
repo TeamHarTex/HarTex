@@ -25,6 +25,8 @@ use std::collections::HashMap;
 use convert_case::Case;
 use convert_case::Casing;
 use hartex_macro_utils::bail;
+use hartex_macro_utils::expect;
+use hartex_macro_utils::impl_bracket_parse;
 use hartex_macro_utils::impl_parse;
 use itertools::Itertools;
 use pluralizer::pluralize;
@@ -34,12 +36,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
 use quote::TokenStreamExt;
-use syn::bracketed;
-use syn::parse::Parse;
-use syn::parse::ParseStream;
-use syn::punctuated::Punctuated;
 use syn::spanned::Spanned;
-use syn::token::Bracket;
 use syn::Expr;
 use syn::ExprArray;
 use syn::ExprLit;
@@ -99,37 +96,13 @@ pub struct EntityMacroInput where
     comma6??: Token![,],
 );
 
+impl_bracket_parse!(
 #[derive(Clone)]
-struct KeyValueArray {
+struct KeyValueArray where
     #[allow(dead_code)]
-    bracket_token: Bracket,
-    elements: Punctuated<KeyValueArrayElement, Token![,]>,
-}
-
-impl Parse for KeyValueArray {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        let content;
-        let bracket_token = bracketed!(content in input);
-        let mut elements = Punctuated::new();
-
-        while !content.is_empty() {
-            let first = content.parse::<KeyValueArrayElement>()?;
-            elements.push_value(first);
-
-            if content.is_empty() {
-                break;
-            }
-
-            let punct = content.parse()?;
-            elements.push_punct(punct);
-        }
-
-        Ok(Self {
-            bracket_token,
-            elements,
-        })
-    }
-}
+    bracket_token,
+    elements => KeyValueArrayElement,
+);
 
 impl_parse!(
 #[derive(Clone)]
@@ -139,38 +112,14 @@ struct KeyValueArrayElement where
     value: LitStr,
 );
 
+impl_bracket_parse!(
 #[derive(Clone)]
-struct RelatesArray {
+struct RelatesArray where
     #[allow(dead_code)]
-    bracket_token: Bracket,
+    bracket_token,
     #[allow(dead_code)]
-    elements: Punctuated<RelatesArrayElement, Token![,]>,
-}
-
-impl Parse for RelatesArray {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        let content;
-        let bracket_token = bracketed!(content in input);
-        let mut elements = Punctuated::new();
-
-        while !content.is_empty() {
-            let first = content.parse::<RelatesArrayElement>()?;
-            elements.push_value(first);
-
-            if content.is_empty() {
-                break;
-            }
-
-            let punct = content.parse()?;
-            elements.push_punct(punct);
-        }
-
-        Ok(Self {
-            bracket_token,
-            elements,
-        })
-    }
-}
+    elements => RelatesArrayElement,
+);
 
 impl_parse!(
 #[derive(Clone)]
@@ -185,48 +134,42 @@ struct RelatesArrayElement where
     as_value: LitStr,
 );
 
+fn type_of(ty: &str, input: &EntityMacroInput) -> syn::Type {
+    syn::parse_str(&expand_fully_qualified_type_name(
+        ty,
+        &input.overrides_array,
+    ))
+    .unwrap()
+}
+
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::too_many_lines)]
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
-    if input.from_ident != "from" {
-        bail(&input.from_ident, "expected `from`")?;
-    }
-
-    if input.assume_ident != "assume" {
-        bail(&input.assume_ident, "expected `assume`")?;
-    }
-
-    if input.id_ident != "id" {
-        bail(&input.from_ident, "expected `id`")?;
-    }
-
-    if input.extra_fields_ident != "extra" {
-        bail(&input.extra_fields_ident, "expected `extra`")?;
-    }
-
-    if input.overrides_ident != "overrides" {
-        bail(&input.overrides_ident, "expected `overrides`")?;
-    }
+    expect!(input:
+        from_ident == "from";
+        assume_ident == "assume";
+        id_ident == "id";
+        extra_fields_ident == "extra";
+        overrides_ident == "overrides"
+    );
 
     let type_key = input.from_lit_str.value();
     let rfind_index = type_key.rfind(':').unwrap();
     let end = &type_key[rfind_index..];
 
-    let type_metadata = if let Some(key) =
-        metadata::STRUCT_MAP.keys().find(|key| key.ends_with(end))
-    {
-        metadata::STRUCT_MAP.get(key).copied().unwrap()
-    } else {
-        (input.from_lit_str.span().unwrap())
-            .error(format!("type `{type_key}` cannot be found"))
-            .note(format!(
-                "the type metadata generated was for twilight-model version {}",
-                metadata::CRATE_VERSION
-            ))
-            .help("consider regenerating the metadata for a newer version if the type is recently added")
-            .emit();
-        return None;
-    };
+    let type_metadata = metadata::STRUCT_MAP.iter().find(|(key, _)| key.ends_with(end)).map_or_else(
+        || {
+            (input.from_lit_str.span().unwrap())
+                .error(format!("type `{type_key}` cannot be found"))
+                .note(format!(
+                    "the type metadata generated was for twilight-model version {}",
+                    metadata::CRATE_VERSION
+                ))
+                .help("consider regenerating the metadata for a newer version if the type is recently added")
+                .emit();
+            None
+        },
+        |(_, v)| Some(v))?;
 
     let mut any_not_found = false;
     let fields = input.exclude_or_include_array.elems.iter().filter_map(|expr| {
@@ -260,11 +203,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 lit: Lit::Str(lit_str),
                 ..
             }) => {
-                if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
-                    return Some(lit_str.value());
-                }
-
-                if input.extra_fields_array.elements.iter().any(|element| element.key.value() == lit_str.value()) {
+                if type_metadata.fields.iter().any(|field| field.name == lit_str.value())
+                    || input.extra_fields_array.elements.iter().any(|element| element.key.value() == lit_str.value()) {
                     return Some(lit_str.value());
                 }
 
@@ -285,20 +225,13 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let id_fields = id_fields.collect::<Vec<_>>();
 
     input.relates_array.elements.iter().for_each(|element| {
-        if ![fields.clone(), id_fields.clone()]
-            .concat()
-            .contains(&element.value.value())
-        {
-            element
-                .value
-                .span()
-                .unwrap()
+        if !fields.contains(&element.value.value()) && !id_fields.contains(&element.value.value()) {
+            (element.value.span().unwrap())
                 .error(format!(
                     "field `{}` cannot be found in type `{type_key}`",
                     element.value.value()
                 ))
                 .emit();
-
             any_not_found = true;
         }
     });
@@ -309,46 +242,32 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     let item_struct_vis = item_struct.vis.clone();
     let item_struct_name = item_struct.ident.clone();
+    let maker = |field: &Field| {
+        let field_name = Ident::new(&field.name, Span::call_site());
+        make_field_decl_and_assignments(&field_name, &type_of(&field.ty, &input))
+    };
 
+    macro_rules! filterer {
+        (@$decider:literal) => {
+            |field: &Field| { // flip the condition
+                if fields.contains(&field.name) ^ $decider {
+                    Some(maker(field))
+                } else {
+                    None
+                }
+            }
+        };
+        ($decider:literal) => {{
+            type_metadata.fields.iter().filter_map(filterer!(@$decider)).multiunzip()
+        }};
+    }
     let (mut fields_tokens, mut fields_assignments, mut field_assignments_with_necessary_casts): (
         Vec<_>,
         Vec<_>,
         Vec<_>,
     ) = match &*input.exclude_or_include_ident.to_string() {
-        "exclude" => type_metadata
-            .fields
-            .iter()
-            .filter_map(|field| {
-                if fields.contains(&field.name) {
-                    None
-                } else {
-                    let field_name = Ident::new(field.name.as_str(), Span::call_site());
-                    let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                        &field.ty,
-                        &input.overrides_array,
-                    ))
-                    .unwrap();
-
-                    Some(make_field_decl_and_assignments(&field_name, &field_type))
-                }
-            })
-            .multiunzip(),
-        "include" => type_metadata
-            .fields
-            .iter()
-            .filter_map(|field| {
-                fields.iter().find(|&x| x == &field.name).map(|_| {
-                    let field_name = Ident::new(&field.name, Span::call_site());
-                    let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                        &field.ty,
-                        &input.overrides_array,
-                    ))
-                    .unwrap();
-
-                    make_field_decl_and_assignments(&field_name, &field_type)
-                })
-            })
-            .multiunzip(),
+        "exclude" => filterer!(true),
+        "include" => filterer!(false),
         _ => bail(
             &input.exclude_or_include_ident,
             "expected `exclude` or `include`",
@@ -359,22 +278,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         mut field_tokens_to_append,
         mut field_assignments_to_append,
         mut field_assignments_to_append_with_necessary_casts,
-    ): (Vec<_>, Vec<_>, Vec<_>) = type_metadata
-        .fields
-        .iter()
-        .filter_map(|field| {
-            id_fields.iter().find(|&x| x == &field.name).map(|_| {
-                let field_name = Ident::new(field.name.as_str(), Span::call_site());
-
-                let field_type = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                    &field.ty,
-                    &input.overrides_array,
-                ))
-                .unwrap();
-
-                make_field_decl_and_assignments(&field_name, &field_type)
-            })
-        })
+    ): (Vec<_>, Vec<_>, Vec<_>) = (type_metadata.fields.iter())
+        .filter_map(|field| (id_fields.iter().find(|&x| x == &field.name)).map(|_| maker(field)))
         .multiunzip();
 
     fields_tokens.append(&mut field_tokens_to_append);
@@ -387,37 +292,21 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .find(|field| &field.name == first)
             .unwrap();
 
-        let s = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-            &field.ty,
-            &input.overrides_array,
-        ));
-        s.unwrap().to_token_stream()
+        type_of(&field.ty, &input).to_token_stream()
     } else {
-        let vec = (id_fields.iter())
-            .map(|name| {
-                (type_metadata.fields.iter().cloned())
-                    .chain(
-                        input
-                            .extra_fields_array
-                            .elements
-                            .iter()
-                            .map(|element| Field {
-                                name: element.key.value(),
-                                vis: "pub".to_string(),
-                                ty: element.value.value(),
-                            }),
-                    )
-                    .find(|field| &field.name == name)
-                    .unwrap()
-            })
-            .map(|field| {
-                syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                    &field.ty,
-                    &input.overrides_array,
-                ))
+        let vec = id_fields.iter().map(|name| {
+            (type_metadata.fields.iter().cloned())
+                .chain(
+                    (input.extra_fields_array.elements.iter()).map(|element| Field {
+                        name: element.key.value(),
+                        vis: "pub".to_string(),
+                        ty: element.value.value(),
+                    }),
+                )
+                .find(|field| &field.name == name)
                 .unwrap()
-            })
-            .collect::<Vec<_>>();
+        });
+        let vec = (vec.map(|field| type_of(&field.ty, &input))).collect::<Vec<_>>();
 
         quote! {
             (#(#vec),*)
@@ -428,12 +317,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         let ident = Ident::new(first, Span::call_site()).to_token_stream();
         quote! { self.#ident }
     } else {
-        let vec = (id_fields.iter())
-            .map(|name| {
-                let ident = Ident::new(name, Span::call_site()).to_token_stream();
-                quote! { self.#ident }
-            })
-            .collect::<Vec<_>>();
+        let vec = id_fields.iter().map(|name| {
+            let ident = Ident::new(name, Span::call_site()).to_token_stream();
+            quote! { self.#ident }
+        });
+        let vec = vec.collect::<Vec<_>>();
 
         quote! { (#(#vec),*) }
     };
@@ -441,38 +329,28 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     let attrs = &item_struct.attrs;
     let from_type = syn::parse_str::<Type>(&type_key).unwrap();
 
-    let fields_for_function_decls = type_metadata
-        .fields
-        .iter()
-        .map(|field| (field.name.clone(), field.ty.clone()))
-        .merge(
-            input
-                .extra_fields_array
-                .elements
-                .iter()
-                .map(|element| (element.key.value(), element.value.value())),
-        )
-        .collect::<HashMap<_, _>>();
+    let fields_for_function_decls =
+        (type_metadata.fields.iter()).map(|field| (field.name.clone(), field.ty.clone()));
+    let fields_for_function_decls = fields_for_function_decls.merge(
+        (input.extra_fields_array.elements.iter())
+            .map(|element| (element.key.value(), element.value.value())),
+    );
+    let fields_for_function_decls = fields_for_function_decls.collect::<HashMap<_, _>>();
 
     let mut function_decls = Vec::new();
     for element in &input.relates_array.elements {
-        if !["multiple", "unique"].contains(&element.unique_or_multiple.to_string().as_str()) {
+        if !["multiple", "unique"].contains(&&*element.unique_or_multiple.to_string()) {
             bail(
                 &element.unique_or_multiple,
                 "expected either `multiple` or `unique`",
             )?;
         }
 
-        if element.via != "via" {
-            bail(&element.via, "expected `via`")?;
-        }
+        expect!(element: via == "via");
 
         let hashmap = VALID_ENTITIES.into_iter().collect::<HashMap<_, _>>();
 
-        if !hashmap
-            .keys()
-            .any(|name| name == &element.name.value().as_str())
-        {
+        if !hashmap.keys().any(|name| name == &&*element.name.value()) {
             bail(&element.name, "unknown entity name")?;
         }
 
@@ -482,82 +360,72 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
         // FIXME: may need to generalize for multiple fields
         let (param_decl, param_name) = {
-            let name = Ident::new(element.value.value().as_str(), Span::call_site());
+            let name = Ident::new(&*element.value.value(), Span::call_site());
 
-            let ty = fields_for_function_decls
-                .get(element.value.value().as_str())
-                .unwrap();
-            let ty = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                ty,
-                &input.overrides_array,
-            ))
-            .unwrap();
+            let ty = (fields_for_function_decls.get(&*element.value.value())).unwrap();
+            let ty = type_of(ty, &input);
 
             (quote! {#name: #ty}, name)
         };
-        let ret_type = syn::parse_str::<Type>(hashmap.get(entity.as_str()).unwrap()).unwrap();
+        let ret_type = syn::parse_str::<Type>(hashmap.get(&*entity).unwrap()).unwrap();
 
-        let query_function_name =
-            make_query_function_name(first, element.as_value.value().as_str());
+        let query_function_name = make_query_function_name(first, &*element.as_value.value());
         // FIXME: bad assumption of always calling .to_string() here (mostly just that should suffice, but...)
         let mut full_query_function_call = quote! {
             let data = hartex_database_queries::discord_frontend::queries::#query_function_name::#query_function_name().bind(client, &#param_name.to_string())
         };
 
-        let function = if element.unique_or_multiple == "multiple" {
-            let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
+        let function = match &*element.unique_or_multiple.to_string() {
+            "multiple" => {
+                let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
-            full_query_function_call.append_all(quote! {
-                .all().await?;
-            });
+                full_query_function_call.append_all(quote! {
+                    .all().await?;
+                });
 
-            quote! {
-                pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
-                    let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
-                    let pooled = pinned.get().await?;
-                    let client = pooled.client();
+                quote! {
+                    pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
+                        let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
+                        let pooled = pinned.get().await?;
+                        let client = pooled.client();
 
-                    #full_query_function_call
+                        #full_query_function_call
 
-                    Ok(data.into_iter().map(|thing| #ret_type::from(thing)).collect())
+                        Ok(data.into_iter().map(|thing| #ret_type::from(thing)).collect())
+                    }
                 }
             }
-        } else if element.unique_or_multiple == "unique" {
-            let ident = Ident::new(first, Span::call_site());
+            "unique" => {
+                let ident = Ident::new(first, Span::call_site());
 
-            full_query_function_call.append_all(quote! {
-                .one().await?;
-            });
+                full_query_function_call.append_all(quote! {
+                    .one().await?;
+                });
 
-            quote! {
-                pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
-                    let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
-                    let pooled = pinned.get().await?;
-                    let client = pooled.client();
+                quote! {
+                    pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
+                        let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
+                        let pooled = pinned.get().await?;
+                        let client = pooled.client();
 
-                    #full_query_function_call
+                        #full_query_function_call
 
-                    Ok(#ret_type::from(data))
+                        Ok(#ret_type::from(data))
+                    }
                 }
             }
-        } else {
-            unreachable!()
+            _ => unreachable!(),
         };
-
         function_decls.push(quote! {#function});
     }
 
-    let assumed_extra_impls = input
-        .assume_lits
-        .elems
-        .iter()
-        .filter_map(|expr| match expr {
-            Expr::Lit(ExprLit {
-                lit: Lit::Str(lit_str),
-                ..
-            }) => Some(lit_str.value()),
-            _ => None,
-        });
+    let assumed_extra_impls = (input.assume_lits.elems.iter()).filter_map(|expr| match expr {
+        Expr::Lit(ExprLit {
+            lit: Lit::Str(lit_str),
+            ..
+        }) => Some(lit_str.value()),
+        _ => None,
+    });
 
     if input.extra_fields_array.elements.is_empty() {
         let extra = assumed_extra_impls
@@ -605,34 +473,22 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
     let fields = input.extra_fields_array.elements.iter().map(|element| {
         let ident = Ident::new(&element.key.value(), Span::call_site());
-        let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-            &element.value.value(),
-            &input.overrides_array,
-        ))
-        .unwrap();
-
-        make_field_decl_and_assignments(&ident, &type_token)
+        make_field_decl_and_assignments(&ident, &type_of(&element.value.value(), &input))
     });
     let (extra_fields_tokens, _, extra_fields_assignment_tokens_with_necessary_casts): (
         Vec<_>,
         Vec<_>,
         Vec<_>,
     ) = fields.multiunzip();
-    let (extra_fields_tokens2, extra_type_tokens): (Vec<_>, Vec<_>) = input
-        .extra_fields_array
-        .elements
-        .iter()
-        .map(|element| {
-            let ident = Ident::new(&element.key.value(), Span::call_site());
-            let type_token = syn::parse_str::<Type>(&expand_fully_qualified_type_name(
-                &element.value.value(),
-                &input.overrides_array,
-            ))
-            .unwrap();
+    let (extra_fields_tokens2, extra_type_tokens): (Vec<_>, Vec<_>) =
+        (input.extra_fields_array.elements.iter())
+            .map(|element| {
+                let ident = Ident::new(&element.key.value(), Span::call_site());
+                let type_token = &type_of(&element.value.value(), &input);
 
-            (quote! {#ident}, quote! {#type_token})
-        })
-        .multiunzip();
+                (quote! {#ident}, quote! {#type_token})
+            })
+            .multiunzip();
     let extra = assumed_extra_impls
         .map(|str| {
             let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
@@ -683,8 +539,7 @@ fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueA
     let open_angle_brackets = to_expand.find('<');
     let close_angle_brackets = to_expand.rfind('>');
 
-    if open_angle_brackets.or(close_angle_brackets).is_some() {
-        let (left, right) = open_angle_brackets.zip(close_angle_brackets).unwrap();
+    if let Some((left, right)) = open_angle_brackets.zip(close_angle_brackets) {
         return format!(
             "{}<{}>",
             expand_fully_qualified_type_name(&to_expand[0..left], overrides_array),
@@ -695,10 +550,8 @@ fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueA
         return to_expand;
     }
 
-    if let Some(element) = overrides_array
-        .elements
-        .iter()
-        .find(|elm| elm.key.value() == to_expand)
+    if let Some(element) =
+        (overrides_array.elements.iter()).find(|elm| elm.key.value() == to_expand)
     {
         return element.value.value();
     }
