@@ -33,6 +33,17 @@ pub fn bail<T: ToTokens, A: Any>(token: &T, msg: &str) -> Option<A> {
 }
 
 #[macro_export]
+macro_rules! expect {
+    ($input:ident: $($attr:ident == $sth:literal);*) => {
+        $(
+            if $input.$attr != $sth {
+                ::hartex_macro_utils::bail(&$input.$attr, concat!("expected `", $sth, "`"))?;
+            }
+        )*
+    };
+}
+
+#[macro_export]
 macro_rules! impl_parse {
     (@type $t:ty) => { $t };
     (?@type $t:ty) => { Option<$t> };
@@ -52,4 +63,43 @@ macro_rules! impl_parse {
             }
         }
     };
+}
+
+#[macro_export]
+macro_rules! impl_bracket_parse {
+    (
+        $(#[$m0:meta])* $v:vis struct $name:ident where
+        $(#[$m1:meta])* $bracket_name:ident,
+        $(#[$m2:meta])* $elements:ident => $elmtype:ty,
+    ) => {
+        $(#[$m0])* $v struct $name {
+            $(#[$m1])* $bracket_name: ::syn::token::Bracket,
+            $(#[$m2])* $elements: ::syn::punctuated::Punctuated<$elmtype, ::syn::Token![,]>,
+        }
+
+        impl ::syn::parse::Parse for $name {
+            fn parse(input: ::syn::parse::ParseStream) -> ::syn::Result<Self> {
+                let content;
+                let bracket_token = ::syn::bracketed!(content in input);
+                let mut elements = ::syn::punctuated::Punctuated::new();
+
+                while !content.is_empty() {
+                    let first = content.parse::<$elmtype>()?;
+                    elements.push_value(first);
+
+                    if content.is_empty() {
+                        break;
+                    }
+
+                    let punct = content.parse()?;
+                    elements.push_punct(punct);
+                }
+
+                Ok(Self {
+                    bracket_token,
+                    elements,
+                })
+            }
+        }
+    }
 }
