@@ -25,13 +25,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate core;
 extern crate hartex_discord_entitycache_macros;
 
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from =
+    from = core
 )]
-pub struct ExpectedLiteral1;
+pub struct ExpectedLiteral2;
 
 fn main() {}
