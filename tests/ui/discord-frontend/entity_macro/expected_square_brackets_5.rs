@@ -37,6 +37,6 @@ use hartex_discord_entitycache_macros::entity;
     extra = [],
     overrides =
 )]
-pub struct ExpectedEqual2;
+pub struct ExpectedSquareBrackets5;
 
 fn main() {}

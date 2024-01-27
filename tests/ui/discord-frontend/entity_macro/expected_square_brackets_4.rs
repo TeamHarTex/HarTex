@@ -36,6 +36,6 @@ use hartex_discord_entitycache_macros::entity;
     exclude = [],
     extra =
 )]
-pub struct ExpectedEqual2;
+pub struct ExpectedSquareBrackets4;
 
 fn main() {}

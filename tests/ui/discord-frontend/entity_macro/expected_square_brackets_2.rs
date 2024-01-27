@@ -34,6 +34,6 @@ use hartex_discord_entitycache_macros::entity;
     assume = [],
     id =
 )]
-pub struct ExpectedEqual2;
+pub struct ExpectedSquareBrackets2;
 
 fn main() {}
