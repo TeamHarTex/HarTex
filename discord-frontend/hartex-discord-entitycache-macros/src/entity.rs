@@ -425,7 +425,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             lit: Lit::Str(lit_str),
             ..
         }) => Some(lit_str.value()),
-        _ => None,
+        _ => bail(expr, "expected string literal")?,
     });
 
     if input.extra_fields_array.elements.is_empty() {
