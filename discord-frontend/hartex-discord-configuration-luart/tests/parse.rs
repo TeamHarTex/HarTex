@@ -56,7 +56,8 @@ const SAMPLE_CONFIG: &'static str = r#"return {
 #[test]
 pub fn parse_test() {
     let config = evaluate_config(SAMPLE_CONFIG).unwrap();
-    let expected = expect![r#"
+    let expected = expect![
+        r#"
 Configuration {
     appearance: Some(
         Appearance {
@@ -96,7 +97,8 @@ Configuration {
         },
     ),
 }
-"#];
+"#
+    ];
 
     expected.assert_debug_eq(&config);
 }
