@@ -1,0 +1,8 @@
+error: expected literal
+  --> tests/ui/discord-frontend/command_macro/command_macro_expected_literal_4.rs:32:20
+   |
+LL |     command_type = core,
+   |                    ^^^^
+
+error: aborting due to 1 previous error
+
