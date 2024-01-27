@@ -33,6 +33,6 @@ use hartex_discord_entitycache_macros::entity;
     from = "twilight_model::channel::Channel",
     assume =
 )]
-pub struct ExpectedEqual2;
+pub struct ExpectedSquareBrackets1;
 
 fn main() {}
