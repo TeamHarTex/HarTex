@@ -11,7 +11,7 @@ rust-version = "1.77.0"
 [dependencies]
 clap = { version = "4.4.18", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
 fd-lock = "4.0.2"
-serde = { version = "1.0.195", features = ["derive"] }
+serde = { version = "1.0.196", features = ["derive"] }
 toml = "0.8.8"
 
 [[bin]]
