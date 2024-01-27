@@ -408,7 +408,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     }
 
     let assumed_extra_impls =
-        (input.assume_lits.elements.iter()).filter_map(|lit_str| Some(lit_str.value()));
+        (input.assume_lits.elements.iter()).map(|lit_str| lit_str.value());
 
     if input.extra_fields_array.elements.is_empty() {
         let extra = assumed_extra_impls
