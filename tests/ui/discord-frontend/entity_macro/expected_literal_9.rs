@@ -35,10 +35,10 @@ use hartex_discord_entitycache_macros::entity;
     assume = [],
     id = [],
     exclude = [],
-    extra = ["extra_id"],
+    extra = ["extra_id": core],
     overrides = [],
     relates = []
 )]
-pub struct ExpectedColon1;
+pub struct ExpectedLiteral9;
 
 fn main() {}
