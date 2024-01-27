@@ -44,9 +44,6 @@ impl<'lua> FromLua<'lua> for Appearance {
         let colour = table.get("colour")?;
         let nickname = table.get("nickname")?;
 
-        Ok(Self {
-            colour,
-            nickname,
-        })
+        Ok(Self { colour, nickname })
     }
 }

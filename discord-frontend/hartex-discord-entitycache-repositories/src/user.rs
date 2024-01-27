@@ -65,7 +65,7 @@ impl Repository<UserEntity> for CachedUserRepository {
                 &entity.bot,
                 &entity.name,
                 &entity.discriminator.to_string(),
-                &entity.global_name
+                &entity.global_name,
             )
             .await?;
 
