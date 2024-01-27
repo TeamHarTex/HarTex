@@ -1,0 +1,8 @@
+error: unexpected end of input, expected identifier
+  --> tests/ui/discord-frontend/entity_macro/expected_ident.rs:40:40
+   |
+LL |     relates = [multiple "MemberEntity":]
+   |                                        ^
+
+error: aborting due to 1 previous error
+
