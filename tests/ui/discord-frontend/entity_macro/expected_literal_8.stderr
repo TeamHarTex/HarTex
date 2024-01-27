@@ -1,5 +1,5 @@
 error: unexpected end of input, expected string literal
-  --> tests/ui/discord-frontend/entity_macro/expected_literal_8.rs:38:25
+  --> tests/ui/discord-frontend/entity_macro/expected_literal_8.rs:37:25
    |
 LL |     extra = ["extra_id":],
    |                         ^
