@@ -1,5 +1,5 @@
 error: expected literal
-  --> tests/ui/discord-frontend/command_macro/command_macro_expected_literal_4.rs:32:20
+  --> tests/ui/discord-frontend/command_macro/expected_literal_4.rs:32:20
    |
 LL |     command_type = core,
    |                    ^^^^
