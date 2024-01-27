@@ -36,9 +36,9 @@ use hartex_discord_entitycache_macros::entity;
     id = [],
     exclude = [],
     extra = [],
-    overrides = ["ChannelFlags":],
-    relates = []
+    overrides = [],
+    relates = [multiple]
 )]
-pub struct ExpectedLiteral11;
+pub struct ExpectedLiteral12;
 
 fn main() {}
