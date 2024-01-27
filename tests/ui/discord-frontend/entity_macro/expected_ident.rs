@@ -31,14 +31,14 @@ extern crate hartex_discord_entitycache_macros;
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from = "twilight_model::channel::Channel",
+    from = "twilight_model::guild::Guild",
     assume = [],
-    id = [],
+    id = ["id"],
     exclude = [],
     extra = [],
-    overrides = ["ChannelFlags":],
-    relates = []
+    overrides = [],
+    relates = [multiple "MemberEntity":]
 )]
-pub struct ExpectedLiteral11;
+pub struct ExpectedIdent;
 
 fn main() {}
