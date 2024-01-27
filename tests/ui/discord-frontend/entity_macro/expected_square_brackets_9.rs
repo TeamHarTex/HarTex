@@ -1,3 +1,8 @@
+// ==BEGIN TESTSUITE DECL==
+// testsuite-type: ui
+// testsuite-result: compile-fail
+// ==END TESTSUITE DECL==
+
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,21 +25,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate core;
+extern crate hartex_discord_entitycache_macros;
+
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from = "twilight_model::guild::Guild",
+    from = "twilight_model::channel::Channel",
     assume = [],
-    id = ["id"],
-    include = ["default_message_notifications", "explicit_content_filter", "features", "icon", "large", "name", "owner_id"],
-    extra = [],
-    overrides = [
-        "DefaultMessageNotificationLevel": "twilight_model::guild::DefaultMessageNotificationLevel",
-        "ExplicitContentFilter": "twilight_model::guild::ExplicitContentFilter",
-        "GuildFeature": "twilight_model::guild::GuildFeature"
-    ],
-    relates = [],
+    id = [],
+    exclude = core
 )]
-pub struct GuildOverride;
+pub struct ExpectedSquareBrackets9;
 
 fn main() {}

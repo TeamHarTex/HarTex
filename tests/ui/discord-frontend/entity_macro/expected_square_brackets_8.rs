@@ -25,13 +25,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate core;
 extern crate hartex_discord_entitycache_macros;
 
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from =
+    from = "twilight_model::channel::Channel",
+    assume = [],
+    id = core
 )]
-pub struct ExpectedLiteral1;
+pub struct ExpectedSquareBrackets8;
 
 fn main() {}

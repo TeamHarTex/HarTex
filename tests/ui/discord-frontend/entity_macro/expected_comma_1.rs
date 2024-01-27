@@ -1,3 +1,8 @@
+// ==BEGIN TESTSUITE DECL==
+// testsuite-type: ui
+// testsuite-result: compile-fail
+// ==END TESTSUITE DECL==
+
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,11 +25,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use trybuild::TestCases;
+extern crate hartex_discord_entitycache_macros;
 
-#[test]
-pub fn ui() {
-    let test_cases = TestCases::new();
-    test_cases.compile_fail("tests/ui/fail/*.rs");
-    test_cases.pass("tests/ui/success_with_warn/*.rs")
-}
+use hartex_discord_entitycache_macros::entity;
+
+#[entity(
+    from  = "twilight_model::channel::Channel"
+)]
+pub struct ExpectedComma1;
+
+fn main() {}

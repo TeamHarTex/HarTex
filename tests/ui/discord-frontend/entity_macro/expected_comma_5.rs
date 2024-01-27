@@ -30,8 +30,12 @@ extern crate hartex_discord_entitycache_macros;
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from =
+    from = "twilight_model::channel::Channel",
+    assume = [],
+    id = [],
+    exclude = [],
+    extra = []
 )]
-pub struct ExpectedLiteral1;
+pub struct ExpectedComma5;
 
 fn main() {}

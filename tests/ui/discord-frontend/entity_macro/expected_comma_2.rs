@@ -1,3 +1,8 @@
+// ==BEGIN TESTSUITE DECL==
+// testsuite-type: ui
+// testsuite-result: compile-fail
+// ==END TESTSUITE DECL==
+
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,17 +25,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate hartex_discord_entitycache_macros;
+
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
     from = "twilight_model::channel::Channel",
-    assume = [],
-    id = [],
-    include = [true],
-    extra = [],
-    overrides = [],
-    relates = [],
+    assume = []
 )]
-pub struct IgnoreNonStringExpressions;
+pub struct ExpectedComma2;
 
 fn main() {}
