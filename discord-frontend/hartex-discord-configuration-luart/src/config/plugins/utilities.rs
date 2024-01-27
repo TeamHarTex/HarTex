@@ -42,8 +42,6 @@ impl<'lua> FromLua<'lua> for UtilitiesPlugin {
 
         let enabled = table.get("enabled")?;
 
-        Ok(Self {
-            enabled,
-        })
+        Ok(Self { enabled })
     }
 }

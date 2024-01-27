@@ -24,6 +24,7 @@ use rlua::Context;
 use rlua::Error;
 use rlua::FromLua;
 use rlua::Value;
+
 use crate::config::plugins::utilities::UtilitiesPlugin;
 
 pub mod utilities;
@@ -44,8 +45,6 @@ impl<'lua> FromLua<'lua> for Plugins {
 
         let utilities = table.get("utilities")?;
 
-        Ok(Self {
-            utilities,
-        })
+        Ok(Self { utilities })
     }
 }
