@@ -1,5 +1,5 @@
 error: expected string literal
-  --> tests/ui/discord-frontend/entity_macro/expected_literal_3.rs:36:11
+  --> tests/ui/discord-frontend/entity_macro/expected_literal_4.rs:36:11
    |
 LL |     id = [true],
    |           ^^^^
