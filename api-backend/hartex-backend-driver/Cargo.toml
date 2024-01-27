@@ -22,8 +22,8 @@ dotenvy = "0.15.7"
 hyper = { version = "1.1.0", features = ["http1", "server"] }
 hyper-util = { version = "0.1.2", features = ["http1", "tokio"] }
 miette = { version = "5.10.0", features = ["fancy"] }
-serde = "1.0.195"
-serde_json = "1.0.111"
+serde = "1.0.196"
+serde_json = "1.0.112"
 tokio = { version = "1.35.1", features = ["full"] }
 tower = "0.4.13"
 tower-http = { version = "0.5.1", features = ["timeout", "trace"] }
