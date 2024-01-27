@@ -1,5 +1,5 @@
 error: expected string
-  --> tests/ui/discord-frontend/command_macro/command_macro_expected_string_literal.rs:33:12
+  --> tests/ui/discord-frontend/command_macro/expected_string_literal.rs:33:12
    |
 LL |     name = 394
    |            ^^^
