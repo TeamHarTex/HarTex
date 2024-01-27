@@ -36,12 +36,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
 use quote::TokenStreamExt;
-use syn::spanned::Spanned;
-use syn::Expr;
-use syn::ExprArray;
-use syn::ExprLit;
 use syn::ItemStruct;
-use syn::Lit;
 use syn::LitStr;
 use syn::Token;
 use syn::Type;
@@ -72,15 +67,15 @@ pub struct EntityMacroInput where
     comma1: Token![,],
     assume_ident: Ident,
     equal7: Token![=],
-    assume_lits: ExprArray,
+    assume_lits: LitStrArray,
     comma7: Token![,],
     id_ident: Ident,
     equal3: Token![=],
-    id_array: ExprArray,
+    id_array: LitStrArray,
     comma3: Token![,],
     exclude_or_include_ident: Ident,
     equal2: Token![=],
-    exclude_or_include_array: ExprArray,
+    exclude_or_include_array: LitStrArray,
     comma5: Token![,],
     extra_fields_ident: Ident,
     equal5: Token![=],
@@ -94,6 +89,14 @@ pub struct EntityMacroInput where
     equal6: Token![=],
     relates_array: RelatesArray,
     comma6??: Token![,],
+);
+
+impl_bracket_parse!(
+#[derive(Clone)]
+struct LitStrArray where
+    #[allow(dead_code)]
+    bracket_token,
+    elements => LitStr,
 );
 
 impl_bracket_parse!(
@@ -173,54 +176,38 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         |(_, v)| Some(v))?;
 
     let mut any_not_found = false;
-    let fields = input.exclude_or_include_array.elems.iter().filter_map(|expr| {
-        match expr {
-            Expr::Lit(ExprLit {
-                lit: Lit::Str(lit_str),
-                ..
-            }) => {
-                if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
-                    return Some(lit_str.value())
-                }
-                lit_str.span().unwrap()
-                    .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
-                    .note(format!(
-                        "the type metadata generated was for twilight-model version {}",
-                        metadata::CRATE_VERSION
-                    ))
-                    .help("consider regenerating the metadata for a newer version if the field is recently added")
-                    .emit();
-                any_not_found = true;
-            }
-            expr => expr.span().unwrap().warning("non-string expressions are ignored").emit(),
+    let fields = input.exclude_or_include_array.elements.iter().filter_map(|lit_str| {
+        if type_metadata.fields.iter().any(|field| field.name == lit_str.value()) {
+            return Some(lit_str.value());
         }
+        lit_str.span().unwrap()
+            .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+            .note(format!(
+                "the type metadata generated was for twilight-model version {}",
+                metadata::CRATE_VERSION
+            ))
+            .help("consider regenerating the metadata for a newer version if the field is recently added")
+            .emit();
+        any_not_found = true;
         None
     });
     let fields: Vec<_> = fields.collect();
 
-    let id_fields = input.id_array.elems.iter().filter_map(|expr| {
-        match expr {
-            Expr::Lit(ExprLit {
-                lit: Lit::Str(lit_str),
-                ..
-            }) => {
-                if type_metadata.fields.iter().any(|field| field.name == lit_str.value())
-                    || input.extra_fields_array.elements.iter().any(|element| element.key.value() == lit_str.value()) {
-                    return Some(lit_str.value());
-                }
-
-                lit_str.span().unwrap()
-                    .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
-                    .note(format!(
-                        "the type metadata generated was for twilight-model version {}",
-                        metadata::CRATE_VERSION
-                    ))
-                    .help("consider regenerating the metadata for a newer version if the field is recently added")
-                    .emit();
-                any_not_found = true;
-            }
-            expr => bail(expr, "non-string expressions are ignored")?,
+    let id_fields = input.id_array.elements.iter().filter_map(|lit_str| {
+        if type_metadata.fields.iter().any(|field| field.name == lit_str.value())
+            || input.extra_fields_array.elements.iter().any(|element| element.key.value() == lit_str.value()) {
+            return Some(lit_str.value());
         }
+
+        lit_str.span().unwrap()
+            .error(format!("field `{}` cannot be found in type `{type_key}`", lit_str.value()))
+            .note(format!(
+                "the type metadata generated was for twilight-model version {}",
+                metadata::CRATE_VERSION
+            ))
+            .help("consider regenerating the metadata for a newer version if the field is recently added")
+            .emit();
+        any_not_found = true;
         None
     });
     let id_fields = id_fields.collect::<Vec<_>>();
@@ -420,13 +407,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         function_decls.push(quote! {#function});
     }
 
-    let assumed_extra_impls = (input.assume_lits.elems.iter()).filter_map(|expr| match expr {
-        Expr::Lit(ExprLit {
-            lit: Lit::Str(lit_str),
-            ..
-        }) => Some(lit_str.value()),
-        _ => None,
-    });
+    let assumed_extra_impls =
+        (input.assume_lits.elements.iter()).filter_map(|lit_str| Some(lit_str.value()));
 
     if input.extra_fields_array.elements.is_empty() {
         let extra = assumed_extra_impls

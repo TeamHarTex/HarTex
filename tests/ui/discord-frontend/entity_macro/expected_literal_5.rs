@@ -1,3 +1,8 @@
+// ==BEGIN TESTSUITE DECL==
+// testsuite-type: ui
+// testsuite-result: compile-fail
+// ==END TESTSUITE DECL==
+
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,30 +25,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use rlua::Context;
-use rlua::Error;
-use rlua::FromLua;
-use rlua::Result;
-use rlua::Value;
+extern crate core;
+extern crate hartex_discord_entitycache_macros;
 
-#[derive(Debug)]
-pub struct Appearance {
-    pub colour: Option<u32>,
-    pub nickname: Option<String>,
-}
+use hartex_discord_entitycache_macros::entity;
 
-impl<'lua> FromLua<'lua> for Appearance {
-    fn from_lua(lua_value: Value<'lua>, _: Context<'lua>) -> Result<Self> {
-        let Value::Table(table) = lua_value.clone() else {
-            return Err(Error::RuntimeError(format!(
-                "Appearance: mismatched value type, exoected table, found: {}",
-                lua_value.type_name()
-            )));
-        };
+#[entity(
+    from = "twilight_model::channel::Channel",
+    assume = [],
+    id = [],
+    exclude = [true],
+    extra = [],
+    overrides = [],
+    relates = []
+)]
+pub struct ExpectedLiteral3;
 
-        let colour = table.get("colour")?;
-        let nickname = table.get("nickname")?;
-
-        Ok(Self { colour, nickname })
-    }
-}
+fn main() {}
