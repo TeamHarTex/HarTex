@@ -33,11 +33,11 @@ use hartex_discord_entitycache_macros::entity;
     from = "twilight_model::channel::Channel",
     assume = [],
     id = [],
-    expected_exclude = [],
-    extra = [],
+    exclude = [],
+    expected_extra = [],
     overrides = [],
     relates = []
 )]
-pub struct ExpectedExcludeOrInclude;
+pub struct ExpectedExtra;
 
 fn main() {}
