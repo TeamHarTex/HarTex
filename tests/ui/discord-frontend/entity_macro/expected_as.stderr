@@ -1,0 +1,8 @@
+error: unexpected end of input, expected `as`
+  --> tests/ui/discord-frontend/entity_macro/expected_as.rs:40:49
+   |
+LL |     relates = [multiple "MemberEntity": via "id"]
+   |                                                 ^
+
+error: aborting due to 1 previous error
+
