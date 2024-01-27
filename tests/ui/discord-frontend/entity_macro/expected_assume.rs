@@ -30,14 +30,14 @@ extern crate hartex_discord_entitycache_macros;
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    expected_from = "twilight_model::channel::Channel",
-    assume = [],
+    from = "twilight_model::channel::Channel",
+    expected_assume = [],
     id = [],
     exclude = [],
     extra = [],
     overrides = [],
     relates = []
 )]
-pub struct ExpectedFrom;
+pub struct ExpectedAssume;
 
 fn main() {}
