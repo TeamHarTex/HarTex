@@ -1,0 +1,8 @@
+error: expected string literal
+  --> tests/ui/discord-frontend/entity_macro/expected_literal_16.rs:40:45
+   |
+LL |     relates = [multiple "MemberEntity": via id]
+   |                                             ^^
+
+error: aborting due to 1 previous error
+
