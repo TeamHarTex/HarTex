@@ -1,0 +1,8 @@
+error: expected square brackets
+  --> tests/ui/discord-frontend/entity_macro/expected_square_brackets_7.rs:35:14
+   |
+LL |     assume = core
+   |              ^^^^
+
+error: aborting due to 1 previous error
+
