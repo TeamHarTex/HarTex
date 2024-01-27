@@ -402,7 +402,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                     }
                 }
             }
-            _ => unreachable!(),
+            _ => bail(&element.unique_or_multiple, "expected `multiple` or `unique`")?,
         };
         function_decls.push(quote! {#function});
     }
