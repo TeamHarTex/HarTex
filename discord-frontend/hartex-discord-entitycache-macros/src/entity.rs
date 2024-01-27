@@ -90,7 +90,7 @@ pub struct EntityMacroInput where
     equal4: Token![=],
     overrides_array: KeyValueArray,
     comma4: Token![,],
-    relates_idents: Ident,
+    relates_ident: Ident,
     equal6: Token![=],
     relates_array: RelatesArray,
     comma6??: Token![,],
@@ -150,7 +150,8 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         assume_ident == "assume";
         id_ident == "id";
         extra_fields_ident == "extra";
-        overrides_ident == "overrides"
+        overrides_ident == "overrides";
+        relates_ident == "relates"
     );
 
     let type_key = input.from_lit_str.value();

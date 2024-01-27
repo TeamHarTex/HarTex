@@ -1,0 +1,8 @@
+error: expected `overrides`
+  --> tests/ui/discord-frontend/entity_macro/expected_overrides.rs:38:5
+   |
+LL |     expected_overrides = [],
+   |     ^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
