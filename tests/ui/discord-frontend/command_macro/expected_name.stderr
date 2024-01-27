@@ -1,5 +1,5 @@
 error: expected `name`
-  --> tests/ui/discord-frontend/command_macro/command_macro_expected_name.rs:33:5
+  --> tests/ui/discord-frontend/command_macro/expected_name.rs:33:5
    |
 LL |     expected_name = "foo"
    |     ^^^^^^^^^^^^^

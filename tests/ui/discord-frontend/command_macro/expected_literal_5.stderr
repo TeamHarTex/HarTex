@@ -1,5 +1,5 @@
 error: expected literal
-  --> tests/ui/discord-frontend/command_macro/command_macro_expected_literal_5.rs:33:24
+  --> tests/ui/discord-frontend/command_macro/expected_literal_5.rs:33:24
    |
 LL |     interaction_only = core,
    |                        ^^^^
