@@ -39,6 +39,6 @@ use hartex_discord_entitycache_macros::entity;
     overrides = [],
     relates = []
 )]
-pub struct ExpectedLiteral3;
+pub struct ExpectedLiteral8;
 
 fn main() {}
