@@ -1,3 +1,8 @@
+// ==BEGIN TESTSUITE DECL==
+// testsuite-type: ui
+// testsuite-result: compile-fail
+// ==END TESTSUITE DECL==
+
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,8 +25,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[rustversion::attr(not(nightly), ignore)]
-#[test]
-pub fn expand() {
-    macrotest::expand("tests/expand/*.rs");
-}
+extern crate hartex_discord_entitycache_macros;
+
+use hartex_discord_entitycache_macros::entity;
+
+#[entity(
+    from = "twilight_model::channel::Channel",
+    assume = [],
+    id = [],
+    exclude = [],
+    extra = [],
+    overrides = []
+)]
+pub struct ExpectedComma6;
+
+fn main() {}

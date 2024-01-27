@@ -1,3 +1,8 @@
+// ==BEGIN TESTSUITE DECL==
+// testsuite-type: ui
+// testsuite-result: compile-fail
+// ==END TESTSUITE DECL==
+
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,17 +25,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+extern crate core;
+extern crate hartex_discord_entitycache_macros;
+
 use hartex_discord_entitycache_macros::entity;
 
 #[entity(
-    from = "twilight_model::user::User",
+    from = "twilight_model::channel::Channel",
     assume = [],
-    id = ["id"],
-    include = ["accent_color", "avatar", "bot", "discriminator", "name"],
-    extra = [],
-    overrides = [],
-    relates = [],
+    id = [],
+    exclude = [],
+    extra = core
 )]
-pub struct UserExpand;
+pub struct ExpectedSquareBrackets10;
 
 fn main() {}
