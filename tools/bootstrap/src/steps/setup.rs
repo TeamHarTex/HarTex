@@ -200,12 +200,12 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
 #[allow(clippy::module_name_repetitions)]
 pub fn setup_profile(config: &Config, profile: SetupProfile) {
     println!("INFO: using profile {profile}");
-    println!("INFO: copying `bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`");
+    println!("INFO: copying `tools/bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`");
 
     fs::copy(
         config
             .root
-            .join(format!("bootstrap/profiles/hartex.{profile}.conf")),
+            .join(format!("tools/bootstrap/profiles/hartex.{profile}.conf")),
         config.root.join("hartex.conf"),
     )
     .expect("failed to copy files");
