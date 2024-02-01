@@ -1,6 +1,6 @@
 [package]
 name = "hartex_localization_core"
-version = "0.7.1"
+version = "0.8.0"
 edition = "2021"
 description = """
 Localization infrastructure for HarTex.
