@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_leader"
-version = "0.7.1"
+version = "0.8.0"
 edition = "2021"
 description = """
 The leader component of the bot.
