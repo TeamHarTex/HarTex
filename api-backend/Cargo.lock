@@ -713,7 +713,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_driver"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "axum",
  "bb8-postgres",
@@ -735,11 +735,11 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_layers"
-version = "0.7.1"
+version = "0.8.0"
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "axum",
  "serde",
@@ -747,14 +747,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models_v2"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "hartex_backend_routes"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "axum",
  "bb8-postgres",
@@ -768,7 +768,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "cornucopia",
  "cornucopia_async",
@@ -783,7 +783,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "miette",
  "thiserror",
@@ -791,7 +791,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "log",
  "log4rs",
@@ -1635,9 +1635,9 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.32"
+version = "0.3.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe80ced77cbfb4cb91a94bf72b378b4b6791a0d9b7f09d0be747d1bdff4e68bd"
+checksum = "00b24b79b7a07f10209f19e683ca1e289d80b1e76ffa8c2b779718566a083679"
 dependencies = [
  "deranged",
  "num-conv",
