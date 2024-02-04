@@ -278,7 +278,7 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedMemberUpsertStmt
     { Box::pin(self.bind(client, &params.user_id,&params.guild_id,&params.roles,)) }
 }}pub mod cached_role_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedRoleSelectByGuildId
-{ pub color : i32,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub color : i32,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}
+{ pub color : i64,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub color : i64,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}
 impl<'a> From<CachedRoleSelectByGuildIdBorrowed<'a>> for CachedRoleSelectByGuildId
 {
     fn from(CachedRoleSelectByGuildIdBorrowed { color,icon,id,guild_id,hoist,mentionable,flags,managed,position,}: CachedRoleSelectByGuildIdBorrowed<'a>) ->
@@ -343,7 +343,7 @@ CachedRoleSelectByGuildId, 1>
     }
 } }}pub mod cached_role_select_by_id_and_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedRoleSelectByIdAndGuildIdParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> { pub id: T1,pub guild_id: T2,}#[derive( Debug, Clone, PartialEq,)] pub struct CachedRoleSelectByIdAndGuildId
-{ pub color : i32,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByIdAndGuildIdBorrowed<'a> { pub color : i32,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}
+{ pub color : i64,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByIdAndGuildIdBorrowed<'a> { pub color : i64,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}
 impl<'a> From<CachedRoleSelectByIdAndGuildIdBorrowed<'a>> for CachedRoleSelectByIdAndGuildId
 {
     fn from(CachedRoleSelectByIdAndGuildIdBorrowed { color,icon,id,guild_id,hoist,mentionable,flags,managed,position,}: CachedRoleSelectByIdAndGuildIdBorrowed<'a>) ->
@@ -418,7 +418,7 @@ CachedRoleSelectByIdAndGuildId, 2>, C> for CachedRoleSelectByIdAndGuildIdStmt
     CachedRoleSelectByIdAndGuildId, 2>
     { self.bind(client, &params.id,&params.guild_id,) }
 }}pub mod cached_role_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedRoleUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,> { pub color: i32,pub icon: Option<T1>,pub id: T2,pub guild_id: T3,pub flags: i32,pub hoist: bool,pub managed: bool,pub mentionable: bool,pub position: i32,}pub fn cached_role_upsert() -> CachedRoleUpsertStmt
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedRoleUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,> { pub color: i64,pub icon: Option<T1>,pub id: T2,pub guild_id: T3,pub flags: i32,pub hoist: bool,pub managed: bool,pub mentionable: bool,pub position: i32,}pub fn cached_role_upsert() -> CachedRoleUpsertStmt
 { CachedRoleUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedRoles\" (\"color\", \"icon\", \"id\", \"guild_id\", \"flags\", \"hoist\", \"managed\", \"mentionable\", \"position\")
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 ON CONFLICT (\"id\", \"guild_id\") DO UPDATE
@@ -436,7 +436,7 @@ GenericClient,T1:
 cornucopia_async::StringSql,T2:
 cornucopia_async::StringSql,T3:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-color: &'a i32,icon: &'a Option<T1>,id: &'a T2,guild_id: &'a T3,flags: &'a i32,hoist: &'a bool,managed: &'a bool,mentionable: &'a bool,position: &'a i32,) -> Result<u64, tokio_postgres::Error>
+color: &'a i64,icon: &'a Option<T1>,id: &'a T2,guild_id: &'a T3,flags: &'a i32,hoist: &'a bool,managed: &'a bool,mentionable: &'a bool,position: &'a i32,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
     client.execute(stmt, &[color,icon,id,guild_id,flags,hoist,managed,mentionable,position,]).await
