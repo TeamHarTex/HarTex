@@ -70,9 +70,9 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
             if metadata.is_dir() {
                 let mut components = entry.path().components();
 
-                for component in components.by_ref() {
+                while let Some(component) = components.next() {
                     match component {
-                        Component::RootDir => continue,
+                        Component::Prefix(_) | Component::RootDir => continue,
                         Component::Normal(component)
                             if component != config.root.file_name().unwrap() =>
                         {
