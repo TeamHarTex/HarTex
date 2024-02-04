@@ -36,6 +36,8 @@ use test::TestFn;
 use test::TestName;
 use test::TestOpts;
 use test::TestType;
+
+use path_slash::PathExt;
 use walkdir::WalkDir;
 
 use crate::config::Config;
@@ -68,9 +70,9 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
             if metadata.is_dir() {
                 let mut components = entry.path().components();
 
-                for component in components.by_ref() {
+                while let Some(component) = components.next() {
                     match component {
-                        Component::RootDir => continue,
+                        Component::Prefix(_) | Component::RootDir => continue,
                         Component::Normal(component)
                             if component != config.root.file_name().unwrap() =>
                         {
@@ -128,7 +130,7 @@ fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
             name: TestName::DynTestName(format!(
                 "[{}] {}",
                 header.testsuite_type,
-                relative_path.display()
+                relative_path.to_slash_lossy()
             )),
             ignore: false,
             ignore_message: header.testsuite_ignoremsg,

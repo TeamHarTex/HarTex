@@ -28,6 +28,9 @@ use std::path::Component;
 use std::path::Path;
 use std::process::Command;
 
+use path_slash::PathBufExt;
+use path_slash::PathExt;
+
 use crate::config::Config;
 use crate::testrunner::diff;
 
@@ -66,7 +69,7 @@ impl<'test> TestContext<'test> {
         };
 
         let mut command = Command::new("rustc");
-        command.arg(from_test);
+        command.arg(&*from_test.to_slash_lossy());
 
         // rustc codegen flags
         command.args([
@@ -113,7 +116,7 @@ impl<'test> TestContext<'test> {
             let mut file = OpenOptions::new()
                 .create(true)
                 .write(true)
-                .open(&write_path)
+                .open(&*write_path.to_slash_lossy())
                 .expect("failed to open file");
             file.set_len(0).expect("failed to erase file");
             file.write(output_str.as_bytes())
