@@ -554,7 +554,7 @@ dependencies = [
  "codegen_template",
  "heck",
  "indexmap 1.9.3",
- "miette",
+ "miette 5.10.0",
  "postgres",
  "postgres-types",
  "thiserror",
@@ -1080,7 +1080,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.1.0",
  "hyper-util",
- "miette",
+ "miette 6.0.1",
  "serde_json",
 ]
 
@@ -1090,7 +1090,7 @@ version = "0.8.0"
 dependencies = [
  "hartex_discord_commands_macros",
  "hartex_discord_core",
- "miette",
+ "miette 6.0.1",
 ]
 
 [[package]]
@@ -1114,7 +1114,7 @@ dependencies = [
  "hyper 1.1.0",
  "hyper-trust-dns",
  "hyper-util",
- "miette",
+ "miette 6.0.1",
  "minify",
  "owo-colors 4.0.0",
  "serde",
@@ -1218,7 +1218,7 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",
- "miette",
+ "miette 6.0.1",
  "once_cell",
  "rdkafka",
  "serde_json",
@@ -1234,7 +1234,7 @@ dependencies = [
  "bb8-postgres",
  "hartex_discord_core",
  "hartex_localization_core",
- "miette",
+ "miette 6.0.1",
  "once_cell",
  "tokio-postgres",
  "tokio-rustls 0.25.0",
@@ -1260,7 +1260,7 @@ dependencies = [
  "hartex_log",
  "hyper 1.1.0",
  "hyper-util",
- "miette",
+ "miette 6.0.1",
  "once_cell",
  "rdkafka",
  "serde",
@@ -1286,7 +1286,7 @@ dependencies = [
  "fluent-syntax",
  "hartex_localization_loader",
  "intl-memoizer",
- "miette",
+ "miette 6.0.1",
  "proc-macro2",
  "quote",
  "syn 2.0.48",
@@ -1303,7 +1303,7 @@ dependencies = [
  "hartex_localization_loader",
  "intl-memoizer",
  "lazy_static",
- "miette",
+ "miette 6.0.1",
  "unic-langid",
 ]
 
@@ -1314,7 +1314,7 @@ dependencies = [
  "fluent-bundle",
  "fluent-syntax",
  "intl-memoizer",
- "miette",
+ "miette 6.0.1",
  "unic-langid",
  "walkdir",
 ]
@@ -1445,7 +1445,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "socket2 0.5.5",
  "tokio",
  "tower-service",
  "tracing",
@@ -1829,14 +1829,33 @@ dependencies = [
  "backtrace",
  "backtrace-ext",
  "is-terminal",
- "miette-derive",
+ "miette-derive 5.10.0",
  "once_cell",
  "owo-colors 3.5.0",
- "supports-color",
- "supports-hyperlinks",
- "supports-unicode",
- "terminal_size",
- "textwrap",
+ "supports-color 2.1.0",
+ "supports-hyperlinks 2.1.0",
+ "supports-unicode 2.1.0",
+ "terminal_size 0.1.17",
+ "textwrap 0.15.2",
+ "thiserror",
+ "unicode-width",
+]
+
+[[package]]
+name = "miette"
+version = "6.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "337e1043bbc086dac9d9674983bef52ac991ce150e09b5b8e35c5a73dd83f66c"
+dependencies = [
+ "backtrace",
+ "backtrace-ext",
+ "miette-derive 6.0.1",
+ "owo-colors 3.5.0",
+ "supports-color 3.0.0",
+ "supports-hyperlinks 3.0.0",
+ "supports-unicode 3.0.0",
+ "terminal_size 0.3.0",
+ "textwrap 0.16.0",
  "thiserror",
  "unicode-width",
 ]
@@ -1846,6 +1865,17 @@ name = "miette-derive"
 version = "5.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49e7bc1560b95a3c4a25d03de42fe76ca718ab92d1a22a55b9b4cf67b3ae635c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.48",
+]
+
+[[package]]
+name = "miette-derive"
+version = "6.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "71e622f2a0dd84cbca79bc6c3c33f4fd7dc69faf992216516aacc1d136102800"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2890,6 +2920,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "supports-color"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9829b314621dfc575df4e409e79f9d6a66a3bd707ab73f23cb4aa3a854ac854f"
+dependencies = [
+ "is_ci",
+]
+
+[[package]]
 name = "supports-hyperlinks"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2899,6 +2938,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "supports-hyperlinks"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c0a1e5168041f5f3ff68ff7d95dcb9c8749df29f6e7e89ada40dd4c9de404ee"
+
+[[package]]
 name = "supports-unicode"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2906,6 +2951,12 @@ checksum = "f850c19edd184a205e883199a261ed44471c81e39bd95b1357f5febbef00e77a"
 dependencies = [
  "is-terminal",
 ]
+
+[[package]]
+name = "supports-unicode"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b7401a30af6cb5818bb64852270bb722533397edcfc7344954a38f420819ece2"
 
 [[package]]
 name = "syn"
@@ -2980,10 +3031,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "terminal_size"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "21bebf2b7c9e0a515f6e0f8c51dc0f8e4696391e6f1ff30379559f8365fb0df7"
+dependencies = [
+ "rustix",
+ "windows-sys 0.48.0",
+]
+
+[[package]]
 name = "textwrap"
 version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b7b3e525a49ec206798b40326a44121291b530c963cfb01018f63e135bac543d"
+dependencies = [
+ "smawk",
+ "unicode-linebreak",
+ "unicode-width",
+]
+
+[[package]]
+name = "textwrap"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "222a222a5bfe1bba4a77b45ec488a741b3cb8872e5e499451fd7d0129c9c7c3d"
 dependencies = [
  "smawk",
  "unicode-linebreak",
