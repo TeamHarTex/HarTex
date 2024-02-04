@@ -36,6 +36,8 @@ use test::TestFn;
 use test::TestName;
 use test::TestOpts;
 use test::TestType;
+
+use path_slash::PathExt;
 use walkdir::WalkDir;
 
 use crate::config::Config;
@@ -128,7 +130,7 @@ fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
             name: TestName::DynTestName(format!(
                 "[{}] {}",
                 header.testsuite_type,
-                relative_path.display()
+                relative_path.to_slash_lossy()
             )),
             ignore: false,
             ignore_message: header.testsuite_ignoremsg,
