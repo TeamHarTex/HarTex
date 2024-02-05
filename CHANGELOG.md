@@ -18,11 +18,11 @@
 
 ## Web Frontend
 
-# [Next Version, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1..0.8.0)
+# [0.8.0, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1..0.8.0)
 
 > **4** contributors made contributions to this release
 
-> **564** commits since 2024-01-01
+> **566** commits since 2024-01-01
 
 ## API Backend
 
