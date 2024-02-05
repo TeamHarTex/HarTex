@@ -99,7 +99,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 roleinfo_embed_generalinfo_id_subfield_name,
                 role.id.to_string().discord_inline_code(),
                 roleinfo_embed_generalinfo_created_subfield_name,
-                (role.id.timestamp() / 1000).discord_relative_timestamp(),
+                (role.id.timestamp() / 1000)
+                    .to_string()
+                    .discord_relative_timestamp(),
                 roleinfo_embed_generalinfo_color_subfield_name,
                 role.color,
             ),
