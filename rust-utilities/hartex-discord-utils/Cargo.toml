@@ -17,7 +17,7 @@ hartex_localization_core = { path = "../../localization/hartex-localization-core
 
 async-once-cell = "0.5.3"
 bb8-postgres = "0.8.1"
-miette = "6.0.1"
+miette = "7.0.0"
 once_cell = "1.19.0"
 tokio-postgres = "0.7.10"
 tokio-rustls = { version = "0.25.0", features = ["ring"] }
