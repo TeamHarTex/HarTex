@@ -1080,7 +1080,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.1.0",
  "hyper-util",
- "miette 6.0.1",
+ "miette 7.0.0",
  "serde_json",
 ]
 
@@ -1090,7 +1090,7 @@ version = "0.8.0"
 dependencies = [
  "hartex_discord_commands_macros",
  "hartex_discord_core",
- "miette 6.0.1",
+ "miette 7.0.0",
 ]
 
 [[package]]
@@ -1114,7 +1114,7 @@ dependencies = [
  "hyper 1.1.0",
  "hyper-trust-dns",
  "hyper-util",
- "miette 6.0.1",
+ "miette 7.0.0",
  "minify",
  "owo-colors 4.0.0",
  "serde",
@@ -1218,7 +1218,7 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",
- "miette 6.0.1",
+ "miette 7.0.0",
  "once_cell",
  "rdkafka",
  "serde_json",
@@ -1234,7 +1234,7 @@ dependencies = [
  "bb8-postgres",
  "hartex_discord_core",
  "hartex_localization_core",
- "miette 6.0.1",
+ "miette 7.0.0",
  "once_cell",
  "tokio-postgres",
  "tokio-rustls 0.25.0",
@@ -1260,7 +1260,7 @@ dependencies = [
  "hartex_log",
  "hyper 1.1.0",
  "hyper-util",
- "miette 6.0.1",
+ "miette 7.0.0",
  "once_cell",
  "rdkafka",
  "serde",
@@ -1286,7 +1286,7 @@ dependencies = [
  "fluent-syntax",
  "hartex_localization_loader",
  "intl-memoizer",
- "miette 6.0.1",
+ "miette 7.0.0",
  "proc-macro2",
  "quote",
  "syn 2.0.48",
@@ -1303,7 +1303,7 @@ dependencies = [
  "hartex_localization_loader",
  "intl-memoizer",
  "lazy_static",
- "miette 6.0.1",
+ "miette 7.0.0",
  "unic-langid",
 ]
 
@@ -1314,7 +1314,7 @@ dependencies = [
  "fluent-bundle",
  "fluent-syntax",
  "intl-memoizer",
- "miette 6.0.1",
+ "miette 7.0.0",
  "unic-langid",
  "walkdir",
 ]
@@ -1843,14 +1843,14 @@ dependencies = [
 
 [[package]]
 name = "miette"
-version = "6.0.1"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "337e1043bbc086dac9d9674983bef52ac991ce150e09b5b8e35c5a73dd83f66c"
+checksum = "98a72adfa0c7ae88ba0abcbd00047a476616c66b831d628b8ac7f1e9de0cfd67"
 dependencies = [
  "backtrace",
  "backtrace-ext",
- "miette-derive 6.0.1",
- "owo-colors 3.5.0",
+ "miette-derive 7.0.0",
+ "owo-colors 4.0.0",
  "supports-color 3.0.0",
  "supports-hyperlinks 3.0.0",
  "supports-unicode 3.0.0",
@@ -1873,9 +1873,9 @@ dependencies = [
 
 [[package]]
 name = "miette-derive"
-version = "6.0.1"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71e622f2a0dd84cbca79bc6c3c33f4fd7dc69faf992216516aacc1d136102800"
+checksum = "279def6bf114a34b3cf887489eb440d4dfcf709ab3ce9955e4a6f957ce5cce77"
 dependencies = [
  "proc-macro2",
  "quote",
