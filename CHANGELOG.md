@@ -6,11 +6,14 @@
 
 ## API Backend
 
+- **Changed:** bumped `rust-version` to 1.78.0
+
 ## Buildsystem
 
 - **Added:** added x.py and related bootstrap barebones
 - **Added:** added various x.py commands
 - **Added:** sample configuration files
+- **Changed:** bumped `rust-version` to 1.78.0
 - **Removed:** removed old buildsystem
 
 ## Database Queries
@@ -21,19 +24,22 @@
 
 - **Added:** added more conversions to entity macro
 - **Added:** added inter-entity relations to entity macro
+- **Changed:** bumped `rust-version` to 1.78.0
 - **Changed:** migrated to Lua configuration
 - **Changed:** modified cached guild entity fields
 - **Changed:** modified cached user entity fields
 - **Changed:** updated `/info server` command to add extra information
-- **Changed:** migrated some tests to the new testing infrastructure
+- **Changed:** migrated tests to the new testing infrastructure
 
 ## Localization Infrastructure
 
 - **Added:** added more localization keys
+- **Changed:** bumped `rust-version` to 1.78.0
 
 ## Rust Utilities
 
 - **Added:** added more types to be localizable
+- **Changed:** bumped `rust-version` to 1.78.0
 
 ## Web Frontend
 
