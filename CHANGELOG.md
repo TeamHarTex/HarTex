@@ -1,8 +1,28 @@
-# [Next Version, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1...nightly)
+# [Next Version, Fluorine I](https://github.com/TeamHarTex/HarTex/compare/0.8.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2024-01-01
+> **y** commits since 2024-02-05
+
+## API Backend
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [Next Version, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1..0.8.0)
+
+> **4** contributors made contributions to this release
+
+> **564** commits since 2024-01-01
 
 ## API Backend
 
