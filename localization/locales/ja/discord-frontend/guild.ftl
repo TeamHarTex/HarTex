@@ -22,6 +22,9 @@
 
 default-message-notification-level-all=全て
 default-message-notification-level-mentions=メンション
+explicit-content-filter-disabled=無効
+explicit-content-filter-members-without-roles=サーバーのロールのないメンバー
+explicit-content-filter-all-members=全てのメンバー
 mfa-level-none=なし
 mfa-level-elevated=必要
 premium-tier-none=なし

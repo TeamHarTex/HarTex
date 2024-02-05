@@ -56,5 +56,6 @@ serverinfo-embed-nitroinfo-field-boosts-subfield-name=何回：
 serverinfo-embed-flags-field-name=フラグ
 serverinfo-embed-flags-large-subfield-name=鯖は大きいか：
 serverinfo-embed-flags-default-message-notifications-subfield-name=標準通知設定レベル：
+serverinfo-embed-flags-explicit-content-filter-subfield-name=不適切な画像のフィルター
 serverinfo-embed-flags-mfa-level-subfield-name=多要素認証：
 serverinfo-embed-flags-verification-level-subfield-name=検証レベル：
