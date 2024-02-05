@@ -723,7 +723,7 @@ dependencies = [
  "hartex_log",
  "hyper",
  "hyper-util",
- "miette 6.0.1",
+ "miette 7.0.0",
  "serde",
  "serde_json",
  "tokio",
@@ -785,7 +785,7 @@ dependencies = [
 name = "hartex_errors"
 version = "0.8.0"
 dependencies = [
- "miette 6.0.1",
+ "miette 7.0.0",
  "thiserror",
 ]
 
@@ -1071,7 +1071,7 @@ dependencies = [
  "is-terminal",
  "miette-derive 5.10.0",
  "once_cell",
- "owo-colors",
+ "owo-colors 3.5.0",
  "supports-color 2.1.0",
  "supports-hyperlinks 2.1.0",
  "supports-unicode 2.1.0",
@@ -1083,14 +1083,14 @@ dependencies = [
 
 [[package]]
 name = "miette"
-version = "6.0.1"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "337e1043bbc086dac9d9674983bef52ac991ce150e09b5b8e35c5a73dd83f66c"
+checksum = "98a72adfa0c7ae88ba0abcbd00047a476616c66b831d628b8ac7f1e9de0cfd67"
 dependencies = [
  "backtrace",
  "backtrace-ext",
- "miette-derive 6.0.1",
- "owo-colors",
+ "miette-derive 7.0.0",
+ "owo-colors 4.0.0",
  "supports-color 3.0.0",
  "supports-hyperlinks 3.0.0",
  "supports-unicode 3.0.0",
@@ -1113,9 +1113,9 @@ dependencies = [
 
 [[package]]
 name = "miette-derive"
-version = "6.0.1"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71e622f2a0dd84cbca79bc6c3c33f4fd7dc69faf992216516aacc1d136102800"
+checksum = "279def6bf114a34b3cf887489eb440d4dfcf709ab3ce9955e4a6f957ce5cce77"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1193,6 +1193,12 @@ name = "owo-colors"
 version = "3.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c1b04fb49957986fdce4d6ee7a65027d55d4b6d2265e5848bbb507b58ccfdb6f"
+
+[[package]]
+name = "owo-colors"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "caff54706df99d2a78a5a4e3455ff45448d81ef1bb63c22cd14052ca0e993a3f"
 
 [[package]]
 name = "parking_lot"
