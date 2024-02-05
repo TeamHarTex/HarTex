@@ -26,6 +26,7 @@ botinfo-embed-latency-field-name=Latency (Milliseconds)
 roleinfo-embed-description=Information of {$roleMention}
 roleinfo-embed-generalinfo-field-name=General Information
 roleinfo-embed-generalinfo-id-subfield-name=ID:
+roleinfo-embed-generalinfo-created-subfield-name=Created:
 roleinfo-embed-generalinfo-color-subfield-name=Colour:
 roleinfo-embed-attributes-field-name=Attributes
 roleinfo-embed-attributes-hoist-subfield-name=Hoist:
