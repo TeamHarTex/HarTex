@@ -12,6 +12,8 @@
 
 ## Discord Frontend
 
+- **Added:** added role creation relative timestamp to `/info role`
+
 ## Localization Infrastructure
 
 ## Rust Utilities

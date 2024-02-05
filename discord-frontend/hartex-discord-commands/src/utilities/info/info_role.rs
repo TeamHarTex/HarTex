@@ -31,6 +31,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::localizable::Localizable;
@@ -66,6 +67,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_roleinfo_embed_generalinfo_field_name()?;
     let roleinfo_embed_generalinfo_id_subfield_name =
         localizer.utilities_plugin_roleinfo_embed_generalinfo_id_subfield_name()?;
+    let roleinfo_embed_generalinfo_created_subfield_name =
+        localizer.utilities_plugin_roleinfo_embed_generalinfo_created_subfield_name()?;
     let roleinfo_embed_generalinfo_color_subfield_name =
         localizer.utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
     let roleinfo_embed_description =
@@ -92,9 +95,13 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .field(EmbedFieldBuilder::new(
             format!("<:role:1139004530277765211> {roleinfo_embed_generalinfo_field_name}"),
             format!(
-                "{} {}\n{} `#{:06X}`",
+                "{} {}\n{} {}\n{} `#{:06X}`",
                 roleinfo_embed_generalinfo_id_subfield_name,
                 role.id.to_string().discord_inline_code(),
+                roleinfo_embed_generalinfo_created_subfield_name,
+                (role.id.timestamp() / 1000)
+                    .to_string()
+                    .discord_relative_timestamp(),
                 roleinfo_embed_generalinfo_color_subfield_name,
                 role.color,
             ),
