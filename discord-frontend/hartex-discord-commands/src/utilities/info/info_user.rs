@@ -28,6 +28,8 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
@@ -54,6 +56,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!()
     };
 
+    let user = CachedUserRepository.get(user_id).await.into_diagnostic()?;
+
     let userinfo_embed_generalinfo_field_name =
         localizer.utilities_plugin_userinfo_embed_generalinfo_field_name()?;
 
@@ -63,6 +67,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             userinfo_embed_generalinfo_field_name,
             user_id.to_string(),
         ))
+        .title(user.name)
         .validate()
         .into_diagnostic()?
         .build();
