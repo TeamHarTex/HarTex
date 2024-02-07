@@ -20,12 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use rlua::Context;
-use rlua::Error;
-use rlua::FromLuaMulti;
-use rlua::MultiValue;
-use rlua::Result;
-use rlua::Value;
+use mlua::Error;
+use mlua::FromLuaMulti;
+use mlua::Lua;
+use mlua::MultiValue;
+use mlua::Value;
 
 use crate::config::appearance::Appearance;
 use crate::config::dashboard::Dashboard;
@@ -43,7 +42,7 @@ pub struct Configuration {
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {
-    fn from_lua_multi(values: MultiValue<'lua>, _: Context<'lua>) -> Result<Self> {
+    fn from_lua_multi(values: MultiValue<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         if values.is_empty() {
             return Err(Error::RuntimeError(String::from(
                 "Configuration: multi value is empty",
