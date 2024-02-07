@@ -407,8 +407,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         function_decls.push(quote! {#function});
     }
 
-    let assumed_extra_impls =
-        (input.assume_lits.elements.iter()).map(LitStr::value);
+    let assumed_extra_impls = (input.assume_lits.elements.iter()).map(LitStr::value);
 
     if input.extra_fields_array.elements.is_empty() {
         let extra = assumed_extra_impls
