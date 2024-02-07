@@ -41,7 +41,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-    let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
+    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::User(user_id) = options
         .iter()
@@ -54,9 +54,15 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!()
     };
 
+    let userinfo_embed_generalinfo_field_name =
+        localizer.utilities_plugin_userinfo_embed_generalinfo_field_name()?;
+
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
-        .field(EmbedFieldBuilder::new("User ID", user_id.to_string()))
+        .field(EmbedFieldBuilder::new(
+            userinfo_embed_generalinfo_field_name,
+            user_id.to_string(),
+        ))
         .validate()
         .into_diagnostic()?
         .build();
