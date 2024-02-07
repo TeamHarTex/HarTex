@@ -60,3 +60,4 @@ serverinfo-embed-flags-default-message-notifications-subfield-name=Default Messa
 serverinfo-embed-flags-explicit-content-filter-subfield-name=Explicit Content Filter:
 serverinfo-embed-flags-mfa-level-subfield-name=MFA Level:
 serverinfo-embed-flags-verification-level-subfield-name=Verification Level:
+userinfo-embed-generalinfo-field-name=General Information
