@@ -61,3 +61,7 @@ serverinfo-embed-flags-explicit-content-filter-subfield-name=Explicit Content Fi
 serverinfo-embed-flags-mfa-level-subfield-name=MFA Level:
 serverinfo-embed-flags-verification-level-subfield-name=Verification Level:
 userinfo-embed-generalinfo-field-name=General Information
+userinfo-embed-generalinfo-id-subfield-name=ID:
+userinfo-embed-generalinfo-name-subfield-name=Global Name:
+userinfo-embed-generalinfo-nickname-subfield-name=Server Nickname:
+userinfo-embed-generalinfo-created-subfield-name=Created:
