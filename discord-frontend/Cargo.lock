@@ -1127,7 +1127,7 @@ name = "hartex_discord_configuration_luart"
 version = "0.8.0"
 dependencies = [
  "expect-test",
- "rlua",
+ "mlua",
 ]
 
 [[package]]
@@ -1950,7 +1950,6 @@ checksum = "1d3561f79659ff3afad7b25e2bf2ec21507fe601ebecb7f81088669ec4bfd51e"
 dependencies = [
  "bstr",
  "mlua-sys",
- "mlua_derive",
  "num-traits",
  "once_cell",
  "rustc-hash",
@@ -1967,21 +1966,6 @@ dependencies = [
  "lua-src",
  "luajit-src",
  "pkg-config",
-]
-
-[[package]]
-name = "mlua_derive"
-version = "0.9.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aaade5f94e5829db58791664ba98f35fea6a3ffebc783becb51dc97c7a21abee"
-dependencies = [
- "itertools",
- "once_cell",
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "regex",
- "syn 2.0.48",
 ]
 
 [[package]]
@@ -2343,30 +2327,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "proc-macro-error"
-version = "1.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c"
-dependencies = [
- "proc-macro-error-attr",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
- "version_check",
-]
-
-[[package]]
-name = "proc-macro-error-attr"
-version = "1.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869"
-dependencies = [
- "proc-macro2",
- "quote",
- "version_check",
-]
-
-[[package]]
 name = "proc-macro-hack"
 version = "0.5.20+deprecated"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2577,15 +2537,6 @@ dependencies = [
  "spin 0.9.8",
  "untrusted 0.9.0",
  "windows-sys 0.48.0",
-]
-
-[[package]]
-name = "rlua"
-version = "0.20.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fd34c54dd561441c9fc4129c88d21d2785f73c6a74f244dd356a64e6272dbfd"
-dependencies = [
- "mlua",
 ]
 
 [[package]]
