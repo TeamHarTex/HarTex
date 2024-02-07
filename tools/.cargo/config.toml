@@ -1,0 +1,2 @@
+[build]
+rustflags = ["-C", "target-cpu=native", "-Zmacro-backtrace", "-Zthreads=8", "-Zvalidate-mir"]
