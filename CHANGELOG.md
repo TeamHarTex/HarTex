@@ -19,6 +19,7 @@
 ## Discord Frontend
 
 - **Added:** added role creation relative timestamp to `/info role`
+- **Added:** added more information to `/info user`
 - **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
 
 ## Localization Infrastructure

@@ -28,6 +28,8 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
@@ -41,7 +43,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-    let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
+    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::User(user_id) = options
         .iter()
@@ -54,9 +56,18 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         unreachable!()
     };
 
+    let user = CachedUserRepository.get(user_id).await.into_diagnostic()?;
+
+    let userinfo_embed_generalinfo_field_name =
+        localizer.utilities_plugin_userinfo_embed_generalinfo_field_name()?;
+
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
-        .field(EmbedFieldBuilder::new("User ID", user_id.to_string()))
+        .field(EmbedFieldBuilder::new(
+            userinfo_embed_generalinfo_field_name,
+            user_id.to_string(),
+        ))
+        .title(user.name)
         .validate()
         .into_diagnostic()?
         .build();
