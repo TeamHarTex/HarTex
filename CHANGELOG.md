@@ -6,17 +6,28 @@
 
 ## API Backend
 
+- **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
+
 ## Buildsystem
 
+- **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
+
 ## Database Queries
+
+- **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
 
 ## Discord Frontend
 
 - **Added:** added role creation relative timestamp to `/info role`
+- **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
 
 ## Localization Infrastructure
 
+- **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
+
 ## Rust Utilities
+
+- **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
 
 ## Web Frontend
 
