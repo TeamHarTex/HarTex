@@ -20,11 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use rlua::Context;
-use rlua::Error;
-use rlua::FromLua;
-use rlua::Result;
-use rlua::Value;
+use mlua::Error;
+use mlua::FromLua;
+use mlua::Lua;
+use mlua::Value;
 
 #[derive(Debug)]
 pub struct Appearance {
@@ -33,7 +32,7 @@ pub struct Appearance {
 }
 
 impl<'lua> FromLua<'lua> for Appearance {
-    fn from_lua(lua_value: Value<'lua>, _: Context<'lua>) -> Result<Self> {
+    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "Appearance: mismatched value type, exoected table, found: {}",
