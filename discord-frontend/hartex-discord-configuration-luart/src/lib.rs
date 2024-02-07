@@ -26,27 +26,28 @@
 
 pub mod config;
 
-use rlua::Lua;
-use rlua::Result;
-use rlua::StdLib;
+use mlua::Lua;
+use mlua::LuaOptions;
+use mlua::Result;
+use mlua::StdLib;
 
 use crate::config::Configuration;
 
 #[allow(clippy::missing_errors_doc)]
 pub fn evaluate_config(config: &str) -> Result<Configuration> {
-    Lua::new_with(StdLib::BASE).context(|ctx| {
-        let globals = ctx.globals();
-        globals.set("VERSION", 10)?;
+    let lua = Lua::new_with(StdLib::NONE, LuaOptions::new())?;
 
-        let hartexconf_table = ctx.create_table()?;
-        let hartexconf_colour_table = ctx.create_table()?;
-        let hartexconf_colour_rgb_function = ctx.create_function(|_, colour: u32| Ok(colour))?;
-        hartexconf_colour_table.set("rgb", hartexconf_colour_rgb_function)?;
+    let globals = lua.globals();
+    globals.set("VERSION", 10)?;
 
-        hartexconf_table.set("colour", hartexconf_colour_table)?;
+    let hartexconf_table = lua.create_table()?;
+    let hartexconf_colour_table = lua.create_table()?;
+    let hartexconf_colour_rgb_function = lua.create_function(|_, colour: u32| Ok(colour))?;
+    hartexconf_colour_table.set("rgb", hartexconf_colour_rgb_function)?;
 
-        globals.set("hartexconf", hartexconf_table)?;
+    hartexconf_table.set("colour", hartexconf_colour_table)?;
 
-        ctx.load(config).eval()
-    })
+    globals.set("hartexconf", hartexconf_table)?;
+
+    lua.load(config).eval()
 }
