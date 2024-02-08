@@ -80,7 +80,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 userinfo_embed_generalinfo_name_subfield_name,
                 user.global_name.unwrap_or(localizer.general_enum_unknown()?),
                 userinfo_embed_generalinfo_created_subfield_name,
-                user.id.timestamp().to_string().discord_relative_timestamp(),
+                (user.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
             ),
         ))
         .title(user.name)
