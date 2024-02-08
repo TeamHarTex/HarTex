@@ -43,7 +43,7 @@ impl Cdn {
         let index = if let Some(id) = user_id {
             (id.get() >> 22) % 6
         } else if let Some(discrim) = discriminator {
-            (discrim % 5) as u64
+            u64::from(discrim % 5)
         } else {
             unreachable!()
         };
