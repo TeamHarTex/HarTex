@@ -36,6 +36,22 @@ impl Cdn {
     pub const URL_BASE: &'static str = "https://cdn.discordapp.com/";
 
     #[must_use]
+    pub fn default_user_avatar(
+        user_id: Option<Id<UserMarker>>,
+        discriminator: Option<u16>,
+    ) -> String {
+        let index = if let Some(id) = user_id {
+            (id.get() >> 22) % 6
+        } else if let Some(discrim) = discriminator {
+            (discrim % 5) as u64
+        } else {
+            unreachable!()
+        };
+
+        format!("{}embed/avatars/{index}.png", Self::URL_BASE)
+    }
+
+    #[must_use]
     pub fn guild_icon(guild_id: Id<GuildMarker>, icon: ImageHash) -> String {
         let mut url = format!("{}icons/{guild_id}/{icon}", Self::URL_BASE);
         if icon.is_animated() {
