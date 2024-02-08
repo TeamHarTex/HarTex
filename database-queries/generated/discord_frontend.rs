@@ -110,11 +110,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedGuildUpsertStmt
     { Box::pin(self.bind(client, &params.default_message_notifications,&params.explicit_content_filter,&params.features,&params.icon,&params.large,&params.name,&params.owner_id,&params.id,&params.mfa_level,&params.premium_subscription_count,&params.premium_tier,&params.verification_level,)) }
 }}pub mod cached_member_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedMemberSelectByGuildId
-{ pub guild_id : String,pub user_id : String,pub roles : Vec<String>,}pub struct CachedMemberSelectByGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,}
+{ pub guild_id : String,pub user_id : String,pub roles : Vec<String>,pub nick : Option<String>,}pub struct CachedMemberSelectByGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub nick : Option<&'a str>,}
 impl<'a> From<CachedMemberSelectByGuildIdBorrowed<'a>> for CachedMemberSelectByGuildId
 {
-    fn from(CachedMemberSelectByGuildIdBorrowed { guild_id,user_id,roles,}: CachedMemberSelectByGuildIdBorrowed<'a>) ->
-    Self { Self { guild_id: guild_id.into(),user_id: user_id.into(),roles: roles.map(|v| v.into()).collect(),} }
+    fn from(CachedMemberSelectByGuildIdBorrowed { guild_id,user_id,roles,nick,}: CachedMemberSelectByGuildIdBorrowed<'a>) ->
+    Self { Self { guild_id: guild_id.into(),user_id: user_id.into(),roles: roles.map(|v| v.into()).collect(),nick: nick.map(|v| v.into()),} }
 }pub struct CachedMemberSelectByGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -171,15 +171,15 @@ CachedMemberSelectByGuildId, 1>
     CachedMemberSelectByGuildIdQuery
     {
         client, params: [guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedMemberSelectByGuildIdBorrowed { guild_id: row.get(0),user_id: row.get(1),roles: row.get(2),} }, mapper: |it| { <CachedMemberSelectByGuildId>::from(it) },
+        |row| { CachedMemberSelectByGuildIdBorrowed { guild_id: row.get(0),user_id: row.get(1),roles: row.get(2),nick: row.get(3),} }, mapper: |it| { <CachedMemberSelectByGuildId>::from(it) },
     }
 } }}pub mod cached_member_select_by_user_id_and_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedMemberSelectByUserIdAndGuildIdParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> { pub user_id: T1,pub guild_id: T2,}#[derive( Debug, Clone, PartialEq,)] pub struct CachedMemberSelectByUserIdAndGuildId
-{ pub guild_id : String,pub user_id : String,pub roles : Vec<String>,}pub struct CachedMemberSelectByUserIdAndGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,}
+{ pub guild_id : String,pub user_id : String,pub roles : Vec<String>,pub nick : Option<String>,}pub struct CachedMemberSelectByUserIdAndGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub nick : Option<&'a str>,}
 impl<'a> From<CachedMemberSelectByUserIdAndGuildIdBorrowed<'a>> for CachedMemberSelectByUserIdAndGuildId
 {
-    fn from(CachedMemberSelectByUserIdAndGuildIdBorrowed { guild_id,user_id,roles,}: CachedMemberSelectByUserIdAndGuildIdBorrowed<'a>) ->
-    Self { Self { guild_id: guild_id.into(),user_id: user_id.into(),roles: roles.map(|v| v.into()).collect(),} }
+    fn from(CachedMemberSelectByUserIdAndGuildIdBorrowed { guild_id,user_id,roles,nick,}: CachedMemberSelectByUserIdAndGuildIdBorrowed<'a>) ->
+    Self { Self { guild_id: guild_id.into(),user_id: user_id.into(),roles: roles.map(|v| v.into()).collect(),nick: nick.map(|v| v.into()),} }
 }pub struct CachedMemberSelectByUserIdAndGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -238,7 +238,7 @@ CachedMemberSelectByUserIdAndGuildId, 2>
     CachedMemberSelectByUserIdAndGuildIdQuery
     {
         client, params: [user_id,guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedMemberSelectByUserIdAndGuildIdBorrowed { guild_id: row.get(0),user_id: row.get(1),roles: row.get(2),} }, mapper: |it| { <CachedMemberSelectByUserIdAndGuildId>::from(it) },
+        |row| { CachedMemberSelectByUserIdAndGuildIdBorrowed { guild_id: row.get(0),user_id: row.get(1),roles: row.get(2),nick: row.get(3),} }, mapper: |it| { <CachedMemberSelectByUserIdAndGuildId>::from(it) },
     }
 } }impl <'a, C: GenericClient,T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> cornucopia_async::Params<'a,
 CachedMemberSelectByUserIdAndGuildIdParams<T1,T2,>, CachedMemberSelectByUserIdAndGuildIdQuery<'a, C,
@@ -250,32 +250,34 @@ CachedMemberSelectByUserIdAndGuildId, 2>, C> for CachedMemberSelectByUserIdAndGu
     CachedMemberSelectByUserIdAndGuildId, 2>
     { self.bind(client, &params.user_id,&params.guild_id,) }
 }}pub mod cached_member_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedMemberUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::ArraySql<Item = T3>,> { pub user_id: T1,pub guild_id: T2,pub roles: T4,}pub fn cached_member_upsert() -> CachedMemberUpsertStmt
-{ CachedMemberUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedMembers\" (\"user_id\", \"guild_id\", \"roles\")
-VALUES ($1, $2, $3)
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedMemberUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::ArraySql<Item = T4>,> { pub nick: Option<T1>,pub user_id: T2,pub guild_id: T3,pub roles: T5,}pub fn cached_member_upsert() -> CachedMemberUpsertStmt
+{ CachedMemberUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedMembers\" (\"nick\", \"user_id\", \"guild_id\", \"roles\")
+VALUES ($1, $2, $3, $4)
 ON CONFLICT (\"user_id\", \"guild_id\") DO UPDATE
     SET
-        \"roles\" = $3")) } pub struct
+        \"nick\" = $1,
+        \"roles\" = $4")) } pub struct
 CachedMemberUpsertStmt(cornucopia_async::private::Stmt); impl CachedMemberUpsertStmt
 { pub async fn bind<'a, C:
 GenericClient,T1:
 cornucopia_async::StringSql,T2:
 cornucopia_async::StringSql,T3:
 cornucopia_async::StringSql,T4:
-cornucopia_async::ArraySql<Item = T3>,>(&'a mut self, client: &'a  C,
-user_id: &'a T1,guild_id: &'a T2,roles: &'a T4,) -> Result<u64, tokio_postgres::Error>
+cornucopia_async::StringSql,T5:
+cornucopia_async::ArraySql<Item = T4>,>(&'a mut self, client: &'a  C,
+nick: &'a Option<T1>,user_id: &'a T2,guild_id: &'a T3,roles: &'a T5,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
-    client.execute(stmt, &[user_id,guild_id,roles,]).await
-} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::ArraySql<Item = T3>,>
-cornucopia_async::Params<'a, CachedMemberUpsertParams<T1,T2,T3,T4,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    client.execute(stmt, &[nick,user_id,guild_id,roles,]).await
+} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::ArraySql<Item = T4>,>
+cornucopia_async::Params<'a, CachedMemberUpsertParams<T1,T2,T3,T4,T5,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
 tokio_postgres::Error>> + Send + 'a>>, C> for CachedMemberUpsertStmt
 {
     fn
     params(&'a mut self, client: &'a  C, params: &'a
-    CachedMemberUpsertParams<T1,T2,T3,T4,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    CachedMemberUpsertParams<T1,T2,T3,T4,T5,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
-    { Box::pin(self.bind(client, &params.user_id,&params.guild_id,&params.roles,)) }
+    { Box::pin(self.bind(client, &params.nick,&params.user_id,&params.guild_id,&params.roles,)) }
 }}pub mod cached_role_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedRoleSelectByGuildId
 { pub color : i64,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub color : i64,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}

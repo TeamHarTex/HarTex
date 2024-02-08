@@ -30,6 +30,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -44,14 +45,14 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
-    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let locale = interaction.locale.clone().unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let CommandOptionValue::User(user_id) = options
         .iter()
         .find(|option| option.name.as_str() == "user")
         .map_or(
-            CommandOptionValue::User(interaction.member.unwrap().user.unwrap().id),
+            CommandOptionValue::User(interaction.author_id().unwrap()),
             |option| option.value.clone(),
         )
     else {
@@ -68,28 +69,47 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_userinfo_embed_generalinfo_name_subfield_name()?;
     let userinfo_embed_generalinfo_created_subfield_name =
         localizer.utilities_plugin_userinfo_embed_generalinfo_created_subfield_name()?;
-    let userinfo_embed_serverpresence_created_subfield_name =
+    let userinfo_embed_serverpresence_field_name =
         localizer.utilities_plugin_userinfo_embed_serverpresence_field_name()?;
+    let userinfo_embed_serverpresence_nickname_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_serverpresence_nickname_subfield_name()?;
 
-    let embed = EmbedBuilder::new()
+    let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             userinfo_embed_generalinfo_field_name,
             format!(
                 "{} {}\n{} {}\n{} {}",
                 userinfo_embed_generalinfo_id_subfield_name,
-                user_id.to_string(),
+                user_id.to_string().discord_inline_code(),
                 userinfo_embed_generalinfo_name_subfield_name,
-                user.global_name.unwrap_or(localizer.general_enum_unknown()?),
+                user.global_name.unwrap_or(String::from("<not set>")),
                 userinfo_embed_generalinfo_created_subfield_name,
-                (user.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
+                (user.id.timestamp() / 1000)
+                    .to_string()
+                    .discord_relative_timestamp(),
             ),
-        ))
-        .field(EmbedFieldBuilder::new(userinfo_embed_serverpresence_created_subfield_name, ""))
-        .title(user.name)
-        .validate()
-        .into_diagnostic()?
-        .build();
+        ));
+
+    if let Some(guild_id) = interaction.guild_id {
+        let member = CachedMemberRepository
+            .get((guild_id, user_id))
+            .await
+            .into_diagnostic()?;
+
+        builder = builder
+            .field(EmbedFieldBuilder::new(
+                userinfo_embed_serverpresence_field_name,
+                format!(
+                    "{} {}",
+                    userinfo_embed_serverpresence_nickname_subfield_name,
+                    member.nick.unwrap_or(String::from("<not set>")),
+                ),
+            ))
+            .title(user.name);
+    }
+
+    let embed = builder.validate().into_diagnostic()?.build();
 
     interaction_client
         .create_response(
