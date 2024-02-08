@@ -3,7 +3,7 @@
     "rust-analyzer.cargo.buildScripts.invocationLocation": "root",
     "rust-analyzer.cargo.buildScripts.invocationStrategy": "once",
     "rust-analyzer.cargo.buildScripts.overrideCommand": [
-        "python3",
+        "python",
         "x.py",
         "--json",
         "check"
@@ -11,7 +11,7 @@
     "rust-analyzer.check.invocationLocation": "root",
     "rust-analyzer.check.invocationStrategy": "once",
     "rust-analyzer.check.overrideCommand": [
-        "python3",
+        "python",
         "x.py",
         "--json",
         "check"
