@@ -116,18 +116,16 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     builder = if let Some(avatar) = user.avatar {
         builder.thumbnail(ImageSource::url(Cdn::user_avatar(user_id, avatar)).into_diagnostic()?)
+    } else if user.global_name.is_some() {
+        builder.thumbnail(
+            ImageSource::url(Cdn::default_user_avatar(Some(user_id), None))
+                .into_diagnostic()?,
+        )
     } else {
-        if user.global_name.is_some() {
-            builder.thumbnail(
-                ImageSource::url(Cdn::default_user_avatar(Some(user_id), None))
-                    .into_diagnostic()?,
-            )
-        } else {
-            builder.thumbnail(
-                ImageSource::url(Cdn::default_user_avatar(None, Some(user.discriminator)))
-                    .into_diagnostic()?,
-            )
-        }
+        builder.thumbnail(
+            ImageSource::url(Cdn::default_user_avatar(None, Some(user.discriminator)))
+                .into_diagnostic()?,
+        )
     };
 
     let embed = builder.validate().into_diagnostic()?.build();
