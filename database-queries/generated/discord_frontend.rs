@@ -453,11 +453,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedRoleUpsertStmt
     { Box::pin(self.bind(client, &params.color,&params.icon,&params.id,&params.guild_id,&params.flags,&params.hoist,&params.managed,&params.mentionable,&params.position,)) }
 }}pub mod cached_user_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedUserSelectById
-{ pub id : String,pub bot : bool,pub discriminator : String,pub name : String,pub global_name : Option<String>,}pub struct CachedUserSelectByIdBorrowed<'a> { pub id : &'a str,pub bot : bool,pub discriminator : &'a str,pub name : &'a str,pub global_name : Option<&'a str>,}
+{ pub id : String,pub bot : bool,pub discriminator : String,pub name : String,pub global_name : Option<String>,pub avatar : Option<String>,}pub struct CachedUserSelectByIdBorrowed<'a> { pub id : &'a str,pub bot : bool,pub discriminator : &'a str,pub name : &'a str,pub global_name : Option<&'a str>,pub avatar : Option<&'a str>,}
 impl<'a> From<CachedUserSelectByIdBorrowed<'a>> for CachedUserSelectById
 {
-    fn from(CachedUserSelectByIdBorrowed { id,bot,discriminator,name,global_name,}: CachedUserSelectByIdBorrowed<'a>) ->
-    Self { Self { id: id.into(),bot,discriminator: discriminator.into(),name: name.into(),global_name: global_name.map(|v| v.into()),} }
+    fn from(CachedUserSelectByIdBorrowed { id,bot,discriminator,name,global_name,avatar,}: CachedUserSelectByIdBorrowed<'a>) ->
+    Self { Self { id: id.into(),bot,discriminator: discriminator.into(),name: name.into(),global_name: global_name.map(|v| v.into()),avatar: avatar.map(|v| v.into()),} }
 }pub struct CachedUserSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -514,36 +514,38 @@ CachedUserSelectById, 1>
     CachedUserSelectByIdQuery
     {
         client, params: [id,], stmt: &mut self.0, extractor:
-        |row| { CachedUserSelectByIdBorrowed { id: row.get(0),bot: row.get(1),discriminator: row.get(2),name: row.get(3),global_name: row.get(4),} }, mapper: |it| { <CachedUserSelectById>::from(it) },
+        |row| { CachedUserSelectByIdBorrowed { id: row.get(0),bot: row.get(1),discriminator: row.get(2),name: row.get(3),global_name: row.get(4),avatar: row.get(5),} }, mapper: |it| { <CachedUserSelectById>::from(it) },
     }
 } }}pub mod cached_user_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedUserUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,> { pub id: T1,pub bot: bool,pub name: T2,pub discriminator: T3,pub global_name: Option<T4>,}pub fn cached_user_upsert() -> CachedUserUpsertStmt
-{ CachedUserUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedUsers\" (\"id\", \"bot\", \"name\", \"discriminator\", \"global_name\")
-VALUES ($1, $2, $3, $4, $5)
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedUserUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,> { pub avatar: Option<T1>,pub id: T2,pub bot: bool,pub name: T3,pub discriminator: T4,pub global_name: Option<T5>,}pub fn cached_user_upsert() -> CachedUserUpsertStmt
+{ CachedUserUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedUsers\" (\"avatar\", \"id\", \"bot\", \"name\", \"discriminator\", \"global_name\")
+VALUES ($1, $2, $3, $4, $5, $6)
 ON CONFLICT (\"id\") DO UPDATE
     SET
-        \"bot\" = $2,
-        \"name\" = $3,
-        \"discriminator\" = $4,
-        \"global_name\" = $5")) } pub struct
+        \"avatar\" = $1,
+        \"bot\" = $3,
+        \"name\" = $4,
+        \"discriminator\" = $5,
+        \"global_name\" = $6")) } pub struct
 CachedUserUpsertStmt(cornucopia_async::private::Stmt); impl CachedUserUpsertStmt
 { pub async fn bind<'a, C:
 GenericClient,T1:
 cornucopia_async::StringSql,T2:
 cornucopia_async::StringSql,T3:
 cornucopia_async::StringSql,T4:
+cornucopia_async::StringSql,T5:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-id: &'a T1,bot: &'a bool,name: &'a T2,discriminator: &'a T3,global_name: &'a Option<T4>,) -> Result<u64, tokio_postgres::Error>
+avatar: &'a Option<T1>,id: &'a T2,bot: &'a bool,name: &'a T3,discriminator: &'a T4,global_name: &'a Option<T5>,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
-    client.execute(stmt, &[id,bot,name,discriminator,global_name,]).await
-} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,>
-cornucopia_async::Params<'a, CachedUserUpsertParams<T1,T2,T3,T4,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    client.execute(stmt, &[avatar,id,bot,name,discriminator,global_name,]).await
+} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,>
+cornucopia_async::Params<'a, CachedUserUpsertParams<T1,T2,T3,T4,T5,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
 tokio_postgres::Error>> + Send + 'a>>, C> for CachedUserUpsertStmt
 {
     fn
     params(&'a mut self, client: &'a  C, params: &'a
-    CachedUserUpsertParams<T1,T2,T3,T4,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    CachedUserUpsertParams<T1,T2,T3,T4,T5,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
-    { Box::pin(self.bind(client, &params.id,&params.bot,&params.name,&params.discriminator,&params.global_name,)) }
+    { Box::pin(self.bind(client, &params.avatar,&params.id,&params.bot,&params.name,&params.discriminator,&params.global_name,)) }
 }}}

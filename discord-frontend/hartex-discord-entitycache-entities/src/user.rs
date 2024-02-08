@@ -28,6 +28,7 @@ use hartex_discord_entitycache_core::entity;
     assume = ["CachedUserSelectById"],
     id = ["id"],
     include = [
+        "avatar",
         "bot",
         "discriminator",
         "global_name",
