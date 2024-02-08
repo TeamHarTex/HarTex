@@ -1,4 +1,4 @@
---! cached_user_select_by_id : (id, bot, name, discriminator, global_name?)
+--! cached_user_select_by_id : (avatar?, id, bot, name, discriminator, global_name?)
 SELECT
     *
 FROM
