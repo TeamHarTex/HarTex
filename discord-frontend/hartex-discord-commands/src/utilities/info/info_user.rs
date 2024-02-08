@@ -68,6 +68,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_userinfo_embed_generalinfo_name_subfield_name()?;
     let userinfo_embed_generalinfo_created_subfield_name =
         localizer.utilities_plugin_userinfo_embed_generalinfo_created_subfield_name()?;
+    let userinfo_embed_serverpresence_created_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_serverpresence_field_name()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -83,6 +85,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 (user.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
             ),
         ))
+        .field(EmbedFieldBuilder::new(userinfo_embed_serverpresence_created_subfield_name, ""))
         .title(user.name)
         .validate()
         .into_diagnostic()?
