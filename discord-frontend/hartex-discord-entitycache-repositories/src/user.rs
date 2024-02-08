@@ -22,9 +22,9 @@
 
 use std::pin::Pin;
 
-use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_database_queries::discord_frontend::queries::cached_user_select_by_id::cached_user_select_by_id;
 use hartex_database_queries::discord_frontend::queries::cached_user_upsert::cached_user_upsert;
+use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
