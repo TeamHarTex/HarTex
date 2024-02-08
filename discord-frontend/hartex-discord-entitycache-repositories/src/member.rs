@@ -50,6 +50,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .await?;
 
         Ok(MemberEntity {
+            nick: data.nick,
             roles: data
                 .roles
                 .into_iter()
@@ -68,6 +69,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         cached_member_upsert()
             .bind(
                 client,
+                &entity.nick,
                 &entity.user_id.to_string(),
                 &entity.guild_id.to_string(),
                 &entity
