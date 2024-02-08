@@ -28,8 +28,10 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
@@ -60,13 +62,30 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let userinfo_embed_generalinfo_field_name =
         localizer.utilities_plugin_userinfo_embed_generalinfo_field_name()?;
+    let userinfo_embed_generalinfo_id_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_generalinfo_id_subfield_name()?;
+    let userinfo_embed_generalinfo_name_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_generalinfo_name_subfield_name()?;
+    let userinfo_embed_generalinfo_created_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_generalinfo_created_subfield_name()?;
+    let userinfo_embed_serverpresence_created_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_serverpresence_field_name()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             userinfo_embed_generalinfo_field_name,
-            user_id.to_string(),
+            format!(
+                "{} {}\n{} {}\n{} {}",
+                userinfo_embed_generalinfo_id_subfield_name,
+                user_id.to_string(),
+                userinfo_embed_generalinfo_name_subfield_name,
+                user.global_name.unwrap_or(localizer.general_enum_unknown()?),
+                userinfo_embed_generalinfo_created_subfield_name,
+                (user.id.timestamp() / 1000).to_string().discord_relative_timestamp(),
+            ),
         ))
+        .field(EmbedFieldBuilder::new(userinfo_embed_serverpresence_created_subfield_name, ""))
         .title(user.name)
         .validate()
         .into_diagnostic()?
