@@ -64,5 +64,5 @@ userinfo-embed-generalinfo-field-name=一般情報
 userinfo-embed-generalinfo-id-subfield-name=ID：
 userinfo-embed-generalinfo-name-subfield-name=表示名：
 userinfo-embed-generalinfo-created-subfield-name=アカウント作った時：
-userinfo-embed-serverpresence-field-name=Server Presence
+userinfo-embed-serverpresence-field-name=サーバープロフィール
 userinfo-embed-serverpresence-nickname-subfield-name=サーバーニックネーム：
