@@ -64,5 +64,5 @@ userinfo-embed-generalinfo-field-name=General Information
 userinfo-embed-generalinfo-id-subfield-name=ID:
 userinfo-embed-generalinfo-name-subfield-name=Global Name:
 userinfo-embed-generalinfo-created-subfield-name=Created:
-userinfo-embed-serverpresence-field-name=Server Presence
+userinfo-embed-serverpresence-field-name=Server Profile
 userinfo-embed-serverpresence-nickname-subfield-name=Server Nickname:
