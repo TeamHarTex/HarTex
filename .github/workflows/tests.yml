@@ -47,5 +47,5 @@ jobs:
           python-version: '3.11'
       - name: Run Build
         run: python ./x.py build -- discord-frontend
-      - name: Run Tes
+      - name: Run Tests
         run: python ./x.py test -- --ui --build-dir=build
