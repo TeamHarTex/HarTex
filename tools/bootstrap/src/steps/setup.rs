@@ -34,6 +34,7 @@ use crate::builder::RunConfig;
 use crate::builder::Step;
 use crate::config::Config;
 
+const FLEET_SETTINGS: &str = include_str!("../../config/fleet-settings.json");
 const VSCODE_SETTINGS: &str = include_str!("../../config/vscode-settings.json");
 
 #[allow(clippy::module_name_repetitions)]
@@ -272,6 +273,68 @@ pub fn setup_vscode_config(builder: &Builder<'_>) {
         .open(builder.build.config.root.join(".vscode/settings.json"))
         .expect("failed to open file");
     file.write(VSCODE_SETTINGS.as_bytes())
+        .expect("failed to write to file");
+}
+
+pub struct ConfigureFleet;
+
+impl Step for ConfigureFleet {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        setup_fleet_config(builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        let fleet_config = run.builder.config.root.join(".fleet/settings.json");
+
+        if fleet_config.exists() {
+            eprintln!(
+                "WARN: a fleet configuration file already exists at {}",
+                fleet_config
+                    .canonicalize()
+                    .expect("failed to canonicalize path")
+                    .display()
+            );
+
+            match question_bool("Do you wish to delete and replace it?", false) {
+                Ok(true) => fs::remove_file(fleet_config).expect("failed to remove file"),
+                _ => {
+                    println!("Operation cancelled. Skipping");
+                    return;
+                }
+            }
+        }
+
+        println!("INFO: Preview of the recommended fleet configuration file is as follows");
+        println!("{FLEET_SETTINGS}");
+
+        match question_bool("Do you wish to continue?", true) {
+            Ok(true) => run.builder.run_step(ConfigureFleet),
+            _ => {
+                println!("Operation cancelled. Skipping.");
+            }
+        }
+    }
+}
+
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::unused_io_amount)]
+pub fn setup_fleet_config(builder: &Builder<'_>) {
+    println!("INFO: writing new `.fleet/settings.json`");
+
+    let fleet_dir = builder.config.root.join(".fleet");
+    if !fleet_dir.exists() {
+        fs::create_dir(fleet_dir).expect("failed to create directory");
+    }
+
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .open(builder.build.config.root.join(".fleet/settings.json"))
+        .expect("failed to open file");
+    file.write(FLEET_SETTINGS.as_bytes())
         .expect("failed to write to file");
 }
 
