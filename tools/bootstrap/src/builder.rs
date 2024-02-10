@@ -77,6 +77,7 @@ impl BuildKind {
             Self::Setup => vec![
                 StepDescriptor::from::<setup::SetupProfile>(*self),
                 StepDescriptor::from::<setup::ConfigureVscode>(*self),
+                StepDescriptor::from::<setup::ConfigureFleet>(*self),
             ],
             Self::Test => vec![
                 StepDescriptor::from::<test::BuildTestsuiteTool>(*self),
