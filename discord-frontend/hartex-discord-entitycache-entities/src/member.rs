@@ -27,7 +27,7 @@ use hartex_discord_entitycache_core::entity;
     from = "twilight_model::guild::Member",
     assume = ["CachedMemberSelectByGuildId"],
     id = ["guild_id", "user_id"],
-    include = ["nick", "roles"],
+    include = ["joined_at", "nick", "roles"],
     extra = [
         "guild_id": "Id<GuildMarker>",
         "user_id": "Id<UserMarker>",
