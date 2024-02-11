@@ -24,6 +24,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![allow(dead_code)]
+#![allow(unused_variables)]
 #![allow(clippy::expect_fun_call)]
 #![feature(let_chains)]
 
@@ -70,8 +71,16 @@ struct ModuleTree {
 }
 
 pub fn main() {
+    #[cfg(feature = "discord_model_v_0_15_4")]
     let response = reqwest::blocking::get(format!("https://github.com/twilight-rs/twilight/archive/refs/tags/twilight-model-{MODEL_CRATE_VERSION}.zip"))
         .expect(&format!("twilight-model {MODEL_CRATE_VERSION} is not found"));
+
+    #[cfg(feature = "discord_model_git")]
+    let response = reqwest::blocking::get(format!(
+        "https://github.com/twilight-rs/twilight/archive/refs/heads/next.zip"
+    ))
+    .expect("failed to download latest next");
+
     let bytes = response.bytes().expect("failed to obtain archive bytes");
 
     // extract the archive
@@ -80,9 +89,14 @@ pub fn main() {
 
     extract_archive(reader, output_dir);
 
+    #[cfg(feature = "discord_model_v_0_15_4")]
     let crate_dir = output_dir.join(format!(
         "twilight-twilight-model-{MODEL_CRATE_VERSION}/twilight-model"
     ));
+
+    #[cfg(feature = "discord_model_git")]
+    let crate_dir = output_dir.join("twilight-next/twilight-model");
+
     let lib_rs_path = crate_dir.join("src/lib.rs");
 
     let module_tree = build_module_tree_from_file(
@@ -227,9 +241,15 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
             .by_index(i)
             .expect("failed to obtain file in zip archive");
 
+        #[cfg(feature = "discord_model_v_0_15_4")]
         if !file.name().starts_with(&format!(
             "twilight-twilight-model-{MODEL_CRATE_VERSION}/twilight-model"
         )) {
+            continue;
+        }
+
+        #[cfg(feature = "discord_model_git")]
+        if !file.name().starts_with("twilight-next/twilight-model") {
             continue;
         }
 

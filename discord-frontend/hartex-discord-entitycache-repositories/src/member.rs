@@ -26,11 +26,13 @@ use std::str::FromStr;
 use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::util::Timestamp;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
 use hartex_discord_utils::DATABASE_POOL;
+use time::OffsetDateTime;
 use tokio_postgres::GenericClient;
 
 pub struct CachedMemberRepository;
@@ -50,6 +52,9 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .await?;
 
         Ok(MemberEntity {
+            joined_at: data
+                .joined_at
+                .map(|timestamp| Timestamp::from_secs(timestamp.unix_timestamp()).unwrap()),
             nick: data.nick,
             roles: data
                 .roles
@@ -69,6 +74,9 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         cached_member_upsert()
             .bind(
                 client,
+                &entity.joined_at.map(|timestamp| {
+                    OffsetDateTime::from_unix_timestamp(timestamp.as_secs()).unwrap()
+                }),
                 &entity.nick,
                 &entity.user_id.to_string(),
                 &entity.guild_id.to_string(),

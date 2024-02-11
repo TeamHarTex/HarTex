@@ -31,6 +31,7 @@ zip = { version = "0.6.6" }
 [features]
 default = ["discord_model_v_0_15_4"]
 discord_model_v_0_15_4 = []
+discord_model_git = []
 
 [lib]
 name = "hartex_discord_entitycache_macros"
