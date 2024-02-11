@@ -88,7 +88,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 userinfo_embed_generalinfo_id_subfield_name,
                 user_id.to_string().discord_inline_code(),
                 userinfo_embed_generalinfo_name_subfield_name,
-                user.global_name.clone().unwrap_or(String::from("<not set>")),
+                user.global_name
+                    .clone()
+                    .unwrap_or(String::from("<not set>")),
                 userinfo_embed_generalinfo_created_subfield_name,
                 (user.id.timestamp() / 1000)
                     .to_string()
@@ -118,8 +120,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         builder.thumbnail(ImageSource::url(Cdn::user_avatar(user_id, avatar)).into_diagnostic()?)
     } else if user.global_name.is_some() {
         builder.thumbnail(
-            ImageSource::url(Cdn::default_user_avatar(Some(user_id), None))
-                .into_diagnostic()?,
+            ImageSource::url(Cdn::default_user_avatar(Some(user_id), None)).into_diagnostic()?,
         )
     } else {
         builder.thumbnail(
