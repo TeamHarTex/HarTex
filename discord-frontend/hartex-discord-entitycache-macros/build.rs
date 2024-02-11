@@ -76,9 +76,9 @@ pub fn main() {
         .expect(&format!("twilight-model {MODEL_CRATE_VERSION} is not found"));
 
     #[cfg(feature = "discord_model_git")]
-    let response = reqwest::blocking::get(format!(
-        "https://github.com/twilight-rs/twilight/archive/refs/heads/next.zip"
-    ))
+    let response = reqwest::blocking::get(
+        "https://github.com/twilight-rs/twilight/archive/refs/heads/next.zip",
+    )
     .expect("failed to download latest next");
 
     let bytes = response.bytes().expect("failed to obtain archive bytes");
