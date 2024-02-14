@@ -25,9 +25,6 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 if __name__ == "__main__":
     import os
     import sys
-    import warnings
-
-    from inspect import cleandoc
 
     major = sys.version_info.major
     minor = sys.version_info.minor
