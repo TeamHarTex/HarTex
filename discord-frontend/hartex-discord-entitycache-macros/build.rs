@@ -24,9 +24,6 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![allow(dead_code)]
-#![allow(unused_mut)]
-#![allow(unreachable_code)]
-#![allow(unused_variables)]
 #![allow(clippy::expect_fun_call)]
 #![feature(let_chains)]
 
