@@ -40,7 +40,7 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
-#[allow(clippy::unused_async)]
+#[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()
@@ -116,11 +116,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                     userinfo_embed_serverpresence_joined_subfield_name,
                     member
                         .joined_at
-                        .map(|timestamp| timestamp
+                        .map_or(String::from("unknown"), |timestamp| timestamp
                             .as_secs()
                             .to_string()
                             .discord_relative_timestamp())
-                        .unwrap_or(String::from("unknown"))
                 ),
             ))
             .title(user.name);
