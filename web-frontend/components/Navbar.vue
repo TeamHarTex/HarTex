@@ -25,13 +25,16 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     <NuxtLink class="brand" to="/">hartex</NuxtLink>
     <div class="links">
       <NuxtLink to="/" target="_blank">
-        <div class="i-carbon-notebook-reference"></div>
+        <div class="i-carbon:notebook-reference"></div>
       </NuxtLink>
       <NuxtLink to="https://discord.com/invite/Xu8453VBAv" target="_blank">
-        <div class="i-carbon-logo-discord"></div>
+        <div class="i-carbon:logo-discord"></div>
       </NuxtLink>
       <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
-        <div class="i-carbon-logo-github"></div>
+        <div class="i-carbon:logo-github"></div>
+      </NuxtLink>
+      <NuxtLink to="https://github.com/TeamHarTex/HarTex/blob/nightly/CHANGELOG.md" target="_blank">
+        <div class="i-carbon:catalog"></div>
       </NuxtLink>
     </div>
   </nav>
