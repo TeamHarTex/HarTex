@@ -9,7 +9,7 @@ license = "AGPL-3.0-or-later"
 rust-version = "1.78.0"
 
 [dependencies]
-clap = { version = "4.5.0", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
+clap = { version = "4.5.1", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
 console = "0.15.8"
 path-slash = "0.2.1"
 similar = { version = "2.4.0", features = ["inline"] }
