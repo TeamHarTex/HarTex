@@ -16,7 +16,7 @@ hartex_localization_loader = { path = "../hartex-localization-loader" }
 fluent-bundle = "0.15.2"
 fluent-syntax = "0.11.0"
 intl-memoizer = "0.5.1"
-miette = "7.0.0"
+miette = "7.1.0"
 proc-macro2 = "1.0.78"
 quote = "1.0.35"
 syn = "2.0.48"
