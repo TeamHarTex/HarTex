@@ -1531,9 +1531,9 @@
   integrity sha512-UTce8mUwUW0RikMb/eseJ7ys0BRkZVFB86orHzrfW12ZmFtym5zua8joZ4L7okH2dDFHkcFjqnZ5GocWBXOFtA==
 
 "@studio-freight/lenis@^1.0.34":
-  version "1.0.35"
-  resolved "https://registry.yarnpkg.com/@studio-freight/lenis/-/lenis-1.0.35.tgz#039d1064363306f6554b8d676421db647dffd770"
-  integrity sha512-dduQqZERC5EaJSVGBoCt2WdPFQlr39zFewkQxvJcYZrMl1aVTPPIQCnZMqIjl4KZBQIL3kIXes+HP22T9XVh4w==
+  version "1.0.36"
+  resolved "https://registry.yarnpkg.com/@studio-freight/lenis/-/lenis-1.0.36.tgz#7c39898a1af2a98798c473ca05e818212303df81"
+  integrity sha512-dPrPjz8F5MRtZlCKVQ8t7xIyjS+btRr1FmHIM84FwC1e+T+M86+32YhhgD0o45NMx9XOyipIzsga2n34NbajZw==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
