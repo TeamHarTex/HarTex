@@ -19,7 +19,7 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 axum = "0.7.4"
 bb8-postgres = "0.8.1"
 dotenvy = "0.15.7"
-hyper = { version = "1.1.0", features = ["http1", "server"] }
+hyper = { version = "1.2.0", features = ["http1", "server"] }
 hyper-util = { version = "0.1.3", features = ["http1", "tokio"] }
 miette = { version = "7.1.0", features = ["fancy"] }
 serde = "1.0.197"

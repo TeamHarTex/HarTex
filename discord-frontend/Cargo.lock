@@ -172,7 +172,7 @@ dependencies = [
  "http 1.0.0",
  "http-body 1.0.0",
  "http-body-util",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "hyper-util",
  "itoa",
  "matchit",
@@ -1078,7 +1078,7 @@ dependencies = [
  "hartex_localization_core",
  "hartex_log",
  "http-body-util",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "hyper-util",
  "miette 7.1.0",
  "serde_json",
@@ -1111,7 +1111,7 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_log",
  "http-body-util",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "hyper-trust-dns",
  "hyper-util",
  "miette 7.1.0",
@@ -1259,7 +1259,7 @@ dependencies = [
  "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "hyper-util",
  "miette 7.1.0",
  "once_cell",
@@ -1464,9 +1464,9 @@ dependencies = [
 
 [[package]]
 name = "hyper"
-version = "1.1.0"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb5aa53871fc917b1a9ed87b683a5d86db645e23acb32c2e0785a353e522fb75"
+checksum = "186548d73ac615b32a73aafe38fb4f56c0d340e110e5a200bcadbaf2e199263a"
 dependencies = [
  "bytes",
  "futures-channel",
@@ -1478,6 +1478,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
+ "smallvec",
  "tokio",
  "want",
 ]
@@ -1504,7 +1505,7 @@ checksum = "a0bea761b46ae2b24eb4aef630d8d1c398157b6fc29e6350ecf090a0b70c952c"
 dependencies = [
  "futures-util",
  "http 1.0.0",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "hyper-util",
  "rustls 0.22.2",
  "rustls-native-certs",
@@ -1551,7 +1552,7 @@ dependencies = [
  "futures-util",
  "http 1.0.0",
  "http-body 1.0.0",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "pin-project-lite",
  "socket2 0.5.5",
  "tokio",
@@ -3486,7 +3487,7 @@ dependencies = [
  "fastrand",
  "http 1.0.0",
  "http-body-util",
- "hyper 1.1.0",
+ "hyper 1.2.0",
  "hyper-rustls 0.26.0",
  "hyper-util",
  "percent-encoding",
