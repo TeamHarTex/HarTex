@@ -26,10 +26,9 @@ use std::time::Duration;
 
 use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::discord::gateway::queue::Queue;
+use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
-use hartex_discord_core::discord::gateway::StreamExt;
-use hartex_discord_core::discord::gateway::{EventTypeFlags, Message as GatewayMessage};
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::task::JoinSet;
@@ -50,7 +49,7 @@ pub async fn handle<'a, Q>(
     consumer: StreamConsumer,
 ) -> miette::Result<()>
 where
-    Q: Queue + Send + Sync + Sized + 'a,
+    Q: Queue + Send + Sync + Sized + Unpin + 'a,
 {
     let shards = shards.collect::<Vec<_>>();
     let senders = shards
@@ -66,9 +65,9 @@ where
     Ok(())
 }
 
-async fn inbound<Q>(shards: Vec<&'_ mut Shard<Q>>, producer: FutureProducer) -> miette::Result<()>
+async fn inbound<'a, Q>(shards: Vec<&'a mut Shard<Q>>, producer: FutureProducer) -> miette::Result<()>
 where
-    Q: Queue + Send + Sync + Sized,
+    Q: Queue + Send + Sync + Sized + Unpin + 'a,
 {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
@@ -77,13 +76,13 @@ where
 
         for shard in shards {
             set.spawn(async move {
-                while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
+                while let Some(result) = shard.next().await {
                     match result {
                         Ok(message) => {
                             let Some(bytes) = (match message {
                                 // todo: handle close frame
-                                GatewayMessage::Close(Some(_)) => None,
                                 GatewayMessage::Text(string) => Some(string.into_bytes()),
+                                _ => None,
                             }) else {
                                 continue;
                             };
@@ -111,14 +110,6 @@ where
                             }
                         }
                         Err(error) => {
-                            if error.is_fatal() {
-                                log::error!(
-                                "[shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
-                                shard_id = shard.id().number()
-                            );
-                                break;
-                            }
-
                             log::warn!(
                                 "[shard {shard_id}] error when receiving gateway message: {error}",
                                 shard_id = shard.id().number()
