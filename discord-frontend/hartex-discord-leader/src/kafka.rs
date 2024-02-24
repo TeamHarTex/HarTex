@@ -26,7 +26,6 @@ use std::time::Duration;
 
 use futures_util::StreamExt;
 use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;

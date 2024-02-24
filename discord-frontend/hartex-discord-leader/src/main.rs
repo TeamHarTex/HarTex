@@ -100,7 +100,7 @@ pub async fn main() -> miette::Result<()> {
         tokio::select! {
             _ = kafka::handle(shards.iter_mut(), producer.clone(), consumer) => {},
             _ = rx.changed() => {
-                future::join_all(shards.iter_mut().map(|shard| shard.close(CloseFrame::RESUME))).await;
+                let _ = shards.iter_mut().map(|shard| shard.close(CloseFrame::RESUME));
             },
         }
     });
