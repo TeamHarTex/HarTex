@@ -24,13 +24,15 @@ use std::env;
 use std::str;
 use std::time::Duration;
 
-use futures_util::StreamExt;
+use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
+use hartex_discord_core::discord::gateway::StreamExt;
+use hartex_discord_core::discord::gateway::{EventTypeFlags, Message as GatewayMessage};
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::task::JoinSet;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use rdkafka::consumer::StreamConsumer;
@@ -55,76 +57,78 @@ where
         .iter()
         .map(|shard| (shard.id().number(), shard.sender()))
         .collect::<Vec<_>>();
-    let stream = ShardMessageStream::new(shards.into_iter());
 
     tokio::select! {
-        _ = inbound(stream, producer) => {},
+        _ = inbound(shards, producer) => {},
         _ = outbound(senders, consumer) => {}
     }
 
     Ok(())
 }
 
-async fn inbound<Q>(
-    mut stream: ShardMessageStream<'_, Q>,
-    producer: FutureProducer,
-) -> miette::Result<()>
+async fn inbound<Q>(shards: Vec<&'_ mut Shard<Q>>, producer: FutureProducer) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized,
 {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
-    while let Some((shard, result)) = stream.next().await {
-        match result {
-            Ok(message) => {
-                let Some(bytes) = (match message {
-                    // todo: handle close frame
-                    GatewayMessage::Close(_) => None,
-                    GatewayMessage::Text(string) => Some(string.into_bytes()),
-                }) else {
-                    continue;
-                };
+    loop {
+        let mut set = JoinSet::new();
 
-                log::trace!(
-                    "[shard {shard_id}] received binary payload from gateway",
-                    shard_id = shard.id().number()
-                );
+        for shard in shards {
+            set.spawn(async move {
+                while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
+                    match result {
+                        Ok(message) => {
+                            let Some(bytes) = (match message {
+                                // todo: handle close frame
+                                GatewayMessage::Close(Some(_)) => None,
+                                GatewayMessage::Text(string) => Some(string.into_bytes()),
+                            }) else {
+                                continue;
+                            };
 
-                if let Err((error, _)) = producer
-                    .send(
-                        FutureRecord::to(&topic)
-                            .key(&format!(
-                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
+                            log::trace!(
+                                "[shard {shard_id}] received binary payload from gateway",
                                 shard_id = shard.id().number()
-                            ))
-                            .payload(&bytes),
-                        Timeout::After(Duration::from_secs(0)),
-                    )
-                    .await
-                {
-                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
+                            );
 
-                    continue;
-                }
-            }
-            Err(error) => {
-                if error.is_fatal() {
-                    log::error!(
-                        "[shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
-                        shard_id = shard.id().number()
-                    );
-                    break;
-                }
+                            if let Err((error, _)) = producer
+                                .send(
+                                    FutureRecord::to(&topic)
+                                        .key(&format!(
+                                            "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
+                                            shard_id = shard.id().number()
+                                        ))
+                                        .payload(&bytes),
+                                    Timeout::After(Duration::from_secs(0)),
+                                )
+                                .await
+                            {
+                                println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
 
-                log::warn!(
-                    "[shard {shard_id}] error when receiving gateway message: {error}",
-                    shard_id = shard.id().number()
-                );
-            }
+                                continue;
+                            }
+                        }
+                        Err(error) => {
+                            if error.is_fatal() {
+                                log::error!(
+                                "[shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
+                                shard_id = shard.id().number()
+                            );
+                                break;
+                            }
+
+                            log::warn!(
+                                "[shard {shard_id}] error when receiving gateway message: {error}",
+                                shard_id = shard.id().number()
+                            );
+                        }
+                    }
+                }
+            });
         }
     }
-
-    Ok(())
 }
 
 async fn outbound(
