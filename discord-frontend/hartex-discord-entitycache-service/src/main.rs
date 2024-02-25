@@ -20,56 +20,39 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Worker Process
-//!
-//! The worker process is the process thatr receives messages from the leader.
-
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
 use std::env;
-use std::str;
+use std::io::Error;
+use std::io::ErrorKind;
 use std::str::Utf8Error;
+use std::str;
 
 use futures_util::StreamExt;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use hartex_discord_utils::CLIENT;
-use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
-use hartex_kafka_utils::types::CompressionType;
 use hartex_log::log;
 use miette::IntoDiagnostic;
-use once_cell::sync::Lazy;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
-use rdkafka::message::Message;
-use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
-use serde::de::DeserializeSeed;
+use rdkafka::Message;
 use serde_scan::scan;
 
-use crate::error::ConsumerError;
-use crate::error::ConsumerErrorKind;
+mod entitycache;
 
-mod error;
-mod eventcallback;
-mod interaction;
-
-/// Entry point.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
     log::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
-
-    Lazy::force(&TOKEN);
-    Lazy::force(&CLIENT);
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
         .into_diagnostic()?
@@ -78,12 +61,6 @@ pub async fn main() -> miette::Result<()> {
         .collect::<Vec<_>>();
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
-    let producer = ClientConfig::new()
-        .bootstrap_servers(bootstrap_servers.clone().into_iter())
-        .compression_type(CompressionType::Lz4)
-        .delivery_timeout_ms(30000)
-        .create::<FutureProducer>()
-        .into_diagnostic()?;
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
         .group_id("com.github.teamhartex.hartex.inbound.gateway.payload.consumer")
@@ -110,20 +87,13 @@ pub async fn main() -> miette::Result<()> {
                 continue;
             }
 
-            let result =
-                GatewayEventDeserializer::from_json(result.unwrap()).ok_or(ConsumerError {
-                    kind: ConsumerErrorKind::InvalidGatewayPayload,
-                });
-
-            if let Err(error) = result {
-                println!("{:?}", Err::<(), ConsumerError>(error).into_diagnostic());
-
-                continue;
-            }
+            let result = GatewayEventDeserializer::from_json(result.unwrap())
+                .ok_or(Error::new(ErrorKind::Other, ""))
+                .into_diagnostic()?;
 
             let json_deserializer = serde_json::Deserializer::from_slice(bytes);
 
-            (result.unwrap(), json_deserializer)
+            (result, json_deserializer)
         };
 
         let key_bytes = message.key().unwrap();
@@ -153,7 +123,7 @@ pub async fn main() -> miette::Result<()> {
 
         let event = result.unwrap();
 
-        eventcallback::invoke(event, scanned, producer.clone()).await?;
+        entitycache::update(event).await?;
     }
 
     signal::ctrl_c().await.into_diagnostic()?;

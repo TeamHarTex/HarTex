@@ -111,6 +111,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-luart/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tools/bootstrap/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tools/testsuite/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-service/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/common/target" />
