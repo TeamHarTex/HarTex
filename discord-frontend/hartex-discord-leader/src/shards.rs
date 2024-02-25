@@ -22,10 +22,9 @@
 
 use std::ops::Deref;
 
+use hartex_discord_core::discord::gateway::create_recommended;
 use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::gateway::stream;
 use hartex_discord_core::discord::gateway::ConfigBuilder;
-use hartex_discord_core::discord::gateway::EventTypeFlags;
 use hartex_discord_core::discord::gateway::Intents;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::ShardId;
@@ -46,12 +45,11 @@ where
         .queue(queue.clone())
         .build();
 
-    Ok(stream::create_recommended::<_, Q>(
+    Ok(create_recommended::<_, Q>(
         &CLIENT,
         config,
         |shard_id: ShardId, builder: ConfigBuilder<Q>| {
             builder
-                .event_types(EventTypeFlags::all())
                 .presence(UpdatePresencePayload {
                     activities: vec![Activity {
                         application_id: None,
