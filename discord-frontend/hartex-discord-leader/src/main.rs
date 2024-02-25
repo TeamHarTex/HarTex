@@ -31,14 +31,12 @@
 
 use std::env;
 use std::sync::Arc;
-use std::time::Duration;
 
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
-use hartex_discord_core::tokio::time;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
