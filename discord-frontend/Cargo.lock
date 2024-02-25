@@ -1211,6 +1211,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_discord_entitycache_service"
+version = "0.8.0"
+dependencies = [
+ "futures-util",
+ "hartex_discord_core",
+ "hartex_discord_entitycache_cacheupdaters",
+ "hartex_discord_entitycache_core",
+ "hartex_discord_utils",
+ "hartex_kafka_utils",
+ "hartex_log",
+ "miette 7.1.0",
+ "rdkafka",
+ "serde",
+ "serde_json",
+ "serde_scan",
+ "tracing",
+]
+
+[[package]]
 name = "hartex_discord_leader"
 version = "0.8.0"
 dependencies = [
@@ -1254,8 +1273,6 @@ dependencies = [
  "hartex_discord_commands",
  "hartex_discord_commands_core",
  "hartex_discord_core",
- "hartex_discord_entitycache_cacheupdaters",
- "hartex_discord_entitycache_core",
  "hartex_discord_utils",
  "hartex_kafka_utils",
  "hartex_log",

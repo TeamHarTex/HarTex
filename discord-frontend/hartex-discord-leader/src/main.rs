@@ -37,6 +37,7 @@ use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
+use hartex_discord_core::tokio::task::JoinSet;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
@@ -48,7 +49,6 @@ use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
-use hartex_discord_core::tokio::task::JoinSet;
 
 mod kafka;
 mod queue;
@@ -78,11 +78,13 @@ pub async fn main() -> miette::Result<()> {
         .delivery_timeout_ms(30000)
         .create::<FutureProducer>()
         .into_diagnostic()?;
-    let consumer = Arc::new(ClientConfig::new()
-        .bootstrap_servers(bootstrap_servers.into_iter())
-        .group_id("com.github.teamhartex.hartex.inbound.gateway.command.consumer")
-        .create::<StreamConsumer>()
-        .into_diagnostic()?);
+    let consumer = Arc::new(
+        ClientConfig::new()
+            .bootstrap_servers(bootstrap_servers.into_iter())
+            .group_id("com.github.teamhartex.hartex.inbound.gateway.command.consumer")
+            .create::<StreamConsumer>()
+            .into_diagnostic()?,
+    );
 
     consumer.subscribe(&[&topic]).into_diagnostic()?;
 
