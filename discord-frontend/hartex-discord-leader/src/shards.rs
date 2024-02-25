@@ -23,6 +23,7 @@
 use std::ops::Deref;
 
 use hartex_discord_core::discord::gateway::create_recommended;
+use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::ConfigBuilder;
 use hartex_discord_core::discord::gateway::Intents;
 use hartex_discord_core::discord::gateway::Shard;
@@ -35,18 +36,19 @@ use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::TOKEN;
 use miette::IntoDiagnostic;
 
-use crate::queue::BotQueue;
-
 /// Obtain a list of shards.
-pub async fn obtain(queue: BotQueue) -> miette::Result<Vec<Shard<BotQueue>>> {
+pub async fn obtain<Q>(queue: Q) -> miette::Result<Vec<Shard<Q>>>
+where
+    Q: Queue + Clone + Send + Sync + Sized,
+{
     let config = ConfigBuilder::new(TOKEN.deref().clone(), Intents::all())
         .queue(queue.clone())
         .build();
 
-    Ok(create_recommended::<_, BotQueue>(
+    Ok(create_recommended::<_, Q>(
         &CLIENT,
         config,
-        |shard_id: ShardId, builder: ConfigBuilder<BotQueue>| {
+        |shard_id: ShardId, builder: ConfigBuilder<Q>| {
             builder
                 .presence(UpdatePresencePayload {
                     activities: vec![Activity {
