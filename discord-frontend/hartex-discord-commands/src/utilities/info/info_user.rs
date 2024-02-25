@@ -21,6 +21,7 @@
  */
 
 use hartex_discord_cdn::Cdn;
+use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -39,6 +40,8 @@ use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
+use rand::seq::IndexedRandom;
+use rand::thread_rng;
 
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
@@ -80,6 +83,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_userinfo_embed_serverpresence_nickname_subfield_name()?;
     let userinfo_embed_serverpresence_joined_subfield_name =
         localizer.utilities_plugin_userinfo_embed_serverpresence_joinedat_subfield_name()?;
+    let userinfo_embed_serverpresence_roles_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_serverpresence_roles_subfield_name()?;
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -110,7 +115,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             .field(EmbedFieldBuilder::new(
                 userinfo_embed_serverpresence_field_name,
                 format!(
-                    "{} {}\n{} {}",
+                    "{} {}\n{} {}\n{} {}",
                     userinfo_embed_serverpresence_nickname_subfield_name,
                     member.nick.unwrap_or(String::from("<not set>")),
                     userinfo_embed_serverpresence_joined_subfield_name,
@@ -119,7 +124,14 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                         .map_or(String::from("unknown"), |timestamp| timestamp
                             .as_secs()
                             .to_string()
-                            .discord_relative_timestamp())
+                            .discord_relative_timestamp()),
+                    userinfo_embed_serverpresence_roles_subfield_name,
+                    member
+                        .roles
+                        .choose_multiple(&mut thread_rng(), 10)
+                        .map(|id| id.mention().to_string())
+                        .collect::<Vec<_>>()
+                        .join(", "),
                 ),
             ))
             .title(user.name);
