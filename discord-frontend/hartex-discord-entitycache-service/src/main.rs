@@ -60,7 +60,7 @@ pub async fn main() -> miette::Result<()> {
         .split(';')
         .map(String::from)
         .collect::<Vec<_>>();
-    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
+    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD_CACHE").into_diagnostic()?;
 
     let consumer = ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
