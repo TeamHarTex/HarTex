@@ -61,6 +61,7 @@ where
     Ok(())
 }
 
+#[allow(clippy::match_wildcard_for_single_variants)]
 async fn inbound<Q>(shard: &mut Shard<Q>, producer: FutureProducer) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
