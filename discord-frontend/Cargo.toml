@@ -12,6 +12,7 @@ members = [
     "hartex-discord-entitycache-entities",
     "hartex-discord-entitycache-macros",
     "hartex-discord-entitycache-repositories",
+    "hartex-discord-entitycache-service",
     "hartex-discord-leader",
     "hartex-discord-worker",
 ]
