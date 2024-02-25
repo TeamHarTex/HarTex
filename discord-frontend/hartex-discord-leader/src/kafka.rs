@@ -22,11 +22,11 @@
 
 use std::env;
 use std::str;
+use std::sync::Arc;
 use std::time::Duration;
 
-use futures_util::StreamExt;
+use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::gateway::stream::ShardMessageStream;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
@@ -42,46 +42,39 @@ use rdkafka::util::Timeout;
 use rdkafka::Message;
 use serde_scan::scan;
 
-/// Handle inbound AND outbound messages.
+/// Handle inbound AND outbound messages for a given shard.
 pub async fn handle<'a, Q>(
-    shards: impl Iterator<Item = &'a mut Shard<Q>> + Send,
+    shard: &mut Shard<Q>,
     producer: FutureProducer,
-    consumer: StreamConsumer,
+    consumer: Arc<StreamConsumer>,
 ) -> miette::Result<()>
 where
-    Q: Queue + Send + Sync + Sized + 'a,
+    Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    let shards = shards.collect::<Vec<_>>();
-    let senders = shards
-        .iter()
-        .map(|shard| (shard.id().number(), shard.sender()))
-        .collect::<Vec<_>>();
-    let stream = ShardMessageStream::new(shards.into_iter());
-
+    let shard_id = shard.id().number();
+    let sender = shard.sender();
     tokio::select! {
-        _ = inbound(stream, producer) => {},
-        _ = outbound(senders, consumer) => {}
+        _ = inbound(shard, producer) => {},
+        _ = outbound((shard_id, sender), consumer) => {}
     }
 
     Ok(())
 }
 
-async fn inbound<Q>(
-    mut stream: ShardMessageStream<'_, Q>,
-    producer: FutureProducer,
-) -> miette::Result<()>
+#[allow(clippy::match_wildcard_for_single_variants)]
+async fn inbound<Q>(shard: &mut Shard<Q>, producer: FutureProducer) -> miette::Result<()>
 where
-    Q: Queue + Send + Sync + Sized,
+    Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
-    while let Some((shard, result)) = stream.next().await {
+    while let Some(result) = shard.next().await {
         match result {
             Ok(message) => {
                 let Some(bytes) = (match message {
                     // todo: handle close frame
-                    GatewayMessage::Close(_) => None,
                     GatewayMessage::Text(string) => Some(string.into_bytes()),
+                    _ => None,
                 }) else {
                     continue;
                 };
@@ -109,14 +102,6 @@ where
                 }
             }
             Err(error) => {
-                if error.is_fatal() {
-                    log::error!(
-                        "[shard {shard_id}] FATAL ERROR WHEN RECEIVING GATEWAY MESSAGE: {error}; TERMINATING EVENT LOOP",
-                        shard_id = shard.id().number()
-                    );
-                    break;
-                }
-
                 log::warn!(
                     "[shard {shard_id}] error when receiving gateway message: {error}",
                     shard_id = shard.id().number()
@@ -129,8 +114,8 @@ where
 }
 
 async fn outbound(
-    senders: Vec<(u32, MessageSender)>,
-    consumer: StreamConsumer,
+    (shard_id, sender): (u32, MessageSender),
+    consumer: Arc<StreamConsumer>,
 ) -> miette::Result<()> {
     while let Some(result) = consumer.stream().next().await {
         let Ok(message) = result else {
@@ -149,11 +134,10 @@ async fn outbound(
             let scanned: u32 =
                 scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
 
-            let sender = senders
-                .iter()
-                .find(|(shard_id, _)| scanned == *shard_id)
-                .map(|(_, sender)| sender)
-                .unwrap();
+            if shard_id != scanned {
+                continue;
+            }
+
             sender.command(&command).into_diagnostic()?;
         }
     }
