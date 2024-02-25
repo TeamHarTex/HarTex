@@ -30,6 +30,7 @@
 #![deny(warnings)]
 
 use std::env;
+use std::sync::Arc;
 use std::time::Duration;
 
 use hartex_discord_core::discord::gateway::CloseFrame;
@@ -88,7 +89,7 @@ pub async fn main() -> miette::Result<()> {
 
     log::trace!("building clusters");
     let queue = queue::obtain()?;
-    let mut shards = shards::obtain(queue).await?;
+    let shards = Arc::new(shards::obtain(queue).await?);
 
     let (tx, rx) = watch::channel(false);
 
@@ -97,9 +98,9 @@ pub async fn main() -> miette::Result<()> {
 
     tokio::spawn(async move {
         tokio::select! {
-            _ = kafka::handle(shards.iter_mut(), producer.clone(), consumer) => {},
+            _ = kafka::handle(shards.clone(), producer.clone(), consumer) => {},
             _ = rx.changed() => {
-                let _ = shards.iter_mut().map(|shard| shard.close(CloseFrame::RESUME));
+                let _ = shards.iter().map(|shard| shard.close(CloseFrame::RESUME));
             },
         }
     });
