@@ -1081,6 +1081,7 @@ dependencies = [
  "hyper 1.2.0",
  "hyper-util",
  "miette 7.1.0",
+ "rand 0.9.0-alpha.0",
  "serde_json",
 ]
 
@@ -2183,7 +2184,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7676374caaee8a325c9e7a2ae557f216c5563a171d6997b0ef8a65af35147700"
 dependencies = [
  "base64ct",
- "rand_core",
+ "rand_core 0.6.4",
  "subtle",
 ]
 
@@ -2298,7 +2299,7 @@ dependencies = [
  "hmac",
  "md-5",
  "memchr",
- "rand",
+ "rand 0.8.5",
  "sha2",
  "stringprep",
 ]
@@ -2377,8 +2378,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
 dependencies = [
  "libc",
- "rand_chacha",
- "rand_core",
+ "rand_chacha 0.3.1",
+ "rand_core 0.6.4",
+]
+
+[[package]]
+name = "rand"
+version = "0.9.0-alpha.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "807b7862b9cbece02dbbb9465356885df299fcc8b19d27a4570903eaf6a4062e"
+dependencies = [
+ "libc",
+ "rand_chacha 0.9.0-alpha.0",
+ "rand_core 0.9.0-alpha.0",
+ "zerocopy",
 ]
 
 [[package]]
@@ -2388,7 +2401,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6c10a63a0fa32252be49d21e7709d4d4baf8d231c2dbce1eaa8141b9b127d88"
 dependencies = [
  "ppv-lite86",
- "rand_core",
+ "rand_core 0.6.4",
+]
+
+[[package]]
+name = "rand_chacha"
+version = "0.9.0-alpha.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b5c41723acb3ac225e48e77a0921e0c69b36b670d857e0914fc8d574efa7df8"
+dependencies = [
+ "ppv-lite86",
+ "rand_core 0.9.0-alpha.0",
 ]
 
 [[package]]
@@ -2398,6 +2421,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 dependencies = [
  "getrandom",
+]
+
+[[package]]
+name = "rand_core"
+version = "0.9.0-alpha.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b962254c1392bbfc8571c17acb5d0e52116bbefd704e965e92e6c60fadc096e"
+dependencies = [
+ "getrandom",
+ "zerocopy",
 ]
 
 [[package]]
@@ -3264,7 +3297,7 @@ dependencies = [
  "pin-project-lite",
  "postgres-protocol",
  "postgres-types",
- "rand",
+ "rand 0.8.5",
  "socket2 0.5.6",
  "tokio",
  "tokio-util",
@@ -3435,7 +3468,7 @@ dependencies = [
  "idna 0.2.3",
  "ipnet",
  "lazy_static",
- "rand",
+ "rand 0.8.5",
  "smallvec",
  "thiserror",
  "tinyvec",
@@ -4056,6 +4089,26 @@ checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
 dependencies = [
  "cfg-if",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "zerocopy"
+version = "0.8.0-alpha.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7dd4a4b5a6b38e736bca19abe211abf0ba2552462555fc960d763fbbaff2b191"
+dependencies = [
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "zerocopy-derive"
+version = "0.8.0-alpha.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "157bd6b2f5a6f8e2b1b1e5b427aec8d2c085f9ab99c92eaa0ca79b9b84c11254"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.50",
 ]
 
 [[package]]
