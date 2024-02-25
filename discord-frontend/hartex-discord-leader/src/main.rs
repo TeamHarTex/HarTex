@@ -30,6 +30,7 @@
 #![deny(warnings)]
 
 use std::env;
+use std::sync::Arc;
 use std::time::Duration;
 
 use hartex_discord_core::discord::gateway::CloseFrame;
@@ -49,6 +50,7 @@ use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
+use hartex_discord_core::tokio::task::JoinSet;
 
 mod kafka;
 mod queue;
@@ -78,31 +80,36 @@ pub async fn main() -> miette::Result<()> {
         .delivery_timeout_ms(30000)
         .create::<FutureProducer>()
         .into_diagnostic()?;
-    let consumer = ClientConfig::new()
+    let consumer = Arc::new(ClientConfig::new()
         .bootstrap_servers(bootstrap_servers.into_iter())
         .group_id("com.github.teamhartex.hartex.inbound.gateway.command.consumer")
         .create::<StreamConsumer>()
-        .into_diagnostic()?;
+        .into_diagnostic()?);
 
     consumer.subscribe(&[&topic]).into_diagnostic()?;
 
     log::trace!("building clusters");
     let queue = queue::obtain()?;
-    let mut shards = shards::obtain(queue).await?;
+    let shards = shards::obtain(queue).await?;
 
     let (tx, rx) = watch::channel(false);
 
     log::trace!("launching {} shard(s)", shards.len());
-    let mut rx = rx.clone();
+    let mut set = JoinSet::new();
+    for mut shard in shards {
+        let mut rx = rx.clone();
+        let consumer_clone = consumer.clone();
+        let producer_clone = producer.clone();
 
-    tokio::spawn(async move {
-        tokio::select! {
-            _ = kafka::handle(shards.iter_mut(), producer.clone(), consumer) => {},
-            _ = rx.changed() => {
-                let _ = shards.iter_mut().map(|shard| shard.close(CloseFrame::RESUME));
-            },
-        }
-    });
+        set.spawn(async move {
+            tokio::select! {
+                _ = kafka::handle(&mut shard, producer_clone, consumer_clone) => {},
+                _ = rx.changed() => {
+                    shard.close(CloseFrame::NORMAL);
+                }
+            }
+        });
+    }
 
     signal::ctrl_c().await.into_diagnostic()?;
 
