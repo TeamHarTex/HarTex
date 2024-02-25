@@ -67,6 +67,7 @@ where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
+    let topic_2 = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD_CACHE").into_diagnostic()?;
 
     while let Some(result) = shard.next().await {
         match result {
@@ -84,9 +85,28 @@ where
                     shard_id = shard.id().number()
                 );
 
+                // send payload to worker process
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic)
+                            .key(&format!(
+                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
+                                shard_id = shard.id().number()
+                            ))
+                            .payload(&bytes),
+                        Timeout::After(Duration::from_secs(0)),
+                    )
+                    .await
+                {
+                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
+
+                    continue;
+                }
+
+                // send payloaad to caching process
+                if let Err((error, _)) = producer
+                    .send(
+                        FutureRecord::to(&topic_2)
                             .key(&format!(
                                 "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
                                 shard_id = shard.id().number()
