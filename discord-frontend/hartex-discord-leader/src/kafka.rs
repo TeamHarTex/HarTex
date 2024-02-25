@@ -22,16 +22,16 @@
 
 use std::env;
 use std::str;
-use std::sync::Arc;
 use std::time::Duration;
 
 use futures_util::StreamExt as FutureStreamExt;
+use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
-use hartex_discord_core::tokio::task::JoinSet;
 use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::task::JoinSet;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use rdkafka::consumer::StreamConsumer;
@@ -42,14 +42,16 @@ use rdkafka::util::Timeout;
 use rdkafka::Message;
 use serde_scan::scan;
 
-use crate::queue::BotQueue;
-
 /// Handle inbound AND outbound messages.
-pub async fn handle<'a>(
-    shards: Arc<Vec<Shard<BotQueue>>>,
+pub async fn handle<'a, Q>(
+    shards: impl Iterator<Item = &'a mut Shard<Q>> + Send,
     producer: FutureProducer,
     consumer: StreamConsumer,
-) -> miette::Result<()> {
+) -> miette::Result<()>
+where
+    Q: Queue + Send + Sync + Sized + Unpin + 'a,
+{
+    let shards = shards.collect::<Vec<_>>();
     let senders = shards
         .iter()
         .map(|shard| (shard.id().number(), shard.sender()))
@@ -63,16 +65,16 @@ pub async fn handle<'a>(
     Ok(())
 }
 
-async fn inbound(
-    shards: Arc<Vec<Shard<BotQueue>>>,
-    producer: FutureProducer
-) -> miette::Result<()> {
+async fn inbound<'a, Q>(shards: Vec<&'a mut Shard<Q>>, producer: FutureProducer) -> miette::Result<()>
+where
+    Q: Queue + Send + Sync + Sized + Unpin + 'a,
+{
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
     loop {
         let mut set = JoinSet::new();
 
-        for mut shard in shards.iter() {
+        for shard in shards {
             let cloned_producer = producer.clone();
             let cloned_topic = topic.clone();
 
