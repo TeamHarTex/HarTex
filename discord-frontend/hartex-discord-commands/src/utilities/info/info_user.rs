@@ -80,6 +80,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_userinfo_embed_serverpresence_nickname_subfield_name()?;
     let userinfo_embed_serverpresence_joined_subfield_name =
         localizer.utilities_plugin_userinfo_embed_serverpresence_joinedat_subfield_name()?;
+    let userinfo_embed_serverpresence_roles_subfield_name =
+        localizer.utilities_plugin_userinfo_embed_serverpresence_roles_subfield_name()?;
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -110,7 +112,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             .field(EmbedFieldBuilder::new(
                 userinfo_embed_serverpresence_field_name,
                 format!(
-                    "{} {}\n{} {}",
+                    "{} {}\n{} {}\n{}",
                     userinfo_embed_serverpresence_nickname_subfield_name,
                     member.nick.unwrap_or(String::from("<not set>")),
                     userinfo_embed_serverpresence_joined_subfield_name,
@@ -119,7 +121,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                         .map_or(String::from("unknown"), |timestamp| timestamp
                             .as_secs()
                             .to_string()
-                            .discord_relative_timestamp())
+                            .discord_relative_timestamp()),
+                    userinfo_embed_serverpresence_roles_subfield_name,
                 ),
             ))
             .title(user.name);
