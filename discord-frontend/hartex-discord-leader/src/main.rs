@@ -116,7 +116,9 @@ pub async fn main() -> miette::Result<()> {
     log::warn!("ctrl-c signal received, shutting down");
 
     tx.send(true).into_diagnostic()?;
-    time::sleep(Duration::from_secs(5)).await;
+
+    // wait for all tasks to complete
+    while set.join_next().await.is_some() {}
 
     Ok(())
 }
