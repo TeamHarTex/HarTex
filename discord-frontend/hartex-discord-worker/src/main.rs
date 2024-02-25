@@ -61,6 +61,7 @@ mod eventcallback;
 mod interaction;
 
 /// Entry point.
+#[allow(clippy::large_futures)]
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
