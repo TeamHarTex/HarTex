@@ -44,6 +44,7 @@ use rdkafka::error::KafkaError;
 use rdkafka::ClientConfig;
 use rdkafka::Message;
 use serde_scan::scan;
+use serde::de::DeserializeSeed;
 
 mod entitycache;
 

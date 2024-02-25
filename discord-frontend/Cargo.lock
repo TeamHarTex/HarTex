@@ -1223,6 +1223,7 @@ dependencies = [
  "hartex_log",
  "miette 7.1.0",
  "rdkafka",
+ "serde",
  "serde_json",
  "serde_scan",
  "tracing",
