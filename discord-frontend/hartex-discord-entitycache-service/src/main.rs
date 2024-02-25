@@ -27,8 +27,8 @@
 use std::env;
 use std::io::Error;
 use std::io::ErrorKind;
-use std::str::Utf8Error;
 use std::str;
+use std::str::Utf8Error;
 
 use futures_util::StreamExt;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
@@ -43,8 +43,8 @@ use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
 use rdkafka::ClientConfig;
 use rdkafka::Message;
-use serde_scan::scan;
 use serde::de::DeserializeSeed;
+use serde_scan::scan;
 
 mod entitycache;
 
