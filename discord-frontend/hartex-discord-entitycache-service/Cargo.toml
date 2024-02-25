@@ -1,9 +1,9 @@
 [package]
-name = "hartex_discord_worker"
+name = "hartex_discord_entitycache_service"
 version = "0.8.0"
 edition = "2021"
 description = """
-The worker component of the bot.
+The leader component of the bot.
 """
 license = "AGPL-3.0-or-later"
 rust-version = "1.78.0"
@@ -11,30 +11,19 @@ rust-version = "1.78.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_backend_models_v2 = { path = "../../api-backend/hartex-backend-models-v2" }
-
-hartex_database_queries = { path = "../../database-queries" }
-
-hartex_discord_commands = { path = "../hartex-discord-commands" }
-hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment"] }
+hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
+hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-chrono = { version = "0.4.34", features = ["clock"], default-features = false }
 futures-util = "0.3.30"
-hyper = { version =  "1.2.0", features = ["client", "http1"] }
-hyper-util = { version = "0.1.3", features = ["tokio"] }
 miette = { version = "7.1.0", features = ["fancy"] }
-once_cell = "1.19.0"
 rdkafka = { version = "0.36.2", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
-serde = "1.0.197"
 serde_json = "1.0.114"
 serde_scan = "0.4.1"
-tokio-postgres = "0.7.10"
-tracing = { version = "0.1.40", features = ["log-always" ] }
-time = "0.3.34"
+tracing = { version = "0.1.40", features = ["log-always"] }
 
 [features]
