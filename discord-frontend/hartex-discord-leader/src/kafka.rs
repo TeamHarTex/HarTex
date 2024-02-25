@@ -75,6 +75,9 @@ where
         let mut set = JoinSet::new();
 
         for shard in shards {
+            let cloned_producer = producer.clone();
+            let cloned_topic = topic.clone();
+
             set.spawn(async move {
                 while let Some(result) = shard.next().await {
                     match result {
@@ -92,9 +95,9 @@ where
                                 shard_id = shard.id().number()
                             );
 
-                            if let Err((error, _)) = producer
+                            if let Err((error, _)) = cloned_producer
                                 .send(
-                                    FutureRecord::to(&topic)
+                                    FutureRecord::to(&cloned_topic)
                                         .key(&format!(
                                             "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
                                             shard_id = shard.id().number()
