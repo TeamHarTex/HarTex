@@ -22,6 +22,7 @@
 
 use std::env;
 use std::str;
+use std::sync::Arc;
 use std::time::Duration;
 
 use futures_util::StreamExt as FutureStreamExt;
@@ -31,7 +32,6 @@ use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::task::JoinSet;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use rdkafka::consumer::StreamConsumer;
@@ -42,92 +42,79 @@ use rdkafka::util::Timeout;
 use rdkafka::Message;
 use serde_scan::scan;
 
-/// Handle inbound AND outbound messages.
+/// Handle inbound AND outbound messages for a given shard.
 pub async fn handle<'a, Q>(
-    shards: impl Iterator<Item = &'a mut Shard<Q>> + Send,
+    shard: &mut Shard<Q>,
     producer: FutureProducer,
-    consumer: StreamConsumer,
+    consumer: Arc<StreamConsumer>,
 ) -> miette::Result<()>
 where
-    Q: Queue + Send + Sync + Sized + Unpin + 'a,
+    Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    let shards = shards.collect::<Vec<_>>();
-    let senders = shards
-        .iter()
-        .map(|shard| (shard.id().number(), shard.sender()))
-        .collect::<Vec<_>>();
-
+    let shard_id = shard.id().number();
+    let sender = shard.sender();
     tokio::select! {
-        _ = inbound(shards, producer) => {},
-        _ = outbound(senders, consumer) => {}
+        _ = inbound(shard, producer) => {},
+        _ = outbound((shard_id, sender), consumer) => {}
     }
 
     Ok(())
 }
 
-async fn inbound<'a, Q>(shards: Vec<&'a mut Shard<Q>>, producer: FutureProducer) -> miette::Result<()>
+async fn inbound<Q>(shard: &mut Shard<Q>, producer: FutureProducer) -> miette::Result<()>
 where
-    Q: Queue + Send + Sync + Sized + Unpin + 'a,
+    Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
 
-    loop {
-        let mut set = JoinSet::new();
+    while let Some(result) = shard.next().await {
+        match result {
+            Ok(message) => {
+                let Some(bytes) = (match message {
+                    // todo: handle close frame
+                    GatewayMessage::Text(string) => Some(string.into_bytes()),
+                    _ => None,
+                }) else {
+                    continue;
+                };
 
-        for shard in shards {
-            let cloned_producer = producer.clone();
-            let cloned_topic = topic.clone();
+                log::trace!(
+                    "[shard {shard_id}] received binary payload from gateway",
+                    shard_id = shard.id().number()
+                );
 
-            set.spawn(async move {
-                while let Some(result) = shard.next().await {
-                    match result {
-                        Ok(message) => {
-                            let Some(bytes) = (match message {
-                                // todo: handle close frame
-                                GatewayMessage::Text(string) => Some(string.into_bytes()),
-                                _ => None,
-                            }) else {
-                                continue;
-                            };
-
-                            log::trace!(
-                                "[shard {shard_id}] received binary payload from gateway",
+                if let Err((error, _)) = producer
+                    .send(
+                        FutureRecord::to(&topic)
+                            .key(&format!(
+                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
                                 shard_id = shard.id().number()
-                            );
+                            ))
+                            .payload(&bytes),
+                        Timeout::After(Duration::from_secs(0)),
+                    )
+                    .await
+                {
+                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
 
-                            if let Err((error, _)) = cloned_producer
-                                .send(
-                                    FutureRecord::to(&cloned_topic)
-                                        .key(&format!(
-                                            "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
-                                            shard_id = shard.id().number()
-                                        ))
-                                        .payload(&bytes),
-                                    Timeout::After(Duration::from_secs(0)),
-                                )
-                                .await
-                            {
-                                println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-
-                                continue;
-                            }
-                        }
-                        Err(error) => {
-                            log::warn!(
-                                "[shard {shard_id}] error when receiving gateway message: {error}",
-                                shard_id = shard.id().number()
-                            );
-                        }
-                    }
+                    continue;
                 }
-            });
+            }
+            Err(error) => {
+                log::warn!(
+                    "[shard {shard_id}] error when receiving gateway message: {error}",
+                    shard_id = shard.id().number()
+                );
+            }
         }
     }
+
+    Ok(())
 }
 
 async fn outbound(
-    senders: Vec<(u32, MessageSender)>,
-    consumer: StreamConsumer,
+    (shard_id, sender): (u32, MessageSender),
+    consumer: Arc<StreamConsumer>,
 ) -> miette::Result<()> {
     while let Some(result) = consumer.stream().next().await {
         let Ok(message) = result else {
@@ -146,11 +133,10 @@ async fn outbound(
             let scanned: u32 =
                 scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
 
-            let sender = senders
-                .iter()
-                .find(|(shard_id, _)| scanned == *shard_id)
-                .map(|(_, sender)| sender)
-                .unwrap();
+            if shard_id != scanned {
+                continue;
+            }
+
             sender.command(&command).into_diagnostic()?;
         }
     }
