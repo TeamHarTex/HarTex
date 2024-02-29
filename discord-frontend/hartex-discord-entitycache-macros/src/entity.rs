@@ -571,11 +571,17 @@ fn make_field_decl_and_assignments(
             quote! {#field_name: model.#field_name},
             quote! {#field_name: #field_type::from(model.#field_name as u8)},
         )
-    } else if field_type.is_id() {
+    } else if field_type.is("Id") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
             quote! {#field_name: std::str::FromStr::from_str(&model.#field_name).unwrap()},
+        )
+    } else if field_type.is("MemberFlags") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name.bits() as i64},
         )
     } else if field_type.is_option_of("ImageHash") {
         (
