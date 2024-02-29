@@ -67,3 +67,4 @@ userinfo-embed-generalinfo-created-subfield-name=創建於：
 userinfo-embed-serverpresence-field-name=伺服器個人資料
 userinfo-embed-serverpresence-nickname-subfield-name=伺服器暱稱：
 userinfo-embed-serverpresence-joinedat-subfield-name=加入於：
+userinfo-embed-serverpresence-roles-subfield-name=身分組（最多顯示 10 個）：
