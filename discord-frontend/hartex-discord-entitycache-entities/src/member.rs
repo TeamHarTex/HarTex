@@ -32,7 +32,9 @@ use hartex_discord_entitycache_core::entity;
         "guild_id": "Id<GuildMarker>",
         "user_id": "Id<UserMarker>",
     ],
-    overrides = [],
+    overrides = [
+        "MemberFlags": "twilight_model::guild::MemberFlags",
+    ],
     relates = [
         unique "GuildEntity": via "guild_id" as "id",
         unique "UserEntity": via "user_id" as "id",
