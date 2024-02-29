@@ -65,3 +65,4 @@ userinfo-embed-generalinfo-id-subfield-name=ID：
 userinfo-embed-generalinfo-name-subfield-name=全局名称：
 userinfo-embed-generalinfo-created-subfield-name=创建：
 userinfo-embed-serverpresence-nickname-subfield-name=服务器昵称：
+userinfo-embed-serverpresence-roles-subfield-name=身份组（最多显示10条）：
