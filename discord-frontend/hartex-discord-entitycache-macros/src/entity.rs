@@ -581,7 +581,7 @@ fn make_field_decl_and_assignments(
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name.bits() as i64},
-            quote! {#field_name: model.#field_name},
+            quote! {#field_name: twilight_model::guild::MemberFlags::from_bits(model.#field_name as u64)},
         )
     } else if field_type.is_option_of("ImageHash") {
         (
