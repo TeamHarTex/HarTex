@@ -580,8 +580,8 @@ fn make_field_decl_and_assignments(
     } else if field_type.is("MemberFlags") {
         (
             quote! {pub #field_name: #field_type},
-            quote! {#field_name: model.#field_name},
             quote! {#field_name: model.#field_name.bits() as i64},
+            quote! {#field_name: model.#field_name},
         )
     } else if field_type.is_option_of("ImageHash") {
         (
