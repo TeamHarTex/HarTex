@@ -13,7 +13,7 @@ clap = { version = "4.5.1", default-features = false, features = ["std", "usage"
 console = "0.15.8"
 path-slash = "0.2.1"
 similar = { version = "2.4.0", features = ["inline"] }
-walkdir = "2.4.0"
+walkdir = "2.5.0"
 
 [[bin]]
 name = "testsuite"
