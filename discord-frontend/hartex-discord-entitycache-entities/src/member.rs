@@ -27,12 +27,14 @@ use hartex_discord_entitycache_core::entity;
     from = "twilight_model::guild::Member",
     assume = ["CachedMemberSelectByGuildId"],
     id = ["guild_id", "user_id"],
-    include = ["joined_at", "nick", "roles"],
+    include = ["flags", "joined_at", "nick", "roles"],
     extra = [
         "guild_id": "Id<GuildMarker>",
         "user_id": "Id<UserMarker>",
     ],
-    overrides = [],
+    overrides = [
+        "MemberFlags": "twilight_model::guild::MemberFlags",
+    ],
     relates = [
         unique "GuildEntity": via "guild_id" as "id",
         unique "UserEntity": via "user_id" as "id",
