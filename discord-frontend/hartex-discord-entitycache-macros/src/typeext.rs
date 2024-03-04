@@ -27,7 +27,7 @@ use syn::Type;
 pub trait TypeExt {
     fn is_enum(&self, name: &str) -> bool;
 
-    fn is_id(&self) -> bool;
+    fn is(&self, name: &str) -> bool;
 
     fn is_option_of(&self, option_of: &str) -> bool;
 
@@ -44,13 +44,13 @@ impl TypeExt for Type {
         last.ident == name && last.arguments.is_none()
     }
 
-    fn is_id(&self) -> bool {
+    fn is(&self, name: &str) -> bool {
         let Type::Path(path) = self else {
             return false;
         };
 
         let last = path.path.segments.last().unwrap();
-        last.ident == "Id"
+        last.ident == name
     }
 
     fn is_option_of(&self, option_of: &str) -> bool {
