@@ -39,6 +39,7 @@ use tokio_postgres::GenericClient;
 pub struct CachedMemberRepository;
 
 impl Repository<MemberEntity> for CachedMemberRepository {
+    #[allow(clippy::cast_sign_loss)]
     async fn get(
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
@@ -68,6 +69,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         })
     }
 
+    #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
