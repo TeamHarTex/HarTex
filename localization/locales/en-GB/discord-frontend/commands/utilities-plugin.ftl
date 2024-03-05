@@ -68,3 +68,4 @@ userinfo-embed-serverpresence-field-name=Server Profile
 userinfo-embed-serverpresence-nickname-subfield-name=Server Nickname:
 userinfo-embed-serverpresence-joinedat-subfield-name=Joined:
 userinfo-embed-serverpresence-roles-subfield-name=Roles (max. 10 displayed):
+userinfo-embed-serverpresence-flags-subfield-name=Flags:
