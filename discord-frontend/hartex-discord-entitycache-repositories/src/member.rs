@@ -25,6 +25,7 @@ use std::str::FromStr;
 
 use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
+use hartex_discord_core::discord::model::guild::MemberFlags;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::Timestamp;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -38,6 +39,7 @@ use tokio_postgres::GenericClient;
 pub struct CachedMemberRepository;
 
 impl Repository<MemberEntity> for CachedMemberRepository {
+    #[allow(clippy::cast_sign_loss)]
     async fn get(
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
@@ -52,6 +54,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .await?;
 
         Ok(MemberEntity {
+            flags: MemberFlags::from_bits(data.flags as u64).unwrap(),
             joined_at: data
                 .joined_at
                 .map(|timestamp| Timestamp::from_secs(timestamp.unix_timestamp()).unwrap()),
@@ -66,6 +69,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         })
     }
 
+    #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
@@ -74,6 +78,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         cached_member_upsert()
             .bind(
                 client,
+                &(entity.flags.bits() as i64),
                 &entity.joined_at.map(|timestamp| {
                     OffsetDateTime::from_unix_timestamp(timestamp.as_secs()).unwrap()
                 }),
