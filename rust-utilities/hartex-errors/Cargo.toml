@@ -11,7 +11,7 @@ rust-version = "1.78.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-miette = "7.1.0"
+miette = "7.2.0"
 thiserror = "1.0.57"
 
 [features]
