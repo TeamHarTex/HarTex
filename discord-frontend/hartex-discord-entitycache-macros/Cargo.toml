@@ -24,7 +24,7 @@ hartex-macro-utils = { version = "0.1.0", path = "../../rust-utilities/hartex-ma
 convert_case = "0.6.0"
 proc-macro2 = "1.0.78"
 quote = "1.0.35"
-reqwest = { version = "0.11.24", features = ["blocking"] }
+reqwest = { version = "0.11.25", features = ["blocking"] }
 syn = { version = "2.0.52", features = ["extra-traits", "full"] }
 zip = { version = "0.6.6" }
 
