@@ -113,6 +113,17 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             .await
             .into_diagnostic()?;
 
+        let flags = member
+            .flags
+            .iter_names()
+            .map(|(name, _)| name)
+            .collect::<Vec<_>>();
+        let flags_display = if flags.is_empty() {
+            "None".to_string()
+        } else {
+            flags.join(", ")
+        };
+
         builder = builder
             .field(EmbedFieldBuilder::new(
                 userinfo_embed_serverpresence_field_name,
@@ -135,12 +146,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                         .collect::<Vec<_>>()
                         .join(", "),
                     userinfo_embed_serverpresence_flags_subfield_name,
-                    member
-                        .flags
-                        .iter_names()
-                        .map(|(name, _)| name)
-                        .collect::<Vec<_>>()
-                        .join(", ")
+                    flags_display,
                 ),
             ))
             .title(user.name);
