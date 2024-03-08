@@ -1,8 +1,28 @@
-# [Next Version, Fluorine I](https://github.com/TeamHarTex/HarTex/compare/0.8.0...nightly)
+# [Next Version, Neon I](https://github.com/TeamHarTex/HarTex/compare/0.9.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2024-02-05
+> **y** commits since 2024-03-08
+
+## API Backend
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.9.0, Fluorine I](https://github.com/TeamHarTex/HarTex/compare/0.8.0..0.9.0)
+
+> **4** contributor made contributions to this release
+
+> **204** commits since 2024-02-05
 
 ## API Backend
 
@@ -31,8 +51,6 @@
 ## Rust Utilities
 
 - **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
-
-## Web Frontend
 
 # [0.8.0, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1..0.8.0)
 

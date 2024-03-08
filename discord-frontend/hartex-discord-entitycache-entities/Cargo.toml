@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_entitycache_entities"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 description = """
 The entity declarations of the repository cache middleware for HarTex.
