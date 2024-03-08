@@ -117,7 +117,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             .field(EmbedFieldBuilder::new(
                 userinfo_embed_serverpresence_field_name,
                 format!(
-                    "{} {}\n{} {}\n{} {}\n{}",
+                    "{} {}\n{} {}\n{} {}\n{} {}",
                     userinfo_embed_serverpresence_nickname_subfield_name,
                     member.nick.unwrap_or(String::from("<not set>")),
                     userinfo_embed_serverpresence_joined_subfield_name,
@@ -135,6 +135,12 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                         .collect::<Vec<_>>()
                         .join(", "),
                     userinfo_embed_serverpresence_flags_subfield_name,
+                    member
+                        .flags
+                        .iter_names()
+                        .map(|(name, _)| name)
+                        .collect::<Vec<_>>()
+                        .join(", ")
                 ),
             ))
             .title(user.name);
