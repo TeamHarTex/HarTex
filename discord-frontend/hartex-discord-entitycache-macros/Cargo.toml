@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_entitycache_macros"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 description = """
 Macros for the command framework.
