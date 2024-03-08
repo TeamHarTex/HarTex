@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/HarTex-rust-discord-bot.iml" filepath="$PROJECT_DIR$/.idea/HarTex-rust-discord-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/HarTex.iml" filepath="$PROJECT_DIR$/.idea/HarTex.iml" />
     </modules>
   </component>
 </project>
