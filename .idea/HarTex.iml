@@ -49,6 +49,7 @@
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/bootstrap/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
