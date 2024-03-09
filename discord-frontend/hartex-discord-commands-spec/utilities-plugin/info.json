@@ -125,6 +125,27 @@
         }
       ],
       "type": 1
+    },
+    {
+      "name": "emoji",
+      "description": "Information about a specific emoji.",
+      "name_localizations": {
+      },
+      "description_localizations": {
+      },
+      "options": [
+        {
+          "name": "emoji",
+          "description": "The emoji to obtain information for. An error is returned if more than one emojis are specified.",
+          "name_localizations": {
+          },
+          "description_localizations": {
+          },
+          "required": true,
+          "type": 3
+        }
+      ],
+      "type": 1
     }
   ],
   "type": 1
