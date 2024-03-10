@@ -27,6 +27,7 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 
 mod info_bot;
+mod info_emoji;
 mod info_role;
 mod info_server;
 mod info_user;
@@ -50,6 +51,7 @@ impl Command for Info {
 
         match subcommand.name.as_str() {
             "bot" => info_bot::execute(interaction, subcommand.clone()).await,
+            "emoji" => info_emoji::execute(interaction, subcommand.clone()).await,
             "role" => info_role::execute(interaction, subcommand.clone()).await,
             "server" => info_server::execute(interaction, subcommand.clone()).await,
             "user" => info_user::execute(interaction, subcommand.clone()).await,
