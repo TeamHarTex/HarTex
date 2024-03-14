@@ -21,8 +21,13 @@
  */
 
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
+use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
-pub async fn execute(_: Interaction, _: CommandDataOption) -> miette::Result<()> {
+pub async fn execute(_: Interaction, option: CommandDataOption) -> miette::Result<()> {
+    let CommandOptionValue::SubCommand(_) = option.value else {
+        unreachable!()
+    };
+
     Ok(())
 }
