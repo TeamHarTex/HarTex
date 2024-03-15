@@ -13,6 +13,7 @@
 ## Discord Frontend
 
 - **Added:** `/info emoji` command
+- **Added:** basic panic handling via unwinding for interaction commands only
 
 ## Localization Infrastructure
 
