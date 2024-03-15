@@ -33,10 +33,6 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let _ = CLIENT.interaction(interaction.application_id);
-    let _ = interaction
-        .locale
-        .clone()
-        .and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
