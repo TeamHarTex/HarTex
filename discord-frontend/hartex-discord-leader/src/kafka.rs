@@ -67,7 +67,8 @@ where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
     let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
-    let topic_2 = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD_CACHE").into_diagnostic()?;
+    let topic_2 =
+        env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD_CACHE").into_diagnostic()?;
 
     while let Some(result) = shard.next().await {
         match result {

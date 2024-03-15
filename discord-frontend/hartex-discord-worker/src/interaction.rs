@@ -27,6 +27,7 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
+use tracing::log;
 
 /// Handle an application command interaction
 #[allow(clippy::large_futures)]
@@ -35,6 +36,8 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
     else {
         unreachable!("this should not be possible")
     };
+
+    log::trace!("running interaction command {}", &command.name);
 
     match command.name {
         name if name == About.name() => About.execute(interaction_create.0).await,
