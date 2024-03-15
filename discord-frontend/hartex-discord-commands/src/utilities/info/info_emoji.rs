@@ -24,8 +24,8 @@ use hartex_discord_core::discord::model::application::interaction::application_c
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
+use hartex_localization_core::LOCALIZATION_HOLDER;
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(_) = option.value else {
