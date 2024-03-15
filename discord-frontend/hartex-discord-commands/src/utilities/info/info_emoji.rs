@@ -28,17 +28,23 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
-    let CommandOptionValue::SubCommand(_) = option.value else {
+    let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()
     };
 
     let _ = CLIENT.interaction(interaction.application_id);
-    let _ = interaction
-        .locale
-        .clone()
-        .and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
+
+    let CommandOptionValue::String(_) = options
+        .iter()
+        .find(|option| option.name.as_str() == "emoji")
+        .map_or(CommandOptionValue::String(String::new()), |option| {
+            option.value.clone()
+        })
+        else {
+            unreachable!()
+        };
 
     Ok(())
 }
