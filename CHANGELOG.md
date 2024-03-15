@@ -12,6 +12,8 @@
 
 ## Discord Frontend
 
+- **Added:** `/info emoji` command
+
 ## Localization Infrastructure
 
 ## Rust Utilities
