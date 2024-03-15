@@ -23,11 +23,22 @@
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_utils::CLIENT;
+use hartex_localization_core::LOCALIZATION_HOLDER;
+use hartex_localization_core::Localizer;
 
-pub async fn execute(_: Interaction, option: CommandDataOption) -> miette::Result<()> {
+pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(_) = option.value else {
         unreachable!()
     };
+
+    let _ = CLIENT.interaction(interaction.application_id);
+    let _ = interaction
+        .locale
+        .clone()
+        .and_then(|locale| locale.parse().ok());
+    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
+    let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     Ok(())
 }
