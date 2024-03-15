@@ -24,6 +24,7 @@ use std::env;
 use std::time::Duration;
 use std::time::SystemTime;
 
+use futures_util::FutureExt;
 use hartex_backend_models_v2::uptime::UptimeUpdate;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
@@ -97,7 +98,14 @@ pub async fn invoke(
                     "shard {shard} has received INTERACTION_CREATE payload from Discord (sequence {seq})"
                 );
 
-                crate::interaction::application_command(interaction_create).await
+                if let Err(error) = crate::interaction::application_command(interaction_create)
+                    .catch_unwind()
+                    .await
+                {
+                    log::error!("interaction command panicked: {error:?}");
+                }
+
+                Ok(())
             }
             DispatchEvent::Ready(ready) => {
                 log::info!(
