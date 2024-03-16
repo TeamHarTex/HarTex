@@ -42,9 +42,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .map_or(CommandOptionValue::String(String::new()), |option| {
             option.value.clone()
         })
-        else {
-            unreachable!()
-        };
+    else {
+        unreachable!()
+    };
 
     Ok(())
 }
