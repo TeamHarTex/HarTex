@@ -21,6 +21,7 @@
  */
 
 use std::env;
+use std::panic::AssertUnwindSafe;
 use std::time::Duration;
 use std::time::SystemTime;
 
@@ -98,9 +99,10 @@ pub async fn invoke(
                     "shard {shard} has received INTERACTION_CREATE payload from Discord (sequence {seq})"
                 );
 
-                if let Err(error) = crate::interaction::application_command(interaction_create)
-                    .catch_unwind()
-                    .await
+                if let Err(error) =
+                    AssertUnwindSafe(crate::interaction::application_command(interaction_create))
+                        .catch_unwind()
+                        .await
                 {
                     log::error!("interaction command panicked: {error:?}");
                 }
