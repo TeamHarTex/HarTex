@@ -12,7 +12,7 @@ rust-version = "1.78.0"
 clap = { version = "4.5.3", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
 fd-lock = "4.0.2"
 serde = { version = "1.0.197", features = ["derive"] }
-toml = "0.8.11"
+toml = "0.8.12"
 
 [[bin]]
 name = "bootstrap"
