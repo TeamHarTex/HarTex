@@ -54,8 +54,10 @@ use syn::Token;
 use syn::Visibility;
 use zip::ZipArchive;
 
-#[cfg(feature = "discord_model_v_0_15_4")]
+#[cfg(all(feature = "discord_model_v_0_15_4", not(feature = "discord_model_git")))]
 const MODEL_CRATE_VERSION: &str = "0.15.4";
+#[cfg(feature = "discord_model_git")]
+const MODEL_CRATE_VERSION: &str = "git";
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 enum ModuleTreeItemKind {
