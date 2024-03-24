@@ -13,7 +13,7 @@ rust-version = "1.78.0"
 [dependencies]
 proc-macro2 = "1.0.79"
 quote = "1.0.35"
-syn = { version = "2.0.53", features = ["extra-traits", "full"] }
+syn = { version = "2.0.55", features = ["extra-traits", "full"] }
 
 [features]
 
