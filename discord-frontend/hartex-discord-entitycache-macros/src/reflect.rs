@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(dead_code)]
+
 #[derive(Debug, Clone)]
 pub struct Enum {
     pub name: String,
