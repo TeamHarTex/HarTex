@@ -33,7 +33,7 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 use regex::Regex;
 
-const EMOJI_REGEX: LazyCell<Regex> = LazyCell::new(|| {
+static EMOJI_REGEX: LazyCell<Regex> = LazyCell::new(|| {
     Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap()
 });
 
