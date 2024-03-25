@@ -57,7 +57,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let emojiinfo_error_only_custom_emojis =
-        localizer.utilities_plugin_emojiinfo_error_only_custom_emojis();
+        localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
 
     LazyCell::force(&EMOJI_REGEX);
     let Some(_) = EMOJI_REGEX.captures(&emoji) else {
