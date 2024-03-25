@@ -30,6 +30,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(lazy_cell)]
 
 pub mod general;
 pub mod utilities;
