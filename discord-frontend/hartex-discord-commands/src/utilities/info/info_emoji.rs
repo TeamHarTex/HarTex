@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::cell::LazyCell;
+
+use regex::Regex;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -27,17 +30,21 @@ use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 
+const EMOJI_REGEX: LazyCell<Regex> = LazyCell::new(|| {
+    Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap()
+});
+
 #[allow(clippy::unused_async)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()
     };
 
-    let _ = CLIENT.interaction(interaction.application_id);
+    let client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let _ = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let CommandOptionValue::String(_) = options
+    let CommandOptionValue::String(emoji) = options
         .iter()
         .find(|option| option.name.as_str() == "emoji")
         .map_or(CommandOptionValue::String(String::new()), |option| {
@@ -45,6 +52,12 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         })
     else {
         unreachable!()
+    };
+
+    LazyCell::force(&EMOJI_REGEX);
+    let Some(_) = EMOJI_REGEX.captures(&emoji) else {
+        // todo: send error message
+        return Ok(());
     };
 
     Ok(())

@@ -23,6 +23,7 @@
 botinfo-embed-title=Runtime Information
 botinfo-embed-botstarted-field-name=Bot Started
 botinfo-embed-latency-field-name=Latency (Milliseconds)
+emojiinfo-error-only-custom-emojis=Sorry! Only custom emojis are supported at this stage.
 roleinfo-embed-description=Information of {$roleMention}
 roleinfo-embed-generalinfo-field-name=General Information
 roleinfo-embed-generalinfo-id-subfield-name=ID:
