@@ -57,7 +57,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let emojiinfo_error_only_custom_emojis =
         localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
 
-    let Some(_) = EMOJI_REGEX.captures(&emoji) else {
+    let Some(captures) = EMOJI_REGEX.captures(&emoji) else {
         interaction_client
             .create_response(
                 interaction.id,
@@ -75,6 +75,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             .into_diagnostic()?;
         return Ok(());
     };
+
+    if captures.len() != 1 {
+        // todo: send error
+        return Ok(());
+    }
 
     Ok(())
 }
