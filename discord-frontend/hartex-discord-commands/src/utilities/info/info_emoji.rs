@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::cell::LazyCell;
-
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -33,9 +31,9 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 use regex::Regex;
 
-static EMOJI_REGEX: LazyCell<Regex> = LazyCell::new(|| {
-    Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap()
-});
+lazy_static::lazy_static! {
+    static ref EMOJI_REGEX: Regex = Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap();
+}
 
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
@@ -59,7 +57,6 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let emojiinfo_error_only_custom_emojis =
         localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
 
-    LazyCell::force(&EMOJI_REGEX);
     let Some(_) = EMOJI_REGEX.captures(&emoji) else {
         interaction_client
             .create_response(
