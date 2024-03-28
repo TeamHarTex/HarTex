@@ -44,7 +44,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
     log::trace!("running interaction command {}", &command.name);
 
     let cloned = interaction_create.clone();
-    if let Err(error) = match command.name {
+    if let Err(error) = match &command.name {
         name if name == About.name() => About.execute(cloned.0).await,
         name if name == Contributors.name() => Contributors.execute(cloned.0).await,
         name if name == Info.name() => Info.execute(cloned.0).await,
@@ -67,7 +67,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
             .await
             .into_diagnostic()?;
 
-        log::warn!("unexpected error occurred for command {}: {error:?}", &command.name);
+        log::warn!("unexpected error occurred for command {}: {error:?}", command.name);
     }
 
     Ok(())
