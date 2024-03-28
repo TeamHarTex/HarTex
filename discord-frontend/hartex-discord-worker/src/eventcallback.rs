@@ -56,6 +56,7 @@ use rdkafka::util::Timeout;
 /// Invoke a corresponding event callback for an event.
 #[allow(clippy::cast_lossless)]
 #[allow(clippy::large_futures)]
+#[allow(clippy::too_many_lines)]
 pub async fn invoke(
     event: GatewayEvent,
     shard: u8,
