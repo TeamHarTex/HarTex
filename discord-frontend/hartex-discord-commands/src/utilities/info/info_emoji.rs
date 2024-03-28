@@ -56,6 +56,8 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let emojiinfo_error_only_custom_emojis =
         localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
+    let emojiinfo_error_only_one_emoji =
+        localizer.utilities_plugin_emojiinfo_error_only_one_emoji()?;
 
     let Some(captures) = EMOJI_REGEX.captures(&emoji) else {
         interaction_client
@@ -77,7 +79,21 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     if captures.len() != 1 {
-        // todo: send error
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content(emojiinfo_error_only_one_emoji)
+                            .build(),
+                    ),
+                },
+            )
+            .await
+            .into_diagnostic()?;
         return Ok(());
     }
 
