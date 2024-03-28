@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use chrono::Utc;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -27,11 +28,15 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_log::log;
 use miette::Report;
+use sha2::Digest;
+use sha2::Sha224;
 
 pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
 ) {
+    let mut hasher = Sha224::new();
+
     match payload {
         ErrorPayload::Miette(report) => {
             let interaction_client = CLIENT.interaction(interaction_create.application_id);
@@ -51,7 +56,14 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
-            log::warn!("command errorred: {report}; error hash: ");
+            hasher.update(report.to_string().as_bytes());
+            hasher.update(Utc::now().timestamp().to_string().as_bytes());
+            let output = hasher.finalize();
+
+            log::warn!(
+                "command errorred: {report:?}; error hash: {}",
+                output.map(|int| format!("{int:x}")).join("")
+            );
         }
         ErrorPayload::Panic(message) => {
             let interaction_client = CLIENT.interaction(interaction_create.application_id);
@@ -71,7 +83,14 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
-            log::error!("interaction command panicked: {message}; error hash: ");
+            hasher.update(message.as_bytes());
+            hasher.update(Utc::now().timestamp().to_string().as_bytes());
+            let output = hasher.finalize();
+
+            log::error!(
+                "interaction command panicked: {message:?}; error hash: {}",
+                output.map(|int| format!("{int:x}")).join("")
+            );
         }
     }
 }
