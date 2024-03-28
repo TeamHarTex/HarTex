@@ -90,7 +90,8 @@ pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::
 
     let data = response.data();
     let timestamp = data
-        .ok_or(Report::msg("failed to obtain uptime data"))?
+        .ok_or(Report::msg("failed to obtain uptime data"))
+        .unwrap()
         .start_timestamp();
 
     let botinfo_embed_botstarted_field_name =
