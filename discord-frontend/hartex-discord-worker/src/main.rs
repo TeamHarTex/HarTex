@@ -57,6 +57,7 @@ use crate::error::ConsumerError;
 use crate::error::ConsumerErrorKind;
 
 mod error;
+mod errorhandler;
 mod eventcallback;
 mod interaction;
 
