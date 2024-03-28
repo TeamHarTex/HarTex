@@ -23,7 +23,8 @@
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
-use hartex_discord_core::discord::model::http::interaction::{InteractionResponse, InteractionResponseType};
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;

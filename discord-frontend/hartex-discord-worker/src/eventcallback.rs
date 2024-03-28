@@ -33,8 +33,13 @@ use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::OpCode;
+use hartex_discord_core::discord::model::http::interaction::{
+    InteractionResponse, InteractionResponseType,
+};
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::spawn;
+use hartex_discord_utils::CLIENT;
 use hartex_log::log;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
@@ -51,6 +56,7 @@ use rdkafka::util::Timeout;
 /// Invoke a corresponding event callback for an event.
 #[allow(clippy::cast_lossless)]
 #[allow(clippy::large_futures)]
+#[allow(clippy::too_many_lines)]
 pub async fn invoke(
     event: GatewayEvent,
     shard: u8,
@@ -99,12 +105,32 @@ pub async fn invoke(
                     "shard {shard} has received INTERACTION_CREATE payload from Discord (sequence {seq})"
                 );
 
-                if let Err(error) =
-                    AssertUnwindSafe(crate::interaction::application_command(interaction_create))
-                        .catch_unwind()
-                        .await
+                if let Err(error) = AssertUnwindSafe(crate::interaction::application_command(
+                    interaction_create.clone(),
+                ))
+                .catch_unwind()
+                .await
                 {
-                    log::error!("interaction command panicked: {error:?}");
+                    let interaction_client = CLIENT.interaction(interaction_create.application_id);
+                    interaction_client
+                        .create_response(
+                            interaction_create.id,
+                            &interaction_create.token,
+                            &InteractionResponse {
+                                kind: InteractionResponseType::ChannelMessageWithSource,
+                                data: Some(
+                                    InteractionResponseDataBuilder::new()
+                                        .content("This command encountered a critical error.")
+                                        .build(),
+                                ),
+                            },
+                        )
+                        .await
+                        .into_diagnostic()?;
+                    log::error!(
+                        "interaction command panicked: {}",
+                        error.downcast_ref::<String>().unwrap_or(&String::new())
+                    );
                 }
 
                 Ok(())
