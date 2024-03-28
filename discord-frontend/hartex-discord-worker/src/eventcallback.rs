@@ -119,7 +119,7 @@ pub async fn invoke(
                                 kind: InteractionResponseType::ChannelMessageWithSource,
                                 data: Some(
                                     InteractionResponseDataBuilder::new()
-                                        .content("This command encountered an unexpected error.")
+                                        .content("This command encountered a critical error.")
                                         .build(),
                                 ),
                             },
@@ -127,8 +127,8 @@ pub async fn invoke(
                         .await
                         .into_diagnostic()?;
                     log::error!(
-                        "interaction command panicked: {:?}",
-                        error.downcast_ref::<String>()
+                        "interaction command panicked: {}",
+                        error.downcast_ref::<String>().unwrap_or(&String::new())
                     );
                 }
 
