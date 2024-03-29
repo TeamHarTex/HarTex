@@ -50,7 +50,9 @@ pub async fn handle_interaction_error(
 
     match payload {
         ErrorPayload::Miette(report) => {
-            hasher.update(report.to_string().as_bytes());
+            let report = strip_ansi_escapes::strip_str(report.to_string());
+
+            hasher.update(report.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
 
             let output = hasher.finalize();
@@ -84,7 +86,7 @@ pub async fn handle_interaction_error(
                 ))
                 .field(EmbedFieldBuilder::new(
                     "Error",
-                    report.to_string().discord_codeblock(),
+                    report.clone().discord_codeblock(),
                 ))
                 .validate()
                 .unwrap()
@@ -99,6 +101,8 @@ pub async fn handle_interaction_error(
             log::warn!("command errorred: {report:?}; error hash: {hash}");
         }
         ErrorPayload::Panic(message) => {
+            let message = strip_ansi_escapes::strip_str(message);
+
             hasher.update(message.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
 
