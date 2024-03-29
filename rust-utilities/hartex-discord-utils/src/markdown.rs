@@ -26,6 +26,9 @@ pub trait MarkdownStyle {
     fn discord_bold(self) -> Self;
 
     #[must_use]
+    fn discord_codeblock(self) -> Self;
+
+    #[must_use]
     fn discord_inline_code(self) -> Self;
 
     #[must_use]
@@ -44,6 +47,10 @@ pub trait MarkdownStyle {
 impl MarkdownStyle for String {
     fn discord_bold(self) -> Self {
         format!("**{self}**")
+    }
+
+    fn discord_codeblock(self) -> Self {
+        format!("```{self}```")
     }
 
     fn discord_inline_code(self) -> Self {

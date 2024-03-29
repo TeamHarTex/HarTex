@@ -20,11 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::env;
+use std::str::FromStr;
+
 use chrono::Utc;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::model::id::marker::ChannelMarker;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_log::log;
 use miette::Report;
@@ -37,35 +45,17 @@ pub async fn handle_interaction_error(
 ) {
     let mut hasher = Sha224::new();
 
+    let channel_id_str = env::var("ERROR_CHANNEL_ID").unwrap();
+    let channel_id = Id::<ChannelMarker>::from_str(channel_id_str.as_str()).unwrap();
+
     match payload {
         ErrorPayload::Miette(report) => {
-            let interaction_client = CLIENT.interaction(interaction_create.application_id);
-            interaction_client
-                .create_response(
-                    interaction_create.id,
-                    &interaction_create.token,
-                    &InteractionResponse {
-                        kind: InteractionResponseType::ChannelMessageWithSource,
-                        data: Some(
-                            InteractionResponseDataBuilder::new()
-                                .content("This command encountered an unexpected error.")
-                                .build(),
-                        ),
-                    },
-                )
-                .await
-                .unwrap();
-
             hasher.update(report.to_string().as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
-            let output = hasher.finalize();
 
-            log::warn!(
-                "command errorred: {report:?}; error hash: {}",
-                output.map(|int| format!("{int:x}")).join("")
-            );
-        }
-        ErrorPayload::Panic(message) => {
+            let output = hasher.finalize();
+            let hash = output.map(|int| format!("{int:x}")).join("");
+
             let interaction_client = CLIENT.interaction(interaction_create.application_id);
             interaction_client
                 .create_response(
@@ -75,7 +65,9 @@ pub async fn handle_interaction_error(
                         kind: InteractionResponseType::ChannelMessageWithSource,
                         data: Some(
                             InteractionResponseDataBuilder::new()
-                                .content("This command encountered a critical error.")
+                                .content(format!(
+                                    ":x: This command encountered an unexpected error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                                ))
                                 .build(),
                         ),
                     },
@@ -83,14 +75,77 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
+            let embed = EmbedBuilder::new()
+                .color(0xFF9933)
+                .title("Unexpected Error")
+                .field(EmbedFieldBuilder::new(
+                    "Error Hash",
+                    hash.clone().discord_inline_code(),
+                ))
+                .field(EmbedFieldBuilder::new(
+                    "Error",
+                    report.to_string().discord_codeblock(),
+                ))
+                .validate()
+                .unwrap()
+                .build();
+
+            CLIENT
+                .create_message(channel_id)
+                .embeds(&[embed])
+                .await
+                .unwrap();
+
+            log::warn!("command errorred: {report:?}; error hash: {hash}");
+        }
+        ErrorPayload::Panic(message) => {
             hasher.update(message.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
-            let output = hasher.finalize();
 
-            log::error!(
-                "interaction command panicked: {message:?}; error hash: {}",
-                output.map(|int| format!("{int:x}")).join("")
-            );
+            let output = hasher.finalize();
+            let hash = output.map(|int| format!("{int:x}")).join("");
+
+            let interaction_client = CLIENT.interaction(interaction_create.application_id);
+            interaction_client
+                .create_response(
+                    interaction_create.id,
+                    &interaction_create.token,
+                    &InteractionResponse {
+                        kind: InteractionResponseType::ChannelMessageWithSource,
+                        data: Some(
+                            InteractionResponseDataBuilder::new()
+                                .content(format!(
+                                    ":x: This command encountered a critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                                ))
+                                .build(),
+                        ),
+                    },
+                )
+                .await
+                .unwrap();
+
+            let embed = EmbedBuilder::new()
+                .color(0xFF3333)
+                .title("Critical Error")
+                .field(EmbedFieldBuilder::new(
+                    "Error Hash",
+                    hash.clone().discord_inline_code(),
+                ))
+                .field(EmbedFieldBuilder::new(
+                    "Error",
+                    message.clone().discord_codeblock(),
+                ))
+                .validate()
+                .unwrap()
+                .build();
+
+            CLIENT
+                .create_message(channel_id)
+                .embeds(&[embed])
+                .await
+                .unwrap();
+
+            log::error!("interaction command panicked: {message:?}; error hash: {hash}");
         }
     }
 }
