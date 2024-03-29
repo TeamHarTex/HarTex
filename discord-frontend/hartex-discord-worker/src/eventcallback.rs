@@ -33,13 +33,8 @@ use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::OpCode;
-use hartex_discord_core::discord::model::http::interaction::{
-    InteractionResponse, InteractionResponseType,
-};
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::spawn;
-use hartex_discord_utils::CLIENT;
 use hartex_log::log;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
@@ -52,6 +47,8 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
+
+use crate::errorhandler::ErrorPayload;
 
 /// Invoke a corresponding event callback for an event.
 #[allow(clippy::cast_lossless)]
@@ -111,26 +108,16 @@ pub async fn invoke(
                 .catch_unwind()
                 .await
                 {
-                    let interaction_client = CLIENT.interaction(interaction_create.application_id);
-                    interaction_client
-                        .create_response(
-                            interaction_create.id,
-                            &interaction_create.token,
-                            &InteractionResponse {
-                                kind: InteractionResponseType::ChannelMessageWithSource,
-                                data: Some(
-                                    InteractionResponseDataBuilder::new()
-                                        .content("This command encountered a critical error.")
-                                        .build(),
-                                ),
-                            },
-                        )
-                        .await
-                        .into_diagnostic()?;
-                    log::error!(
-                        "interaction command panicked: {}",
-                        error.downcast_ref::<String>().unwrap_or(&String::new())
-                    );
+                    crate::errorhandler::handle_interaction_error(
+                        ErrorPayload::Panic(
+                            error
+                                .downcast_ref::<String>()
+                                .unwrap_or(&String::new())
+                                .to_string(),
+                        ),
+                        interaction_create,
+                    )
+                    .await;
                 }
 
                 Ok(())
