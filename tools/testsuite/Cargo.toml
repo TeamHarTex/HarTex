@@ -12,7 +12,7 @@ rust-version = "1.78.0"
 clap = { version = "4.5.4", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
 console = "0.15.8"
 path-slash = "0.2.1"
-similar = { version = "2.4.0", features = ["inline"] }
+similar = { version = "2.5.0", features = ["inline"] }
 walkdir = "2.5.0"
 
 [[bin]]
