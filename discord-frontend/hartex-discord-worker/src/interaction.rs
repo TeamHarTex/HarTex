@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use miette::IntoDiagnostic;
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::contributors::Contributors;
 use hartex_discord_commands::utilities::info::Info;
@@ -28,10 +27,9 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
-use hartex_discord_core::discord::model::http::interaction::{InteractionResponse, InteractionResponseType};
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_utils::CLIENT;
 use hartex_log::log;
+
+use crate::errorhandler::ErrorPayload;
 
 /// Handle an application command interaction
 #[allow(clippy::large_futures)]
@@ -50,24 +48,11 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
         name if name == Info.name() => Info.execute(cloned.0).await,
         _ => Ok(()),
     } {
-        let interaction_client = CLIENT.interaction(interaction_create.application_id);
-        interaction_client
-            .create_response(
-                interaction_create.id,
-                &interaction_create.token,
-                &InteractionResponse {
-                    kind: InteractionResponseType::ChannelMessageWithSource,
-                    data: Some(
-                        InteractionResponseDataBuilder::new()
-                            .content("This command encountered an unexpected error.")
-                            .build(),
-                    ),
-                },
-            )
-            .await
-            .into_diagnostic()?;
-
-        log::warn!("unexpected error occurred for command {}: {error:?}", command.name);
+        crate::errorhandler::handle_interaction_error(
+            ErrorPayload::Miette(error),
+            interaction_create,
+        )
+        .await;
     }
 
     Ok(())
