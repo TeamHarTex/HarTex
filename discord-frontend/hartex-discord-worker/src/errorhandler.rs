@@ -78,7 +78,7 @@ pub async fn handle_interaction_error(
                 .unwrap();
 
             let embed = EmbedBuilder::new()
-                .color(0xFF9933)
+                .color(0xFF_99_33)
                 .title("Unexpected Error")
                 .field(EmbedFieldBuilder::new(
                     "Error Hash",
@@ -129,7 +129,7 @@ pub async fn handle_interaction_error(
                 .unwrap();
 
             let embed = EmbedBuilder::new()
-                .color(0xFF3333)
+                .color(0xFF_33_33)
                 .title("Critical Error")
                 .field(EmbedFieldBuilder::new(
                     "Error Hash",
