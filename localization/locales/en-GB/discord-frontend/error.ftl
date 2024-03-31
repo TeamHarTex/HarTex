@@ -23,5 +23,6 @@
 error-line-one=:x: This command encountered{ $errorKind ->
   [critical] a critical
   [unexpected] an unexpected
+  *[other] an
 } error. Please provide the following error code for support.
 error-line-two=Error code:
