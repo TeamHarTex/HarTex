@@ -48,6 +48,7 @@ use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
 use tokio::signal;
 use tower_http::timeout::TimeoutLayer;
+use tower_http::trace::TraceLayer;
 
 /// # Entry Point
 ///
@@ -78,6 +79,7 @@ pub async fn main() -> miette::Result<()> {
 
     log::debug!("starting axum server");
     let app = Router::new()
+        .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .route(
             "/api/:version/stats/uptime",
