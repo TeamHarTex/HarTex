@@ -48,7 +48,6 @@ use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
 use tokio::signal;
 use tower_http::timeout::TimeoutLayer;
-use tower_http::trace::TraceLayer;
 
 /// # Entry Point
 ///
