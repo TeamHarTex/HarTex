@@ -84,6 +84,8 @@ section:last-of-type {
 </style>
 
 <script setup lang="ts">
+import {useSmoothScroll} from "~/composables/useSmoothScroll";
+
 onMounted(() => {
   useSmoothScroll();
 });
