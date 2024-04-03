@@ -23,5 +23,3 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-
-pub mod log;
