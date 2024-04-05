@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Info Bot Subcommand
+//!
+//! This command returns latency and uptime information about the bot.
+
 use std::env;
 use std::time::SystemTime;
 
@@ -51,6 +55,7 @@ use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
 
+/// Executes the `info bot` command
 pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));

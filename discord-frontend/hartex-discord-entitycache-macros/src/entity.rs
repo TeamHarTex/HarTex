@@ -45,11 +45,13 @@ use crate::metadata;
 use crate::reflect::Field;
 use crate::typeext::TypeExt;
 
+/// Primitive types and types that are included in the prelude.
 const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
     "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "&str",
     "bool", "char", "f32", "f64", "Option", "Box", "String", "Vec",
 ];
 
+/// Valid entities for inter-entity relationships.
 const VALID_ENTITIES: [(&str, &str); 4] = [
     ("GuildEntity", "crate::guild::GuildEntity"),
     ("MemberEntity", "crate::member::MemberEntity"),
@@ -60,6 +62,7 @@ const VALID_ENTITIES: [(&str, &str); 4] = [
 impl_parse!(
 #[allow(dead_code)]
 #[allow(clippy::module_name_repetitions)]
+/// Represents the input to the entity macro.
 pub struct EntityMacroInput where
     from_ident: Ident,
     equal1: Token![=],
@@ -92,6 +95,7 @@ pub struct EntityMacroInput where
 );
 
 impl_bracket_parse!(
+/// Just a literal string array.
 #[derive(Clone)]
 struct LitStrArray where
     #[allow(dead_code)]
@@ -100,6 +104,7 @@ struct LitStrArray where
 );
 
 impl_bracket_parse!(
+/// Just an array with key-value pairs.
 #[derive(Clone)]
 struct KeyValueArray where
     #[allow(dead_code)]
@@ -108,6 +113,7 @@ struct KeyValueArray where
 );
 
 impl_parse!(
+/// An element of a key-value array.
 #[derive(Clone)]
 struct KeyValueArrayElement where
     key: LitStr,
@@ -116,6 +122,7 @@ struct KeyValueArrayElement where
 );
 
 impl_bracket_parse!(
+/// The `relates` array that defines inter-entity relationships.
 #[derive(Clone)]
 struct RelatesArray where
     #[allow(dead_code)]
@@ -125,6 +132,7 @@ struct RelatesArray where
 );
 
 impl_parse!(
+/// An element of a `relates` array.
 #[derive(Clone)]
 struct RelatesArrayElement where
     unique_or_multiple: Ident,
@@ -137,6 +145,7 @@ struct RelatesArrayElement where
     as_value: LitStr,
 );
 
+/// Obtains the syn `Type` from a type string and override array.
 fn type_of(ty: &str, input: &EntityMacroInput) -> Type {
     syn::parse_str(&expand_fully_qualified_type_name(
         ty,
@@ -145,6 +154,7 @@ fn type_of(ty: &str, input: &EntityMacroInput) -> Type {
     .unwrap()
 }
 
+/// Return the syntax tree for the expanded struct, trait implementations, etc.
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::too_many_lines)]
 pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> Option<TokenStream> {
@@ -515,6 +525,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     })
 }
 
+/// Expand the fully-qualified type name from a given type name.
 fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueArray) -> String {
     let to_expand = to_expand.replace(' ', "");
 
@@ -546,6 +557,7 @@ fn expand_fully_qualified_type_name(to_expand: &str, overrides_array: &KeyValueA
     fully_qualified.map_or(to_expand, ToString::to_string)
 }
 
+/// Construct the field declaration and assignment token streams.
 fn make_field_decl_and_assignments(
     field_name: &Ident,
     field_type: &Type,
@@ -623,6 +635,7 @@ fn make_field_decl_and_assignments(
 }
 
 // FIXME: may need to generalize for multiple fields
+/// Construct an identifier containing the database query function name.
 fn make_query_function_name(target_entity: &str, by_field: &str) -> Ident {
     let name = format!(
         "cached_{}_select_by_{}",

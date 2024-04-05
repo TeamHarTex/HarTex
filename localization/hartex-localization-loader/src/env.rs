@@ -20,9 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Environment Utilities
+
 use std::env;
 use std::path::PathBuf;
 
+/// Returns the containing directory of the localization files.
 pub fn base_path() -> PathBuf {
     let mut dir = env::current_dir().expect("failed to get current dir");
 

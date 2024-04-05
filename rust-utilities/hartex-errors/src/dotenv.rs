@@ -20,10 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Dotenv Errors
+
 use miette::Diagnostic;
 use miette::SourceSpan;
 use thiserror::Error;
 
+/// Line parse error
 #[derive(Debug, Diagnostic, Error)]
 #[diagnostic(
     code("E0001: dotenv::syntax_error"),

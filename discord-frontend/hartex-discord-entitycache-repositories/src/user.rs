@@ -32,6 +32,7 @@ use hartex_discord_entitycache_entities::user::UserEntity;
 use hartex_discord_utils::DATABASE_POOL;
 use tokio_postgres::GenericClient;
 
+/// Repository for user entities.
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {

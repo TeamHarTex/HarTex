@@ -31,6 +31,7 @@ use lazy_static::lazy_static;
 hartex_localization_bindings::generate_bindings!();
 
 lazy_static! {
+    /// Localization holder.
     pub static ref LOCALIZATION_HOLDER: LocalizationBundleHolder =
         LocalizationBundleHolder::load_localizations().unwrap();
 }

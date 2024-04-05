@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Plugins Configuration Object
+
 use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
@@ -29,8 +31,10 @@ use crate::config::plugins::utilities::UtilitiesPlugin;
 
 pub mod utilities;
 
+/// The plugins configuration object.
 #[derive(Debug)]
 pub struct Plugins {
+    /// Optional configuration object for the utilities plugin.
     pub utilities: Option<UtilitiesPlugin>,
 }
 

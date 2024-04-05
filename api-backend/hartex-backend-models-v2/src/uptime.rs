@@ -20,9 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Uptime Models V1
+//! # Uptime Models V2
 //!
-//! Models for the uptime API specification V1 of the backend.
+//! Models for the uptime API specification V2 of the backend.
 
 use serde::Deserialize;
 use serde::Serialize;
@@ -58,6 +58,7 @@ pub struct UptimeResponse {
 }
 
 impl UptimeResponse {
+    /// Constructs a response to an uptime query with the start timestamp.
     #[must_use]
     pub fn with_start_timestamp(start_timestamp: u128) -> Self {
         Self { start_timestamp }
@@ -70,6 +71,7 @@ impl UptimeResponse {
     }
 }
 
+/// An uptime update payload.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Deserialize, Serialize)]
 pub struct UptimeUpdate {
@@ -78,6 +80,7 @@ pub struct UptimeUpdate {
 }
 
 impl UptimeUpdate {
+    /// Constructs a new uptime update payload.
     #[must_use]
     pub fn new(component_name: impl Into<String>, start_timestamp: u128) -> Self {
         Self {

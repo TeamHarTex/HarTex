@@ -36,6 +36,7 @@ use hartex_discord_utils::DATABASE_POOL;
 use time::OffsetDateTime;
 use tokio_postgres::GenericClient;
 
+/// Repository for member entities.
 pub struct CachedMemberRepository;
 
 impl Repository<MemberEntity> for CachedMemberRepository {

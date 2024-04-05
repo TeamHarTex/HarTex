@@ -34,10 +34,13 @@ use hartex_discord_core::tokio::time::sleep;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 
+/// A discriminated union of supported bot queues.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub enum BotQueue {
+    /// A local queue.
     Local(LocalQueue),
+    /// A large bot queue.
     LargeBot(LargeBotQueue),
 }
 
@@ -111,6 +114,7 @@ impl Queue for LargeBotQueue {
     }
 }
 
+/// Waits for a while until an unbounded receiver receives something.
 async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duration) {
     while let Some(tx) = rx.recv().await {
         if let Err(error) = tx.send(()) {

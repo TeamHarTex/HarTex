@@ -61,6 +61,7 @@ where
     Ok(())
 }
 
+/// Handle inbound traffic.
 #[allow(clippy::match_wildcard_for_single_variants)]
 async fn inbound<Q>(shard: &mut Shard<Q>, producer: FutureProducer) -> miette::Result<()>
 where
@@ -134,6 +135,7 @@ where
     Ok(())
 }
 
+/// Handle outbound traffic.
 async fn outbound(
     (shard_id, sender): (u32, MessageSender),
     consumer: Arc<StreamConsumer>,
