@@ -20,15 +20,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Dashboard Configuration Object
+
 use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
 
+/// The dashboard configuration object.
 #[derive(Debug)]
 pub struct Dashboard {
+    /// The admins that have full edit access to the dashboard and can invite others to the
+    /// dashboard.
     pub admins: Vec<String>,
+    /// The editors that have access to the dashboard but cannot invite others to the
+    /// dashboard.
     pub editors: Option<Vec<String>>,
+    /// The viewers that only have read-only access to the dashboard and cannot change anything.
     pub viewers: Option<Vec<String>>,
 }
 

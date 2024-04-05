@@ -54,8 +54,13 @@ pub static CLIENT: Lazy<Client> = Lazy::new(|| {
         .build()
 });
 
+/// A typealias for a Postgres database pool.
 pub type PostgresPool = Pool<PostgresConnectionManager<NoTls>>;
+
+/// A typealias for a future returned from database pool operations.
 pub type DatabasePoolFuture = impl Future<Output = PostgresPool>;
+
+/// An asynchronously lazyily initialized database pool/
 pub static DATABASE_POOL: AsyncLazy<PostgresPool, DatabasePoolFuture> = AsyncLazy::new(async {
     let hartex_pgsql_url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
 

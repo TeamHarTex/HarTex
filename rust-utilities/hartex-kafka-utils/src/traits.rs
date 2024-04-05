@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Kafka Utility Traits
+
 use rdkafka::ClientConfig;
 
 use crate::types::CompressionType;

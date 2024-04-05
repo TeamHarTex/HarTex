@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Configuration Lua Runtime
+//!
+//! This implements the Lua execution environment for obtaining the configuration for the bot when
+//! needed.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -33,6 +38,7 @@ use mlua::StdLib;
 
 use crate::config::Configuration;
 
+/// Evaluates the configuration code and returns a configuration object.
 #[allow(clippy::missing_errors_doc)]
 pub fn evaluate_config(config: &str) -> Result<Configuration> {
     let lua = Lua::new_with(StdLib::NONE, LuaOptions::new())?;

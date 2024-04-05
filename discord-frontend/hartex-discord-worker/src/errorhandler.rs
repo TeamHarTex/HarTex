@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Error (and Panic) Handler
+//!
+//! This module defines handlers for errors and panics.
+
 use std::env;
 use std::str::FromStr;
 
@@ -39,6 +43,11 @@ use miette::Report;
 use sha2::Digest;
 use sha2::Sha224;
 
+/// This function handle errors from an interaction. It does the following things:
+///
+/// (1) generate a unique error code;
+/// (2) send a message to a designated channel for error logs in the support server with the error code; and
+/// (3) responds to the interaction with the error message with the error code.
 pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
@@ -154,7 +163,10 @@ pub async fn handle_interaction_error(
     }
 }
 
+/// The error payload received.
 pub enum ErrorPayload {
+    /// A `miette` report payload.
     Miette(Report),
+    /// A panic message payload.
     Panic(String),
 }

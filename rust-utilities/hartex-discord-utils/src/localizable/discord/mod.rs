@@ -20,4 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Discord Localizable Objects
+
 mod guild;

@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Kafka Utility Types
+
 /// The compression type to use.
 pub enum CompressionType {
     /// GZIP compression

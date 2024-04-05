@@ -20,14 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Appearance Configuration Object
+
 use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
 
+/// The appearance configuration object.
 #[derive(Debug)]
 pub struct Appearance {
+    /// The role colour of the bot.
     pub colour: Option<u32>,
+    /// The nickname of the bot in the server.
     pub nickname: Option<String>,
 }
 

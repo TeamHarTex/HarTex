@@ -20,26 +20,36 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Discord Markdown Utilities
+
+/// A trait for a DSL to add certain markdonw styles.
 #[allow(clippy::module_name_repetitions)]
 pub trait MarkdownStyle {
+    /// Apply the bold style.
     #[must_use]
     fn discord_bold(self) -> Self;
 
+    /// Apply the codeblock style.
     #[must_use]
     fn discord_codeblock(self) -> Self;
 
+    /// Apply the inline code style.
     #[must_use]
     fn discord_inline_code(self) -> Self;
 
+    /// Apply the italic style.
     #[must_use]
     fn discord_italic(self) -> Self;
 
+    /// Apply the relative timestamp style.
     #[must_use]
     fn discord_relative_timestamp(self) -> Self;
 
+    /// Apply the underline style.
     #[must_use]
     fn discord_underline(self) -> Self;
 
+    /// Apply the strikethrough style.
     #[must_use]
     fn discord_strikethrough(self) -> Self;
 }

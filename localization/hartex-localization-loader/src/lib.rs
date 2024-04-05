@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Localization Loader
+//!
+//! The component that loads Fluent localizations from its files.
+
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
@@ -34,16 +38,22 @@ use walkdir::WalkDir;
 
 pub mod env;
 
+/// A localization bundle holder.
 pub struct LocalizationBundleHolder {
+    /// The localization bundles as a map from string.
     bundles: HashMap<String, LocalizationBundle>,
 }
 
+/// A Fluent resource wrapper.
 pub struct FluentResourceWrapper {
+    /// The name of the Fluent resource.
     pub name: String,
+    /// The Fluent resource.
     pub resource: Arc<FluentResource>,
 }
 
 impl LocalizationBundleHolder {
+    /// Load the localizations.
     pub fn load_localizations() -> miette::Result<Self> {
         let base_path = env::base_path();
         let mut bundles = HashMap::new();
@@ -72,6 +82,7 @@ impl LocalizationBundleHolder {
         Ok(Self { bundles })
     }
 
+    /// Get a localization bundle by its language ID.
     pub fn get_bundle(&self, lang: &str) -> &LocalizationBundle {
         self.bundles
             .get(lang)
@@ -79,6 +90,7 @@ impl LocalizationBundleHolder {
     }
 }
 
+/// Load a bundle from a path.
 fn load_bundle(
     mut base_path: PathBuf,
     lang_ident: LanguageIdentifier,
@@ -95,6 +107,7 @@ fn load_bundle(
     Ok(bundle)
 }
 
+/// Load the Fluent resources from a path.
 pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResourceWrapper>> {
     let mut loaded = Vec::new();
 
@@ -125,4 +138,5 @@ pub fn load_resources(path: PathBuf) -> miette::Result<Vec<FluentResourceWrapper
     Ok(loaded)
 }
 
+/// A typealias for a localization bundle.
 type LocalizationBundle = FluentBundle<Arc<FluentResource>, ConcurrentIntlLangMemoizer>;

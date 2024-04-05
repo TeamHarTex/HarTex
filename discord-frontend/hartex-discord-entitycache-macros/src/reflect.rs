@@ -20,29 +20,44 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Compile-time Reflection Types
+
 #![allow(dead_code)]
 
+/// Represents an enum.
 #[derive(Debug, Clone)]
 pub struct Enum {
+    /// The name of the enum.
     pub name: String,
+    /// The generic parameters of the enum.
     pub generic_params: Vec<GenericParameter>,
 }
 
+/// Represents a field.
 #[derive(Debug, Clone)]
 pub struct Field {
+    /// The name of the field.
     pub name: String,
+    /// The visibility of the field.
     pub vis: String,
+    /// The type of the field.
     pub ty: String,
 }
 
+/// Represents a generic parameter.
 #[derive(Debug, Clone)]
 pub struct GenericParameter {
+    /// The name of the generic parameter.
     pub name: String,
 }
 
+/// Represents a struct.
 #[derive(Debug, Clone)]
 pub struct Struct {
+    /// The name of the struct.
     pub name: String,
+    /// The generic parameters of the struct.
     pub generic_params: Vec<GenericParameter>,
+    /// The fields of the struct.
     pub fields: Vec<Field>,
 }

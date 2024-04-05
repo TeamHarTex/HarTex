@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Macro Utilities
+
 #![feature(proc_macro_diagnostic)]
 
 use std::any::Any;
@@ -27,11 +29,13 @@ use std::any::Any;
 use quote::ToTokens;
 use syn::spanned::Spanned;
 
+/// Just bail.
 pub fn bail<T: ToTokens, A: Any>(token: &T, msg: &str) -> Option<A> {
     token.span().unwrap().error(msg).emit();
     None
 }
 
+/// Expect a certain identifier.
 #[macro_export]
 macro_rules! expect {
     ($input:ident: $($attr:ident == $sth:literal);*) => {
@@ -43,6 +47,7 @@ macro_rules! expect {
     };
 }
 
+/// Implement parsing for AST objects.
 #[macro_export]
 macro_rules! impl_parse {
     (@type $t:ty) => { $t };
@@ -65,6 +70,7 @@ macro_rules! impl_parse {
     };
 }
 
+/// Implement bracketed parsing for array AST objects.
 #[macro_export]
 macro_rules! impl_bracket_parse {
     (

@@ -100,6 +100,9 @@ pub async fn main() -> miette::Result<()> {
     Ok(())
 }
 
+/// Creates a shutdown signal future for the Axum server to wait for in graceful shutdown.
+///
+/// This listens for both CTRL+C and SIGTERM (Unix-specific).
 #[allow(clippy::ignored_unit_patterns)]
 async fn shutdown() {
     let ctrl_c = async {
