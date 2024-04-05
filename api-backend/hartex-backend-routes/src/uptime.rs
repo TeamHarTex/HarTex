@@ -39,6 +39,7 @@ use hartex_backend_models_v2::uptime::UptimeUpdate;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
 use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
 use time::OffsetDateTime;
+use hartex_log::log;
 
 /// # `PATCH /stats/uptime`
 ///
@@ -52,6 +53,7 @@ pub async fn patch_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeUpdate>,
 ) -> (StatusCode, Json<Response<()>>) {
+    log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
         return (
@@ -63,6 +65,7 @@ pub async fn patch_uptime(
     let connection = result.unwrap();
     let client = connection.client();
 
+    log::trace!("updating timestamp");
     let Ok(timestamp) = OffsetDateTime::from_unix_timestamp(query.start_timestamp() as i64) else {
         // FIXME: return a better status code as the timestamp is out of range if this branch is reached
         // just 500 for now
@@ -99,6 +102,7 @@ pub async fn post_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeQuery>,
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
+    log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
         return (
@@ -110,6 +114,7 @@ pub async fn post_uptime(
     let connection = result.unwrap();
     let client = connection.client();
 
+    log::trace!("querying timestamp");
     let result = select_start_timestamp_by_component()
         .bind(client, &query.component_name())
         .one()
@@ -117,6 +122,8 @@ pub async fn post_uptime(
 
     // FIXME: figure out whether the data is actually not found and return 404
     if result.is_err() {
+        log::error!("{:?}", result.unwrap_err());
+
         return (
             StatusCode::INTERNAL_SERVER_ERROR,
             Response::internal_server_error(),
