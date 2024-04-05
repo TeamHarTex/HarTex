@@ -21,6 +21,7 @@
  */
 
 use std::env;
+use std::io::Read;
 use std::time::SystemTime;
 
 use hartex_backend_models::Response;
