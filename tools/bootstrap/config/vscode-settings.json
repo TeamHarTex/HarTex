@@ -24,8 +24,7 @@
         "./discord-frontend/Cargo.toml",
         "./localization/Cargo.toml",
         "./rust-utilities/Cargo.toml",
-        "./tools/bootstrap/Cargo.toml",
-        "./tools/testsuite/Cargo.toml"
+        "./tools/Cargo.toml"
     ],
     "rust-analyzer.procMacro.enable": true,
     "rust-analyzer.checkOnSave": true
