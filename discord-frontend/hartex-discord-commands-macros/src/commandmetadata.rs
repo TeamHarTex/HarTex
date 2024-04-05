@@ -28,6 +28,7 @@ use syn::ItemStruct;
 use syn::Lit;
 use syn::Token;
 
+/// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]
 pub struct MetadataMacroInput {
     pub(self) command_type_ident: Ident,
@@ -63,6 +64,7 @@ impl Parse for MetadataMacroInput {
     }
 }
 
+/// Returns the token stream for generating the `CommandMetadata` trait implementation
 #[allow(clippy::too_many_lines)]
 pub fn implement_metadata(
     parameters: &MetadataMacroInput,

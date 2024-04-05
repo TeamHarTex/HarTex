@@ -21,6 +21,9 @@
  */
 
 //! # The About Command
+//!
+//! This command returns brief information about the bot, like its description and GitHub
+//! repository.
 
 use hartex_discord_commands_core::metadata;
 use hartex_discord_commands_core::traits::Command;
@@ -38,6 +41,7 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
+/// The `about` command declaration.
 #[metadata(command_type = 1, interaction_only = true, name = "about")]
 pub struct About;
 

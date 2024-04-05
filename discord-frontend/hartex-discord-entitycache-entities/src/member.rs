@@ -22,6 +22,7 @@
 
 use hartex_discord_entitycache_core::entity;
 
+/// A member entity.
 #[allow(clippy::module_name_repetitions)]
 #[entity(
     from = "twilight_model::guild::Member",

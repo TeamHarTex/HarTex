@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Info Emoji Subcommand
+//!
+//! This command returns information of a custom Discord emoji.
+
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -33,9 +37,11 @@ use miette::IntoDiagnostic;
 use regex::Regex;
 
 lazy_static::lazy_static! {
+    /// The regex for looking for a Discord emoji in the command input.
     static ref EMOJI_REGEX: Regex = Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap();
 }
 
+/// Executes the `info emoji` command.
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()

@@ -38,6 +38,7 @@ use hartex_discord_entitycache_entities::role::RoleEntity;
 use hartex_discord_utils::DATABASE_POOL;
 use tokio_postgres::GenericClient;
 
+/// Repository for role entities.
 pub struct CachedRoleRepository;
 
 impl CachedRoleRepository {

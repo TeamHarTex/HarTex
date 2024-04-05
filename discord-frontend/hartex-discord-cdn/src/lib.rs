@@ -30,11 +30,16 @@ use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 
+/// Utility struct providing utility functions for working with the Discord content delivery
+/// network.
 pub struct Cdn;
 
 impl Cdn {
+    /// The base URL for all URLs linking to media served on the Discord content delivery
+    /// network.
     pub const URL_BASE: &'static str = "https://cdn.discordapp.com/";
 
+    /// Constructs a content delivery network URL for obtaining the default user avatar of a user.
     #[must_use]
     pub fn default_user_avatar(
         user_id: Option<Id<UserMarker>>,
@@ -51,6 +56,7 @@ impl Cdn {
         format!("{}embed/avatars/{index}.png", Self::URL_BASE)
     }
 
+    /// Constructs a content delivery network URL for obtaining the guild icon of a guild.
     #[must_use]
     pub fn guild_icon(guild_id: Id<GuildMarker>, icon: ImageHash) -> String {
         let mut url = format!("{}icons/{guild_id}/{icon}", Self::URL_BASE);
@@ -63,6 +69,7 @@ impl Cdn {
         url
     }
 
+    /// Constructs a content delivery network URL for obtaining the role icon of a role.
     #[must_use]
     pub fn role_icon(role_id: Id<RoleMarker>, icon: ImageHash) -> String {
         let mut url = format!("{}icons/{role_id}/{icon}", Self::URL_BASE);
@@ -75,6 +82,7 @@ impl Cdn {
         url
     }
 
+    /// Constructs a content delivery network URL for obtaining the user avatar of a user.
     #[must_use]
     pub fn user_avatar(user_id: Id<UserMarker>, avatar: ImageHash) -> String {
         let mut url = format!("{}avatars/{user_id}/{avatar}", Self::URL_BASE);

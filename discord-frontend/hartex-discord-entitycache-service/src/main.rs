@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Entitycache Update Service
+//!
+//! A separate service for updating the entitycache when event payloads are received from Discord
+//! via the websocket gateway.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -48,6 +53,7 @@ use serde_scan::scan;
 
 mod entitycache;
 
+/// The entrypoint for the entitycache update service.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();

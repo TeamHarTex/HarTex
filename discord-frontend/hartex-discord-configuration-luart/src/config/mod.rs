@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Configuration Object
+//!
+//! This is the lowest level in the configuration structure hierarchy.
+
 use mlua::Error;
 use mlua::FromLuaMulti;
 use mlua::Lua;
@@ -34,10 +38,14 @@ pub mod appearance;
 pub mod dashboard;
 pub mod plugins;
 
+/// The configuration object.
 #[derive(Debug)]
 pub struct Configuration {
+    /// An optional appearance configuration object.
     pub appearance: Option<Appearance>,
+    /// A dashboard configuration object.
     pub dashboard: Dashboard,
+    /// An optional plugins configuration object.
     pub plugins: Option<Plugins>,
 }
 
