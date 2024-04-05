@@ -11,7 +11,7 @@ rust-version = "1.78.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-mlua = { version = "0.9.6", features = ["lua54", "vendored"] }
+mlua = { version = "0.9.7", features = ["lua54", "vendored"] }
 
 [dev-dependencies]
 expect-test = "1.5.0"
