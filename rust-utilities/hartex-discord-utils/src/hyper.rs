@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Hyper Library Utilities
+
 use std::sync::Arc;
 
 use hartex_discord_core::tokio::net::TcpStream;
@@ -31,6 +33,7 @@ use tokio_rustls::rustls::RootCertStore;
 use tokio_rustls::TlsConnector;
 use webpki_roots::TLS_SERVER_ROOTS;
 
+/// Construct a TLS stream.
 #[allow(clippy::missing_errors_doc)]
 pub async fn tls_stream() -> miette::Result<TlsStream<TcpStream>> {
     let mut root_cert_store = RootCertStore::empty();
