@@ -20,12 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Localization Utilities
+
 use unic_langid::LanguageIdentifier;
 
 mod bool;
 mod discord;
 
+/// A trait for localizable objects to implement.
 pub trait Localizable {
+    /// Localize the object into a string.
     #[allow(clippy::missing_errors_doc)]
     fn localize(&self, locale: Option<LanguageIdentifier>) -> miette::Result<String>;
 }
