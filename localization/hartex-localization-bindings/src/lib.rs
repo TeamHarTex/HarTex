@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Localization Bindings
+//!
+//! This crate provides a macro for generating localization bindings from Fluent files.
+
 #![feature(proc_macro_diagnostic)]
 
 use std::collections::HashMap;
@@ -42,6 +46,7 @@ use syn::Ident;
 use syn::LitStr;
 use syn::TypeParam;
 
+/// A localization node.
 struct LocalizationNode<'a> {
     category: &'a str,
     name: &'a str,
@@ -51,6 +56,7 @@ struct LocalizationNode<'a> {
 }
 
 impl<'a> LocalizationNode<'a> {
+    /// Constructs a new localization node.
     pub fn new(category: &'a str, name: &'a str, term: bool) -> Self {
         Self {
             category,
@@ -62,6 +68,7 @@ impl<'a> LocalizationNode<'a> {
     }
 }
 
+/// Generate the localization bindings.
 #[proc_macro]
 pub fn generate_bindings(_: TokenStream) -> TokenStream {
     let mut base_dir = base_path();
@@ -269,6 +276,7 @@ pub fn generate_bindings(_: TokenStream) -> TokenStream {
     stream.into()
 }
 
+/// Generate nodes for a given Fluent resources
 fn generate_nodes_for_resource<'a>(
     parent: &'a str,
     resource: &'a Arc<FluentResource>,
@@ -287,6 +295,7 @@ fn generate_nodes_for_resource<'a>(
     nodes.collect()
 }
 
+/// Process a Fluent expression.
 fn process_expression<'a>(expression: &'a Expression<&'a str>, node: &mut LocalizationNode<'a>) {
     match expression {
         Expression::Inline(expression) => process_inline_expression(expression, node),
@@ -297,6 +306,7 @@ fn process_expression<'a>(expression: &'a Expression<&'a str>, node: &mut Locali
     }
 }
 
+/// Process an inline Fluent expression.
 fn process_inline_expression<'a>(
     expression: &'a InlineExpression<&'a str>,
     node: &mut LocalizationNode<'a>,
@@ -317,6 +327,7 @@ fn process_inline_expression<'a>(
     };
 }
 
+/// Process the pattern elements.
 fn process_pattern_elements<'a>(
     elements: &'a Vec<PatternElement<&'a str>>,
     node: &mut LocalizationNode<'a>,
@@ -328,6 +339,7 @@ fn process_pattern_elements<'a>(
     }
 }
 
+/// Sanitize Fluent names.
 fn sanitize_name(unsanitized: &str) -> String {
     unsanitized.replace('-', "_").to_lowercase()
 }
