@@ -42,9 +42,12 @@ use axum::RequestPartsExt;
 use serde::Deserialize;
 use serde::Serialize;
 
+/// Specifies the API version to be used for a given API request.
 #[derive(Copy, Clone, Debug)]
 pub enum APIVersion {
+    /// Version 1 of the backend API.
     V1,
+    /// Version 2 of the backend API.
     V2,
 }
 
@@ -85,6 +88,7 @@ impl<'a, T> Response<T>
 where
     T: Clone + Deserialize<'a>,
 {
+    /// Constructs a response object with a status code of 500 and its corresponding message.
     pub fn internal_server_error() -> Json<Response<T>> {
         Json(Self {
             code: 500,
@@ -93,6 +97,7 @@ where
         })
     }
 
+    /// Constructs a response object with a status code of 200 and its corresponding message.
     pub fn ok(value: T) -> Json<Response<T>> {
         Json(Self {
             code: 200,
