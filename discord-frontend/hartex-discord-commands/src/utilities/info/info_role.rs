@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Info Role Subcommand
+//!
+//! This command returns informatiomn about a role.
+
 use hartex_discord_cdn::Cdn;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
@@ -41,6 +45,7 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
+/// Executes the `info emoji` command.
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()

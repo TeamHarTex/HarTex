@@ -43,6 +43,7 @@ mod metadata;
 mod reflect;
 mod typeext;
 
+/// Implementatioon of the `entity` attribute macro.
 #[proc_macro_attribute]
 pub fn entity(tokens: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(tokens as entity::EntityMacroInput);

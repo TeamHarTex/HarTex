@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Info Role Subcommand
+//!
+//! This command returns informatiomn about the current server (the server the command is run in).
+
 use std::borrow::Cow;
 use std::fmt::Write;
 
@@ -47,6 +51,7 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
+/// Executes the `info server` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {

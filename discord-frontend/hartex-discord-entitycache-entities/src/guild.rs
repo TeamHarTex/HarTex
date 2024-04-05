@@ -24,6 +24,7 @@
 
 use hartex_discord_entitycache_core::entity;
 
+/// A guild entity.
 #[allow(clippy::module_name_repetitions)]
 #[entity(
     from = "twilight_model::guild::Guild",

@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # The Info User Subcommand
+//!
+//! This command returns informatiomn about a user.
+
 use hartex_discord_cdn::Cdn;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
@@ -43,6 +47,7 @@ use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
 use rand::thread_rng;
 
+/// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
