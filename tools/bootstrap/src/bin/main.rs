@@ -31,6 +31,7 @@ use bootstrap::config::flags::BootstrapSubcommand;
 use bootstrap::config::Config;
 use fd_lock::RwLock;
 
+/// Entry point to the bootstrap binary, invoked by x.py.
 #[allow(clippy::unused_io_amount)]
 pub fn main() {
     let args = env::args().skip(1).collect::<Vec<_>>();

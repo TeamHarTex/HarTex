@@ -20,9 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::builder::{Builder, RunConfig, Step};
-use std::process::{exit, Command};
+use std::process::Command;
+use std::process::exit;
 
+use crate::builder::Builder;
+use crate::builder::RunConfig;
+use crate::builder::Step;
+
+/// Step for compiling the test suite.
 pub struct BuildTestsuiteTool;
 
 impl Step for BuildTestsuiteTool {
@@ -37,6 +42,7 @@ impl Step for BuildTestsuiteTool {
     }
 }
 
+/// Utility function for building the test suite tool.
 #[allow(clippy::missing_panics_doc)]
 fn build_testsuite_tool(builder: &Builder<'_>) {
     let pwd = builder.config.root.join("tools/testsuite");
@@ -68,6 +74,7 @@ fn build_testsuite_tool(builder: &Builder<'_>) {
     }
 }
 
+/// Step for running the test suite.
 pub struct RunUiTests;
 
 impl Step for RunUiTests {
@@ -89,6 +96,7 @@ impl Step for RunUiTests {
     }
 }
 
+/// Utility function for running the test suite.
 #[allow(clippy::missing_panics_doc)]
 fn run_ui_tests(builder: &Builder<'_>) {
     let mut command = Command::new("./build/testsuite/debug/testsuite");
