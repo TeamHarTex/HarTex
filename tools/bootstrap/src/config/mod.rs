@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Command Line Configuration
+
 use std::fs;
 use std::mem;
 use std::path::absolute;
@@ -35,23 +37,38 @@ use self::ini::IniConfig;
 pub mod flags;
 pub mod ini;
 
+/// Some general configuration options.
 pub struct Config {
+    /// Whether to bypass filesystem lock.
     pub bypass_fs_lock: bool,
+    /// Path to a `hartex.conf` configuration file.
     pub config_path: Option<PathBuf>,
+    /// Whether to output JSON for language servers to process.
     pub output_json: bool,
+    /// The root path of the project.
     pub root: PathBuf,
+    /// A subcommand.
     pub subcommand: BootstrapSubcommand,
+    /// Arguments to be passed to subcommands.
     pub subcommand_args: Vec<String>,
 
+    /// The output directory.
     pub output_dir: PathBuf,
 
+    /// Instructs the compiler the number of code generation units.
+    ///
+    /// `1` is preferred to not miss any potential optimizations,
     pub codegen_units: u32,
+    /// Whether to include debug information.
     pub debug: bool,
+    /// Optimization level.
     pub opt_level: u32,
+    /// Number of parallel threads to use to speed up compilation.
     pub parallel_threads: u32,
 }
 
 impl Config {
+    /// Parses the configuration options from command line arguments.
     #[must_use]
     #[allow(clippy::expect_fun_call)]
     #[allow(clippy::missing_panics_doc)]
@@ -70,6 +87,7 @@ impl Config {
         })
     }
 
+    /// Internal implementation detail of parsing the configuration options.
     #[must_use]
     #[allow(clippy::field_reassign_with_default)]
     #[allow(clippy::missing_panics_doc)]

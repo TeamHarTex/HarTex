@@ -27,6 +27,7 @@ use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+/// Step for checking the api-backend project.
 #[allow(clippy::module_name_repetitions)]
 pub struct CheckApi;
 
@@ -50,6 +51,7 @@ impl Step for CheckApi {
     }
 }
 
+/// Step for checking the database-queries project.
 #[allow(clippy::module_name_repetitions)]
 pub struct CheckDatabase;
 
@@ -73,6 +75,7 @@ impl Step for CheckDatabase {
     }
 }
 
+/// Step for checking the discord-frontend project.
 #[allow(clippy::module_name_repetitions)]
 pub struct CheckDiscord;
 
@@ -96,6 +99,7 @@ impl Step for CheckDiscord {
     }
 }
 
+/// Step for checking the localization project.
 #[allow(clippy::module_name_repetitions)]
 pub struct CheckLocalization;
 
@@ -119,6 +123,7 @@ impl Step for CheckLocalization {
     }
 }
 
+/// Step for checking the rust-utilities project.
 #[allow(clippy::module_name_repetitions)]
 pub struct CheckUtilities;
 
@@ -142,6 +147,7 @@ impl Step for CheckUtilities {
     }
 }
 
+/// Utility function for checking projects by running `cargo check`.
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::module_name_repetitions)]
 fn check_cargo_project(project: &'static str, builder: &Builder<'_>) {
