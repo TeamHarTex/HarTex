@@ -28,6 +28,7 @@
 
 .fleet
 .vscode
+.zed
 **/.gradle
 **/build
 
