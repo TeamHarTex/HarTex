@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Buildsystem Bootstrap
+//!
+//! This is invoked from the x.py buildsystem.
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]

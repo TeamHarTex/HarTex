@@ -26,6 +26,7 @@ use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+/// Step for cleaning the api-backend built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct CleanApi;
 
@@ -49,6 +50,7 @@ impl Step for CleanApi {
     }
 }
 
+/// Step for cleaning the database-queries built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct CleanDatabase;
 
@@ -72,6 +74,7 @@ impl Step for CleanDatabase {
     }
 }
 
+/// Step for cleaning the discord-frontend built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct CleanDiscord;
 
@@ -95,6 +98,7 @@ impl Step for CleanDiscord {
     }
 }
 
+/// Step for cleaning the localization built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct CleanLocalization;
 
@@ -118,6 +122,7 @@ impl Step for CleanLocalization {
     }
 }
 
+/// Step for cleaning the rust-utilities built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct CleanUtilities;
 
@@ -141,6 +146,7 @@ impl Step for CleanUtilities {
     }
 }
 
+/// Utility function for cleaning the built artifact directories of a given project.
 #[allow(clippy::missing_panics_doc)]
 fn clean(project: &'static str, builder: &Builder<'_>) {
     let dir = builder

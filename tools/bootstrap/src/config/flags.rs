@@ -47,6 +47,7 @@ pub struct Flags {
 }
 
 impl Flags {
+    /// Parse the flags from command line arguments.
     #[must_use]
     pub fn parse_from_args(args: &[String]) -> Self {
         let first = String::from("x.py");

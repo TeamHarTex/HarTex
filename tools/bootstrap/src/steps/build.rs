@@ -27,6 +27,7 @@ use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+/// Step for building the api-backend project.
 pub struct Api;
 
 impl Step for Api {
@@ -49,6 +50,7 @@ impl Step for Api {
     }
 }
 
+/// Step for building the database-queries project.
 pub struct Database;
 
 impl Step for Database {
@@ -71,6 +73,7 @@ impl Step for Database {
     }
 }
 
+/// Step for building the discord-frontend project.
 pub struct Discord;
 
 impl Step for Discord {
@@ -93,6 +96,7 @@ impl Step for Discord {
     }
 }
 
+/// Step for building the localization project.
 pub struct Localization;
 
 impl Step for Localization {
@@ -115,6 +119,7 @@ impl Step for Localization {
     }
 }
 
+/// Step for building the rust-utilities project.
 pub struct Utilities;
 
 impl Step for Utilities {
@@ -137,6 +142,7 @@ impl Step for Utilities {
     }
 }
 
+/// Utility function for building a project using `cargo build`.
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::module_name_repetitions)]
 pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {

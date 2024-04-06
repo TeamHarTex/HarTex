@@ -34,21 +34,31 @@ use crate::builder::RunConfig;
 use crate::builder::Step;
 use crate::config::Config;
 
+/// Path to a default Fleet settings file.
 const FLEET_SETTINGS: &str = include_str!("../../config/fleet-settings.json");
+/// Path to a default VSCode settings file.
 const VSCODE_SETTINGS: &str = include_str!("../../config/vscode-settings.json");
 
+/// Profile for setting up the editors for different needs.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Copy)]
 pub enum SetupProfile {
+    /// Contribute to the API backend.
     ApiBackend,
+    /// Contribute to the Discord frontend.
     DiscordFrontend,
+    /// Host an instance of HarTex.
     Hosting,
+    /// Contribute to localization infrastructure.
     Localization,
+    /// Contribute to the web frontend.
     WebFrontend,
+    /// Nothing.
     None,
 }
 
 impl SetupProfile {
+    /// Returns the purpose of a given profile.
     #[must_use]
     pub fn purpose(&self) -> String {
         match self {
@@ -62,6 +72,7 @@ impl SetupProfile {
         .to_string()
     }
 
+    /// Returns a list of variants.
     pub fn variants() -> impl Iterator<Item = Self> {
         [
             Self::ApiBackend,
@@ -75,6 +86,7 @@ impl SetupProfile {
         .copied()
     }
 
+    /// Converts it into a string.
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -150,6 +162,7 @@ impl Step for SetupProfile {
     }
 }
 
+/// An interactive question-answer session for setting up the development environment.
 #[allow(clippy::missing_errors_doc)]
 pub fn interactive_profile() -> io::Result<SetupProfile> {
     fn options() -> impl Iterator<Item = ((String, String), SetupProfile)> {
@@ -197,6 +210,7 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
     Ok(profile)
 }
 
+/// Set up the development environment with the corresponding profile.
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::module_name_repetitions)]
 pub fn setup_profile(config: &Config, profile: SetupProfile) {
@@ -214,6 +228,7 @@ pub fn setup_profile(config: &Config, profile: SetupProfile) {
     println!("INFO: Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.");
 }
 
+/// Step for configuration for VSCode.
 pub struct ConfigureVscode;
 
 impl Step for ConfigureVscode {
@@ -256,6 +271,7 @@ impl Step for ConfigureVscode {
     }
 }
 
+/// Utility function for setting up the configuration for VSCode.
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_io_amount)]
@@ -276,8 +292,10 @@ pub fn setup_vscode_config(builder: &Builder<'_>) {
         .expect("failed to write to file");
 }
 
+/// Step for configuration for Fleet.
 pub struct ConfigureFleet;
 
+/// Utility function for setting up the configuration for Fleet.
 impl Step for ConfigureFleet {
     type Output = ();
 
@@ -318,6 +336,7 @@ impl Step for ConfigureFleet {
     }
 }
 
+/// Utility function for setting up the configuration for Fleet.
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_io_amount)]
@@ -338,6 +357,7 @@ pub fn setup_fleet_config(builder: &Builder<'_>) {
         .expect("failed to write to file");
 }
 
+/// Utility function for asking a question returning a boolean result.
 fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
     let default_text = if default { "(Y/n)" } else { "(y/N)" };
     write!(io::stdout().lock(), "{prompt} {default_text} ")?;
@@ -356,6 +376,7 @@ fn question_bool(prompt: &str, default: bool) -> io::Result<bool> {
     }
 }
 
+/// Utility function for asking a question returning a string result.
 fn question_str(prompt: &str) -> io::Result<String> {
     write!(io::stdout().lock(), "{prompt} ")?;
 
@@ -363,6 +384,7 @@ fn question_str(prompt: &str) -> io::Result<String> {
     readln()
 }
 
+/// Utility function for awaiting user input.
 fn readln() -> io::Result<String> {
     let stdin = io::stdin();
     let locked = stdin.lock();
