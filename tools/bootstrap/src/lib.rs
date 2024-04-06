@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Buildsystem Boostrap
+//! # Buildsystem Bootstrap
 //!
 //! This is invoked from the x.py buildsystem.
 
