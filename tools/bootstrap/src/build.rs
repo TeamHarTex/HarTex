@@ -23,16 +23,20 @@
 use crate::builder::Builder;
 use crate::config::Config;
 
+/// Represents a build session.
 pub struct Build {
+    /// The configuration used for the session.
     pub config: Config,
 }
 
 impl Build {
+    /// Construct a new build session.
     #[must_use]
     pub fn new(config: Config) -> Self {
         Self { config }
     }
 
+    /// Run the build.
     pub fn build(&self) {
         Builder::new(self).run_cli();
     }

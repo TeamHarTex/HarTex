@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Builder of the Buildsystem
+//!
+//! This governs how the project is built for individual commands and tasks.
+
 use std::any::type_name;
 use std::ops::Deref;
 
@@ -32,17 +36,25 @@ use crate::steps::clippy;
 use crate::steps::setup;
 use crate::steps::test;
 
+/// The type of build to perform.
 #[derive(Clone, Copy)]
 pub enum BuildKind {
+    /// Run `cargo build`.
     Build,
+    /// Run `cargo check`.
     Check,
+    /// Delete build artifacts from the `build` directory.
     Clean,
+    /// Run `cargo clippy`.
     Clippy,
+    /// Setup editor tooling for contributors.
     Setup,
+    /// Run the test suite.
     Test,
 }
 
 impl BuildKind {
+    /// Returns the steps required for each build workflow.
     #[must_use]
     pub fn steps(&self) -> Vec<StepDescriptor> {
         match self {
@@ -87,12 +99,16 @@ impl BuildKind {
     }
 }
 
+/// A builder with a reference to the current build session.
 pub struct Builder<'build> {
+    /// The reference to the current build session.
     pub build: &'build Build,
+    /// The type of build workflow to perform.
     pub kind: BuildKind,
 }
 
 impl<'build> Builder<'build> {
+    /// Construct a new builder from a build session.
     #[must_use]
     pub fn new(build: &'build Build) -> Self {
         let kind = match build.config.subcommand {
@@ -107,14 +123,17 @@ impl<'build> Builder<'build> {
         Self { build, kind }
     }
 
+    /// Run the build.
     pub fn run_cli(&self) {
         self.run_steps(self.kind.steps());
     }
 
+    /// Run the specified step.
     pub fn run_step<S: Step>(&'build self, step: S) -> S::Output {
         step.run(self)
     }
 
+    /// Run all steps.
     fn run_steps(&self, steps: Vec<StepDescriptor>) {
         for step in steps {
             step.run(self);
@@ -130,17 +149,24 @@ impl<'build> Deref for Builder<'build> {
     }
 }
 
+/// A run configuration.
 pub struct RunConfig<'run> {
+    /// A builder.
     pub builder: &'run Builder<'run>,
 }
 
+/// A descriptor that describes how a step should be performed.
 pub struct StepDescriptor {
+    /// Name of the step descriptor.
     pub name: &'static str,
+    /// The build kind the step is associated with.
     pub kind: BuildKind,
+    /// A closure that takes the run configuration.
     pub run_config: fn(RunConfig<'_>),
 }
 
 impl StepDescriptor {
+    /// Construct a step descriptor from a build workflow type and a generic step.
     #[must_use]
     pub fn from<S: Step>(kind: BuildKind) -> Self {
         Self {
@@ -150,15 +176,20 @@ impl StepDescriptor {
         }
     }
 
+    /// Configure the step associated with this descriptor.
     pub fn run(&self, builder: &Builder<'_>) {
         (self.run_config)(RunConfig { builder });
     }
 }
 
+/// A trait for all build steps to implement.
 pub trait Step {
+    /// The output type of this step.
     type Output;
 
+    /// The run callback of this step.
     fn run(self, builder: &Builder<'_>) -> Self::Output;
 
+    /// The run configuration callback.
     fn run_config(_: RunConfig<'_>);
 }

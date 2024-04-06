@@ -27,6 +27,7 @@ use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
 
+/// Step for clippying the api-backend built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct ClippyApi;
 
