@@ -83,7 +83,7 @@ fn rust_default_codegen_units() -> u32 {
 
 /// Default value for the inclusion of debug information.
 ///
-/// Set to `true` for enhanced debugging perposes.
+/// Set to `true` for enhanced debugging purposes.
 #[must_use]
 fn rust_default_debug() -> bool {
     true
