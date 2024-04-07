@@ -5,11 +5,11 @@
 #[allow(unused_imports)] #[allow(dead_code)] pub mod queries
 { pub mod cached_guild_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedGuildSelectById
-{ pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : Vec<String>,pub icon : Option<String>,pub id : String,pub large : bool,pub name : String,pub owner_id : String,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub id : &'a str,pub large : bool,pub name : &'a str,pub owner_id : &'a str,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}
+{ pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : Vec<String>,pub icon : Option<String>,pub id : String,pub large : bool,pub name : String,pub owner_id : String,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,pub emojis : Vec<String>,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub id : &'a str,pub large : bool,pub name : &'a str,pub owner_id : &'a str,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,pub emojis : cornucopia_async::ArrayIterator<'a, &'a str>,}
 impl<'a> From<CachedGuildSelectByIdBorrowed<'a>> for CachedGuildSelectById
 {
-    fn from(CachedGuildSelectByIdBorrowed { default_message_notifications,explicit_content_filter,features,icon,id,large,name,owner_id,mfa_level,premium_subscription_count,premium_tier,verification_level,}: CachedGuildSelectByIdBorrowed<'a>) ->
-    Self { Self { default_message_notifications,explicit_content_filter,features: features.map(|v| v.into()).collect(),icon: icon.map(|v| v.into()),id: id.into(),large,name: name.into(),owner_id: owner_id.into(),mfa_level,premium_subscription_count,premium_tier,verification_level,} }
+    fn from(CachedGuildSelectByIdBorrowed { default_message_notifications,explicit_content_filter,features,icon,id,large,name,owner_id,mfa_level,premium_subscription_count,premium_tier,verification_level,emojis,}: CachedGuildSelectByIdBorrowed<'a>) ->
+    Self { Self { default_message_notifications,explicit_content_filter,features: features.map(|v| v.into()).collect(),icon: icon.map(|v| v.into()),id: id.into(),large,name: name.into(),owner_id: owner_id.into(),mfa_level,premium_subscription_count,premium_tier,verification_level,emojis: emojis.map(|v| v.into()).collect(),} }
 }pub struct CachedGuildSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -50,7 +50,7 @@ GenericClient
         Ok(it)
     }
 }pub fn cached_guild_select_by_id() -> CachedGuildSelectByIdStmt
-{ CachedGuildSelectByIdStmt(cornucopia_async::private::Stmt::new("SELECT 
+{ CachedGuildSelectByIdStmt(cornucopia_async::private::Stmt::new("SELECT
     *
 FROM
     \"DiscordFrontend\".\"Nightly\".\"CachedGuilds\"
@@ -66,48 +66,51 @@ CachedGuildSelectById, 1>
     CachedGuildSelectByIdQuery
     {
         client, params: [id,], stmt: &mut self.0, extractor:
-        |row| { CachedGuildSelectByIdBorrowed { default_message_notifications: row.get(0),explicit_content_filter: row.get(1),features: row.get(2),icon: row.get(3),id: row.get(4),large: row.get(5),name: row.get(6),owner_id: row.get(7),mfa_level: row.get(8),premium_subscription_count: row.get(9),premium_tier: row.get(10),verification_level: row.get(11),} }, mapper: |it| { <CachedGuildSelectById>::from(it) },
+        |row| { CachedGuildSelectByIdBorrowed { default_message_notifications: row.get(0),explicit_content_filter: row.get(1),features: row.get(2),icon: row.get(3),id: row.get(4),large: row.get(5),name: row.get(6),owner_id: row.get(7),mfa_level: row.get(8),premium_subscription_count: row.get(9),premium_tier: row.get(10),verification_level: row.get(11),emojis: row.get(12),} }, mapper: |it| { <CachedGuildSelectById>::from(it) },
     }
 } }}pub mod cached_guild_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedGuildUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,> { pub default_message_notifications: i16,pub explicit_content_filter: i16,pub features: T2,pub icon: Option<T3>,pub large: bool,pub name: T4,pub owner_id: T5,pub id: T6,pub mfa_level: i16,pub premium_subscription_count: Option<i64>,pub premium_tier: i16,pub verification_level: i16,}pub fn cached_guild_upsert() -> CachedGuildUpsertStmt
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedGuildUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::ArraySql<Item = T3>,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,T7: cornucopia_async::StringSql,T8: cornucopia_async::StringSql,> { pub default_message_notifications: i16,pub emojis: T2,pub explicit_content_filter: i16,pub features: T4,pub icon: Option<T5>,pub large: bool,pub name: T6,pub owner_id: T7,pub id: T8,pub mfa_level: i16,pub premium_subscription_count: Option<i64>,pub premium_tier: i16,pub verification_level: i16,}pub fn cached_guild_upsert() -> CachedGuildUpsertStmt
 { CachedGuildUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO
-    \"DiscordFrontend\".\"Nightly\".\"CachedGuilds\" (\"default_message_notifications\", \"explicit_content_filter\", \"features\", \"icon\", \"large\", \"name\", \"owner_id\", \"id\", \"mfa_level\", \"premium_subscription_count\", \"premium_tier\", \"verification_level\")
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    \"DiscordFrontend\".\"Nightly\".\"CachedGuilds\" (\"default_message_notifications\", \"emojis\", \"explicit_content_filter\", \"features\", \"icon\", \"large\", \"name\", \"owner_id\", \"id\", \"mfa_level\", \"premium_subscription_count\", \"premium_tier\", \"verification_level\")
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 ON CONFLICT (\"id\") DO UPDATE
     SET
         \"default_message_notifications\" = $1,
-        \"explicit_content_filter\" = $2,
-        \"features\" = $3,
-        \"icon\" = $4,
-        \"large\" = $5,
-        \"mfa_level\" = $9,
-        \"name\" = $6,
-        \"owner_id\" = $7,
-        \"premium_subscription_count\" = $10,
-        \"premium_tier\" = $11,
-        \"verification_level\" = $12")) } pub struct
+        \"emojis\" = $2,
+        \"explicit_content_filter\" = $3,
+        \"features\" = $4,
+        \"icon\" = $5,
+        \"large\" = $6,
+        \"mfa_level\" = $10,
+        \"name\" = $7,
+        \"owner_id\" = $8,
+        \"premium_subscription_count\" = $11,
+        \"premium_tier\" = $12,
+        \"verification_level\" = $13")) } pub struct
 CachedGuildUpsertStmt(cornucopia_async::private::Stmt); impl CachedGuildUpsertStmt
 { pub async fn bind<'a, C:
 GenericClient,T1:
 cornucopia_async::StringSql,T2:
 cornucopia_async::ArraySql<Item = T1>,T3:
 cornucopia_async::StringSql,T4:
-cornucopia_async::StringSql,T5:
+cornucopia_async::ArraySql<Item = T3>,T5:
 cornucopia_async::StringSql,T6:
+cornucopia_async::StringSql,T7:
+cornucopia_async::StringSql,T8:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-default_message_notifications: &'a i16,explicit_content_filter: &'a i16,features: &'a T2,icon: &'a Option<T3>,large: &'a bool,name: &'a T4,owner_id: &'a T5,id: &'a T6,mfa_level: &'a i16,premium_subscription_count: &'a Option<i64>,premium_tier: &'a i16,verification_level: &'a i16,) -> Result<u64, tokio_postgres::Error>
+default_message_notifications: &'a i16,emojis: &'a T2,explicit_content_filter: &'a i16,features: &'a T4,icon: &'a Option<T5>,large: &'a bool,name: &'a T6,owner_id: &'a T7,id: &'a T8,mfa_level: &'a i16,premium_subscription_count: &'a Option<i64>,premium_tier: &'a i16,verification_level: &'a i16,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
-    client.execute(stmt, &[default_message_notifications,explicit_content_filter,features,icon,large,name,owner_id,id,mfa_level,premium_subscription_count,premium_tier,verification_level,]).await
-} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,>
-cornucopia_async::Params<'a, CachedGuildUpsertParams<T1,T2,T3,T4,T5,T6,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    client.execute(stmt, &[default_message_notifications,emojis,explicit_content_filter,features,icon,large,name,owner_id,id,mfa_level,premium_subscription_count,premium_tier,verification_level,]).await
+} }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::ArraySql<Item = T3>,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,T7: cornucopia_async::StringSql,T8: cornucopia_async::StringSql,>
+cornucopia_async::Params<'a, CachedGuildUpsertParams<T1,T2,T3,T4,T5,T6,T7,T8,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
 tokio_postgres::Error>> + Send + 'a>>, C> for CachedGuildUpsertStmt
 {
     fn
     params(&'a mut self, client: &'a  C, params: &'a
-    CachedGuildUpsertParams<T1,T2,T3,T4,T5,T6,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
+    CachedGuildUpsertParams<T1,T2,T3,T4,T5,T6,T7,T8,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
-    { Box::pin(self.bind(client, &params.default_message_notifications,&params.explicit_content_filter,&params.features,&params.icon,&params.large,&params.name,&params.owner_id,&params.id,&params.mfa_level,&params.premium_subscription_count,&params.premium_tier,&params.verification_level,)) }
+    { Box::pin(self.bind(client, &params.default_message_notifications,&params.emojis,&params.explicit_content_filter,&params.features,&params.icon,&params.large,&params.name,&params.owner_id,&params.id,&params.mfa_level,&params.premium_subscription_count,&params.premium_tier,&params.verification_level,)) }
 }}pub mod cached_member_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedMemberSelectByGuildId
 { pub guild_id : String,pub user_id : String,pub roles : Vec<String>,pub nick : Option<String>,pub joined_at : Option<time::OffsetDateTime>,pub flags : i64,}pub struct CachedMemberSelectByGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub nick : Option<&'a str>,pub joined_at : Option<time::OffsetDateTime>,pub flags : i64,}
