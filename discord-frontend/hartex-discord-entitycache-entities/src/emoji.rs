@@ -20,17 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Entity Cache Entities
-//!
-//! This crate provides definitions for entities stored in the entity cache.
+use hartex_discord_entitycache_core::entity;
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#![allow(deprecated)]
-
-pub mod emoji;
-pub mod guild;
-pub mod member;
-pub mod role;
-pub mod user;
+#[entity(
+    from = "twilight_model::guild::Emoji",
+    assume = [],
+    id = ["id", "guild_id"],
+    include = [],
+    extra = [
+        "guild_id": "Id<GuildMarker>",
+    ],
+    overrides = [],
+    relates = [],
+)]
+pub struct EmojiEntity;
