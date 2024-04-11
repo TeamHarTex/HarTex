@@ -42,6 +42,7 @@ use tokio_postgres::GenericClient;
 pub struct CachedRoleRepository;
 
 impl CachedRoleRepository {
+    // todo: add relationship to get all roles from a guild
     #[allow(clippy::missing_errors_doc)]
     #[allow(clippy::missing_panics_doc)]
     pub async fn role_ids_in_guild(

@@ -33,7 +33,6 @@ use hartex_discord_entitycache_core::entity;
     include = [
         "default_message_notifications",
         "explicit_content_filter",
-        "emojis",
         "features",
         "icon",
         "large",
@@ -54,6 +53,7 @@ use hartex_discord_entitycache_core::entity;
         "VerificationLevel": "twilight_model::guild::VerificationLevel"
     ],
     relates = [
+        multiple "EmojiEntity": via "id" as "guild_id",
         multiple "MemberEntity": via "id" as "guild_id",
     ],
 )]

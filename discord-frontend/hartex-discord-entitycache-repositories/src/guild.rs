@@ -63,11 +63,6 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             default_message_notifications: DefaultMessageNotificationLevel::from(
                 data.default_message_notifications as u8,
             ),
-            emojis: data
-                .emojis
-                .iter()
-                .map(Id::from_str)
-                .map(|result| result.expect("id is zero (unexpected and unreachable)")),
             explicit_content_filter: ExplicitContentFilter::from(
                 data.explicit_content_filter as u8,
             ),
@@ -104,11 +99,6 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                 &i16::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
                     entity.default_message_notifications,
                 )),
-                &entity
-                    .emojis
-                    .iter()
-                    .map(|id| id.to_string())
-                    .collect::<Cow<'static, str>>(),
                 &i16::from(<ExplicitContentFilter as Into<u8>>::into(
                     entity.explicit_content_filter,
                 )),
