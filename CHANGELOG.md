@@ -6,18 +6,29 @@
 
 ## API Backend
 
+- **Changed:** updated `rust-version` to 1.79
+
 ## Buildsystem
 
+- **Changed:** updated `rust-version` to 1.79
+
 ## Database Queries
+
+- **Changed:** updated `rust-version` to 1.79
 
 ## Discord Frontend
 
 - **Added:** `/info emoji` command
 - **Added:** basic panic handling via unwinding for interaction commands only
+- **Changed:** updated `rust-version` to 1.79
 
 ## Localization Infrastructure
 
+- **Changed:** updated `rust-version` to 1.79
+
 ## Rust Utilities
+
+- **Changed:** updated `rust-version` to 1.79
 
 ## Web Frontend
 

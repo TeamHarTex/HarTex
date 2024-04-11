@@ -53,6 +53,7 @@ use hartex_discord_entitycache_core::entity;
         "VerificationLevel": "twilight_model::guild::VerificationLevel"
     ],
     relates = [
+        multiple "EmojiEntity": via "id" as "guild_id",
         multiple "MemberEntity": via "id" as "guild_id",
     ],
 )]
