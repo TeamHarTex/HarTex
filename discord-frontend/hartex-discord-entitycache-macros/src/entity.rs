@@ -52,7 +52,8 @@ const PRELUDE_AND_PRIMITIVES: [&str; 21] = [
 ];
 
 /// Valid entities for inter-entity relationships.
-const VALID_ENTITIES: [(&str, &str); 4] = [
+const VALID_ENTITIES: [(&str, &str); 5] = [
+    ("EmojiEntity", "crate::emoji::EmojiEntity"),
     ("GuildEntity", "crate::guild::GuildEntity"),
     ("MemberEntity", "crate::member::MemberEntity"),
     ("RoleEntity", "crate::role::RoleEntity"),
