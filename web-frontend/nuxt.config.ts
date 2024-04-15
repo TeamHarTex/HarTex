@@ -4,15 +4,20 @@ export default defineNuxtConfig({
       title: "HarTex",
     },
   },
-  modules: ["@hypernym/nuxt-gsap", "@unocss/nuxt", "@vueuse/nuxt"],
+  modules: [
+    "@hypernym/nuxt-gsap",
+    "@unocss/nuxt",
+    "@vueuse/nuxt",
+    "@nuxt/content",
+  ],
   gsap: {
     extraPlugins: {
-      scrollTrigger: true
-    }
+      scrollTrigger: true,
+    },
   },
   devtools: {
     timeline: {
-      enabled: true
-    }
-  }
+      enabled: true,
+    },
+  },
 });

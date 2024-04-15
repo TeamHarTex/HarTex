@@ -23,7 +23,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <template>
   <header>
     <h1>
-      Discord server management,<br/>
+      Discord server management,<br />
       <span>reimagined</span>.
     </h1>
     <NuxtLink class="primary-btn">Add to Discord</NuxtLink>

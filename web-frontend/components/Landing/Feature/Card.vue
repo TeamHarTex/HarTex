@@ -23,7 +23,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <template>
   <div class="card" ref="card">
     <h2>{{ heading }}</h2>
-    <slot/>
+    <slot />
   </div>
 </template>
 
@@ -39,19 +39,28 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <script setup lang="ts">
 defineProps({
-  heading: String
+  heading: String,
 });
 
-const card = ref(null);
+const card: Ref<HTMLElement | null> = ref(null);
 
-const {elementX, elementY, elementHeight, elementWidth, isOutside} = useMouseInElement(card);
+const { elementX, elementY, elementHeight, elementWidth, isOutside } =
+  useMouseInElement(card);
 
 const cardTransform = computed(() => {
   const maxRotation = Math.PI * 2;
 
-  const rX = (maxRotation / 2 - (elementY.value / elementHeight.value) * maxRotation).toFixed(2);
-  const rY = (maxRotation / 2 - (elementX.value / elementWidth.value) * maxRotation).toFixed(2);
+  const rX = (
+    maxRotation / 2 -
+    (elementY.value / elementHeight.value) * maxRotation
+  ).toFixed(2);
+  const rY = (
+    maxRotation / 2 -
+    (elementX.value / elementWidth.value) * maxRotation
+  ).toFixed(2);
 
-  return isOutside.value ? '' : `perspective(${elementWidth.value}px) rotateX(${rX}deg) rotateY(${rY}deg)`;
+  return isOutside.value
+    ? ""
+    : `perspective(${elementWidth.value}px) rotateX(${rX}deg) rotateY(${rY}deg)`;
 });
 </script>
