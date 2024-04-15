@@ -17,7 +17,7 @@ lazy_static = "1.4.0"
 pluralizer = "0.4.0"
 proc-macro2 = "1.0.80"
 quote = "1.0.36"
-syn = { version = "2.0.58", features = ["extra-traits", "full"] }
+syn = { version = "2.0.59", features = ["extra-traits", "full"] }
 hartex-macro-utils = { version = "0.1.0", path = "../../rust-utilities/hartex-macro-utils" }
 
 [build-dependencies]
@@ -25,7 +25,7 @@ convert_case = "0.6.0"
 proc-macro2 = "1.0.80"
 quote = "1.0.36"
 reqwest = { version = "0.12.3", features = ["blocking"] }
-syn = { version = "2.0.58", features = ["extra-traits", "full"] }
+syn = { version = "2.0.59", features = ["extra-traits", "full"] }
 zip = { version = "0.6.6" }
 
 [features]
