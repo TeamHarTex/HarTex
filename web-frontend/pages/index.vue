@@ -21,7 +21,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-  <LandingHero/>
-  <LandingFeatureGrid/>
-  <LandingContribute/>
+  <LandingHero />
+  <LandingFeatureGrid />
+  <LandingContribute />
 </template>
