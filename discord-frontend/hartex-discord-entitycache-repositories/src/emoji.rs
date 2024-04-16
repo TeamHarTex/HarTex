@@ -20,18 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_entitycache_core::entity;
+use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::emoji::EmojiEntity;
 
-/// An emoji entity.
-#[entity(
-    from = "twilight_model::guild::Emoji",
-    assume = ["CachedEmojiSelectByGuildId"],
-    id = ["id", "guild_id"],
-    include = [],
-    extra = [
-        "guild_id": "Id<GuildMarker>",
-    ],
-    overrides = [],
-    relates = [],
-)]
-pub struct EmojiEntity;
+/// Repository for emoji entities.
+pub struct CachedEmojiRepository;
+
+impl Repository<EmojiEntity> for CachedEmojiRepository {
+    async fn get(&self, entity_id: EmojiEntity::Id) -> CacheResult<EmojiEntity> {
+        todo!()
+    }
+
+    async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
+        todo!()
+    }
+}
