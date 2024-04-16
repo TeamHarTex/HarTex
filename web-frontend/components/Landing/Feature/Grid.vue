@@ -21,45 +21,45 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-  <section>
-    <div class="features">
-      <LandingFeatureCard class="first" heading="Flexible configurations:">
-        <div class="whitespace"></div>
-        <ul>
-          <li>Comprehensive API,</li>
-          <li>Example,</li>
-          <li>... and much more</li>
-        </ul>
-      </LandingFeatureCard>
-      <LandingFeatureCard class="second" heading="Ticket system">
-        <div class="i-carbon-ticket"></div>
-      </LandingFeatureCard>
-      <LandingFeatureCard class="third">
-        <h2>
-          Any questions?<br/>
-          Join our
-          <NuxtLink to="https://discord.com/invite/Xu8453VBAv"
-                    class="inline-btn"
-                    target="_blank">Discord
-          </NuxtLink>
-        </h2>
-        <div class="i-carbon-share-knowledge"></div>
-      </LandingFeatureCard>
-      <LandingFeatureCard class="forth" heading="Leveling system">
-        <div class="i-carbon-increase-level"></div>
-      </LandingFeatureCard>
-      <LandingFeatureCard class="fifth" heading="Starboard">
-        <div class="i-carbon-star"></div>
-      </LandingFeatureCard>
-      <LandingFeatureCard class="sixth" heading="Robust moderation features:">
-        <div class="whitespace"></div>
-        <ul>
-          <li>Infraction database,</li>
-          <li>Example,</li>
-          <li>... and much more</li>
-        </ul>
-      </LandingFeatureCard>
-    </div>
+  <section class="features">
+    <LandingFeatureCard class="first" heading="Flexible configurations:">
+      <div class="whitespace"></div>
+      <ul>
+        <li>Comprehensive API,</li>
+        <li>Example,</li>
+        <li>... and much more</li>
+      </ul>
+    </LandingFeatureCard>
+    <LandingFeatureCard class="second" heading="Ticket system">
+      <div class="i-carbon-ticket"></div>
+    </LandingFeatureCard>
+    <LandingFeatureCard class="third">
+      <h2>
+        Any questions?<br />
+        Join our
+        <NuxtLink
+          to="https://discord.com/invite/Xu8453VBAv"
+          class="inline-btn"
+          target="_blank"
+          >Discord
+        </NuxtLink>
+      </h2>
+      <div class="i-carbon-share-knowledge"></div>
+    </LandingFeatureCard>
+    <LandingFeatureCard class="forth" heading="Leveling system">
+      <div class="i-carbon-increase-level"></div>
+    </LandingFeatureCard>
+    <LandingFeatureCard class="fifth" heading="Starboard">
+      <div class="i-carbon-star"></div>
+    </LandingFeatureCard>
+    <LandingFeatureCard class="sixth" heading="Robust moderation features:">
+      <div class="whitespace"></div>
+      <ul>
+        <li>Infraction database,</li>
+        <li>Example,</li>
+        <li>... and much more</li>
+      </ul>
+    </LandingFeatureCard>
   </section>
 </template>
 
@@ -79,7 +79,8 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     grid-area: 2 / 3 / 3 / 5;
   }
 
-  .first, .sixth {
+  .first,
+  .sixth {
     h2 {
       @apply text-2xl md:text-3xl 5xl:text-4xl;
     }
@@ -89,7 +90,10 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     }
   }
 
-  .second, .third, .forth, .fifth {
+  .second,
+  .third,
+  .forth,
+  .fifth {
     @apply items-center justify-center text-center;
 
     h2 {
@@ -102,7 +106,8 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
   }
 
   @media only screen and (max-width: 1024px) {
-    .first, .sixth {
+    .first,
+    .sixth {
       grid-area: auto;
     }
   }

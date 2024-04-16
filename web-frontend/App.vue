@@ -22,7 +22,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <template>
   <NuxtLayout>
-    <NuxtPage/>
+    <NuxtPage />
   </NuxtLayout>
 </template>
 
@@ -49,7 +49,9 @@ body {
   @apply bg-primary text-tertiary;
 }
 
-main, nav, footer {
+main,
+nav,
+footer {
   @apply px-10 sm:px-20 md:px-30 lg:px-40 xl:px-60 2xl:px-80;
 }
 
@@ -84,7 +86,7 @@ section:last-of-type {
 </style>
 
 <script setup lang="ts">
-import {useSmoothScroll} from "~/composables/useSmoothScroll";
+import { useSmoothScroll } from "~/composables/useSmoothScroll";
 
 onMounted(() => {
   useSmoothScroll();

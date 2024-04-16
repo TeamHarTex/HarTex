@@ -33,7 +33,10 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
       <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
         <div class="i-carbon:logo-github"></div>
       </NuxtLink>
-      <NuxtLink to="https://github.com/TeamHarTex/HarTex/blob/nightly/CHANGELOG.md" target="_blank">
+      <NuxtLink
+        to="https://github.com/TeamHarTex/HarTex/blob/nightly/CHANGELOG.md"
+        target="_blank"
+      >
         <div class="i-carbon:catalog"></div>
       </NuxtLink>
     </div>
@@ -74,7 +77,7 @@ let showNavbar = true;
 let lastScrollPosition = 0;
 
 onMounted(() => {
-  window.addEventListener('scroll', onScroll);
+  window.addEventListener("scroll", onScroll);
 });
 
 function onScroll() {
@@ -85,7 +88,7 @@ function onScroll() {
   }
 
   if (Math.abs(currentScrollPosition - lastScrollPosition) < 30) {
-    return
+    return;
   }
 
   showNavbar = currentScrollPosition < lastScrollPosition;
@@ -95,10 +98,10 @@ function onScroll() {
   if (navbar.value) {
     if (!showNavbar) {
       navbar.value.style.opacity = "0";
-      navbar.value.style.pointerEvents = 'none';
+      navbar.value.style.pointerEvents = "none";
     } else {
       navbar.value.style.opacity = "100";
-      navbar.value.style.pointerEvents = 'auto';
+      navbar.value.style.pointerEvents = "auto";
     }
   }
 }

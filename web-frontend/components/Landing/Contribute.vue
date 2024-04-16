@@ -25,10 +25,18 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     <h2>Want to contribute to or support HarTex?</h2>
     <div class="whitespace"></div>
     <div class="links">
-      <NuxtLink class="primary-btn" to="https://github.com/TeamHarTex/HarTex" target="_blank">
+      <NuxtLink
+        class="primary-btn"
+        to="https://github.com/TeamHarTex/HarTex"
+        target="_blank"
+      >
         GitHub
       </NuxtLink>
-      <NuxtLink class="primary-btn" to="https://opencollective.com/HarTex" target="_blank">
+      <NuxtLink
+        class="primary-btn"
+        to="https://opencollective.com/HarTex"
+        target="_blank"
+      >
         Open Collective
       </NuxtLink>
     </div>
