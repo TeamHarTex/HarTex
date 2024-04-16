@@ -21,6 +21,7 @@
  */
 
 use hartex_discord_entitycache_core::error::CacheResult;
+use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::emoji::EmojiEntity;
 
@@ -28,7 +29,7 @@ use hartex_discord_entitycache_entities::emoji::EmojiEntity;
 pub struct CachedEmojiRepository;
 
 impl Repository<EmojiEntity> for CachedEmojiRepository {
-    async fn get(&self, entity_id: EmojiEntity::Id) -> CacheResult<EmojiEntity> {
+    async fn get(&self, entity_id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
         todo!()
     }
 
