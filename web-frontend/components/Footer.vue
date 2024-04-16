@@ -23,7 +23,10 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <template>
   <footer>
     <p>© Copyright 2021-2024, Team HarTex. All Rights Reserved.</p>
-    <p>HarTex and its affiliated software are protected under the GNU Affero General Public License.</p>
+    <p>
+      HarTex and its affiliated software are protected under the GNU Affero
+      General Public License.
+    </p>
   </footer>
 </template>
 

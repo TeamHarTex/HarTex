@@ -10,5 +10,5 @@ bun install
 bun run dev
 
 # When adding new package(s), please install them into devDependencies.
-bun add -d [package_name]
+bun add [package_name]
 ```
