@@ -20,20 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::pin::Pin;
+
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::emoji::EmojiEntity;
+use hartex_discord_utils::DATABASE_POOL;
+use tokio_postgres::GenericClient;
 
 /// Repository for emoji entities.
 pub struct CachedEmojiRepository;
 
 impl Repository<EmojiEntity> for CachedEmojiRepository {
-    async fn get(&self, entity_id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
+    async fn get(&self, _: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let _ = pooled.client();
+
         todo!()
     }
 
-    async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
+    async fn upsert(&self, _: EmojiEntity) -> CacheResult<()> {
         todo!()
     }
 }
