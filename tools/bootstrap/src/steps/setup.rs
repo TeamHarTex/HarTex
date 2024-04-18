@@ -38,6 +38,8 @@ use crate::config::Config;
 const FLEET_SETTINGS: &str = include_str!("../../config/fleet-settings.json");
 /// Path to a default VSCode settings file.
 const VSCODE_SETTINGS: &str = include_str!("../../config/vscode-settings.json");
+/// Path to a default Zed settings file.
+const ZED_SETTINGS: &str = include_str!("../../config/zed-settings.json");
 
 /// Profile for setting up the editors for different needs.
 #[allow(clippy::module_name_repetitions)]
@@ -354,6 +356,71 @@ pub fn setup_fleet_config(builder: &Builder<'_>) {
         .open(builder.build.config.root.join(".fleet/settings.json"))
         .expect("failed to open file");
     file.write(FLEET_SETTINGS.as_bytes())
+        .expect("failed to write to file");
+}
+
+/// Step for configuration for Zed.
+pub struct ConfigureZed;
+
+/// Utility function for setting up the configuration for Zed.
+impl Step for ConfigureZed {
+    type Output = ();
+
+    fn run(self, builder: &Builder<'_>) -> Self::Output {
+        setup_zed_config(builder);
+    }
+
+    fn run_config(run: RunConfig<'_>) {
+        let zed_config = run.builder.config.root.join(".zed/settings.json");
+
+        if zed_config.exists() {
+            eprintln!(
+                "WARN: a zed configuration file already exists at {}",
+                zed_config
+                    .canonicalize()
+                    .expect("failed to canonicalize path")
+                    .display()
+            );
+
+            match question_bool("Do you wish to delete and replace it?", false) {
+                Ok(true) => fs::remove_file(zed_config).expect("failed to remove file"),
+                _ => {
+                    println!("Operation cancelled. Skipping");
+                    return;
+                }
+            }
+        }
+
+        println!("INFO: Preview of the recommended Zed configuration file is as follows");
+        println!("{ZED_SETTINGS}");
+
+        match question_bool("Do you wish to continue?", true) {
+            Ok(true) => run.builder.run_step(ConfigureZed),
+            _ => {
+                println!("Operation cancelled. Skipping.");
+            }
+        }
+    }
+}
+
+/// Utility function for setting up the configuration for Zed.
+#[allow(clippy::missing_panics_doc)]
+#[allow(clippy::module_name_repetitions)]
+#[allow(clippy::unused_io_amount)]
+pub fn setup_zed_config(builder: &Builder<'_>) {
+    println!("INFO: writing new `.zed/settings.json`");
+
+    let zed_dir = builder.config.root.join(".zed");
+    if !zed_dir.exists() {
+        fs::create_dir(zed_dir).expect("failed to create directory");
+    }
+
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .open(builder.build.config.root.join(".zed/settings.json"))
+        .expect("failed to open file");
+    file.write(ZED_SETTINGS.as_bytes())
         .expect("failed to write to file");
 }
 
