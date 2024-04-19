@@ -43,7 +43,7 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
         let client = pooled.client();
 
         let data = cached_emoji_select_by_id()
-            .bind(&client, &id.to_string())
+            .bind(client, &id.to_string())
             .one()
             .await?;
 
@@ -62,7 +62,7 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
 
         cached_emoji_upsert()
             .bind(
-                &client,
+                client,
                 &entity.id.to_string(),
                 &entity.guild_id.to_string()
             ).await?;
