@@ -21,8 +21,11 @@
  */
 
 use std::pin::Pin;
+use std::str::FromStr;
 
+use hartex_discord_core::discord::model::id::Id;
 use hartex_database_queries::discord_frontend::queries::cached_emoji_upsert::cached_emoji_upsert;
+use hartex_database_queries::discord_frontend::queries::cached_emoji_select_by_id::cached_emoji_select_by_id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -34,12 +37,22 @@ use tokio_postgres::GenericClient;
 pub struct CachedEmojiRepository;
 
 impl Repository<EmojiEntity> for CachedEmojiRepository {
-    async fn get(&self, _: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
+    async fn get(&self, id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await?;
-        let _ = pooled.client();
+        let client = pooled.client();
 
-        todo!()
+        let data = cached_emoji_select_by_id()
+            .bind(&client, &id.to_string())
+            .one()
+            .await?;
+
+        Ok(EmojiEntity {
+            id: Id::from_str(&data.id)
+                .expect("id is zero (unexpected and unreachable)"),
+            guild_id: Id::from_str(&data.id)
+                .expect("id is zero (unexpected and unreachable)"),
+        })
     }
 
     async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
