@@ -26,7 +26,7 @@ use hartex_discord_entitycache_core::entity;
 #[entity(
     from = "twilight_model::guild::Emoji",
     assume = ["CachedEmojiSelectByGuildId"],
-    id = ["id", "guild_id"],
+    id = ["id"],
     include = [],
     extra = [
         "guild_id": "Id<GuildMarker>",

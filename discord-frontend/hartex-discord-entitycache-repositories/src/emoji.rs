@@ -22,6 +22,7 @@
 
 use std::pin::Pin;
 
+use hartex_database_queries::discord_frontend::queries::cached_emoji_upsert::cached_emoji_upsert;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -41,7 +42,18 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
         todo!()
     }
 
-    async fn upsert(&self, _: EmojiEntity) -> CacheResult<()> {
-        todo!()
+    async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
+
+        cached_emoji_upsert()
+            .bind(
+                &client,
+                &entity.id.to_string(),
+                &entity.guild_id.to_string()
+            ).await?;
+
+        Ok(())
     }
 }
