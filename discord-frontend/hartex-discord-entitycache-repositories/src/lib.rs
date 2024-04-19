@@ -27,6 +27,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+pub mod emoji;
 pub mod guild;
 pub mod member;
 pub mod role;
