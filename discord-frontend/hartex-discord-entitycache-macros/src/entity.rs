@@ -596,6 +596,12 @@ fn make_field_decl_and_assignments(
             quote! {#field_name: model.#field_name},
             quote! {#field_name: twilight_model::guild::MemberFlags::from_bits(model.#field_name as u64).unwrap()},
         )
+    } else if field_type.is("RoleFlags") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: twilight_model::guild::RoleFlags::from_bits(model.#field_name as u64).unwrap()},
+        )
     } else if field_type.is_option_of("ImageHash") {
         (
             quote! {pub #field_name: #field_type},
