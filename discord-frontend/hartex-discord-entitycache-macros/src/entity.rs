@@ -614,6 +614,18 @@ fn make_field_decl_and_assignments(
             quote! {#field_name: model.#field_name},
             quote! {#field_name: model.#field_name.map(|timestamp| twilight_model::util::Timestamp::from_secs(timestamp.unix_timestamp()).unwrap())},
         )
+    } else if field_type.is("i64") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name as i64},
+        )
+    } else if field_type.is("u32") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name as u32},
+        )
     } else if field_type.is_option_of("u64") {
         (
             quote! {pub #field_name: #field_type},
