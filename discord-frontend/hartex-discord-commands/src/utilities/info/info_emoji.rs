@@ -24,12 +24,18 @@
 //!
 //! This command returns information of a custom Discord emoji.
 
+use std::str::FromStr;
+
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::model::id::marker::EmojiMarker;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
@@ -82,10 +88,11 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             )
             .await
             .into_diagnostic()?;
+
         return Ok(());
     };
 
-    if captures.len() != 1 {
+    if captures.len() > 2 {
         interaction_client
             .create_response(
                 interaction.id,
@@ -101,8 +108,33 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
             )
             .await
             .into_diagnostic()?;
+
         return Ok(());
     }
+
+    let id = captures.get(1).unwrap().as_str();
+    let emoji_id = Id::<EmojiMarker>::from_str(id).unwrap();
+
+    let emoji = CachedEmojiRepository
+        .get(emoji_id)
+        .await
+        .into_diagnostic()?;
+
+    interaction_client
+        .create_response(
+            interaction.id,
+            &interaction.token,
+            &InteractionResponse {
+                kind: InteractionResponseType::ChannelMessageWithSource,
+                data: Some(
+                    InteractionResponseDataBuilder::new()
+                        .content(emoji.id.to_string())
+                        .build(),
+                ),
+            },
+        )
+        .await
+        .into_diagnostic()?;
 
     Ok(())
 }
