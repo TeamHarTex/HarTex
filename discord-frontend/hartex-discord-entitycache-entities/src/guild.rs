@@ -55,6 +55,7 @@ use hartex_discord_entitycache_core::entity;
     relates = [
         multiple "EmojiEntity": via "id" as "guild_id",
         multiple "MemberEntity": via "id" as "guild_id",
+        multiple "RoleEntity": via "id" as "guild_id",
     ],
 )]
 pub struct GuildEntity;

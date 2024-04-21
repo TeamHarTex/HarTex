@@ -43,7 +43,6 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
-use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -206,10 +205,13 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         ));
     }
 
-    let roles = CachedRoleRepository
-        .role_ids_in_guild(guild.id)
+    let roles = guild
+        .roles(guild.id)
         .await
-        .into_diagnostic()?;
+        .into_diagnostic()?
+        .iter()
+        .map(|entity| entity.id)
+        .collect::<Vec<_>>();
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
