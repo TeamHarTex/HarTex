@@ -206,10 +206,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         ));
     }
 
-    let roles = CachedRoleRepository
-        .role_ids_in_guild(guild.id)
-        .await
-        .into_diagnostic()?;
+    let roles = guild.roles(guild.id).await?
+        .iter()
+        .map(|entity| entity.id)
+        .collect::<Vec<_>>();
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
