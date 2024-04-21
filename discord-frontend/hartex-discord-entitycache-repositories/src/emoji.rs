@@ -23,9 +23,9 @@
 use std::pin::Pin;
 use std::str::FromStr;
 
-use hartex_discord_core::discord::model::id::Id;
-use hartex_database_queries::discord_frontend::queries::cached_emoji_upsert::cached_emoji_upsert;
 use hartex_database_queries::discord_frontend::queries::cached_emoji_select_by_id::cached_emoji_select_by_id;
+use hartex_database_queries::discord_frontend::queries::cached_emoji_upsert::cached_emoji_upsert;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -48,10 +48,8 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
             .await?;
 
         Ok(EmojiEntity {
-            id: Id::from_str(&data.id)
-                .expect("id is zero (unexpected and unreachable)"),
-            guild_id: Id::from_str(&data.id)
-                .expect("id is zero (unexpected and unreachable)"),
+            id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
+            guild_id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
         })
     }
 
@@ -61,11 +59,8 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
         let client = pooled.client();
 
         cached_emoji_upsert()
-            .bind(
-                client,
-                &entity.id.to_string(),
-                &entity.guild_id.to_string()
-            ).await?;
+            .bind(client, &entity.id.to_string(), &entity.guild_id.to_string())
+            .await?;
 
         Ok(())
     }
