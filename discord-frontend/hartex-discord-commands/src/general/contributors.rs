@@ -39,7 +39,6 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
-
 /// The `contributors` command declaration.
 #[metadata(command_type = 1, interaction_only = true, name = "contributors")]
 pub struct Contributors;
