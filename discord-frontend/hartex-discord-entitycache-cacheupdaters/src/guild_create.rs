@@ -27,8 +27,10 @@
 use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Repository;
+use hartex_discord_entitycache_entities::emoji::EmojiEntity;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
 use hartex_discord_entitycache_entities::role::RoleEntity;
+use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
 use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 
@@ -43,6 +45,12 @@ impl CacheUpdater for GuildCreate {
         for role in &self.0.roles {
             CachedRoleRepository
                 .upsert(RoleEntity::from((self.0.id, role.clone())))
+                .await?;
+        }
+
+        for emoji in &self.0.emojis {
+            CachedEmojiRepository
+                .upsert(EmojiEntity::from((self.0.id, emoji.clone())))
                 .await?;
         }
 
