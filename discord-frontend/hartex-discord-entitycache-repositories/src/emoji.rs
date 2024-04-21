@@ -48,8 +48,10 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
             .await?;
 
         Ok(EmojiEntity {
+            animated: data.animated,
             id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
             guild_id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
+            name: data.name,
         })
     }
 
@@ -59,7 +61,13 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
         let client = pooled.client();
 
         cached_emoji_upsert()
-            .bind(client, &entity.id.to_string(), &entity.guild_id.to_string())
+            .bind(
+                client,
+                &entity.animated,
+                &entity.id.to_string(),
+                &entity.guild_id.to_string(),
+                &entity.name,
+            )
             .await?;
 
         Ok(())
