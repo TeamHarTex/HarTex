@@ -23,6 +23,11 @@
 botinfo-embed-title=Runtime Information
 botinfo-embed-botstarted-field-name=Bot Started
 botinfo-embed-latency-field-name=Latency (Milliseconds)
+emojiinfo-embed-generalinfo-field-name=General Information
+emojiinfo-embed-generalinfo-guild-id-subfield-name=Guild ID:
+emojiinfo-embed-generalinfo-id-subfield-name=ID:
+emojiinfo-embed-generalinfo-animated-name=Animated:
+emojiinfo-embed-generalinfo-name-subfield-name=Name:
 emojiinfo-error-only-custom-emojis=Sorry! Only custom emojis are supported at this stage.
 emojiinfo-error-only-one-emoji=Querying multiple emojis is not supported.
 roleinfo-embed-description=Information of {$roleMention}
