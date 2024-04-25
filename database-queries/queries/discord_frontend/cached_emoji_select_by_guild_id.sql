@@ -1,4 +1,4 @@
---! cached_emoji_select_by_guild_id : (id, guild_id)
+--! cached_emoji_select_by_guild_id : (id, guild_id, animated, name)
 SELECT
     *
 FROM
