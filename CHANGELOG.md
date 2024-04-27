@@ -6,31 +6,43 @@
 
 ## API Backend
 
+- **Added:** code documentation
 - **Changed:** updated `rust-version` to 1.79
 
 ## Buildsystem
 
+- **Added:** code documentation
+- **Added:** setup procedure for the Zed editor for working with HarTex
 - **Changed:** updated `rust-version` to 1.79
 
 ## Database Queries
 
+- **Added:** code documentation
 - **Changed:** updated `rust-version` to 1.79
 
 ## Discord Frontend
 
 - **Added:** `/info emoji` command
-- **Added:** basic panic handling via unwinding for interaction commands only
+- **Added:** error handling for interaction commands only
+- **Added:** panic handling via unwinding for interaction commands only
+- **Added:** error reporting in internal channels and user-facing messages
+- **Added:** code documentation
 - **Changed:** updated `rust-version` to 1.79
+- **Changed:** updated cache entities and repositories
 
 ## Localization Infrastructure
 
+- **Added:** code documentation
 - **Changed:** updated `rust-version` to 1.79
 
 ## Rust Utilities
 
+- **Added:** code documentation
 - **Changed:** updated `rust-version` to 1.79
 
 ## Web Frontend
+
+- **Changed:** migrated to the Bun runtime
 
 # [0.9.0, Fluorine I](https://github.com/TeamHarTex/HarTex/compare/0.8.0..0.9.0)
 
