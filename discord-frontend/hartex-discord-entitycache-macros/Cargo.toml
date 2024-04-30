@@ -26,7 +26,7 @@ proc-macro2 = "1.0.81"
 quote = "1.0.36"
 reqwest = { version = "0.12.4", features = ["blocking"] }
 syn = { version = "2.0.60", features = ["extra-traits", "full"] }
-zip = { version = "1.1.2" }
+zip = { version = "1.1.3" }
 
 [features]
 default = ["discord_model_v_0_15_4"]
