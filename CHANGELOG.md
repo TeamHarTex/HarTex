@@ -1,8 +1,28 @@
-# [Next Version, Neon I](https://github.com/TeamHarTex/HarTex/compare/0.9.0...nightly)
+# [Next Version, Sodium I](https://github.com/TeamHarTex/HarTex/compare/0.10.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2024-03-08
+> **y** commits since 2024-04-30
+
+## API Backend
+
+## Buildsystem
+
+## Database Queries
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.10.0, Neon I](https://github.com/TeamHarTex/HarTex/compare/0.9.0..0.10.0)
+
+> **3** contributors made contributions to this release
+
+> **277** commits since 2024-03-08
 
 ## API Backend
 
@@ -46,7 +66,7 @@
 
 # [0.9.0, Fluorine I](https://github.com/TeamHarTex/HarTex/compare/0.8.0..0.9.0)
 
-> **4** contributor made contributions to this release
+> **4** contributors made contributions to this release
 
 > **205** commits since 2024-02-05
 
