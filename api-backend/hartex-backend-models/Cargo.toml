@@ -12,6 +12,6 @@ rust-version = "1.80.0"
 
 [dependencies]
 axum = "0.7.5"
-serde = { version = "1.0.199", features = ["derive"] }
+serde = { version = "1.0.200", features = ["derive"] }
 
 [features]
