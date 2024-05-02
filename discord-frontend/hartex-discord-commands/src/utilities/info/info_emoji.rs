@@ -33,9 +33,11 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::model::id::marker::EmojiMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFieldBuilder};
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
+use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
@@ -120,6 +122,25 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .await
         .into_diagnostic()?;
 
+    let emojiinfo_embed_generalinfo_field_name =
+        localizer.utilities_plugin_emojiinfo_embed_generalinfo_field_name()?;
+    let emojiinfo_embed_generalinfo_guild_id_subfield_name =
+        localizer.utilities_plugin_emojiinfo_embed_generalinfo_guild_id_subfield_name()?;
+
+    let embed = EmbedBuilder::new()
+        .color(0x41_A0_DE)
+        .field(EmbedFieldBuilder::new(
+            emojiinfo_embed_generalinfo_field_name,
+            format!(
+                "{} {}",
+                emojiinfo_embed_generalinfo_guild_id_subfield_name,
+                emoji.id.to_string().discord_inline_code(),
+            ),
+        ))
+        .validate()
+        .into_diagnostic()?
+        .build();
+
     interaction_client
         .create_response(
             interaction.id,
@@ -128,7 +149,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 kind: InteractionResponseType::ChannelMessageWithSource,
                 data: Some(
                     InteractionResponseDataBuilder::new()
-                        .content(emoji.id.to_string())
+                        .embeds(vec![embed])
                         .build(),
                 ),
             },
