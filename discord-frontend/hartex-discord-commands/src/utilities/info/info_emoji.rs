@@ -50,6 +50,7 @@ lazy_static::lazy_static! {
 }
 
 /// Executes the `info emoji` command.
+#[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()
@@ -124,6 +125,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
 
     let emojiinfo_embed_generalinfo_field_name =
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_field_name()?;
+    let emojiinfo_embed_generalinfo_id_subfield_name =
+        localizer.utilities_plugin_emojiinfo_embed_generalinfo_id_subfield_name()?;
+    let emojiinfo_embed_generalinfo_name_subfield_name =
+        localizer.utilities_plugin_emojiinfo_embed_generalinfo_name_subfield_name()?;
     let emojiinfo_embed_generalinfo_guild_id_subfield_name =
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_guild_id_subfield_name()?;
 
@@ -132,9 +137,13 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .field(EmbedFieldBuilder::new(
             emojiinfo_embed_generalinfo_field_name,
             format!(
-                "{} {}",
-                emojiinfo_embed_generalinfo_guild_id_subfield_name,
+                "{} {}\n{} {}\n{} {}",
+                emojiinfo_embed_generalinfo_id_subfield_name,
                 emoji.id.to_string().discord_inline_code(),
+                emojiinfo_embed_generalinfo_name_subfield_name,
+                emoji.name,
+                emojiinfo_embed_generalinfo_guild_id_subfield_name,
+                emoji.guild_id.to_string().discord_inline_code(),
             ),
         ))
         .validate()
