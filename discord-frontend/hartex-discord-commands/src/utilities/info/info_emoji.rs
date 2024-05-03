@@ -50,6 +50,7 @@ lazy_static::lazy_static! {
 }
 
 /// Executes the `info emoji` command.
+#[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
     let CommandOptionValue::SubCommand(options) = option.value else {
         unreachable!()
