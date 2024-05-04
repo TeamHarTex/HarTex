@@ -43,6 +43,7 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 use regex::Regex;
+use hartex_discord_utils::localizable::Localizable;
 
 lazy_static::lazy_static! {
     /// The regex for looking for a Discord emoji in the command input.
@@ -57,6 +58,10 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     };
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
+    let langid_locale = interaction
+        .locale
+        .clone()
+        .and_then(|locale| locale.parse().ok());
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
@@ -131,19 +136,23 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_name_subfield_name()?;
     let emojiinfo_embed_generalinfo_guild_id_subfield_name =
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_guild_id_subfield_name()?;
+    let emojiinfo_embed_generalinfo_animated_subfield_name =
+        localizer.utilities_plugin_emojiinfo_embed_generalinfo_animated_subfield_name()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             emojiinfo_embed_generalinfo_field_name,
             format!(
-                "{} {}\n{} {}\n{} {}",
+                "{} {}\n{} {}\n{} {}\n{} {}",
                 emojiinfo_embed_generalinfo_id_subfield_name,
                 emoji.id.to_string().discord_inline_code(),
                 emojiinfo_embed_generalinfo_name_subfield_name,
                 emoji.name,
                 emojiinfo_embed_generalinfo_guild_id_subfield_name,
                 emoji.guild_id.to_string().discord_inline_code(),
+                emojiinfo_embed_generalinfo_animated_subfield_name,
+                emoji.animated.localize(langid_locale)?,
             ),
         ))
         .validate()
