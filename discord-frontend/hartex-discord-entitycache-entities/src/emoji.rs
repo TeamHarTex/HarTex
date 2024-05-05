@@ -29,6 +29,7 @@ use hartex_discord_entitycache_core::entity;
     id = ["id"],
     include = [
         "animated",
+        "managed",
         "name",
     ],
     extra = [

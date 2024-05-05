@@ -51,6 +51,7 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
             animated: data.animated,
             id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
             guild_id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
+            managed: data.managed,
             name: data.name,
         })
     }
@@ -67,6 +68,7 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
                 &entity.id.to_string(),
                 &entity.guild_id.to_string(),
                 &entity.name,
+                &entity.managed,
             )
             .await?;
 
