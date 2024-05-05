@@ -138,13 +138,15 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_guild_id_subfield_name()?;
     let emojiinfo_embed_generalinfo_animated_subfield_name =
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_animated_subfield_name()?;
+    let emojiinfo_embed_generalinfo_managed_subfield_name =
+        localizer.utilities_plugin_emojiinfo_embed_generalinfo_managed_subfield_name()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
         .field(EmbedFieldBuilder::new(
             emojiinfo_embed_generalinfo_field_name,
             format!(
-                "{} {}\n{} {}\n{} {}\n{} {}",
+                "{} {}\n{} {}\n{} {}\n{} {}\n{} {}",
                 emojiinfo_embed_generalinfo_id_subfield_name,
                 emoji.id.to_string().discord_inline_code(),
                 emojiinfo_embed_generalinfo_name_subfield_name,
@@ -152,7 +154,9 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
                 emojiinfo_embed_generalinfo_guild_id_subfield_name,
                 emoji.guild_id.to_string().discord_inline_code(),
                 emojiinfo_embed_generalinfo_animated_subfield_name,
-                emoji.animated.localize(langid_locale)?,
+                emoji.animated.localize(langid_locale.clone())?,
+                emojiinfo_embed_generalinfo_managed_subfield_name,
+                emoji.managed.localize(langid_locale)?,
             ),
         ))
         .validate()
