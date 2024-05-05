@@ -5,11 +5,11 @@
 #[allow(unused_imports)] #[allow(dead_code)] pub mod queries
 { pub mod cached_emoji_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedEmojiSelectByGuildId
-{ pub id : String,pub guild_id : String,pub name : String,pub animated : bool,}pub struct CachedEmojiSelectByGuildIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub name : &'a str,pub animated : bool,}
+{ pub id : String,pub guild_id : String,pub name : String,pub animated : bool,pub managed : bool,}pub struct CachedEmojiSelectByGuildIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub name : &'a str,pub animated : bool,pub managed : bool,}
 impl<'a> From<CachedEmojiSelectByGuildIdBorrowed<'a>> for CachedEmojiSelectByGuildId
 {
-    fn from(CachedEmojiSelectByGuildIdBorrowed { id,guild_id,name,animated,}: CachedEmojiSelectByGuildIdBorrowed<'a>) ->
-    Self { Self { id: id.into(),guild_id: guild_id.into(),name: name.into(),animated,} }
+    fn from(CachedEmojiSelectByGuildIdBorrowed { id,guild_id,name,animated,managed,}: CachedEmojiSelectByGuildIdBorrowed<'a>) ->
+    Self { Self { id: id.into(),guild_id: guild_id.into(),name: name.into(),animated,managed,} }
 }pub struct CachedEmojiSelectByGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -66,15 +66,15 @@ CachedEmojiSelectByGuildId, 1>
     CachedEmojiSelectByGuildIdQuery
     {
         client, params: [guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedEmojiSelectByGuildIdBorrowed { id: row.get(0),guild_id: row.get(1),name: row.get(2),animated: row.get(3),} }, mapper: |it| { <CachedEmojiSelectByGuildId>::from(it) },
+        |row| { CachedEmojiSelectByGuildIdBorrowed { id: row.get(0),guild_id: row.get(1),name: row.get(2),animated: row.get(3),managed: row.get(4),} }, mapper: |it| { <CachedEmojiSelectByGuildId>::from(it) },
     }
 } }}pub mod cached_emoji_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedEmojiSelectById
-{ pub id : String,pub guild_id : String,pub name : String,pub animated : bool,}pub struct CachedEmojiSelectByIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub name : &'a str,pub animated : bool,}
+{ pub id : String,pub guild_id : String,pub name : String,pub animated : bool,pub managed : bool,}pub struct CachedEmojiSelectByIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub name : &'a str,pub animated : bool,pub managed : bool,}
 impl<'a> From<CachedEmojiSelectByIdBorrowed<'a>> for CachedEmojiSelectById
 {
-    fn from(CachedEmojiSelectByIdBorrowed { id,guild_id,name,animated,}: CachedEmojiSelectByIdBorrowed<'a>) ->
-    Self { Self { id: id.into(),guild_id: guild_id.into(),name: name.into(),animated,} }
+    fn from(CachedEmojiSelectByIdBorrowed { id,guild_id,name,animated,managed,}: CachedEmojiSelectByIdBorrowed<'a>) ->
+    Self { Self { id: id.into(),guild_id: guild_id.into(),name: name.into(),animated,managed,} }
 }pub struct CachedEmojiSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -131,27 +131,28 @@ CachedEmojiSelectById, 1>
     CachedEmojiSelectByIdQuery
     {
         client, params: [id,], stmt: &mut self.0, extractor:
-        |row| { CachedEmojiSelectByIdBorrowed { id: row.get(0),guild_id: row.get(1),name: row.get(2),animated: row.get(3),} }, mapper: |it| { <CachedEmojiSelectById>::from(it) },
+        |row| { CachedEmojiSelectByIdBorrowed { id: row.get(0),guild_id: row.get(1),name: row.get(2),animated: row.get(3),managed: row.get(4),} }, mapper: |it| { <CachedEmojiSelectById>::from(it) },
     }
 } }}pub mod cached_emoji_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedEmojiUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,> { pub animated: bool,pub name: T1,pub id: T2,pub guild_id: T3,}pub fn cached_emoji_upsert() -> CachedEmojiUpsertStmt
-{ CachedEmojiUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedEmojis\" (\"animated\", \"name\", \"id\", \"guild_id\")
-VALUES ($1, $2, $3, $4)
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedEmojiUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,> { pub animated: bool,pub name: T1,pub id: T2,pub guild_id: T3,pub managed: bool,}pub fn cached_emoji_upsert() -> CachedEmojiUpsertStmt
+{ CachedEmojiUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedEmojis\" (\"animated\", \"name\", \"id\", \"guild_id\", \"managed\")
+VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT (\"id\") DO UPDATE
     SET
         \"guild_id\" = $4,
         \"animated\" = $1,
-        \"name\" = $2")) } pub struct
+        \"name\" = $2,
+        \"managed\" = $5")) } pub struct
 CachedEmojiUpsertStmt(cornucopia_async::private::Stmt); impl CachedEmojiUpsertStmt
 { pub async fn bind<'a, C:
 GenericClient,T1:
 cornucopia_async::StringSql,T2:
 cornucopia_async::StringSql,T3:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-animated: &'a bool,name: &'a T1,id: &'a T2,guild_id: &'a T3,) -> Result<u64, tokio_postgres::Error>
+animated: &'a bool,name: &'a T1,id: &'a T2,guild_id: &'a T3,managed: &'a bool,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
-    client.execute(stmt, &[animated,name,id,guild_id,]).await
+    client.execute(stmt, &[animated,name,id,guild_id,managed,]).await
 } }impl <'a, C: GenericClient + Send + Sync, T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,>
 cornucopia_async::Params<'a, CachedEmojiUpsertParams<T1,T2,T3,>, std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
 tokio_postgres::Error>> + Send + 'a>>, C> for CachedEmojiUpsertStmt
@@ -160,7 +161,7 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedEmojiUpsertStmt
     params(&'a mut self, client: &'a  C, params: &'a
     CachedEmojiUpsertParams<T1,T2,T3,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
-    { Box::pin(self.bind(client, &params.animated,&params.name,&params.id,&params.guild_id,)) }
+    { Box::pin(self.bind(client, &params.animated,&params.name,&params.id,&params.guild_id,&params.managed,)) }
 }}pub mod cached_guild_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedGuildSelectById
 { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : Vec<String>,pub icon : Option<String>,pub id : String,pub large : bool,pub name : String,pub owner_id : String,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub id : &'a str,pub large : bool,pub name : &'a str,pub owner_id : &'a str,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}
