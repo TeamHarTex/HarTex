@@ -4454,12 +4454,26 @@ name = "zeroize"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "525b4ec142c6b68a2d10f01f7bbf6755599ca3f81ea53b8431b7dd348f5fdb2d"
+dependencies = [
+ "zeroize_derive",
+]
+
+[[package]]
+name = "zeroize_derive"
+version = "1.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ce36e65b0d2999d2aafac989fb249189a141aee1f53c612c1f37d72631959f69"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.60",
+]
 
 [[package]]
 name = "zip"
-version = "1.2.0"
+version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57c07d35c02b10a0884b033b17edb61a4d7bc443ef9a12636bb8cd2e8b8ab5ca"
+checksum = "006d078b7b6fc587bb25e022ad39e7086f44e5c4fef6076964ea601533241beb"
 dependencies = [
  "aes",
  "arbitrary",
@@ -4475,9 +4489,11 @@ dependencies = [
  "lzma-rs",
  "num_enum 0.7.2",
  "pbkdf2",
+ "rand 0.8.5",
  "sha1",
  "thiserror",
  "time",
+ "zeroize",
  "zopfli",
  "zstd",
 ]
