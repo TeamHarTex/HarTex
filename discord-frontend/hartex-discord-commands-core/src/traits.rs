@@ -30,12 +30,6 @@ pub trait CommandMetadata {
     /// Whether the command is only available in the form of an interaction.
     fn interaction_only(&self) -> bool;
 
-    /// The minimum rank permission level required to run this command.
-    #[deprecated(since = "0.4.0")]
-    fn minimum_level(&self) -> u16 {
-        0
-    }
-
     /// The name of the command.
     fn name(&self) -> String;
 }
@@ -43,6 +37,5 @@ pub trait CommandMetadata {
 /// The command trait.
 pub trait Command: CommandMetadata {
     /// Executes the command.
-    #[allow(async_fn_in_trait)]
     async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
 }
