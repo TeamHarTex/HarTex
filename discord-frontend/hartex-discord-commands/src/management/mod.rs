@@ -20,17 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Discord Frontend Commands
+//! # The Management Plugin
 //!
-//! This crate contains implementations of the commands. These are also categozied
-//! in modules in terms of the corresponding "plugin" they belong to.
+//! Command List:
+//! - role
 
-#![allow(deprecated)]
-#![allow(incomplete_features)]
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
-pub mod general;
-pub mod management;
-pub mod utilities;
+pub mod role;
