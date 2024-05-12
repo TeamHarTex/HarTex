@@ -20,43 +20,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Plugins Configuration Object
+//! # Management Plugin Configuration Object
 
 use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
 
-use crate::config::plugins::management::ManagementPlugin;
-use crate::config::plugins::utilities::UtilitiesPlugin;
-
-pub mod management;
-pub mod utilities;
-
-/// The plugins configuration object.
+/// The management plugin configuration object.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
-pub struct Plugins {
-    /// Optional configuration object for the management plugin.
-    pub management: Option<ManagementPlugin>,
-    /// Optional configuration object for the utilities plugin.
-    pub utilities: Option<UtilitiesPlugin>,
+pub struct ManagementPlugin {
+    /// Sets whether the management plugin is enabled.
+    pub enabled: bool,
 }
 
-impl<'lua> FromLua<'lua> for Plugins {
+impl<'lua> FromLua<'lua> for ManagementPlugin {
     fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
-                "Dashboard: mismatched value type, exoected table, found: {}",
+                "ManagementPlugin: mismatched value type, exoected table, found: {}",
                 lua_value.type_name()
             )));
         };
 
-        let management = table.get("management")?;
-        let utilities = table.get("utilities")?;
+        let enabled = table.get("enabled")?;
 
-        Ok(Self {
-            management,
-            utilities,
-        })
+        Ok(Self { enabled })
     }
 }

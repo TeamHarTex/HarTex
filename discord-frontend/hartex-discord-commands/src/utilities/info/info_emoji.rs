@@ -37,13 +37,13 @@ use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFiel
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
+use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 use regex::Regex;
-use hartex_discord_utils::localizable::Localizable;
 
 lazy_static::lazy_static! {
     /// The regex for looking for a Discord emoji in the command input.
