@@ -42,6 +42,9 @@
                   <Item>
                     <option name="path" value="discord-frontend/hartex-discord-commands-spec/utilities-plugin/serverinfo.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="discord-frontend/hartex-discord-commands-spec/management-plugin/role.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
