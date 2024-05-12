@@ -20,17 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Discord Frontend Commands
-//!
-//! This crate contains implementations of the commands. These are also categozied
-//! in modules in terms of the corresponding "plugin" they belong to.
+//! # The Role Command
 
-#![allow(deprecated)]
-#![allow(incomplete_features)]
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+use hartex_discord_commands_core::metadata;
+use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::model::application::interaction::Interaction;
 
-pub mod general;
-pub mod management;
-pub mod utilities;
+/// The `info` command declaration.
+#[metadata(command_type = 1, interaction_only = true, name = "role")]
+pub struct Role;
+
+impl Command for Role {
+    async fn execute(&self, _: Interaction) -> miette::Result<()> {
+        Ok(())
+    }
+}

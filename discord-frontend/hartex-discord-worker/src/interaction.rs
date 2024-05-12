@@ -22,6 +22,7 @@
 
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::contributors::Contributors;
+use hartex_discord_commands::management::role::Role;
 use hartex_discord_commands::utilities::info::Info;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
@@ -46,6 +47,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
         name if name == About.name() => About.execute(cloned.0).await,
         name if name == Contributors.name() => Contributors.execute(cloned.0).await,
         name if name == Info.name() => Info.execute(cloned.0).await,
+        name if name == Role.name() => Role.execute(cloned.0).await,
         _ => Ok(()),
     } {
         crate::errorhandler::handle_interaction_error(
