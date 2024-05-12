@@ -57,6 +57,12 @@ return {
 
     -- Configuration for various plugins.
     plugins = {
+        -- Configuration for the Management plugin.
+        management = {
+            -- Whether this plugin is enabled.
+            enabled = true
+        },
+
         -- Configuration for the Utilities plugin.
         utilities = {
             -- Whether this plugin is enabled.
