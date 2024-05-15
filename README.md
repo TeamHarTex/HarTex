@@ -35,10 +35,6 @@ Announcements will be made as we progress through finishing the basic functional
 
 ## Building, Testing and Self-hosting
 
-> [!WARNING]
-> **While we do support development of the project on Windows, please make sure that all files are configured to use the LF line ending.**
-> **The Windows CRLF line ending does not work well with the testsuite.**
-
 If you are interested in using HarTex at an early stage, then you may host your own instance of HarTex. Documentation for
 which will be added at a later date.
 
