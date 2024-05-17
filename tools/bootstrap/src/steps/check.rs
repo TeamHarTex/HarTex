@@ -59,7 +59,7 @@ impl Step for CheckDatabase {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        check_cargo_project("database-queries", builder);
+        check_cargo_project("database", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -67,7 +67,7 @@ impl Step for CheckDatabase {
             .builder
             .config
             .subcommand_args
-            .contains(&String::from("database-queries"))
+            .contains(&String::from("database"))
             || run.builder.config.subcommand_args.is_empty()
         {
             run.builder.run_step(CheckDatabase);
