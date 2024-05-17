@@ -13,7 +13,6 @@
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-models-v2/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-routes/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/database-queries/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-cdn/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-commands-core/src" isTestSource="false" />
@@ -42,14 +41,17 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-log/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tools/bootstrap/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tools/testsuite/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database/database-migrate/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database/database-queries/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
-      <excludeFolder url="file://$MODULE_DIR$/database-queries/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
       <excludeFolder url="file://$MODULE_DIR$/localization/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/bootstrap/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
+      <excludeFolder url="file://$MODULE_DIR$/database/database-queries/target" />
+      <excludeFolder url="file://$MODULE_DIR$/database/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
