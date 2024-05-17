@@ -20,4 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+use std::env;
+
+use miette::IntoDiagnostic;
+use hartex_log::log;
+
+#[tokio::main]
+pub async fn main() -> miette::Result<()> {
+    hartex_log::initialize();
+
+    log::trace!("loading environment variables");
+    dotenvy::dotenv().into_diagnostic()?;
+
+    log::trace!("establishing database connection");
+    let url = env::var("API_PGSQL_URL").unwrap();
+
+    Ok(())
+}
