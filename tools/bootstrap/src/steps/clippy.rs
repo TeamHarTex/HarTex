@@ -58,7 +58,7 @@ impl Step for ClippyDatabase {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        clippy_cargo_project("database-queries", builder);
+        clippy_cargo_project("database", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -66,7 +66,7 @@ impl Step for ClippyDatabase {
             .builder
             .config
             .subcommand_args
-            .contains(&String::from("database-queries"))
+            .contains(&String::from("database"))
             || run.builder.config.subcommand_args.is_empty()
         {
             run.builder.run_step(ClippyDatabase);

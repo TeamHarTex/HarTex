@@ -58,7 +58,7 @@ impl Step for CleanDatabase {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        clean("database-queries", builder);
+        clean("database", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -66,7 +66,7 @@ impl Step for CleanDatabase {
             .builder
             .config
             .subcommand_args
-            .contains(&String::from("database-queries"))
+            .contains(&String::from("database"))
             || run.builder.config.subcommand_args.is_empty()
         {
             run.builder.run_step(CleanDatabase);

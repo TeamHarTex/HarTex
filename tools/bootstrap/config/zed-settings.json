@@ -25,7 +25,7 @@
                 },
                 "linkedProjects": [
                     "./api-backend/Cargo.toml",
-                    "./database-queries/Cargo.toml",
+                    "./database/Cargo.toml",
                     "./discord-frontend/Cargo.toml",
                     "./localization/Cargo.toml",
                     "./rust-utilities/Cargo.toml",
