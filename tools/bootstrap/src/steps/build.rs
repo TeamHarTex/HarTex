@@ -57,7 +57,7 @@ impl Step for Database {
     type Output = ();
 
     fn run(self, builder: &Builder<'_>) -> Self::Output {
-        build_cargo_project("database-queries", builder);
+        build_cargo_project("database", builder);
     }
 
     fn run_config(run: RunConfig<'_>) {
@@ -65,7 +65,7 @@ impl Step for Database {
             .builder
             .config
             .subcommand_args
-            .contains(&String::from("database-queries"))
+            .contains(&String::from("database"))
             || run.builder.config.subcommand_args.is_empty()
         {
             run.builder.run_step(Database);

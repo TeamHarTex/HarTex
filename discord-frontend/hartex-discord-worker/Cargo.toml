@@ -13,7 +13,7 @@ rust-version = "1.80.0"
 [dependencies]
 hartex_backend_models_v2 = { path = "../../api-backend/hartex-backend-models-v2" }
 
-hartex_database_queries = { path = "../../database-queries" }
+hartex_database_queries = { path = "../../database/database-queries" }
 
 hartex_discord_commands = { path = "../hartex-discord-commands" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
