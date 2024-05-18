@@ -20,11 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Database Migration Binary
+//!
+//! This utility is used for migrating to certain revisions of the PostgreSQL database
+//! used by HarTex.
+
 use std::env;
 
 use miette::IntoDiagnostic;
 use hartex_log::log;
+use tokio_postgres::NoTls;
 
+refinery::embed_migrations!();
+
+/// The entry point of the migration utility program.
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
@@ -34,6 +43,16 @@ pub async fn main() -> miette::Result<()> {
 
     log::trace!("establishing database connection");
     let url = env::var("API_PGSQL_URL").unwrap();
+    let (mut client, connection) =
+        tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
+
+    tokio::spawn(async move {
+        if let Err(error) = connection.await {
+            log::error!("postgres connection error: {error}");
+        }
+    });
+
+    migrations::runner().run_async(&mut client).await.into_diagnostic()?;
 
     Ok(())
 }
