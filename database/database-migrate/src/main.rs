@@ -24,6 +24,9 @@ use std::env;
 
 use miette::IntoDiagnostic;
 use hartex_log::log;
+use tokio_postgres::NoTls;
+
+refinery::embed_migrations!();
 
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
@@ -34,6 +37,16 @@ pub async fn main() -> miette::Result<()> {
 
     log::trace!("establishing database connection");
     let url = env::var("API_PGSQL_URL").unwrap();
+    let (mut client, connection) =
+        tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
+
+    tokio::spawn(async move {
+        if let Err(error) = connection.await {
+            log::error!("postgres connection error: {error}");
+        }
+    });
+
+    migrations::runner().run_async(&mut client).await.into_diagnostic()?;
 
     Ok(())
 }
