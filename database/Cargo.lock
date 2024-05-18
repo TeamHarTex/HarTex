@@ -153,6 +153,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "barrel"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad9e605929a6964efbec5ac0884bd0fe93f12a3b1eb271f52c251316640c68d9"
+
+[[package]]
 name = "base64"
 version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -610,6 +616,7 @@ checksum = "4271d37baee1b8c7e4b708028c57d816cf9d2434acb33a549475f78c181f6253"
 name = "hartex_database_migrate"
 version = "0.10.0"
 dependencies = [
+ "barrel",
  "dotenvy",
  "hartex_log",
  "miette 7.2.0",

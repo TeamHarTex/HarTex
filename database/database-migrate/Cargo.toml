@@ -13,6 +13,7 @@ rust-version = "1.80.0"
 [dependencies]
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
+barrel = { version = "0.7.0", features = ["pg"] }
 dotenvy = "0.15.7"
 miette = { version = "7.2.0", features = ["fancy"] }
 refinery = { version = "0.8.14", features = ["tokio-postgres"] }
