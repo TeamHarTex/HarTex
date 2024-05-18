@@ -20,6 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Database Migration Binary
+//!
+//! This utility is used for migrating to certain revisions of the PostgreSQL database
+//! used by HarTex.
+
 use std::env;
 
 use miette::IntoDiagnostic;
@@ -28,6 +33,7 @@ use tokio_postgres::NoTls;
 
 refinery::embed_migrations!();
 
+/// The entry point of the migration utility program.
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
