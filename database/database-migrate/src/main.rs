@@ -31,7 +31,16 @@ use miette::IntoDiagnostic;
 use hartex_log::log;
 use tokio_postgres::NoTls;
 
-refinery::embed_migrations!();
+mod api_bcakend {
+    refinery::embed_migrations!("api-backend-migrations");
+}
+
+mod discord_frontend {
+    refinery::embed_migrations!("discord-frontend-migrations");
+}
+
+#[path = "../discord-frontend-migrations/V1__init.rs"]
+mod __this_is_only_here_such_that_intellisense_works1__;
 
 /// The entry point of the migration utility program.
 #[tokio::main]
@@ -42,7 +51,7 @@ pub async fn main() -> miette::Result<()> {
     dotenvy::dotenv().into_diagnostic()?;
 
     log::trace!("establishing database connection");
-    let url = env::var("API_PGSQL_URL").unwrap();
+    let url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
     let (mut client, connection) =
         tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
 
@@ -52,7 +61,19 @@ pub async fn main() -> miette::Result<()> {
         }
     });
 
-    migrations::runner().run_async(&mut client).await.into_diagnostic()?;
+    discord_frontend::migrations::runner().run_async(&mut client).await.into_diagnostic()?;
+
+    let url2 = env::var("API_BACKEND_PGSQL_URL").unwrap();
+    let (mut client2, connection2) =
+        tokio_postgres::connect(&url2, NoTls).await.into_diagnostic()?;
+
+    tokio::spawn(async move {
+        if let Err(error) = connection2.await {
+            log::error!("postgres connection error: {error}");
+        }
+    });
+
+    api_bcakend::migrations::runner().run_async(&mut client2).await.into_diagnostic()?;
 
     Ok(())
 }
