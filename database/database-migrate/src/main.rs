@@ -42,7 +42,7 @@ pub async fn main() -> miette::Result<()> {
     dotenvy::dotenv().into_diagnostic()?;
 
     log::trace!("establishing database connection");
-    let url = env::var("API_PGSQL_URL").unwrap();
+    let url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
     let (mut client, connection) =
         tokio_postgres::connect(&url, NoTls).await.into_diagnostic()?;
 
