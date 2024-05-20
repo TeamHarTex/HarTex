@@ -39,8 +39,10 @@ mod discord_frontend {
     refinery::embed_migrations!("discord-frontend-migrations");
 }
 
-#[path = "../discord-frontend-migrations/V1__init.rs"]
+#[path = "../api-backend-migrations/V1__init.rs"]
 mod __this_is_only_here_such_that_intellisense_works1__;
+#[path = "../discord-frontend-migrations/V1__init.rs"]
+mod __this_is_only_here_such_that_intellisense_works2__;
 
 /// The entry point of the migration utility program.
 #[tokio::main]
