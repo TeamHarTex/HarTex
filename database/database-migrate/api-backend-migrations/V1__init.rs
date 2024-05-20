@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Discord Frontend Database Migration V1: Schema Initialization
+//! # API Backend Database Migration V1: Schema Initialization
 
 use barrel::Migration;
 use barrel::backend::Pg;
@@ -31,3 +31,4 @@ pub fn migration() -> String {
 
     migration.make::<Pg>()
 }
+
