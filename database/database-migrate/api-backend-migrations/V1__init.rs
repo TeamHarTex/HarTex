@@ -20,14 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Discord Frontend Database Migration V1: Schema Initialization
+//! # API Backend Database Migration V1: Schema Initialization
 
 use barrel::Migration;
 use barrel::backend::Pg;
+use barrel::types;
 
 /// Perform the database migration.
 pub fn migration() -> String {
     let mut migration = Migration::new();
+    migration.create_table_if_not_exists("StartTimestamp", |table| {
+        table.add_column("component", types::text());
+        table.add_column("start_timestamp", types::datetime());
+    });
 
     migration.make::<Pg>()
 }
