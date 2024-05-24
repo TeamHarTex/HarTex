@@ -50,7 +50,7 @@ impl Step for Api {
     }
 }
 
-/// Step for building the database-queries project.
+/// Step for building the hartex-database-queries project.
 pub struct Database;
 
 impl Step for Database {

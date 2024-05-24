@@ -51,7 +51,7 @@ impl Step for CheckApi {
     }
 }
 
-/// Step for checking the database-queries project.
+/// Step for checking the hartex-database-queries project.
 #[allow(clippy::module_name_repetitions)]
 pub struct CheckDatabase;
 

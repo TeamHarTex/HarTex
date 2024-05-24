@@ -22,11 +22,14 @@
 
 //! # The Info Command
 
+use std::pin::Pin;
+use hartex_database_queries::discord_frontend::queries::utilities_plugin_enabled::utilities_plugin_enabled;
 use hartex_discord_commands_core::metadata;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
+use hartex_discord_utils::DATABASE_POOL;
 
 mod info_bot;
 mod info_emoji;
@@ -43,6 +46,11 @@ impl Command for Info {
         let Some(InteractionData::ApplicationCommand(command)) = interaction.clone().data else {
             unreachable!()
         };
+
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await?;
+        let client = pooled.client();
+        let _ = utilities_plugin_enabled().bind(&client, &interaction.guild_id.unwrap().to_string()).one().await?;
 
         let Some(subcommand) = command
             .options

@@ -1218,6 +1218,7 @@ dependencies = [
  "futures",
  "hartex_backend_models",
  "hartex_backend_models_v2",
+ "hartex_database_queries",
  "hartex_discord_cdn",
  "hartex_discord_commands_core",
  "hartex_discord_core",
