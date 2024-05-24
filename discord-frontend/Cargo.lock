@@ -1198,6 +1198,7 @@ dependencies = [
  "futures",
  "postgres",
  "postgres-types",
+ "serde_json",
  "time",
  "tokio",
  "tokio-postgres",
