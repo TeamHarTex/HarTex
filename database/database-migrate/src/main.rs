@@ -39,9 +39,6 @@ mod discord_frontend {
     refinery::embed_migrations!("discord-frontend-migrations");
 }
 
-#[path = "../api-backend-migrations/V1__init.rs"]
-mod __this_is_only_here_such_that_intellisense_works1__;
-
 /// The entry point of the migration utility program.
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
