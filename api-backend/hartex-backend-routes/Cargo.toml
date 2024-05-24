@@ -14,7 +14,7 @@ rust-version = "1.80.0"
 hartex_backend_models = { path = "../hartex-backend-models" }
 hartex_backend_models_v2 = { path = "../hartex-backend-models-v2" }
 
-hartex_database_queries = { path = "../../database/database-queries" }
+hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
