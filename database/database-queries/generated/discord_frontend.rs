@@ -5,11 +5,11 @@
 #[allow(unused_imports)] #[allow(dead_code)] pub mod queries
 { pub mod cached_emoji_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedEmojiSelectByGuildId
-{ pub id : String,pub guild_id : String,pub name : String,pub animated : bool,pub managed : bool,}pub struct CachedEmojiSelectByGuildIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub name : &'a str,pub animated : bool,pub managed : bool,}
+{ pub id : String,pub guild_id : String,pub animated : bool,pub name : String,pub managed : bool,}pub struct CachedEmojiSelectByGuildIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub animated : bool,pub name : &'a str,pub managed : bool,}
 impl<'a> From<CachedEmojiSelectByGuildIdBorrowed<'a>> for CachedEmojiSelectByGuildId
 {
-    fn from(CachedEmojiSelectByGuildIdBorrowed { id,guild_id,name,animated,managed,}: CachedEmojiSelectByGuildIdBorrowed<'a>) ->
-    Self { Self { id: id.into(),guild_id: guild_id.into(),name: name.into(),animated,managed,} }
+    fn from(CachedEmojiSelectByGuildIdBorrowed { id,guild_id,animated,name,managed,}: CachedEmojiSelectByGuildIdBorrowed<'a>) ->
+    Self { Self { id: id.into(),guild_id: guild_id.into(),animated,name: name.into(),managed,} }
 }pub struct CachedEmojiSelectByGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -66,15 +66,15 @@ CachedEmojiSelectByGuildId, 1>
     CachedEmojiSelectByGuildIdQuery
     {
         client, params: [guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedEmojiSelectByGuildIdBorrowed { id: row.get(0),guild_id: row.get(1),name: row.get(2),animated: row.get(3),managed: row.get(4),} }, mapper: |it| { <CachedEmojiSelectByGuildId>::from(it) },
+        |row| { CachedEmojiSelectByGuildIdBorrowed { id: row.get(0),guild_id: row.get(1),animated: row.get(2),name: row.get(3),managed: row.get(4),} }, mapper: |it| { <CachedEmojiSelectByGuildId>::from(it) },
     }
 } }}pub mod cached_emoji_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedEmojiSelectById
-{ pub id : String,pub guild_id : String,pub name : String,pub animated : bool,pub managed : bool,}pub struct CachedEmojiSelectByIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub name : &'a str,pub animated : bool,pub managed : bool,}
+{ pub id : String,pub guild_id : String,pub animated : bool,pub name : String,pub managed : bool,}pub struct CachedEmojiSelectByIdBorrowed<'a> { pub id : &'a str,pub guild_id : &'a str,pub animated : bool,pub name : &'a str,pub managed : bool,}
 impl<'a> From<CachedEmojiSelectByIdBorrowed<'a>> for CachedEmojiSelectById
 {
-    fn from(CachedEmojiSelectByIdBorrowed { id,guild_id,name,animated,managed,}: CachedEmojiSelectByIdBorrowed<'a>) ->
-    Self { Self { id: id.into(),guild_id: guild_id.into(),name: name.into(),animated,managed,} }
+    fn from(CachedEmojiSelectByIdBorrowed { id,guild_id,animated,name,managed,}: CachedEmojiSelectByIdBorrowed<'a>) ->
+    Self { Self { id: id.into(),guild_id: guild_id.into(),animated,name: name.into(),managed,} }
 }pub struct CachedEmojiSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -131,7 +131,7 @@ CachedEmojiSelectById, 1>
     CachedEmojiSelectByIdQuery
     {
         client, params: [id,], stmt: &mut self.0, extractor:
-        |row| { CachedEmojiSelectByIdBorrowed { id: row.get(0),guild_id: row.get(1),name: row.get(2),animated: row.get(3),managed: row.get(4),} }, mapper: |it| { <CachedEmojiSelectById>::from(it) },
+        |row| { CachedEmojiSelectByIdBorrowed { id: row.get(0),guild_id: row.get(1),animated: row.get(2),name: row.get(3),managed: row.get(4),} }, mapper: |it| { <CachedEmojiSelectById>::from(it) },
     }
 } }}pub mod cached_emoji_upsert
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedEmojiUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,> { pub animated: bool,pub name: T1,pub id: T2,pub guild_id: T3,pub managed: bool,}pub fn cached_emoji_upsert() -> CachedEmojiUpsertStmt
@@ -164,11 +164,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedEmojiUpsertStmt
     { Box::pin(self.bind(client, &params.animated,&params.name,&params.id,&params.guild_id,&params.managed,)) }
 }}pub mod cached_guild_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedGuildSelectById
-{ pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : Vec<String>,pub icon : Option<String>,pub id : String,pub large : bool,pub name : String,pub owner_id : String,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub id : &'a str,pub large : bool,pub name : &'a str,pub owner_id : &'a str,pub mfa_level : i16,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}
+{ pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : Vec<String>,pub icon : Option<String>,pub id : String,pub large : bool,pub mfa_level : i16,pub name : String,pub owner_id : String,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}pub struct CachedGuildSelectByIdBorrowed<'a> { pub default_message_notifications : i16,pub explicit_content_filter : i16,pub features : cornucopia_async::ArrayIterator<'a, &'a str>,pub icon : Option<&'a str>,pub id : &'a str,pub large : bool,pub mfa_level : i16,pub name : &'a str,pub owner_id : &'a str,pub premium_subscription_count : Option<i64>,pub premium_tier : i16,pub verification_level : i16,}
 impl<'a> From<CachedGuildSelectByIdBorrowed<'a>> for CachedGuildSelectById
 {
-    fn from(CachedGuildSelectByIdBorrowed { default_message_notifications,explicit_content_filter,features,icon,id,large,name,owner_id,mfa_level,premium_subscription_count,premium_tier,verification_level,}: CachedGuildSelectByIdBorrowed<'a>) ->
-    Self { Self { default_message_notifications,explicit_content_filter,features: features.map(|v| v.into()).collect(),icon: icon.map(|v| v.into()),id: id.into(),large,name: name.into(),owner_id: owner_id.into(),mfa_level,premium_subscription_count,premium_tier,verification_level,} }
+    fn from(CachedGuildSelectByIdBorrowed { default_message_notifications,explicit_content_filter,features,icon,id,large,mfa_level,name,owner_id,premium_subscription_count,premium_tier,verification_level,}: CachedGuildSelectByIdBorrowed<'a>) ->
+    Self { Self { default_message_notifications,explicit_content_filter,features: features.map(|v| v.into()).collect(),icon: icon.map(|v| v.into()),id: id.into(),large,mfa_level,name: name.into(),owner_id: owner_id.into(),premium_subscription_count,premium_tier,verification_level,} }
 }pub struct CachedGuildSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -225,7 +225,7 @@ CachedGuildSelectById, 1>
     CachedGuildSelectByIdQuery
     {
         client, params: [id,], stmt: &mut self.0, extractor:
-        |row| { CachedGuildSelectByIdBorrowed { default_message_notifications: row.get(0),explicit_content_filter: row.get(1),features: row.get(2),icon: row.get(3),id: row.get(4),large: row.get(5),name: row.get(6),owner_id: row.get(7),mfa_level: row.get(8),premium_subscription_count: row.get(9),premium_tier: row.get(10),verification_level: row.get(11),} }, mapper: |it| { <CachedGuildSelectById>::from(it) },
+        |row| { CachedGuildSelectByIdBorrowed { default_message_notifications: row.get(0),explicit_content_filter: row.get(1),features: row.get(2),icon: row.get(3),id: row.get(4),large: row.get(5),mfa_level: row.get(6),name: row.get(7),owner_id: row.get(8),premium_subscription_count: row.get(9),premium_tier: row.get(10),verification_level: row.get(11),} }, mapper: |it| { <CachedGuildSelectById>::from(it) },
     }
 } }}pub mod cached_guild_upsert
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedGuildUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::ArraySql<Item = T1>,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,T6: cornucopia_async::StringSql,> { pub default_message_notifications: i16,pub explicit_content_filter: i16,pub features: T2,pub icon: Option<T3>,pub large: bool,pub name: T4,pub owner_id: T5,pub id: T6,pub mfa_level: i16,pub premium_subscription_count: Option<i64>,pub premium_tier: i16,pub verification_level: i16,}pub fn cached_guild_upsert() -> CachedGuildUpsertStmt
@@ -269,11 +269,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedGuildUpsertStmt
     { Box::pin(self.bind(client, &params.default_message_notifications,&params.explicit_content_filter,&params.features,&params.icon,&params.large,&params.name,&params.owner_id,&params.id,&params.mfa_level,&params.premium_subscription_count,&params.premium_tier,&params.verification_level,)) }
 }}pub mod cached_member_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedMemberSelectByGuildId
-{ pub guild_id : String,pub user_id : String,pub roles : Vec<String>,pub nick : Option<String>,pub joined_at : Option<time::OffsetDateTime>,pub flags : i64,}pub struct CachedMemberSelectByGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub nick : Option<&'a str>,pub joined_at : Option<time::OffsetDateTime>,pub flags : i64,}
+{ pub flags : i64,pub joined_at : Option<time::OffsetDateTime>,pub nick : Option<String>,pub roles : Vec<String>,pub guild_id : String,pub user_id : String,}pub struct CachedMemberSelectByGuildIdBorrowed<'a> { pub flags : i64,pub joined_at : Option<time::OffsetDateTime>,pub nick : Option<&'a str>,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub guild_id : &'a str,pub user_id : &'a str,}
 impl<'a> From<CachedMemberSelectByGuildIdBorrowed<'a>> for CachedMemberSelectByGuildId
 {
-    fn from(CachedMemberSelectByGuildIdBorrowed { guild_id,user_id,roles,nick,joined_at,flags,}: CachedMemberSelectByGuildIdBorrowed<'a>) ->
-    Self { Self { guild_id: guild_id.into(),user_id: user_id.into(),roles: roles.map(|v| v.into()).collect(),nick: nick.map(|v| v.into()),joined_at,flags,} }
+    fn from(CachedMemberSelectByGuildIdBorrowed { flags,joined_at,nick,roles,guild_id,user_id,}: CachedMemberSelectByGuildIdBorrowed<'a>) ->
+    Self { Self { flags,joined_at,nick: nick.map(|v| v.into()),roles: roles.map(|v| v.into()).collect(),guild_id: guild_id.into(),user_id: user_id.into(),} }
 }pub struct CachedMemberSelectByGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -330,15 +330,15 @@ CachedMemberSelectByGuildId, 1>
     CachedMemberSelectByGuildIdQuery
     {
         client, params: [guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedMemberSelectByGuildIdBorrowed { guild_id: row.get(0),user_id: row.get(1),roles: row.get(2),nick: row.get(3),joined_at: row.get(4),flags: row.get(5),} }, mapper: |it| { <CachedMemberSelectByGuildId>::from(it) },
+        |row| { CachedMemberSelectByGuildIdBorrowed { flags: row.get(0),joined_at: row.get(1),nick: row.get(2),roles: row.get(3),guild_id: row.get(4),user_id: row.get(5),} }, mapper: |it| { <CachedMemberSelectByGuildId>::from(it) },
     }
 } }}pub mod cached_member_select_by_user_id_and_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedMemberSelectByUserIdAndGuildIdParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> { pub user_id: T1,pub guild_id: T2,}#[derive( Debug, Clone, PartialEq,)] pub struct CachedMemberSelectByUserIdAndGuildId
-{ pub guild_id : String,pub user_id : String,pub roles : Vec<String>,pub nick : Option<String>,pub joined_at : Option<time::OffsetDateTime>,pub flags : i64,}pub struct CachedMemberSelectByUserIdAndGuildIdBorrowed<'a> { pub guild_id : &'a str,pub user_id : &'a str,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub nick : Option<&'a str>,pub joined_at : Option<time::OffsetDateTime>,pub flags : i64,}
+{ pub flags : i64,pub joined_at : Option<time::OffsetDateTime>,pub nick : Option<String>,pub roles : Vec<String>,pub guild_id : String,pub user_id : String,}pub struct CachedMemberSelectByUserIdAndGuildIdBorrowed<'a> { pub flags : i64,pub joined_at : Option<time::OffsetDateTime>,pub nick : Option<&'a str>,pub roles : cornucopia_async::ArrayIterator<'a, &'a str>,pub guild_id : &'a str,pub user_id : &'a str,}
 impl<'a> From<CachedMemberSelectByUserIdAndGuildIdBorrowed<'a>> for CachedMemberSelectByUserIdAndGuildId
 {
-    fn from(CachedMemberSelectByUserIdAndGuildIdBorrowed { guild_id,user_id,roles,nick,joined_at,flags,}: CachedMemberSelectByUserIdAndGuildIdBorrowed<'a>) ->
-    Self { Self { guild_id: guild_id.into(),user_id: user_id.into(),roles: roles.map(|v| v.into()).collect(),nick: nick.map(|v| v.into()),joined_at,flags,} }
+    fn from(CachedMemberSelectByUserIdAndGuildIdBorrowed { flags,joined_at,nick,roles,guild_id,user_id,}: CachedMemberSelectByUserIdAndGuildIdBorrowed<'a>) ->
+    Self { Self { flags,joined_at,nick: nick.map(|v| v.into()),roles: roles.map(|v| v.into()).collect(),guild_id: guild_id.into(),user_id: user_id.into(),} }
 }pub struct CachedMemberSelectByUserIdAndGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -397,7 +397,7 @@ CachedMemberSelectByUserIdAndGuildId, 2>
     CachedMemberSelectByUserIdAndGuildIdQuery
     {
         client, params: [user_id,guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedMemberSelectByUserIdAndGuildIdBorrowed { guild_id: row.get(0),user_id: row.get(1),roles: row.get(2),nick: row.get(3),joined_at: row.get(4),flags: row.get(5),} }, mapper: |it| { <CachedMemberSelectByUserIdAndGuildId>::from(it) },
+        |row| { CachedMemberSelectByUserIdAndGuildIdBorrowed { flags: row.get(0),joined_at: row.get(1),nick: row.get(2),roles: row.get(3),guild_id: row.get(4),user_id: row.get(5),} }, mapper: |it| { <CachedMemberSelectByUserIdAndGuildId>::from(it) },
     }
 } }impl <'a, C: GenericClient,T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> cornucopia_async::Params<'a,
 CachedMemberSelectByUserIdAndGuildIdParams<T1,T2,>, CachedMemberSelectByUserIdAndGuildIdQuery<'a, C,
@@ -441,11 +441,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedMemberUpsertStmt
     { Box::pin(self.bind(client, &params.flags,&params.joined_at,&params.nick,&params.user_id,&params.guild_id,&params.roles,)) }
 }}pub mod cached_role_select_by_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedRoleSelectByGuildId
-{ pub color : i64,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub color : i64,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}
+{ pub color : i64,pub flags : i32,pub guild_id : String,pub hoist : bool,pub icon : Option<String>,pub id : String,pub managed : bool,pub mentionable : bool,pub position : i32,}pub struct CachedRoleSelectByGuildIdBorrowed<'a> { pub color : i64,pub flags : i32,pub guild_id : &'a str,pub hoist : bool,pub icon : Option<&'a str>,pub id : &'a str,pub managed : bool,pub mentionable : bool,pub position : i32,}
 impl<'a> From<CachedRoleSelectByGuildIdBorrowed<'a>> for CachedRoleSelectByGuildId
 {
-    fn from(CachedRoleSelectByGuildIdBorrowed { color,icon,id,guild_id,hoist,mentionable,flags,managed,position,}: CachedRoleSelectByGuildIdBorrowed<'a>) ->
-    Self { Self { color,icon: icon.map(|v| v.into()),id: id.into(),guild_id: guild_id.into(),hoist,mentionable,flags,managed,position,} }
+    fn from(CachedRoleSelectByGuildIdBorrowed { color,flags,guild_id,hoist,icon,id,managed,mentionable,position,}: CachedRoleSelectByGuildIdBorrowed<'a>) ->
+    Self { Self { color,flags,guild_id: guild_id.into(),hoist,icon: icon.map(|v| v.into()),id: id.into(),managed,mentionable,position,} }
 }pub struct CachedRoleSelectByGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -502,15 +502,15 @@ CachedRoleSelectByGuildId, 1>
     CachedRoleSelectByGuildIdQuery
     {
         client, params: [guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedRoleSelectByGuildIdBorrowed { color: row.get(0),icon: row.get(1),id: row.get(2),guild_id: row.get(3),hoist: row.get(4),mentionable: row.get(5),flags: row.get(6),managed: row.get(7),position: row.get(8),} }, mapper: |it| { <CachedRoleSelectByGuildId>::from(it) },
+        |row| { CachedRoleSelectByGuildIdBorrowed { color: row.get(0),flags: row.get(1),guild_id: row.get(2),hoist: row.get(3),icon: row.get(4),id: row.get(5),managed: row.get(6),mentionable: row.get(7),position: row.get(8),} }, mapper: |it| { <CachedRoleSelectByGuildId>::from(it) },
     }
 } }}pub mod cached_role_select_by_id_and_guild_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedRoleSelectByIdAndGuildIdParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> { pub id: T1,pub guild_id: T2,}#[derive( Debug, Clone, PartialEq,)] pub struct CachedRoleSelectByIdAndGuildId
-{ pub color : i64,pub icon : Option<String>,pub id : String,pub guild_id : String,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}pub struct CachedRoleSelectByIdAndGuildIdBorrowed<'a> { pub color : i64,pub icon : Option<&'a str>,pub id : &'a str,pub guild_id : &'a str,pub hoist : bool,pub mentionable : bool,pub flags : i32,pub managed : bool,pub position : i32,}
+{ pub color : i64,pub flags : i32,pub guild_id : String,pub hoist : bool,pub icon : Option<String>,pub id : String,pub managed : bool,pub mentionable : bool,pub position : i32,}pub struct CachedRoleSelectByIdAndGuildIdBorrowed<'a> { pub color : i64,pub flags : i32,pub guild_id : &'a str,pub hoist : bool,pub icon : Option<&'a str>,pub id : &'a str,pub managed : bool,pub mentionable : bool,pub position : i32,}
 impl<'a> From<CachedRoleSelectByIdAndGuildIdBorrowed<'a>> for CachedRoleSelectByIdAndGuildId
 {
-    fn from(CachedRoleSelectByIdAndGuildIdBorrowed { color,icon,id,guild_id,hoist,mentionable,flags,managed,position,}: CachedRoleSelectByIdAndGuildIdBorrowed<'a>) ->
-    Self { Self { color,icon: icon.map(|v| v.into()),id: id.into(),guild_id: guild_id.into(),hoist,mentionable,flags,managed,position,} }
+    fn from(CachedRoleSelectByIdAndGuildIdBorrowed { color,flags,guild_id,hoist,icon,id,managed,mentionable,position,}: CachedRoleSelectByIdAndGuildIdBorrowed<'a>) ->
+    Self { Self { color,flags,guild_id: guild_id.into(),hoist,icon: icon.map(|v| v.into()),id: id.into(),managed,mentionable,position,} }
 }pub struct CachedRoleSelectByIdAndGuildIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -569,7 +569,7 @@ CachedRoleSelectByIdAndGuildId, 2>
     CachedRoleSelectByIdAndGuildIdQuery
     {
         client, params: [id,guild_id,], stmt: &mut self.0, extractor:
-        |row| { CachedRoleSelectByIdAndGuildIdBorrowed { color: row.get(0),icon: row.get(1),id: row.get(2),guild_id: row.get(3),hoist: row.get(4),mentionable: row.get(5),flags: row.get(6),managed: row.get(7),position: row.get(8),} }, mapper: |it| { <CachedRoleSelectByIdAndGuildId>::from(it) },
+        |row| { CachedRoleSelectByIdAndGuildIdBorrowed { color: row.get(0),flags: row.get(1),guild_id: row.get(2),hoist: row.get(3),icon: row.get(4),id: row.get(5),managed: row.get(6),mentionable: row.get(7),position: row.get(8),} }, mapper: |it| { <CachedRoleSelectByIdAndGuildId>::from(it) },
     }
 } }impl <'a, C: GenericClient,T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> cornucopia_async::Params<'a,
 CachedRoleSelectByIdAndGuildIdParams<T1,T2,>, CachedRoleSelectByIdAndGuildIdQuery<'a, C,
@@ -614,11 +614,11 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedRoleUpsertStmt
     { Box::pin(self.bind(client, &params.color,&params.icon,&params.id,&params.guild_id,&params.flags,&params.hoist,&params.managed,&params.mentionable,&params.position,)) }
 }}pub mod cached_user_select_by_id
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct CachedUserSelectById
-{ pub id : String,pub bot : bool,pub discriminator : String,pub name : String,pub global_name : Option<String>,pub avatar : Option<String>,}pub struct CachedUserSelectByIdBorrowed<'a> { pub id : &'a str,pub bot : bool,pub discriminator : &'a str,pub name : &'a str,pub global_name : Option<&'a str>,pub avatar : Option<&'a str>,}
+{ pub avatar : Option<String>,pub bot : bool,pub id : String,pub discriminator : String,pub global_name : Option<String>,pub name : String,}pub struct CachedUserSelectByIdBorrowed<'a> { pub avatar : Option<&'a str>,pub bot : bool,pub id : &'a str,pub discriminator : &'a str,pub global_name : Option<&'a str>,pub name : &'a str,}
 impl<'a> From<CachedUserSelectByIdBorrowed<'a>> for CachedUserSelectById
 {
-    fn from(CachedUserSelectByIdBorrowed { id,bot,discriminator,name,global_name,avatar,}: CachedUserSelectByIdBorrowed<'a>) ->
-    Self { Self { id: id.into(),bot,discriminator: discriminator.into(),name: name.into(),global_name: global_name.map(|v| v.into()),avatar: avatar.map(|v| v.into()),} }
+    fn from(CachedUserSelectByIdBorrowed { avatar,bot,id,discriminator,global_name,name,}: CachedUserSelectByIdBorrowed<'a>) ->
+    Self { Self { avatar: avatar.map(|v| v.into()),bot,id: id.into(),discriminator: discriminator.into(),global_name: global_name.map(|v| v.into()),name: name.into(),} }
 }pub struct CachedUserSelectByIdQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
@@ -675,7 +675,7 @@ CachedUserSelectById, 1>
     CachedUserSelectByIdQuery
     {
         client, params: [id,], stmt: &mut self.0, extractor:
-        |row| { CachedUserSelectByIdBorrowed { id: row.get(0),bot: row.get(1),discriminator: row.get(2),name: row.get(3),global_name: row.get(4),avatar: row.get(5),} }, mapper: |it| { <CachedUserSelectById>::from(it) },
+        |row| { CachedUserSelectByIdBorrowed { avatar: row.get(0),bot: row.get(1),id: row.get(2),discriminator: row.get(3),global_name: row.get(4),name: row.get(5),} }, mapper: |it| { <CachedUserSelectById>::from(it) },
     }
 } }}pub mod cached_user_upsert
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct CachedUserUpsertParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,T3: cornucopia_async::StringSql,T4: cornucopia_async::StringSql,T5: cornucopia_async::StringSql,> { pub avatar: Option<T1>,pub id: T2,pub bot: bool,pub name: T3,pub discriminator: T4,pub global_name: Option<T5>,}pub fn cached_user_upsert() -> CachedUserUpsertStmt
@@ -709,4 +709,63 @@ tokio_postgres::Error>> + Send + 'a>>, C> for CachedUserUpsertStmt
     CachedUserUpsertParams<T1,T2,T3,T4,T5,>) -> std::pin::Pin<Box<dyn futures::Future<Output = Result<u64,
     tokio_postgres::Error>> + Send + 'a>>
     { Box::pin(self.bind(client, &params.avatar,&params.id,&params.bot,&params.name,&params.discriminator,&params.global_name,)) }
-}}}
+}}pub mod utilities_plugin_enabled
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;pub struct SerdejsonValueQuery<'a, C: GenericClient, T, const N: usize>
+{
+    client: &'a  C, params:
+    [&'a (dyn postgres_types::ToSql + Sync); N], stmt: &'a mut
+    cornucopia_async::private::Stmt, extractor: fn(&tokio_postgres::Row) -> postgres_types::Json<& serde_json::value::RawValue>,
+    mapper: fn(postgres_types::Json<& serde_json::value::RawValue>) -> T,
+} impl<'a, C, T:'a, const N: usize> SerdejsonValueQuery<'a, C, T, N> where C:
+GenericClient
+{
+    pub fn map<R>(self, mapper: fn(postgres_types::Json<& serde_json::value::RawValue>) -> R) ->
+    SerdejsonValueQuery<'a,C,R,N>
+    {
+        SerdejsonValueQuery
+        {
+            client: self.client, params: self.params, stmt: self.stmt,
+            extractor: self.extractor, mapper,
+        }
+    } pub async fn one(self) -> Result<T, tokio_postgres::Error>
+    {
+        let stmt = self.stmt.prepare(self.client).await?; let row =
+        self.client.query_one(stmt, &self.params).await?;
+        Ok((self.mapper)((self.extractor)(&row)))
+    } pub async fn all(self) -> Result<Vec<T>, tokio_postgres::Error>
+    { self.iter().await?.try_collect().await } pub async fn opt(self) ->
+    Result<Option<T>, tokio_postgres::Error>
+    {
+        let stmt = self.stmt.prepare(self.client).await?;
+        Ok(self.client.query_opt(stmt, &self.params) .await?
+        .map(|row| (self.mapper)((self.extractor)(&row))))
+    } pub async fn iter(self,) -> Result<impl futures::Stream<Item = Result<T,
+    tokio_postgres::Error>> + 'a, tokio_postgres::Error>
+    {
+        let stmt = self.stmt.prepare(self.client).await?; let it =
+        self.client.query_raw(stmt,
+        cornucopia_async::private::slice_iter(&self.params)) .await?
+        .map(move |res|
+        res.map(|row| (self.mapper)((self.extractor)(&row)))) .into_stream();
+        Ok(it)
+    }
+}pub fn utilities_plugin_enabled() -> UtilitiesPluginEnabledStmt
+{ UtilitiesPluginEnabledStmt(cornucopia_async::private::Stmt::new("SELECT
+    configuration -> 'plugins' -> 'utilities' -> 'enabled'
+FROM
+    \"Nightly\".\"GuildConfigurations\"
+WHERE
+    guild_id = $1")) } pub struct
+UtilitiesPluginEnabledStmt(cornucopia_async::private::Stmt); impl UtilitiesPluginEnabledStmt
+{ pub fn bind<'a, C:
+GenericClient,T1:
+cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
+guild_id: &'a T1,) -> SerdejsonValueQuery<'a,C,
+serde_json::Value, 1>
+{
+    SerdejsonValueQuery
+    {
+        client, params: [guild_id,], stmt: &mut self.0, extractor:
+        |row| { row.get(0) }, mapper: |it| { serde_json::from_str(it.0.get()).unwrap() },
+    }
+} }}}
