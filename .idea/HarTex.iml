@@ -41,8 +41,8 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-log/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tools/bootstrap/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tools/testsuite/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/database/database-migrate/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/database/database-queries/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database/hartex-database-migrate/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/database/hartex-database-queries/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
       <excludeFolder url="file://$MODULE_DIR$/localization/target" />
@@ -50,8 +50,8 @@
       <excludeFolder url="file://$MODULE_DIR$/tools/bootstrap/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
-      <excludeFolder url="file://$MODULE_DIR$/database/database-queries/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/target" />
+      <excludeFolder url="file://$MODULE_DIR$/database/hartex-database-queries/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

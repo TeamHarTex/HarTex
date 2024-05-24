@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "database-migrate",
-    "database-queries",
+    "hartex-database-migrate",
+    "hartex-database-queries",
 ]
 
 resolver = "2"
