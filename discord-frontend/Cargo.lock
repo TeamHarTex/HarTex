@@ -1236,6 +1236,7 @@ dependencies = [
  "rand 0.9.0-alpha.1",
  "regex",
  "serde_json",
+ "tokio-postgres",
 ]
 
 [[package]]
