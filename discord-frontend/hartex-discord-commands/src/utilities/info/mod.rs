@@ -54,7 +54,7 @@ impl Command for Info {
         let pooled = pinned.get().await.into_diagnostic()?;
         let client = pooled.client();
         let _ = utilities_plugin_enabled()
-            .bind(&client, &interaction.guild_id.unwrap().to_string())
+            .bind(client, &interaction.guild_id.unwrap().to_string())
             .one()
             .await
             .into_diagnostic()?;
