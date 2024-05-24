@@ -32,7 +32,7 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
-use tokio_postgres::generic_client::GenericClient;
+use tokio_postgres::GenericClient;
 
 mod info_bot;
 mod info_emoji;
@@ -51,7 +51,7 @@ impl Command for Info {
         };
 
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
+        let pooled = pinned.get().await.into_diagnostic()?;
         let client = pooled.client();
         let _ = utilities_plugin_enabled()
             .bind(&client, &interaction.guild_id.unwrap().to_string())
