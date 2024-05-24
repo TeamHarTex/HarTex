@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS "Nightly"."CachedEmojis" (
     "guild_id" TEXT NOT NULL,
     "animated" BOOLEAN NOT NULL,
     "name" TEXT NOT NULL,
-    "managed" BOOLEAN NOT NULL,
+    "managed" BOOLEAN NOT NULL
 );

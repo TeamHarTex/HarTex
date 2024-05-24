@@ -5,7 +5,7 @@
 #[allow(unused_imports)] #[allow(dead_code)] pub mod queries
 { pub mod start_timestamp_select_by_component
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug, Clone, PartialEq,)] pub struct SelectStartTimestampByComponent
-{ pub component : String,pub timestamp : time::PrimitiveDateTime,}pub struct SelectStartTimestampByComponentBorrowed<'a> { pub component : &'a str,pub timestamp : time::PrimitiveDateTime,}
+{ pub component : String,pub timestamp : time::OffsetDateTime,}pub struct SelectStartTimestampByComponentBorrowed<'a> { pub component : &'a str,pub timestamp : time::OffsetDateTime,}
 impl<'a> From<SelectStartTimestampByComponentBorrowed<'a>> for SelectStartTimestampByComponent
 {
     fn from(SelectStartTimestampByComponentBorrowed { component,timestamp,}: SelectStartTimestampByComponentBorrowed<'a>) ->
@@ -69,7 +69,7 @@ SelectStartTimestampByComponent, 1>
         |row| { SelectStartTimestampByComponentBorrowed { component: row.get(0),timestamp: row.get(1),} }, mapper: |it| { <SelectStartTimestampByComponent>::from(it) },
     }
 } }}pub mod start_timestamp_upsert
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct StartTimestampUpsertParams<T1: cornucopia_async::StringSql,> { pub component: T1,pub timestamp: time::PrimitiveDateTime,}pub fn start_timestamp_upsert() -> StartTimestampUpsertStmt
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct StartTimestampUpsertParams<T1: cornucopia_async::StringSql,> { pub component: T1,pub timestamp: time::OffsetDateTime,}pub fn start_timestamp_upsert() -> StartTimestampUpsertStmt
 { StartTimestampUpsertStmt(cornucopia_async::private::Stmt::new("INSERT INTO
     \"APIBackend\".public.\"StartTimestamps\" (\"component\", \"timestamp\")
 VALUES ($1, $2)
@@ -80,7 +80,7 @@ StartTimestampUpsertStmt(cornucopia_async::private::Stmt); impl StartTimestampUp
 { pub async fn bind<'a, C:
 GenericClient,T1:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-component: &'a T1,timestamp: &'a time::PrimitiveDateTime,) -> Result<u64, tokio_postgres::Error>
+component: &'a T1,timestamp: &'a time::OffsetDateTime,) -> Result<u64, tokio_postgres::Error>
 {
     let stmt = self.0.prepare(client).await?;
     client.execute(stmt, &[component,timestamp,]).await
