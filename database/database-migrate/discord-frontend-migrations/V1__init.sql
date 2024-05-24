@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "Nightly"."CachedGuilds" (
 
 CREATE TABLE IF NOT EXISTS "Nightly"."CachedMembers" (
     "flags" BIGINT NOT NULL,
-    "joined_at" TIMESTAMP WITH TIME ZONE
+    "joined_at" TIMESTAMP WITH TIME ZONE,
     "nick" TEXT,
     "roles" TEXT[] NOT NULL,
     "guild_id" TEXT NOT NULL,
