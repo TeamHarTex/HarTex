@@ -50,7 +50,7 @@ impl Step for CleanApi {
     }
 }
 
-/// Step for cleaning the database-queries built artifacts.
+/// Step for cleaning the hartex-database-queries built artifacts.
 #[allow(clippy::module_name_repetitions)]
 pub struct CleanDatabase;
 

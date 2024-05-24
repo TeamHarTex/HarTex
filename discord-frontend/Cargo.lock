@@ -1198,6 +1198,7 @@ dependencies = [
  "futures",
  "postgres",
  "postgres-types",
+ "serde_json",
  "time",
  "tokio",
  "tokio-postgres",
@@ -1218,6 +1219,7 @@ dependencies = [
  "futures",
  "hartex_backend_models",
  "hartex_backend_models_v2",
+ "hartex_database_queries",
  "hartex_discord_cdn",
  "hartex_discord_commands_core",
  "hartex_discord_core",
@@ -1234,6 +1236,7 @@ dependencies = [
  "rand 0.9.0-alpha.1",
  "regex",
  "serde_json",
+ "tokio-postgres",
 ]
 
 [[package]]
@@ -2562,6 +2565,8 @@ dependencies = [
  "bytes",
  "fallible-iterator",
  "postgres-protocol",
+ "serde",
+ "serde_json",
  "time",
 ]
 
