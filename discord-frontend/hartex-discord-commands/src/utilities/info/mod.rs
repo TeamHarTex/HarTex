@@ -62,7 +62,8 @@ impl Command for Info {
             .map(|json| json.0.get())
             .one()
             .await
-            .map_or_else(Ok(false), |boolean| boolean.parse())
+            .ok()
+            .and_then(|boolean| boolean.parse().ok())
             .unwrap_or(false);
 
         if !enabled {
