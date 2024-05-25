@@ -84,8 +84,8 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
                 ),
             }
         )
-            .await
-            .into_diagnostic()?;
+        .await
+        .into_diagnostic()?;
     }
 
     if let Err(error) = command.execute(cloned.0).await {
