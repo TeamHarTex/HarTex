@@ -38,6 +38,7 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
+use hartex_discord_utils::commands::CommandDaataOptionExt;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -47,9 +48,7 @@ use miette::IntoDiagnostic;
 
 /// Executes the `info emoji` command.
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
-    let CommandOptionValue::SubCommand(options) = option.value else {
-        unreachable!()
-    };
+    let options = option.assume_subcommand();
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let langid_locale = interaction
