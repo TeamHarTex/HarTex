@@ -27,8 +27,6 @@ use hartex_discord_core::discord::model::id::Id;
 
 /// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
-    type Plugin: Plugin;
-
     /// The type of the command.
     #[deprecated(since = "0.11.0")]
     fn command_type(&self) -> u8 {
@@ -45,7 +43,7 @@ pub trait CommandMetadata {
     fn name(&self) -> String;
 
     /// The plugin the command belongs to.
-    fn plugin(&self) -> Self::Plugin;
+    fn plugin(&self) -> Box<dyn Plugin>;
 }
 
 /// The command trait, contains callbacks that are to be run before or when an interaction command

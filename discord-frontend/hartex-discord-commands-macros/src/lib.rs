@@ -48,3 +48,9 @@ pub fn command(tokens: TokenStream, item: TokenStream) -> TokenStream {
         .unwrap_or_default()
         .into()
 }
+
+/// Macro to implement the `PluginMetadata` trait.
+#[proc_macro_attribute]
+pub fn plugin(tokens: TokenStream, item: TokenStream) -> TokenStream {
+    todo!()
+}
