@@ -30,6 +30,10 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;
@@ -53,11 +57,31 @@ impl Command for Info {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await.into_diagnostic()?;
         let client = pooled.client();
-        let _ = utilities_plugin_enabled()
+        let enabled = utilities_plugin_enabled()
             .bind(client, &interaction.guild_id.unwrap().to_string())
+            .map(|json| json.0.get())
             .one()
             .await
+            .map_or_else(Ok(false), |boolean| boolean.parse())
+            .unwrap_or(false);
+
+        if !enabled {
+            let interaction_client = CLIENT.interaction(interaction.application_id);
+            interaction_client.create_response(
+                interaction.id,
+                &interaction.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content("The `utilities` plugin is not enabled. Please enable it in the guild configuration.")
+                            .build(),
+                    ),
+                }
+            )
+            .await
             .into_diagnostic()?;
+        }
 
         let Some(subcommand) = command
             .options
