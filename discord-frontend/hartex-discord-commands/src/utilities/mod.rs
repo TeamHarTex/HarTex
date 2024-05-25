@@ -25,4 +25,21 @@
 //! Command List:
 //! - info
 
+use async_trait::async_trait;
+use hartex_discord_commands_core::plugin;
+use hartex_discord_commands_core::traits::Plugin;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::Id;
+
 pub mod info;
+
+/// The utilities plugin.
+#[plugin(name = "utilities")]
+pub struct Utilities;
+
+#[async_trait]
+impl Plugin for Utilities {
+    async fn enabled(&self, _: Id<GuildMarker>) -> bool {
+        todo!()
+    }
+}

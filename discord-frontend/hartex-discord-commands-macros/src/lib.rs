@@ -38,13 +38,24 @@ use syn::parse_macro_input;
 use syn::ItemStruct;
 
 mod commandmetadata;
+mod pluginmetadata;
 
 /// Macro to implement the `CommandMetadata` trait.
 #[proc_macro_attribute]
-pub fn metadata(tokens: TokenStream, item: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(tokens as commandmetadata::MetadataMacroInput);
+pub fn command(tokens: TokenStream, item: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(tokens as commandmetadata::CommandMetadataMacroInput);
     let struct_decl = parse_macro_input!(item as ItemStruct);
     commandmetadata::implement_metadata(&input, &struct_decl)
+        .unwrap_or_default()
+        .into()
+}
+
+/// Macro to implement the `PluginMetadata` trait.
+#[proc_macro_attribute]
+pub fn plugin(tokens: TokenStream, item: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(tokens as pluginmetadata::PluginMetadataMacroInput);
+    let struct_decl = parse_macro_input!(item as ItemStruct);
+    pluginmetadata::implement_metadata(&input, &struct_decl)
         .unwrap_or_default()
         .into()
 }
