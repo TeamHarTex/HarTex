@@ -25,6 +25,7 @@
 //! This command returns brief information about the bot, like its description and GitHub
 //! repository.
 
+use async_trait::async_trait;
 use hartex_discord_commands_core::metadata;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -45,6 +46,7 @@ use miette::IntoDiagnostic;
 #[metadata(command_type = 1, interaction_only = true, name = "about")]
 pub struct About;
 
+#[async_trait]
 impl Command for About {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);
