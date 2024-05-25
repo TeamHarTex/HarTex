@@ -37,6 +37,7 @@ use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFiel
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
+use hartex_discord_utils::commands::CommandDaataOptionExt;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -53,9 +54,7 @@ lazy_static::lazy_static! {
 /// Executes the `info emoji` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
-    let CommandOptionValue::SubCommand(options) = option.value else {
-        unreachable!()
-    };
+    let options = option.assume_subcommand();
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let langid_locale = interaction

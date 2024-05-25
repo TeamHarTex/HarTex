@@ -41,6 +41,7 @@ use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
 use tokio_postgres::NoTls;
 
+pub mod commands;
 pub mod hyper;
 pub mod localizable;
 pub mod markdown;

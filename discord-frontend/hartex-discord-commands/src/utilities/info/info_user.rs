@@ -39,6 +39,7 @@ use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
+use hartex_discord_utils::commands::CommandDaataOptionExt;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
@@ -50,9 +51,7 @@ use rand::thread_rng;
 /// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
-    let CommandOptionValue::SubCommand(options) = option.value else {
-        unreachable!()
-    };
+    let options = option.assume_subcommand();
 
     let interaction_client = CLIENT.interaction(interaction.application_id);
     let locale = interaction
