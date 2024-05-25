@@ -34,6 +34,10 @@ pub struct MetadataMacroInput {
     pub(self) name_ident: Ident,
     pub(self) equal3: Token![=],
     pub(self) name_lit: Lit,
+    pub(self) comma1: Token![,],
+    pub(self) plugin_ident: Ident,
+    pub(self) equal1: Token![=],
+    pub(self) plugin_actual_ident: Ident,
     pub(self) comma3: Option<Token![,]>,
 }
 
@@ -43,6 +47,10 @@ impl Parse for MetadataMacroInput {
             name_ident: input.parse()?,
             equal3: input.parse()?,
             name_lit: input.parse()?,
+            comma1: input.parse()?,
+            plugin_ident: input.parse()?,
+            equal1: input.parse()?,
+            plugin_actual_ident: input.parse()?,
             comma3: input.parse().ok(),
         })
     }
@@ -60,6 +68,17 @@ pub fn implement_metadata(
             .span()
             .unwrap()
             .error("expected `name`")
+            .emit();
+
+        return None;
+    }
+
+    if parameters.plugin_ident != "plugin" {
+        parameters
+            .plugin_ident
+            .span()
+            .unwrap()
+            .error("expected `plugin`")
             .emit();
 
         return None;
@@ -85,10 +104,20 @@ pub fn implement_metadata(
     };
     functions.extend(expanded);
 
+    // plugin = ?
+    let string = parameters.plugin_actual_ident.to_string();
+    let expanded = quote::quote! {
+        fn plugin(&self) -> String {
+            String::from(#string)
+        }
+    };
+    functions.extend(expanded);
+
     let core_use = quote::quote! {
         extern crate hartex_discord_commands_core as _commands_core;
     };
     let ident = struct_item.ident.clone();
+    let plugin_ident = parameters.plugin_actual_ident.clone();
     let expanded = quote::quote! {
         #core_use
 
@@ -96,6 +125,8 @@ pub fn implement_metadata(
 
         #[automatically_derived]
         impl _commands_core::traits::CommandMetadata for #ident {
+            type Plugin = #plugin_ident;
+
             #functions
         }
     };

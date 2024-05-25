@@ -25,7 +25,7 @@
 //! This command returns information about the contributors of the bot.
 
 use async_trait::async_trait;
-use hartex_discord_commands_core::metadata;
+use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
@@ -41,7 +41,7 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 /// The `contributors` command declaration.
-#[metadata(name = "contributors")]
+#[command(name = "contributors", plugin = General)]
 pub struct Contributors;
 
 #[async_trait]

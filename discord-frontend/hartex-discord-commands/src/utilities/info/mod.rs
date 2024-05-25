@@ -26,7 +26,7 @@ use std::pin::Pin;
 
 use async_trait::async_trait;
 use hartex_database_queries::discord_frontend::queries::utilities_plugin_enabled::utilities_plugin_enabled;
-use hartex_discord_commands_core::metadata;
+use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -46,7 +46,7 @@ mod info_server;
 mod info_user;
 
 /// The `info` command declaration.
-#[metadata(name = "info")]
+#[command(name = "info", plugin = Utilities)]
 pub struct Info;
 
 #[async_trait]

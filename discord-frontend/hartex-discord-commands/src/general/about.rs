@@ -26,7 +26,7 @@
 //! repository.
 
 use async_trait::async_trait;
-use hartex_discord_commands_core::metadata;
+use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
@@ -43,7 +43,7 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 /// The `about` command declaration.
-#[metadata(name = "about")]
+#[command(name = "about", plugin = General)]
 pub struct About;
 
 #[async_trait]
