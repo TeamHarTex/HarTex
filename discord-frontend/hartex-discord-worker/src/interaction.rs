@@ -36,14 +36,15 @@ use once_cell::sync::Lazy;
 use crate::errorhandler::ErrorPayload;
 
 /// Lookup table for commands provided by the bot
-pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>> = Lazy::new(|| {
-    let mut map = HashMap::<String, Box<dyn Command + Send + Sync>>::new();
-    map.insert(About.name(), Box::new(About));
-    map.insert(Contributors.name(), Box::new(Contributors));
-    map.insert(Info.name(), Box::new(Info));
-    map.insert(Role.name(), Box::new(Role));
-    map
-});
+pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>> =
+    Lazy::new(|| {
+        let mut map = HashMap::<String, Box<dyn Command + Send + Sync>>::new();
+        map.insert(About.name(), Box::new(About));
+        map.insert(Contributors.name(), Box::new(Contributors));
+        map.insert(Info.name(), Box::new(Info));
+        map.insert(Role.name(), Box::new(Role));
+        map
+    });
 
 /// Handle an application command interaction
 #[allow(clippy::large_futures)]
