@@ -28,8 +28,8 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::plugin;
 use hartex_discord_commands_core::traits::Plugin;
-use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::Id;
 
 pub mod info;
 
