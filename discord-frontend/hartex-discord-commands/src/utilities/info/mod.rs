@@ -59,7 +59,7 @@ impl Command for Info {
         let client = pooled.client();
         let enabled = utilities_plugin_enabled()
             .bind(client, &interaction.guild_id.unwrap().to_string())
-            .map(|json| json.0.get())
+            .map(|json| json.0.get().to_string())
             .one()
             .await
             .ok()
