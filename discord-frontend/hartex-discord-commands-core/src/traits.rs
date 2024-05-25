@@ -26,11 +26,15 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 pub trait CommandMetadata {
     /// The type of the command.
     #[deprecated(since = "0.11.0")]
-    fn command_type(&self) -> u8 { 0 }
+    fn command_type(&self) -> u8 {
+        0
+    }
 
     /// Whether the command is only available in the form of an interaction.
     #[deprecated(since = "0.11.0")]
-    fn interaction_only(&self) -> bool { true }
+    fn interaction_only(&self) -> bool {
+        true
+    }
 
     /// The name of the command.
     fn name(&self) -> String;
