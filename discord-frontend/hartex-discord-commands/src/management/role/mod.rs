@@ -27,6 +27,8 @@ use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
+use crate::management::Management;
+
 /// The `role` command declaration.
 #[command(name = "role", plugin = Management)]
 pub struct Role;

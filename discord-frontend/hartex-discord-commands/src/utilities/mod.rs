@@ -25,4 +25,10 @@
 //! Command List:
 //! - info
 
+use hartex_discord_commands_core::plugin;
+
 pub mod info;
+
+/// The utilities plugin.
+#[plugin(name = "utilities")]
+pub struct Utilities;

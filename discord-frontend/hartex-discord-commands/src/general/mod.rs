@@ -26,5 +26,11 @@
 //! - about
 //! - contributors
 
+use hartex_discord_commands_core::plugin;
+
 pub mod about;
 pub mod contributors;
+
+/// The general plugin.
+#[plugin(name = "general")]
+pub struct General;
