@@ -22,11 +22,11 @@
 
 use proc_macro2::Ident;
 use proc_macro2::TokenStream as TokenStream2;
+use syn::parse::Parse;
+use syn::parse::ParseStream;
 use syn::ItemStruct;
 use syn::Lit;
 use syn::Token;
-use syn::parse::Parse;
-use syn::parse::ParseStream;
 
 /// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]
