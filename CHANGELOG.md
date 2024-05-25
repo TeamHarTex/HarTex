@@ -12,20 +12,30 @@
 
 - **Changed:** updated `rust-version` to 1.80
 
-## Database Queries
+## Database Infrastructure
 
+- **Added:** added database migration tool utilising `refinery`
 - **Changed:** updated `rust-version` to 1.80
 
 ## Discord Frontend
 
+- **Added:** added `Management` plugin
+- **Added:** added `/role` command stub
 - **Changed:** updated `rust-version` to 1.80
+- **Changed:** `/info emoji` now sends embeds
+- **Changed:** more information has been added to `/info emoji`
+- **Changed:** removed previously deprecated functions from `CommandMetadata`
+- **Changed:** deprecated `command_type` and `interaction_only` in `CommandMetadata`
+- **Changed:** `/info` check on whether `Utilities` plugin has been enabled before running
 
 ## Localization Infrastructure
 
+- **Added:** added messages to Fluent for more commands
 - **Changed:** updated `rust-version` to 1.80
 
 ## Rust Utilities
 
+- **Added:** added utility functions for working with `CommandDataOption`
 - **Changed:** updated `rust-version` to 1.80
 
 ## Web Frontend
