@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::contributors::Contributors;
 use hartex_discord_commands::management::role::Role;
@@ -29,8 +31,19 @@ use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 use hartex_log::log;
+use once_cell::sync::Lazy;
 
 use crate::errorhandler::ErrorPayload;
+
+/// Lookup table for commands provided by the bot
+pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>> = Lazy::new(|| {
+    let mut map = HashMap::<String, Box<dyn Command + Send + Sync>>::new();
+    map.insert(About.name(), Box::new(About));
+    map.insert(Contributors.name(), Box::new(Contributors));
+    map.insert(Info.name(), Box::new(Info));
+    map.insert(Role.name(), Box::new(Role));
+    map
+});
 
 /// Handle an application command interaction
 #[allow(clippy::large_futures)]
@@ -43,13 +56,9 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
     log::trace!("running interaction command {}", &command.name);
 
     let cloned = interaction_create.clone();
-    if let Err(error) = match command.name {
-        name if name == About.name() => About.execute(cloned.0).await,
-        name if name == Contributors.name() => Contributors.execute(cloned.0).await,
-        name if name == Info.name() => Info.execute(cloned.0).await,
-        name if name == Role.name() => Role.execute(cloned.0).await,
-        _ => Ok(()),
-    } {
+
+    let command = COMMAND_LOOKUP.get(&command.name).unwrap();
+    if let Err(error) = command.execute(cloned.0).await {
         crate::errorhandler::handle_interaction_error(
             ErrorPayload::Miette(error),
             interaction_create,
