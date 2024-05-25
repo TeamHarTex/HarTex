@@ -105,10 +105,10 @@ pub fn implement_metadata(
     functions.extend(expanded);
 
     // plugin = ?
-    let string = parameters.plugin_actual_ident.to_string();
+    let plugin_ident = parameters.plugin_actual_ident.clone();
     let expanded = quote::quote! {
-        fn plugin(&self) -> String {
-            String::from(#string)
+        fn plugin(&self) -> Box<dyn Plugin> {
+            Box::new(#plugin_ident)
         }
     };
     functions.extend(expanded);
