@@ -107,7 +107,7 @@ pub fn implement_metadata(
     // plugin = ?
     let plugin_ident = parameters.plugin_actual_ident.clone();
     let expanded = quote::quote! {
-        fn plugin(&self) -> Box<dyn Plugin> {
+        fn plugin(&self) -> Box<dyn _commands_core::traits::Plugin> {
             Box::new(#plugin_ident)
         }
     };
