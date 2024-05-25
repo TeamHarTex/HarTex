@@ -26,6 +26,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install Problem Matches
+        run: echo "::add-matcher::.github/problemMatchers/test.json"
       - name: Run Build
         run: python ./x.py build
 
@@ -45,6 +47,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install Problem Matches
+        run: echo "::add-matcher::.github/problemMatchers/test.json"
       - name: Run Build
         run: python ./x.py build -- discord-frontend
       - name: Run Tests
