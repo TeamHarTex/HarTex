@@ -39,6 +39,8 @@ use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;
 
+use crate::utilities::Utilities;
+
 mod info_bot;
 mod info_emoji;
 mod info_role;

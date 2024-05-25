@@ -77,7 +77,7 @@ pub fn implement_metadata(
 
         #[automatically_derived]
         impl _commands_core::traits::PluginMetadata for #ident {
-            pub fn name(&self) -> String {
+            fn name(&self) -> String {
                 String::from(#lit)
             }
         }
