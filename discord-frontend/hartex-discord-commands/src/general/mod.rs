@@ -26,7 +26,11 @@
 //! - about
 //! - contributors
 
+use async_trait::async_trait;
 use hartex_discord_commands_core::plugin;
+use hartex_discord_commands_core::traits::Plugin;
+use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
 
 pub mod about;
 pub mod contributors;
@@ -34,3 +38,10 @@ pub mod contributors;
 /// The general plugin.
 #[plugin(name = "general")]
 pub struct General;
+
+#[async_trait]
+impl Plugin for General {
+    async fn enabled(&self, _: Id<GuildMarker>) -> bool {
+        todo!()
+    }
+}
