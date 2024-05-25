@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use async_trait::async_trait;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
 /// The command metadata trait, specifying the various information about the command.
@@ -41,8 +42,8 @@ pub trait CommandMetadata {
 }
 
 /// The command trait.
+#[async_trait]
 pub trait Command: CommandMetadata {
     /// Executes the command.
-    #[allow(async_fn_in_trait)]
     async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
 }

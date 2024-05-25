@@ -24,6 +24,7 @@
 //!
 //! This command returns information about the contributors of the bot.
 
+use async_trait::async_trait;
 use hartex_discord_commands_core::metadata;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -43,6 +44,7 @@ use miette::IntoDiagnostic;
 #[metadata(command_type = 1, interaction_only = true, name = "contributors")]
 pub struct Contributors;
 
+#[async_trait]
 impl Command for Contributors {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let interaction_client = CLIENT.interaction(interaction.application_id);

@@ -55,6 +55,7 @@ use serde_scan::scan;
 
 use crate::error::ConsumerError;
 use crate::error::ConsumerErrorKind;
+use crate::interaction::COMMAND_LOOKUP;
 
 mod error;
 mod errorhandler;
@@ -70,8 +71,9 @@ pub async fn main() -> miette::Result<()> {
     log::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    Lazy::force(&TOKEN);
     Lazy::force(&CLIENT);
+    Lazy::force(&COMMAND_LOOKUP);
+    Lazy::force(&TOKEN);
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
         .into_diagnostic()?

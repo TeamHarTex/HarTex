@@ -24,6 +24,7 @@
 
 use std::pin::Pin;
 
+use async_trait::async_trait;
 use hartex_database_queries::discord_frontend::queries::utilities_plugin_enabled::utilities_plugin_enabled;
 use hartex_discord_commands_core::metadata;
 use hartex_discord_commands_core::traits::Command;
@@ -48,6 +49,7 @@ mod info_user;
 #[metadata(command_type = 1, interaction_only = true, name = "info")]
 pub struct Info;
 
+#[async_trait]
 impl Command for Info {
     async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
         let Some(InteractionData::ApplicationCommand(command)) = interaction.clone().data else {

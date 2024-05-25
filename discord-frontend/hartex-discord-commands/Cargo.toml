@@ -27,6 +27,7 @@ hartex_localization_core = { path = "../../localization/hartex-localization-core
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
+async-trait = "0.1.80"
 fluent-bundle = "0.15.2"
 futures = "0.3.30"
 http-body-util = "0.1.1"
