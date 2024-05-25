@@ -27,7 +27,6 @@
 use std::str::FromStr;
 
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -37,7 +36,8 @@ use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFiel
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
-use hartex_discord_utils::commands::CommandDaataOptionExt;
+use hartex_discord_utils::commands::CommandDataOptionExt;
+use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
@@ -64,15 +64,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
     let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let CommandOptionValue::String(emoji) = options
-        .iter()
-        .find(|option| option.name.as_str() == "emoji")
-        .map_or(CommandOptionValue::String(String::new()), |option| {
-            option.value.clone()
-        })
-    else {
-        unreachable!()
-    };
+    let emoji = options.string_value_of("emoji");
 
     let emojiinfo_error_only_custom_emojis =
         localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
