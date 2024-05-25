@@ -27,7 +27,6 @@
 use hartex_discord_cdn::Cdn;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -39,7 +38,8 @@ use hartex_discord_core::discord::util::snowflake::Snowflake;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
 use hartex_discord_entitycache_repositories::user::CachedUserRepository;
-use hartex_discord_utils::commands::CommandDaataOptionExt;
+use hartex_discord_utils::commands::CommandDataOptionExt;
+use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
@@ -60,16 +60,7 @@ pub async fn execute(interaction: Interaction, option: CommandDataOption) -> mie
         .unwrap_or_else(|| String::from("en-GB"));
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
-    let CommandOptionValue::User(user_id) = options
-        .iter()
-        .find(|option| option.name.as_str() == "user")
-        .map_or(
-            CommandOptionValue::User(interaction.author_id().unwrap()),
-            |option| option.value.clone(),
-        )
-    else {
-        unreachable!()
-    };
+    let user_id = options.user_value_of("user");
 
     let user = CachedUserRepository.get(user_id).await.into_diagnostic()?;
 
