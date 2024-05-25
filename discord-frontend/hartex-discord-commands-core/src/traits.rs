@@ -22,8 +22,10 @@
 
 use async_trait::async_trait;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::Id;
 
-/// The command metadata trait, specifying the various information about the command.
+/// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
     /// The type of the command.
     #[deprecated(since = "0.11.0")]
@@ -39,11 +41,29 @@ pub trait CommandMetadata {
 
     /// The name of the command.
     fn name(&self) -> String;
+
+    /// The plugin the command belongs to.
+    fn plugin(&self) -> Box<dyn Plugin>;
 }
 
-/// The command trait.
+/// The command trait, contains callbacks that are to be run before or when an interaction command
+/// is handled.
 #[async_trait]
 pub trait Command: CommandMetadata {
     /// Executes the command.
     async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
+}
+
+/// The plugin metadata data specifying information about a plugin.
+pub trait PluginMetadata {
+    /// The name of the plugin.
+    fn name(&self) -> String;
+}
+
+/// The plugin trait, contains callbacks that are to be run before or when an interaction command is
+/// handled.
+#[async_trait]
+pub trait Plugin: PluginMetadata {
+    /// Whether a given plugin is enabled.
+    async fn enabled(&self, guild_id: Id<GuildMarker>) -> bool;
 }

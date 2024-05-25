@@ -25,4 +25,21 @@
 //! Command List:
 //! - role
 
+use async_trait::async_trait;
+use hartex_discord_commands_core::plugin;
+use hartex_discord_commands_core::traits::Plugin;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::Id;
+
 pub mod role;
+
+/// The management plugin.
+#[plugin(name = "management")]
+pub struct Management;
+
+#[async_trait]
+impl Plugin for Management {
+    async fn enabled(&self, _: Id<GuildMarker>) -> bool {
+        todo!()
+    }
+}

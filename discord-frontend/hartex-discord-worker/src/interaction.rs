@@ -30,7 +30,12 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
+use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
+use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::CLIENT;
 use hartex_log::log;
+use miette::IntoDiagnostic;
 use once_cell::sync::Lazy;
 
 use crate::errorhandler::ErrorPayload;
@@ -62,6 +67,25 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
     let cloned = interaction_create.clone();
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
+    let plugin = command.plugin();
+    if !plugin.enabled(interaction_create.guild_id.unwrap()).await {
+        let interaction_client = CLIENT.interaction(interaction_create.application_id);
+        interaction_client.create_response(
+            interaction_create.id,
+            &interaction_create.token,
+            &InteractionResponse {
+                kind: InteractionResponseType::ChannelMessageWithSource,
+                data: Some(
+                    InteractionResponseDataBuilder::new()
+                        .content(format!("The `{}` plugin is not enabled. Please enable it in the guild configuration.", plugin.name()))
+                        .build(),
+                ),
+            }
+        )
+        .await
+        .into_diagnostic()?;
+    }
+
     if let Err(error) = command.execute(cloned.0).await {
         crate::errorhandler::handle_interaction_error(
             ErrorPayload::Miette(error),

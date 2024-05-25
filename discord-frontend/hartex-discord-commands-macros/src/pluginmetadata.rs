@@ -20,46 +20,38 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use proc_macro2::Ident;
 use proc_macro2::TokenStream as TokenStream2;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
-use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
 use syn::Token;
 
 /// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]
-pub struct CommandMetadataMacroInput {
+pub struct PluginMetadataMacroInput {
     pub(self) name_ident: Ident,
-    pub(self) equal3: Token![=],
-    pub(self) name_lit: Lit,
-    pub(self) comma1: Token![,],
-    pub(self) plugin_ident: Ident,
     pub(self) equal1: Token![=],
-    pub(self) plugin_actual_ident: Ident,
-    pub(self) comma3: Option<Token![,]>,
+    pub(self) name_lit: Lit,
+    pub(self) comma1: Option<Token![,]>,
 }
 
-impl Parse for CommandMetadataMacroInput {
+impl Parse for PluginMetadataMacroInput {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
             name_ident: input.parse()?,
-            equal3: input.parse()?,
-            name_lit: input.parse()?,
-            comma1: input.parse()?,
-            plugin_ident: input.parse()?,
             equal1: input.parse()?,
-            plugin_actual_ident: input.parse()?,
-            comma3: input.parse().ok(),
+            name_lit: input.parse()?,
+            comma1: input.parse().ok(),
         })
     }
 }
 
-/// Returns the token stream for generating the `CommandMetadata` trait implementation
+/// Returns the token stream for generating the `PluginMetadata` trait implementation
 #[allow(clippy::too_many_lines)]
 pub fn implement_metadata(
-    parameters: &CommandMetadataMacroInput,
+    parameters: &PluginMetadataMacroInput,
     struct_item: &ItemStruct,
 ) -> Option<TokenStream2> {
     if parameters.name_ident != "name" {
@@ -73,62 +65,21 @@ pub fn implement_metadata(
         return None;
     }
 
-    if parameters.plugin_ident != "plugin" {
-        parameters
-            .plugin_ident
-            .span()
-            .unwrap()
-            .error("expected `plugin`")
-            .emit();
-
-        return None;
-    }
-
-    let mut functions = TokenStream2::new();
-
-    // name = ?
-    let Lit::Str(name) = parameters.name_lit.clone() else {
-        parameters
-            .name_lit
-            .span()
-            .unwrap()
-            .error("expected string")
-            .emit();
-
-        return None;
-    };
-    let expanded = quote::quote! {
-        fn name(&self) -> String {
-            String::from(#name)
-        }
-    };
-    functions.extend(expanded);
-
-    // plugin = ?
-    let plugin_ident = parameters.plugin_actual_ident.clone();
-    let expanded = quote::quote! {
-        fn plugin(&self) -> Box<dyn _commands_core::traits::Plugin> {
-            Box::new(#plugin_ident)
-        }
-    };
-    functions.extend(expanded);
-
     let core_use = quote::quote! {
         extern crate hartex_discord_commands_core as _commands_core;
     };
     let ident = struct_item.ident.clone();
-    let expanded = quote::quote! {
+    let lit = parameters.name_lit.clone();
+    Some(quote::quote! {
         #core_use
 
         #struct_item
 
         #[automatically_derived]
-        impl _commands_core::traits::CommandMetadata for #ident {
-            #functions
+        impl _commands_core::traits::PluginMetadata for #ident {
+            fn name(&self) -> String {
+                String::from(#lit)
+            }
         }
-    };
-
-    Some(quote::quote! {
-       #expanded
     })
 }
