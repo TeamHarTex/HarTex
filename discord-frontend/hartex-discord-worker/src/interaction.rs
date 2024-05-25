@@ -28,8 +28,6 @@ use hartex_discord_commands::management::role::Role;
 use hartex_discord_commands::utilities::info::Info;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
-use hartex_discord_commands_core::traits::Plugin;
-use hartex_discord_commands_core::traits::PluginMetadata;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
