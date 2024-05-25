@@ -35,7 +35,10 @@ use once_cell::sync::Lazy;
 
 use crate::errorhandler::ErrorPayload;
 
-/// Lookup table for commands provided by the bot
+/// Lookup table for commands provided by the bot.
+///
+/// This is used for retrieving the command instance by its name such that precommand checks
+/// can be executed via dynamic dispatch without the need of match arms and if guards.
 pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>> =
     Lazy::new(|| {
         let mut map = HashMap::<String, Box<dyn Command + Send + Sync>>::new();
@@ -46,7 +49,7 @@ pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>>
         map
     });
 
-/// Handle an application command interaction
+/// Handle an application command interaction.
 #[allow(clippy::large_futures)]
 pub async fn application_command(interaction_create: Box<InteractionCreate>) -> miette::Result<()> {
     let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap()
