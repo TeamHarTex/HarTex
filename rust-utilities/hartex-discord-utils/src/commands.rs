@@ -37,6 +37,6 @@ impl CommandDaataOptionExt for CommandDataOption {
             unreachable!()
         };
 
-        return options.clone();
+        options.clone()
     }
 }
