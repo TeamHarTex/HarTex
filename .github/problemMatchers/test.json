@@ -1,0 +1,13 @@
+{
+    "problemMatchers": [
+        {
+            "owner": "test",
+            "pattern": [
+                {
+                    "regexp": "FAILED",
+                    "severity": 1
+                }
+            ]
+        }
+    ]
+}
