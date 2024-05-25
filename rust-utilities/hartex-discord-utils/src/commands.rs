@@ -20,25 +20,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::model::application::interaction::Interaction;
+//! # Utility Functions for Commands
 
-/// The command metadata trait, specifying the various information about the command.
-pub trait CommandMetadata {
-    /// The type of the command.
-    #[deprecated(since = "0.11.0")]
-    fn command_type(&self) -> u8 { 0 }
+use hartex_discord_core::discord::model::application::interaction::application_command::{CommandDataOption, CommandOptionValue};
 
-    /// Whether the command is only available in the form of an interaction.
-    #[deprecated(since = "0.11.0")]
-    fn interaction_only(&self) -> bool { true }
-
-    /// The name of the command.
-    fn name(&self) -> String;
+/// Extension functions for `CommandDataOption`s.
+pub trait CommandDaataOptionExt {
+    /// Assumes that the context of the command is a subcommand.
+    /// This returns the options of the subcommand
+    fn assume_subcommand(&self) -> Vec<CommandDataOption>;
 }
 
-/// The command trait.
-pub trait Command: CommandMetadata {
-    /// Executes the command.
-    #[allow(async_fn_in_trait)]
-    async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
+impl CommandDaataOptionExt for CommandDataOption {
+    fn assume_subcommand(&self) -> Vec<CommandDataOption> {
+        let CommandOptionValue::SubCommand(options) = self.value.clone() else {
+            unreachable!()
+        };
+
+        options.clone()
+    }
 }
