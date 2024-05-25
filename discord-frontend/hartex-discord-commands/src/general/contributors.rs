@@ -41,7 +41,7 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 /// The `contributors` command declaration.
-#[metadata(command_type = 1, interaction_only = true, name = "contributors")]
+#[metadata(name = "contributors")]
 pub struct Contributors;
 
 #[async_trait]

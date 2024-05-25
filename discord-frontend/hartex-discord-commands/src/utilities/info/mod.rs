@@ -46,7 +46,7 @@ mod info_server;
 mod info_user;
 
 /// The `info` command declaration.
-#[metadata(command_type = 1, interaction_only = true, name = "info")]
+#[metadata(name = "info")]
 pub struct Info;
 
 #[async_trait]

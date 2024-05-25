@@ -28,7 +28,7 @@ use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 
 /// The `role` command declaration.
-#[metadata(command_type = 1, interaction_only = true, name = "role")]
+#[metadata(name = "role")]
 pub struct Role;
 
 #[async_trait]
