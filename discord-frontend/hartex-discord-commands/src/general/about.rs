@@ -42,6 +42,8 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
+use crate::general::General;
+
 /// The `about` command declaration.
 #[command(name = "about", plugin = General)]
 pub struct About;

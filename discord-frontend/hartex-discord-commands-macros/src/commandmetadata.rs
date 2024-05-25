@@ -30,7 +30,7 @@ use syn::Token;
 
 /// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]
-pub struct MetadataMacroInput {
+pub struct CommandMetadataMacroInput {
     pub(self) name_ident: Ident,
     pub(self) equal3: Token![=],
     pub(self) name_lit: Lit,
@@ -41,7 +41,7 @@ pub struct MetadataMacroInput {
     pub(self) comma3: Option<Token![,]>,
 }
 
-impl Parse for MetadataMacroInput {
+impl Parse for CommandMetadataMacroInput {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
             name_ident: input.parse()?,
@@ -59,7 +59,7 @@ impl Parse for MetadataMacroInput {
 /// Returns the token stream for generating the `CommandMetadata` trait implementation
 #[allow(clippy::too_many_lines)]
 pub fn implement_metadata(
-    parameters: &MetadataMacroInput,
+    parameters: &CommandMetadataMacroInput,
     struct_item: &ItemStruct,
 ) -> Option<TokenStream2> {
     if parameters.name_ident != "name" {
@@ -117,7 +117,6 @@ pub fn implement_metadata(
         extern crate hartex_discord_commands_core as _commands_core;
     };
     let ident = struct_item.ident.clone();
-    let plugin_ident = parameters.plugin_actual_ident.clone();
     let expanded = quote::quote! {
         #core_use
 
@@ -125,8 +124,6 @@ pub fn implement_metadata(
 
         #[automatically_derived]
         impl _commands_core::traits::CommandMetadata for #ident {
-            type Plugin = #plugin_ident;
-
             #functions
         }
     };

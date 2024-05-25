@@ -25,4 +25,10 @@
 //! Command List:
 //! - role
 
+use hartex_discord_commands_core::plugin;
+
 pub mod role;
+
+/// The management plugin.
+#[plugin(name = "management")]
+pub struct Management;

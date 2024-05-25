@@ -40,6 +40,8 @@ use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
+use crate::general::General;
+
 /// The `contributors` command declaration.
 #[command(name = "contributors", plugin = General)]
 pub struct Contributors;
