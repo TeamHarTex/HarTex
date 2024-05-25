@@ -43,7 +43,7 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 /// The `about` command declaration.
-#[metadata(command_type = 1, interaction_only = true, name = "about")]
+#[metadata(name = "about")]
 pub struct About;
 
 #[async_trait]

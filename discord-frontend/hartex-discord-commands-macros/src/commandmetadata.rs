@@ -31,14 +31,6 @@ use syn::Token;
 /// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]
 pub struct MetadataMacroInput {
-    pub(self) command_type_ident: Ident,
-    pub(self) equal1: Token![=],
-    pub(self) command_type_lit: Lit,
-    pub(self) comma1: Token![,],
-    pub(self) interaction_only_ident: Ident,
-    pub(self) equal2: Token![=],
-    pub(self) interaction_only_lit: Lit,
-    pub(self) comma2: Token![,],
     pub(self) name_ident: Ident,
     pub(self) equal3: Token![=],
     pub(self) name_lit: Lit,
@@ -48,14 +40,6 @@ pub struct MetadataMacroInput {
 impl Parse for MetadataMacroInput {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            command_type_ident: input.parse()?,
-            equal1: input.parse()?,
-            command_type_lit: input.parse()?,
-            comma1: input.parse()?,
-            interaction_only_ident: input.parse()?,
-            equal2: input.parse()?,
-            interaction_only_lit: input.parse()?,
-            comma2: input.parse()?,
             name_ident: input.parse()?,
             equal3: input.parse()?,
             name_lit: input.parse()?,
@@ -70,28 +54,6 @@ pub fn implement_metadata(
     parameters: &MetadataMacroInput,
     struct_item: &ItemStruct,
 ) -> Option<TokenStream2> {
-    if parameters.command_type_ident != "command_type" {
-        parameters
-            .command_type_ident
-            .span()
-            .unwrap()
-            .error("expected `command_type`")
-            .emit();
-
-        return None;
-    }
-
-    if parameters.interaction_only_ident != "interaction_only" {
-        parameters
-            .interaction_only_ident
-            .span()
-            .unwrap()
-            .error("expected `interaction_only`")
-            .emit();
-
-        return None;
-    }
-
     if parameters.name_ident != "name" {
         parameters
             .name_ident
@@ -104,58 +66,6 @@ pub fn implement_metadata(
     }
 
     let mut functions = TokenStream2::new();
-
-    // command_type = ?
-    let Lit::Int(command_type_literal) = parameters.command_type_lit.clone() else {
-        parameters
-            .command_type_lit
-            .span()
-            .unwrap()
-            .error("expected integer literal")
-            .emit();
-
-        return None;
-    };
-    let Ok(command_type) = command_type_literal.base10_digits().parse::<u8>() else {
-        unreachable!()
-    };
-
-    if !(1..=3).contains(&command_type) {
-        parameters
-            .command_type_lit
-            .span()
-            .unwrap()
-            .error("invalid command type")
-            .emit();
-
-        return None;
-    }
-
-    let expanded = quote::quote! {
-        fn command_type(&self) -> u8 {
-            #command_type_literal
-        }
-    };
-    functions.extend(expanded);
-
-    // interaction_only = ?
-    let Lit::Bool(interaction_only_literal) = parameters.interaction_only_lit.clone() else {
-        parameters
-            .interaction_only_lit
-            .span()
-            .unwrap()
-            .error("expected boolean")
-            .emit();
-
-        return None;
-    };
-
-    let expanded = quote::quote! {
-        fn interaction_only(&self) -> bool {
-            #interaction_only_literal
-        }
-    };
-    functions.extend(expanded);
 
     // name = ?
     let Lit::Str(name) = parameters.name_lit.clone() else {
