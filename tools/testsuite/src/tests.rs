@@ -46,12 +46,12 @@ use crate::header::TestsuiteOutcome;
 use crate::testrunner;
 
 #[allow(clippy::module_name_repetitions)]
-pub fn run_tests(config: Arc<Config>) {
+pub fn run_tests(config: Arc<Config>) -> bool {
     let mut tests = Vec::new();
     discover_tests(config, &mut tests);
 
     let options = make_test_options();
-    let _ = test::run_tests_console(&options, tests);
+    test::run_tests_console(&options, tests).unwrap_or(false)
 }
 
 #[allow(clippy::module_name_repetitions)]
