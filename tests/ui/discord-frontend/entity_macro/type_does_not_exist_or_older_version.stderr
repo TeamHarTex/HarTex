@@ -4,7 +4,7 @@ error: type `twilight_model::TypeDoesNotExistOrOlderVersion` cannot be found
 LL |     from = "twilight_model::TypeDoesNotExistOrOlderVersion",
    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    |
-   = note: the type metadata generated was for twilight-model version 0.15.4
+   = note: the type metadata generated was for twilight-model version git
    = help: consider regenerating the metadata for a newer version if the type is recently added
 
 error: aborting due to 1 previous error

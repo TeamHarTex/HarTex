@@ -28,7 +28,7 @@
 extern crate hartex_discord_commands_macros;
 
 #[hartex_discord_commands_macros::metadata(
-    command_type = 1
+    name = "name"
 )]
 pub struct ExpectedComma1;
 

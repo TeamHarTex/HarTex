@@ -1,8 +1,12 @@
-error: expected `name`
-  --> tests/ui/discord-frontend/command_macro/expected_name.rs:33:5
+error: expected `,`
+  --> tests/ui/discord-frontend/command_macro/expected_name.rs:30:1
    |
-LL |     expected_name = "foo"
-   |     ^^^^^^^^^^^^^
+LL | / #[hartex_discord_commands_macros::command(
+LL | |     expected_name = "foo"
+LL | | )]
+   | |__^
+   |
+   = note: this error originates in the attribute macro `hartex_discord_commands_macros::command` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: aborting due to 1 previous error
 
