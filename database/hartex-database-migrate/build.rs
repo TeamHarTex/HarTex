@@ -20,9 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[path = "../generated/api_backend.rs"]
-pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
-pub mod discord_frontend;
+pub fn main() {
+    println!("cargo:rerun-if-changed=api-backend-migrations");
+    println!("cargo:rerun-if-changed=discord-frontend-migrations");
+}
