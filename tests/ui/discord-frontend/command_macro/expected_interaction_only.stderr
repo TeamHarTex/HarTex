@@ -1,8 +1,0 @@
-error: expected `interaction_only`
-  --> tests/ui/discord-frontend/command_macro/expected_interaction_only.rs:32:5
-   |
-LL |     expected_interaction_only = true,
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
-
-error: aborting due to 1 previous error
-

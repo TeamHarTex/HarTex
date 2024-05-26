@@ -1,12 +1,9 @@
-error: expected `,`
-  --> tests/ui/discord-frontend/command_macro/expected_comma_1.rs:30:1
+error[E0433]: failed to resolve: could not find `metadata` in `hartex_discord_commands_macros`
+  --> tests/ui/discord-frontend/command_macro/expected_comma_1.rs:30:35
    |
-LL | / #[hartex_discord_commands_macros::metadata(
-LL | |     command_type = 1
-LL | | )]
-   | |__^
-   |
-   = note: this error originates in the attribute macro `hartex_discord_commands_macros::metadata` (in Nightly builds, run with -Z macro-backtrace for more info)
+LL | #[hartex_discord_commands_macros::metadata(
+   |                                   ^^^^^^^^ could not find `metadata` in `hartex_discord_commands_macros`
 
 error: aborting due to 1 previous error
 
+For more information about this error, try `rustc --explain E0433`.

@@ -1,8 +1,0 @@
-error: expected integer literal
-  --> tests/ui/discord-frontend/command_macro/expected_integer_literal.rs:31:20
-   |
-LL |     command_type = "0",
-   |                    ^^^
-
-error: aborting due to 1 previous error
-
