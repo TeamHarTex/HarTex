@@ -1,0 +1,8 @@
+error: expected `name`
+  --> tests/ui/discord-frontend/plugin_macro/expected_name.rs:31:5
+   |
+LL |     expected_name = "foo"
+   |     ^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+

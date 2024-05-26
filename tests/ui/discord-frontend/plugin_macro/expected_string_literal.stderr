@@ -1,0 +1,13 @@
+error[E0463]: can't find crate for `async_trait` which `hartex_discord_commands_core` depends on
+  --> tests/ui/discord-frontend/plugin_macro/expected_string_literal.rs:30:1
+   |
+LL | / #[hartex_discord_commands_macros::plugin(
+LL | |     name = 394
+LL | | )]
+   | |__^ can't find crate
+   |
+   = note: this error originates in the attribute macro `hartex_discord_commands_macros::plugin` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0463`.
