@@ -1,0 +1,9 @@
+error[E0433]: failed to resolve: could not find `metadata` in `hartex_discord_commands_macros`
+  --> tests/ui/discord-frontend/command_macro/expected_ident.rs:30:35
+   |
+LL | #[hartex_discord_commands_macros::metadata(
+   |                                   ^^^^^^^^ could not find `metadata` in `hartex_discord_commands_macros`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0433`.
