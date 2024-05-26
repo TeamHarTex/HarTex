@@ -68,7 +68,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
-    if !plugin.enabled(interaction_create.guild_id.unwrap()).await {
+    if !plugin.enabled(interaction_create.guild_id.unwrap()).await? {
         let interaction_client = CLIENT.interaction(interaction_create.application_id);
         interaction_client.create_response(
             interaction_create.id,
