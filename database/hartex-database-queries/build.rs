@@ -46,6 +46,21 @@ pub fn main() {
     )
     .unwrap();
 
+    let configuration_queries_path = "queries/configuration";
+    println!("cargo:rerun-if-changed={configuration_queries_path}");
+
+    let url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
+    cornucopia::generate_live(
+        &mut Client::connect(&url, NoTls).unwrap(),
+        configuration_queries_path,
+        Some("generated/configuration.rs"),
+        CodegenSettings {
+            derive_ser: false,
+            is_async: true,
+        },
+    )
+    .unwrap();
+
     let discord_frontend_queries_path = "queries/discord_frontend";
     println!("cargo:rerun-if-changed={discord_frontend_queries_path}");
 
