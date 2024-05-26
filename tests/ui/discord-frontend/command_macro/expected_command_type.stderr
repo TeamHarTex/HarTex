@@ -1,8 +1,0 @@
-error: expected `command_type`
-  --> tests/ui/discord-frontend/command_macro/expected_command_type.rs:31:5
-   |
-LL |     expected_command_type = 1,
-   |     ^^^^^^^^^^^^^^^^^^^^^
-
-error: aborting due to 1 previous error
-

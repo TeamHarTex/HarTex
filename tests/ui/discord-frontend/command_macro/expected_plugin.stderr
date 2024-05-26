@@ -1,8 +1,9 @@
-error: expected `,`
-  --> tests/ui/discord-frontend/command_macro/expected_string_literal.rs:30:1
+error: expected `=`
+  --> tests/ui/discord-frontend/command_macro/expected_plugin.rs:30:1
    |
 LL | / #[hartex_discord_commands_macros::command(
-LL | |     name = 394
+LL | |     name = "foo",
+LL | |     expected_plugin
 LL | | )]
    | |__^
    |

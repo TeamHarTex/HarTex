@@ -27,11 +27,10 @@
 
 extern crate hartex_discord_commands_macros;
 
-#[hartex_discord_commands_macros::metadata(
-    command_type = 1,
-    interaction_only = "true",
-    name = "foo"
+#[hartex_discord_commands_macros::command(
+    name = "foo",
+    expected_plugin
 )]
-pub struct ExpectedBooleanLiteral;
+pub struct ExpectedPlugin;
 
 fn main() {}

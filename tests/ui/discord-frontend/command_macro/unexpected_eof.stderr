@@ -1,10 +1,10 @@
 error: unexpected end of input, expected identifier
   --> tests/ui/discord-frontend/command_macro/unexpected_eof.rs:30:1
    |
-LL | #[hartex_discord_commands_macros::metadata()]
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+LL | #[hartex_discord_commands_macros::command()]
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    |
-   = note: this error originates in the attribute macro `hartex_discord_commands_macros::metadata` (in Nightly builds, run with -Z macro-backtrace for more info)
+   = note: this error originates in the attribute macro `hartex_discord_commands_macros::command` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: aborting due to 1 previous error
 
