@@ -25,17 +25,11 @@
 use std::pin::Pin;
 
 use async_trait::async_trait;
-use hartex_database_queries::discord_frontend::queries::utilities_plugin_enabled::utilities_plugin_enabled;
 use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_utils::CLIENT;
-use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;
 
