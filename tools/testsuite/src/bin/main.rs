@@ -21,6 +21,7 @@
  */
 
 use std::env;
+use std::process;
 use std::sync::Arc;
 
 use testsuite::config::Config;
@@ -32,5 +33,7 @@ pub fn main() {
     let flags = Flags::parse_from_args(&args);
     let config = Config::from_flags(flags);
 
-    run_tests(Arc::new(config));
+    if !run_tests(Arc::new(config)) {
+        process::exit(1);
+    }
 }
