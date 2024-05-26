@@ -65,5 +65,5 @@ pub trait PluginMetadata {
 #[async_trait]
 pub trait Plugin: PluginMetadata {
     /// Whether a given plugin is enabled.
-    async fn enabled(&self, guild_id: Id<GuildMarker>) -> bool;
+    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool>;
 }

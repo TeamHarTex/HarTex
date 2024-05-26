@@ -58,36 +58,6 @@ impl Command for Info {
             unreachable!()
         };
 
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await.into_diagnostic()?;
-        let client = pooled.client();
-        let enabled = utilities_plugin_enabled()
-            .bind(client, &interaction.guild_id.unwrap().to_string())
-            .map(|json| json.0.get().to_string())
-            .one()
-            .await
-            .ok()
-            .and_then(|boolean| boolean.parse().ok())
-            .unwrap_or(false);
-
-        if !enabled {
-            let interaction_client = CLIENT.interaction(interaction.application_id);
-            interaction_client.create_response(
-                interaction.id,
-                &interaction.token,
-                &InteractionResponse {
-                    kind: InteractionResponseType::ChannelMessageWithSource,
-                    data: Some(
-                        InteractionResponseDataBuilder::new()
-                            .content("The `utilities` plugin is not enabled. Please enable it in the guild configuration.")
-                            .build(),
-                    ),
-                }
-            )
-            .await
-            .into_diagnostic()?;
-        }
-
         let Some(subcommand) = command
             .options
             .iter()
