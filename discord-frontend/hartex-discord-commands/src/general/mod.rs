@@ -41,7 +41,7 @@ pub struct General;
 
 #[async_trait]
 impl Plugin for General {
-    async fn enabled(&self, _: Id<GuildMarker>) -> bool {
+    async fn enabled(&self, _: Id<GuildMarker>) -> miette::Result<bool> {
         todo!()
     }
 }

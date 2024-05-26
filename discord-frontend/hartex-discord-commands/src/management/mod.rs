@@ -39,7 +39,7 @@ pub struct Management;
 
 #[async_trait]
 impl Plugin for Management {
-    async fn enabled(&self, _: Id<GuildMarker>) -> bool {
+    async fn enabled(&self, _: Id<GuildMarker>) -> miette::Result<bool> {
         todo!()
     }
 }
