@@ -1178,6 +1178,7 @@ name = "hartex_backend_models"
 version = "0.11.0"
 dependencies = [
  "axum",
+ "hartex_discord_configuration_models",
  "serde",
 ]
 

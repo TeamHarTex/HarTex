@@ -42,6 +42,7 @@ use axum::RequestPartsExt;
 use serde::Deserialize;
 use serde::Serialize;
 
+pub use hartex_discord_configuration_models as config;
 pub mod uptime;
 
 /// Specifies the API version to be used for a given API request.
