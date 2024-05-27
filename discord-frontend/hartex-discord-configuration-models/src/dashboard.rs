@@ -26,9 +26,10 @@ use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
+use serde::Serialize;
 
 /// The dashboard configuration object.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Dashboard {
     /// The admins that have full edit access to the dashboard and can invite others to the
     /// dashboard.

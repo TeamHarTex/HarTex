@@ -26,10 +26,11 @@ use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
+use serde::Serialize;
 
 /// The management plugin configuration object.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ManagementPlugin {
     /// Sets whether the management plugin is enabled.
     pub enabled: bool,
