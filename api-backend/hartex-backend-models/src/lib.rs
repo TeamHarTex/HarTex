@@ -42,13 +42,13 @@ use axum::RequestPartsExt;
 use serde::Deserialize;
 use serde::Serialize;
 
+pub mod uptime;
+
 /// Specifies the API version to be used for a given API request.
 #[derive(Copy, Clone, Debug)]
 pub enum APIVersion {
-    /// Version 1 of the backend API.
-    V1,
-    /// Version 2 of the backend API.
-    V2,
+    /// Version 0.11.0 of the backend API.
+    V0_11_0,
 }
 
 #[async_trait]
@@ -67,8 +67,7 @@ where
             .ok_or_else(|| (StatusCode::NOT_FOUND, "version not specified").into_response())?;
 
         match version.as_str() {
-            "v1" => Ok(APIVersion::V1),
-            "v2" => Ok(APIVersion::V2),
+            "v0110" | "v1" => Ok(APIVersion::V0_11_0),
             _ => Err((StatusCode::NOT_FOUND, "unknown version specified").into_response()),
         }
     }

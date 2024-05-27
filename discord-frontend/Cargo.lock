@@ -1182,13 +1182,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hartex_backend_models_v2"
-version = "0.11.0"
-dependencies = [
- "serde",
-]
-
-[[package]]
 name = "hartex_database_queries"
 version = "0.11.0"
 dependencies = [
@@ -1219,7 +1212,6 @@ dependencies = [
  "fluent-bundle",
  "futures",
  "hartex_backend_models",
- "hartex_backend_models_v2",
  "hartex_database_queries",
  "hartex_discord_cdn",
  "hartex_discord_commands_core",
@@ -1434,7 +1426,7 @@ version = "0.11.0"
 dependencies = [
  "chrono",
  "futures-util",
- "hartex_backend_models_v2",
+ "hartex_backend_models",
  "hartex_database_queries",
  "hartex_discord_commands",
  "hartex_discord_commands_core",

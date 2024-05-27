@@ -3,7 +3,6 @@ members = [
     "hartex-backend-driver",
     "hartex-backend-layers",
     "hartex-backend-models",
-    "hartex-backend-models-v2",
     "hartex-backend-routes",
 ]
 
