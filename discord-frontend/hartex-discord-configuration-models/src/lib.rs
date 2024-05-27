@@ -20,9 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Configuration Object
+//! # Configuration Models
 //!
-//! This is the lowest level in the configuration structure hierarchy.
+//! This crate contains models that are returned by evaluating Lua configuration and can be
+//! serialized via `serde`.
 
 use mlua::Error;
 use mlua::FromLuaMulti;
@@ -30,23 +31,18 @@ use mlua::Lua;
 use mlua::MultiValue;
 use mlua::Value;
 
-use crate::config::appearance::Appearance;
-use crate::config::dashboard::Dashboard;
-use crate::config::plugins::Plugins;
-
 pub mod appearance;
 pub mod dashboard;
 pub mod plugins;
 
-/// The configuration object.
 #[derive(Debug)]
 pub struct Configuration {
     /// An optional appearance configuration object.
-    pub appearance: Option<Appearance>,
+    pub appearance: Option<appearance::Appearance>,
     /// A dashboard configuration object.
-    pub dashboard: Dashboard,
+    pub dashboard: dashboard::Dashboard,
     /// An optional plugins configuration object.
-    pub plugins: Option<Plugins>,
+    pub plugins: Option<plugins::Plugins>,
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {
