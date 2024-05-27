@@ -26,9 +26,10 @@ use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
+use serde::Serialize;
 
 /// The appearance configuration object.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Appearance {
     /// The role colour of the bot.
     pub colour: Option<u32>,

@@ -26,12 +26,13 @@ use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
+use serde::Serialize;
 
 pub mod management;
 pub mod utilities;
 
 /// The plugins configuration object.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Plugins {
     /// Optional configuration object for the management plugin.
     pub management: Option<management::ManagementPlugin>,

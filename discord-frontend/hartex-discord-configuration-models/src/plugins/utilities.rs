@@ -26,10 +26,11 @@ use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
+use serde::Serialize;
 
 /// The utilities plugin configuration object.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct UtilitiesPlugin {
     /// Sets whether the utilities plugin is enabled.
     pub enabled: bool,
