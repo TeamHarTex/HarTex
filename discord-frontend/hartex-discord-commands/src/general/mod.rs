@@ -26,15 +26,11 @@
 //! - about
 //! - contributors
 
-use std::pin::Pin;
-
 use async_trait::async_trait;
-use hartex_database_queries::configuration::queries::general_plugin_enabled::general_plugin_enabled;
 use hartex_discord_commands_core::plugin;
 use hartex_discord_commands_core::traits::Plugin;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;
 
@@ -47,18 +43,7 @@ pub struct General;
 
 #[async_trait]
 impl Plugin for General {
-    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await.into_diagnostic()?;
-        let client = pooled.client();
-
-        let bool = general_plugin_enabled()
-            .bind(client, &guild_id.to_string())
-            .map(|json| json.0.get().to_string())
-            .one()
-            .await
-            .into_diagnostic()?;
-
-        bool.parse().into_diagnostic()
+    async fn enabled(&self, _: Id<GuildMarker>) -> miette::Result<bool> {
+        Ok(true)
     }
 }
