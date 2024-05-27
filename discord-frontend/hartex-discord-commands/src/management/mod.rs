@@ -25,11 +25,17 @@
 //! Command List:
 //! - role
 
+use std::pin::Pin;
+
 use async_trait::async_trait;
+use hartex_database_queries::configuration::queries::management_plugin_enabled::management_plugin_enabled;
 use hartex_discord_commands_core::plugin;
 use hartex_discord_commands_core::traits::Plugin;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_utils::DATABASE_POOL;
+use miette::IntoDiagnostic;
+use tokio_postgres::GenericClient;
 
 pub mod role;
 
@@ -39,7 +45,18 @@ pub struct Management;
 
 #[async_trait]
 impl Plugin for Management {
-    async fn enabled(&self, _: Id<GuildMarker>) -> miette::Result<bool> {
-        todo!()
+    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool> {
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await.into_diagnostic()?;
+        let client = pooled.client();
+
+        let bool = management_plugin_enabled()
+            .bind(client, &guild_id.to_string())
+            .map(|json| json.0.get().to_string())
+            .one()
+            .await
+            .into_diagnostic()?;
+
+        bool.parse().into_diagnostic()
     }
 }
