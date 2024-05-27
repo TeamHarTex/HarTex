@@ -1,9 +1,9 @@
 [package]
-name = "hartex_discord_configuration_luart"
+name = "hartex_discord_configuration_models"
 version = "0.11.0"
 edition = "2021"
 description = """
-Lua runtime for evaluating configurations.
+The worker component of the bot.
 """
 license = "AGPL-3.0-or-later"
 rust-version = "1.80.0"
@@ -11,11 +11,6 @@ rust-version = "1.80.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_discord_configuration_models = { path = "../hartex-discord-configuration-models" }
-
 mlua = { version = "0.9.7", features = ["lua54", "vendored"] }
-
-[dev-dependencies]
-expect-test = "1.5.0"
 
 [features]
