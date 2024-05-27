@@ -30,12 +30,13 @@ use mlua::FromLuaMulti;
 use mlua::Lua;
 use mlua::MultiValue;
 use mlua::Value;
+use serde::Serialize;
 
 pub mod appearance;
 pub mod dashboard;
 pub mod plugins;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Configuration {
     /// An optional appearance configuration object.
     pub appearance: Option<appearance::Appearance>,
