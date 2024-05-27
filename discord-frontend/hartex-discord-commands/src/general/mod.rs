@@ -31,8 +31,6 @@ use hartex_discord_commands_core::plugin;
 use hartex_discord_commands_core::traits::Plugin;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
-use miette::IntoDiagnostic;
-use tokio_postgres::GenericClient;
 
 pub mod about;
 pub mod contributors;
