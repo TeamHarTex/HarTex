@@ -38,11 +38,11 @@ pub mod plugins;
 #[derive(Debug)]
 pub struct Configuration {
     /// An optional appearance configuration object.
-    pub appearance: Option<Appearance>,
+    pub appearance: Option<appearance::Appearance>,
     /// A dashboard configuration object.
-    pub dashboard: Dashboard,
+    pub dashboard: dashboard::Dashboard,
     /// An optional plugins configuration object.
-    pub plugins: Option<Plugins>,
+    pub plugins: Option<plugins::Plugins>,
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {

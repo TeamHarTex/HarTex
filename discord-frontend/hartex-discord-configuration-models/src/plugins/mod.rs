@@ -27,9 +27,6 @@ use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
 
-use crate::config::plugins::management::ManagementPlugin;
-use crate::config::plugins::utilities::UtilitiesPlugin;
-
 pub mod management;
 pub mod utilities;
 
@@ -37,9 +34,9 @@ pub mod utilities;
 #[derive(Debug)]
 pub struct Plugins {
     /// Optional configuration object for the management plugin.
-    pub management: Option<ManagementPlugin>,
+    pub management: Option<management::ManagementPlugin>,
     /// Optional configuration object for the utilities plugin.
-    pub utilities: Option<UtilitiesPlugin>,
+    pub utilities: Option<utilities::UtilitiesPlugin>,
 }
 
 impl<'lua> FromLua<'lua> for Plugins {
