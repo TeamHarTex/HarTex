@@ -26,7 +26,7 @@ use std::time::Duration;
 use std::time::SystemTime;
 
 use futures_util::FutureExt;
-use hartex_backend_models_v2::uptime::UptimeUpdate;
+use hartex_backend_models::uptime::UptimeUpdate;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
@@ -131,7 +131,7 @@ pub async fn invoke(
                 );
 
                 let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-                let uri = format!("http://{}/api/v2/stats/uptime", api_domain.clone());
+                let uri = format!("http://{}/api/v0110/stats/uptime", api_domain.clone());
                 let now = SystemTime::now();
                 let duration = now
                     .duration_since(SystemTime::UNIX_EPOCH)

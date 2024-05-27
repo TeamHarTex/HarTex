@@ -12,7 +12,6 @@ rust-version = "1.80.0"
 
 [dependencies]
 hartex_backend_models = { path = "../../api-backend/hartex-backend-models" }
-hartex_backend_models_v2 = { path = "../../api-backend/hartex-backend-models-v2" }
 
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
