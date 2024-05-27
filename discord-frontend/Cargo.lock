@@ -1293,6 +1293,7 @@ name = "hartex_discord_configuration_models"
 version = "0.11.0"
 dependencies = [
  "mlua",
+ "serde",
 ]
 
 [[package]]
