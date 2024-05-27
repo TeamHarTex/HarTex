@@ -29,14 +29,11 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-pub mod config;
-
+use hartex_discord_configuration_models::Configuration;
 use mlua::Lua;
 use mlua::LuaOptions;
 use mlua::Result;
 use mlua::StdLib;
-
-use crate::config::Configuration;
 
 /// Evaluates the configuration code and returns a configuration object.
 #[allow(clippy::missing_errors_doc)]

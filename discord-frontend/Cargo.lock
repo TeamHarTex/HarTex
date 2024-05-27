@@ -1284,6 +1284,14 @@ name = "hartex_discord_configuration_luart"
 version = "0.11.0"
 dependencies = [
  "expect-test",
+ "hartex_discord_configuration_models",
+ "mlua",
+]
+
+[[package]]
+name = "hartex_discord_configuration_models"
+version = "0.11.0"
+dependencies = [
  "mlua",
 ]
 
