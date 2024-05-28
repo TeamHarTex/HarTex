@@ -72,7 +72,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>, int
         .locale
         .as_deref()
         .unwrap_or("en-GB");
-    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
+    let localizer = Localizer::new(&LOCALIZATION_HOLDER, locale);
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
