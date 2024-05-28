@@ -41,22 +41,23 @@ use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
+use hartex_discord_core::discord::http::client::InteractionClient;
 
 /// Executes the `info emoji` command.
-pub async fn execute(interaction: Interaction, option: CommandDataOption) -> miette::Result<()> {
+pub async fn execute(
+    interaction: Interaction,
+    interaction_client: &InteractionClient,
+    option: CommandDataOption,
+    localizer: Localizer,
+) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
-    let interaction_client = CLIENT.interaction(interaction.application_id);
     let langid_locale = interaction
         .locale
         .clone()
         .and_then(|locale| locale.parse().ok());
-    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
     let role_id = options.role_value_of("role");
 

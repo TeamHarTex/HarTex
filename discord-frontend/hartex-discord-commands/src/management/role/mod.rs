@@ -25,7 +25,9 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_localization_core::Localizer;
 
 use crate::management::Management;
 
@@ -35,7 +37,12 @@ pub struct Role;
 
 #[async_trait]
 impl Command for Role {
-    async fn execute(&self, _: Interaction) -> miette::Result<()> {
+    async fn execute(
+        &self,
+        _: Interaction,
+        _: &InteractionClient,
+        _: Localizer,
+    ) -> miette::Result<()> {
         Ok(())
     }
 }

@@ -28,6 +28,7 @@ use std::env;
 use std::str::FromStr;
 
 use chrono::Utc;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -51,6 +52,7 @@ use sha2::Sha224;
 pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
+    interaction_client: InteractionClient,
 ) {
     let mut hasher = Sha224::new();
 
@@ -67,7 +69,6 @@ pub async fn handle_interaction_error(
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
 
-            let interaction_client = CLIENT.interaction(interaction_create.application_id);
             interaction_client
                 .create_response(
                     interaction_create.id,
@@ -118,7 +119,6 @@ pub async fn handle_interaction_error(
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
 
-            let interaction_client = CLIENT.interaction(interaction_create.application_id);
             interaction_client
                 .create_response(
                     interaction_create.id,

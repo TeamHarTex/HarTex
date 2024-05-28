@@ -28,6 +28,7 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
@@ -37,9 +38,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use miette::IntoDiagnostic;
 
 use crate::general::General;
@@ -50,11 +49,12 @@ pub struct About;
 
 #[async_trait]
 impl Command for About {
-    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
-        let interaction_client = CLIENT.interaction(interaction.application_id);
-        let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-        let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
-
+    async fn execute(
+        &self,
+        interaction: Interaction,
+        interaction_client: &InteractionClient,
+        localizer: Localizer,
+    ) -> miette::Result<()> {
         let about_embed_title = localizer.general_plugin_about_embed_title()?;
         let about_embed_description = localizer.general_plugin_about_embed_description()?;
         let about_embed_github_repo_field_name =
