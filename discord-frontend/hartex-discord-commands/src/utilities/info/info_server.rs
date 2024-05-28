@@ -29,6 +29,7 @@ use std::fmt::Write;
 
 use futures::future;
 use hartex_discord_cdn::Cdn;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -49,15 +50,14 @@ use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
-use hartex_discord_core::discord::http::client::InteractionClient;
 
 /// Executes the `info server` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
     interaction: Interaction,
-    interaction_client: &InteractionClient,
+    interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
-    localizer: Localizer,
+    localizer: Localizer<'_>,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 

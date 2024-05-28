@@ -28,12 +28,12 @@ use hartex_discord_commands::management::role::Role;
 use hartex_discord_commands::utilities::info::Info;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_log::log;
@@ -58,7 +58,7 @@ pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>>
 
 /// Handle an application command interaction.
 #[allow(clippy::large_futures)]
-pub async fn application_command(interaction_create: Box<InteractionCreate>) -> miette::Result<()> {
+pub async fn application_command(interaction_create: Box<InteractionCreate>, interaction_client: &InteractionClient<'_>) -> miette::Result<()> {
     let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap()
     else {
         unreachable!("this should not be possible")
@@ -68,10 +68,9 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
 
     let cloned = interaction_create.clone();
 
-    let interaction_client = CLIENT.interaction(interaction_create.application_id);
     let locale = interaction_create
         .locale
-        .as_ref()
+        .as_deref()
         .unwrap_or_else(|| "en-GB");
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
 
@@ -96,7 +95,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>) -> 
     }
 
     if let Err(error) = command
-        .execute(cloned.0, &interaction_client, localizer)
+        .execute(cloned.0, interaction_client, localizer)
         .await
     {
         crate::errorhandler::handle_interaction_error(

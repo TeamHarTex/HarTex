@@ -57,9 +57,9 @@ use miette::Report;
 /// Executes the `info bot` command
 pub async fn execute(
     interaction: Interaction,
-    interaction_client: &InteractionClient,
+    interaction_client: &InteractionClient<'_>,
     _: CommandDataOption,
-    localizer: Localizer,
+    localizer: Localizer<'_>,
 ) -> miette::Result<()> {
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!("http://{}/api/v0110/stats/uptime", api_domain.clone());

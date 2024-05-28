@@ -48,8 +48,8 @@ impl Command for Info {
     async fn execute(
         &self,
         interaction: Interaction,
-        interaction_client: &InteractionClient,
-        localizer: Localizer,
+        interaction_client: &InteractionClient<'_>,
+        localizer: Localizer<'_>,
     ) -> miette::Result<()> {
         let Some(InteractionData::ApplicationCommand(command)) = interaction.clone().data else {
             unreachable!()
