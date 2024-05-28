@@ -21,9 +21,11 @@
  */
 
 use async_trait::async_trait;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_localization_core::Localizer;
 
 /// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
@@ -51,7 +53,12 @@ pub trait CommandMetadata {
 #[async_trait]
 pub trait Command: CommandMetadata {
     /// Executes the command.
-    async fn execute(&self, interaction: Interaction) -> miette::Result<()>;
+    async fn execute(
+        &self,
+        interaction: Interaction,
+        interaction_client: &InteractionClient<'_>,
+        localizer: Localizer<'_>,
+    ) -> miette::Result<()>;
 }
 
 /// The plugin metadata data specifying information about a plugin.

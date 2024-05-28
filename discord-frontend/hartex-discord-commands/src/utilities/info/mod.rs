@@ -25,9 +25,11 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::InteractionData;
+use hartex_localization_core::Localizer;
 
 use crate::utilities::Utilities;
 
@@ -43,7 +45,12 @@ pub struct Info;
 
 #[async_trait]
 impl Command for Info {
-    async fn execute(&self, interaction: Interaction) -> miette::Result<()> {
+    async fn execute(
+        &self,
+        interaction: Interaction,
+        interaction_client: &InteractionClient<'_>,
+        localizer: Localizer<'_>,
+    ) -> miette::Result<()> {
         let Some(InteractionData::ApplicationCommand(command)) = interaction.clone().data else {
             unreachable!()
         };
@@ -57,11 +64,51 @@ impl Command for Info {
         };
 
         match subcommand.name.as_str() {
-            "bot" => info_bot::execute(interaction, subcommand.clone()).await,
-            "emoji" => info_emoji::execute(interaction, subcommand.clone()).await,
-            "role" => info_role::execute(interaction, subcommand.clone()).await,
-            "server" => info_server::execute(interaction, subcommand.clone()).await,
-            "user" => info_user::execute(interaction, subcommand.clone()).await,
+            "bot" => {
+                info_bot::execute(
+                    interaction,
+                    interaction_client,
+                    subcommand.clone(),
+                    localizer,
+                )
+                .await
+            }
+            "emoji" => {
+                info_emoji::execute(
+                    interaction,
+                    interaction_client,
+                    subcommand.clone(),
+                    localizer,
+                )
+                .await
+            }
+            "role" => {
+                info_role::execute(
+                    interaction,
+                    interaction_client,
+                    subcommand.clone(),
+                    localizer,
+                )
+                .await
+            }
+            "server" => {
+                info_server::execute(
+                    interaction,
+                    interaction_client,
+                    subcommand.clone(),
+                    localizer,
+                )
+                .await
+            }
+            "user" => {
+                info_user::execute(
+                    interaction,
+                    interaction_client,
+                    subcommand.clone(),
+                    localizer,
+                )
+                .await
+            }
             _ => unreachable!(),
         }
     }

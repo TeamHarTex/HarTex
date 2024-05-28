@@ -30,6 +30,7 @@ use std::time::SystemTime;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_backend_models::Response;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
@@ -40,9 +41,7 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_discord_utils::CLIENT;
 use hartex_localization_core::Localizer;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_log::log;
 use http_body_util::BodyExt;
 use hyper::body::Buf;
@@ -56,11 +55,12 @@ use miette::IntoDiagnostic;
 use miette::Report;
 
 /// Executes the `info bot` command
-pub async fn execute(interaction: Interaction, _: CommandDataOption) -> miette::Result<()> {
-    let interaction_client = CLIENT.interaction(interaction.application_id);
-    let locale = interaction.locale.unwrap_or_else(|| String::from("en-GB"));
-    let localizer = Localizer::new(&LOCALIZATION_HOLDER, &locale);
-
+pub async fn execute(
+    interaction: Interaction,
+    interaction_client: &InteractionClient<'_>,
+    _: CommandDataOption,
+    localizer: Localizer<'_>,
+) -> miette::Result<()> {
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = format!("http://{}/api/v0110/stats/uptime", api_domain.clone());
     let now = SystemTime::now();
