@@ -52,7 +52,7 @@ use sha2::Sha224;
 pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
-    interaction_client: InteractionClient,
+    interaction_client: &InteractionClient<'_>,
 ) {
     let mut hasher = Sha224::new();
 

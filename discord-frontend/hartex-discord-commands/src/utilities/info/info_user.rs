@@ -25,6 +25,7 @@
 //! This command returns informatiomn about a user.
 
 use hartex_discord_cdn::Cdn;
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -45,15 +46,14 @@ use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
 use rand::thread_rng;
-use hartex_discord_core::discord::http::client::InteractionClient;
 
 /// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
     interaction: Interaction,
-    interaction_client: &InteractionClient,
+    interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
-    localizer: Localizer,
+    localizer: Localizer<'_>,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 

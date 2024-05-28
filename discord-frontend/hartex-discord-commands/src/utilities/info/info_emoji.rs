@@ -26,6 +26,7 @@
 
 use std::str::FromStr;
 
+use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
@@ -43,7 +44,6 @@ use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use regex::Regex;
-use hartex_discord_core::discord::http::client::InteractionClient;
 
 lazy_static::lazy_static! {
     /// The regex for looking for a Discord emoji in the command input.
@@ -54,9 +54,9 @@ lazy_static::lazy_static! {
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
     interaction: Interaction,
-    interaction_client: &InteractionClient,
+    interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
-    localizer: Localizer,
+    localizer: Localizer<'_>,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 

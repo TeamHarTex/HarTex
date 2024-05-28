@@ -56,8 +56,8 @@ pub trait Command: CommandMetadata {
     async fn execute(
         &self,
         interaction: Interaction,
-        interaction_client: &InteractionClient,
-        localizer: Localizer,
+        interaction_client: &InteractionClient<'_>,
+        localizer: Localizer<'_>,
     ) -> miette::Result<()>;
 }
 

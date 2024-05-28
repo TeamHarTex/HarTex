@@ -40,8 +40,8 @@ impl Command for Role {
     async fn execute(
         &self,
         _: Interaction,
-        _: &InteractionClient,
-        _: Localizer,
+        _: &InteractionClient<'_>,
+        _: Localizer<'_>,
     ) -> miette::Result<()> {
         Ok(())
     }

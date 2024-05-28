@@ -50,8 +50,8 @@ impl Command for Contributors {
     async fn execute(
         &self,
         interaction: Interaction,
-        interaction_client: &InteractionClient,
-        localizer: Localizer,
+        interaction_client: &InteractionClient<'_>,
+        localizer: Localizer<'_>,
     ) -> miette::Result<()> {
         let contributors_embed_title = localizer.general_plugin_contributors_embed_title()?;
         let contributors_embed_description =

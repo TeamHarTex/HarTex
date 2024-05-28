@@ -52,8 +52,8 @@ impl Command for About {
     async fn execute(
         &self,
         interaction: Interaction,
-        interaction_client: &InteractionClient,
-        localizer: Localizer,
+        interaction_client: &InteractionClient<'_>,
+        localizer: Localizer<'_>,
     ) -> miette::Result<()> {
         let about_embed_title = localizer.general_plugin_about_embed_title()?;
         let about_embed_description = localizer.general_plugin_about_embed_description()?;
