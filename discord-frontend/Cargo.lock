@@ -1240,6 +1240,7 @@ dependencies = [
  "async-trait",
  "hartex_discord_commands_macros",
  "hartex_discord_core",
+ "hartex_localization_core",
  "miette 7.2.0",
 ]
 
@@ -1434,6 +1435,7 @@ dependencies = [
  "hartex_discord_core",
  "hartex_discord_utils",
  "hartex_kafka_utils",
+ "hartex_localization_core",
  "hartex_log",
  "hyper 1.3.1",
  "hyper-util",
