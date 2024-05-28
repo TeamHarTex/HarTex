@@ -47,6 +47,7 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
+use hartex_discord_utils::CLIENT;
 
 use crate::errorhandler::ErrorPayload;
 
@@ -102,8 +103,11 @@ pub async fn invoke(
                     "shard {shard} has received INTERACTION_CREATE payload from Discord (sequence {seq})"
                 );
 
+                let interaction_client = CLIENT.interaction(interaction_create.application_id);
+
                 if let Err(error) = AssertUnwindSafe(crate::interaction::application_command(
                     interaction_create.clone(),
+                    &interaction_client,
                 ))
                 .catch_unwind()
                 .await
@@ -116,6 +120,7 @@ pub async fn invoke(
                                 .to_string(),
                         ),
                         interaction_create,
+                        &interaction_client,
                     )
                     .await;
                 }

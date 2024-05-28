@@ -19,6 +19,8 @@ hartex_discord_commands = { path = "../hartex-discord-commands" }
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_core = { path = "../hartex-discord-core", features = ["async-runtime", "async-signal", "discord-model", "environment"] }
 
+hartex_localization_core = { path = "../../localization/hartex-localization-core" }
+
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
