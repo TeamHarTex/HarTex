@@ -568,20 +568,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
 
 [[package]]
-name = "combine"
-version = "4.6.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba5a308b75df32fe02788e748662718f03fde005016435c444eea572398219fd"
-dependencies = [
- "bytes",
- "futures-core",
- "memchr",
- "pin-project-lite",
- "tokio",
- "tokio-util",
-]
-
-[[package]]
 name = "const-oid"
 version = "0.10.0-pre.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1363,7 +1349,6 @@ dependencies = [
  "hartex_discord_entitycache_core",
  "hartex_discord_entitycache_entities",
  "hartex_discord_utils",
- "redis",
  "serde_scan",
  "time",
  "tokio-postgres",
@@ -2721,27 +2706,6 @@ dependencies = [
  "lz4-sys",
  "num_enum 0.5.11",
  "pkg-config",
-]
-
-[[package]]
-name = "redis"
-version = "0.25.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6472825949c09872e8f2c50bde59fcefc17748b6be5c90fd67cd8b4daca73bfd"
-dependencies = [
- "async-trait",
- "bytes",
- "combine",
- "futures-util",
- "itoa",
- "percent-encoding",
- "pin-project-lite",
- "ryu",
- "sha1_smol",
- "socket2 0.5.7",
- "tokio",
- "tokio-util",
- "url",
 ]
 
 [[package]]
