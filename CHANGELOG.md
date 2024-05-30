@@ -15,18 +15,19 @@
 ## Database Infrastructure
 
 - **Added:** added database migration tool utilising `refinery`
+- **Added:** database queries to work with configuration as `JSONB` objects
 - **Changed:** updated `rust-version` to 1.80
 
 ## Discord Frontend
 
-- **Added:** added `Management` plugin
-- **Added:** added `/role` command stub
+- **Changed:** extracted configuration models to its own crate (`serde` support included)
 - **Changed:** updated `rust-version` to 1.80
 - **Changed:** `/info emoji` now sends embeds
 - **Changed:** more information has been added to `/info emoji`
 - **Changed:** removed previously deprecated functions from `CommandMetadata`
 - **Changed:** deprecated `command_type` and `interaction_only` in `CommandMetadata`
 - **Changed:** `/info` check on whether `Utilities` plugin has been enabled before running
+- **Removed:** `redis` dependency removed
 
 ## Localization Infrastructure
 
