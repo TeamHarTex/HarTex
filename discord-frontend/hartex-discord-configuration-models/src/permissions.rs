@@ -26,14 +26,17 @@ use mlua::FromLua;
 use mlua::Lua;
 use mlua::MultiValue;
 use serde::Serialize;
+use hartex_discord_core::discord::model::id::marker::RoleMarker;
+use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_core::discord::model::id::Id;
 
 /// The permissions configuration object,
 #[derive(Debug, Serialize)]
 pub struct Permissions {
     /// Permissions map for roles.
-    pub roles: HashMap<String, u8>,
+    pub roles: HashMap<Id<RoleMarker>, u8>,
     /// Permissions map for users.
-    pub users: HashMap<String, u8>,
+    pub users: HashMap<Id<UserMarker>, u8>,
 }
 
 impl<'lua> FromLua<'lua> for Permissions {
