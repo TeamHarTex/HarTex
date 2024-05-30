@@ -32,5 +32,4 @@
 #![deny(warnings)]
 
 pub mod general;
-pub mod management;
 pub mod utilities;
