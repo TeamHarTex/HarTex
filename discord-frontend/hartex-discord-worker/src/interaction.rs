@@ -24,7 +24,6 @@ use std::collections::HashMap;
 
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::contributors::Contributors;
-use hartex_discord_commands::management::role::Role;
 use hartex_discord_commands::utilities::info::Info;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
@@ -52,7 +51,6 @@ pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>>
         map.insert(About.name(), Box::new(About));
         map.insert(Contributors.name(), Box::new(Contributors));
         map.insert(Info.name(), Box::new(Info));
-        map.insert(Role.name(), Box::new(Role));
         map
     });
 
