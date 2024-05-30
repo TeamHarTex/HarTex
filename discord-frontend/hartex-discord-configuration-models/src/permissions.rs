@@ -21,14 +21,16 @@
  */
 
 use std::collections::HashMap;
+use std::str::FromStr;
 
-use mlua::FromLua;
-use mlua::Lua;
-use mlua::MultiValue;
-use serde::Serialize;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
+use mlua::Error;
+use mlua::FromLua;
+use mlua::Lua;
+use mlua::Value;
+use serde::Serialize;
 
 /// The permissions configuration object,
 #[derive(Debug, Serialize)]
@@ -40,7 +42,45 @@ pub struct Permissions {
 }
 
 impl<'lua> FromLua<'lua> for Permissions {
-    fn from_lua(_: MultiValue<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
-        todo!()
+    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+        let Value::Table(table) = lua_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "Permissions: mismatched value type, exoected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let Value::Table(roles) = table.get("roles") else {
+            return Err(Error::RuntimeError(format!(
+                "Permissions: mismatched value type, exoected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let Value::Table(users) = table.get("roles") else {
+            return Err(Error::RuntimeError(format!(
+                "Permissions: mismatched value type, exoected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        Ok(Self {
+            roles: roles
+                .pairs::<String, u8>()
+                .filter_map(|result| {
+                    result
+                        .ok()
+                        .map(|(key, value)| (Id::from_str(key.as_str()), value))
+                })
+                .collect(),
+            users: users
+                .pairs::<String, u8>()
+                .filter_map(|result| {
+                    result
+                        .ok()
+                        .map(|(key, value)| (Id::from_str(key.as_str()), value))
+                })
+                .collect(),
+        })
     }
 }

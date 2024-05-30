@@ -35,6 +35,7 @@ use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuil
 use hartex_discord_core::discord::model::gateway::OpCode;
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::spawn;
+use hartex_discord_utils::CLIENT;
 use hartex_log::log;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
@@ -47,7 +48,6 @@ use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use hartex_discord_utils::CLIENT;
 
 use crate::errorhandler::ErrorPayload;
 
