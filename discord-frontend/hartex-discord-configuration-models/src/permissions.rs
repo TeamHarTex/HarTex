@@ -26,6 +26,7 @@ use std::str::FromStr;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
 use hartex_discord_core::discord::model::id::Id;
+use itertools::Itertools;
 use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
@@ -67,18 +68,14 @@ impl<'lua> FromLua<'lua> for Permissions {
         Ok(Self {
             roles: roles
                 .pairs::<String, u8>()
-                .filter_map(|result| {
-                    result
-                        .ok()
-                        .map(|(key, value)| (Id::from_str(key.as_str()), value))
+                .map_ok(|(key, value)| {
+                    (Id::from_str(key.as_str()), value)
                 })
                 .collect(),
             users: users
                 .pairs::<String, u8>()
-                .filter_map(|result| {
-                    result
-                        .ok()
-                        .map(|(key, value)| (Id::from_str(key.as_str()), value))
+                .map_ok(|(key, value)| {
+                    (Id::from_str(key.as_str()), value)
                 })
                 .collect(),
         })
