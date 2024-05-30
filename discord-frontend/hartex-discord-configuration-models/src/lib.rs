@@ -34,6 +34,7 @@ use serde::Serialize;
 
 pub mod appearance;
 pub mod dashboard;
+pub mod permissions;
 pub mod plugins;
 
 #[derive(Debug, Serialize)]
@@ -42,6 +43,8 @@ pub struct Configuration {
     pub appearance: Option<appearance::Appearance>,
     /// A dashboard configuration object.
     pub dashboard: dashboard::Dashboard,
+    /// A permissions configuration object,
+    pub permissions: permissions::Permissions,
     /// An optional plugins configuration object.
     pub plugins: Option<plugins::Plugins>,
 }
@@ -64,11 +67,13 @@ impl<'lua> FromLuaMulti<'lua> for Configuration {
 
         let appearance = value.get("appearance")?;
         let dashboard = value.get("dashboard")?;
+        let permissions = value.get("permissions")?;
         let plugins = value.get("plugins")?;
 
         Ok(Self {
             appearance,
             dashboard,
+            permissions,
             plugins,
         })
     }
