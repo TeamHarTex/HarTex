@@ -25,8 +25,8 @@
 //! This command returns informatiomn about a role.
 
 use hartex_discord_cdn::Cdn;
-use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::http::client::InteractionClient;
+use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
