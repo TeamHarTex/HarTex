@@ -614,7 +614,7 @@ checksum = "4271d37baee1b8c7e4b708028c57d816cf9d2434acb33a549475f78c181f6253"
 
 [[package]]
 name = "hartex_database_migrate"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "barrel",
  "dotenvy",
@@ -627,7 +627,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "cornucopia",
  "cornucopia_async",
@@ -643,7 +643,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "log",
  "log4rs",
