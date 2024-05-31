@@ -56,7 +56,10 @@ pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>>
 
 /// Handle an application command interaction.
 #[allow(clippy::large_futures)]
-pub async fn application_command(interaction_create: Box<InteractionCreate>, interaction_client: &InteractionClient<'_>) -> miette::Result<()> {
+pub async fn application_command(
+    interaction_create: Box<InteractionCreate>,
+    interaction_client: &InteractionClient<'_>,
+) -> miette::Result<()> {
     let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap()
     else {
         unreachable!("this should not be possible")
@@ -66,10 +69,7 @@ pub async fn application_command(interaction_create: Box<InteractionCreate>, int
 
     let cloned = interaction_create.clone();
 
-    let locale = interaction_create
-        .locale
-        .as_deref()
-        .unwrap_or("en-GB");
+    let locale = interaction_create.locale.as_deref().unwrap_or("en-GB");
     let localizer = Localizer::new(&LOCALIZATION_HOLDER, locale);
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
