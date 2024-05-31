@@ -31,6 +31,7 @@ emojiinfo-embed-generalinfo-managed-subfield-name=Managed:
 emojiinfo-embed-generalinfo-name-subfield-name=Name:
 emojiinfo-error-only-custom-emojis=Sorry! Only custom emojis are supported at this stage.
 emojiinfo-error-only-one-emoji=Querying multiple emojis is not supported.
+emojiinfo-error-unknown-emoji=Unknown emoji. Perhaps the bot is not in a server that has this emoji?
 roleinfo-embed-description=Information of {$roleMention}
 roleinfo-embed-generalinfo-field-name=General Information
 roleinfo-embed-generalinfo-id-subfield-name=ID:
