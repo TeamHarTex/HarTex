@@ -73,6 +73,8 @@ pub async fn execute(
         localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
     let emojiinfo_error_only_one_emoji =
         localizer.utilities_plugin_emojiinfo_error_only_one_emoji()?;
+    let emojiinfo_error_unknown_emoji =
+        localizer.utilities_plugin_emojiinfo_error_unknown_emoji()?;
 
     let Some(captures) = EMOJI_REGEX.captures(&emoji) else {
         interaction_client
@@ -117,14 +119,29 @@ pub async fn execute(
     let id = captures.get(1).unwrap().as_str();
     let emoji_id = Id::<EmojiMarker>::from_str(id).unwrap();
 
-    let result = CachedEmojiRepository
-        .get(emoji_id)
-        .await;
+    let result = CachedEmojiRepository.get(emoji_id).await;
     let emoji = match result {
         Ok(emoji) => emoji,
-        Err(CacheError::Postgres(postgres_error)) if let Some(code) =  postgres_error.code() && *code == SqlState::NO_DATA => {
-            todo!()
-        },
+        Err(CacheError::Postgres(postgres_error))
+            if let Some(code) = postgres_error.code()
+                && *code == SqlState::NO_DATA =>
+        {
+            interaction_client
+                .create_response(
+                    interaction.id,
+                    &interaction.token,
+                    &InteractionResponse {
+                        kind: InteractionResponseType::ChannelMessageWithSource,
+                        data: Some(
+                            InteractionResponseDataBuilder::new()
+                                .content(emojiinfo_error_unknown_emoji)
+                                .build(),
+                        ),
+                    },
+                )
+                .await
+                .into_diagnostic()?;
+        }
         error => error.into_diagnostic()?,
     };
 
