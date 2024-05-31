@@ -1,8 +1,28 @@
-# [Next Version, Sodium I](https://github.com/TeamHarTex/HarTex/compare/0.10.0...nightly)
+# [Next Version, Magnesium I](https://github.com/TeamHarTex/HarTex/compare/0.11.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2024-04-30
+> **y** commits since 2024-05-31
+
+## API Backend
+
+## Buildsystem
+
+## Database Infrastructure
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.11.0, Sodium I](https://github.com/TeamHarTex/HarTex/compare/0.10.0..0.11.0)
+
+> **2** contributors made contributions to this release
+
+> **241** commits since 2024-04-30
 
 ## API Backend
 
@@ -42,8 +62,6 @@
 
 - **Added:** added utility functions for working with `CommandDataOption`
 - **Changed:** updated `rust-version` to 1.80
-
-## Web Frontend
 
 # [0.10.0, Neon I](https://github.com/TeamHarTex/HarTex/compare/0.9.0..0.10.0)
 
