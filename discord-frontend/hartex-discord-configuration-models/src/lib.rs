@@ -30,6 +30,7 @@
 use mlua::Error;
 use mlua::FromLuaMulti;
 use mlua::Lua;
+use mlua::MultiValue;
 use mlua::Value;
 use serde::Serialize;
 
@@ -51,7 +52,7 @@ pub struct Configuration {
 }
 
 impl<'lua> FromLuaMulti<'lua> for Configuration {
-    fn from_lua_multi(values: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+    fn from_lua_multi(values: MultiValue<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         if values.is_empty() {
             return Err(Error::RuntimeError(String::from(
                 "Configuration: multi value is empty",
