@@ -73,7 +73,7 @@ impl<'lua> FromLua<'lua> for Permissions {
                         .map(|id| (id, value))
                         .map_err(|_| Error::runtime("invalid id"))
                 })
-                .map(|result| result.flatten())
+                .map(Result::flatten)
                 .collect::<Result<HashMap<_, _>, _>>()?,
             users: users
                 .pairs::<String, u8>()
@@ -82,7 +82,7 @@ impl<'lua> FromLua<'lua> for Permissions {
                         .map(|id| (id, value))
                         .map_err(|_| Error::runtime("invalid id"))
                 })
-                .map(|result| result.flatten())
+                .map(Result::flatten)
                 .collect::<Result<HashMap<_, _>, _>>()?,
         })
     }
