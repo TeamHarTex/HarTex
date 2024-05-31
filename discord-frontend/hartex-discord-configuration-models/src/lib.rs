@@ -25,6 +25,8 @@
 //! This crate contains models that are returned by evaluating Lua configuration and can be
 //! serialized via `serde`.
 
+#![feature(result_flattening)]
+
 use mlua::Error;
 use mlua::FromLuaMulti;
 use mlua::Lua;
