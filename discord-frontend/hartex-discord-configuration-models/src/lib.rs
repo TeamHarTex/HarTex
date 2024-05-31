@@ -25,6 +25,9 @@
 //! This crate contains models that are returned by evaluating Lua configuration and can be
 //! serialized via `serde`.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(result_flattening)]
 
 use mlua::Error;

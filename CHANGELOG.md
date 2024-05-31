@@ -20,13 +20,17 @@
 
 ## Discord Frontend
 
+- **Added:** `plugin` attribute macro and `Plugin` traits
+- **Added:** plugin-related functions to `CommandMetadata` trait
+- **Added:** checks for whether plugins are enabled before running one of their commands
+- **Changed:** lookup tables are now used for command dispatch rather than `match`
 - **Changed:** extracted configuration models to its own crate (`serde` support included)
 - **Changed:** updated `rust-version` to 1.80
 - **Changed:** `/info emoji` now sends embeds
 - **Changed:** more information has been added to `/info emoji`
+- **Changed:** `/info emoji` now handles the error of an emoji not being found from database
 - **Changed:** removed previously deprecated functions from `CommandMetadata`
 - **Changed:** deprecated `command_type` and `interaction_only` in `CommandMetadata`
-- **Changed:** `/info` check on whether `Utilities` plugin has been enabled before running
 - **Removed:** `redis` dependency removed
 
 ## Localization Infrastructure

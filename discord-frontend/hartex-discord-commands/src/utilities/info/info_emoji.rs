@@ -35,6 +35,7 @@ use hartex_discord_core::discord::model::id::marker::EmojiMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFieldBuilder};
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_entitycache_core::error::CacheError;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
 use hartex_discord_utils::commands::CommandDataOptionExt;
@@ -44,6 +45,7 @@ use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use regex::Regex;
+use tokio_postgres::error::SqlState;
 
 lazy_static::lazy_static! {
     /// The regex for looking for a Discord emoji in the command input.
@@ -71,6 +73,8 @@ pub async fn execute(
         localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
     let emojiinfo_error_only_one_emoji =
         localizer.utilities_plugin_emojiinfo_error_only_one_emoji()?;
+    let emojiinfo_error_unknown_emoji =
+        localizer.utilities_plugin_emojiinfo_error_unknown_emoji()?;
 
     let Some(captures) = EMOJI_REGEX.captures(&emoji) else {
         interaction_client
@@ -115,10 +119,33 @@ pub async fn execute(
     let id = captures.get(1).unwrap().as_str();
     let emoji_id = Id::<EmojiMarker>::from_str(id).unwrap();
 
-    let emoji = CachedEmojiRepository
-        .get(emoji_id)
-        .await
-        .into_diagnostic()?;
+    let result = CachedEmojiRepository.get(emoji_id).await;
+    let emoji = match result {
+        Ok(emoji) => emoji,
+        Err(CacheError::Postgres(postgres_error))
+            if let Some(code) = postgres_error.code()
+                && *code == SqlState::NO_DATA =>
+        {
+            interaction_client
+                .create_response(
+                    interaction.id,
+                    &interaction.token,
+                    &InteractionResponse {
+                        kind: InteractionResponseType::ChannelMessageWithSource,
+                        data: Some(
+                            InteractionResponseDataBuilder::new()
+                                .content(emojiinfo_error_unknown_emoji)
+                                .build(),
+                        ),
+                    },
+                )
+                .await
+                .into_diagnostic()?;
+
+            return Ok(());
+        }
+        error => error.into_diagnostic()?,
+    };
 
     let emojiinfo_embed_generalinfo_field_name =
         localizer.utilities_plugin_emojiinfo_embed_generalinfo_field_name()?;

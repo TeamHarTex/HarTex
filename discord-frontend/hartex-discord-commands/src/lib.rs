@@ -30,6 +30,8 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(if_let_guard)]
+#![feature(let_chains)]
 
 pub mod general;
 pub mod utilities;
