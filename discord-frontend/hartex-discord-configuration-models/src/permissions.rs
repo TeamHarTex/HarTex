@@ -51,14 +51,14 @@ impl<'lua> FromLua<'lua> for Permissions {
             )));
         };
 
-        let Value::Table(roles) = table.get("roles") else {
+        let Value::Table(roles) = table.get("roles")? else {
             return Err(Error::RuntimeError(format!(
                 "Permissions: mismatched value type, exoected table, found: {}",
                 lua_value.type_name()
             )));
         };
 
-        let Value::Table(users) = table.get("roles") else {
+        let Value::Table(users) = table.get("roles")? else {
             return Err(Error::RuntimeError(format!(
                 "Permissions: mismatched value type, exoected table, found: {}",
                 lua_value.type_name()
