@@ -141,6 +141,8 @@ pub async fn execute(
                 )
                 .await
                 .into_diagnostic()?;
+
+            return Ok(());
         }
         error => error.into_diagnostic()?,
     };
