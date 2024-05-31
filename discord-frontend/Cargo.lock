@@ -1272,6 +1272,8 @@ dependencies = [
 name = "hartex_discord_configuration_models"
 version = "0.11.0"
 dependencies = [
+ "hartex_discord_core",
+ "itertools 0.13.0",
  "mlua",
  "serde",
 ]
