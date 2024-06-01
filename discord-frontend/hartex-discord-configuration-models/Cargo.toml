@@ -14,7 +14,7 @@ rust-version = "1.80.0"
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 
 itertools = "0.13.0"
-mlua = { version = "0.9.7", features = ["lua54", "vendored"] }
-serde = { version = "1.0.200", features = ["derive"] }
+mlua = { version = "0.9.8", features = ["lua54", "vendored"] }
+serde = { version = "1.0.203", features = ["derive"] }
 
 [features]
