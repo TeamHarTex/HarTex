@@ -29,7 +29,7 @@ use hartex_localization_core::Localizer;
 
 /// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
-    /// The minimum permission level required for this command to be ran.
+    /// The minimum permission level required for this command to be run.
     fn minimum_permission_level(&self) -> u8 {
         0
     }
