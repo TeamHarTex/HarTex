@@ -26,6 +26,7 @@ use syn::parse::ParseStream;
 use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
+use syn::spanned::Spanned;
 use syn::Token;
 
 /// Represents input to the `metadata` derive macro.
@@ -39,11 +40,15 @@ pub struct CommandMetadataMacroInput {
     pub(self) equal1: Token![=],
     pub(self) plugin_actual_ident: Ident,
     pub(self) comma3: Option<Token![,]>,
+    pub(self) minimum_permission_level_ident: Option<Ident>,
+    pub(self) equal_2: Option<Token![=]>,
+    pub(self) minimum_permission_level: Option<Lit>,
+    pub(self) comma4: Option<Token![,]>,
 }
 
 impl Parse for CommandMetadataMacroInput {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(Self {
+        let mut result = Self {
             name_ident: input.parse()?,
             equal3: input.parse()?,
             name_lit: input.parse()?,
@@ -51,8 +56,19 @@ impl Parse for CommandMetadataMacroInput {
             plugin_ident: input.parse()?,
             equal1: input.parse()?,
             plugin_actual_ident: input.parse()?,
-            comma3: input.parse().ok(),
-        })
+            ..Default::default()
+        };
+
+        let Some(comma_3) = input.parse().ok() else {
+            return Ok(result);
+        };
+
+        result.comma3.replace(comma_3);
+        result.minimum_permission_level_ident = input.parse().ok();
+        result.equal_2 = input.parse().ok();
+        result.comma4 = input.parse().ok();
+
+        Ok(result)
     }
 }
 
@@ -112,6 +128,37 @@ pub fn implement_metadata(
         }
     };
     functions.extend(expanded);
+
+    // minimum_permission_level = ?
+    if let Some(minimum_permission_level_ident) = parameters.minimum_permission_level_ident.clone()
+        && minimum_permission_level_ident == "minimum_permission_level" {
+        let Some(_) = parameters.equal_2 else {
+            parameters.equal_2.span()
+                .unwrap()
+                .error("expected equal")
+                .emit();
+
+            return None;
+        };
+
+        let Some(Lit::Int(level)) = parameters.minimum_permission_level.clone() else {
+            parameters
+                .minimum_permission_level
+                .span()
+                .unwrap()
+                .error("expected integer")
+                .emit();
+
+            return None;
+        };
+
+        let expanded = quote::quote! {
+            fn minimum_permission_level(&self) -> u8 {
+                #level
+            }
+        };
+        functions.extend(expanded);
+    }
 
     let core_use = quote::quote! {
         extern crate hartex_discord_commands_core as _commands_core;
