@@ -49,7 +49,6 @@ impl Parse for PluginMetadataMacroInput {
 }
 
 /// Returns the token stream for generating the `PluginMetadata` trait implementation
-#[allow(clippy::too_many_lines)]
 pub fn implement_metadata(
     parameters: &PluginMetadataMacroInput,
     struct_item: &ItemStruct,
