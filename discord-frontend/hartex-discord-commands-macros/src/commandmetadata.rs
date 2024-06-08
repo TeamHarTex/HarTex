@@ -56,7 +56,11 @@ impl Parse for CommandMetadataMacroInput {
             plugin_ident: input.parse()?,
             equal1: input.parse()?,
             plugin_actual_ident: input.parse()?,
-            ..Default::default()
+            comma3: None,
+            minimum_permission_level_ident: None,
+            equal_2: None,
+            minimum_permission_level: None,
+            comma4: None
         };
 
         let Some(comma_3) = input.parse().ok() else {
