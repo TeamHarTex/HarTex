@@ -12,6 +12,8 @@
 
 ## Discord Frontend
 
+- **Added:** `minimum_permission_level` field to `command` macro
+
 ## Localization Infrastructure
 
 ## Rust Utilities
