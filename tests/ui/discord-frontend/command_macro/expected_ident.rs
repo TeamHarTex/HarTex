@@ -27,7 +27,7 @@
 
 extern crate hartex_discord_commands_macros;
 
-#[hartex_discord_commands_macros::metadata(
+#[hartex_discord_commands_macros::command(
     name = "name",
     plugin =
 )]
