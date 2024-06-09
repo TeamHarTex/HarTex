@@ -40,7 +40,7 @@ pub fn initialize() {
                 Box::new(
                     ConsoleAppender::builder()
                         .encoder(Box::new(PatternEncoder::new(
-                            "{h([{d(%Y-%m-%d %H:%M:%S %Z)(local):>30}] [{l:>6}] [{M}]  {m})}{n}",
+                            "{h({l:>6} | {d(%Y-%m-%d %H:%M:%S %Z)(local):>30} | {T} | {f}:{l} | {m})}{n}",
                         )))
                         .build(),
                 ),
