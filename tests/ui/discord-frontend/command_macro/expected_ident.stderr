@@ -1,9 +1,13 @@
-error[E0433]: failed to resolve: could not find `metadata` in `hartex_discord_commands_macros`
-  --> tests/ui/discord-frontend/command_macro/expected_ident.rs:30:35
+error: unexpected end of input, expected identifier
+  --> tests/ui/discord-frontend/command_macro/expected_ident.rs:30:1
    |
-LL | #[hartex_discord_commands_macros::metadata(
-   |                                   ^^^^^^^^ could not find `metadata` in `hartex_discord_commands_macros`
+LL | / #[hartex_discord_commands_macros::command(
+LL | |     name = "name",
+LL | |     plugin =
+LL | | )]
+   | |__^
+   |
+   = note: this error originates in the attribute macro `hartex_discord_commands_macros::command` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: aborting due to 1 previous error
 
-For more information about this error, try `rustc --explain E0433`.
