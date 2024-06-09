@@ -6,17 +6,29 @@
 
 ## API Backend
 
+- **Changed:** updated `rust-version` to 1.81
+
 ## Buildsystem
 
+- **Changed:** updated `rust-version` to 1.81
+
 ## Database Infrastructure
+
+- **Changed:** updated `rust-version` to 1.81
 
 ## Discord Frontend
 
 - **Added:** `minimum_permission_level` field to `command` macro
+- **Changed:** updated `rust-version` to 1.81
 
 ## Localization Infrastructure
 
+- **Changed:** updated `rust-version` to 1.81
+
 ## Rust Utilities
+
+- **Changed:** updated `rust-version` to 1.81
+- **Changed:** format for log entries
 
 ## Web Frontend
 
