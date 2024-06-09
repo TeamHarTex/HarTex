@@ -28,7 +28,8 @@
 extern crate hartex_discord_commands_macros;
 
 #[hartex_discord_commands_macros::command(
-    expected_name = "foo"
+    expected_name = "foo",
+    plugin = PluginIdent
 )]
 pub struct ExpectedName;
 
