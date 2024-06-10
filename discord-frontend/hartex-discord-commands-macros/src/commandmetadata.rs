@@ -23,10 +23,10 @@
 use proc_macro2::TokenStream as TokenStream2;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
+use syn::spanned::Spanned;
 use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
-use syn::spanned::Spanned;
 use syn::Token;
 
 /// Represents input to the `metadata` derive macro.
@@ -60,7 +60,7 @@ impl Parse for CommandMetadataMacroInput {
             minimum_permission_level_ident: None,
             equal_2: None,
             minimum_permission_level: None,
-            comma4: None
+            comma4: None,
         };
 
         let Some(comma_3) = input.parse().ok() else {
@@ -135,9 +135,12 @@ pub fn implement_metadata(
 
     // minimum_permission_level = ?
     if let Some(minimum_permission_level_ident) = parameters.minimum_permission_level_ident.clone()
-        && minimum_permission_level_ident == "minimum_permission_level" {
+        && minimum_permission_level_ident == "minimum_permission_level"
+    {
         let Some(_) = parameters.equal_2 else {
-            parameters.equal_2.span()
+            parameters
+                .equal_2
+                .span()
                 .unwrap()
                 .error("expected equal")
                 .emit();
