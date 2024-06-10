@@ -37,6 +37,7 @@ pub struct ConfigurationProvider {
 }
 
 impl ConfigurationProvider {
+    #[must_use]
     pub fn of_guild(id: Id<GuildMarker>) -> Self {
         Self { guild_id: id }
     }
