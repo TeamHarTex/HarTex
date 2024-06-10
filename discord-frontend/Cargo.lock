@@ -1282,6 +1282,9 @@ dependencies = [
 [[package]]
 name = "hartex_discord_configuration_provider"
 version = "0.12.0"
+dependencies = [
+ "hartex_discord_core",
+]
 
 [[package]]
 name = "hartex_discord_core"
