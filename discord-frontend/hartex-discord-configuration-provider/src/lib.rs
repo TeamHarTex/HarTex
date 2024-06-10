@@ -32,6 +32,7 @@ use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
 
 pub struct ConfigurationProvider {
+    #[allow(dead_code)]
     guild_id: Id<GuildMarker>,
 }
 
