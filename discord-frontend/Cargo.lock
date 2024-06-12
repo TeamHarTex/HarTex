@@ -1283,7 +1283,10 @@ dependencies = [
 name = "hartex_discord_configuration_provider"
 version = "0.12.0"
 dependencies = [
+ "hartex_database_queries",
  "hartex_discord_core",
+ "hartex_discord_utils",
+ "miette 7.2.0",
 ]
 
 [[package]]
