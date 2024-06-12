@@ -28,8 +28,14 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::pin::Pin;
+
+use hartex_database_queries::configuration::queries::plugin_enabled::plugin_enabled;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_utils::DATABASE_POOL;
+use miette::IntoDiagnostic;
+use tokio_postgres::GenericClient;
 
 pub struct ConfigurationProvider {
     #[allow(dead_code)]
@@ -40,5 +46,21 @@ impl ConfigurationProvider {
     #[must_use]
     pub fn of_guild(id: Id<GuildMarker>) -> Self {
         Self { guild_id: id }
+    }
+
+    #[allow(clippy::missing_errors_doc)]
+    pub async fn plugin_enabled(&self, plugin: impl Into<String>) -> miette::Result<bool> {
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await.into_diagnostic()?;
+        let client = pooled.client();
+
+        plugin_enabled()
+            .bind(client, &plugin.into(), &self.guild_id.to_string())
+            .map(|json| json.0.get().to_string())
+            .one()
+            .await
+            .into_diagnostic()?
+            .parse()
+            .into_diagnostic()
     }
 }
