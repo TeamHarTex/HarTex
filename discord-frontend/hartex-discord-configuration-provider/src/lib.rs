@@ -48,6 +48,7 @@ impl ConfigurationProvider {
         Self { guild_id: id }
     }
 
+    #[allow(clippy::missing_errors_doc)]
     pub async fn plugin_enabled(&self, plugin: impl Into<String>) -> miette::Result<bool> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await.into_diagnostic()?;
