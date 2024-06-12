@@ -35,6 +35,7 @@ use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
+use tokio_postgres::GenericClient;
 
 pub struct ConfigurationProvider {
     #[allow(dead_code)]
