@@ -37,25 +37,17 @@ use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;
 
-pub struct ConfigurationProvider {
-    #[allow(dead_code)]
-    guild_id: Id<GuildMarker>,
-}
+pub struct ConfigurationProvider;
 
 impl ConfigurationProvider {
-    #[must_use]
-    pub fn of_guild(id: Id<GuildMarker>) -> Self {
-        Self { guild_id: id }
-    }
-
     #[allow(clippy::missing_errors_doc)]
-    pub async fn plugin_enabled(&self, plugin: impl Into<String>) -> miette::Result<bool> {
+    pub async fn plugin_enabled(guild_id: Id<GuildMarker>, plugin: impl Into<String>) -> miette::Result<bool> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;
         let pooled = pinned.get().await.into_diagnostic()?;
         let client = pooled.client();
 
         plugin_enabled()
-            .bind(client, &plugin.into(), &self.guild_id.to_string())
+            .bind(client, &plugin.into(), &guild_id.to_string())
             .map(|json| json.0.get().to_string())
             .one()
             .await
