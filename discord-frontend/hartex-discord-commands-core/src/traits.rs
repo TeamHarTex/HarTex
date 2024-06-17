@@ -26,6 +26,7 @@ use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_localization_core::Localizer;
+use hartex_discord_configuration_provider::ConfigurationProvider;
 
 /// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
@@ -38,7 +39,7 @@ pub trait CommandMetadata {
     fn name(&self) -> String;
 
     /// The plugin the command belongs to.
-    fn plugin(&self) -> Box<dyn Plugin>;
+    fn plugin(&self) -> Box<dyn Plugin + Send + Sync>;
 }
 
 /// The command trait, contains callbacks that are to be run before or when an interaction command
@@ -65,5 +66,7 @@ pub trait PluginMetadata {
 #[async_trait]
 pub trait Plugin: PluginMetadata {
     /// Whether a given plugin is enabled.
-    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool>;
+    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool> {
+        ConfigurationProvider::plugin_enabled(guild_id, self.name()).await
+    }
 }
