@@ -29,17 +29,17 @@ use std::str::FromStr;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::model::id::marker::EmojiMarker;
 use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::util::builder::embed::{EmbedBuilder, EmbedFieldBuilder};
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
+use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_entitycache_core::error::CacheError;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
 use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
+use hartex_discord_utils::interaction::embed_response;
+use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
@@ -81,14 +81,7 @@ pub async fn execute(
             .create_response(
                 interaction.id,
                 &interaction.token,
-                &InteractionResponse {
-                    kind: InteractionResponseType::ChannelMessageWithSource,
-                    data: Some(
-                        InteractionResponseDataBuilder::new()
-                            .content(emojiinfo_error_only_custom_emojis)
-                            .build(),
-                    ),
-                },
+                &ephemeral_error_response(emojiinfo_error_only_custom_emojis),
             )
             .await
             .into_diagnostic()?;
@@ -101,14 +94,7 @@ pub async fn execute(
             .create_response(
                 interaction.id,
                 &interaction.token,
-                &InteractionResponse {
-                    kind: InteractionResponseType::ChannelMessageWithSource,
-                    data: Some(
-                        InteractionResponseDataBuilder::new()
-                            .content(emojiinfo_error_only_one_emoji)
-                            .build(),
-                    ),
-                },
+                &ephemeral_error_response(emojiinfo_error_only_one_emoji),
             )
             .await
             .into_diagnostic()?;
@@ -130,14 +116,7 @@ pub async fn execute(
                 .create_response(
                     interaction.id,
                     &interaction.token,
-                    &InteractionResponse {
-                        kind: InteractionResponseType::ChannelMessageWithSource,
-                        data: Some(
-                            InteractionResponseDataBuilder::new()
-                                .content(emojiinfo_error_unknown_emoji)
-                                .build(),
-                        ),
-                    },
+                    &ephemeral_error_response(emojiinfo_error_unknown_emoji),
                 )
                 .await
                 .into_diagnostic()?;
@@ -186,14 +165,7 @@ pub async fn execute(
         .create_response(
             interaction.id,
             &interaction.token,
-            &InteractionResponse {
-                kind: InteractionResponseType::ChannelMessageWithSource,
-                data: Some(
-                    InteractionResponseDataBuilder::new()
-                        .embeds(vec![embed])
-                        .build(),
-                ),
-            },
+            &embed_response(vec![embed]),
         )
         .await
         .into_diagnostic()?;
