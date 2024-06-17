@@ -31,6 +31,7 @@ use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_utils::DATABASE_POOL;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
+use hartex_discord_configuration_provider::ConfigurationProvider;
 
 /// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
@@ -71,17 +72,6 @@ pub trait PluginMetadata {
 pub trait Plugin: PluginMetadata {
     /// Whether a given plugin is enabled.
     async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await.into_diagnostic()?;
-        let client = pooled.client();
-
-        let bool = plugin_enabled()
-            .bind(client, &self.name(), &guild_id.to_string())
-            .map(|json| json.0.get().to_string())
-            .one()
-            .await
-            .into_diagnostic()?;
-
-        bool.parse().into_diagnostic()
+        ConfigurationProvider::plugin_enabled(guild_id, self.name()).await
     }
 }
