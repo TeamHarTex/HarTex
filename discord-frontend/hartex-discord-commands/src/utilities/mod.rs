@@ -28,8 +28,6 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::plugin;
 use hartex_discord_commands_core::traits::Plugin;
-use miette::IntoDiagnostic;
-use tokio_postgres::GenericClient;
 
 pub mod info;
 
