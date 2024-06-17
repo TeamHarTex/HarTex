@@ -43,6 +43,7 @@ use tokio_postgres::NoTls;
 
 pub mod commands;
 pub mod hyper;
+pub mod interaction;
 pub mod localizable;
 pub mod markdown;
 

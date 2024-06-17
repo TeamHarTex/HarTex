@@ -30,14 +30,12 @@ use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::interaction::embed_response;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
@@ -79,14 +77,7 @@ impl Command for About {
             .create_response(
                 interaction.id,
                 &interaction.token,
-                &InteractionResponse {
-                    kind: InteractionResponseType::ChannelMessageWithSource,
-                    data: Some(
-                        InteractionResponseDataBuilder::new()
-                            .embeds(vec![embed])
-                            .build(),
-                    ),
-                },
+                &embed_response(vec![embed]),
             )
             .await
             .into_diagnostic()?;
