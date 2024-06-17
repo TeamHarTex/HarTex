@@ -20,12 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::pin::Pin;
+
 use async_trait::async_trait;
+use hartex_database_queries::configuration::queries::plugin_enabled::plugin_enabled;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_utils::DATABASE_POOL;
 use hartex_localization_core::Localizer;
+use miette::IntoDiagnostic;
 
 /// The command metadata trait, specifying the various information about a command.
 pub trait CommandMetadata {
@@ -65,5 +70,18 @@ pub trait PluginMetadata {
 #[async_trait]
 pub trait Plugin: PluginMetadata {
     /// Whether a given plugin is enabled.
-    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool>;
+    async fn enabled(&self, guild_id: Id<GuildMarker>) -> miette::Result<bool> {
+        let pinned = Pin::static_ref(&DATABASE_POOL).await;
+        let pooled = pinned.get().await.into_diagnostic()?;
+        let client = pooled.client();
+
+        let bool = plugin_enabled()
+            .bind(client, &self.name(), &guild_id.to_string())
+            .map(|json| json.0.get().to_string())
+            .one()
+            .await
+            .into_diagnostic()?;
+
+        bool.parse().into_diagnostic()
+    }
 }
