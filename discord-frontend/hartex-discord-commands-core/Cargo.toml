@@ -13,6 +13,7 @@ rust-version = "1.81.0"
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros", optional = true }
+hartex_discord_configuration_provider = { path = "../hartex-discord-configuration-provider" }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
