@@ -39,7 +39,7 @@ pub trait CommandMetadata {
     fn name(&self) -> String;
 
     /// The plugin the command belongs to.
-    fn plugin(&self) -> Box<dyn Plugin>;
+    fn plugin(&self) -> Box<dyn Plugin + Send + Sync>;
 }
 
 /// The command trait, contains callbacks that are to be run before or when an interaction command
