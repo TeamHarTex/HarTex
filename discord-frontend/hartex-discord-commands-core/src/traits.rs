@@ -20,17 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
-
 use async_trait::async_trait;
-use hartex_database_queries::configuration::queries::plugin_enabled::plugin_enabled;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_utils::DATABASE_POOL;
 use hartex_localization_core::Localizer;
-use miette::IntoDiagnostic;
 use hartex_discord_configuration_provider::ConfigurationProvider;
 
 /// The command metadata trait, specifying the various information about a command.
