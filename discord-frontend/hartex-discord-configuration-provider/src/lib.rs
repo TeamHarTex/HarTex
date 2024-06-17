@@ -37,9 +37,11 @@ use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;
 
+/// The configuration provide for fetching configuration.
 pub struct ConfigurationProvider;
 
 impl ConfigurationProvider {
+    /// Queries whether a specific plugin is enabled for a certain guild.
     #[allow(clippy::missing_errors_doc)]
     pub async fn plugin_enabled(guild_id: Id<GuildMarker>, plugin: impl Into<String>) -> miette::Result<bool> {
         let pinned = Pin::static_ref(&DATABASE_POOL).await;

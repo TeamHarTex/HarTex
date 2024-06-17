@@ -11,14 +11,11 @@ rust-version = "1.81.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-hartex_database_queries = { path = "../../database/hartex-database-queries" }
-
 hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros", optional = true }
+hartex_discord_configuration_provider = { path = "../hartex-discord-configuration-provider" }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
-
-hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
 async-trait = "0.1.80"
 miette = "7.2.0"
