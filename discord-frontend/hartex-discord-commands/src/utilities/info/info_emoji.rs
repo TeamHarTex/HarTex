@@ -33,7 +33,6 @@ use hartex_discord_core::discord::model::id::marker::EmojiMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_discord_entitycache_core::error::CacheError;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
