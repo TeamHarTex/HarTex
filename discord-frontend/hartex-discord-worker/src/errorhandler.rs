@@ -30,13 +30,11 @@ use std::str::FromStr;
 use chrono::Utc;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::model::id::marker::ChannelMarker;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_discord_utils::CLIENT;
 use hartex_log::log;
@@ -68,21 +66,13 @@ pub async fn handle_interaction_error(
 
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
-
             interaction_client
                 .create_response(
                     interaction_create.id,
                     &interaction_create.token,
-                    &InteractionResponse {
-                        kind: InteractionResponseType::ChannelMessageWithSource,
-                        data: Some(
-                            InteractionResponseDataBuilder::new()
-                                .content(format!(
-                                    ":x: This command encountered an unexpected error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
-                                ))
-                                .build(),
-                        ),
-                    },
+                    &ephemeral_error_response(format!(
+                        ":x: This command encountered an unexpected error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                    ))
                 )
                 .await
                 .unwrap();
@@ -123,16 +113,9 @@ pub async fn handle_interaction_error(
                 .create_response(
                     interaction_create.id,
                     &interaction_create.token,
-                    &InteractionResponse {
-                        kind: InteractionResponseType::ChannelMessageWithSource,
-                        data: Some(
-                            InteractionResponseDataBuilder::new()
-                                .content(format!(
-                                    ":x: This command encountered a critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
-                                ))
-                                .build(),
-                        ),
-                    },
+                    &ephemeral_error_response(format!(
+                        ":x: This command encountered an critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                    )),
                 )
                 .await
                 .unwrap();

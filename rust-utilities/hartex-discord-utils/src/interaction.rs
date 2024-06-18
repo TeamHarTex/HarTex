@@ -29,6 +29,7 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 
 /// Constructs an embed response.
+#[must_use]
 pub fn embed_response(embeds: Vec<Embed>) -> InteractionResponse {
     InteractionResponse {
         kind: InteractionResponseType::ChannelMessageWithSource,
@@ -41,6 +42,7 @@ pub fn embed_response(embeds: Vec<Embed>) -> InteractionResponse {
 }
 
 /// Constructs an ephemeral text response, used for error display.
+#[must_use]
 pub fn ephemeral_error_response(message: impl Into<String>) -> InteractionResponse {
     InteractionResponse {
         kind: InteractionResponseType::ChannelMessageWithSource,
