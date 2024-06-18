@@ -46,6 +46,7 @@ pub mod hyper;
 pub mod interaction;
 pub mod localizable;
 pub mod markdown;
+pub mod postgres;
 
 /// A proxied Discord HTTP cliemt.
 pub static CLIENT: Lazy<Client> = Lazy::new(|| {
