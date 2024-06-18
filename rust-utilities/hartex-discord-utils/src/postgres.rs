@@ -28,11 +28,11 @@ use tokio_postgres::error::SqlState;
 /// Extension trait for PostgreSQL errors.
 pub trait PostgresErrorExt {
     /// Returns whether the `SqlState` within the error is the value specified.
-    fn is(self, state: SqlState) -> bool;
+    fn is(&self, state: SqlState) -> bool;
 }
 
 impl PostgresErrorExt for Error {
-    fn is(self, state: SqlState) -> bool {
+    fn is(&self, state: SqlState) -> bool {
         let Some(sql_state) = self.code() else {
             return false;
         };
