@@ -25,7 +25,8 @@
 use tokio_postgres::error::Error;
 use tokio_postgres::error::SqlState;
 
-/// Extension trait for PostgreSQL errors.
+/// Extension trait for `PostgreSQL` errors.
+#[allow(clippy::module_name_repetitions)]
 pub trait PostgresErrorExt {
     /// Returns whether the `SqlState` within the error is the value specified.
     fn is(&self, state: SqlState) -> bool;
