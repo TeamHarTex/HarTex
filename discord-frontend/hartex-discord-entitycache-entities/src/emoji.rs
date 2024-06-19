@@ -25,7 +25,7 @@ use hartex_discord_entitycache_core::entity;
 /// An emoji entity.
 #[entity(
     from = "twilight_model::guild::Emoji",
-    assume = ["CachedEmojiSelectByGuildId"],
+    assume = ["CachedEmojiSelectByGuildId", "CachedEmojiSelectById"],
     id = ["id"],
     include = [
         "animated",
