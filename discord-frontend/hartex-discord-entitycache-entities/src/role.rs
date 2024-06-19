@@ -26,7 +26,7 @@ use hartex_discord_entitycache_core::entity;
 #[allow(clippy::module_name_repetitions)]
 #[entity(
     from = "twilight_model::guild::Role",
-    assume = ["CachedRoleSelectByGuildId"],
+    assume = ["CachedRoleSelectByGuildId", "CachedRoleSelectByIdAndGuildId"],
     id = ["guild_id", "id"],
     include = ["color", "flags", "hoist", "icon", "managed", "mentionable", "position"],
     extra = [
