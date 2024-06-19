@@ -21,13 +21,9 @@
  */
 
 use std::pin::Pin;
-use std::str::FromStr;
 
 use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
-use hartex_discord_core::discord::model::guild::MemberFlags;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::util::Timestamp;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -54,20 +50,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             .one()
             .await?;
 
-        Ok(MemberEntity {
-            flags: MemberFlags::from_bits(data.flags as u64).unwrap(),
-            joined_at: data
-                .joined_at
-                .map(|timestamp| Timestamp::from_secs(timestamp.unix_timestamp()).unwrap()),
-            nick: data.nick,
-            roles: data
-                .roles
-                .into_iter()
-                .map(|role| Id::from_str(&role).unwrap())
-                .collect(),
-            guild_id: Id::from_str(&data.guild_id).unwrap(),
-            user_id: Id::from_str(&data.user_id).unwrap(),
-        })
+        Ok(MemberEntity::from(data))
     }
 
     #[allow(clippy::cast_possible_wrap)]

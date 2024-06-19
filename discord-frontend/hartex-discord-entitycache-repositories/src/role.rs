@@ -26,11 +26,9 @@ use std::str::FromStr;
 use hartex_database_queries::discord_frontend::queries::cached_role_select_by_guild_id::cached_role_select_by_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_role_select_by_id_and_guild_id::cached_role_select_by_id_and_guild_id;
 use hartex_database_queries::discord_frontend::queries::cached_role_upsert::cached_role_upsert;
-use hartex_discord_core::discord::model::guild::RoleFlags;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -79,19 +77,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
             .one()
             .await?;
 
-        Ok(RoleEntity {
-            color: data.color as u32,
-            flags: RoleFlags::from_bits_truncate(data.flags as u64),
-            guild_id,
-            hoist: data.hoist,
-            icon: data
-                .icon
-                .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
-            id,
-            managed: data.managed,
-            mentionable: data.mentionable,
-            position: data.position as i64,
-        })
+        Ok(RoleEntity::from(data))
     }
 
     #[allow(clippy::cast_lossless)]
