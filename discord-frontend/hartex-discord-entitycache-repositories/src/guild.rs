@@ -24,18 +24,14 @@
 
 use std::borrow::Cow;
 use std::pin::Pin;
-use std::str::FromStr;
 
 use hartex_database_queries::discord_frontend::queries::cached_guild_select_by_id::cached_guild_select_by_id;
 use hartex_database_queries::discord_frontend::queries::cached_guild_upsert::cached_guild_upsert;
 use hartex_discord_core::discord::model::guild::DefaultMessageNotificationLevel;
 use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
-use hartex_discord_core::discord::model::guild::GuildFeature;
 use hartex_discord_core::discord::model::guild::MfaLevel;
 use hartex_discord_core::discord::model::guild::PremiumTier;
 use hartex_discord_core::discord::model::guild::VerificationLevel;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -59,32 +55,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
             .one()
             .await?;
 
-        Ok(GuildEntity {
-            default_message_notifications: DefaultMessageNotificationLevel::from(
-                data.default_message_notifications as u8,
-            ),
-            explicit_content_filter: ExplicitContentFilter::from(
-                data.explicit_content_filter as u8,
-            ),
-            features: data
-                .features
-                .iter()
-                .cloned()
-                .map(GuildFeature::from)
-                .collect(),
-            icon: data
-                .icon
-                .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
-            id,
-            large: data.large,
-            mfa_level: MfaLevel::from(data.mfa_level as u8),
-            name: data.name,
-            owner_id: Id::from_str(&data.owner_id)
-                .expect("id is zero (unexpected and unreachable)"),
-            premium_subscription_count: data.premium_subscription_count.map(|id| id as u64),
-            premium_tier: PremiumTier::from(data.premium_tier as u8),
-            verification_level: VerificationLevel::from(data.verification_level as u8),
-        })
+        Ok(GuildEntity::from(data))
     }
 
     #[allow(clippy::cast_possible_wrap)]
