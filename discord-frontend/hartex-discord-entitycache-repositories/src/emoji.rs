@@ -21,11 +21,9 @@
  */
 
 use std::pin::Pin;
-use std::str::FromStr;
 
 use hartex_database_queries::discord_frontend::queries::cached_emoji_select_by_id::cached_emoji_select_by_id;
 use hartex_database_queries::discord_frontend::queries::cached_emoji_upsert::cached_emoji_upsert;
-use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -47,13 +45,7 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
             .one()
             .await?;
 
-        Ok(EmojiEntity {
-            animated: data.animated,
-            id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
-            guild_id: Id::from_str(&data.id).expect("id is zero (unexpected and unreachable)"),
-            managed: data.managed,
-            name: data.name,
-        })
+        Ok(EmojiEntity::from(data))
     }
 
     async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
