@@ -24,7 +24,6 @@ use std::pin::Pin;
 
 use hartex_database_queries::discord_frontend::queries::cached_user_select_by_id::cached_user_select_by_id;
 use hartex_database_queries::discord_frontend::queries::cached_user_upsert::cached_user_upsert;
-use hartex_discord_core::discord::model::util::ImageHash;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
@@ -46,16 +45,7 @@ impl Repository<UserEntity> for CachedUserRepository {
             .one()
             .await?;
 
-        Ok(UserEntity {
-            avatar: data
-                .avatar
-                .map(|hash| ImageHash::parse(hash.as_bytes()).unwrap()),
-            bot: data.bot,
-            id,
-            discriminator: data.discriminator.parse().unwrap(),
-            global_name: data.global_name,
-            name: data.name,
-        })
+        Ok(UserEntity::from(data))
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
