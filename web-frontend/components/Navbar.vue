@@ -22,34 +22,34 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <template>
   <nav ref="navbar">
-    <NuxtLink class="brand" to="/">hartex</NuxtLink>
+    <NuxtLink class="brand" to="/">HarTex</NuxtLink>
     <div class="links">
-      <NuxtLink to="/" target="_blank">
-        <div class="i-carbon:notebook-reference"></div>
-      </NuxtLink>
       <NuxtLink to="https://discord.com/invite/Xu8453VBAv" target="_blank">
         <div class="i-carbon:logo-discord"></div>
       </NuxtLink>
       <NuxtLink to="https://github.com/TeamHarTex/HarTex" target="_blank">
         <div class="i-carbon:logo-github"></div>
       </NuxtLink>
-      <NuxtLink
-        to="https://github.com/TeamHarTex/HarTex/blob/nightly/CHANGELOG.md"
-        target="_blank"
-      >
+      <NuxtLink @click="toggleMenu()">
         <div class="i-carbon:catalog"></div>
       </NuxtLink>
     </div>
   </nav>
+  <div ref="sidebar" :class="{ hidden: !isOpened }" class="sidebar">
+    <button @click="toggleMenu()">
+      <div class="i-carbon-minimize"></div>
+    </button>
+  </div>
+  <div :class="{ hidden: !isOpened }" class="overlay"></div>
 </template>
 
 <style scoped lang="postcss">
 nav {
-  @apply fixed flex justify-between items-center z-99;
+  @apply fixed flex justify-between items-center;
   @apply w-full py-12 md:py-18 transition-opacity;
 
   .brand {
-    @apply text-3xl md:text-4xl font-600;
+    @apply text-3xl md:text-4xl font-bold;
   }
 
   .links {
@@ -68,17 +68,38 @@ nav {
     }
   }
 }
+
+.sidebar {
+  @apply fixed right-0 w-[35vw] h-screen z-99;
+  @apply bg-secondary text-primary;
+
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+
+  button {
+    @apply decoration-none;
+    @apply border-0 bg-transparent cursor-pointer;
+    @apply absolute right-8 top-8;
+    @apply text-4xl text-primary;
+  }
+}
+
+.overlay {
+  @apply fixed w-screen h-screen z-98;
+
+  background: rgba(0, 0, 0, 0.5);
+}
 </style>
 
 <script setup lang="ts">
+const { $gsap } = useNuxtApp();
+
 const navbar: Ref<HTMLElement | null> = ref(null);
+
+const isOpened = ref(false);
 
 let showNavbar = true;
 let lastScrollPosition = 0;
-
-onMounted(() => {
-  window.addEventListener("scroll", onScroll);
-});
 
 function onScroll() {
   const currentScrollPosition = window.scrollY;
@@ -105,4 +126,66 @@ function onScroll() {
     }
   }
 }
+
+function toggleMenu() {
+  if (!isOpened.value) {
+    isOpened.value = true;
+
+    $gsap.fromTo(
+      ".sidebar",
+      {
+        x: "45vw",
+      },
+      {
+        x: 0,
+        delay: 0.5,
+        duration: 1.5,
+        ease: "expo.out",
+      }
+    );
+
+    $gsap.fromTo(
+      ".overlay",
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 1.5,
+        ease: "expo.out",
+      }
+    );
+  } else {
+    $gsap.fromTo(
+      ".sidebar",
+      {
+        x: 0,
+      },
+      {
+        x: "45vw",
+        duration: 1.5,
+        ease: "expo.inOut",
+      }
+    );
+
+    $gsap.fromTo(
+      ".overlay",
+      {
+        opacity: 1,
+      },
+      {
+        opacity: 0,
+        duration: 1.5,
+        ease: "expo.in",
+        onComplete: () => {
+          isOpened.value = false;
+        },
+      }
+    );
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("scroll", onScroll);
+});
 </script>

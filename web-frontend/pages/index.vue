@@ -23,5 +23,14 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 <template>
   <LandingHero />
   <LandingFeatureGrid />
+  <section>
+    <p>FAQ</p>
+  </section>
   <LandingContribute />
 </template>
+
+<script setup lang="ts">
+onMounted(() => {
+  useSmoothScroll();
+});
+</script>
