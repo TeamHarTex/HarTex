@@ -36,9 +36,13 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
     </div>
   </nav>
   <div ref="sidebar" :class="{ hidden: !isOpened }" class="sidebar">
-    <button @click="toggleMenu()">
-      <div class="i-carbon-minimize"></div>
-    </button>
+    <div class="navigation">
+      <h2>Changelogs:</h2>
+      <button @click="toggleMenu()">
+        <div class="i-carbon-right-panel-close-filled"></div>
+      </button>
+    </div>
+    <div class="logs"></div>
   </div>
   <div :class="{ hidden: !isOpened }" class="overlay"></div>
 </template>
@@ -71,16 +75,32 @@ nav {
 
 .sidebar {
   @apply fixed right-0 w-[35vw] h-screen z-99;
+  @apply flex p-15;
   @apply bg-secondary text-primary;
 
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
 
-  button {
-    @apply decoration-none;
-    @apply border-0 bg-transparent cursor-pointer;
-    @apply absolute right-8 top-8;
-    @apply text-4xl text-primary;
+  .navigation {
+    @apply flex justify-between items-center w-full h-fit;
+
+    button {
+      @apply decoration-none text-center;
+      @apply border-0 bg-transparent cursor-pointer;
+      @apply text-4xl text-primary;
+      @apply transition-color duration-300;
+
+      &:hover {
+        @apply text-tertiary;
+      }
+    }
+
+    h2 {
+      @apply text-4xl inline font-serif font-500 select-none;
+    }
+  }
+
+  .logs {
   }
 }
 
