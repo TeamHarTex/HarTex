@@ -72,7 +72,7 @@ section:last-of-type {
 }
 
 .primary-btn {
-  @apply mx-6 px-10 py-5;
+  @apply mx-6 px-10 py-5 text-center;
   @apply font-600 text-lg md:text-xl 5xl:text-2xl;
   @apply border-solid border-rd-[1000px] border-2;
   @apply bg-secondary text-primary!;
@@ -111,3 +111,11 @@ html.lenis body {
   pointer-events: none;
 }
 </style>
+
+<script setup lang="ts">
+console.log(
+  `%c🤓☝️ erm actually,
+u are not supposed to be here.`,
+  "font-size: 20px"
+);
+</script>
