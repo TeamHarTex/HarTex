@@ -1,4 +1,4 @@
-import {defineConfig} from "unocss";
+import { defineConfig } from "unocss";
 
 import presetIcons from "@unocss/preset-icons";
 import presetUno from "@unocss/preset-uno";
@@ -15,7 +15,7 @@ export default defineConfig({
       "2xl": "1600px",
       "3xl": "1920px",
       "4xl": "2048px",
-      "5xl": "2560px"
+      "5xl": "2560px",
     },
     colors: {
       primary: "#401d19",

@@ -37,12 +37,12 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 }
 
 a {
-  @apply decoration-none select-none;
-  @apply text-tertiary text-center transition-colors;
-}
+  @apply cursor-pointer decoration-none select-none;
+  @apply text-tertiary text-center transition-colors duration-300;
 
-a:hover {
-  @apply text-secondary;
+  &:hover {
+    @apply text-secondary;
+  }
 }
 
 body {
@@ -53,6 +53,10 @@ main,
 nav,
 footer {
   @apply px-10 sm:px-20 md:px-30 lg:px-40 xl:px-60 2xl:px-80;
+}
+
+main {
+  @apply min-h-screen;
 }
 
 section {
@@ -68,12 +72,14 @@ section:last-of-type {
 }
 
 .primary-btn {
-  @apply mx-6 px-4 py-2 text-lg md:text-2xl 5xl:text-3xl;
-  @apply border-solid border-rd border-1;
-}
+  @apply mx-6 px-10 py-5;
+  @apply font-600 text-lg md:text-xl 5xl:text-2xl;
+  @apply border-solid border-rd-[1000px] border-2;
+  @apply bg-secondary text-primary!;
 
-.primary-btn:hover {
-  @apply bg-secondary text-primary;
+  &:hover {
+    @apply bg-primary text-secondary!;
+  }
 }
 
 .inline-btn {
@@ -83,12 +89,25 @@ section:last-of-type {
 .whitespace {
   @apply py-4;
 }
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
 </style>
-
-<script setup lang="ts">
-import { useSmoothScroll } from "~/composables/useSmoothScroll";
-
-onMounted(() => {
-  useSmoothScroll();
-});
-</script>

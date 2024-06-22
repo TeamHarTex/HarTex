@@ -1,14 +1,14 @@
-import Lenis from '@studio-freight/lenis';
+import Lenis from "@studio-freight/lenis";
 
 export const useSmoothScroll = () => {
-  const {$gsap, $ScrollTrigger} = useNuxtApp();
+  const { $gsap, $ScrollTrigger } = useNuxtApp();
 
   const lenis = new Lenis({
-    duration: 1.5
+    duration: 1.5,
   });
 
-  lenis.on('scroll', () => {
-    $ScrollTrigger.update()
+  lenis.on("scroll", () => {
+    $ScrollTrigger.update();
   });
 
   $gsap.ticker.add((time) => {

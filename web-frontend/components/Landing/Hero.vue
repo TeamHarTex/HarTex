@@ -43,11 +43,7 @@ header {
   }
 
   .primary-btn {
-    @apply mt-20 cursor-not-allowed opacity-50;
-  }
-
-  .primary-btn:hover {
-    @apply bg-primary text-tertiary;
+    @apply mt-20 pointer-events-none opacity-50;
   }
 }
 </style>
