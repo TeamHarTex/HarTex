@@ -52,6 +52,7 @@ pub fn initialize() {
         .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
         .logger(Logger::builder().build("rustls", LevelFilter::Off))
         .logger(Logger::builder().build("tokio", LevelFilter::Off))
+        .logger(Logger::builder().build("tokio-runtime-worker", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_postgres", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
         .logger(Logger::builder().build("tokio_util", LevelFilter::Off))
