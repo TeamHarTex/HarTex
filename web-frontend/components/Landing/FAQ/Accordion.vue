@@ -21,14 +21,50 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <template>
-  <LandingHero />
-  <LandingFeatureGrid />
-  <LandingFAQ />
-  <LandingContribute />
+  <div class="accordion">
+    <button @click="isOpened = !isOpened">
+      <div :class="{ 'rotate-45': isOpened }" class="i-carbon-add"></div>
+      {{ question }}
+    </button>
+    <p :class="{ hidden: !isOpened }">{{ answer }}</p>
+  </div>
 </template>
 
+<style scoped lang="postcss">
+.accordion {
+  @apply border-solid border-1 border-tertiary border-rd;
+
+  button {
+    @apply flex items-center;
+    @apply text-left text-lg font-500;
+    @apply w-full p-6;
+
+    div {
+      @apply transition-transform text-2xl mr-4;
+    }
+
+    &:hover {
+      @apply border-secondary;
+    }
+  }
+
+  p {
+    @apply pl-6 pb-6 text-lg;
+  }
+}
+</style>
+
 <script setup lang="ts">
-onMounted(() => {
-  useSmoothScroll();
+defineProps({
+  question: {
+    type: String,
+    required: true,
+  },
+  answer: {
+    type: String,
+    required: true,
+  },
 });
+
+const isOpened = ref(false);
 </script>

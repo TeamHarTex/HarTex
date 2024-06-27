@@ -35,21 +35,25 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
       </NuxtLink>
     </div>
   </nav>
-  <div ref="sidebar" :class="{ hidden: !isOpened }" class="sidebar">
+  <div ref="sidebar" :class="{ 'hidden!': !isOpened }" class="sidebar">
     <div class="navigation">
-      <h2>Changelogs:</h2>
-      <button @click="toggleMenu()">
+      <h2 class="subheading">Changelogs:</h2>
+      <button class="close" @click="toggleMenu()">
         <div class="i-carbon-right-panel-close-filled"></div>
       </button>
     </div>
-    <div class="logs"></div>
+    <div class="whitespace"></div>
+    <div class="whitespace"></div>
+    <div class="logs">
+      <button>Example Log</button>
+    </div>
   </div>
   <div :class="{ hidden: !isOpened }" class="overlay"></div>
 </template>
 
 <style scoped lang="postcss">
 nav {
-  @apply fixed flex justify-between items-center;
+  @apply fixed flex justify-between items-center z-97;
   @apply w-full py-12 md:py-18 transition-opacity;
 
   .brand {
@@ -75,7 +79,7 @@ nav {
 
 .sidebar {
   @apply fixed right-0 w-[35vw] h-screen z-99;
-  @apply flex p-15;
+  @apply flex flex-col p-15;
   @apply bg-secondary text-primary;
 
   border-top-left-radius: 50px;
@@ -84,9 +88,7 @@ nav {
   .navigation {
     @apply flex justify-between items-center w-full h-fit;
 
-    button {
-      @apply decoration-none text-center;
-      @apply border-0 bg-transparent cursor-pointer;
+    .close {
       @apply text-4xl text-primary;
       @apply transition-color duration-300;
 
@@ -96,11 +98,19 @@ nav {
     }
 
     h2 {
-      @apply text-4xl inline font-serif font-500 select-none;
+      @apply inline select-none;
     }
   }
 
   .logs {
+    button {
+      @apply text-4xl text-primary font-600 uppercase;
+      @apply border-solid border-b-2 w-full text-left pb-5;
+
+      &:hover {
+        @apply text-tertiary border-b-tertiary;
+      }
+    }
   }
 }
 
