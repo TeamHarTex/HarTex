@@ -36,9 +36,11 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
   @apply font-sans outline-none;
 }
 
-a {
+a,
+button {
   @apply cursor-pointer decoration-none select-none;
   @apply text-tertiary text-center transition-colors duration-300;
+  @apply border-0 bg-transparent;
 
   &:hover {
     @apply text-secondary;
@@ -60,15 +62,11 @@ main {
 }
 
 section {
-  @apply min-h-xl my-9xl;
+  @apply mb-[15rem];
 }
 
-section:first-of-type {
-  @apply mt-0;
-}
-
-section:last-of-type {
-  @apply mb-0;
+.subheading {
+  @apply font-serif font-400 text-4xl;
 }
 
 .primary-btn {
