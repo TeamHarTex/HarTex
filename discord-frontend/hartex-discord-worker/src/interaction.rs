@@ -90,6 +90,8 @@ pub async fn application_command(
             )
             .await
             .into_diagnostic()?;
+
+        return Ok(());
     }
 
     if let Err(error) = command

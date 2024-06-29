@@ -63,19 +63,19 @@ serde_json::Value, 1>
         |row| { row.get(0) }, mapper: |it| { serde_json::from_str(it.0.get()).unwrap() },
     }
 } }}pub mod plugin_enabled
-{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct PluginEnabledParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> { pub plugin: T1,pub guild_id: T2,}pub struct SerdejsonValueQuery<'a, C: GenericClient, T, const N: usize>
+{ use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;#[derive( Debug)] pub struct PluginEnabledParams<T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> { pub plugin: T1,pub guild_id: T2,}pub struct StringQuery<'a, C: GenericClient, T, const N: usize>
 {
     client: &'a  C, params:
     [&'a (dyn postgres_types::ToSql + Sync); N], stmt: &'a mut
-    cornucopia_async::private::Stmt, extractor: fn(&tokio_postgres::Row) -> postgres_types::Json<& serde_json::value::RawValue>,
-    mapper: fn(postgres_types::Json<& serde_json::value::RawValue>) -> T,
-} impl<'a, C, T:'a, const N: usize> SerdejsonValueQuery<'a, C, T, N> where C:
+    cornucopia_async::private::Stmt, extractor: fn(&tokio_postgres::Row) -> & str,
+    mapper: fn(& str) -> T,
+} impl<'a, C, T:'a, const N: usize> StringQuery<'a, C, T, N> where C:
 GenericClient
 {
-    pub fn map<R>(self, mapper: fn(postgres_types::Json<& serde_json::value::RawValue>) -> R) ->
-    SerdejsonValueQuery<'a,C,R,N>
+    pub fn map<R>(self, mapper: fn(& str) -> R) ->
+    StringQuery<'a,C,R,N>
     {
-        SerdejsonValueQuery
+        StringQuery
         {
             client: self.client, params: self.params, stmt: self.stmt,
             extractor: self.extractor, mapper,
@@ -104,7 +104,7 @@ GenericClient
     }
 }pub fn plugin_enabled() -> PluginEnabledStmt
 { PluginEnabledStmt(cornucopia_async::private::Stmt::new("SELECT
-    configuration -> 'plugins' -> $1 -> 'enabled'
+    COALESCE(MAX(configuration -> 'plugins' -> $1 ->> 'enabled'), 'false')
 FROM
     \"Nightly\".\"GuildConfigurations\"
 WHERE
@@ -114,22 +114,22 @@ PluginEnabledStmt(cornucopia_async::private::Stmt); impl PluginEnabledStmt
 GenericClient,T1:
 cornucopia_async::StringSql,T2:
 cornucopia_async::StringSql,>(&'a mut self, client: &'a  C,
-plugin: &'a T1,guild_id: &'a T2,) -> SerdejsonValueQuery<'a,C,
-serde_json::Value, 2>
+plugin: &'a T1,guild_id: &'a T2,) -> StringQuery<'a,C,
+String, 2>
 {
-    SerdejsonValueQuery
+    StringQuery
     {
         client, params: [plugin,guild_id,], stmt: &mut self.0, extractor:
-        |row| { row.get(0) }, mapper: |it| { serde_json::from_str(it.0.get()).unwrap() },
+        |row| { row.get(0) }, mapper: |it| { it.into() },
     }
 } }impl <'a, C: GenericClient,T1: cornucopia_async::StringSql,T2: cornucopia_async::StringSql,> cornucopia_async::Params<'a,
-PluginEnabledParams<T1,T2,>, SerdejsonValueQuery<'a, C,
-serde_json::Value, 2>, C> for PluginEnabledStmt
+PluginEnabledParams<T1,T2,>, StringQuery<'a, C,
+String, 2>, C> for PluginEnabledStmt
 {
     fn
     params(&'a mut self, client: &'a  C, params: &'a
-    PluginEnabledParams<T1,T2,>) -> SerdejsonValueQuery<'a, C,
-    serde_json::Value, 2>
+    PluginEnabledParams<T1,T2,>) -> StringQuery<'a, C,
+    String, 2>
     { self.bind(client, &params.plugin,&params.guild_id,) }
 }}pub mod utilities_plugin_enabled
 { use futures::{{StreamExt, TryStreamExt}};use futures; use cornucopia_async::GenericClient;pub struct SerdejsonValueQuery<'a, C: GenericClient, T, const N: usize>
