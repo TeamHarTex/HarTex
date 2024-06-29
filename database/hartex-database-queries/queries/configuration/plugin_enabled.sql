@@ -1,6 +1,6 @@
 --! plugin_enabled (guild_id, plugin)
 SELECT
-    configuration -> 'plugins' -> :plugin -> 'enabled'
+    COALESCE(MAX(configuration -> 'plugins' -> :plugin ->> 'enabled'), 'false')
 FROM
     "Nightly"."GuildConfigurations"
 WHERE
