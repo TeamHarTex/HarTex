@@ -53,7 +53,6 @@ impl ConfigurationProvider {
 
         plugin_enabled()
             .bind(client, &plugin.into(), &guild_id.to_string())
-            .map(|json| json.0.get().to_string())
             .one()
             .await
             .into_diagnostic()?

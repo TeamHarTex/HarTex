@@ -40,28 +40,30 @@ pub fn initialize() {
                 Box::new(
                     ConsoleAppender::builder()
                         .encoder(Box::new(PatternEncoder::new(
-                            "{h({l:>6} | {d(%Y-%m-%d %H:%M:%S %Z)(local):>30} | {T} | {f}:{l} | {m})}{n}",
+                            "{h({l:>6} | {d(%Y-%m-%d %H:%M:%S %Z)(local):>30} | {M} - {f}:{L} - {m})}{n}",
                         )))
                         .build(),
                 ),
             ),
         )
-        .logger(Logger::builder().build("h2", LevelFilter::Off))
-        .logger(Logger::builder().build("hyper", LevelFilter::Off))
-        .logger(Logger::builder().build("mio", LevelFilter::Off))
-        .logger(Logger::builder().build("rdkafka", LevelFilter::Off))
-        .logger(Logger::builder().build("rustls", LevelFilter::Off))
-        .logger(Logger::builder().build("tokio", LevelFilter::Off))
-        .logger(Logger::builder().build("tokio_postgres", LevelFilter::Off))
-        .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Off))
-        .logger(Logger::builder().build("tokio_util", LevelFilter::Off))
-        .logger(Logger::builder().build("trust_dns_proto", LevelFilter::Off))
-        .logger(Logger::builder().build("trust_dns_resolver", LevelFilter::Off))
-        .logger(Logger::builder().build("tungstenite", LevelFilter::Off))
-        .logger(Logger::builder().build("twilight_gateway", LevelFilter::Off))
-        .logger(Logger::builder().build("twilight_http", LevelFilter::Off))
-        .logger(Logger::builder().build("twilight_model", LevelFilter::Off))
-        .logger(Logger::builder().build("want", LevelFilter::Off))
+        .logger(Logger::builder().build("h2", LevelFilter::Error))
+        .logger(Logger::builder().build("hyper", LevelFilter::Error))
+        .logger(Logger::builder().build("hyper_util", LevelFilter::Error))
+        .logger(Logger::builder().build("mio", LevelFilter::Error))
+        .logger(Logger::builder().build("rdkafka", LevelFilter::Warn))
+        .logger(Logger::builder().build("rustls", LevelFilter::Error))
+        .logger(Logger::builder().build("tokio", LevelFilter::Error))
+        .logger(Logger::builder().build("tokio_postgres", LevelFilter::Error))
+        .logger(Logger::builder().build("tokio_tungstenite", LevelFilter::Error))
+        .logger(Logger::builder().build("tokio_util", LevelFilter::Error))
+        .logger(Logger::builder().build("shard", LevelFilter::Error))
+        .logger(Logger::builder().build("trust_dns_proto", LevelFilter::Error))
+        .logger(Logger::builder().build("trust_dns_resolver", LevelFilter::Error))
+        .logger(Logger::builder().build("tungstenite", LevelFilter::Error))
+        .logger(Logger::builder().build("twilight_gateway", LevelFilter::Error))
+        .logger(Logger::builder().build("twilight_http", LevelFilter::Error))
+        .logger(Logger::builder().build("twilight_model", LevelFilter::Error))
+        .logger(Logger::builder().build("want", LevelFilter::Error))
         .build(Root::builder().appender("stdout").build(LevelFilter::Trace))
         .expect("failed to build log4rs configuration");
 
