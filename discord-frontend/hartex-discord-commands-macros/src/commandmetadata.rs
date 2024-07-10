@@ -24,6 +24,7 @@ use proc_macro2::TokenStream as TokenStream2;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
+use syn::Expr;
 use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
@@ -42,7 +43,7 @@ pub struct CommandMetadataMacroInput {
     pub(self) comma3: Option<Token![,]>,
     pub(self) minimum_permission_level_ident: Option<Ident>,
     pub(self) equal_2: Option<Token![=]>,
-    pub(self) minimum_permission_level: Option<Lit>,
+    pub(self) minimum_permission_level: Option<Expr>,
     pub(self) comma4: Option<Token![,]>,
 }
 
@@ -148,12 +149,12 @@ pub fn implement_metadata(
             return None;
         };
 
-        let Some(Lit::Int(level)) = parameters.minimum_permission_level.clone() else {
+        let Some(Expr::Binary(expr)) = parameters.minimum_permission_level.clone() else {
             parameters
                 .minimum_permission_level
                 .span()
                 .unwrap()
-                .error("expected integer")
+                .error("expected expression")
                 .emit();
 
             return None;
@@ -161,7 +162,7 @@ pub fn implement_metadata(
 
         let expanded = quote::quote! {
             fn minimum_permission_level(&self) -> u8 {
-                #level
+                0
             }
         };
         functions.extend(expanded);
