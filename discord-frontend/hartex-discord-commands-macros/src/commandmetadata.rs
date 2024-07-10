@@ -160,9 +160,10 @@ pub fn implement_metadata(
             return None;
         };
 
+        // todo: validate that expr is only a bitor expression
         let expanded = quote::quote! {
-            fn minimum_permission_level(&self) -> u8 {
-                0
+            fn required_permissions(&self) -> Permissions {
+                #expr
             }
         };
         functions.extend(expanded);
@@ -170,6 +171,8 @@ pub fn implement_metadata(
 
     let core_use = quote::quote! {
         extern crate hartex_discord_commands_core as _commands_core;
+
+        use hartex_discord_core::discord::model::guild::Permissions;
     };
     let ident = struct_item.ident.clone();
     let expanded = quote::quote! {
