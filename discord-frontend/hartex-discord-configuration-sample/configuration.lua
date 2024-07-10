@@ -42,19 +42,6 @@ return {
         colour = hartexconf.colour.rgb(0x768EE5)
     },
 
-    -- Permission ranks for HarTex usage roles and users.
-    permissions = {
-        -- Permissions for the role with ID 1234567890987654
-        roles = {
-            ["1234567890987654"] = 100
-        },
-
-        -- Permissions for the user with ID 1000000000000000
-        users = {
-            ["1000000000000000"] = 100
-        }
-    },
-
     -- Configuration for various plugins.
     plugins = {
         -- Configuration for the Management plugin.

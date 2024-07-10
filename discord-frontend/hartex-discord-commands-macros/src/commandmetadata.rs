@@ -24,6 +24,7 @@ use proc_macro2::TokenStream as TokenStream2;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::spanned::Spanned;
+use syn::Expr;
 use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
@@ -42,7 +43,7 @@ pub struct CommandMetadataMacroInput {
     pub(self) comma3: Option<Token![,]>,
     pub(self) minimum_permission_level_ident: Option<Ident>,
     pub(self) equal_2: Option<Token![=]>,
-    pub(self) minimum_permission_level: Option<Lit>,
+    pub(self) minimum_permission_level: Option<Expr>,
     pub(self) comma4: Option<Token![,]>,
 }
 
@@ -135,7 +136,7 @@ pub fn implement_metadata(
 
     // minimum_permission_level = ?
     if let Some(minimum_permission_level_ident) = parameters.minimum_permission_level_ident.clone()
-        && minimum_permission_level_ident == "minimum_permission_level"
+        && minimum_permission_level_ident == "required_permissions"
     {
         let Some(_) = parameters.equal_2 else {
             parameters
@@ -148,20 +149,21 @@ pub fn implement_metadata(
             return None;
         };
 
-        let Some(Lit::Int(level)) = parameters.minimum_permission_level.clone() else {
+        let Some(Expr::Binary(expr)) = parameters.minimum_permission_level.clone() else {
             parameters
                 .minimum_permission_level
                 .span()
                 .unwrap()
-                .error("expected integer")
+                .error("expected expression")
                 .emit();
 
             return None;
         };
 
+        // todo: validate that expr is only a bitor expression
         let expanded = quote::quote! {
-            fn minimum_permission_level(&self) -> u8 {
-                #level
+            fn required_permissions(&self) -> Permissions {
+                #expr
             }
         };
         functions.extend(expanded);
@@ -169,6 +171,8 @@ pub fn implement_metadata(
 
     let core_use = quote::quote! {
         extern crate hartex_discord_commands_core as _commands_core;
+
+        use hartex_discord_core::discord::model::guild::Permissions;
     };
     let ident = struct_item.ident.clone();
     let expanded = quote::quote! {
