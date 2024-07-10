@@ -27,3 +27,4 @@ error-line-one=:x: This command encountered{ $errorKind ->
 } error. Please provide the following error code for support.
 error-line-two=Error code:
 error-plugin-disabled=The `{$plugin}` plugin is not enabled. Please enable it in the guild configuration.
+error-insufficient-permissions=Invoking user has insufficient permissions.
