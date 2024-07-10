@@ -135,7 +135,7 @@ pub fn implement_metadata(
 
     // minimum_permission_level = ?
     if let Some(minimum_permission_level_ident) = parameters.minimum_permission_level_ident.clone()
-        && minimum_permission_level_ident == "minimum_permission_level"
+        && minimum_permission_level_ident == "required_permissions"
     {
         let Some(_) = parameters.equal_2 else {
             parameters
