@@ -160,7 +160,6 @@ pub fn implement_metadata(
             return None;
         };
 
-        // todo: validate that expr is only a bitor expression
         let expanded = quote::quote! {
             fn required_permissions(&self) -> Permissions {
                 #expr
