@@ -26,3 +26,5 @@ error-line-one=:x: 這個指令發生了{ $errorKind ->
   *[other]其他
 }錯誤。請提供以下錯誤代碼以取得支援。
 error-line-two=錯誤代碼：
+error-plugin-disabled=插件 `{$plugin}` 未啟用。請在伺服器設定中啟用。
+error-insufficient-permissions=使用者權限不足。

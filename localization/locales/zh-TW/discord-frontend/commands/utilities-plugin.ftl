@@ -31,6 +31,7 @@ emojiinfo-embed-generalinfo-managed-subfield-name=受管理：
 emojiinfo-embed-generalinfo-name-subfield-name=名稱：
 emojiinfo-error-only-custom-emojis=抱歉！現階段僅支援自訂表情符號。
 emojiinfo-error-only-one-emoji=暫不支援多表情符號查詢。
+emojiinfo-error-unknown-emoji=未知表情符號。機器人可能不在擁有此表情符號的伺服器中？
 roleinfo-embed-description={$roleMention} 的資訊
 roleinfo-embed-generalinfo-field-name=一般資訊
 roleinfo-embed-generalinfo-id-subfield-name=ID：
