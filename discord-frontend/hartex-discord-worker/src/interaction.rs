@@ -95,22 +95,28 @@ pub async fn application_command(
     }
 
     let permissions = command.required_permissions();
-    let member_permissions = interaction_create.member.clone().unwrap().permissions.unwrap();
-    if !member_permissions.contains(permissions) {interaction_client
-        .create_response(
-            interaction_create.id,
-            &interaction_create.token,
-            &InteractionResponse {
-                kind: InteractionResponseType::ChannelMessageWithSource,
-                data: Some(
-                    InteractionResponseDataBuilder::new()
-                        .content(localizer.error_error_insufficient_permissions()?)
-                        .build(),
-                ),
-            },
-        )
-        .await
-        .into_diagnostic()?;
+    let member_permissions = interaction_create
+        .member
+        .clone()
+        .unwrap()
+        .permissions
+        .unwrap();
+    if !member_permissions.contains(permissions) {
+        interaction_client
+            .create_response(
+                interaction_create.id,
+                &interaction_create.token,
+                &InteractionResponse {
+                    kind: InteractionResponseType::ChannelMessageWithSource,
+                    data: Some(
+                        InteractionResponseDataBuilder::new()
+                            .content(localizer.error_error_insufficient_permissions()?)
+                            .build(),
+                    ),
+                },
+            )
+            .await
+            .into_diagnostic()?;
 
         return Ok(());
     }
