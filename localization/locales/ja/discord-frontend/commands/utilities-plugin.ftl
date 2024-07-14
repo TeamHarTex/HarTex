@@ -23,6 +23,15 @@
 botinfo-embed-title=運行情報
 botinfo-embed-botstarted-field-name=起動済み
 botinfo-embed-latency-field-name=遅延（ms）
+emojiinfo-embed-generalinfo-field-name=一般情報
+emojiinfo-embed-generalinfo-guild-id-subfield-name=鯖ID：
+emojiinfo-embed-generalinfo-id-subfield-name=ID：
+emojiinfo-embed-generalinfo-animated-subfield-name=アニメーション：
+emojiinfo-embed-generalinfo-managed-subfield-name=管理中：
+emojiinfo-embed-generalinfo-name-subfield-name=名：
+emojiinfo-error-only-custom-emojis=申し訳ありませんが、今時点はカスタム絵文字しかサポートしてません。
+emojiinfo-error-only-one-emoji=複数の絵文字を問いかけることができません。
+emojiinfo-error-unknown-emoji=不明な絵文字。この絵文字がある鯖を参加してないかもしれません。
 roleinfo-embed-description={$roleMention}の情報
 roleinfo-embed-generalinfo-field-name=一般情報
 roleinfo-embed-generalinfo-id-subfield-name=ID：
