@@ -44,13 +44,15 @@ GenericClient
         Ok(it)
     }
 }pub fn plugin_enabled() -> PluginEnabledStmt
-{ PluginEnabledStmt(cornucopia_async::private::Stmt::new("SELECT
-    TRUE
-FROM
-    \"Nightly\".\"GuildConfigurations\"
-WHERE
-    \"enabled_plugins\" @> array[ $1 ] AND
-    \"guild_id\" = $2")) } pub struct
+{ PluginEnabledStmt(cornucopia_async::private::Stmt::new("SELECT EXISTS(
+    SELECT
+        TRUE
+    FROM
+        \"Nightly\".\"GuildConfigurations\"
+    WHERE
+        \"enabled_plugins\" @> array[ $1 ] AND
+        \"guild_id\" = $2
+)")) } pub struct
 PluginEnabledStmt(cornucopia_async::private::Stmt); impl PluginEnabledStmt
 { pub fn bind<'a, C:
 GenericClient,T1:
