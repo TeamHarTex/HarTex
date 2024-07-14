@@ -1,6 +1,6 @@
 --! plugin_enabled (guild_id, plugin)
 SELECT
-    *
+    TRUE
 FROM
     "Nightly"."GuildConfigurations"
 WHERE

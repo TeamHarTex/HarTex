@@ -55,8 +55,6 @@ impl ConfigurationProvider {
             .bind(client, &plugin.into(), &guild_id.to_string())
             .one()
             .await
-            .into_diagnostic()?
-            .parse()
             .into_diagnostic()
     }
 }
