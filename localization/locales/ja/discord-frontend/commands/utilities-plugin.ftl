@@ -75,3 +75,6 @@ userinfo-embed-generalinfo-name-subfield-name=表示名：
 userinfo-embed-generalinfo-created-subfield-name=アカウント作った時：
 userinfo-embed-serverpresence-field-name=サーバープロフィール
 userinfo-embed-serverpresence-nickname-subfield-name=サーバーニックネーム：
+userinfo-embed-serverpresence-joinedat-subfield-name=参加済：
+userinfo-embed-serverpresence-roles-subfield-name=ロール（10個まで表示）
+userinfo-embed-serverpresence-flags-subfield-name=フラグ：
