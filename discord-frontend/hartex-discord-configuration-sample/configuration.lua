@@ -49,7 +49,23 @@ return {
             -- Whether this plugin is enabled.
             enabled = true
         },
-
+        -- Configuration for the Modlog plugin.
+        modlog = {
+            -- Whether this plugin is enabled.
+            enabled = true,
+            -- Configuration for individual loggers
+            loggers = {
+                {
+                    -- The channel for the logger,
+                    channel = "3943943943943943",
+                    -- Array of events this logger listens for.
+                    events = {"MESSAGE_UPDATE"},
+                    -- Formatting of log messages sent for this logger.
+                    -- Options: `pretty` (embeds), `default` (default when unspecified, just text)
+                    format = "pretty"
+                },
+            }
+        },
         -- Configuration for the Utilities plugin.
         utilities = {
             -- Whether this plugin is enabled.
