@@ -26,6 +26,7 @@ use mlua::{FromLua, Lua, Value};
 use serde::Serialize;
 
 /// The modlog logger configuration object.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Serialize)]
 pub struct ModlogLogger {
     /// The channel ID associated with this logger.
