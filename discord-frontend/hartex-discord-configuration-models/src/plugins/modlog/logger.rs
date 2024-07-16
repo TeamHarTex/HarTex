@@ -22,7 +22,7 @@
 
 //! # Modlog Logger Configuration Object
 
-use mlua::{FromLua, Lua, Value};
+use mlua::{Error, FromLua, Lua, Value};
 use serde::Serialize;
 
 /// The modlog logger configuration object.
@@ -35,6 +35,27 @@ pub struct ModlogLogger {
     pub events: Vec<String>,
     /// The format the logger is configured to use.
     pub format: ModlogFormat,
+}
+
+impl<'lua> FromLua<'lua> for ModlogLogger {
+    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+        let Value::Table(table) = lua_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "ModlogPlugin: mismatched value type, expected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let channel = table.get("channel")?;
+        let events = table.get("events")?;
+        let format = table.get("format")?;
+
+        Ok(Self {
+            channel,
+            events,
+            format,
+        })
+    }
 }
 
 /// Configures modlog formats.
@@ -52,7 +73,7 @@ impl Default for ModlogFormat {
     }
 }
 
-impl<'lua> FromLua<'lua> for ModlogLogger {
+impl<'lua> FromLua<'lua> for ModlogFormat {
     fn from_lua(_: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         todo!()
     }
