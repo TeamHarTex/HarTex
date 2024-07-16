@@ -63,7 +63,7 @@ impl<'lua> FromLuaMulti<'lua> for Configuration {
         let next_value = values.into_iter().next().unwrap();
         let Value::Table(value) = next_value.clone() else {
             return Err(Error::RuntimeError(format!(
-                "Configuration: mismatched value type, exoected table, found: {}",
+                "Configuration: mismatched value type, expected table, found: {}",
                 next_value.type_name()
             )));
         };
