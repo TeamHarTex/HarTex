@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Plugins Configuration Object
+//! # Modlog Plugin Configuration Object
 
 use mlua::Error;
 use mlua::FromLua;
@@ -28,38 +28,33 @@ use mlua::Lua;
 use mlua::Value;
 use serde::Serialize;
 
-pub mod management;
-pub mod modlog;
-pub mod utilities;
+pub mod logger;
 
-/// The plugins configuration object.
+/// The modlog plugin configuration object.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Serialize)]
-pub struct Plugins {
-    /// Optional configuration object for the management plugin.
-    pub management: Option<management::ManagementPlugin>,
-    /// Optional configuration object for the modlog plugin.
-    pub modlog: Option<modlog::ModlogPlugin>,
-    /// Optional configuration object for the utilities plugin.
-    pub utilities: Option<utilities::UtilitiesPlugin>,
+pub struct ModlogPlugin {
+    /// Sets whether the modlog plugin is enabled.
+    pub enabled: bool,
+    /// Sets the loggers
+    pub loggers: Vec<logger::ModlogLogger>,
 }
 
-impl<'lua> FromLua<'lua> for Plugins {
+impl<'lua> FromLua<'lua> for ModlogPlugin {
     fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
-                "Dashboard: mismatched value type, exoected table, found: {}",
+                "ModlogPlugin: mismatched value type, exoected table, found: {}",
                 lua_value.type_name()
             )));
         };
 
-        let management = table.get("management")?;
-        let modlog = table.get("modlog")?;
-        let utilities = table.get("utilities")?;
+        let enabled = table.get("enabled")?;
+        let loggers = table.get("loggers")?;
 
         Ok(Self {
-            management,
-            modlog,
-            utilities,
+            enabled,
+            loggers,
         })
     }
 }
