@@ -39,6 +39,7 @@ use serde::Serialize;
 
 pub mod appearance;
 pub mod dashboard;
+pub mod eventflags;
 pub mod plugins;
 
 #[derive(Debug, Serialize)]
