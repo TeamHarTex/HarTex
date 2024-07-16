@@ -31,6 +31,7 @@ use serde::Serialize;
 pub mod logger;
 
 /// The modlog plugin configuration object.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Serialize)]
 pub struct ModlogPlugin {
     /// Sets whether the modlog plugin is enabled.
