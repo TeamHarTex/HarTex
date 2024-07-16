@@ -44,7 +44,7 @@ impl<'lua> FromLua<'lua> for ModlogPlugin {
     fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
-                "ModlogPlugin: mismatched value type, exoected table, found: {}",
+                "ModlogPlugin: mismatched value type, expected table, found: {}",
                 lua_value.type_name()
             )));
         };
