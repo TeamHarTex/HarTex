@@ -74,7 +74,25 @@ impl Default for ModlogFormat {
 }
 
 impl<'lua> FromLua<'lua> for ModlogFormat {
-    fn from_lua(_: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
-        todo!()
+    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+        let Value::String(string) = lua_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "ModlogFormat: mismatched value type, expected string, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let Ok(rust_string) = string.to_str() else {
+            return Err(Error::RuntimeError(String::from("ModlogFormat: string contains invalid UTF-8")));
+        };
+
+        Ok(match rust_string {
+            "default" => Self::Default,
+            "pretty" => Self::Pretty,
+            _ => return Err(Error::RuntimeError(format!(
+                "ModlogFormat: unexpected variant: {}, expected either default or pretty",
+                lua_value.type_name()
+            ))),
+        })
     }
 }
