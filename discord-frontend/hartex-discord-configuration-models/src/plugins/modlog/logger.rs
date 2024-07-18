@@ -22,7 +22,10 @@
 
 //! # Modlog Logger Configuration Object
 
-use mlua::{Error, FromLua, Lua, Value};
+use mlua::Error;
+use mlua::FromLua;
+use mlua::Lua;
+use mlua::Value;
 use serde::Serialize;
 
 /// The modlog logger configuration object.

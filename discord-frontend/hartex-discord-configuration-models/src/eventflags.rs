@@ -21,3 +21,8 @@
  */
 
 //! # Event Bitflags
+
+bitflags::bitflags! {
+    pub struct EventFlags: u128 {
+    }
+}
