@@ -15,6 +15,7 @@ members = [
     "hartex-discord-configuration-provider",
     "hartex-discord-entitycache-repositories",
     "hartex-discord-entitycache-service",
+    "hartex-discord-internal-events",
     "hartex-discord-leader",
     "hartex-discord-worker",
 ]
