@@ -20,9 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Event Bitflags
-
-bitflags::bitflags! {
-    pub struct EventFlags: u128 {
-    }
-}
+//! # Payloads for internal events used within HarTex.
