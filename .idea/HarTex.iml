@@ -46,6 +46,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-models/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-configuration-provider/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-validator/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-internal-events/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
       <excludeFolder url="file://$MODULE_DIR$/localization/target" />
