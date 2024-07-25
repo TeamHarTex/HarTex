@@ -6,7 +6,7 @@ description = """
 Bootstrap binary
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.81.0"
+rust-version = "1.82.0"
 
 [dependencies]
 clap = { version = "4.5.4", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }
