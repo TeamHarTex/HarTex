@@ -52,9 +52,6 @@ impl<'lua> FromLua<'lua> for ModlogPlugin {
         let enabled = table.get("enabled")?;
         let loggers = table.get("loggers")?;
 
-        Ok(Self {
-            enabled,
-            loggers,
-        })
+        Ok(Self { enabled, loggers })
     }
 }
