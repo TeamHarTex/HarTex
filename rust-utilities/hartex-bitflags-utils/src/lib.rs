@@ -29,7 +29,7 @@ use bitflags::Flags;
 pub trait FlagsExt: Flags {
     /// Obtain an instance of flags from their names.
     fn from_names(names: Vec<String>) -> Self {
-        let mut flags = Self;
+        let mut flags = Self::empty();
 
         names.iter().filter_map(|name| Self::from_name(name)).for_each(|flag|
             flags.insert(flag)
