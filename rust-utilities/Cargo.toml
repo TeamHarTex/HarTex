@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "hartex-bitflags-utils",
     "hartex-discord-utils",
     "hartex-errors",
     "hartex-kafka-utils",
