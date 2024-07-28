@@ -86,16 +86,20 @@ impl<'lua> FromLua<'lua> for ModlogFormat {
         };
 
         let Ok(rust_string) = string.to_str() else {
-            return Err(Error::RuntimeError(String::from("ModlogFormat: string contains invalid UTF-8")));
+            return Err(Error::RuntimeError(String::from(
+                "ModlogFormat: string contains invalid UTF-8",
+            )));
         };
 
         Ok(match rust_string {
             "default" => Self::Default,
             "pretty" => Self::Pretty,
-            _ => return Err(Error::RuntimeError(format!(
-                "ModlogFormat: unexpected variant: {}, expected either default or pretty",
-                lua_value.type_name()
-            ))),
+            _ => {
+                return Err(Error::RuntimeError(format!(
+                    "ModlogFormat: unexpected variant: {}, expected either default or pretty",
+                    lua_value.type_name()
+                )))
+            }
         })
     }
 }
