@@ -22,13 +22,19 @@
 
 //! Useful extensions for the `bitflags` crate.
 
-use std::collections::HashSet;
-
 use bitflags::Flags;
 
 /// Extension trait for items implementing the `Flags` trait containing convenience methods
 /// for various purposes.
 pub trait FlagsExt: Flags {
     /// Obtain an instance of flags from their names.
-    fn from_names(names: HashSet<String>) -> Self;
+    fn from_names(names: Vec<String>) -> Self {
+        let mut flags = Self;
+
+        names.iter().filter_map(|name| Self::from_name(name)).for_each(|flag|
+            flags.insert(flag)
+        );
+
+        flags
+    }
 }
