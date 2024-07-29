@@ -31,10 +31,13 @@ pub trait FlagsExt: Flags {
     fn from_names(names: Vec<String>) -> Self {
         let mut flags = Self::empty();
 
-        names.iter().filter_map(|name| Self::from_name(name)).for_each(|flag|
-            flags.insert(flag)
-        );
+        names
+            .iter()
+            .filter_map(|name| Self::from_name(name))
+            .for_each(|flag| flags.insert(flag));
 
         flags
     }
 }
+
+impl<T> FlagsExt for T where T: Flags {}
