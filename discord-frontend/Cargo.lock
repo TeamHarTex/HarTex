@@ -1169,6 +1169,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_bitflags_utils"
+version = "0.12.0"
+dependencies = [
+ "bitflags 2.6.0",
+]
+
+[[package]]
 name = "hartex_database_queries"
 version = "0.12.0"
 dependencies = [
@@ -1274,6 +1281,7 @@ name = "hartex_discord_configuration_models"
 version = "0.12.0"
 dependencies = [
  "bitflags 2.6.0",
+ "hartex_bitflags_utils",
  "hartex_discord_core",
  "itertools 0.13.0",
  "mlua",
