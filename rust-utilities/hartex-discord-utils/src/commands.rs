@@ -108,9 +108,9 @@ impl CommandDataOptionsExt for Vec<CommandDataOption> {
             .find(|option| option.name.as_str() == name)
             .map(|option| option.value.clone())
             .unwrap()
-            else {
-                unreachable!();
-            };
+        else {
+            unreachable!();
+        };
 
         user_id
     }

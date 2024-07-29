@@ -27,10 +27,12 @@ use mlua::Error;
 use mlua::FromLua;
 use mlua::Lua;
 use mlua::Value;
+use serde::Serialize;
 
 bitflags::bitflags! {
-    #[derive(Debug)]
+    #[derive(Debug, Serialize)]
     pub struct EventFlags: u128 {
+        const DUMMY_EVENT = 1;
     }
 }
 
@@ -49,6 +51,6 @@ impl<'lua> FromLua<'lua> for EventFlags {
             return Err(Error::RuntimeError(String::from("EventFlags: expected string array")));
         }
 
-        Ok(Self::from_names(flags.collect()))
+        Ok(Self::from_names(flags.map(Result::unwrap).collect()))
     }
 }

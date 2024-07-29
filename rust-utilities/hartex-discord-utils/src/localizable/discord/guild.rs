@@ -53,7 +53,9 @@ impl Localizable for ExplicitContentFilter {
 
         Ok(match self {
             Self::None => localizer.guild_explicit_content_filter_disabled()?,
-            Self::MembersWithoutRole => localizer.guild_explicit_content_filter_members_without_roles()?,
+            Self::MembersWithoutRole => {
+                localizer.guild_explicit_content_filter_members_without_roles()?
+            }
             Self::AllMembers => localizer.guild_explicit_content_filter_all_members()?,
             _ => localizer.general_enum_unknown()?,
         })
