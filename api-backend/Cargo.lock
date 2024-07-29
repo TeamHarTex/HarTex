@@ -253,6 +253,9 @@ name = "bitflags"
 version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b048fb63fd8b5923fc5aa7b340d8e156aec7ec02f0c78fa8a6ddc2613f6f71de"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "block-buffer"
@@ -749,6 +752,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_bitflags_utils"
+version = "0.12.0"
+dependencies = [
+ "bitflags 2.6.0",
+]
+
+[[package]]
 name = "hartex_database_queries"
 version = "0.12.0"
 dependencies = [
@@ -769,6 +779,7 @@ name = "hartex_discord_configuration_models"
 version = "0.12.0"
 dependencies = [
  "bitflags 2.6.0",
+ "hartex_bitflags_utils",
  "hartex_discord_core",
  "itertools",
  "mlua",
