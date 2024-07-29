@@ -28,6 +28,8 @@ use mlua::Lua;
 use mlua::Value;
 use serde::Serialize;
 
+use crate::eventflags::EventFlags;
+
 /// The modlog logger configuration object.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Serialize)]
@@ -35,7 +37,7 @@ pub struct ModlogLogger {
     /// The channel ID associated with this logger.
     pub channel: String,
     /// The events this logger listens to.
-    pub events: Vec<String>,
+    pub events: EventFlags,
     /// The format the logger is configured to use.
     pub format: ModlogFormat,
 }

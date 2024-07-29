@@ -33,11 +33,7 @@ use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 pub fn embed_response(embeds: Vec<Embed>) -> InteractionResponse {
     InteractionResponse {
         kind: InteractionResponseType::ChannelMessageWithSource,
-        data: Some(
-            InteractionResponseDataBuilder::new()
-                .embeds(embeds)
-                .build(),
-        ),
+        data: Some(InteractionResponseDataBuilder::new().embeds(embeds).build()),
     }
 }
 
