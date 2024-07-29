@@ -22,7 +22,33 @@
 
 //! # Event Bitflags
 
+use hartex_bitflags_utils::FlagsExt;
+use mlua::Error;
+use mlua::FromLua;
+use mlua::Lua;
+use mlua::Value;
+
 bitflags::bitflags! {
+    #[derive(Debug)]
     pub struct EventFlags: u128 {
+    }
+}
+
+impl<'lua> FromLua<'lua> for EventFlags {
+    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+        let Value::Table(table) = lua_value.clone() else {
+            return Err(Error::RuntimeError(format!(
+                "EventFlags: mismatched value type, expected table, found: {}",
+                lua_value.type_name()
+            )));
+        };
+
+        let mut flags = table.sequence_values::<String>();
+
+        if !flags.all(|result| result.is_ok()) {
+            return Err(Error::RuntimeError(String::from("EventFlags: expected string array")));
+        }
+
+        Ok(Self::from_names(flags.collect()))
     }
 }
