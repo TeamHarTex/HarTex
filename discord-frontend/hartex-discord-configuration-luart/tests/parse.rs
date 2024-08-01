@@ -35,16 +35,6 @@ const SAMPLE_CONFIG: &'static str = r#"return {
         colour = hartexconf.colour.rgb(0x768EE5)
     },
 
-    permissions = {
-        roles = {
-            ["1234567890987654"] = 100
-        },
-
-        users = {
-            ["1000000000000000"] = 100
-        }
-    },
-
     plugins = {
         utilities = {
             enabled = true
