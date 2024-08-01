@@ -32,7 +32,8 @@ use serde::Serialize;
 bitflags::bitflags! {
     #[derive(Debug, Serialize)]
     pub struct EventFlags: u128 {
-        const DUMMY_EVENT = 1;
+        const MESSAGE_DELETED = 1;
+        const MESSAGE_UPDATED = 1 << 1;
     }
 }
 
