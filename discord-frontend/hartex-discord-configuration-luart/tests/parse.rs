@@ -36,6 +36,19 @@ const SAMPLE_CONFIG: &'static str = r#"return {
     },
 
     plugins = {
+        management = {
+            enabled = true
+        },
+        modlog = {
+            enabled = true,
+            loggers = {
+                {
+                    channel = "1000000000000006",
+                    events = { "MESSAGE_DELETED", "MESSAGE_UPDATED" },
+                    format = "pretty"
+                }
+            }
+        },
         utilities = {
             enabled = true
         }
@@ -79,6 +92,25 @@ Configuration {
     },
     plugins: Some(
         Plugins {
+            management: Some(
+                ManagementPlugin {
+                    enabled: true,
+                },
+            ),
+            modlog: Some(
+                ModlogPlugin {
+                    enabled: true,
+                    loggers: [
+                        ModlogLogger {
+                            channel: "1000000000000006",
+                            events: EventFlags(
+                                0x0,
+                            ),
+                            format: Pretty,
+                        },
+                    ],
+                },
+            ),
             utilities: Some(
                 UtilitiesPlugin {
                     enabled: true,
