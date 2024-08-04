@@ -1,6 +1,6 @@
 [package]
 name = "hartex_localization_loader"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
 description = """
 Localization loader for HarTex.

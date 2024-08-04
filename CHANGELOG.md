@@ -18,7 +18,7 @@
 
 ## Web Frontend
 
-# [Next Version, Magnesium I](https://github.com/TeamHarTex/HarTex/compare/0.11.0..0.12.0)
+# [0.12.0, Magnesium I](https://github.com/TeamHarTex/HarTex/compare/0.11.0..0.12.0)
 
 > **4** contributors made contributions to this release
 
@@ -51,6 +51,11 @@
 
 - **Changed:** updated `rust-version` to 1.82
 - **Changed:** format for log entries
+
+## Web Frontend
+
+- **Added:** added several components
+- **Changed:** updated website
 
 # [0.11.0, Sodium I](https://github.com/TeamHarTex/HarTex/compare/0.10.0..0.11.0)
 
