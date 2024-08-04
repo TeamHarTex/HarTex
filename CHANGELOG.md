@@ -1,36 +1,56 @@
-# [Next Version, Magnesium I](https://github.com/TeamHarTex/HarTex/compare/0.11.0...nightly)
+# [Next Version, Aluminium I](https://github.com/TeamHarTex/HarTex/compare/0.12.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2024-05-31
+> **y** commits since 2024-08-04
 
 ## API Backend
 
-- **Changed:** updated `rust-version` to 1.81
-
 ## Buildsystem
-
-- **Changed:** updated `rust-version` to 1.81
 
 ## Database Infrastructure
 
-- **Changed:** updated `rust-version` to 1.81
-
 ## Discord Frontend
-
-- **Added:** `minimum_permission_level` field to `command` macro
-- **Changed:** updated `rust-version` to 1.81
 
 ## Localization Infrastructure
 
-- **Changed:** updated `rust-version` to 1.81
+## Rust Utilities
+
+## Web Frontend
+
+# [Next Version, Magnesium I](https://github.com/TeamHarTex/HarTex/compare/0.11.0..0.12.0)
+
+> **4** contributors made contributions to this release
+
+> **243** commits since 2024-05-31
+
+## API Backend
+
+- **Changed:** updated `rust-version` to 1.82
+
+## Buildsystem
+
+- **Changed:** updated `rust-version` to 1.82
+
+## Database Infrastructure
+
+- **Changed:** updated `rust-version` to 1.82
+
+## Discord Frontend
+
+- **Added:** `required_permissions` field to `command` macro
+- **Added:** `plugin` macro
+- **Added:** guild configuration provider
+- **Changed:** updated `rust-version` to 1.82
+
+## Localization Infrastructure
+
+- **Changed:** updated `rust-version` to 1.82
 
 ## Rust Utilities
 
-- **Changed:** updated `rust-version` to 1.81
+- **Changed:** updated `rust-version` to 1.82
 - **Changed:** format for log entries
-
-## Web Frontend
 
 # [0.11.0, Sodium I](https://github.com/TeamHarTex/HarTex/compare/0.10.0..0.11.0)
 
