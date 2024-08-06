@@ -705,7 +705,7 @@ checksum = "40ecd4077b5ae9fd2e9e169b102c6c330d0605168eb0e8bf79952b256dbefffd"
 
 [[package]]
 name = "hartex_backend_driver"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "axum",
  "bb8-postgres",
@@ -727,11 +727,11 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_layers"
-version = "0.12.0"
+version = "0.13.0"
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "axum",
  "hartex_discord_configuration_models",
@@ -740,7 +740,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_routes"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "axum",
  "bb8-postgres",
@@ -753,14 +753,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_bitflags_utils"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "bitflags 2.6.0",
 ]
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "cornucopia",
  "cornucopia_async",
@@ -776,7 +776,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_models"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "bitflags 2.6.0",
  "hartex_bitflags_utils",
@@ -788,7 +788,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "num_enum",
  "num_enum_derive",
@@ -798,7 +798,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "miette 7.2.0",
  "thiserror",
@@ -806,7 +806,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
  "log",
  "log4rs",
@@ -927,9 +927,9 @@ dependencies = [
 
 [[package]]
 name = "hyper-util"
-version = "0.1.6"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ab92f4f49ee4fb4f997c784b7a2e0fa70050211e0b6a287f898c3c9785ca956"
+checksum = "cde7055719c54e36e95e8719f95883f22072a48ede39db7fc17a4e1d5281e9b9"
 dependencies = [
  "bytes",
  "futures-util",
