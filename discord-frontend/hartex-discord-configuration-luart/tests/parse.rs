@@ -104,7 +104,7 @@ Configuration {
                         ModlogLogger {
                             channel: "1000000000000006",
                             events: EventFlags(
-                                0x0,
+                                MESSAGE_DELETED | MESSAGE_UPDATED,
                             ),
                             format: Pretty,
                         },

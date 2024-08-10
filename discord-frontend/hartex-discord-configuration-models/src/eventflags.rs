@@ -46,12 +46,7 @@ impl<'lua> FromLua<'lua> for EventFlags {
             )));
         };
 
-        let mut flags = table.sequence_values::<String>();
-
-        if !flags.all(|result| result.is_ok()) {
-            return Err(Error::RuntimeError(String::from("EventFlags: expected string array")));
-        }
-
-        Ok(Self::from_names(flags.map(Result::unwrap).collect()))
+        let flags = table.sequence_values::<String>();
+        Ok(Self::from_names(flags.filter_map(Result::ok).collect()))
     }
 }
