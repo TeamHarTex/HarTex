@@ -47,6 +47,7 @@ impl<'lua> FromLua<'lua> for EventFlags {
         };
 
         let flags = table.sequence_values::<String>();
+        // todo: error out on unexpected elements
         Ok(Self::from_names(flags.filter_map(Result::ok).collect()))
     }
 }
