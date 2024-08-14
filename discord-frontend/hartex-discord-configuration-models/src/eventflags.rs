@@ -22,6 +22,7 @@
 
 //! # Event Bitflags
 
+use bitflags::Flags;
 use hartex_bitflags_utils::FlagsExt;
 use mlua::Error;
 use mlua::FromLua;
@@ -46,8 +47,24 @@ impl<'lua> FromLua<'lua> for EventFlags {
             )));
         };
 
-        // todo: error out in unexpected event names
-        let flags = table.sequence_values::<String>().collect::<Result<Vec<_>, _>>()?;
+        let known = EventFlags::FLAGS
+            .iter()
+            .map(|flag| flag.name().to_string())
+            .collect::<Vec<_>>();
+
+        let flags = table
+            .sequence_values::<String>()
+            .map(|flag| {
+                if known.contains(&flag.clone()?) {
+                    flag
+                } else {
+                    Err(Error::RuntimeError(format!(
+                        "EventFlags: unknown flag {}",
+                        flag?
+                    )))
+                }
+            })
+            .collect::<Result<Vec<_>, _>>()?;
         Ok(Self::from_names(flags))
     }
 }
