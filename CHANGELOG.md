@@ -6,15 +6,27 @@
 
 ## API Backend
 
+- **Changed:** updated `rust-version` to 1.83
+
 ## Buildsystem
+
+- **Changed:** updated `rust-version` to 1.83
 
 ## Database Infrastructure
 
+- **Changed:** updated `rust-version` to 1.83
+
 ## Discord Frontend
+
+- **Changed:** updated `rust-version` to 1.83
 
 ## Localization Infrastructure
 
+- **Changed:** updated `rust-version` to 1.83
+
 ## Rust Utilities
+
+- **Changed:** updated `rust-version` to 1.83
 
 ## Web Frontend
 
