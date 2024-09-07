@@ -22,8 +22,8 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 futures-util = "0.3.30"
 miette = { version = "7.2.0", features = ["fancy"] }
 rdkafka = { version = "0.36.2", default-features = false, features = ["cmake-build", "external-lz4", "tokio"] }
-serde_json = "1.0.117"
-serde = "1.0.203"
+serde_json = "1.0.128"
+serde = "1.0.210"
 serde_scan = "0.4.1"
 tracing = { version = "0.1.40", features = ["log-always"] }
 
