@@ -17,5 +17,5 @@ barrel = { version = "0.7.0", features = ["pg"] }
 dotenvy = "0.15.7"
 miette = { version = "7.2.0", features = ["fancy"] }
 refinery = { version = "0.8.14", features = ["tokio-postgres"] }
-tokio = { version = "1.38.0", features = ["macros", "rt-multi-thread"] }
-tokio-postgres = "0.7.10"
+tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
+tokio-postgres = "0.7.11"
