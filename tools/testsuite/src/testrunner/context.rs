@@ -49,6 +49,8 @@ impl<'test> TestContext<'test> {
         }
     }
 
+    pub fn run_confeval_test(&self) {}
+
     #[allow(clippy::missing_panics_doc)]
     #[allow(clippy::unused_io_amount)]
     pub fn run_ui_test(&self) {
