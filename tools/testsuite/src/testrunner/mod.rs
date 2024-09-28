@@ -33,6 +33,10 @@ mod diff;
 pub fn run(config: Arc<Config>, path: PathBuf) {
     let context = TestContext::new(&config, &path);
 
+    if config.confeval {
+        context.run_confeval_test();
+    }
+
     if config.ui {
         context.run_ui_test();
     }

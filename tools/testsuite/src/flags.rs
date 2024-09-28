@@ -36,6 +36,9 @@ pub struct Flags {
     /// Output directory of test results from a test run.
     #[arg(long)]
     pub build_dir: PathBuf,
+    /// Whether to run configuration evaluation tests.
+    #[arg(global(true), long)]
+    pub confeval: bool,
     /// Whether to run UI tests.
     #[arg(global(true), long)]
     pub ui: bool,
