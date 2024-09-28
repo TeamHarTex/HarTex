@@ -28,6 +28,7 @@ use crate::flags::Flags;
 pub struct Config {
     pub build_dir: PathBuf,
     pub root: PathBuf,
+    pub confeval: bool,
     pub ui: bool,
 }
 
@@ -40,6 +41,7 @@ impl Config {
         Self {
             build_dir: flags.build_dir,
             root: manifest_dir.parent().unwrap().parent().unwrap().to_owned(),
+            confeval: flags.confeval,
             ui: flags.ui,
         }
     }
