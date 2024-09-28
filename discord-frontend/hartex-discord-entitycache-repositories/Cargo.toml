@@ -21,6 +21,6 @@ hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
 serde_scan = "0.4.1"
 time = "0.3.36"
-tokio-postgres = "0.7.11"
+tokio-postgres = "0.7.12"
 
 [features]
