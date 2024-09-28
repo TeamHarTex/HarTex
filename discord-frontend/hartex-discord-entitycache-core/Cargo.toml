@@ -15,7 +15,7 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-mo
 hartex_discord_entitycache_macros = { path = "../hartex-discord-entitycache-macros", optional = true, default-features = false, features = ["discord_model_git"] }
 
 bb8 = "0.8.5"
-tokio-postgres = "0.7.11"
+tokio-postgres = "0.7.12"
 
 [features]
 derive = ["dep:hartex_discord_entitycache_macros"]
