@@ -16,17 +16,17 @@ hartex_backend_routes = { path = "../hartex-backend-routes" }
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
-axum = "0.7.5"
+axum = "0.7.7"
 bb8-postgres = "0.8.1"
 dotenvy = "0.15.7"
 hyper = { version = "1.4.1", features = ["http1", "server"] }
-hyper-util = { version = "0.1.7", features = ["http1", "tokio"] }
+hyper-util = { version = "0.1.9", features = ["http1", "tokio"] }
 miette = { version = "7.2.0", features = ["fancy"] }
 serde = "1.0.210"
 serde_json = "1.0.128"
 tokio = { version = "1.40.0", features = ["full"] }
 tower = "0.4.13"
-tower-http = { version = "0.6.0", features = ["timeout", "trace"] }
+tower-http = { version = "0.6.1", features = ["timeout", "trace"] }
 tower-service = "0.3.3"
 tracing = { version = "0.1.40", features = ["log-always"] }
 
