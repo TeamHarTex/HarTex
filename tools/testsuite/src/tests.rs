@@ -57,6 +57,8 @@ pub fn run_tests(config: Arc<Config>) -> bool {
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::needless_pass_by_value)]
 fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
+    if config.confeval {}
+
     if config.ui {
         let search_dir = config.root.join("tests/ui");
         let walkdir = WalkDir::new(search_dir)
