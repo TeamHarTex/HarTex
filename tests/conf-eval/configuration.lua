@@ -20,7 +20,8 @@ You should have received a copy of the GNU Affero General Public License along
 with HarTex. If not, see <https://www.gnu.org/licenses/>.
 ]]
 
--- This file is a sample configuration for the per-guild configuration of HarTex.
+-- This file is a sample configuration for the per-guild configuration of HarTex,
+-- as well as a base test case for the configuration evaluator.
 -- This sample may change as the data structures and manifest evolves.
 
 return {
@@ -59,7 +60,7 @@ return {
                     -- The channel for the logger,
                     channel = "3943943943943943",
                     -- Array of events this logger listens for.
-                    events = {"MESSAGE_UPDATE"},
+                    events = {"MESSAGE_DELETE", "MESSAGE_UPDATE"},
                     -- Formatting of log messages sent for this logger.
                     -- Options: `pretty` (embeds), `default` (default when unspecified, just text)
                     format = "pretty"
