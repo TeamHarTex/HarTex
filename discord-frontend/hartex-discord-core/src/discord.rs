@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// Re-exports of the twilight ecosystem.
+//! Re-exports of the twilight ecosystem.
 
 #[cfg(feature = "discord-gateway")]
 pub use twilight_gateway as gateway;
