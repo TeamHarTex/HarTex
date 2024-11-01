@@ -28,6 +28,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(str_as_str)]
 #![feature(result_flattening)]
 
 use mlua::Error;
@@ -52,8 +53,8 @@ pub struct Configuration {
     pub plugins: Option<plugins::Plugins>,
 }
 
-impl<'lua> FromLuaMulti<'lua> for Configuration {
-    fn from_lua_multi(values: MultiValue<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLuaMulti for Configuration {
+    fn from_lua_multi(values: MultiValue, _: &Lua) -> mlua::Result<Self> {
         if values.is_empty() {
             return Err(Error::RuntimeError(String::from(
                 "Configuration: multi value is empty",

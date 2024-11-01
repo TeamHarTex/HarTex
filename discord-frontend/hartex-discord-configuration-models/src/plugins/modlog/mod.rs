@@ -40,8 +40,8 @@ pub struct ModlogPlugin {
     pub loggers: Vec<logger::ModlogLogger>,
 }
 
-impl<'lua> FromLua<'lua> for ModlogPlugin {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for ModlogPlugin {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "ModlogPlugin: mismatched value type, expected table, found: {}",
