@@ -41,8 +41,8 @@ pub struct Dashboard {
     pub viewers: Option<Vec<String>>,
 }
 
-impl<'lua> FromLua<'lua> for Dashboard {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for Dashboard {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "Dashboard: mismatched value type, expected table, found: {}",

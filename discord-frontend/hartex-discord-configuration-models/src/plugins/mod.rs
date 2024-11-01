@@ -43,8 +43,8 @@ pub struct Plugins {
     pub utilities: Option<utilities::UtilitiesPlugin>,
 }
 
-impl<'lua> FromLua<'lua> for Plugins {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for Plugins {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "Dashboard: mismatched value type, expected table, found: {}",

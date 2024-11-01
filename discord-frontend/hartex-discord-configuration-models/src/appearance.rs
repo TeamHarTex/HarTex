@@ -37,8 +37,8 @@ pub struct Appearance {
     pub nickname: Option<String>,
 }
 
-impl<'lua> FromLua<'lua> for Appearance {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for Appearance {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "Appearance: mismatched value type, expected table, found: {}",

@@ -36,8 +36,8 @@ pub struct ManagementPlugin {
     pub enabled: bool,
 }
 
-impl<'lua> FromLua<'lua> for ManagementPlugin {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for ManagementPlugin {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "ManagementPlugin: mismatched value type, expected table, found: {}",

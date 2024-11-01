@@ -42,8 +42,8 @@ pub struct ModlogLogger {
     pub format: ModlogFormat,
 }
 
-impl<'lua> FromLua<'lua> for ModlogLogger {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for ModlogLogger {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::Table(table) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "ModlogPlugin: mismatched value type, expected table, found: {}",
@@ -78,8 +78,8 @@ impl Default for ModlogFormat {
     }
 }
 
-impl<'lua> FromLua<'lua> for ModlogFormat {
-    fn from_lua(lua_value: Value<'lua>, _: &'lua Lua) -> mlua::Result<Self> {
+impl FromLua for ModlogFormat {
+    fn from_lua(lua_value: Value, _: &Lua) -> mlua::Result<Self> {
         let Value::String(string) = lua_value.clone() else {
             return Err(Error::RuntimeError(format!(
                 "ModlogFormat: mismatched value type, expected string, found: {}",
@@ -93,7 +93,7 @@ impl<'lua> FromLua<'lua> for ModlogFormat {
             )));
         };
 
-        Ok(match rust_string {
+        Ok(match rust_string.as_str() {
             "default" => Self::Default,
             "pretty" => Self::Pretty,
             _ => {
