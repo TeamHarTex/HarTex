@@ -43,7 +43,7 @@ use rdkafka::Message;
 use serde_scan::scan;
 
 /// Handle inbound AND outbound messages for a given shard.
-pub async fn handle<'a, Q>(
+pub async fn handle<Q>(
     shard: &mut Shard<Q>,
     producer: FutureProducer,
     consumer: Arc<StreamConsumer>,
