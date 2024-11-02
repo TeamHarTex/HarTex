@@ -41,6 +41,54 @@ use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start
 use time::OffsetDateTime;
 use hartex_log::log;
 
+/// # `GET /stats/uptime`
+///
+/// Obtain the uptime of a certain component.
+#[allow(clippy::cast_sign_loss)]
+#[allow(clippy::missing_panics_doc)] // this function cannot panic
+#[allow(clippy::module_name_repetitions)]
+pub async fn get_uptime(
+    _: APIVersion,
+    State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
+    Json(query): Json<UptimeQuery>,
+) -> (StatusCode, Json<Response<UptimeResponse>>) {
+    log::trace!("retrieving connection from database pool");
+    let result = pool.get().await;
+    if result.is_err() {
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
+    }
+
+    let connection = result.unwrap();
+    let client = connection.client();
+
+    log::trace!("querying timestamp");
+    let result = select_start_timestamp_by_component()
+        .bind(client, &query.component_name())
+        .one()
+        .await;
+
+    // FIXME: figure out whether the data is actually not found and return 404
+    if result.is_err() {
+        log::error!("{:?}", result.unwrap_err());
+
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Response::internal_server_error(),
+        );
+    }
+    let data = result.unwrap();
+
+    (
+        StatusCode::OK,
+        Response::ok(UptimeResponse::with_start_timestamp(
+            data.timestamp.unix_timestamp() as u128,
+        )),
+    )
+}
+
 /// # `PATCH /stats/uptime`
 ///
 /// Update the uptime of a certain component.
@@ -88,53 +136,5 @@ pub async fn patch_uptime(
     (
         StatusCode::OK,
         Response::ok(()),
-    )
-}
-
-/// # `POST /stats/uptime`
-///
-/// Obtain the uptime of a certain component.
-#[allow(clippy::cast_sign_loss)]
-#[allow(clippy::missing_panics_doc)] // this function cannot panic
-#[allow(clippy::module_name_repetitions)]
-pub async fn post_uptime(
-    _: APIVersion,
-    State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
-    Json(query): Json<UptimeQuery>,
-) -> (StatusCode, Json<Response<UptimeResponse>>) {
-    log::trace!("retrieving connection from database pool");
-    let result = pool.get().await;
-    if result.is_err() {
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
-    }
-
-    let connection = result.unwrap();
-    let client = connection.client();
-
-    log::trace!("querying timestamp");
-    let result = select_start_timestamp_by_component()
-        .bind(client, &query.component_name())
-        .one()
-        .await;
-
-    // FIXME: figure out whether the data is actually not found and return 404
-    if result.is_err() {
-        log::error!("{:?}", result.unwrap_err());
-
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
-    }
-    let data = result.unwrap();
-
-    (
-        StatusCode::OK,
-        Response::ok(UptimeResponse::with_start_timestamp(
-            data.timestamp.unix_timestamp() as u128,
-        )),
     )
 }
