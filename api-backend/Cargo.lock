@@ -718,6 +718,7 @@ dependencies = [
  "tower-http",
  "tower-service",
  "tracing",
+ "utoipa",
  "utoipa-axum",
  "utoipa-redoc",
 ]

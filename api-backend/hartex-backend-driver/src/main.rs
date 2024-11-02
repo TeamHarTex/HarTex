@@ -36,7 +36,6 @@ use std::env;
 use std::future;
 use std::time::Duration;
 
-use axum::routing::get;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::NoTls;
 use bb8_postgres::PostgresConnectionManager;
@@ -84,12 +83,9 @@ pub async fn main() -> miette::Result<()> {
     let (app, openapi) = OpenApiRouter::new()
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
-        .route(
-            "/api/:version/stats/uptime",
-            routes![
-                hartex_backend_routes::uptime::get_uptime
-            ],
-        )
+        .routes(routes!(
+            hartex_backend_routes::uptime::get_uptime
+        ))
         .with_state(pool)
         .split_for_parts();
 
