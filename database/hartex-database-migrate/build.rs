@@ -21,6 +21,6 @@
  */
 
 pub fn main() {
-    println!("cargo:rerun-if-changed=api-backend-migrations");
-    println!("cargo:rerun-if-changed=discord-frontend-migrations");
+    println!("cargo::rerun-if-changed=api-backend-migrations");
+    println!("cargo::rerun-if-changed=discord-frontend-migrations");
 }

@@ -25,5 +25,5 @@ use std::env;
 pub fn main() {
     let target = env::var("TARGET").expect("cannot find build target");
 
-    println!("cargo:rustc-env=BOOTSTRAP_TARGET={target}");
+    println!("cargo::rustc-env=BOOTSTRAP_TARGET={target}");
 }

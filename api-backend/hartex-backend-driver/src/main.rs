@@ -49,8 +49,7 @@ use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::TraceLayer;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_axum::routes;
-use utoipa_redoc::Redoc;
-use utoipa_redoc::Servable;
+use utoipa_scalar::{Scalar, Servable};
 
 /// # Entry Point
 ///
@@ -89,7 +88,7 @@ pub async fn main() -> miette::Result<()> {
         .with_state(pool)
         .split_for_parts();
 
-    let router = app.merge(Redoc::with_url("/openapi", openapi));
+    let router = app.merge(Scalar::with_url("/openapi", openapi));
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
