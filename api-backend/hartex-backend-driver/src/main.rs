@@ -47,9 +47,11 @@ use tokio::net::TcpListener;
 use tokio::signal;
 use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::TraceLayer;
+use utoipa::openapi::Info;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_axum::routes;
-use utoipa_scalar::{Scalar, Servable};
+use utoipa_scalar::Scalar;
+use utoipa_scalar::Servable;
 
 /// # Entry Point
 ///
@@ -79,7 +81,7 @@ pub async fn main() -> miette::Result<()> {
     let pool = Pool::builder().build(manager).await.into_diagnostic()?;
 
     log::debug!("starting axum server");
-    let (app, openapi) = OpenApiRouter::new()
+    let (app, mut openapi) = OpenApiRouter::new()
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .routes(routes!(
@@ -88,11 +90,12 @@ pub async fn main() -> miette::Result<()> {
         .with_state(pool)
         .split_for_parts();
 
-    let router = app.merge(Scalar::with_url("/openapi", openapi));
-
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
-    log::debug!("listening on {domain}");
+    log::debug!("listening on {}", &domain);
+
+    openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
+    let router = app.merge(Scalar::with_url("/openapi", openapi));
 
     axum::serve(listener, router)
         .with_graceful_shutdown(shutdown())
@@ -120,7 +123,7 @@ async fn shutdown() {
             .recv()
             .await;
     };
-
+ 
     #[cfg(not(unix))]
     let terminate = future::pending::<()>();
 

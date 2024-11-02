@@ -28,51 +28,12 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use std::collections::HashMap;
-
-use axum::async_trait;
-use axum::extract::FromRequestParts;
-use axum::extract::Path;
-use axum::http::request::Parts;
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
-use axum::response::Response as AxumResponse;
 use axum::Json;
-use axum::RequestPartsExt;
 use serde::Deserialize;
 use serde::Serialize;
 
 pub use hartex_discord_configuration_models as config;
 pub mod uptime;
-
-/// Specifies the API version to be used for a given API request.
-#[derive(Copy, Clone, Debug)]
-pub enum APIVersion {
-    /// Version 0.11.0 of the backend API.
-    V0_11_0,
-}
-
-#[async_trait]
-impl<S> FromRequestParts<S> for APIVersion
-where
-    S: Send + Sync,
-{
-    type Rejection = AxumResponse;
-
-    async fn from_request_parts(parts: &mut Parts, _: &S) -> Result<Self, Self::Rejection> {
-        let parameters: Path<HashMap<String, String>> =
-            parts.extract().await.map_err(IntoResponse::into_response)?;
-
-        let version = parameters
-            .get("version")
-            .ok_or_else(|| (StatusCode::NOT_FOUND, "version not specified").into_response())?;
-
-        match version.as_str() {
-            "v0110" | "v1" => Ok(APIVersion::V0_11_0),
-            _ => Err((StatusCode::NOT_FOUND, "unknown version specified").into_response()),
-        }
-    }
-}
 
 /// An API response object.
 ///

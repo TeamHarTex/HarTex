@@ -35,27 +35,23 @@ use bb8_postgres::PostgresConnectionManager;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_backend_models::uptime::UptimeUpdate;
-use hartex_backend_models::APIVersion;
 use hartex_backend_models::Response;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
 use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
 use hartex_log::log;
 use time::OffsetDateTime;
 
-/// # `GET /stats/uptime`
-///
-/// Obtain the uptime of a certain component.
+/// Get component uptime
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 #[utoipa::path(
     get,
-    path = "/stats/uptime",
+    path = "/api/v1/stats/uptime",
     params(UptimeQuery),
     responses((status = 200, description = "Uptime retrieved successfully", body = UptimeResponse))
 )]
 pub async fn get_uptime(
-    _: APIVersion,
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Query(query): Query<UptimeQuery>,
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
@@ -104,7 +100,6 @@ pub async fn get_uptime(
 #[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 pub async fn patch_uptime(
-    _: APIVersion,
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeUpdate>,
 ) -> (StatusCode, Json<Response<()>>) {
