@@ -24,6 +24,7 @@
 ///
 /// Routes interacting with the uptime API.
 
+use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::Json;
@@ -50,7 +51,7 @@ use hartex_log::log;
 pub async fn get_uptime(
     _: APIVersion,
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
-    Json(query): Json<UptimeQuery>,
+    Query(query): Query<UptimeQuery>,
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;

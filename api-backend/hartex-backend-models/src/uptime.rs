@@ -31,22 +31,22 @@ use serde::Serialize;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, Serialize)]
 pub struct UptimeQuery {
-    component_name: String,
+    component: String,
 }
 
 impl UptimeQuery {
     /// Create a new uptime query with the component name to search for.
     #[must_use]
-    pub fn new(component_name: &str) -> Self {
+    pub fn new(component: &str) -> Self {
         Self {
-            component_name: component_name.to_string(),
+            component: component.to_string(),
         }
     }
 
     /// The component name to search for in this uptime query.
     #[must_use]
     pub fn component_name(&self) -> &str {
-        self.component_name.as_str()
+        self.component.as_str()
     }
 }
 

@@ -36,7 +36,7 @@ use std::env;
 use std::future;
 use std::time::Duration;
 
-use axum::routing::post;
+use axum::routing::get;
 use axum::Router;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::NoTls;
@@ -83,7 +83,7 @@ pub async fn main() -> miette::Result<()> {
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .route(
             "/api/:version/stats/uptime",
-            post(hartex_backend_routes::uptime::get_uptime)
+            get(hartex_backend_routes::uptime::get_uptime)
                 .patch(hartex_backend_routes::uptime::patch_uptime),
         )
         .with_state(pool);
