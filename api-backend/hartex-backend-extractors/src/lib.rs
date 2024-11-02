@@ -20,9 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Backend Layers
+//! # Backend Extractors
 //!
-//! This crate defines certain middleware layers for use with the Axum HTTP server.
+//! This crate defines certain extractors for use with the Axum HTTP server.
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
