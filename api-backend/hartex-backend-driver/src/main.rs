@@ -37,7 +37,6 @@ use std::future;
 use std::time::Duration;
 
 use axum::routing::get;
-use axum::Router;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::NoTls;
 use bb8_postgres::PostgresConnectionManager;
@@ -49,6 +48,10 @@ use tokio::net::TcpListener;
 use tokio::signal;
 use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::TraceLayer;
+use utoipa_axum::router::OpenApiRouter;
+use utoipa_axum::routes;
+use utoipa_redoc::Redoc;
+use utoipa_redoc::Servable;
 
 /// # Entry Point
 ///
@@ -78,21 +81,25 @@ pub async fn main() -> miette::Result<()> {
     let pool = Pool::builder().build(manager).await.into_diagnostic()?;
 
     log::debug!("starting axum server");
-    let app = Router::new()
+    let (app, openapi) = OpenApiRouter::new()
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .route(
             "/api/:version/stats/uptime",
-            get(hartex_backend_routes::uptime::get_uptime)
-                .patch(hartex_backend_routes::uptime::patch_uptime),
+            routes![
+                hartex_backend_routes::uptime::get_uptime
+            ],
         )
-        .with_state(pool);
+        .with_state(pool)
+        .split_for_parts();
+
+    let router = app.merge(Redoc::with_url("/openapi", openapi));
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
     log::debug!("listening on {domain}");
 
-    axum::serve(listener, app)
+    axum::serve(listener, router)
         .with_graceful_shutdown(shutdown())
         .await
         .into_diagnostic()?;

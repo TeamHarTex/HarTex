@@ -26,10 +26,12 @@
 
 use serde::Deserialize;
 use serde::Serialize;
+use utoipa::IntoParams;
+use utoipa::ToSchema;
 
 /// An uptime query.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, IntoParams, Serialize)]
 pub struct UptimeQuery {
     component: String,
 }
@@ -52,7 +54,7 @@ impl UptimeQuery {
 
 /// A response to an uptime query.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize, ToSchema)]
 pub struct UptimeResponse {
     start_timestamp: u128,
 }

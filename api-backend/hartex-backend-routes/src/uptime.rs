@@ -39,8 +39,8 @@ use hartex_backend_models::APIVersion;
 use hartex_backend_models::Response;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
 use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
-use time::OffsetDateTime;
 use hartex_log::log;
+use time::OffsetDateTime;
 
 /// # `GET /stats/uptime`
 ///
@@ -48,6 +48,12 @@ use hartex_log::log;
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
+#[utoipa::path(
+    get,
+    path = "/stats/uptime",
+    params(UptimeQuery),
+    responses((status = 200, description = "Uptime retrieved successfully", body = UptimeResponse))
+)]
 pub async fn get_uptime(
     _: APIVersion,
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
