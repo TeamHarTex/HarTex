@@ -23,16 +23,17 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
-
 use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::Json;
+use axum_extra::extract::WithRejection;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::GenericClient;
 use bb8_postgres::tokio_postgres::NoTls;
 use bb8_postgres::PostgresConnectionManager;
 use hartex_backend_models::uptime::UptimeQuery;
+use hartex_backend_models::uptime::UptimeQueryRejection;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_backend_models::uptime::UptimeUpdate;
 use hartex_backend_models::Response;
@@ -53,15 +54,12 @@ use time::OffsetDateTime;
 )]
 pub async fn get_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
-    Query(query): Query<UptimeQuery>,
+    WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
 ) -> (StatusCode, Json<Response<UptimeResponse>>) {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
+        return Response::internal_server_error();
     }
 
     let connection = result.unwrap();
@@ -77,19 +75,13 @@ pub async fn get_uptime(
     if result.is_err() {
         log::error!("{:?}", result.unwrap_err());
 
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
+        return Response::internal_server_error();
     }
     let data = result.unwrap();
 
-    (
-        StatusCode::OK,
-        Response::ok(UptimeResponse::with_start_timestamp(
-            data.timestamp.unix_timestamp() as u128,
-        )),
-    )
+    Response::ok(UptimeResponse::with_start_timestamp(
+        data.timestamp.unix_timestamp() as u128,
+    ))
 }
 
 /// # `PATCH /stats/uptime`
@@ -106,10 +98,7 @@ pub async fn patch_uptime(
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
+        return Response::internal_server_error();
     }
 
     let connection = result.unwrap();
@@ -119,24 +108,15 @@ pub async fn patch_uptime(
     let Ok(timestamp) = OffsetDateTime::from_unix_timestamp(query.start_timestamp() as i64) else {
         // FIXME: return a better status code as the timestamp is out of range if this branch is reached
         // just 500 for now
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
+        return Response::internal_server_error();
     };
     let result = start_timestamp_upsert()
         .bind(client, &query.component_name(), &timestamp)
         .await;
 
     if result.is_err() {
-        return (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Response::internal_server_error(),
-        );
+        return Response::internal_server_error();
     }
 
-    (
-        StatusCode::OK,
-        Response::ok(()),
-    )
+    Response::ok(())
 }

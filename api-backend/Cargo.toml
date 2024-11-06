@@ -1,7 +1,6 @@
 [workspace]
 members = [
     "hartex-backend-driver",
-    "hartex-backend-extractors",
     "hartex-backend-models",
     "hartex-backend-routes",
 ]
