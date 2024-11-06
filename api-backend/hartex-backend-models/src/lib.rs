@@ -49,9 +49,10 @@ impl<'a, T> Response<T>
 where
     T: Clone + Deserialize<'a>,
 {
+    #[allow(clippy::missing_panics_doc)]
     pub fn from_code_with_data(code: StatusCode, data: T) -> (StatusCode, Json<Response<T>>) {
         let code_display = code.to_string();
-        let part = code_display.split_once(" ").unwrap().1;
+        let part = code_display.split_once(' ').unwrap().1;
 
         (
             code,
