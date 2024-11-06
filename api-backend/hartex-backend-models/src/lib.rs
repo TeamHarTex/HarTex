@@ -28,11 +28,11 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use axum::http::StatusCode;
 use axum::Json;
 use serde::Deserialize;
 use serde::Serialize;
 
-pub use hartex_discord_configuration_models as config;
 pub mod uptime;
 
 /// An API response object.
@@ -40,7 +40,7 @@ pub mod uptime;
 /// This is the object returned by a certain API endpoint.
 #[derive(Deserialize, Serialize)]
 pub struct Response<T> {
-    code: u16,
+    pub code: u16,
     message: String,
     data: Option<T>,
 }
@@ -49,22 +49,42 @@ impl<'a, T> Response<T>
 where
     T: Clone + Deserialize<'a>,
 {
+    pub fn from_code_with_data(code: StatusCode, data: T) -> (StatusCode, Json<Response<T>>) {
+        let code_display = code.to_string();
+        let part = code_display.split_once(" ").unwrap().1;
+
+        (
+            code,
+            Json(Self {
+                code: code.as_u16(),
+                message: part.to_lowercase(),
+                data: Some(data),
+            }),
+        )
+    }
+
     /// Constructs a response object with a status code of 500 and its corresponding message.
-    pub fn internal_server_error() -> Json<Response<T>> {
-        Json(Self {
-            code: 500,
-            message: String::from("internal server error"),
-            data: None,
-        })
+    pub fn internal_server_error() -> (StatusCode, Json<Response<T>>) {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(Self {
+                code: 500,
+                message: String::from("internal server error"),
+                data: None,
+            }),
+        )
     }
 
     /// Constructs a response object with a status code of 200 and its corresponding message.
-    pub fn ok(value: T) -> Json<Response<T>> {
-        Json(Self {
-            code: 200,
-            message: String::from("ok"),
-            data: Some(value),
-        })
+    pub fn ok(value: T) -> (StatusCode, Json<Response<T>>) {
+        (
+            StatusCode::OK,
+            Json(Self {
+                code: 200,
+                message: String::from("ok"),
+                data: Some(value),
+            }),
+        )
     }
 }
 

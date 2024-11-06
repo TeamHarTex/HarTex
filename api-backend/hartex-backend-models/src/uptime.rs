@@ -24,6 +24,10 @@
 //!
 //! Models for the uptime API specification V2 of the backend.
 
+use axum::extract::rejection::QueryRejection;
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
+use axum::response::Response;
 use serde::Deserialize;
 use serde::Serialize;
 use utoipa::IntoParams;
@@ -52,7 +56,27 @@ impl UptimeQuery {
     }
 }
 
-/// A response to an uptime query.
+pub struct UptimeQueryRejection {
+    status_code: StatusCode,
+    data_message: String,
+}
+
+impl From<QueryRejection> for UptimeQueryRejection {
+    fn from(value: QueryRejection) -> Self {
+        Self {
+            status_code: value.status(),
+            data_message: value.body_text().to_lowercase(),
+        }
+    }
+}
+
+impl IntoResponse for UptimeQueryRejection {
+    fn into_response(self) -> Response {
+        crate::Response::from_code_with_data(self.status_code, self.data_message).into_response()
+    }
+}
+
+/// The uptime of the specified component.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Deserialize, Serialize, ToSchema)]
 pub struct UptimeResponse {
@@ -66,7 +90,7 @@ impl UptimeResponse {
         Self { start_timestamp }
     }
 
-    /// The start timestamp of the uptime entry.
+    /// The start timestamp of the uptime data.
     #[must_use]
     pub fn start_timestamp(&self) -> u128 {
         self.start_timestamp

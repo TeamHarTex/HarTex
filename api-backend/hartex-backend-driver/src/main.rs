@@ -77,16 +77,15 @@ pub async fn main() -> miette::Result<()> {
     let api_pgsql_url = env::var("API_PGSQL_URL").into_diagnostic()?;
 
     log::debug!("building database connection pool");
-    let manager = PostgresConnectionManager::new_from_stringlike(api_pgsql_url, NoTls).into_diagnostic()?;
+    let manager =
+        PostgresConnectionManager::new_from_stringlike(api_pgsql_url, NoTls).into_diagnostic()?;
     let pool = Pool::builder().build(manager).await.into_diagnostic()?;
 
     log::debug!("starting axum server");
     let (app, mut openapi) = OpenApiRouter::new()
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
-        .routes(routes!(
-            hartex_backend_routes::uptime::get_uptime
-        ))
+        .routes(routes!(hartex_backend_routes::uptime::get_uptime))
         .with_state(pool)
         .split_for_parts();
 
@@ -123,7 +122,7 @@ async fn shutdown() {
             .recv()
             .await;
     };
- 
+
     #[cfg(not(unix))]
     let terminate = future::pending::<()>();
 
