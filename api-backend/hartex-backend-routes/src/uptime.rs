@@ -68,7 +68,7 @@ pub async fn get_uptime(
     log::trace!("querying timestamp");
     let result = select_start_timestamp_by_component()
         .bind(client, &query.component_name())
-        .one()
+        .iter()
         .await;
 
     // FIXME: figure out whether the data is actually not found and return 404
@@ -77,7 +77,19 @@ pub async fn get_uptime(
 
         return Response::internal_server_error();
     }
-    let data = result.unwrap();
+
+    let iterator = result.unwrap();
+    let result = iterator.try_collect::<Vec<_>>();
+    if result.is_err() {
+        log::error!("{:?}", result.unwrap_err());
+
+        return Response::internal_server_error();
+    }
+
+    let vec = result.unwrap();
+    if vec.is_empty() {
+
+    }
 
     Response::ok(UptimeResponse::with_start_timestamp(
         data.timestamp.unix_timestamp() as u128,
