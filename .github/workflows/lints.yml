@@ -1,6 +1,7 @@
 name: Lints
 
 on:
+  merge_group:
   pull_request:
     branches:
       - nightly
@@ -12,7 +13,7 @@ jobs:
   ClippyAll:
     name: Clippy
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly Rust toolchain
