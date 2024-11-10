@@ -1,7 +1,6 @@
 name: Lints
 
 on:
-  merge_group:
   pull_request:
     branches:
       - nightly
@@ -24,7 +23,7 @@ jobs:
       - name: Install Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Run Clippy
         run: python ./x.py clippy
 
