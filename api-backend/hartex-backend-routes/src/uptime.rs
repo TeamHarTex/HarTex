@@ -70,8 +70,7 @@ pub async fn get_uptime(
         .bind(client, &query.component_name())
         .iter()
         .await;
-
-    // FIXME: figure out whether the data is actually not found and return 404
+    
     if result.is_err() {
         log::error!("{:?}", result.unwrap_err());
 
@@ -79,7 +78,7 @@ pub async fn get_uptime(
     }
 
     let iterator = result.unwrap();
-    let result = iterator.try_collect::<Vec<_>>();
+    let result = iterator.try_collect::<Vec<_>>().await;
     if result.is_err() {
         log::error!("{:?}", result.unwrap_err());
 
@@ -88,11 +87,11 @@ pub async fn get_uptime(
 
     let vec = result.unwrap();
     if vec.is_empty() {
-
+        return Response::not_found(String::from("specified component"))
     }
 
     Response::ok(UptimeResponse::with_start_timestamp(
-        data.timestamp.unix_timestamp() as u128,
+        vec[0].timestamp.unix_timestamp() as u128,
     ))
 }
 

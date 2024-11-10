@@ -28,6 +28,8 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::collections::HashMap;
+
 use axum::http::StatusCode;
 use axum::Json;
 use serde::Deserialize;
@@ -49,6 +51,7 @@ impl<'a, T> Response<T>
 where
     T: Clone + Deserialize<'a>,
 {
+    /// Constructs a response object from a status code and data.
     #[allow(clippy::missing_panics_doc)]
     pub fn from_code_with_data(code: StatusCode, data: T) -> (StatusCode, Json<Response<T>>) {
         let code_display = code.to_string();
@@ -64,28 +67,22 @@ where
         )
     }
 
-    /// Constructs a response object with a status code of 500 and its corresponding message.
-    pub fn internal_server_error() -> (StatusCode, Json<Response<T>>) {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(Self {
-                code: 500,
-                message: String::from("internal server error"),
-                data: None,
-            }),
+    /// Constructs a response object with a status code of 404 and its corresponding message.
+    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<T>>) {
+        Self::from_code_with_data(
+            StatusCode::NOT_FOUND,
+            format!("{component_missing} not found"),
         )
     }
 
     /// Constructs a response object with a status code of 200 and its corresponding message.
     pub fn ok(value: T) -> (StatusCode, Json<Response<T>>) {
-        (
-            StatusCode::OK,
-            Json(Self {
-                code: 200,
-                message: String::from("ok"),
-                data: Some(value),
-            }),
-        )
+        Self::from_code_with_data(StatusCode::OK, Some(value))
+    }
+
+    /// Constructs a response object with a status code of 500 and its corresponding message.
+    pub fn internal_server_error() -> (StatusCode, Json<Response<T>>) {
+        Self::from_code_with_data(StatusCode::INTERNAL_SERVER_ERROR, None)
     }
 }
 
