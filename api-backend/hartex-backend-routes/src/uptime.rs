@@ -26,12 +26,14 @@
 use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
+use axum::response::IntoResponse;
 use axum::Json;
 use axum_extra::extract::WithRejection;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::GenericClient;
 use bb8_postgres::tokio_postgres::NoTls;
 use bb8_postgres::PostgresConnectionManager;
+use futures_util::stream::TryStreamExt;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeQueryRejection;
 use hartex_backend_models::uptime::UptimeResponse;
@@ -55,7 +57,7 @@ use time::OffsetDateTime;
 pub async fn get_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
-) -> (StatusCode, Json<Response<UptimeResponse>>) {
+) -> impl IntoResponse {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
@@ -72,8 +74,6 @@ pub async fn get_uptime(
         .await;
     
     if result.is_err() {
-        log::error!("{:?}", result.unwrap_err());
-
         return Response::internal_server_error();
     }
 

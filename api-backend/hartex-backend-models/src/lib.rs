@@ -28,8 +28,6 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use std::collections::HashMap;
-
 use axum::http::StatusCode;
 use axum::Json;
 use serde::Deserialize;
@@ -53,7 +51,7 @@ where
 {
     /// Constructs a response object from a status code and data.
     #[allow(clippy::missing_panics_doc)]
-    pub fn from_code_with_data(code: StatusCode, data: T) -> (StatusCode, Json<Response<T>>) {
+    pub fn from_code_with_data(code: StatusCode, data: Option<T>) -> (StatusCode, Json<Response<T>>) {
         let code_display = code.to_string();
         let part = code_display.split_once(' ').unwrap().1;
 
@@ -62,16 +60,8 @@ where
             Json(Self {
                 code: code.as_u16(),
                 message: part.to_lowercase(),
-                data: Some(data),
+                data,
             }),
-        )
-    }
-
-    /// Constructs a response object with a status code of 404 and its corresponding message.
-    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<T>>) {
-        Self::from_code_with_data(
-            StatusCode::NOT_FOUND,
-            format!("{component_missing} not found"),
         )
     }
 
@@ -83,6 +73,16 @@ where
     /// Constructs a response object with a status code of 500 and its corresponding message.
     pub fn internal_server_error() -> (StatusCode, Json<Response<T>>) {
         Self::from_code_with_data(StatusCode::INTERNAL_SERVER_ERROR, None)
+    }
+}
+
+impl Response<String> {
+    /// Constructs a response object with a status code of 404 and its corresponding message.
+    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<String>>) {
+        Self::from_code_with_data(
+            StatusCode::NOT_FOUND, 
+            Some(format!("{component_missing} not found"))
+        )
     }
 }
 
