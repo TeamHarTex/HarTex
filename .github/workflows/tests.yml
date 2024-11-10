@@ -15,6 +15,7 @@ env:
 jobs:
   BuildAll:
     name: Build
+    if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -34,6 +35,7 @@ jobs:
     name: Test
     needs:
       - BuildAll
+    if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
 
     steps:
