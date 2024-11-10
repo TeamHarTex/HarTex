@@ -1,12 +1,14 @@
 name: Tests
 
 on:
+  merge_group:
+    types:
+      - checks_requested
+  pull_request:
   push:
     branches:
       - nightly
       - stable
-      - automation/bors/approve
-      - automation/bors/try
 
 env:
   CARGO_TERM_COLOR: always
@@ -14,8 +16,9 @@ env:
 jobs:
   BuildAll:
     name: Build
+    if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly Rust toolchain
@@ -25,7 +28,7 @@ jobs:
       - name: Install Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Run Build
         run: python ./x.py build
 
@@ -33,6 +36,7 @@ jobs:
     name: Test
     needs:
       - BuildAll
+    if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +48,7 @@ jobs:
       - name: Install Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Run Build
         run: python ./x.py build -- discord-frontend
       - name: Run Tests
