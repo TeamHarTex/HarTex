@@ -24,8 +24,6 @@
 //!
 //! Models for the uptime API specification V2 of the backend.
 
-use std::any::Any;
-
 use axum::extract::rejection::QueryRejection;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
