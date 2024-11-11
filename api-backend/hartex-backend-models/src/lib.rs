@@ -80,7 +80,10 @@ where
     }
 }
 
-impl<T> Response<T, String> {
+impl<T> Response<T, String>
+where
+    T: Clone + Deserialize<'a>,
+{
     /// Constructs a response object with a status code of 404 and its corresponding message.
     pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<T, String>>) {
         Self::from_code_with_data(
@@ -93,6 +96,7 @@ impl<T> Response<T, String> {
 impl<'a, T, R> Response<T, R>
 where
     T: Clone + Deserialize<'a>,
+    R: Clone + Deserialize<'a>,
 {
     /// The status code of the response.
     pub fn code(&self) -> u16 {
