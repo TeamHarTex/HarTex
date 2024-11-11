@@ -49,6 +49,7 @@ pub struct Response<T, R> {
 impl<'a, T, R> Response<T, R>
 where
     T: Clone + Deserialize<'a>,
+    R: Clone + Deserialize<'a>,
 {
     /// Constructs a response object from a status code and data.
     #[allow(clippy::missing_panics_doc)]

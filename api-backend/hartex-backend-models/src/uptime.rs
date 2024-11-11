@@ -75,7 +75,7 @@ impl From<QueryRejection> for UptimeQueryRejection {
 
 impl IntoResponse for UptimeQueryRejection {
     fn into_response(self) -> Response {
-        crate::Response::<String, Box<dyn Any>>::from_code_with_data(
+        crate::Response::<String, Box<dyn Any + Clone + Deserialize<'_> + IntoResponse>>::from_code_with_data(
             self.status_code,
             Either::Left(Some(self.data_message)),
         )
