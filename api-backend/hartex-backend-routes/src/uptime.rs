@@ -26,7 +26,6 @@
 use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::response::IntoResponse;
 use axum::Json;
 use axum_extra::extract::WithRejection;
 use bb8_postgres::bb8::Pool;
@@ -57,7 +56,7 @@ use time::OffsetDateTime;
 pub async fn get_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
-) -> impl IntoResponse {
+) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
@@ -68,8 +67,10 @@ pub async fn get_uptime(
     let client = connection.client();
 
     log::trace!("querying timestamp");
-    let result = select_start_timestamp_by_component()
-        .bind(client, &query.component_name())
+    let name = query.component_name();
+    let mut query = select_start_timestamp_by_component();
+    let result = query
+        .bind(client, &name)
         .iter()
         .await;
 
@@ -105,7 +106,7 @@ pub async fn get_uptime(
 pub async fn patch_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeUpdate>,
-) -> (StatusCode, Json<Response<()>>) {
+) -> (StatusCode, Json<Response<(), String>>) {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
