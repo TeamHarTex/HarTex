@@ -1160,6 +1160,7 @@ name = "hartex_backend_models"
 version = "0.13.0"
 dependencies = [
  "axum",
+ "either",
  "hartex_discord_configuration_models",
  "serde",
  "utoipa",

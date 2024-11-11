@@ -72,7 +72,7 @@ pub async fn get_uptime(
         .bind(client, &query.component_name())
         .iter()
         .await;
-    
+
     if result.is_err() {
         return Response::internal_server_error();
     }
@@ -87,7 +87,7 @@ pub async fn get_uptime(
 
     let vec = result.unwrap();
     if vec.is_empty() {
-        return Response::not_found(String::from("specified component"))
+        return Response::not_found(String::from("component"));
     }
 
     Response::ok(UptimeResponse::with_start_timestamp(

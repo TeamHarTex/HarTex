@@ -30,6 +30,7 @@
 
 use axum::http::StatusCode;
 use axum::Json;
+use either::Either;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -39,19 +40,23 @@ pub mod uptime;
 ///
 /// This is the object returned by a certain API endpoint.
 #[derive(Deserialize, Serialize)]
-pub struct Response<T> {
+pub struct Response<T, R> {
     pub code: u16,
     message: String,
-    data: Option<T>,
+    data: Either<Option<T>, R>,
 }
 
-impl<'a, T> Response<T>
+impl<'a, T, R> Response<T, R>
 where
     T: Clone + Deserialize<'a>,
+    R: Clone + Deserialize<'a>,
 {
     /// Constructs a response object from a status code and data.
     #[allow(clippy::missing_panics_doc)]
-    pub fn from_code_with_data(code: StatusCode, data: Option<T>) -> (StatusCode, Json<Response<T>>) {
+    pub fn from_code_with_data(
+        code: StatusCode,
+        data: Either<Option<T>, R>,
+    ) -> (StatusCode, Json<Response<T, R>>) {
         let code_display = code.to_string();
         let part = code_display.split_once(' ').unwrap().1;
 
@@ -66,22 +71,22 @@ where
     }
 
     /// Constructs a response object with a status code of 200 and its corresponding message.
-    pub fn ok(value: T) -> (StatusCode, Json<Response<T>>) {
-        Self::from_code_with_data(StatusCode::OK, Some(value))
+    pub fn ok(value: T) -> (StatusCode, Json<Response<T, R>>) {
+        Self::from_code_with_data(StatusCode::OK, Either::Left(Some(value)))
     }
 
     /// Constructs a response object with a status code of 500 and its corresponding message.
-    pub fn internal_server_error() -> (StatusCode, Json<Response<T>>) {
-        Self::from_code_with_data(StatusCode::INTERNAL_SERVER_ERROR, None)
+    pub fn internal_server_error() -> (StatusCode, Json<Response<T, R>>) {
+        Self::from_code_with_data(StatusCode::INTERNAL_SERVER_ERROR, Either::Left(None))
     }
 }
 
-impl Response<String> {
+impl<T> Response<T, String> {
     /// Constructs a response object with a status code of 404 and its corresponding message.
-    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<String>>) {
+    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<T, String>>) {
         Self::from_code_with_data(
-            StatusCode::NOT_FOUND, 
-            Some(format!("{component_missing} not found"))
+            StatusCode::NOT_FOUND,
+            Either::Right(format!("{component_missing} not found")),
         )
     }
 }
