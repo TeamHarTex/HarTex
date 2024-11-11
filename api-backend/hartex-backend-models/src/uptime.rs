@@ -24,6 +24,8 @@
 //!
 //! Models for the uptime API specification V2 of the backend.
 
+use std::any::Any;
+
 use axum::extract::rejection::QueryRejection;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -73,7 +75,7 @@ impl From<QueryRejection> for UptimeQueryRejection {
 
 impl IntoResponse for UptimeQueryRejection {
     fn into_response(self) -> Response {
-        crate::Response::<String, _>::from_code_with_data(
+        crate::Response::<String, Box<dyn Any>>::from_code_with_data(
             self.status_code,
             Either::Left(Some(self.data_message)),
         )
