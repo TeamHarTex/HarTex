@@ -91,9 +91,10 @@ impl<T> Response<T, String> {
     }
 }
 
-impl<'a, T> Response<T>
+impl<'a, T, R> Response<T, R>
 where
     T: Clone + Deserialize<'a>,
+    R: Clone + Deserialize<'a>,
 {
     /// The status code of the response.
     pub fn code(&self) -> u16 {
@@ -106,7 +107,7 @@ where
     }
 
     /// The data of the response.
-    pub fn data(&self) -> Option<T> {
+    pub fn data(&self) -> Either<Option<T>, R> {
         self.data.clone()
     }
 }
