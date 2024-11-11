@@ -70,6 +70,10 @@ where
         )
     }
 
+    pub fn no_content() -> (StatusCode, Json<Response<T, R>>) {
+        Self::from_code_with_data(StatusCode::NO_CONTENT, Either::Left(None))
+    }
+
     /// Constructs a response object with a status code of 200 and its corresponding message.
     pub fn ok(value: T) -> (StatusCode, Json<Response<T, R>>) {
         Self::from_code_with_data(StatusCode::OK, Either::Left(Some(value)))

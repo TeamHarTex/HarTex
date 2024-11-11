@@ -85,7 +85,10 @@ pub async fn main() -> miette::Result<()> {
     let (app, mut openapi) = OpenApiRouter::new()
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
-        .routes(routes!(hartex_backend_routes::uptime::get_uptime))
+        .routes(routes!(
+            hartex_backend_routes::uptime::get_uptime,
+            hartex_backend_routes::uptime::patch_uptime
+        ))
         .with_state(pool)
         .split_for_parts();
 
