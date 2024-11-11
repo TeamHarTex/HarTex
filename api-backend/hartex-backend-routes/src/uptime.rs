@@ -51,7 +51,12 @@ use time::OffsetDateTime;
     get,
     path = "/api/v1/stats/uptime",
     params(UptimeQuery),
-    responses((status = 200, description = "Uptime retrieved successfully", body = UptimeResponse))
+    responses(
+        (status = 200, description = "Uptime retrieved successfully", body = UptimeResponse),
+        (status = 404, description = "Specified component not found in uptime database"),
+        (status = 422, description = "Bad request body"),
+        (status = 500, description = "Generic internal server error")
+    )
 )]
 pub async fn get_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
@@ -69,10 +74,7 @@ pub async fn get_uptime(
     log::trace!("querying timestamp");
     let name = query.component_name();
     let mut query = select_start_timestamp_by_component();
-    let result = query
-        .bind(client, &name)
-        .iter()
-        .await;
+    let result = query.bind(client, &name).iter().await;
 
     if result.is_err() {
         return Response::internal_server_error();
@@ -96,13 +98,21 @@ pub async fn get_uptime(
     ))
 }
 
-/// # `PATCH /stats/uptime`
-///
-/// Update the uptime of a certain component.
+/// Update component uptime
 #[allow(clippy::cast_possible_truncation)]
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
+#[utoipa::path(
+    patch,
+    path = "/api/v1/stats/uptime",
+    request_body(content = UptimeUpdate, description = "The uptime update payload for a component"),
+    responses(
+        (status = 204, description = "Uptime updated successfully"),
+        (status = 400, description = "Unable to process request body"),
+        (status = 500, description = "Generic internal server error")
+    )
+)]
 pub async fn patch_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeUpdate>,
@@ -130,5 +140,5 @@ pub async fn patch_uptime(
         return Response::internal_server_error();
     }
 
-    Response::ok(())
+    Response::no_content()
 }

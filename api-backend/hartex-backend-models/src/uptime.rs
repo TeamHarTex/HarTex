@@ -37,6 +37,7 @@ use utoipa::ToSchema;
 /// An uptime query.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, IntoParams, Serialize)]
+#[into_params(parameter_in = Query)]
 pub struct UptimeQuery {
     component: String,
 }
@@ -104,7 +105,7 @@ impl UptimeResponse {
 
 /// An uptime update payload.
 #[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize, ToSchema)]
 pub struct UptimeUpdate {
     component_name: String,
     start_timestamp: u128,
