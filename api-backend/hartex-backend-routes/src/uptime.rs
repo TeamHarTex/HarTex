@@ -32,6 +32,7 @@ use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::GenericClient;
 use bb8_postgres::tokio_postgres::NoTls;
 use bb8_postgres::PostgresConnectionManager;
+use futures_util::stream::TryStreamExt;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeQueryRejection;
 use hartex_backend_models::uptime::UptimeResponse;
@@ -55,7 +56,7 @@ use time::OffsetDateTime;
 pub async fn get_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
-) -> (StatusCode, Json<Response<UptimeResponse>>) {
+) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {
@@ -66,21 +67,32 @@ pub async fn get_uptime(
     let client = connection.client();
 
     log::trace!("querying timestamp");
-    let result = select_start_timestamp_by_component()
-        .bind(client, &query.component_name())
-        .one()
+    let name = query.component_name();
+    let mut query = select_start_timestamp_by_component();
+    let result = query
+        .bind(client, &name)
+        .iter()
         .await;
 
-    // FIXME: figure out whether the data is actually not found and return 404
+    if result.is_err() {
+        return Response::internal_server_error();
+    }
+
+    let iterator = result.unwrap();
+    let result = iterator.try_collect::<Vec<_>>().await;
     if result.is_err() {
         log::error!("{:?}", result.unwrap_err());
 
         return Response::internal_server_error();
     }
-    let data = result.unwrap();
+
+    let vec = result.unwrap();
+    if vec.is_empty() {
+        return Response::not_found(String::from("component"));
+    }
 
     Response::ok(UptimeResponse::with_start_timestamp(
-        data.timestamp.unix_timestamp() as u128,
+        vec[0].timestamp.unix_timestamp() as u128,
     ))
 }
 
@@ -94,7 +106,7 @@ pub async fn get_uptime(
 pub async fn patch_uptime(
     State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeUpdate>,
-) -> (StatusCode, Json<Response<()>>) {
+) -> (StatusCode, Json<Response<(), String>>) {
     log::trace!("retrieving connection from database pool");
     let result = pool.get().await;
     if result.is_err() {

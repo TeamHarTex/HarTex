@@ -86,13 +86,15 @@ pub async fn execute(
     let result = sender.send_request(request).await.into_diagnostic()?;
     log::debug!("deserializing result");
     let body = result.collect().await.into_diagnostic()?.aggregate();
-    let response: Response<UptimeResponse> =
+    let response: Response<UptimeResponse, String> =
         serde_json::from_reader(body.reader()).into_diagnostic()?;
 
     let latency = now.elapsed().into_diagnostic()?.as_millis();
 
     let data = response.data();
     let timestamp = data
+        .left()
+        .flatten()
         .ok_or(Report::msg("failed to obtain uptime data"))?
         .start_timestamp();
 

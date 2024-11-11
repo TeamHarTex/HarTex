@@ -30,6 +30,7 @@
 
 use axum::http::StatusCode;
 use axum::Json;
+use either::Either;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -39,18 +40,23 @@ pub mod uptime;
 ///
 /// This is the object returned by a certain API endpoint.
 #[derive(Deserialize, Serialize)]
-pub struct Response<T> {
+pub struct Response<T, R> {
     pub code: u16,
     message: String,
-    data: Option<T>,
+    data: Either<Option<T>, R>,
 }
 
-impl<'a, T> Response<T>
+impl<'a, T, R> Response<T, R>
 where
     T: Clone + Deserialize<'a>,
+    R: Clone + Deserialize<'a>,
 {
+    /// Constructs a response object from a status code and data.
     #[allow(clippy::missing_panics_doc)]
-    pub fn from_code_with_data(code: StatusCode, data: T) -> (StatusCode, Json<Response<T>>) {
+    pub fn from_code_with_data(
+        code: StatusCode,
+        data: Either<Option<T>, R>,
+    ) -> (StatusCode, Json<Response<T, R>>) {
         let code_display = code.to_string();
         let part = code_display.split_once(' ').unwrap().1;
 
@@ -59,39 +65,40 @@ where
             Json(Self {
                 code: code.as_u16(),
                 message: part.to_lowercase(),
-                data: Some(data),
-            }),
-        )
-    }
-
-    /// Constructs a response object with a status code of 500 and its corresponding message.
-    pub fn internal_server_error() -> (StatusCode, Json<Response<T>>) {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(Self {
-                code: 500,
-                message: String::from("internal server error"),
-                data: None,
+                data,
             }),
         )
     }
 
     /// Constructs a response object with a status code of 200 and its corresponding message.
-    pub fn ok(value: T) -> (StatusCode, Json<Response<T>>) {
-        (
-            StatusCode::OK,
-            Json(Self {
-                code: 200,
-                message: String::from("ok"),
-                data: Some(value),
-            }),
+    pub fn ok(value: T) -> (StatusCode, Json<Response<T, R>>) {
+        Self::from_code_with_data(StatusCode::OK, Either::Left(Some(value)))
+    }
+
+    /// Constructs a response object with a status code of 500 and its corresponding message.
+    pub fn internal_server_error() -> (StatusCode, Json<Response<T, R>>) {
+        Self::from_code_with_data(StatusCode::INTERNAL_SERVER_ERROR, Either::Left(None))
+    }
+}
+
+impl<'a, T> Response<T, String>
+where
+    T: Clone + Deserialize<'a>,
+{
+    /// Constructs a response object with a status code of 404 and its corresponding message.
+    #[allow(clippy::needless_pass_by_value)]
+    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<T, String>>) {
+        Self::from_code_with_data(
+            StatusCode::NOT_FOUND,
+            Either::Right(format!("{component_missing} not found")),
         )
     }
 }
 
-impl<'a, T> Response<T>
+impl<'a, T, R> Response<T, R>
 where
     T: Clone + Deserialize<'a>,
+    R: Clone + Deserialize<'a>,
 {
     /// The status code of the response.
     pub fn code(&self) -> u16 {
@@ -104,7 +111,7 @@ where
     }
 
     /// The data of the response.
-    pub fn data(&self) -> Option<T> {
+    pub fn data(&self) -> Either<Option<T>, R> {
         self.data.clone()
     }
 }

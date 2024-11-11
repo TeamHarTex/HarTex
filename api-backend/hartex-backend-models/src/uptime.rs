@@ -28,6 +28,7 @@ use axum::extract::rejection::QueryRejection;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::response::Response;
+use either::Either;
 use serde::Deserialize;
 use serde::Serialize;
 use utoipa::IntoParams;
@@ -72,7 +73,11 @@ impl From<QueryRejection> for UptimeQueryRejection {
 
 impl IntoResponse for UptimeQueryRejection {
     fn into_response(self) -> Response {
-        crate::Response::from_code_with_data(self.status_code, self.data_message).into_response()
+        crate::Response::<String, ()>::from_code_with_data(
+            self.status_code,
+            Either::Left(Some(self.data_message)),
+        )
+        .into_response()
     }
 }
 
