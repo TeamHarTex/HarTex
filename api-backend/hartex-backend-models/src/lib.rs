@@ -80,7 +80,7 @@ where
     }
 }
 
-impl<T> Response<T, String>
+impl<'a, T> Response<T, String>
 where
     T: Clone + Deserialize<'a>,
 {
