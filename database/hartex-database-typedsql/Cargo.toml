@@ -1,0 +1,16 @@
+[package]
+name = "hartex_database_typedsql"
+version = "0.13.0"
+edition = "2021"
+description = """
+A typed Rust code generator from SQL queries and schema.
+"""
+license = "AGPL-3.0-or-later"
+rust-version = "1.83.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pg_query = "6.0.0"
+
+[build-dependencies]

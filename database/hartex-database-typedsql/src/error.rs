@@ -20,13 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+pub enum Error {}
 
-#[path = "../generated/api_backend.rs"]
-pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
-pub mod discord_frontend;
+pub type Result<T> = std::result::Result<T, Error>;

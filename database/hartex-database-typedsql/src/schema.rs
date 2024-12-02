@@ -19,14 +19,10 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use std::path::Path;
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+pub struct SchemaInfo;
 
-#[path = "../generated/api_backend.rs"]
-pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
-pub mod discord_frontend;
+pub(crate) fn read_schema(dir: &Path) -> crate::error::Result<Vec<SchemaInfo>> {
+    todo!()
+}
