@@ -2,6 +2,7 @@
 members = [
     "hartex-database-migrate",
     "hartex-database-queries",
+    "hartex-database-typedsql",
 ]
 
 resolver = "2"

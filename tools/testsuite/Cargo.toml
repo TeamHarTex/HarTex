@@ -1,12 +1,12 @@
 [package]
 name = "testsuite"
 version = "0.13.0"
-edition = "2021"
+edition = "2024"
 description = """
 UI test binary
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.83.0"
+rust-version = "1.85.0"
 
 [dependencies]
 clap = { version = "4.5.18", default-features = false, features = ["std", "usage", "help", "derive", "error-context"] }

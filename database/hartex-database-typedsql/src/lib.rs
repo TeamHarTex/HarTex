@@ -24,9 +24,25 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-#[path = "../generated/api_backend.rs"]
-pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
-pub mod discord_frontend;
+use std::path::Path;
+
+mod error;
+mod schema;
+
+#[allow(clippy::missing_errors_doc)]
+pub fn generate_queries_with_schemas<P>(
+    schemas_dir: P,
+    _: P,
+    _: P,
+) -> error::Result<()>
+where
+    P: AsRef<Path>,
+{
+    let _ = schema::read_schemas(schemas_dir.as_ref())?
+        .into_iter()
+        .map(schema::parse_schema)
+        .collect::<Result<Vec<_>, _>>()?;
+
+    // todo
+    Ok(())
+}

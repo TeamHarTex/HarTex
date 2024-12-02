@@ -25,6 +25,10 @@
 //! This utility is used for migrating to certain revisions of the PostgreSQL database
 //! used by HarTex.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use std::env;
 
 use miette::IntoDiagnostic;

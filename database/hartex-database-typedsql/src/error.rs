@@ -20,13 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
+use std::io;
 
-#[path = "../generated/api_backend.rs"]
-pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
-pub mod discord_frontend;
+#[derive(Debug)]
+pub enum Error {
+    Io(io::Error),
+
+    SqlParse(pg_query::Error),
+}
+
+impl From<io::Error> for Error {
+    fn from(err: io::Error) -> Error {
+        Self::Io(err)
+    }
+}
+
+impl From<pg_query::Error> for Error {
+    fn from(err: pg_query::Error) -> Error {
+        Self::SqlParse(err)
+    }
+}
+
+pub type Result<T> = std::result::Result<T, Error>;
