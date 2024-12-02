@@ -1,10 +1,10 @@
 [package]
 name = "hartex-macro-utils"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 description = "Macro facilities"
 license = "AGPL-3.0-or-later"
-rust-version = "1.83.0"
+rust-version = "1.85.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
