@@ -31,11 +31,13 @@ mod schema;
 
 pub fn generate_queries_with_schemas<P>(
     schemas_dir: P,
-    queries_dir: P,
-    destination: P,
+    _: P,
+    _: P,
 ) -> error::Result<()>
 where
     P: AsRef<Path>,
 {
+    let _ = schema::read_schemas(schemas_dir)?;
+
     todo!()
 }

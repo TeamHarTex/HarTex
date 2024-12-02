@@ -719,6 +719,7 @@ name = "hartex_database_typedsql"
 version = "0.13.0"
 dependencies = [
  "pg_query",
+ "walkdir",
 ]
 
 [[package]]

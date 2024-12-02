@@ -20,6 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub enum Error {}
+use std::io;
+
+pub enum Error {
+    Io(io::Error),
+}
+
+impl From<io::Error> for Error {
+    fn from(err: io::Error) -> Error {
+        Self::Io(err)
+    }
+}
 
 pub type Result<T> = std::result::Result<T, Error>;

@@ -12,5 +12,6 @@ rust-version = "1.83.0"
 
 [dependencies]
 pg_query = "6.0.0"
+walkdir = "2.5.0"
 
 [build-dependencies]

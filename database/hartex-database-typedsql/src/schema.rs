@@ -19,10 +19,36 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use std::fs;
 use std::path::Path;
+use std::path::PathBuf;
 
-pub struct SchemaInfo;
+pub(crate) struct SchemaInfo {
+    pub(crate) path: PathBuf,
+    pub(crate) name: String,
+    pub(crate) contents: String,
+}
 
-pub(crate) fn read_schema(dir: &Path) -> crate::error::Result<Vec<SchemaInfo>> {
-    todo!()
+pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<SchemaInfo>> {
+    let mut vec = Vec::new();
+
+    for result in fs::read_dir(dir)? {
+        let entry = result?;
+        let path = entry.path();
+        if !path.extension().map(|s| s == "sql").unwrap_or_default() {
+            continue;
+        }
+
+        let name = path.file_stem().expect("is a file").to_str().expect("valid UTF-8").to_string();
+        let contents = fs::read_to_string(&path)?;
+
+        vec.push(SchemaInfo {
+            path,
+            name,
+            contents,
+        })
+    }
+
+    Ok(vec)
 }
