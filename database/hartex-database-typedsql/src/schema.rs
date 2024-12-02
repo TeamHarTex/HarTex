@@ -27,7 +27,9 @@ use std::path::PathBuf;
 pub(crate) struct SchemaInfo;
 
 pub(crate) struct RawSchemaInfo {
+    #[allow(dead_code)]
     pub(crate) path: PathBuf,
+    #[allow(dead_code)]
     pub(crate) name: String,
     pub(crate) contents: String,
 }
@@ -55,6 +57,9 @@ pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo
     Ok(vec)
 }
 
-pub(crate) fn parse_schema(_: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
-    todo!()
+pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
+    let _ = pg_query::parse(schema_info.contents.as_str())?;
+
+    // todo
+    Ok(SchemaInfo)
 }

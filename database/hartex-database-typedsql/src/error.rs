@@ -22,13 +22,22 @@
 
 use std::io;
 
+#[derive(Debug)]
 pub enum Error {
     Io(io::Error),
+
+    SqlParse(pg_query::Error),
 }
 
 impl From<io::Error> for Error {
     fn from(err: io::Error) -> Error {
         Self::Io(err)
+    }
+}
+
+impl From<pg_query::Error> for Error {
+    fn from(err: pg_query::Error) -> Error {
+        Self::SqlParse(err)
     }
 }
 

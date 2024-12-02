@@ -75,4 +75,10 @@ pub fn main() {
         },
     )
     .unwrap();
+
+    hartex_database_typedsql::generate_queries_with_schemas(
+        "schemas",
+        "",
+        ""
+    ).unwrap();
 }

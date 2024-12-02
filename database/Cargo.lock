@@ -706,6 +706,7 @@ dependencies = [
  "cornucopia_async",
  "dotenvy",
  "futures",
+ "hartex_database_typedsql",
  "postgres",
  "postgres-types",
  "serde_json",
