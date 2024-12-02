@@ -37,7 +37,10 @@ pub fn generate_queries_with_schemas<P>(
 where
     P: AsRef<Path>,
 {
-    let _ = schema::read_schemas(schemas_dir)?;
+    let _ = schema::read_schemas(schemas_dir)?
+        .into_iter()
+        .map(schema::parse_schema)
+        .collect::<Result<Vec<_>, _>>()?;
 
     todo!()
 }
