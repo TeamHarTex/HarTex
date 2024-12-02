@@ -41,7 +41,7 @@ pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo
     for result in fs::read_dir(dir)? {
         let entry = result?;
         let path = entry.path();
-        if !path.extension().is_some_and(|s| s == "sql") {
+        if path.extension().is_none_or(|s| s != "sql") {
             continue;
         }
 
