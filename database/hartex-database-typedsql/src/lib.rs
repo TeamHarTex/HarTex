@@ -29,6 +29,7 @@ use std::path::Path;
 mod error;
 mod schema;
 
+#[allow(clippy::missing_errors_doc)]
 pub fn generate_queries_with_schemas<P>(
     schemas_dir: P,
     _: P,

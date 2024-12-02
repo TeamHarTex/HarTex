@@ -34,13 +34,14 @@ pub(crate) struct RawSchemaInfo {
     pub(crate) contents: String,
 }
 
+#[allow(clippy::missing_errors_doc)]
 pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo>> {
     let mut vec = Vec::new();
 
     for result in fs::read_dir(dir)? {
         let entry = result?;
         let path = entry.path();
-        if !path.extension().map(|s| s == "sql").unwrap_or_default() {
+        if !path.extension().is_some_and(|s| s == "sql") {
             continue;
         }
 
@@ -51,12 +52,14 @@ pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo
             path,
             name,
             contents,
-        })
+        });
     }
 
     Ok(vec)
 }
 
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::needless_pass_by_value)]
 pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
     let _ = pg_query::parse(schema_info.contents.as_str())?;
 
