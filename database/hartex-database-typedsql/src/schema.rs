@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use pg_query::protobuf::node::Node;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -45,7 +46,12 @@ pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo
             continue;
         }
 
-        let name = path.file_stem().expect("is a file").to_str().expect("valid UTF-8").to_string();
+        let name = path
+            .file_stem()
+            .expect("is a file")
+            .to_str()
+            .expect("valid UTF-8")
+            .to_string();
         let contents = fs::read_to_string(&path)?;
 
         vec.push(RawSchemaInfo {
@@ -61,7 +67,18 @@ pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::needless_pass_by_value)]
 pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
-    let _ = pg_query::parse(schema_info.contents.as_str())?;
+    let result = pg_query::parse(schema_info.contents.as_str())?;
+    let statements = result.protobuf.stmts;
+    let _ = statements
+        .into_iter()
+        .filter_map(|statement| {
+            if let Some(Node::CreateStmt(create)) = statement.clone().stmt?.node {
+                Some(create)
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
 
     // todo
     Ok(SchemaInfo)
