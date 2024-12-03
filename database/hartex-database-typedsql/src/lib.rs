@@ -1,3 +1,4 @@
+#![feature(let_chains)]
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -19,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -30,11 +30,7 @@ mod error;
 mod schema;
 
 #[allow(clippy::missing_errors_doc)]
-pub fn generate_queries_with_schemas<P>(
-    schemas_dir: P,
-    _: P,
-    _: P,
-) -> error::Result<()>
+pub fn generate_queries_with_schemas<P>(schemas_dir: P, _: P, _: P) -> error::Result<()>
 where
     P: AsRef<Path>,
 {
