@@ -101,7 +101,7 @@ pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<S
         .filter_map(|create| {
             create
                 .relation
-                .and_then(|relation| Some((relation, create.table_elts)))
+                .map(|relation| (relation, create.table_elts))
         })
         .map(|(relation, nodes)| {
             (
