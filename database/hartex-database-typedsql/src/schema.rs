@@ -56,14 +56,16 @@ pub(crate) struct RawSchemaInfo {
 }
 
 #[allow(clippy::missing_errors_doc)]
-pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo>> {
-    let mut vec = Vec::new();
-
-    for result in fs::read_dir(dir)? {
-        let entry = result?;
+pub(crate) fn read_schemas(
+    dir: &Path,
+) -> crate::error::Result<impl Iterator<Item = RawSchemaInfo>> {
+    Ok(fs::read_dir(dir)?.filter_map(|result| {
+        let Ok(entry) = result else {
+            return None;
+        };
         let path = entry.path();
         if path.extension().is_none_or(|s| s != "sql") {
-            continue;
+            return None;
         }
 
         let name = path
@@ -72,16 +74,16 @@ pub(crate) fn read_schemas(dir: &Path) -> crate::error::Result<Vec<RawSchemaInfo
             .to_str()
             .expect("valid UTF-8")
             .to_string();
-        let contents = fs::read_to_string(&path)?;
+        let Ok(contents) = fs::read_to_string(&path) else {
+            return None;
+        };
 
-        vec.push(RawSchemaInfo {
+        Some(RawSchemaInfo {
             path,
             name,
             contents,
-        });
-    }
-
-    Ok(vec)
+        })
+    }))
 }
 
 #[allow(clippy::missing_errors_doc)]
@@ -138,10 +140,8 @@ pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<S
         })
         .collect::<Vec<_>>();
 
-    Ok(
-        SchemaInfo {
-            name: schema_info.name,
-            tables,
-        }
-    )
+    Ok(SchemaInfo {
+        name: schema_info.name,
+        tables,
+    })
 }

@@ -1,4 +1,3 @@
-#![feature(let_chains)]
 /*
  * SPDX-License-Identifier: AGPL-3.0-only
  *
@@ -20,30 +19,19 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
 use std::collections::HashMap;
 use std::path::Path;
+use walkdir::WalkDir;
+use crate::schema::SchemaInfo;
 
-mod error;
-mod query;
-mod schema;
+pub(crate) struct RawQueryModuleInfo;
 
-#[allow(clippy::missing_errors_doc)]
-pub fn generate_queries_with_schemas<P>(schemas_dir: P, queries_dir: P, _: P) -> error::Result<()>
-where
-    P: AsRef<Path>,
-{
-    let schemas = schema::read_schemas(schemas_dir.as_ref())?
-        .map(schema::parse_schema)
-        .filter_map(Result::ok)
-        .map(|schema| (schema.name.as_str(), schema))
-        .collect::<HashMap<_, _>>();
-
-    let _ = query::read_queries(queries_dir.as_ref(), schemas)?;
+pub(crate) fn read_queries(
+    dir: &Path,
+    _: HashMap<&str, SchemaInfo>,
+) -> crate::error::Result<impl Iterator<Item = RawQueryModuleInfo>> {
+    let _ = WalkDir::new(dir).contents_first(true);
 
     // todo
-    Ok(())
+    Ok(std::iter::from_fn(move || Some(RawQueryModuleInfo)))
 }
