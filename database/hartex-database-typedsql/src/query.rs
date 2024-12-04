@@ -21,25 +21,42 @@
  */
 
 use std::collections::HashMap;
+use std::fs;
 use std::path::Path;
+use std::path::PathBuf;
 
 use walkdir::WalkDir;
 
 use crate::schema::SchemaInfo;
 
-pub(crate) struct RawQueryModuleInfo;
+#[allow(dead_code)]
+pub(crate) struct RawQueryModuleInfo {
+    pub(crate) path: PathBuf,
+    pub(crate) name: String,
+    pub(crate) contents: String,
+}
 
 pub(crate) fn read_queries(
     dir: &Path,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<impl Iterator<Item = RawQueryModuleInfo>> {
-    let _ = WalkDir::new(dir)
+    Ok(WalkDir::new(dir)
         .contents_first(true)
         .into_iter()
         .filter_map(Result::ok)
         .filter(|entry| entry.file_type().is_file() && entry.path().extension().is_some())
-        .filter(|entry| entry.path().extension().unwrap() == "sql");
-
-    // todo
-    Ok(std::iter::from_fn(move || Some(RawQueryModuleInfo)))
+        .filter(|entry| entry.path().extension().unwrap() == "sql")
+        .filter_map(|entry| {
+            Some(RawQueryModuleInfo {
+                path: entry.clone().into_path(),
+                name: entry
+                    .path()
+                    .file_stem()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .to_string(),
+                contents: fs::read_to_string(entry.path()).ok()?,
+            })
+        }))
 }
