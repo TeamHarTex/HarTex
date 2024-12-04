@@ -63,6 +63,9 @@ pub(crate) fn read_queries(
         }))
 }
 
-pub(crate) fn parse_query(_: RawQueryInfo, _: HashMap<String, SchemaInfo>) -> crate::error::Result<QueryInfo> {
+#[allow(dead_code)]
+pub(crate) fn parse_query(query_info: RawQueryInfo, _: HashMap<String, SchemaInfo>) -> crate::error::Result<QueryInfo> {
+    let _ = pg_query::parse(query_info.contents.as_str())?;
+
     Ok(QueryInfo)
 }

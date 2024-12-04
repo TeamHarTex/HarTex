@@ -4,4 +4,4 @@ SELECT
 FROM
     "DiscordFrontend"."Nightly"."CachedGuilds"
 WHERE
-    "id" = :id;
+    "id" = @id;
