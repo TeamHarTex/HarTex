@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS "Nightly"."CachedEmojis" (
     "managed" BOOLEAN NOT NULL
 );
 
-/*
 CREATE TABLE IF NOT EXISTS "Nightly"."CachedGuilds" (
     "default_message_notifications" SMALLINT NOT NULL,
     "explicit_content_filter" SMALLINT NOT NULL,
@@ -82,4 +81,3 @@ CREATE TABLE IF NOT EXISTS "Nightly"."GuildConfigurations" (
     "guild_id" TEXT NOT NULL PRIMARY KEY,
     "enabled_plugins" TEXT ARRAY NOT NULL
 );
-*/

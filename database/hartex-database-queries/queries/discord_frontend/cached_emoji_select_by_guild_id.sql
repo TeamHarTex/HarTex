@@ -4,4 +4,4 @@ SELECT
 FROM
     "DiscordFrontend"."Nightly"."CachedEmojis"
 WHERE
-    "guild_id" = :guild_id;
+    "guild_id" = @guild_id;

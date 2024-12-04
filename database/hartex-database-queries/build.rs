@@ -31,7 +31,7 @@ pub fn main() {
         return;
     }
 
-    let api_backend_queries_path = "queries/api_backend";
+    /*let api_backend_queries_path = "queries/api_backend";
     println!("cargo::rerun-if-changed={api_backend_queries_path}");
 
     let url = env::var("API_PGSQL_URL").unwrap();
@@ -74,7 +74,7 @@ pub fn main() {
             is_async: true,
         },
     )
-    .unwrap();
+    .unwrap();*/
 
-    hartex_database_typedsql::generate_queries_with_schemas("schemas", "", "").unwrap();
+    hartex_database_typedsql::generate_queries_with_schemas("schemas", "queries", "").unwrap();
 }

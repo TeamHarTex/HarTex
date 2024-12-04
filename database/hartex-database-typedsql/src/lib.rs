@@ -24,20 +24,28 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::collections::HashMap;
 use std::path::Path;
 
 mod error;
+mod query;
 mod schema;
 
 #[allow(clippy::missing_errors_doc)]
-pub fn generate_queries_with_schemas<P>(schemas_dir: P, _: P, _: P) -> error::Result<()>
+pub fn generate_queries_with_schemas<P>(schemas_dir: P, queries_dir: P, _: P) -> error::Result<()>
 where
     P: AsRef<Path>,
 {
-    let _ = schema::read_schemas(schemas_dir.as_ref())?
-        .into_iter()
+    let schemas = schema::read_schemas(schemas_dir.as_ref())?
         .map(schema::parse_schema)
-        .collect::<Result<Vec<_>, _>>()?;
+        .filter_map(Result::ok)
+        .map(|schema| (schema.name.clone(), schema))
+        .collect::<HashMap<_, _>>();
+
+    let _ = query::read_queries(queries_dir.as_ref())?
+        .map(|info| query::parse_query(info, schemas.clone()))
+        .filter_map(Result::ok)
+        .collect::<Vec<_>>();
 
     // todo
     Ok(())

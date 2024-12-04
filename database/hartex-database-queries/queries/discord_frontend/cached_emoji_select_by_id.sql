@@ -4,4 +4,4 @@ SELECT
 FROM
     "DiscordFrontend"."Nightly"."CachedEmojis"
 WHERE
-    "id" = :id;
+    "id" = @id;
