@@ -19,18 +19,26 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
 use std::collections::HashMap;
 use std::path::Path;
+
 use walkdir::WalkDir;
+
 use crate::schema::SchemaInfo;
 
 pub(crate) struct RawQueryModuleInfo;
 
 pub(crate) fn read_queries(
     dir: &Path,
-    _: HashMap<&str, SchemaInfo>,
+    _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<impl Iterator<Item = RawQueryModuleInfo>> {
-    let _ = WalkDir::new(dir).contents_first(true);
+    let _ = WalkDir::new(dir)
+        .contents_first(true)
+        .into_iter()
+        .filter_map(Result::ok)
+        .filter(|entry| entry.file_type().is_file() && entry.path().extension().is_some())
+        .filter(|entry| entry.path().extension().unwrap() == "sql");
 
     // todo
     Ok(std::iter::from_fn(move || Some(RawQueryModuleInfo)))

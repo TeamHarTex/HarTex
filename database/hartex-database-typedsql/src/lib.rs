@@ -39,7 +39,7 @@ where
     let schemas = schema::read_schemas(schemas_dir.as_ref())?
         .map(schema::parse_schema)
         .filter_map(Result::ok)
-        .map(|schema| (schema.name.as_str(), schema))
+        .map(|schema| (schema.name.clone(), schema))
         .collect::<HashMap<_, _>>();
 
     let _ = query::read_queries(queries_dir.as_ref(), schemas)?;
