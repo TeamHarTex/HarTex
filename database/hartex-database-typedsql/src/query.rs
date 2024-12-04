@@ -29,8 +29,11 @@ use walkdir::WalkDir;
 
 use crate::schema::SchemaInfo;
 
+pub(crate) struct QueryInfo;
+
 #[allow(dead_code)]
-pub(crate) struct RawQueryModuleInfo {
+#[derive(Clone, Debug)]
+pub(crate) struct RawQueryInfo {
     pub(crate) path: PathBuf,
     pub(crate) name: String,
     pub(crate) contents: String,
@@ -38,8 +41,7 @@ pub(crate) struct RawQueryModuleInfo {
 
 pub(crate) fn read_queries(
     dir: &Path,
-    _: HashMap<String, SchemaInfo>,
-) -> crate::error::Result<impl Iterator<Item = RawQueryModuleInfo>> {
+) -> crate::error::Result<impl Iterator<Item = RawQueryInfo>> {
     Ok(WalkDir::new(dir)
         .contents_first(true)
         .into_iter()
@@ -47,7 +49,7 @@ pub(crate) fn read_queries(
         .filter(|entry| entry.file_type().is_file() && entry.path().extension().is_some())
         .filter(|entry| entry.path().extension().unwrap() == "sql")
         .filter_map(|entry| {
-            Some(RawQueryModuleInfo {
+            Some(RawQueryInfo {
                 path: entry.clone().into_path(),
                 name: entry
                     .path()
@@ -59,4 +61,8 @@ pub(crate) fn read_queries(
                 contents: fs::read_to_string(entry.path()).ok()?,
             })
         }))
+}
+
+pub(crate) fn parse_query(_: RawQueryInfo, _: HashMap<String, SchemaInfo>) -> crate::error::Result<QueryInfo> {
+    Ok(QueryInfo)
 }

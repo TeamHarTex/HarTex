@@ -27,21 +27,21 @@ use std::path::PathBuf;
 use pg_query::protobuf::node::Node;
 
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub(crate) struct ColumnInfo {
     pub(crate) name: String,
     pub(crate) coltype: String,
 }
 
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub(crate) struct SchemaInfo {
     pub(crate) name: String,
     pub(crate) tables: Vec<TableInfo>,
 }
 
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub(crate) struct TableInfo {
     pub(crate) name: String,
     pub(crate) columns: Vec<ColumnInfo>,

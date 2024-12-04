@@ -42,7 +42,9 @@ where
         .map(|schema| (schema.name.clone(), schema))
         .collect::<HashMap<_, _>>();
 
-    let _ = query::read_queries(queries_dir.as_ref(), schemas)?;
+    let _ = query::read_queries(queries_dir.as_ref())?
+        .map(|info| query::parse_query(info, schemas.clone()))
+        .filter_map(Result::ok);
 
     // todo
     Ok(())
