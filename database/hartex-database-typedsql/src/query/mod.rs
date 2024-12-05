@@ -83,6 +83,7 @@ pub(crate) fn parse_query(
         .ok_or(Error::QueryFile("unexpected empty inner node"))?;
 
     match stmt {
+        // todo: add more branches
         Node::SelectStmt(stmt) => select::parse_select_query(stmt.as_ref().clone(), schema_map),
         _ => Err(Error::QueryFile("unexpected statement type")),
     }

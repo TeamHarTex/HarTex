@@ -30,5 +30,6 @@ pub(crate) fn parse_select_query(
     _: SelectStmt,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
-    todo!()
+    //todo
+    Ok(super::QueryInfo)
 }
