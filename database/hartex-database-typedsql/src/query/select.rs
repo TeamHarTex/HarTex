@@ -20,10 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-SELECT
-    *
-FROM
-    "DiscordFrontend"."Nightly"."CachedRoles"
-WHERE
-    "id" = @id AND
-    "guild_id" = @guild_id;
+use std::collections::HashMap;
+
+use pg_query::protobuf::SelectStmt;
+
+use crate::schema::SchemaInfo;
+
+pub(crate) fn parse_select_query(
+    _: SelectStmt,
+    _: HashMap<String, SchemaInfo>,
+) -> crate::error::Result<super::QueryInfo> {
+    todo!()
+}
