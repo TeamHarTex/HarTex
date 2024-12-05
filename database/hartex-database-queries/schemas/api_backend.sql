@@ -20,10 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-SELECT
-    *
-FROM
-    "DiscordFrontend"."Nightly"."CachedRoles"
-WHERE
-    "id" = @id AND
-    "guild_id" = @guild_id;
+CREATE TABLE IF NOT EXISTS "StartTimestamps" (
+    "component" TEXT NOT NULL PRIMARY KEY,
+    "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
