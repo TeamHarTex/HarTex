@@ -39,9 +39,7 @@ pub(crate) struct RawQueryInfo {
     pub(crate) contents: String,
 }
 
-pub(crate) fn read_queries(
-    dir: &Path,
-) -> crate::error::Result<impl Iterator<Item = RawQueryInfo>> {
+pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Item = RawQueryInfo>> {
     Ok(WalkDir::new(dir)
         .contents_first(true)
         .into_iter()
@@ -64,8 +62,13 @@ pub(crate) fn read_queries(
 }
 
 #[allow(dead_code)]
-pub(crate) fn parse_query(query_info: RawQueryInfo, _: HashMap<String, SchemaInfo>) -> crate::error::Result<QueryInfo> {
-    let _ = pg_query::parse(query_info.contents.as_str())?;
+pub(crate) fn parse_query(
+    query_info: RawQueryInfo,
+    _: HashMap<String, SchemaInfo>,
+) -> crate::error::Result<QueryInfo> {
+    let result = pg_query::parse(query_info.contents.as_str())?;
+    panic!("{:?}", result.protobuf.stmts);
 
+    #[allow(unreachable_code)]
     Ok(QueryInfo)
 }
