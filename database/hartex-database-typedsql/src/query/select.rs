@@ -23,13 +23,60 @@
 use std::collections::HashMap;
 
 use pg_query::protobuf::SelectStmt;
+use pg_query::protobuf::node::Node;
 
 use crate::schema::SchemaInfo;
 
+#[derive(Clone, Debug)]
+pub(crate) enum SelectTarget {
+    Everything,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct SelectQueryInfo {
+    pub(crate) target: SelectTarget,
+}
+
 pub(crate) fn parse_select_query(
-    _: SelectStmt,
+    stmt: SelectStmt,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
-    // todo
-    Ok(super::QueryInfo)
+    let target_column_fields = stmt
+        .target_list
+        .into_iter()
+        .filter_map(|node| node.node)
+        .filter_map(|node| {
+            if let Node::ResTarget(res_target) = node {
+                Some(res_target)
+            } else {
+                None
+            }
+        })
+        .filter_map(|res_target| res_target.val)
+        .filter_map(|node| node.node)
+        .filter_map(|node| {
+            if let Node::ColumnRef(column_ref) = node {
+                Some(column_ref)
+            } else {
+                None
+            }
+        })
+        .map(|node| {
+            node.fields
+                .into_iter()
+                .filter_map(|node| node.node)
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+    let target = parse_select_target(target_column_fields)?;
+
+    Ok(super::QueryInfo::Select(SelectQueryInfo { target }))
+}
+
+fn parse_select_target(fields: Vec<Vec<Node>>) -> crate::error::Result<SelectTarget> {
+    let _ = fields.first().ok_or(crate::error::Error::QueryFile(
+        "expected at least one node in select target",
+    ))?;
+
+    todo!()
 }
