@@ -23,6 +23,7 @@
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
+
 use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
