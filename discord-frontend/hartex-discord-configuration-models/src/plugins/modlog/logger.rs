@@ -64,18 +64,13 @@ impl FromLua for ModlogLogger {
 }
 
 /// Configures modlog formats.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize)]
 pub enum ModlogFormat {
     /// Default, text-only format.
+    #[default]
     Default,
     /// Embeds are used.
     Pretty,
-}
-
-impl Default for ModlogFormat {
-    fn default() -> Self {
-        Self::Default
-    }
 }
 
 impl FromLua for ModlogFormat {
