@@ -20,9 +20,12 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(dead_code)]
+#![allow(unreachable_code)]
 
 use std::collections::HashMap;
 use std::path::Path;

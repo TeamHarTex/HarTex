@@ -78,5 +78,6 @@ fn parse_select_target(fields: Vec<Vec<Node>>) -> crate::error::Result<SelectTar
         "expected at least one node in select target",
     ))?;
 
-    todo!()
+    // panic!("{fields:?}");
+    Ok(SelectTarget::Everything)
 }
