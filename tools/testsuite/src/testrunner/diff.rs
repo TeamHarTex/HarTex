@@ -23,8 +23,8 @@
 use std::fmt;
 use std::fmt::Display;
 
-use console::style;
 use console::Style;
+use console::style;
 use similar::ChangeTag;
 use similar::TextDiff;
 

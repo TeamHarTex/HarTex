@@ -27,8 +27,8 @@ use hartex_discord_core::discord::model::guild::ExplicitContentFilter;
 use hartex_discord_core::discord::model::guild::MfaLevel;
 use hartex_discord_core::discord::model::guild::PremiumTier;
 use hartex_discord_core::discord::model::guild::VerificationLevel;
-use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
+use hartex_localization_core::Localizer;
 use unic_langid::LanguageIdentifier;
 
 use crate::localizable::Localizable;

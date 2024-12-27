@@ -22,8 +22,8 @@
 
 //! # `bool` as Localizable Object.
 
-use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
+use hartex_localization_core::Localizer;
 use unic_langid::LanguageIdentifier;
 
 use crate::localizable::Localizable;

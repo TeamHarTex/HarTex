@@ -33,9 +33,11 @@ use crate::schema::SchemaInfo;
 
 mod select;
 
-pub(crate) struct QueryInfo;
+#[derive(Clone, Debug)]
+pub(crate) enum QueryInfo {
+    Select(select::SelectQueryInfo),
+}
 
-#[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub(crate) struct RawQueryInfo {
     pub(crate) path: PathBuf,
@@ -65,7 +67,6 @@ pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Ite
         }))
 }
 
-#[allow(dead_code)]
 pub(crate) fn parse_query(
     query_info: RawQueryInfo,
     schema_map: HashMap<String, SchemaInfo>,

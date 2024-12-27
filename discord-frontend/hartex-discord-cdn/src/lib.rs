@@ -24,10 +24,10 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
-use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::util::ImageHash;
 
 /// Utility struct providing utility functions for working with the Discord content delivery

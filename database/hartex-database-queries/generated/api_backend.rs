@@ -13,7 +13,8 @@ pub mod queries {
     pub mod start_timestamp_select_by_component {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct SelectStartTimestampByComponent {
             pub component: String,
@@ -125,7 +126,8 @@ WHERE
     pub mod start_timestamp_upsert {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct StartTimestampUpsertParams<T1: cornucopia_async::StringSql> {
             pub component: T1,

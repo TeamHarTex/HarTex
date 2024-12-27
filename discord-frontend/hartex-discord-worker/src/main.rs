@@ -44,12 +44,12 @@ use hartex_kafka_utils::types::CompressionType;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use once_cell::sync::Lazy;
+use rdkafka::ClientConfig;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
 use rdkafka::message::Message;
 use rdkafka::producer::FutureProducer;
-use rdkafka::ClientConfig;
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
 

@@ -24,9 +24,9 @@ use std::time::Duration;
 
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::sync::mpsc::unbounded_channel;
 use hartex_discord_core::tokio::sync::mpsc::UnboundedReceiver;
 use hartex_discord_core::tokio::sync::mpsc::UnboundedSender;
+use hartex_discord_core::tokio::sync::mpsc::unbounded_channel;
 use hartex_discord_core::tokio::sync::oneshot;
 use hartex_discord_core::tokio::sync::oneshot::Receiver;
 use hartex_discord_core::tokio::sync::oneshot::Sender;

@@ -24,9 +24,9 @@
 
 use std::fs;
 use std::mem;
-use std::path::absolute;
 use std::path::Path;
 use std::path::PathBuf;
+use std::path::absolute;
 use std::process::exit;
 
 use self::flags::BootstrapSubcommand;

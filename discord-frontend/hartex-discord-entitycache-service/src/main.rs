@@ -43,11 +43,11 @@ use hartex_discord_core::tokio::signal;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use rdkafka::ClientConfig;
+use rdkafka::Message;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
-use rdkafka::ClientConfig;
-use rdkafka::Message;
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
 

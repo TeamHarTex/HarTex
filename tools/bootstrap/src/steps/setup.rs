@@ -227,7 +227,9 @@ pub fn setup_profile(config: &Config, profile: SetupProfile) {
     )
     .expect("failed to copy files");
 
-    println!("INFO: Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.");
+    println!(
+        "INFO: Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations."
+    );
 }
 
 /// Step for configuration for VSCode.

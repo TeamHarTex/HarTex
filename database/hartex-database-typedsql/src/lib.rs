@@ -23,6 +23,8 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(dead_code)]
+#![allow(unreachable_code)]
 
 use std::collections::HashMap;
 use std::path::Path;

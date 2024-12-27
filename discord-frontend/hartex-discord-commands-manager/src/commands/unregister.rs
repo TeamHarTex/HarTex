@@ -28,6 +28,8 @@ use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::hyper::tls_stream;
 use hartex_log::log;
 use http_body_util::Empty;
+use hyper::Method;
+use hyper::Request;
 use hyper::body::Bytes;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
@@ -35,8 +37,6 @@ use hyper::header::AUTHORIZATION;
 use hyper::header::CONTENT_LENGTH;
 use hyper::header::HOST;
 use hyper::header::USER_AGENT;
-use hyper::Method;
-use hyper::Request;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 

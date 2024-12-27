@@ -26,20 +26,20 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use futures_util::StreamExt as FutureStreamExt;
-use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
+use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
 use hartex_log::log;
 use miette::IntoDiagnostic;
+use rdkafka::Message;
 use rdkafka::consumer::StreamConsumer;
 use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::producer::FutureRecord;
 use rdkafka::util::Timeout;
-use rdkafka::Message;
 use serde_scan::scan;
 
 /// Handle inbound AND outbound messages for a given shard.

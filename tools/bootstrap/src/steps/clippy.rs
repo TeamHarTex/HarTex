@@ -20,8 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::process::exit;
 use std::process::Command;
+use std::process::exit;
 
 use crate::builder::Builder;
 use crate::builder::RunConfig;
