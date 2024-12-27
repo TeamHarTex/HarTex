@@ -26,11 +26,11 @@ use std::sync::Arc;
 
 use hartex_discord_core::tokio::net::TcpStream;
 use miette::IntoDiagnostic;
+use tokio_rustls::TlsConnector;
 use tokio_rustls::client::TlsStream;
-use tokio_rustls::rustls::pki_types::ServerName;
 use tokio_rustls::rustls::ClientConfig;
 use tokio_rustls::rustls::RootCertStore;
-use tokio_rustls::TlsConnector;
+use tokio_rustls::rustls::pki_types::ServerName;
 use webpki_roots::TLS_SERVER_ROOTS;
 
 /// Construct a TLS stream.

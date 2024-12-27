@@ -20,25 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use axum::Json;
 /// # Uptime Routes
 ///
 /// Routes interacting with the uptime API.
-
 use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::Json;
 use axum_extra::extract::WithRejection;
+use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::GenericClient;
 use bb8_postgres::tokio_postgres::NoTls;
-use bb8_postgres::PostgresConnectionManager;
 use futures_util::stream::TryStreamExt;
+use hartex_backend_models::Response;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeQueryRejection;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_backend_models::uptime::UptimeUpdate;
-use hartex_backend_models::Response;
 use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
 use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
 use hartex_log::log;

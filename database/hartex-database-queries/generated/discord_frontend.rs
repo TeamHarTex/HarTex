@@ -13,7 +13,8 @@ pub mod queries {
     pub mod cached_emoji_select_by_guild_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct CachedEmojiSelectByGuildId {
             pub id: String,
@@ -139,7 +140,8 @@ WHERE
     pub mod cached_emoji_select_by_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct CachedEmojiSelectById {
             pub id: String,
@@ -265,7 +267,8 @@ WHERE
     pub mod cached_emoji_upsert {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedEmojiUpsertParams<
             T1: cornucopia_async::StringSql,
@@ -352,7 +355,8 @@ ON CONFLICT (\"id\") DO UPDATE
     pub mod cached_guild_select_by_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct CachedGuildSelectById {
             pub default_message_notifications: i16,
@@ -513,7 +517,8 @@ WHERE
     pub mod cached_guild_upsert {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedGuildUpsertParams<
             T1: cornucopia_async::StringSql,
@@ -651,7 +656,8 @@ ON CONFLICT (\"id\") DO UPDATE
     pub mod cached_member_select_by_guild_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct CachedMemberSelectByGuildId {
             pub flags: i64,
@@ -783,7 +789,8 @@ WHERE
     pub mod cached_member_select_by_user_id_and_guild_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedMemberSelectByUserIdAndGuildIdParams<
             T1: cornucopia_async::StringSql,
@@ -968,7 +975,8 @@ WHERE
     pub mod cached_member_upsert {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedMemberUpsertParams<
             T1: cornucopia_async::StringSql,
@@ -1064,7 +1072,8 @@ ON CONFLICT (\"user_id\", \"guild_id\") DO UPDATE
     pub mod cached_role_select_by_guild_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct CachedRoleSelectByGuildId {
             pub color: i64,
@@ -1210,7 +1219,8 @@ WHERE
     pub mod cached_role_select_by_id_and_guild_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedRoleSelectByIdAndGuildIdParams<
             T1: cornucopia_async::StringSql,
@@ -1389,7 +1399,8 @@ WHERE
     pub mod cached_role_upsert {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedRoleUpsertParams<
             T1: cornucopia_async::StringSql,
@@ -1501,7 +1512,8 @@ ON CONFLICT (\"id\", \"guild_id\") DO UPDATE
     pub mod cached_user_select_by_id {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug, Clone, PartialEq)]
         pub struct CachedUserSelectById {
             pub avatar: Option<String>,
@@ -1632,7 +1644,8 @@ WHERE
     pub mod cached_user_upsert {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct CachedUserUpsertParams<
             T1: cornucopia_async::StringSql,

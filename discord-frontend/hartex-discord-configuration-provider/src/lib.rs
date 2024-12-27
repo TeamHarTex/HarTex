@@ -31,8 +31,8 @@
 use std::pin::Pin;
 
 use hartex_database_queries::configuration::queries::plugin_enabled::plugin_enabled;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::Id;
+use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_utils::DATABASE_POOL;
 use miette::IntoDiagnostic;
 use tokio_postgres::GenericClient;

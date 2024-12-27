@@ -95,7 +95,7 @@ impl FromLua for ModlogFormat {
                 return Err(Error::RuntimeError(format!(
                     "ModlogFormat: unexpected variant: {}, expected either default or pretty",
                     lua_value.type_name()
-                )))
+                )));
             }
         })
     }

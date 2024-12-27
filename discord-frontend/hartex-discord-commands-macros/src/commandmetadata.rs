@@ -21,14 +21,14 @@
  */
 
 use proc_macro2::TokenStream as TokenStream2;
-use syn::parse::Parse;
-use syn::parse::ParseStream;
-use syn::spanned::Spanned;
 use syn::Expr;
 use syn::Ident;
 use syn::ItemStruct;
 use syn::Lit;
 use syn::Token;
+use syn::parse::Parse;
+use syn::parse::ParseStream;
+use syn::spanned::Spanned;
 
 /// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]

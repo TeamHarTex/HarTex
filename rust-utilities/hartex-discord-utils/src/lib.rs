@@ -35,8 +35,8 @@ use std::future::Future;
 use std::ops::Deref;
 
 use async_once_cell::Lazy as AsyncLazy;
-use bb8_postgres::bb8::Pool;
 use bb8_postgres::PostgresConnectionManager;
+use bb8_postgres::bb8::Pool;
 use hartex_discord_core::discord::http::Client;
 use once_cell::sync::Lazy;
 use tokio_postgres::NoTls;

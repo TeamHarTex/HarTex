@@ -33,8 +33,8 @@ use hartex_discord_core::discord::model::gateway::payload::incoming::Interaction
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_localization_core::Localizer;
 use hartex_localization_core::LOCALIZATION_HOLDER;
+use hartex_localization_core::Localizer;
 use hartex_log::log;
 use miette::IntoDiagnostic;
 use once_cell::sync::Lazy;

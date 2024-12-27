@@ -31,8 +31,8 @@ use owo_colors::OwoColorize;
 use serde::Deserialize;
 use serde::Serialize;
 
-use super::option::CommandManagerCommandOption;
 use super::TypeEnumExt;
+use super::option::CommandManagerCommandOption;
 
 /// Command.
 ///

@@ -22,12 +22,12 @@
 
 use std::ops::Deref;
 
-use hartex_discord_core::discord::gateway::create_recommended;
-use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::gateway::ConfigBuilder;
 use hartex_discord_core::discord::gateway::Intents;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::ShardId;
+use hartex_discord_core::discord::gateway::create_recommended;
+use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
 use hartex_discord_core::discord::model::gateway::presence::Activity;
 use hartex_discord_core::discord::model::gateway::presence::ActivityType;

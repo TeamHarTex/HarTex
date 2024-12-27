@@ -27,8 +27,8 @@ use std::io::Write;
 use std::process;
 
 use bootstrap::build::Build;
-use bootstrap::config::flags::BootstrapSubcommand;
 use bootstrap::config::Config;
+use bootstrap::config::flags::BootstrapSubcommand;
 use fd_lock::RwLock;
 
 /// Entry point to the bootstrap binary, invoked by x.py.
@@ -76,7 +76,9 @@ pub fn main() {
 
     if config.config_path.is_none() && !matches!(config.subcommand, BootstrapSubcommand::Setup) {
         println!("WARN: no `hartex.conf` configuration file is found, using default configuration");
-        println!("HELP: consider running `./x.py setup` or copying `hartex.example.conf` by running `cp hartex.example.conf hartex.conf`")
+        println!(
+            "HELP: consider running `./x.py setup` or copying `hartex.example.conf` by running `cp hartex.example.conf hartex.conf`"
+        )
     }
 
     Build::new(config).build();

@@ -24,9 +24,9 @@
 
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
+use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
 use hartex_discord_core::discord::model::id::marker::UserMarker;
-use hartex_discord_core::discord::model::id::Id;
 
 /// Extension functions for `CommandDataOption`s.
 pub trait CommandDataOptionExt {

@@ -13,7 +13,8 @@ pub mod queries {
     pub mod plugin_enabled {
         use cornucopia_async::GenericClient;
         use futures;
-        use futures::{StreamExt, TryStreamExt};
+        use futures::StreamExt;
+        use futures::TryStreamExt;
         #[derive(Debug)]
         pub struct PluginEnabledParams<
             T1: cornucopia_async::StringSql,

@@ -36,9 +36,9 @@ use std::env;
 use std::future;
 use std::time::Duration;
 
+use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::NoTls;
-use bb8_postgres::PostgresConnectionManager;
 use dotenvy::Error;
 use hartex_errors::dotenv;
 use hartex_log::log;

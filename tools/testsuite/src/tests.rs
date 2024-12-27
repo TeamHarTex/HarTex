@@ -25,6 +25,7 @@ use std::path::Component;
 use std::path::PathBuf;
 use std::sync::Arc;
 
+use path_slash::PathExt;
 use test::ColorConfig;
 use test::Options;
 use test::OutputFormat;
@@ -36,8 +37,6 @@ use test::TestFn;
 use test::TestName;
 use test::TestOpts;
 use test::TestType;
-
-use path_slash::PathExt;
 use walkdir::WalkDir;
 
 use crate::config::Config;
@@ -78,7 +77,7 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
                         Component::Normal(component)
                             if component != config.root.file_name().unwrap() =>
                         {
-                            continue
+                            continue;
                         }
                         _ => break,
                     }
