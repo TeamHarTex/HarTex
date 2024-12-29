@@ -74,10 +74,13 @@ pub(crate) fn parse_select_query(
 }
 
 fn parse_select_target(fields: Vec<Vec<Node>>) -> crate::error::Result<SelectTarget> {
-    let _ = fields.first().ok_or(crate::error::Error::QueryFile(
+    let first = fields.first().ok_or(crate::error::Error::QueryFile(
         "expected at least one node in select target",
     ))?;
 
-    // panic!("{fields:?}");
-    Ok(SelectTarget::Everything)
+    if let Some(Node::AStar(_)) = first.first() && first.len() == 1 {
+        return Ok(SelectTarget::Everything);
+    }
+    
+    Err(crate::error::Error::QueryFile("unsupported select target (yet)"))
 }
