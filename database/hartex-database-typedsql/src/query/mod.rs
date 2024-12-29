@@ -68,7 +68,7 @@ pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Ite
 }
 
 pub(crate) fn parse_query(
-    query_info: RawQueryInfo,
+    query_info: &RawQueryInfo,
     schema_map: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<QueryInfo> {
     let result = pg_query::parse(query_info.contents.as_str())?;
