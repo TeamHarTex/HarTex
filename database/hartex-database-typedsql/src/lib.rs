@@ -45,7 +45,7 @@ where
         .collect::<HashMap<_, _>>();
 
     let _ = query::read_queries(queries_dir.as_ref())?
-        .map(|info| query::parse_query(info, schemas.clone()))
+        .map(|info| query::parse_query(&info, schemas.clone()))
         .filter_map(Result::ok)
         .collect::<Vec<_>>();
 
