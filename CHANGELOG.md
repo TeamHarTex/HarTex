@@ -1,32 +1,66 @@
-# [Next Version, Aluminium I](https://github.com/TeamHarTex/HarTex/compare/0.12.0...nightly)
+# [Next Version, Silicon I](https://github.com/TeamHarTex/HarTex/compare/0.13.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2024-08-04
+> **y** commits since 2025-01-01
 
 ## API Backend
 
-- **Changed:** updated `rust-version` to 1.83
-
 ## Buildsystem
 
-- **Changed:** updated `rust-version` to 1.83
 
 ## Database Infrastructure
 
-- **Changed:** updated `rust-version` to 1.83
-
 ## Discord Frontend
-
-- **Changed:** updated `rust-version` to 1.83
 
 ## Localization Infrastructure
 
-- **Changed:** updated `rust-version` to 1.83
+## Rust Utilities
+
+## Web Frontend
+
+
+# [0.13.0, Aluminium I](https://github.com/TeamHarTex/HarTex/compare/0.12.0..0.13.0)
+
+> **1** contributor made contributions to this release
+
+> **507** commits since 2024-08-04
+
+## API Backend
+
+- **Added:** add `utoipa` for API documentation generation
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
+- **Changed:** retrieving uptime is now a `GET` request with query parameters instead of a `POST` request
+- **Changed:** 404 response implementation
+
+## Buildsystem
+
+- **Changed:** updated `rust-version` to 1.85- **Changed:** use Rust 2024 Edition
+
+
+## Database Infrastructure
+
+- **Added:** started implementation custom type-safe SQL query generator, bindings generated from `cornucopia` are still kept for now
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
+
+## Discord Frontend
+
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
+- **Changed:** tweaked configuration parsing
+- **Fixed:** construction of event flags
+
+## Localization Infrastructure
+
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
 
 ## Rust Utilities
 
-- **Changed:** updated `rust-version` to 1.83
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
 
 ## Web Frontend
 
