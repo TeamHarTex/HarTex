@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_entitycache_macros"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2024"
 description = """
 Macros for the command framework.
@@ -18,7 +18,7 @@ pluralizer = "0.4.0"
 proc-macro2 = "1.0.86"
 quote = "1.0.37"
 syn = { version = "2.0.79", features = ["extra-traits", "full"] }
-hartex-macro-utils = { version = "0.1.0", path = "../../rust-utilities/hartex-macro-utils" }
+hartex-macro-utils = { path = "../../rust-utilities/hartex-macro-utils" }
 
 [build-dependencies]
 convert_case = "0.6.0"
