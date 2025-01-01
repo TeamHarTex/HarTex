@@ -1,6 +1,6 @@
 [package]
 name = "hartex_discord_worker"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2024"
 description = """
 The worker component of the bot.
