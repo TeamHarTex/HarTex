@@ -573,7 +573,7 @@ dependencies = [
 
 [[package]]
 name = "hartex-macro-utils"
-version = "0.1.0"
+version = "0.14.0"
 dependencies = [
  "quote",
  "syn 2.0.90",
@@ -581,14 +581,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_bitflags_utils"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "bitflags",
 ]
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "num_enum",
  "num_enum_derive",
@@ -601,7 +601,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "async-once-cell",
  "bb8-postgres",
@@ -617,7 +617,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "miette",
  "thiserror 2.0.3",
@@ -625,14 +625,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -647,7 +647,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -661,7 +661,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -673,7 +673,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "log",
  "log4rs",
