@@ -78,9 +78,13 @@ fn parse_select_target(fields: Vec<Vec<Node>>) -> crate::error::Result<SelectTar
         "expected at least one node in select target",
     ))?;
 
+    // SELECT * FROM ...
+    //        ^ everything
     if let Some(Node::AStar(_)) = first.first() && first.len() == 1 {
         return Ok(SelectTarget::Everything);
     }
+
+    // todo: support selecting a collection of fields
     
     Err(crate::error::Error::QueryFile("unsupported select target (yet)"))
 }
