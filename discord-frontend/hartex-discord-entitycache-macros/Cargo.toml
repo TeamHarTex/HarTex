@@ -12,7 +12,7 @@ rust-version = "1.85.0"
 
 [dependencies]
 convert_case = "0.6.0"
-itertools = "0.13.0"
+itertools = "0.14.0"
 lazy_static = "1.5.0"
 pluralizer = "0.4.0"
 proc-macro2 = "1.0.86"
