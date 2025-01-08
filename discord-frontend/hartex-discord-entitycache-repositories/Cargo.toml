@@ -20,7 +20,7 @@ hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-en
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
 serde_scan = "0.4.1"
-time = "0.3.36"
+time = "0.3.37"
 tokio-postgres = "0.7.12"
 
 [features]
