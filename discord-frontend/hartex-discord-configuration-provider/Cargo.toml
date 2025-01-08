@@ -17,7 +17,7 @@ hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-mo
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
-miette = "7.2.0"
+miette = "7.4.0"
 tokio-postgres = "0.7.12"
 
 [features]

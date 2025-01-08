@@ -12,10 +12,10 @@ rust-version = "1.85.0"
 
 [dependencies]
 cornucopia_async = "0.6.0"
-tokio = { version = "1.40.0", features = ["full"] }
-futures = "0.3.30"
-serde_json = { version = "1.0.128", features = ["raw_value"] }
-time = "0.3.36"
+tokio = { version = "1.42.0", features = ["full"] }
+futures = "0.3.31"
+serde_json = { version = "1.0.135", features = ["raw_value"] }
+time = "0.3.37"
 tokio-postgres = "0.7.12"
 postgres-types = { version = "0.2.8", features = ["with-serde_json-1", "with-time-0_3"] }
 
