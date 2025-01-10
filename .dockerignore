@@ -1,0 +1,13 @@
+# dotfolders
+.git
+
+# build by buildsystem
+build
+
+# tests and targets
+tests
+**/target
+
+# web frontend
+**/.nuxt
+**/node_modules

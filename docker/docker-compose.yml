@@ -1,5 +1,10 @@
-version: '3.7'
 services:
+  api-backend:
+    build:
+      dockerfile: api-backend/Dockerfile
+      context: ..
+    ports:
+      - "3333:3333"
   proxy:
     image: twilightrs/http-proxy:metrics
     container_name: proxy-1
