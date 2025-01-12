@@ -272,7 +272,7 @@ fn extract_archive<R: Read + Seek>(reader: R, output_dir: &Path) {
 
 fn generate_lazy_static_from_item_enum(item_enum: &ItemEnum) -> TokenStream {
     let ident = &item_enum.ident;
-    let const_name = ident.to_string().to_case(Case::ScreamingSnake);
+    let const_name = ident.to_string().to_case(Case::Constant);
     let const_ident = TokenStream::from_str(&const_name).unwrap();
 
     let generic_params = item_enum
@@ -304,7 +304,7 @@ fn generate_lazy_static_from_item_enum(item_enum: &ItemEnum) -> TokenStream {
 
 fn generate_lazy_static_from_item_struct(item_struct: &ItemStruct) -> TokenStream {
     let ident = &item_struct.ident;
-    let const_name = ident.to_string().to_case(Case::ScreamingSnake);
+    let const_name = ident.to_string().to_case(Case::Constant);
     let const_ident = TokenStream::from_str(&const_name).unwrap();
 
     let generic_params = item_struct
@@ -425,7 +425,7 @@ fn generate_enum_metadata_map(tree: &ModuleTree) -> TokenStream {
             let value_path_name = format!(
                 "{}::{}",
                 &path[16..(path.len() - (struct_name.len() + 2))],
-                struct_name.to_case(Case::ScreamingSnake),
+                struct_name.to_case(Case::Constant),
             );
             let value_path: syn::Path = syn::parse_str(&value_path_name).unwrap();
 
@@ -459,7 +459,7 @@ fn generate_struct_metadata_map(tree: &ModuleTree) -> TokenStream {
             let value_path_name = format!(
                 "{}::{}",
                 &path[16..(path.len() - (struct_name.len() + 2))],
-                struct_name.to_case(Case::ScreamingSnake),
+                struct_name.to_case(Case::Constant),
             );
             let value_path: syn::Path = syn::parse_str(&value_path_name).unwrap();
 
