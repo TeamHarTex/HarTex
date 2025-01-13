@@ -22,11 +22,13 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <template>
   <div class="accordion">
-    <button @click="isOpened = !isOpened">
+    <button @click="toggle">
       <div :class="{ 'rotate-45': isOpened }" class="i-carbon-add"></div>
-      {{ question }}
+      {{ props.question }}
     </button>
-    <p :class="{ hidden: !isOpened }">{{ answer }}</p>
+    <div ref="content">
+      <p :class="{ hidden: !isOpened }">{{ props.answer }}</p>
+    </div>
   </div>
 </template>
 
@@ -55,16 +57,34 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 </style>
 
 <script setup lang="ts">
-defineProps({
-  question: {
-    type: String,
-    required: true,
-  },
-  answer: {
-    type: String,
-    required: true,
-  },
-});
+const { $gsap } = useNuxtApp();
 
+const props = defineProps<{
+  question: string;
+  answer: string;
+}>();
+
+const content: Ref<HTMLDivElement | null> = ref(null);
 const isOpened = ref(false);
+
+function toggle() {
+  isOpened.value = !isOpened.value;
+
+  if (isOpened.value) {
+    $gsap.fromTo(
+      content.value,
+      { height: 0 },
+      { height: "auto", duration: 0.25, ease: "expo.out" }
+    );
+  } else {
+    const height = content.value?.offsetHeight;
+    content.value!.style.height = `${height}px`;
+
+    $gsap.to(content.value, {
+      height: 0,
+      duration: 0.25,
+      ease: "expo.out",
+    });
+  }
+}
 </script>
