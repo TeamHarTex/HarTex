@@ -17,6 +17,6 @@ axum = "0.8.1"
 either = { version = "1.13.0", features = ["serde"] }
 serde = { version = "1.0.217", features = ["derive"] }
 utoipa = "5.3.1"
-utoipa-axum = "0.1.4"
+utoipa-axum = "0.2.0"
 
 [features]
