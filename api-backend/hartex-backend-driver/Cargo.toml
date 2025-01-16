@@ -30,7 +30,7 @@ tower-http = { version = "0.6.2", features = ["timeout", "trace"] }
 tower-service = "0.3.3"
 tracing = { version = "0.1.41", features = ["log-always"] }
 utoipa = "5.3.1"
-utoipa-axum = "0.1.4"
-utoipa-scalar = { version = "0.2.1", features = ["axum"] }
+utoipa-axum = "0.2.0"
+utoipa-scalar = { version = "0.3.0", features = ["axum"] }
 
 [features]
