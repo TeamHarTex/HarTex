@@ -1,10 +1,13 @@
 services:
   api-backend:
+    container_name: api-1
     build:
       dockerfile: api-backend/Dockerfile
       context: ..
     ports:
       - "3333:3333"
+  database:
+    container_name: db-1
   proxy:
     image: twilightrs/http-proxy:metrics
     container_name: proxy-1
