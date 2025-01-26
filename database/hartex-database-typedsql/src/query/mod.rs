@@ -25,7 +25,6 @@ use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
-use pg_query::protobuf::node::Node;
 use walkdir::WalkDir;
 
 use crate::error::Error;
@@ -71,21 +70,5 @@ pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
     schema_map: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<QueryInfo> {
-    let result = pg_query::parse(query_info.contents.as_str())?;
-    let stmt = result
-        .protobuf
-        .stmts
-        .first()
-        .cloned()
-        .ok_or(Error::QueryFile("expected at least one query"))?
-        .stmt
-        .ok_or(Error::QueryFile("unexpected empty node"))?
-        .node
-        .ok_or(Error::QueryFile("unexpected empty inner node"))?;
-
-    match stmt {
-        // todo: add more branches
-        Node::SelectStmt(stmt) => select::parse_select_query(stmt.as_ref().clone(), schema_map),
-        _ => Err(Error::QueryFile("unexpected statement type")),
-    }
+    Err(Error::QueryFile(""))
 }

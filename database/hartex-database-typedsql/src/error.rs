@@ -22,11 +22,13 @@
 
 use std::io;
 
+use sqlparser::parser::ParserError;
+
 #[derive(Debug)]
 pub enum Error {
     Io(io::Error),
     QueryFile(&'static str),
-    SqlParse(pg_query::Error),
+    SqlError(ParserError)
 }
 
 impl From<io::Error> for Error {
@@ -35,9 +37,9 @@ impl From<io::Error> for Error {
     }
 }
 
-impl From<pg_query::Error> for Error {
-    fn from(err: pg_query::Error) -> Error {
-        Self::SqlParse(err)
+impl From<ParserError> for Error {
+    fn from(err: ParserError) -> Error {
+        Self::SqlError(err)
     }
 }
 

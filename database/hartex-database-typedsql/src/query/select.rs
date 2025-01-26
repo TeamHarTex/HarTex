@@ -22,9 +22,7 @@
 
 use std::collections::HashMap;
 
-use pg_query::protobuf::SelectStmt;
-use pg_query::protobuf::node::Node;
-
+use crate::error::Error;
 use crate::schema::SchemaInfo;
 
 #[derive(Clone, Debug)]
@@ -38,53 +36,8 @@ pub(crate) struct SelectQueryInfo {
 }
 
 pub(crate) fn parse_select_query(
-    stmt: SelectStmt,
+    stmt: (),
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
-    let target_column_fields = stmt
-        .target_list
-        .into_iter()
-        .filter_map(|node| node.node)
-        .filter_map(|node| {
-            if let Node::ResTarget(res_target) = node {
-                Some(res_target)
-            } else {
-                None
-            }
-        })
-        .filter_map(|res_target| res_target.val)
-        .filter_map(|node| node.node)
-        .filter_map(|node| {
-            if let Node::ColumnRef(column_ref) = node {
-                Some(column_ref)
-            } else {
-                None
-            }
-        })
-        .map(|node| {
-            node.fields
-                .into_iter()
-                .filter_map(|node| node.node)
-                .collect::<Vec<_>>()
-        })
-        .collect::<Vec<_>>();
-    let target = parse_select_target(target_column_fields)?;
-
-    Ok(super::QueryInfo::Select(SelectQueryInfo { target }))
-}
-
-fn parse_select_target(fields: Vec<Vec<Node>>) -> crate::error::Result<SelectTarget> {
-    let first = fields.first().ok_or(crate::error::Error::QueryFile(
-        "expected at least one node in select target",
-    ))?;
-
-    // SELECT * FROM ...
-    //        ^ everything
-    if let Some(Node::AStar(_)) = first.first() && first.len() == 1 {
-        return Ok(SelectTarget::Everything);
-    }
-
-    // todo: support selecting a collection of fields
-    
-    Err(crate::error::Error::QueryFile("unsupported select target (yet)"))
+    Err(Error::QueryFile(""))
 }

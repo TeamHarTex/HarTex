@@ -23,8 +23,10 @@
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
-
-use pg_query::protobuf::node::Node;
+use sqlparser::ast::Statement;
+use sqlparser::parser::Parser;
+use crate::error::Error;
+use crate::POSTGRESQL_DIALECT;
 
 #[allow(dead_code)]
 #[derive(Clone, Debug)]
@@ -89,59 +91,7 @@ pub(crate) fn read_schemas(
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::needless_pass_by_value)]
 pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
-    let result = pg_query::parse(schema_info.contents.as_str())?;
-    let statements = result.protobuf.stmts;
-    let tables = statements
-        .into_iter()
-        .filter_map(|statement| {
-            if let Some(Node::CreateStmt(create)) = statement.clone().stmt?.node {
-                Some(create)
-            } else {
-                None
-            }
-        })
-        .filter_map(|create| {
-            create
-                .relation
-                .map(|relation| (relation, create.table_elts))
-        })
-        .map(|(relation, nodes)| {
-            (
-                relation,
-                nodes
-                    .into_iter()
-                    .filter_map(|node| {
-                        if let Some(Node::ColumnDef(def)) = node.node {
-                            Some(def)
-                        } else {
-                            None
-                        }
-                    })
-                    .filter(|def| def.type_name.is_some())
-                    .map(|def| (def.colname, def.type_name.unwrap()))
-                    .map(|(name, coltype)| {
-                        let Node::String(string) =
-                            coltype.clone().names.last().unwrap().clone().node.unwrap()
-                        else {
-                            unreachable!()
-                        };
+    let statements = Parser::parse_sql(&POSTGRESQL_DIALECT, schema_info.contents.as_str())?;
 
-                        ColumnInfo {
-                            name,
-                            coltype: string.sval,
-                        }
-                    })
-                    .collect::<Vec<_>>(),
-            )
-        })
-        .map(|(relation, columns)| TableInfo {
-            name: relation.relname,
-            columns,
-        })
-        .collect::<Vec<_>>();
-
-    Ok(SchemaInfo {
-        name: schema_info.name,
-        tables,
-    })
+    panic!("{statements:?}");
 }
