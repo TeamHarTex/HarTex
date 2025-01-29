@@ -22,17 +22,23 @@
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
-#![deny(warnings)]
+//#![deny(warnings)]
 #![allow(dead_code)]
+#![allow(incomplete_features)]
 #![allow(unreachable_code)]
+#![feature(deref_patterns)]
 #![feature(let_chains)]
 
 use std::collections::HashMap;
 use std::path::Path;
 
+use sqlparser::dialect::PostgreSqlDialect;
+
 mod error;
 mod query;
 mod schema;
+
+pub(crate) const POSTGRESQL_DIALECT: PostgreSqlDialect = PostgreSqlDialect {};
 
 #[allow(clippy::missing_errors_doc)]
 pub fn generate_queries_with_schemas<P>(schemas_dir: P, queries_dir: P, _: P) -> error::Result<()>

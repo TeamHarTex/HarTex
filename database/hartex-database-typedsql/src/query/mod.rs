@@ -25,10 +25,13 @@ use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
-use pg_query::protobuf::node::Node;
+use sqlparser::ast::Query;
+use sqlparser::ast::SetExpr;
+use sqlparser::ast::Statement;
+use sqlparser::parser::Parser;
 use walkdir::WalkDir;
 
-use crate::error::Error;
+use crate::POSTGRESQL_DIALECT;
 use crate::schema::SchemaInfo;
 
 mod select;
@@ -71,21 +74,20 @@ pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
     schema_map: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<QueryInfo> {
-    let result = pg_query::parse(query_info.contents.as_str())?;
-    let stmt = result
-        .protobuf
-        .stmts
+    let statement = Parser::parse_sql(&POSTGRESQL_DIALECT, &query_info.contents)?
         .first()
         .cloned()
-        .ok_or(Error::QueryFile("expected at least one query"))?
-        .stmt
-        .ok_or(Error::QueryFile("unexpected empty node"))?
-        .node
-        .ok_or(Error::QueryFile("unexpected empty inner node"))?;
+        .ok_or(crate::error::Error::QueryFile(
+            "no query found in query file",
+        ))?;
 
-    match stmt {
-        // todo: add more branches
-        Node::SelectStmt(stmt) => select::parse_select_query(stmt.as_ref().clone(), schema_map),
-        _ => Err(Error::QueryFile("unexpected statement type")),
+    match statement {
+        Statement::Query(
+            deref!(Query {
+                body: deref!(SetExpr::Select(deref!(ref select))),
+                ..
+            }),
+        ) => select::parse_select_query(select.clone(), schema_map),
+        _ => Err(crate::error::Error::QueryFile("unsupported query type")),
     }
 }
