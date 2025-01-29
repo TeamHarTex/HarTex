@@ -22,22 +22,16 @@
 
 use std::collections::HashMap;
 
-use crate::error::Error;
+use sqlparser::ast::Select;
+
 use crate::schema::SchemaInfo;
 
 #[derive(Clone, Debug)]
-pub(crate) enum SelectTarget {
-    Everything,
-}
-
-#[derive(Clone, Debug)]
-pub(crate) struct SelectQueryInfo {
-    pub(crate) target: SelectTarget,
-}
+pub(crate) struct SelectQueryInfo {}
 
 pub(crate) fn parse_select_query(
-    stmt: (),
+    select: Select,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
-    Err(Error::QueryFile(""))
+    panic!("{select:?}");
 }

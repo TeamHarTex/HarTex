@@ -25,9 +25,13 @@ use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
+use sqlparser::ast::Query;
+use sqlparser::ast::SetExpr;
+use sqlparser::ast::Statement;
+use sqlparser::parser::Parser;
 use walkdir::WalkDir;
 
-use crate::error::Error;
+use crate::POSTGRESQL_DIALECT;
 use crate::schema::SchemaInfo;
 
 mod select;
@@ -70,5 +74,20 @@ pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
     schema_map: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<QueryInfo> {
-    Err(Error::QueryFile(""))
+    let statement = Parser::parse_sql(&POSTGRESQL_DIALECT, &query_info.contents)?
+        .first()
+        .cloned()
+        .ok_or(crate::error::Error::QueryFile(
+            "no query found in query file",
+        ))?;
+
+    match statement {
+        Statement::Query(
+            deref!(Query {
+                body: deref!(SetExpr::Select(deref!(ref select))),
+                ..
+            }),
+        ) => select::parse_select_query(select.clone(), schema_map),
+        _ => Err(crate::error::Error::QueryFile("unsupported query type")),
+    }
 }

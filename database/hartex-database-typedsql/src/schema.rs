@@ -23,16 +23,32 @@
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
+
+use sqlparser::ast::ColumnDef;
+use sqlparser::ast::ColumnOption;
+use sqlparser::ast::CreateTable;
+use sqlparser::ast::DataType;
 use sqlparser::ast::Statement;
 use sqlparser::parser::Parser;
-use crate::error::Error;
+
 use crate::POSTGRESQL_DIALECT;
 
 #[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub(crate) struct ColumnInfo {
     pub(crate) name: String,
-    pub(crate) coltype: String,
+    pub(crate) coltype: DataType,
+    pub(crate) constraints: Vec<ColumnOption>,
+}
+
+impl From<ColumnDef> for ColumnInfo {
+    fn from(value: ColumnDef) -> Self {
+        Self {
+            name: value.name.to_string(),
+            coltype: value.data_type,
+            constraints: value.options.into_iter().map(|opt| opt.option).collect(),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -47,6 +63,15 @@ pub(crate) struct SchemaInfo {
 pub(crate) struct TableInfo {
     pub(crate) name: String,
     pub(crate) columns: Vec<ColumnInfo>,
+}
+
+impl From<CreateTable> for TableInfo {
+    fn from(value: CreateTable) -> Self {
+        Self {
+            name: value.name.to_string(),
+            columns: value.columns.into_iter().map(ColumnInfo::from).collect(),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -91,7 +116,19 @@ pub(crate) fn read_schemas(
 #[allow(clippy::missing_errors_doc)]
 #[allow(clippy::needless_pass_by_value)]
 pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
-    let statements = Parser::parse_sql(&POSTGRESQL_DIALECT, schema_info.contents.as_str())?;
+    let tables = Parser::parse_sql(&POSTGRESQL_DIALECT, schema_info.contents.as_str())?
+        .into_iter()
+        .filter_map(|st| {
+            let Statement::CreateTable(ct) = st else {
+                return None;
+            };
 
-    panic!("{statements:?}");
+            Some(TableInfo::from(ct))
+        })
+        .collect();
+
+    Ok(SchemaInfo {
+        name: schema_info.name,
+        tables,
+    })
 }
