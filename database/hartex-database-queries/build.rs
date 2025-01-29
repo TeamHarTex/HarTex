@@ -20,17 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-
-use cornucopia::CodegenSettings;
-use postgres::Client;
-use postgres::NoTls;
-
 pub fn main() {
-    if dotenvy::dotenv().is_err() {
-        return;
-    }
-
     /*let api_backend_queries_path = "queries/api_backend";
     println!("cargo::rerun-if-changed={api_backend_queries_path}");
 

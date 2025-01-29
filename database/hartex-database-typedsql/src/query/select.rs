@@ -30,8 +30,8 @@ use crate::schema::SchemaInfo;
 pub(crate) struct SelectQueryInfo {}
 
 pub(crate) fn parse_select_query(
-    select: Select,
+    _: Select,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
-    panic!("{select:?}");
+    todo!()
 }

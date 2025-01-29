@@ -79,5 +79,5 @@ CREATE TABLE IF NOT EXISTS "Nightly"."CachedUsers" (
 
 CREATE TABLE IF NOT EXISTS "Nightly"."GuildConfigurations" (
     "guild_id" TEXT NOT NULL PRIMARY KEY,
-    "enabled_plugins" TEXT ARRAY NOT NULL
+    "enabled_plugins" TEXT[] NOT NULL
 );
