@@ -33,5 +33,5 @@ pub(crate) fn parse_select_query(
     _: Select,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
-    todo!()
+    Err(crate::error::Error::QueryFile("todo"))
 }
