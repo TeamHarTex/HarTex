@@ -20,8 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use itertools::Itertools;
 use proc_macro2::Ident;
 use proc_macro2::Span;
+use syn::File;
 
 use crate::schema::SchemaInfo;
 use crate::schema::TableInfo;
@@ -33,15 +35,20 @@ pub(crate) struct GeneratedTableStructsFile {
 
 pub(crate) fn generate_table_structs_from_schema(
     (name, schema): (String, SchemaInfo),
-) -> GeneratedTableStructsFile {
-    let _ = format!("{name}.rs");
-    let _ = generate_token_stream(schema);
+) -> crate::error::Result<GeneratedTableStructsFile> {
+    let filename = format!("{name}.rs");
+    let stream = generate_token_stream(schema)?;
 
-    todo!()
+    let file = syn::parse2::<File>(stream)?;
+
+    Ok(GeneratedTableStructsFile {
+        filename,
+        content: prettyplease::unparse(&file),
+    })
 }
 
-fn generate_token_stream(schema: SchemaInfo) -> proc_macro2::TokenStream {
-    let _ = schema
+fn generate_token_stream(schema: SchemaInfo) -> crate::error::Result<proc_macro2::TokenStream> {
+    let structs = schema
         .tables
         .clone()
         .into_iter()
@@ -51,25 +58,35 @@ fn generate_token_stream(schema: SchemaInfo) -> proc_macro2::TokenStream {
                 .replace('"', "")
                 .replace('.', "");
             let ident = Ident::new(unquoted_name.as_str(), Span::call_site());
-            let _ = generate_table_fields_token_streams(table);
+            let fields = generate_table_fields_token_streams(table)?;
 
-            quote::quote! {
+            Ok::<proc_macro2::TokenStream, crate::error::Error>(quote::quote! {
                 pub struct #ident {
-
+                    #(#fields),*
                 }
-            }
+            })
         })
-        .collect::<Vec<_>>();
+        .process_results(|iter| iter.collect_vec())?;
 
-    todo!()
+    Ok(quote::quote! {
+        #(#structs)*
+    })
 }
 
-fn generate_table_fields_token_streams(table: TableInfo) -> Vec<proc_macro2::TokenStream> {
-    table.columns.into_iter().map(|(name, _)| {
-        let ident = Ident::new(name.as_str(), Span::call_site());
+fn generate_table_fields_token_streams(
+    table: TableInfo,
+) -> crate::error::Result<Vec<proc_macro2::TokenStream>> {
+    table
+        .columns
+        .into_iter()
+        .map(|(name, column)| {
+            let ident = Ident::new(name.as_str(), Span::call_site());
+            let dtype = super::types::sql_type_to_rust_type_token_stream(column.coltype)
+                .ok_or(crate::error::Error::QueryFile("unsupported data type"))?;
 
-        quote::quote! {
-            #ident:
-        }
-    }).collect()
+            Ok::<proc_macro2::TokenStream, crate::error::Error>(quote::quote! {
+                #ident: #dtype
+            })
+        })
+        .process_results(|iter| iter.collect_vec())
 }

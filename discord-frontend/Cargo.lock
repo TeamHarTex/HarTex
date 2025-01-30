@@ -1124,6 +1124,7 @@ version = "0.14.0"
 dependencies = [
  "convert_case",
  "itertools 0.14.0",
+ "prettyplease",
  "proc-macro2",
  "quote",
  "sqlparser",
@@ -2426,9 +2427,9 @@ dependencies = [
 
 [[package]]
 name = "prettyplease"
-version = "0.2.22"
+version = "0.2.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "479cf940fbbb3426c32c5d5176f62ad57549a0bb84773423ba8be9d089f5faba"
+checksum = "6924ced06e1f7dfe3fa48d57b9f74f55d8915f5036121bef647ef4b204895fac"
 dependencies = [
  "proc-macro2",
  "syn 2.0.96",
