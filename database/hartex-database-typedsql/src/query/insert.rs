@@ -19,11 +19,25 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use std::collections::HashMap;
+
 use sqlparser::ast::Insert;
 
-#[derive(Clone, Debug)]
-pub struct InsertQueryInfo;
+use crate::schema::SchemaInfo;
+use crate::schema::TableInfo;
 
-pub(crate) fn parse_insert_query(_: Insert) -> crate::error::Result<InsertQueryInfo> {
-    Ok(InsertQueryInfo)
+#[derive(Clone, Debug)]
+pub(crate) struct InsertQueryInfo {
+    pub(crate) into_table: TableInfo,
+    pub(crate) placeholders: Vec<String>,
+}
+
+pub(crate) fn parse_insert_query(
+    insert: Insert,
+    _: HashMap<String, SchemaInfo>,
+) -> crate::error::Result<InsertQueryInfo> {
+    dbg!(insert);
+
+    todo!()
 }
