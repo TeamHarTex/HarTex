@@ -34,7 +34,6 @@ use sqlparser::ast::TableFactor;
 use sqlparser::ast::Value;
 use sqlparser::ast::Visit;
 
-use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
 use crate::schema::TableInfo;
 use crate::visitor::PlaceholderVisitor;
@@ -42,7 +41,6 @@ use crate::visitor::PlaceholderVisitor;
 #[derive(Clone, Debug)]
 pub(crate) enum SelectWhat {
     Boolean(bool),
-    Columns(Vec<ColumnInfo>),
     Everything,
     Exists(SelectQueryInfo),
 }

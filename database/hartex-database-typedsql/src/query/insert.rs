@@ -22,10 +22,16 @@
 
 use std::collections::HashMap;
 
+use convert_case::Case;
+use convert_case::Casing;
 use sqlparser::ast::Insert;
+use sqlparser::ast::ObjectName;
+use sqlparser::ast::TableObject;
+use sqlparser::ast::Visit;
 
 use crate::schema::SchemaInfo;
 use crate::schema::TableInfo;
+use crate::visitor::PlaceholderVisitor;
 
 #[derive(Clone, Debug)]
 pub(crate) struct InsertQueryInfo {
@@ -35,9 +41,34 @@ pub(crate) struct InsertQueryInfo {
 
 pub(crate) fn parse_insert_query(
     insert: Insert,
-    _: HashMap<String, SchemaInfo>,
+    schema_infos: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<InsertQueryInfo> {
-    dbg!(insert);
+    let TableObject::TableName(ref name) = insert.table else {
+        return Err(crate::error::Error::QueryFile(
+            "table functions are not supported",
+        ));
+    };
+    let schema_name = name
+        .0
+        .first()
+        .ok_or(crate::error::Error::QueryFile("schema name not found"))?;
+    let key = schema_name.value.to_case(Case::Snake);
+    let schema_info = schema_infos
+        .get(&key)
+        .ok_or(crate::error::Error::QueryFile("schema not found"))?;
 
-    todo!()
+    let table_key = ObjectName(name.0[1..].to_vec()).to_string();
+    let into_table = schema_info
+        .tables
+        .get(&table_key)
+        .cloned()
+        .ok_or(crate::error::Error::QueryFile("table not found in schema"))?;
+
+    let mut plvisit = PlaceholderVisitor::default();
+    insert.visit(&mut plvisit);
+
+    Ok(InsertQueryInfo {
+        into_table,
+        placeholders: plvisit.placeholders,
+    })
 }
