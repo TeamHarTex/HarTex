@@ -19,11 +19,8 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use sqlparser::ast::Insert;
 
-SELECT
-    *
-FROM
-    "DiscordFrontend"."Nightly"."CachedRoles"
-WHERE
-    "guild_id" = :guild_id;
-    
+pub(crate) fn parse_insert_query(_: Insert) -> crate::error::Result<()> {
+    Ok(())
+}

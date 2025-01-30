@@ -28,7 +28,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(str_as_str)]
 #![feature(result_flattening)]
 
 use mlua::Error;

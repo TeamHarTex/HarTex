@@ -24,10 +24,14 @@ use std::collections::HashMap;
 
 use convert_case::Case;
 use convert_case::Casing;
+use sqlparser::ast::Expr;
 use sqlparser::ast::ObjectName;
+use sqlparser::ast::Query;
 use sqlparser::ast::Select;
 use sqlparser::ast::SelectItem;
+use sqlparser::ast::SetExpr;
 use sqlparser::ast::TableFactor;
+use sqlparser::ast::Value;
 
 use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
@@ -35,23 +39,35 @@ use crate::schema::TableInfo;
 
 #[derive(Clone, Debug)]
 pub(crate) enum SelectWhat {
-    Everything,
+    Boolean(bool),
     Columns(Vec<ColumnInfo>),
-    Exists(Box<SelectQueryInfo>),
-    True,
+    Everything,
+    Exists(SelectQueryInfo),
 }
 
 #[derive(Clone, Debug)]
 pub(crate) struct SelectQueryInfo {
-    pub(crate) what: SelectWhat,
+    pub(crate) what: Box<SelectWhat>,
     pub(crate) from: Option<TableInfo>,
+    //pub(crate) placeholders:
 }
 
 pub(crate) fn parse_select_query(
     select: Select,
     schema_infos: HashMap<String, SchemaInfo>,
-) -> crate::error::Result<super::QueryInfo> {
+) -> crate::error::Result<SelectQueryInfo> {
     let what = match select.projection.first() {
+        Some(SelectItem::UnnamedExpr(Expr::Exists {
+            subquery:
+                deref!(Query {
+                    body: deref!(SetExpr::Select(deref!(select))),
+                    ..
+                }),
+            ..
+        })) => SelectWhat::Exists(parse_select_query(select.clone(), schema_infos.clone())?),
+        Some(SelectItem::UnnamedExpr(Expr::Value(Value::Boolean(boolean)))) => {
+            SelectWhat::Boolean(*boolean)
+        }
         Some(SelectItem::Wildcard(_)) if select.projection.len() == 1 => SelectWhat::Everything,
         _ => {
             return Err(crate::error::Error::QueryFile(
@@ -78,5 +94,8 @@ pub(crate) fn parse_select_query(
         None
     };
 
-    Ok(super::QueryInfo::Select(SelectQueryInfo { what, from }))
+    Ok(SelectQueryInfo {
+        what: Box::new(what),
+        from,
+    })
 }

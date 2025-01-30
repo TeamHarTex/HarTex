@@ -4,7 +4,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021-2024 HarTex Project Developers
+ * Copyright (c) 2021-2025 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,10 +21,10 @@
  */
 
 INSERT INTO "DiscordFrontend"."Nightly"."CachedMembers" ("flags", "joined_at", "nick", "user_id", "guild_id", "roles")
-VALUES (@flags, @joined_at, @nick, @user_id, @guild_id, @roles)
+VALUES (:flags, :joined_at, :nick, :user_id, :guild_id, :roles)
 ON CONFLICT ("user_id", "guild_id") DO UPDATE
     SET
-        "flags" = @flags,
-        "joined_at" = @joined_at,
-        "nick" = @nick,
-        "roles" = @roles;
+        "flags" = :flags,
+        "joined_at" = :joined_at,
+        "nick" = :nick,
+        "roles" = :roles;

@@ -4,7 +4,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021-2024 HarTex Project Developers
+ * Copyright (c) 2021-2025 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,11 +21,11 @@
  */
 
 INSERT INTO "DiscordFrontend"."Nightly"."CachedUsers" ("avatar", "id", "bot", "name", "discriminator", "global_name")
-VALUES (@avatar, @id, @bot, @name, @discriminator, @global_name)
+VALUES (:avatar, :id, :bot, :name, :discriminator, :global_name)
 ON CONFLICT ("id") DO UPDATE
     SET
-        "avatar" = @avatar,
-        "bot" = @bot,
-        "name" = @name,
-        "discriminator" = @discriminator,
-        "global_name" = @global_name;
+        "avatar" = :avatar,
+        "bot" = :bot,
+        "name" = :name,
+        "discriminator" = :discriminator,
+        "global_name" = :global_name;

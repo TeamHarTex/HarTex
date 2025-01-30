@@ -4,7 +4,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021-2024 HarTex Project Developers
+ * Copyright (c) 2021-2025 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,5 +25,5 @@ SELECT
 FROM
     "DiscordFrontend"."Nightly"."CachedMembers"
 WHERE
-    user_id = @user_id AND
-    guild_id = @guild_id;
+    user_id = :user_id AND
+    guild_id = :guild_id;

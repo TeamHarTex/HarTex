@@ -25,4 +25,4 @@ SELECT
 FROM
     "APIBackend".public."StartTimestamps"
 WHERE
-    "component" = @component;
+    "component" = :component;
