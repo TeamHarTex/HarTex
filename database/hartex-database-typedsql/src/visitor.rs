@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeSet;
 use std::ops::ControlFlow;
 
 use sqlparser::ast::Expr;
@@ -28,7 +29,7 @@ use sqlparser::ast::Visitor;
 
 #[derive(Default)]
 pub struct PlaceholderVisitor {
-    pub(crate) placeholders: Vec<String>,
+    pub(crate) placeholders: BTreeSet<String>,
 }
 
 impl Visitor for PlaceholderVisitor {
@@ -36,9 +37,9 @@ impl Visitor for PlaceholderVisitor {
 
     fn pre_visit_expr(&mut self, expr: &Expr) -> ControlFlow<Self::Break> {
         match expr {
-            Expr::Value(Value::Placeholder(ph)) => self.placeholders.push(String::from(&ph[1..])),
-            _ => (),
-        }
+            Expr::Value(Value::Placeholder(ph)) => self.placeholders.insert(String::from(&ph[1..])),
+            _ => false,
+        };
 
         ControlFlow::Continue(())
     }

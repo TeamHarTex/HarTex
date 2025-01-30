@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeSet;
 use std::collections::HashMap;
 
 use convert_case::Case;
@@ -36,7 +37,7 @@ use crate::visitor::PlaceholderVisitor;
 #[derive(Clone, Debug)]
 pub(crate) struct InsertQueryInfo {
     pub(crate) into_table: TableInfo,
-    pub(crate) placeholders: Vec<String>,
+    pub(crate) placeholders: BTreeSet<String>,
 }
 
 pub(crate) fn parse_insert_query(

@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeSet;
 use std::collections::HashMap;
 
 use convert_case::Case;
@@ -49,7 +50,7 @@ pub(crate) enum SelectWhat {
 pub(crate) struct SelectQueryInfo {
     pub(crate) what: Box<SelectWhat>,
     pub(crate) from: Option<TableInfo>,
-    pub(crate) placeholders: Vec<String>,
+    pub(crate) placeholders: BTreeSet<String>,
 }
 
 pub(crate) fn parse_select_query(
