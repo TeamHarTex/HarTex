@@ -142,7 +142,7 @@ impl<'build> Builder<'build> {
     }
 }
 
-impl<'build> Deref for Builder<'build> {
+impl Deref for Builder<'_> {
     type Target = Build;
 
     fn deref(&self) -> &Self::Target {

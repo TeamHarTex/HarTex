@@ -35,6 +35,7 @@ use std::path::Path;
 use itertools::Itertools;
 use sqlparser::dialect::PostgreSqlDialect;
 
+mod codegen;
 mod error;
 mod query;
 mod schema;
@@ -43,7 +44,11 @@ mod visitor;
 pub(crate) const POSTGRESQL_DIALECT: PostgreSqlDialect = PostgreSqlDialect {};
 
 #[allow(clippy::missing_errors_doc)]
-pub fn generate_queries_with_schemas<P>(schemas_dir: P, queries_dir: P, _: P) -> error::Result<()>
+pub fn generate_queries_with_schemas<P>(
+    schemas_dir: P,
+    queries_dir: P,
+    target_dir: P,
+) -> error::Result<()>
 where
     P: AsRef<Path>,
 {
@@ -58,6 +63,12 @@ where
         .map(|info| query::parse_query(&info, schemas.clone()))
         .process_results(|iter| iter.collect_vec())?;
 
-    // todo
+    // todo: clear generated files before regenerating
+
+    // todo: generate tables and queries
+    codegen::generate_table_structs_from_schemas(schemas, target_dir)?;
+
+    // todo: regenerate src/lib.rs
+
     Ok(())
 }

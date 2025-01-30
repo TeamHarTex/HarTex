@@ -84,7 +84,9 @@ pub(crate) fn parse_query(
         ))?;
 
     Ok(match statement {
-        Statement::Insert(insert) => QueryInfo::Insert(insert::parse_insert_query(insert)?),
+        Statement::Insert(insert) => {
+            QueryInfo::Insert(insert::parse_insert_query(insert, schema_map)?)
+        }
         Statement::Query(
             deref!(Query {
                 body: deref!(SetExpr::Select(deref!(ref select))),

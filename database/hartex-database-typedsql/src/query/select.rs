@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeSet;
 use std::collections::HashMap;
 
 use convert_case::Case;
@@ -34,7 +35,6 @@ use sqlparser::ast::TableFactor;
 use sqlparser::ast::Value;
 use sqlparser::ast::Visit;
 
-use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
 use crate::schema::TableInfo;
 use crate::visitor::PlaceholderVisitor;
@@ -42,7 +42,6 @@ use crate::visitor::PlaceholderVisitor;
 #[derive(Clone, Debug)]
 pub(crate) enum SelectWhat {
     Boolean(bool),
-    Columns(Vec<ColumnInfo>),
     Everything,
     Exists(SelectQueryInfo),
 }
@@ -51,7 +50,7 @@ pub(crate) enum SelectWhat {
 pub(crate) struct SelectQueryInfo {
     pub(crate) what: Box<SelectWhat>,
     pub(crate) from: Option<TableInfo>,
-    pub(crate) placeholders: Vec<String>,
+    pub(crate) placeholders: BTreeSet<String>,
 }
 
 pub(crate) fn parse_select_query(

@@ -45,6 +45,7 @@ use crate::header::TestsuiteOutcome;
 use crate::testrunner;
 
 #[allow(clippy::module_name_repetitions)]
+#[must_use]
 pub fn run_tests(config: Arc<Config>) -> bool {
     let mut tests = Vec::new();
     discover_tests(config, &mut tests);

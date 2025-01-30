@@ -23,12 +23,14 @@
 use std::io;
 
 use sqlparser::parser::ParserError;
+use syn::Error as SynError;
 
 #[derive(Debug)]
 pub enum Error {
     Io(io::Error),
     QueryFile(&'static str),
-    SqlError(ParserError)
+    Sql(ParserError),
+    Syn(SynError),
 }
 
 impl From<io::Error> for Error {
@@ -39,7 +41,13 @@ impl From<io::Error> for Error {
 
 impl From<ParserError> for Error {
     fn from(err: ParserError) -> Error {
-        Self::SqlError(err)
+        Self::Sql(err)
+    }
+}
+
+impl From<SynError> for Error {
+    fn from(err: SynError) -> Error {
+        Self::Syn(err)
     }
 }
 

@@ -70,7 +70,11 @@ impl From<CreateTable> for TableInfo {
     fn from(value: CreateTable) -> Self {
         Self {
             name: value.name.to_string(),
-            columns: value.columns.into_iter().map(|col| (col.name.to_string(), ColumnInfo::from(col))).collect(),
+            columns: value
+                .columns
+                .into_iter()
+                .map(|col| (col.name.value.clone(), ColumnInfo::from(col)))
+                .collect(),
         }
     }
 }
