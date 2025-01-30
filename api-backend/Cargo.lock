@@ -800,6 +800,7 @@ dependencies = [
 name = "hartex_database_typedsql"
 version = "0.14.0"
 dependencies = [
+ "itertools",
  "sqlparser",
  "walkdir",
 ]

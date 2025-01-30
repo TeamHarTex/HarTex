@@ -24,13 +24,24 @@ use std::collections::HashMap;
 
 use sqlparser::ast::Select;
 
+use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
+use crate::schema::TableInfo;
 
 #[derive(Clone, Debug)]
-pub(crate) struct SelectQueryInfo {}
+pub(crate) enum SelectWhat {
+    Everything,
+    Columns(Vec<ColumnInfo>),
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct SelectQueryInfo {
+    pub(crate) what: SelectWhat,
+    pub(crate) from: TableInfo,
+}
 
 pub(crate) fn parse_select_query(
-    _: Select,
+    select: Select,
     _: HashMap<String, SchemaInfo>,
 ) -> crate::error::Result<super::QueryInfo> {
     Err(crate::error::Error::QueryFile("todo"))

@@ -22,7 +22,7 @@
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
-//#![deny(warnings)]
+#![deny(warnings)]
 #![allow(dead_code)]
 #![allow(incomplete_features)]
 #![allow(unreachable_code)]
@@ -32,6 +32,7 @@
 use std::collections::HashMap;
 use std::path::Path;
 
+use itertools::Itertools;
 use sqlparser::dialect::PostgreSqlDialect;
 
 mod error;
@@ -47,14 +48,14 @@ where
 {
     let schemas = schema::read_schemas(schemas_dir.as_ref())?
         .map(schema::parse_schema)
-        .filter_map(Result::ok)
-        .map(|schema| (schema.name.clone(), schema))
-        .collect::<HashMap<_, _>>();
+        .process_results(|iter| {
+            iter.map(|schema| (schema.name.clone(), schema))
+                .collect::<HashMap<_, _>>()
+        })?;
 
     let _ = query::read_queries(queries_dir.as_ref())?
         .map(|info| query::parse_query(&info, schemas.clone()))
-        .filter_map(Result::ok)
-        .collect::<Vec<_>>();
+        .process_results(|iter| iter.collect_vec())?;
 
     // todo
     Ok(())

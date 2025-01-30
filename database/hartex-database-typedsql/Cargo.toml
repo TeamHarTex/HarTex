@@ -11,6 +11,7 @@ rust-version = "1.86.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+itertools = "0.14.0"
 sqlparser = "0.54.0"
 walkdir = "2.5.0"
 
