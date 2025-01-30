@@ -24,7 +24,7 @@ use std::collections::HashMap;
 
 use convert_case::Case;
 use convert_case::Casing;
-use sqlparser::ast::{Expr, Visit};
+use sqlparser::ast::Expr;
 use sqlparser::ast::ObjectName;
 use sqlparser::ast::Query;
 use sqlparser::ast::Select;
@@ -32,6 +32,7 @@ use sqlparser::ast::SelectItem;
 use sqlparser::ast::SetExpr;
 use sqlparser::ast::TableFactor;
 use sqlparser::ast::Value;
+use sqlparser::ast::Visit;
 
 use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
@@ -101,6 +102,6 @@ pub(crate) fn parse_select_query(
     Ok(SelectQueryInfo {
         what: Box::new(what),
         from,
-        placeholders: plvisit.placeholders
+        placeholders: plvisit.placeholders,
     })
 }
