@@ -22,16 +22,86 @@
 
 use std::collections::HashMap;
 
+use convert_case::Case;
+use convert_case::Casing;
+use sqlparser::ast::Expr;
+use sqlparser::ast::ObjectName;
+use sqlparser::ast::Query;
 use sqlparser::ast::Select;
+use sqlparser::ast::SelectItem;
+use sqlparser::ast::SetExpr;
+use sqlparser::ast::TableFactor;
+use sqlparser::ast::Value;
+use sqlparser::ast::Visit;
 
+use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
+use crate::schema::TableInfo;
+use crate::visitor::PlaceholderVisitor;
 
 #[derive(Clone, Debug)]
-pub(crate) struct SelectQueryInfo {}
+pub(crate) enum SelectWhat {
+    Boolean(bool),
+    Columns(Vec<ColumnInfo>),
+    Everything,
+    Exists(SelectQueryInfo),
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct SelectQueryInfo {
+    pub(crate) what: Box<SelectWhat>,
+    pub(crate) from: Option<TableInfo>,
+    pub(crate) placeholders: Vec<String>,
+}
 
 pub(crate) fn parse_select_query(
-    _: Select,
-    _: HashMap<String, SchemaInfo>,
-) -> crate::error::Result<super::QueryInfo> {
-    Err(crate::error::Error::QueryFile("todo"))
+    select: Select,
+    schema_infos: HashMap<String, SchemaInfo>,
+) -> crate::error::Result<SelectQueryInfo> {
+    let what = match select.projection.first() {
+        Some(SelectItem::UnnamedExpr(Expr::Exists {
+            subquery:
+                deref!(Query {
+                    body: deref!(SetExpr::Select(deref!(select))),
+                    ..
+                }),
+            ..
+        })) => SelectWhat::Exists(parse_select_query(select.clone(), schema_infos.clone())?),
+        Some(SelectItem::UnnamedExpr(Expr::Value(Value::Boolean(boolean)))) => {
+            SelectWhat::Boolean(*boolean)
+        }
+        Some(SelectItem::Wildcard(_)) if select.projection.len() == 1 => SelectWhat::Everything,
+        _ => {
+            return Err(crate::error::Error::QueryFile(
+                "unsupported selection projection",
+            ));
+        }
+    };
+
+    let from = if let Some(tablewj) = select.from.first()
+        && let TableFactor::Table { ref name, .. } = tablewj.relation
+    {
+        let schema_name = name
+            .0
+            .first()
+            .ok_or(crate::error::Error::QueryFile("schema name not found"))?;
+        let key = schema_name.value.to_case(Case::Snake);
+        let schema_info = schema_infos
+            .get(&key)
+            .ok_or(crate::error::Error::QueryFile("schema not found"))?;
+
+        let table_key = ObjectName(name.0[1..].to_vec()).to_string();
+        schema_info.tables.get(&table_key).cloned()
+    } else {
+        None
+    };
+
+    let mut plvisit = PlaceholderVisitor::default();
+    select.visit(&mut plvisit);
+
+    Ok(SelectQueryInfo {
+        what: Box::new(what),
+        from,
+        placeholders: plvisit.placeholders,
+    })
 }

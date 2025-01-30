@@ -88,7 +88,7 @@ impl FromLua for ModlogFormat {
             )));
         };
 
-        Ok(match rust_string.as_str() {
+        Ok(match &*rust_string {
             "default" => Self::Default,
             "pretty" => Self::Pretty,
             _ => {

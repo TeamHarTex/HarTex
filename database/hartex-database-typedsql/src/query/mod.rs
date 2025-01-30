@@ -34,10 +34,12 @@ use walkdir::WalkDir;
 use crate::POSTGRESQL_DIALECT;
 use crate::schema::SchemaInfo;
 
+mod insert;
 mod select;
 
 #[derive(Clone, Debug)]
 pub(crate) enum QueryInfo {
+    Insert(insert::InsertQueryInfo),
     Select(select::SelectQueryInfo),
 }
 
@@ -81,13 +83,14 @@ pub(crate) fn parse_query(
             "no query found in query file",
         ))?;
 
-    match statement {
+    Ok(match statement {
+        Statement::Insert(insert) => QueryInfo::Insert(insert::parse_insert_query(insert)?),
         Statement::Query(
             deref!(Query {
                 body: deref!(SetExpr::Select(deref!(ref select))),
                 ..
             }),
-        ) => select::parse_select_query(select.clone(), schema_map),
-        _ => Err(crate::error::Error::QueryFile("unsupported query type")),
-    }
+        ) => QueryInfo::Select(select::parse_select_query(select.clone(), schema_map)?),
+        _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
+    })
 }

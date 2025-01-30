@@ -4,7 +4,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021-2024 HarTex Project Developers
+ * Copyright (c) 2021-2025 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,10 +21,10 @@
  */
 
 INSERT INTO "DiscordFrontend"."Nightly"."CachedEmojis" ("animated", "name", "id", "guild_id", "managed")
-VALUES (@animated, @name, @id, @guild_id, @managed)
+VALUES (:animated, :name, :id, :guild_id, :managed)
 ON CONFLICT ("id") DO UPDATE
     SET
-        "guild_id" = @guild_id,
-        "animated" = @animated,
+        "guild_id" = :guild_id,
+        "animated" = :animated,
         "name" = :name,
-        "managed" = @managed;
+        "managed" = :managed;

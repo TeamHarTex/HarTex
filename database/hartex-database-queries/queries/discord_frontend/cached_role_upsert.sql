@@ -4,7 +4,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021-2024 HarTex Project Developers
+ * Copyright (c) 2021-2025 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,13 +21,13 @@
  */
 
 INSERT INTO "DiscordFrontend"."Nightly"."CachedRoles" ("color", "icon", "id", "guild_id", "flags", "hoist", "managed", "mentionable", "position")
-VALUES (@color, @icon, @id, @guild_id, @flags, @hoist, @managed, @mentionable, @position)
+VALUES (:color, :icon, :id, :guild_id, :flags, :hoist, :managed, :mentionable, :position)
 ON CONFLICT ("id", "guild_id") DO UPDATE
     SET
-        "color" = @color,
-        "icon" = @icon,
-        "flags" = @flags,
-        "hoist" = @hoist,
-        "managed" = @managed,
-        "mentionable" = @mentionable,
-        "position" = @position;
+        "color" = :color,
+        "icon" = :icon,
+        "flags" = :flags,
+        "hoist" = :hoist,
+        "managed" = :managed,
+        "mentionable" = :mentionable,
+        "position" = :position;

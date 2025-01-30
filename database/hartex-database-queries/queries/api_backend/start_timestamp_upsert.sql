@@ -25,4 +25,4 @@ INSERT INTO
 VALUES (:component, :timestamp)
 ON CONFLICT ("component") DO UPDATE
     SET
-        "timestamp" = @timestamp;
+        "timestamp" = :timestamp;

@@ -1208,6 +1208,8 @@ dependencies = [
 name = "hartex_database_typedsql"
 version = "0.14.0"
 dependencies = [
+ "convert_case",
+ "itertools 0.14.0",
  "sqlparser",
  "walkdir",
 ]
@@ -3285,6 +3287,18 @@ checksum = "c66e3b7374ad4a6af849b08b3e7a6eda0edbd82f0fd59b57e22671bf16979899"
 dependencies = [
  "log",
  "recursive",
+ "sqlparser_derive",
+]
+
+[[package]]
+name = "sqlparser_derive"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da5fc6819faabb412da764b99d3b713bb55083c11e7e0c00144d386cd6a1939c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.95",
 ]
 
 [[package]]

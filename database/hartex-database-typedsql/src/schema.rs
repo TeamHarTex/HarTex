@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -44,7 +45,7 @@ pub(crate) struct ColumnInfo {
 impl From<ColumnDef> for ColumnInfo {
     fn from(value: ColumnDef) -> Self {
         Self {
-            name: value.name.to_string(),
+            name: value.name.value,
             coltype: value.data_type,
             constraints: value.options.into_iter().map(|opt| opt.option).collect(),
         }
@@ -55,21 +56,21 @@ impl From<ColumnDef> for ColumnInfo {
 #[derive(Clone, Debug)]
 pub(crate) struct SchemaInfo {
     pub(crate) name: String,
-    pub(crate) tables: Vec<TableInfo>,
+    pub(crate) tables: HashMap<String, TableInfo>,
 }
 
 #[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub(crate) struct TableInfo {
     pub(crate) name: String,
-    pub(crate) columns: Vec<ColumnInfo>,
+    pub(crate) columns: HashMap<String, ColumnInfo>,
 }
 
 impl From<CreateTable> for TableInfo {
     fn from(value: CreateTable) -> Self {
         Self {
             name: value.name.to_string(),
-            columns: value.columns.into_iter().map(ColumnInfo::from).collect(),
+            columns: value.columns.into_iter().map(|col| (col.name.to_string(), ColumnInfo::from(col))).collect(),
         }
     }
 }
@@ -123,9 +124,9 @@ pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<S
                 return None;
             };
 
-            Some(TableInfo::from(ct))
+            Some((ct.name.to_string(), TableInfo::from(ct)))
         })
-        .collect();
+        .collect::<HashMap<_, _>>();
 
     Ok(SchemaInfo {
         name: schema_info.name,

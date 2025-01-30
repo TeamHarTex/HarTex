@@ -20,10 +20,26 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-SELECT
-    *
-FROM
-    "DiscordFrontend"."Nightly"."CachedRoles"
-WHERE
-    "guild_id" = :guild_id;
-    
+use std::ops::ControlFlow;
+
+use sqlparser::ast::Expr;
+use sqlparser::ast::Value;
+use sqlparser::ast::Visitor;
+
+#[derive(Default)]
+pub struct PlaceholderVisitor {
+    pub(crate) placeholders: Vec<String>,
+}
+
+impl Visitor for PlaceholderVisitor {
+    type Break = ();
+
+    fn pre_visit_expr(&mut self, expr: &Expr) -> ControlFlow<Self::Break> {
+        match expr {
+            Expr::Value(Value::Placeholder(ph)) => self.placeholders.push(String::from(&ph[1..])),
+            _ => (),
+        }
+
+        ControlFlow::Continue(())
+    }
+}

@@ -4,7 +4,7 @@
  * This file is part of HarTex.
  *
  * HarTex
- * Copyright (c) 2021-2024 HarTex Project Developers
+ * Copyright (c) 2021-2025 HarTex Project Developers
  *
  * HarTex is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-CREATE TABLE IF NOT EXISTS "StartTimestamps" (
+CREATE TABLE IF NOT EXISTS public."StartTimestamps" (
     "component" TEXT NOT NULL PRIMARY KEY,
     "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL
 );
-
