@@ -44,7 +44,11 @@ mod visitor;
 pub(crate) const POSTGRESQL_DIALECT: PostgreSqlDialect = PostgreSqlDialect {};
 
 #[allow(clippy::missing_errors_doc)]
-pub fn generate_queries_with_schemas<P>(schemas_dir: P, queries_dir: P, target_dir: P) -> error::Result<()>
+pub fn generate_queries_with_schemas<P>(
+    schemas_dir: P,
+    queries_dir: P,
+    target_dir: P,
+) -> error::Result<()>
 where
     P: AsRef<Path>,
 {
