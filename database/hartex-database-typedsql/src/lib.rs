@@ -35,6 +35,7 @@ use std::path::Path;
 use itertools::Itertools;
 use sqlparser::dialect::PostgreSqlDialect;
 
+mod codegen;
 mod error;
 mod query;
 mod schema;
@@ -55,9 +56,15 @@ where
         })?;
 
     let _ = query::read_queries(queries_dir.as_ref())?
-        .map(|info| dbg!(query::parse_query(&info, schemas.clone())))
+        .map(|info| query::parse_query(&info, schemas.clone()))
         .process_results(|iter| iter.collect_vec())?;
 
-    // todo
+    // todo: clear generated files before regenerating
+
+    // todo: generate tables and queries
+    //codegen::generate_table_structs_from_schemas(schemas, target_dir)?;
+
+    // todo: regenerate src/lib.rs
+
     Ok(())
 }

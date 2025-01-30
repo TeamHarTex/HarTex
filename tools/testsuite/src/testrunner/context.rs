@@ -117,6 +117,7 @@ impl<'test> TestContext<'test> {
 
             let mut file = OpenOptions::new()
                 .create(true)
+                .truncate(true)
                 .write(true)
                 .open(&*write_path.to_slash_lossy())
                 .expect("failed to open file");
