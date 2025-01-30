@@ -38,6 +38,7 @@ use sqlparser::dialect::PostgreSqlDialect;
 mod error;
 mod query;
 mod schema;
+mod visitor;
 
 pub(crate) const POSTGRESQL_DIALECT: PostgreSqlDialect = PostgreSqlDialect {};
 

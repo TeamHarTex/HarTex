@@ -39,7 +39,7 @@ mod select;
 
 #[derive(Clone, Debug)]
 pub(crate) enum QueryInfo {
-    Insert(()),
+    Insert(insert::InsertQueryInfo),
     Select(select::SelectQueryInfo),
 }
 
@@ -82,8 +82,6 @@ pub(crate) fn parse_query(
         .ok_or(crate::error::Error::QueryFile(
             "no query found in query file",
         ))?;
-
-    // dbg!(&statement);
 
     Ok(match statement {
         Statement::Insert(insert) => QueryInfo::Insert(insert::parse_insert_query(insert)?),

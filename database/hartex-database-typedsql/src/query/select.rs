@@ -24,7 +24,7 @@ use std::collections::HashMap;
 
 use convert_case::Case;
 use convert_case::Casing;
-use sqlparser::ast::Expr;
+use sqlparser::ast::{Expr, Visit};
 use sqlparser::ast::ObjectName;
 use sqlparser::ast::Query;
 use sqlparser::ast::Select;
@@ -36,6 +36,7 @@ use sqlparser::ast::Value;
 use crate::schema::ColumnInfo;
 use crate::schema::SchemaInfo;
 use crate::schema::TableInfo;
+use crate::visitor::PlaceholderVisitor;
 
 #[derive(Clone, Debug)]
 pub(crate) enum SelectWhat {
@@ -49,7 +50,7 @@ pub(crate) enum SelectWhat {
 pub(crate) struct SelectQueryInfo {
     pub(crate) what: Box<SelectWhat>,
     pub(crate) from: Option<TableInfo>,
-    //pub(crate) placeholders:
+    pub(crate) placeholders: Vec<String>,
 }
 
 pub(crate) fn parse_select_query(
@@ -94,8 +95,12 @@ pub(crate) fn parse_select_query(
         None
     };
 
+    let mut plvisit = PlaceholderVisitor::default();
+    select.visit(&mut plvisit);
+
     Ok(SelectQueryInfo {
         what: Box::new(what),
         from,
+        placeholders: plvisit.placeholders
     })
 }

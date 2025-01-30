@@ -45,7 +45,7 @@ pub(crate) struct ColumnInfo {
 impl From<ColumnDef> for ColumnInfo {
     fn from(value: ColumnDef) -> Self {
         Self {
-            name: value.name.to_string(),
+            name: value.name.value,
             coltype: value.data_type,
             constraints: value.options.into_iter().map(|opt| opt.option).collect(),
         }
