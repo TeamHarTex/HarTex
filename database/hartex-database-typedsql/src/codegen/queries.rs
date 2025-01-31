@@ -104,7 +104,6 @@ pub(crate) fn generate_query_struct_token_stream(
     name: &String,
     query: QueryInfo,
 ) -> crate::error::Result<TokenStream> {
-    dbg!(&query.inner);
     let structname = Ident::new(name.to_case(Case::Pascal).as_str(), Span::call_site());
 
     let (table, placeholders) = match query.inner {
@@ -117,10 +116,15 @@ pub(crate) fn generate_query_struct_token_stream(
             placeholders,
             ..
         }) => (table, placeholders),
+        QueryInfoInner::Select(SelectQueryInfo {
+            what: deref!(SelectWhat::Exists(ref select)),
+            ..
+        }) => {
+            todo!()
+        }
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
 
-    // todo: figure out SELECT EXISTS with subquery
     let fields = placeholders
         .iter()
         .map(|placeholder| {

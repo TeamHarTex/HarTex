@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -81,7 +81,7 @@ pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Ite
 
 pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
-    schema_map: HashMap<String, SchemaInfo>,
+    schema_map: BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<(String, QueryInfo)> {
     let statement = Parser::parse_sql(&POSTGRESQL_DIALECT, &query_info.contents)?
         .first()

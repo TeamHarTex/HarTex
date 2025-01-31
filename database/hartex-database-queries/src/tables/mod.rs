@@ -4,4 +4,5 @@
 // ==================! DO NOT MODIFY !==================
 
 pub mod api_backend;
+pub mod configuration;
 pub mod discord_frontend;

@@ -29,7 +29,6 @@
 #![feature(let_chains)]
 
 use std::collections::BTreeMap;
-use std::collections::HashMap;
 use std::path::Path;
 
 use itertools::Itertools;
@@ -52,7 +51,7 @@ where
         .map(schema::parse_schema)
         .process_results(|iter| {
             iter.map(|schema| (schema.name.clone(), schema))
-                .collect::<HashMap<_, _>>()
+                .collect::<BTreeMap<_, _>>()
         })?;
 
     let queries = query::read_queries(queries_dir.as_ref())?

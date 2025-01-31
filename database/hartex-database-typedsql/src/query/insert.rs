@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use convert_case::Case;
 use convert_case::Casing;
@@ -41,7 +41,7 @@ pub(crate) struct InsertQueryInfo {
 
 pub(crate) fn parse_insert_query(
     insert: Insert,
-    schema_infos: HashMap<String, SchemaInfo>,
+    schema_infos: BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<InsertQueryInfo> {
     let TableObject::TableName(ref name) = insert.table else {
         return Err(crate::error::Error::QueryFile(
