@@ -25,7 +25,6 @@ use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
-use itertools::Itertools;
 use sqlparser::ast::ColumnDef;
 use sqlparser::ast::ColumnOption;
 use sqlparser::ast::CreateTable;
@@ -75,7 +74,6 @@ impl From<CreateTable> for TableInfo {
                 .columns
                 .into_iter()
                 .map(|col| (col.name.value.clone(), ColumnInfo::from(col)))
-                .sorted_by(|(l1, _), (l2, _)| Ord::cmp(l1, l2))
                 .collect(),
         }
     }
@@ -132,7 +130,6 @@ pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<S
 
             Some((ct.name.to_string(), TableInfo::from(ct)))
         })
-        .sorted_by(|(l1, _), (l2, _)| Ord::cmp(l1, l2))
         .collect();
 
     Ok(SchemaInfo {

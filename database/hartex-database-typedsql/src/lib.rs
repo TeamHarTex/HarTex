@@ -54,17 +54,15 @@ where
                 .collect::<HashMap<_, _>>()
         })?;
 
-    let _ = query::read_queries(queries_dir.as_ref())?
+    let queries = query::read_queries(queries_dir.as_ref())?
         .map(|info| query::parse_query(&info, schemas.clone()))
         .process_results(|iter| iter.collect_vec())?;
 
     codegen::result::generate_result_mod(&target_dir)?;
 
-    // todo: generate tables and queries
     codegen::tables::generate_table_structs_from_schemas(schemas, &target_dir)?;
-    // codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
+    codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
 
-    // todo: regenerate src/lib.rs
     codegen::library::generate_lib_rs(target_dir)?;
 
     Ok(())
