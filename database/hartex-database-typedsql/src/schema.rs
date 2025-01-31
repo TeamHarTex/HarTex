@@ -20,11 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
+use itertools::Itertools;
 use sqlparser::ast::ColumnDef;
 use sqlparser::ast::ColumnOption;
 use sqlparser::ast::CreateTable;
@@ -56,14 +57,14 @@ impl From<ColumnDef> for ColumnInfo {
 #[derive(Clone, Debug)]
 pub(crate) struct SchemaInfo {
     pub(crate) name: String,
-    pub(crate) tables: HashMap<String, TableInfo>,
+    pub(crate) tables: BTreeMap<String, TableInfo>,
 }
 
 #[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub(crate) struct TableInfo {
     pub(crate) name: String,
-    pub(crate) columns: HashMap<String, ColumnInfo>,
+    pub(crate) columns: BTreeMap<String, ColumnInfo>,
 }
 
 impl From<CreateTable> for TableInfo {
@@ -74,6 +75,7 @@ impl From<CreateTable> for TableInfo {
                 .columns
                 .into_iter()
                 .map(|col| (col.name.value.clone(), ColumnInfo::from(col)))
+                .sorted_by(|(l1, _), (l2, _)| Ord::cmp(l1, l2))
                 .collect(),
         }
     }
@@ -130,7 +132,8 @@ pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<S
 
             Some((ct.name.to_string(), TableInfo::from(ct)))
         })
-        .collect::<HashMap<_, _>>();
+        .sorted_by(|(l1, _), (l2, _)| Ord::cmp(l1, l2))
+        .collect();
 
     Ok(SchemaInfo {
         name: schema_info.name,

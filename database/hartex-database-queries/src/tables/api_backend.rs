@@ -6,17 +6,17 @@
 use wtx::database::Record as _;
 use wtx::database::client::postgres::Record;
 pub struct StartTimestamps {
-    timestamp: chrono::DateTime<chrono::offset::Utc>,
     component: String,
+    timestamp: chrono::DateTime<chrono::offset::Utc>,
 }
 impl StartTimestamps {
     #[must_use]
-    pub fn timestamp(&self) -> chrono::DateTime<chrono::offset::Utc> {
-        self.timestamp
-    }
-    #[must_use]
     pub fn component(&self) -> &str {
         self.component.as_str()
+    }
+    #[must_use]
+    pub fn timestamp(&self) -> chrono::DateTime<chrono::offset::Utc> {
+        self.timestamp
     }
 }
 impl<'exec, E: From<wtx::Error>> TryFrom<Record<'exec, E>> for StartTimestamps
@@ -26,8 +26,8 @@ where
     type Error = crate::result::Error;
     fn try_from(record: Record<'exec, E>) -> crate::result::Result<Self> {
         Ok(Self {
-            timestamp: record.decode("timestamp")?,
             component: record.decode("component")?,
+            timestamp: record.decode("timestamp")?,
         })
     }
 }
