@@ -3,4 +3,6 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct StartTimestampSelectByComponent {}
+pub struct StartTimestampSelectByComponent {
+    component: String,
+}

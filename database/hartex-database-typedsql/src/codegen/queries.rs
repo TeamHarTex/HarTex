@@ -117,20 +117,31 @@ pub(crate) fn generate_query_struct_token_stream(
             ..
         }) => (table, placeholders),
         QueryInfoInner::Select(SelectQueryInfo {
-            what: deref!(SelectWhat::Exists(ref select)),
+            what:
+                deref!(
+                    SelectWhat::Exists(SelectQueryInfo {
+                        from: Some(ref table),
+                        ref placeholders,
+                        ..
+                    })
+                ),
             ..
-        }) => {
-            todo!()
-        }
+        }) => (table.clone(), placeholders.clone()),
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
 
     let fields = placeholders
         .iter()
         .map(|placeholder| {
-            let col = table.columns.get(placeholder).expect("column must exist");
-            let dtype = types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap();
-            let ident = Ident::new(col.name.as_str(), Span::call_site());
+            let dtype = if let Some(col) = table.columns.get(placeholder) {
+                types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap()
+            } else if let Some(dt) = query.extra_placeholder_tys.get(placeholder) {
+                types::sql_type_to_rust_type_token_stream(dt.clone()).unwrap()
+            } else {
+                unreachable!()
+            };
+
+            let ident = Ident::new(placeholder, Span::call_site());
 
             quote::quote! {
                 #ident: #dtype

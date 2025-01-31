@@ -71,10 +71,13 @@ where
             .process_results(|iter| iter.collect_vec())
         })??;
 
-    let mods = schemas.keys().map(|name| {
-        let ident = Ident::new(name, Span::call_site());
-        quote::quote! {pub mod #ident;}
-    }).collect_vec();
+    let mods = schemas
+        .keys()
+        .map(|name| {
+            let ident = Ident::new(name, Span::call_site());
+            quote::quote! {pub mod #ident;}
+        })
+        .collect_vec();
     let mods_ts = quote::quote! {
         #(#mods)*
     };

@@ -3,4 +3,7 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct PluginEnabled {}
+pub struct PluginEnabled {
+    plugin: String,
+    guild_id: String,
+}

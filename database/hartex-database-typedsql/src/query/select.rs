@@ -64,7 +64,10 @@ pub(crate) fn parse_select_query(
                     ..
                 }),
             ..
-        })) => SelectWhat::Exists(parse_select_query(select_inner.clone(), schema_infos.clone())?),
+        })) => SelectWhat::Exists(parse_select_query(
+            select_inner.clone(),
+            schema_infos.clone(),
+        )?),
         Some(SelectItem::UnnamedExpr(Expr::Value(Value::Boolean(boolean)))) => {
             SelectWhat::Boolean(*boolean)
         }

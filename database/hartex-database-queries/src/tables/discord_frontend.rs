@@ -120,8 +120,7 @@ where
     type Error = crate::result::Error;
     fn try_from(record: Record<'exec, E>) -> crate::result::Result<Self> {
         Ok(Self {
-            default_message_notifications: record
-                .decode("default_message_notifications")?,
+            default_message_notifications: record.decode("default_message_notifications")?,
             explicit_content_filter: record.decode("explicit_content_filter")?,
             features: record.decode("features")?,
             icon: record.decode_opt("icon")?,

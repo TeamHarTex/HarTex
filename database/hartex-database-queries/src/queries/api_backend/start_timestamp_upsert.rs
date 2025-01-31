@@ -3,4 +3,7 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct StartTimestampUpsert {}
+pub struct StartTimestampUpsert {
+    component: String,
+    timestamp: chrono::DateTime<chrono::offset::Utc>,
+}
