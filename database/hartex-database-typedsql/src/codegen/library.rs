@@ -43,8 +43,9 @@ where
         #[path = "../generated/discord_frontend.rs"]
         pub mod discord_frontend;
 
-        pub mod tables;
+        pub mod queries;
         pub mod result;
+        pub mod tables;
     };
 
     let synfile = syn::parse2::<File>(ts)?;

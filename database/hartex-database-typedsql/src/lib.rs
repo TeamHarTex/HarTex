@@ -28,6 +28,7 @@
 #![feature(deref_patterns)]
 #![feature(let_chains)]
 
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -56,7 +57,7 @@ where
 
     let queries = query::read_queries(queries_dir.as_ref())?
         .map(|info| query::parse_query(&info, schemas.clone()))
-        .process_results(|iter| iter.collect_vec())?;
+        .process_results(|iter| iter.collect::<BTreeMap<_, _>>())?;
 
     codegen::result::generate_result_mod(&target_dir)?;
 
