@@ -3,15 +3,5 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-#[path = "../generated/api_backend.rs"]
 pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
 pub mod discord_frontend;
-pub mod queries;
-pub mod result;
-pub mod tables;

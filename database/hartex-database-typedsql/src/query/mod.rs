@@ -34,13 +34,20 @@ use walkdir::WalkDir;
 use crate::POSTGRESQL_DIALECT;
 use crate::schema::SchemaInfo;
 
-mod insert;
-mod select;
+pub(crate) mod insert;
+pub(crate) mod select;
 
 #[derive(Clone, Debug)]
-pub(crate) enum QueryInfo {
+pub(crate) enum QueryInfoInner {
     Insert(insert::InsertQueryInfo),
     Select(select::SelectQueryInfo),
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct QueryInfo {
+    pub(crate) path: String,
+    pub(crate) raw: String,
+    pub(crate) inner: QueryInfoInner,
 }
 
 #[derive(Clone, Debug)]
@@ -75,7 +82,7 @@ pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Ite
 pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
     schema_map: HashMap<String, SchemaInfo>,
-) -> crate::error::Result<QueryInfo> {
+) -> crate::error::Result<(String, QueryInfo)> {
     let statement = Parser::parse_sql(&POSTGRESQL_DIALECT, &query_info.contents)?
         .first()
         .cloned()
@@ -83,16 +90,26 @@ pub(crate) fn parse_query(
             "no query found in query file",
         ))?;
 
-    Ok(match statement {
+    let mut path = query_info.path.clone();
+    path.pop();
+    let parent = path.components().last().unwrap().as_os_str();
+
+    let inner = match statement {
         Statement::Insert(insert) => {
-            QueryInfo::Insert(insert::parse_insert_query(insert, schema_map)?)
+            QueryInfoInner::Insert(insert::parse_insert_query(insert, schema_map)?)
         }
         Statement::Query(
             deref!(Query {
                 body: deref!(SetExpr::Select(deref!(ref select))),
                 ..
             }),
-        ) => QueryInfo::Select(select::parse_select_query(select.clone(), schema_map)?),
+        ) => QueryInfoInner::Select(select::parse_select_query(select.clone(), schema_map)?),
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
-    })
+    };
+
+    Ok((query_info.name.clone(), QueryInfo {
+        raw: query_info.contents.clone(),
+        path: parent.to_string_lossy().to_string(),
+        inner,
+    }))
 }

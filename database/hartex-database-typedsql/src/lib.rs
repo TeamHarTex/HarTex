@@ -25,10 +25,10 @@
 #![deny(warnings)]
 #![allow(dead_code)]
 #![allow(incomplete_features)]
-#![allow(unreachable_code)]
 #![feature(deref_patterns)]
 #![feature(let_chains)]
 
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -44,11 +44,7 @@ mod visitor;
 pub(crate) const POSTGRESQL_DIALECT: PostgreSqlDialect = PostgreSqlDialect {};
 
 #[allow(clippy::missing_errors_doc)]
-pub fn generate_queries_with_schemas<P>(
-    schemas_dir: P,
-    queries_dir: P,
-    target_dir: P,
-) -> error::Result<()>
+pub fn generate_crate<P>(schemas_dir: P, queries_dir: P, target_dir: P) -> error::Result<()>
 where
     P: AsRef<Path>,
 {
@@ -59,16 +55,16 @@ where
                 .collect::<HashMap<_, _>>()
         })?;
 
-    let _ = query::read_queries(queries_dir.as_ref())?
+    let queries = query::read_queries(queries_dir.as_ref())?
         .map(|info| query::parse_query(&info, schemas.clone()))
-        .process_results(|iter| iter.collect_vec())?;
+        .process_results(|iter| iter.collect::<BTreeMap<_, _>>())?;
 
-    // todo: clear generated files before regenerating
+    codegen::result::generate_result_mod(&target_dir)?;
 
-    // todo: generate tables and queries
-    codegen::generate_table_structs_from_schemas(schemas, target_dir)?;
+    codegen::tables::generate_table_structs_from_schemas(schemas, &target_dir)?;
+    codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
 
-    // todo: regenerate src/lib.rs
+    codegen::library::generate_lib_rs(target_dir)?;
 
     Ok(())
 }

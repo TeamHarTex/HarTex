@@ -11,6 +11,7 @@ rust-version = "1.86.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = "0.4.39"
 cornucopia_async = "0.6.0"
 tokio = { version = "1.42.0", features = ["full"] }
 futures = "0.3.31"
@@ -18,7 +19,7 @@ serde_json = { version = "1.0.135", features = ["raw_value"] }
 time = "0.3.37"
 tokio-postgres = "0.7.12"
 postgres-types = { version = "0.2.8", features = ["with-serde_json-1", "with-time-0_3"] }
-wtx = { version = "0.27.0", features = ["database"] }
+wtx = { git = "https://github.com/TeamHarTex/wtx.git", features = ["chrono", "database", "postgres", "std"] }
 
 [build-dependencies]
 hartex_database_typedsql = { path = "../hartex-database-typedsql" }

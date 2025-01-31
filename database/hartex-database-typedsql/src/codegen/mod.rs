@@ -20,14 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
-
-use itertools::Itertools;
-
-use crate::schema::SchemaInfo;
-
+pub(crate) mod library;
+pub(crate) mod queries;
+pub(crate) mod result;
 pub(crate) mod tables;
 pub(crate) mod types;
 
@@ -38,33 +33,3 @@ pub(crate) const DO_NOT_MODIFY_HEADER: &str =
 // ==================! DO NOT MODIFY !==================
 
 ";
-
-pub(crate) fn generate_table_structs_from_schemas<P>(
-    schemas: HashMap<String, SchemaInfo>,
-    root_path: P,
-) -> crate::error::Result<()>
-where
-    P: AsRef<Path>,
-{
-    let tables_dir = root_path.as_ref().join("tables");
-    fs::create_dir_all(&tables_dir)?;
-
-    let _ = schemas
-        .into_iter()
-        .map(tables::generate_table_structs_from_schema)
-        .process_results(|iter| {
-            iter.map(|file| {
-                let path = tables_dir.clone().join(file.filename);
-
-                fs::write(
-                    &path,
-                    DO_NOT_MODIFY_HEADER.to_owned() + file.content.as_str(),
-                )?;
-
-                Ok::<(), crate::error::Error>(())
-            })
-            .process_results(|iter| iter.collect_vec())
-        })??;
-
-    Ok(())
-}

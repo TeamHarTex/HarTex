@@ -19,31 +19,40 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use std::fs;
+use std::path::Path;
 
-use std::ops::ControlFlow;
+use syn::File;
 
-use sqlparser::ast::Expr;
-use sqlparser::ast::Value;
-use sqlparser::ast::Visitor;
+use crate::codegen::DO_NOT_MODIFY_HEADER;
 
-#[derive(Default)]
-pub struct PlaceholderVisitor {
-    pub(crate) placeholders: Vec<String>,
-}
+pub(crate) fn generate_result_mod<P>(path: P) -> crate::error::Result<()>
+where
+    P: AsRef<Path>,
+{
+    let ts = quote::quote! {
+        use wtx::Error as WtxError;
 
-impl Visitor for PlaceholderVisitor {
-    type Break = ();
+        #[derive(Debug)]
+        pub enum Error {
+            Wtx(WtxError),
+        }
 
-    fn pre_visit_expr(&mut self, expr: &Expr) -> ControlFlow<Self::Break> {
-        match expr {
-            Expr::Value(Value::Placeholder(ph)) => {
-                if !self.placeholders.contains(&ph[1..].to_string()) {
-                    self.placeholders.push(String::from(&ph[1..]))
-                }
+        impl From<WtxError> for Error {
+            fn from(err: WtxError) -> Self {
+                Self::Wtx(err)
             }
-            _ => (),
-        };
+        }
 
-        ControlFlow::Continue(())
-    }
+        pub type Result<T> = std::result::Result<T, Error>;
+    };
+
+    let synfile = syn::parse2::<File>(ts)?;
+
+    fs::write(
+        path.as_ref().join("result.rs"),
+        DO_NOT_MODIFY_HEADER.to_owned() + prettyplease::unparse(&synfile).as_str(),
+    )?;
+
+    Ok(())
 }
