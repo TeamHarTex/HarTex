@@ -48,16 +48,20 @@ where
         let path_for_query = pathref.clone().join(&query.path);
         let ident = Ident::new(name.as_str(), Span::call_site());
         module_files
-            .entry(query.path)
+            .entry(query.path.clone())
             .or_insert(TokenStream::new())
             .append_all(quote::quote! {
                 pub mod #ident;
             });
 
         fs::create_dir_all(&path_for_query)?;
+
+        let ts = generate_query_struct_token_stream(query)?;
+        let file = syn::parse2::<File>(ts)?;
+
         fs::write(
             path_for_query.join(format!("{name}.rs")),
-            DO_NOT_MODIFY_HEADER,
+            DO_NOT_MODIFY_HEADER.to_owned() + prettyplease::unparse(&file).as_str(),
         )?;
     }
 
@@ -87,4 +91,10 @@ where
     )?;
 
     Ok(())
+}
+
+pub(crate) fn generate_query_struct_token_stream(
+    _: QueryInfo,
+) -> crate::error::Result<TokenStream> {
+    Ok(quote::quote! {})
 }
