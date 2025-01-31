@@ -12,5 +12,5 @@ pub mod api_backend;
 pub mod configuration;
 #[path = "../generated/discord_frontend.rs"]
 pub mod discord_frontend;
-pub mod result;
 pub mod tables;
+pub mod result;
