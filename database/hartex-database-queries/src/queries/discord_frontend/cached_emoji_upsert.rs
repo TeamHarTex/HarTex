@@ -3,4 +3,10 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedEmojiUpsert {}
+pub struct CachedEmojiUpsert {
+    animated: bool,
+    name: String,
+    id: String,
+    guild_id: String,
+    managed: bool,
+}

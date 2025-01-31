@@ -3,4 +3,14 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedRoleUpsert {}
+pub struct CachedRoleUpsert {
+    color: i64,
+    icon: String,
+    id: String,
+    guild_id: String,
+    flags: i32,
+    hoist: bool,
+    managed: bool,
+    mentionable: bool,
+    position: i32,
+}

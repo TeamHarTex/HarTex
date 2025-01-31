@@ -3,4 +3,11 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedUserUpsert {}
+pub struct CachedUserUpsert {
+    avatar: String,
+    id: String,
+    bot: bool,
+    name: String,
+    discriminator: String,
+    global_name: String,
+}

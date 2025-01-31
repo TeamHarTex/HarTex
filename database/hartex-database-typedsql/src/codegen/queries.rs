@@ -23,7 +23,9 @@
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
-use convert_case::{Case, Casing};
+
+use convert_case::Case;
+use convert_case::Casing;
 use itertools::Itertools;
 use proc_macro2::Ident;
 use proc_macro2::Span;
@@ -32,9 +34,12 @@ use quote::TokenStreamExt;
 use syn::File;
 
 use crate::codegen::DO_NOT_MODIFY_HEADER;
-use crate::query::{QueryInfo, QueryInfoInner};
+use crate::codegen::types;
+use crate::query::QueryInfo;
+use crate::query::QueryInfoInner;
 use crate::query::insert::InsertQueryInfo;
 use crate::query::select::SelectQueryInfo;
+use crate::query::select::SelectWhat;
 
 pub(crate) fn generate_query_structs_from_queries<P>(
     query_map: BTreeMap<String, QueryInfo>,
@@ -102,15 +107,36 @@ pub(crate) fn generate_query_struct_token_stream(
     dbg!(&query.inner);
     let structname = Ident::new(name.to_case(Case::Pascal).as_str(), Span::call_site());
 
-    let (_, _) = match query.inner {
-        QueryInfoInner::Insert(InsertQueryInfo { into_table, placeholders}) => (into_table, placeholders),
-        QueryInfoInner::Select(SelectQueryInfo { from: Some(table), placeholders, .. }) => (table, placeholders),
-        _ => return Err(crate::error::Error::QueryFile("unsupported query type"))
+    let (table, placeholders) = match query.inner {
+        QueryInfoInner::Insert(InsertQueryInfo {
+            into_table,
+            placeholders,
+        }) => (into_table, placeholders),
+        QueryInfoInner::Select(SelectQueryInfo {
+            from: Some(table),
+            placeholders,
+            ..
+        }) => (table, placeholders),
+        _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
+
+    // todo: figure out SELECT EXISTS with subquery
+    let fields = placeholders
+        .iter()
+        .map(|placeholder| {
+            let col = table.columns.get(placeholder).expect("column must exist");
+            let dtype = types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap();
+            let ident = Ident::new(col.name.as_str(), Span::call_site());
+
+            quote::quote! {
+                #ident: #dtype
+            }
+        })
+        .collect_vec();
 
     Ok(quote::quote! {
         pub struct #structname {
-
+            #(#fields),*
         }
     })
 }

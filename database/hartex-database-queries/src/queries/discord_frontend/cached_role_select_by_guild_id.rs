@@ -3,4 +3,6 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedRoleSelectByGuildId {}
+pub struct CachedRoleSelectByGuildId {
+    guild_id: String,
+}

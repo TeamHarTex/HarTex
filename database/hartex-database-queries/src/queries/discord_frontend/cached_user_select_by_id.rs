@@ -3,4 +3,6 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedUserSelectById {}
+pub struct CachedUserSelectById {
+    id: String,
+}

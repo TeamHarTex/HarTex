@@ -3,4 +3,11 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedMemberUpsert {}
+pub struct CachedMemberUpsert {
+    flags: i64,
+    joined_at: chrono::DateTime<chrono::offset::Utc>,
+    nick: String,
+    user_id: String,
+    guild_id: String,
+    roles: Vec<String>,
+}

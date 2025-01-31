@@ -3,4 +3,6 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedEmojiSelectByGuildId {}
+pub struct CachedEmojiSelectByGuildId {
+    guild_id: String,
+}

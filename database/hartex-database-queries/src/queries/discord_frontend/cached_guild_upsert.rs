@@ -3,4 +3,17 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct CachedGuildUpsert {}
+pub struct CachedGuildUpsert {
+    default_message_notifications: i16,
+    explicit_content_filter: i16,
+    features: Vec<String>,
+    icon: String,
+    large: bool,
+    name: String,
+    owner_id: String,
+    id: String,
+    mfa_level: i16,
+    premium_subscription_count: i64,
+    premium_tier: i16,
+    verification_level: i16,
+}
