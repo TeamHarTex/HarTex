@@ -34,8 +34,8 @@ use walkdir::WalkDir;
 use crate::POSTGRESQL_DIALECT;
 use crate::schema::SchemaInfo;
 
-mod insert;
-mod select;
+pub(crate) mod insert;
+pub(crate) mod select;
 
 #[derive(Clone, Debug)]
 pub(crate) enum QueryInfoInner {
@@ -46,6 +46,7 @@ pub(crate) enum QueryInfoInner {
 #[derive(Clone, Debug)]
 pub(crate) struct QueryInfo {
     pub(crate) path: String,
+    pub(crate) raw: String,
     pub(crate) inner: QueryInfoInner,
 }
 
@@ -107,6 +108,7 @@ pub(crate) fn parse_query(
     };
 
     Ok((query_info.name.clone(), QueryInfo {
+        raw: query_info.contents.clone(),
         path: parent.to_string_lossy().to_string(),
         inner,
     }))

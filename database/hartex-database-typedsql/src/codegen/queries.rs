@@ -23,7 +23,7 @@
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
-
+use convert_case::{Case, Casing};
 use itertools::Itertools;
 use proc_macro2::Ident;
 use proc_macro2::Span;
@@ -32,7 +32,9 @@ use quote::TokenStreamExt;
 use syn::File;
 
 use crate::codegen::DO_NOT_MODIFY_HEADER;
-use crate::query::QueryInfo;
+use crate::query::{QueryInfo, QueryInfoInner};
+use crate::query::insert::InsertQueryInfo;
+use crate::query::select::SelectQueryInfo;
 
 pub(crate) fn generate_query_structs_from_queries<P>(
     query_map: BTreeMap<String, QueryInfo>,
@@ -56,7 +58,7 @@ where
 
         fs::create_dir_all(&path_for_query)?;
 
-        let ts = generate_query_struct_token_stream(query)?;
+        let ts = generate_query_struct_token_stream(&name, query)?;
         let file = syn::parse2::<File>(ts)?;
 
         fs::write(
@@ -94,7 +96,21 @@ where
 }
 
 pub(crate) fn generate_query_struct_token_stream(
-    _: QueryInfo,
+    name: &String,
+    query: QueryInfo,
 ) -> crate::error::Result<TokenStream> {
-    Ok(quote::quote! {})
+    dbg!(&query.inner);
+    let structname = Ident::new(name.to_case(Case::Pascal).as_str(), Span::call_site());
+
+    let (_, _) = match query.inner {
+        QueryInfoInner::Insert(InsertQueryInfo { into_table, placeholders}) => (into_table, placeholders),
+        QueryInfoInner::Select(SelectQueryInfo { from: Some(table), placeholders, .. }) => (table, placeholders),
+        _ => return Err(crate::error::Error::QueryFile("unsupported query type"))
+    };
+
+    Ok(quote::quote! {
+        pub struct #structname {
+
+        }
+    })
 }

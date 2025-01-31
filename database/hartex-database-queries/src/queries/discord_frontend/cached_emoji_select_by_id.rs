@@ -3,3 +3,4 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+pub struct CachedEmojiSelectById {}
