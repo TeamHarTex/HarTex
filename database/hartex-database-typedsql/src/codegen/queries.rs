@@ -100,7 +100,7 @@ where
     Ok(())
 }
 
-pub(crate) fn generate_query_struct_token_stream(
+fn generate_query_struct_token_stream(
     name: &String,
     query: QueryInfo,
 ) -> crate::error::Result<TokenStream> {
@@ -149,9 +149,21 @@ pub(crate) fn generate_query_struct_token_stream(
         })
         .collect_vec();
 
+    let bind_constructor = generate_query_struct_bind_constructor_token_stream()?;
+
     Ok(quote::quote! {
         pub struct #structname {
             #(#fields),*
         }
+
+        impl #structname {
+            #bind_constructor
+        }
+    })
+}
+
+fn generate_query_struct_bind_constructor_token_stream() -> crate::error::Result<TokenStream> {
+    Ok(quote::quote! {
+        pub fn bind() {}
     })
 }
