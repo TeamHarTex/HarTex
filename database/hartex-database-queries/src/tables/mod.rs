@@ -3,11 +3,5 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-#[path = "../generated/api_backend.rs"]
 pub mod api_backend;
-#[path = "../generated/configuration.rs"]
-pub mod configuration;
-#[path = "../generated/discord_frontend.rs"]
 pub mod discord_frontend;
-pub mod result;
-pub mod tables;

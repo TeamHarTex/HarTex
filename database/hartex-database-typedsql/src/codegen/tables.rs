@@ -183,8 +183,6 @@ fn generate_struct_impl_token_stream(
 }
 
 fn generate_getter_body(name: Ident, ty: String) -> crate::error::Result<TokenStream> {
-    dbg!(&ty);
-
     Ok(match ty.as_str() {
         "& str" => quote::quote! {self.#name.as_str()},
         "Option < & str >" => quote::quote! {self.#name.as_deref()},

@@ -63,9 +63,10 @@ where
 
     // todo: generate tables and queries
     codegen::tables::generate_table_structs_from_schemas(schemas, &target_dir)?;
-    // codegen::queries::generate_query_structs_from_queries(queries, target_dir)?;
+    // codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
 
     // todo: regenerate src/lib.rs
+    codegen::library::generate_lib_rs(target_dir)?;
 
     Ok(())
 }
