@@ -66,9 +66,7 @@ pub fn main() {
     )
     .unwrap();*/
 
-    if let Err(error) =
-        hartex_database_typedsql::generate_queries_with_schemas("schemas", "queries", "src")
-    {
+    if let Err(error) = hartex_database_typedsql::generate_crate("schemas", "queries", "src") {
         println!("cargo::error=Error while generating typed queries: {error:?}");
     }
 }

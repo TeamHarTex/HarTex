@@ -57,3 +57,39 @@ pub(crate) fn sql_type_to_rust_type_token_stream(dt: DataType) -> Option<proc_ma
         _ => return None,
     })
 }
+
+pub(crate) fn sql_type_to_rust_reftype_token_stream(
+    dt: DataType,
+) -> Option<proc_macro2::TokenStream> {
+    Some(match dt {
+        DataType::Array(ArrayElemTypeDef::SquareBracket(deref!(ref dt_inner), _)) => {
+            let Some(ts) = sql_type_to_rust_type_token_stream(dt_inner.clone()) else {
+                return None;
+            };
+
+            quote::quote! {&[#ts]}
+        }
+        DataType::BigInt(_) => quote::quote! {i64},
+        DataType::Boolean => quote::quote! {bool},
+        DataType::Char(_)
+        | DataType::Character(_)
+        | DataType::CharacterVarying(_)
+        | DataType::Varchar(_)
+        | DataType::Text => quote::quote! {&str},
+        DataType::Real => quote::quote! {f32},
+        DataType::SmallInt(_) => quote::quote! {i16},
+        DataType::Integer(_) => quote::quote! {i32},
+        DataType::Time(_, tz)
+            if matches!(tz, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
+        {
+            quote::quote! {time::Time}
+        }
+        DataType::Timestamp(_, tz) => match tz {
+            TimezoneInfo::None | TimezoneInfo::WithoutTimeZone => {
+                quote::quote! {time::PrimitiveDateTime}
+            }
+            TimezoneInfo::WithTimeZone | TimezoneInfo::Tz => quote::quote! {time::OffsetDateTime},
+        },
+        _ => return None,
+    })
+}
