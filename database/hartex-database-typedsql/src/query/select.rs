@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use convert_case::Case;
 use convert_case::Casing;
@@ -54,17 +54,20 @@ pub(crate) struct SelectQueryInfo {
 
 pub(crate) fn parse_select_query(
     select: Select,
-    schema_infos: HashMap<String, SchemaInfo>,
+    schema_infos: BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<SelectQueryInfo> {
     let what = match select.projection.first() {
         Some(SelectItem::UnnamedExpr(Expr::Exists {
             subquery:
                 deref!(Query {
-                    body: deref!(SetExpr::Select(deref!(select))),
+                    body: deref!(SetExpr::Select(deref!(select_inner))),
                     ..
                 }),
             ..
-        })) => SelectWhat::Exists(parse_select_query(select.clone(), schema_infos.clone())?),
+        })) => SelectWhat::Exists(parse_select_query(
+            select_inner.clone(),
+            schema_infos.clone(),
+        )?),
         Some(SelectItem::UnnamedExpr(Expr::Value(Value::Boolean(boolean)))) => {
             SelectWhat::Boolean(*boolean)
         }

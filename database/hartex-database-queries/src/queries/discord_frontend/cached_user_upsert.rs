@@ -11,3 +11,23 @@ pub struct CachedUserUpsert {
     discriminator: String,
     global_name: String,
 }
+impl CachedUserUpsert {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(
+        avatar: String,
+        id: String,
+        bot: bool,
+        name: String,
+        discriminator: String,
+        global_name: String,
+    ) -> Self {
+        Self {
+            avatar,
+            id,
+            bot,
+            name,
+            discriminator,
+            global_name,
+        }
+    }
+}

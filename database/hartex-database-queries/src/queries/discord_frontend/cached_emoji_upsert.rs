@@ -10,3 +10,21 @@ pub struct CachedEmojiUpsert {
     guild_id: String,
     managed: bool,
 }
+impl CachedEmojiUpsert {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(
+        animated: bool,
+        name: String,
+        id: String,
+        guild_id: String,
+        managed: bool,
+    ) -> Self {
+        Self {
+            animated,
+            name,
+            id,
+            guild_id,
+            managed,
+        }
+    }
+}

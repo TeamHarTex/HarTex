@@ -6,3 +6,9 @@
 pub struct CachedRoleSelectByGuildId {
     guild_id: String,
 }
+impl CachedRoleSelectByGuildId {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(guild_id: String) -> Self {
+        Self { guild_id }
+    }
+}

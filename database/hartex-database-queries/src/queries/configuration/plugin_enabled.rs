@@ -3,4 +3,13 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-pub struct PluginEnabled {}
+pub struct PluginEnabled {
+    plugin: String,
+    guild_id: String,
+}
+impl PluginEnabled {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(plugin: String, guild_id: String) -> Self {
+        Self { plugin, guild_id }
+    }
+}

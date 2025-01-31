@@ -19,14 +19,11 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use sqlparser::ast::DataType;
 
--- plugin:TEXT
-SELECT EXISTS(
-    SELECT
-        TRUE
-    FROM
-        "Configuration"."Nightly"."GuildConfigurations"
-    WHERE
-        "enabled_plugins" @> array[ :plugin ] AND
-        "guild_id" = :guild_id
-);
+pub(crate) fn str_to_sql_data_type(string: &str) -> Option<DataType> {
+    Some(match string {
+        "TEXT" => DataType::Text,
+        _ => return None,
+    })
+}

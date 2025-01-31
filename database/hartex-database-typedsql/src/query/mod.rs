@@ -20,11 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
+use itertools::Itertools;
+use sqlparser::ast::DataType;
 use sqlparser::ast::Query;
 use sqlparser::ast::SetExpr;
 use sqlparser::ast::Statement;
@@ -36,6 +39,7 @@ use crate::schema::SchemaInfo;
 
 pub(crate) mod insert;
 pub(crate) mod select;
+mod types;
 
 #[derive(Clone, Debug)]
 pub(crate) enum QueryInfoInner {
@@ -48,6 +52,7 @@ pub(crate) struct QueryInfo {
     pub(crate) path: String,
     pub(crate) raw: String,
     pub(crate) inner: QueryInfoInner,
+    pub(crate) extra_placeholder_tys: HashMap<String, DataType>,
 }
 
 #[derive(Clone, Debug)]
@@ -81,7 +86,7 @@ pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Ite
 
 pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
-    schema_map: HashMap<String, SchemaInfo>,
+    schema_map: BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<(String, QueryInfo)> {
     let statement = Parser::parse_sql(&POSTGRESQL_DIALECT, &query_info.contents)?
         .first()
@@ -107,9 +112,24 @@ pub(crate) fn parse_query(
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
 
+    let extra_placeholder_tys = query_info
+        .contents
+        .lines()
+        .filter(|line| line.starts_with("-- "))
+        .map(|line| line[3..].to_string())
+        .map(|spec| {
+            let vec = spec.split(':').collect_vec();
+            (
+                vec[0].to_string(),
+                types::str_to_sql_data_type(vec[1]).unwrap(),
+            )
+        })
+        .collect();
+
     Ok((query_info.name.clone(), QueryInfo {
         raw: query_info.contents.clone(),
         path: parent.to_string_lossy().to_string(),
         inner,
+        extra_placeholder_tys,
     }))
 }

@@ -17,3 +17,35 @@ pub struct CachedGuildUpsert {
     premium_tier: i16,
     verification_level: i16,
 }
+impl CachedGuildUpsert {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(
+        default_message_notifications: i16,
+        explicit_content_filter: i16,
+        features: Vec<String>,
+        icon: String,
+        large: bool,
+        name: String,
+        owner_id: String,
+        id: String,
+        mfa_level: i16,
+        premium_subscription_count: i64,
+        premium_tier: i16,
+        verification_level: i16,
+    ) -> Self {
+        Self {
+            default_message_notifications,
+            explicit_content_filter,
+            features,
+            icon,
+            large,
+            name,
+            owner_id,
+            id,
+            mfa_level,
+            premium_subscription_count,
+            premium_tier,
+            verification_level,
+        }
+    }
+}

@@ -100,11 +100,10 @@ where
     Ok(())
 }
 
-pub(crate) fn generate_query_struct_token_stream(
+fn generate_query_struct_token_stream(
     name: &String,
     query: QueryInfo,
 ) -> crate::error::Result<TokenStream> {
-    dbg!(&query.inner);
     let structname = Ident::new(name.to_case(Case::Pascal).as_str(), Span::call_site());
 
     let (table, placeholders) = match query.inner {
@@ -117,16 +116,32 @@ pub(crate) fn generate_query_struct_token_stream(
             placeholders,
             ..
         }) => (table, placeholders),
+        QueryInfoInner::Select(SelectQueryInfo {
+            what:
+                deref!(
+                    SelectWhat::Exists(SelectQueryInfo {
+                        from: Some(ref table),
+                        ref placeholders,
+                        ..
+                    })
+                ),
+            ..
+        }) => (table.clone(), placeholders.clone()),
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
 
-    // todo: figure out SELECT EXISTS with subquery
     let fields = placeholders
         .iter()
         .map(|placeholder| {
-            let col = table.columns.get(placeholder).expect("column must exist");
-            let dtype = types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap();
-            let ident = Ident::new(col.name.as_str(), Span::call_site());
+            let dtype = if let Some(col) = table.columns.get(placeholder) {
+                types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap()
+            } else if let Some(dt) = query.extra_placeholder_tys.get(placeholder) {
+                types::sql_type_to_rust_type_token_stream(dt.clone()).unwrap()
+            } else {
+                unreachable!()
+            };
+
+            let ident = Ident::new(placeholder, Span::call_site());
 
             quote::quote! {
                 #ident: #dtype
@@ -134,9 +149,35 @@ pub(crate) fn generate_query_struct_token_stream(
         })
         .collect_vec();
 
+    let bind_constructor =
+        generate_query_struct_bind_constructor_token_stream(placeholders, fields.clone())?;
+
     Ok(quote::quote! {
         pub struct #structname {
             #(#fields),*
+        }
+
+        impl #structname {
+            #bind_constructor
+        }
+    })
+}
+
+fn generate_query_struct_bind_constructor_token_stream(
+    placeholders: Vec<String>,
+    param_decls: Vec<TokenStream>,
+) -> crate::error::Result<TokenStream> {
+    let idents = placeholders
+        .iter()
+        .map(|string| Ident::new(string, Span::call_site()))
+        .collect_vec();
+
+    Ok(quote::quote! {
+        #[must_use = "Queries must be executed after construction"]
+        pub fn bind(#(#param_decls),*) -> Self {
+            Self {
+                #(#idents),*
+            }
         }
     })
 }

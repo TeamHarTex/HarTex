@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
@@ -44,7 +44,7 @@ pub(crate) struct GeneratedTableStructsFile {
 }
 
 pub(crate) fn generate_table_structs_from_schemas<P>(
-    schemas: HashMap<String, SchemaInfo>,
+    schemas: BTreeMap<String, SchemaInfo>,
     root_path: P,
 ) -> crate::error::Result<()>
 where
@@ -54,6 +54,7 @@ where
     fs::create_dir_all(&tables_dir)?;
 
     let _ = schemas
+        .clone()
         .into_iter()
         .map(tables::generate_table_structs_from_schema)
         .process_results(|iter| {
@@ -70,11 +71,17 @@ where
             .process_results(|iter| iter.collect_vec())
         })??;
 
-    let mods = quote::quote! {
-        pub mod api_backend;
-        pub mod discord_frontend;
+    let mods = schemas
+        .keys()
+        .map(|name| {
+            let ident = Ident::new(name, Span::call_site());
+            quote::quote! {pub mod #ident;}
+        })
+        .collect_vec();
+    let mods_ts = quote::quote! {
+        #(#mods)*
     };
-    let file = syn::parse2::<File>(mods)?;
+    let file = syn::parse2::<File>(mods_ts)?;
     fs::write(
         tables_dir.join("mod.rs"),
         DO_NOT_MODIFY_HEADER.to_owned() + prettyplease::unparse(&file).as_str(),
