@@ -13,3 +13,4 @@ impl From<WtxError> for Error {
         Self::Wtx(err)
     }
 }
+pub type Result<T> = std::result::Result<T, Error>;

@@ -25,7 +25,6 @@
 #![deny(warnings)]
 #![allow(dead_code)]
 #![allow(incomplete_features)]
-#![allow(unreachable_code)]
 #![feature(deref_patterns)]
 #![feature(let_chains)]
 

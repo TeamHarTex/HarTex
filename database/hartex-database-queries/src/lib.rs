@@ -3,6 +3,9 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #[path = "../generated/api_backend.rs"]
 pub mod api_backend;
 #[path = "../generated/configuration.rs"]

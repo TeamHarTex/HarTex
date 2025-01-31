@@ -26,8 +26,10 @@ use std::path::Path;
 
 use itertools::Itertools;
 use proc_macro2::Ident;
+use proc_macro2::Literal;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
+use quote::TokenStreamExt;
 use sqlparser::ast::ColumnOption;
 use syn::File;
 
@@ -85,7 +87,12 @@ pub(crate) fn generate_table_structs_from_schema(
     (name, schema): (String, SchemaInfo),
 ) -> crate::error::Result<GeneratedTableStructsFile> {
     let filename = format!("{name}.rs");
-    let stream = generate_token_stream(schema)?;
+
+    let mut stream = quote::quote! {
+        use wtx::database::Record as _;
+        use wtx::database::client::postgres::Record;
+    };
+    stream.append_all(generate_token_stream(schema)?);
 
     let file = syn::parse2::<File>(stream)?;
 
@@ -107,14 +114,15 @@ fn generate_token_stream(schema: SchemaInfo) -> crate::error::Result<TokenStream
                 .replace('.', "");
             let ident = Ident::new(unquoted_name.as_str(), Span::call_site());
             let fields = generate_table_fields_token_streams(table.clone())?;
-            let impl_block = generate_struct_impl_token_stream(ident.clone(), table)?;
+            let impl_block = generate_struct_impl_token_stream(ident.clone(), table.clone())?;
+            let impl_tryfrom = generate_tryfrom_impl(ident.clone(), table)?;
 
             Ok::<TokenStream, crate::error::Error>(quote::quote! {
                 pub struct #ident {
                     #(#fields),*
                 }
-
                 #impl_block
+                #impl_tryfrom
             })
         })
         .process_results(|iter| iter.collect_vec())?;
@@ -188,5 +196,38 @@ fn generate_getter_body(name: Ident, ty: String) -> crate::error::Result<TokenSt
         "Option < & str >" => quote::quote! {self.#name.as_deref()},
         "& [String]" => quote::quote! {self.#name.as_slice()},
         _ => quote::quote! {self.#name},
+    })
+}
+
+fn generate_tryfrom_impl(name: Ident, table: TableInfo) -> crate::error::Result<TokenStream> {
+    let fieldinits = table
+        .columns
+        .into_iter()
+        .map(|(name, column)| {
+            let ident = Ident::new(name.as_str(), Span::call_site());
+            let literal = Literal::string(name.as_str());
+            let decode_fn = if column.constraints.contains(&ColumnOption::NotNull) {
+                quote::quote! {decode}
+            } else {
+                quote::quote! {decode_opt}
+            };
+
+            quote::quote! {#ident: record.#decode_fn(#literal)?}
+        })
+        .collect_vec();
+
+    Ok(quote::quote! {
+        impl<'exec, E: From<wtx::Error>> TryFrom<Record<'exec, E>> for #name
+        where
+            crate::result::Error: From<E>,
+        {
+            type Error = crate::result::Error;
+
+            fn try_from(record: Record<'exec, E>) -> crate::result::Result<Self> {
+                Ok(Self {
+                    #(#fieldinits),*
+                })
+            }
+        }
     })
 }

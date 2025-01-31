@@ -3,9 +3,11 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use wtx::database::Record as _;
+use wtx::database::client::postgres::Record;
 pub struct StartTimestamps {
     component: String,
-    timestamp: time::OffsetDateTime,
+    timestamp: chrono::DateTime<chrono::offset::Utc>,
 }
 impl StartTimestamps {
     #[must_use]
@@ -13,7 +15,19 @@ impl StartTimestamps {
         self.component.as_str()
     }
     #[must_use]
-    pub fn timestamp(&self) -> time::OffsetDateTime {
+    pub fn timestamp(&self) -> chrono::DateTime<chrono::offset::Utc> {
         self.timestamp
+    }
+}
+impl<'exec, E: From<wtx::Error>> TryFrom<Record<'exec, E>> for StartTimestamps
+where
+    crate::result::Error: From<E>,
+{
+    type Error = crate::result::Error;
+    fn try_from(record: Record<'exec, E>) -> crate::result::Result<Self> {
+        Ok(Self {
+            component: record.decode("component")?,
+            timestamp: record.decode("timestamp")?,
+        })
     }
 }

@@ -43,6 +43,8 @@ where
                 Self::Wtx(err)
             }
         }
+
+        pub type Result<T> = std::result::Result<T, Error>;
     };
 
     let synfile = syn::parse2::<File>(ts)?;

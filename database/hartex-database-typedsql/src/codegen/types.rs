@@ -50,9 +50,11 @@ pub(crate) fn sql_type_to_rust_type_token_stream(dt: DataType) -> Option<proc_ma
         }
         DataType::Timestamp(_, tz) => match tz {
             TimezoneInfo::None | TimezoneInfo::WithoutTimeZone => {
-                quote::quote! {time::PrimitiveDateTime}
+                quote::quote! {chrono::NaiveDateTime}
             }
-            TimezoneInfo::WithTimeZone | TimezoneInfo::Tz => quote::quote! {time::OffsetDateTime},
+            TimezoneInfo::WithTimeZone | TimezoneInfo::Tz => {
+                quote::quote! {chrono::DateTime<chrono::offset::Utc>}
+            }
         },
         _ => return None,
     })
@@ -86,9 +88,11 @@ pub(crate) fn sql_type_to_rust_reftype_token_stream(
         }
         DataType::Timestamp(_, tz) => match tz {
             TimezoneInfo::None | TimezoneInfo::WithoutTimeZone => {
-                quote::quote! {time::PrimitiveDateTime}
+                quote::quote! {chrono::NaiveDateTime}
             }
-            TimezoneInfo::WithTimeZone | TimezoneInfo::Tz => quote::quote! {time::OffsetDateTime},
+            TimezoneInfo::WithTimeZone | TimezoneInfo::Tz => {
+                quote::quote! {chrono::DateTime<chrono::offset::Utc>}
+            }
         },
         _ => return None,
     })
