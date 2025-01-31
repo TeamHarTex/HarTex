@@ -6,3 +6,9 @@
 pub struct CachedEmojiSelectById {
     id: String,
 }
+impl CachedEmojiSelectById {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(id: String) -> Self {
+        Self { id }
+    }
+}

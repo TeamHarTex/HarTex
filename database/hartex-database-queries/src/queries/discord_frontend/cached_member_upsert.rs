@@ -11,3 +11,23 @@ pub struct CachedMemberUpsert {
     guild_id: String,
     roles: Vec<String>,
 }
+impl CachedMemberUpsert {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(
+        flags: i64,
+        joined_at: chrono::DateTime<chrono::offset::Utc>,
+        nick: String,
+        user_id: String,
+        guild_id: String,
+        roles: Vec<String>,
+    ) -> Self {
+        Self {
+            flags,
+            joined_at,
+            nick,
+            user_id,
+            guild_id,
+            roles,
+        }
+    }
+}

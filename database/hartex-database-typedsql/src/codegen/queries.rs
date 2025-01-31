@@ -149,7 +149,8 @@ fn generate_query_struct_token_stream(
         })
         .collect_vec();
 
-    let bind_constructor = generate_query_struct_bind_constructor_token_stream()?;
+    let bind_constructor =
+        generate_query_struct_bind_constructor_token_stream(placeholders, fields.clone())?;
 
     Ok(quote::quote! {
         pub struct #structname {
@@ -162,8 +163,21 @@ fn generate_query_struct_token_stream(
     })
 }
 
-fn generate_query_struct_bind_constructor_token_stream() -> crate::error::Result<TokenStream> {
+fn generate_query_struct_bind_constructor_token_stream(
+    placeholders: Vec<String>,
+    param_decls: Vec<TokenStream>,
+) -> crate::error::Result<TokenStream> {
+    let idents = placeholders
+        .iter()
+        .map(|string| Ident::new(string, Span::call_site()))
+        .collect_vec();
+
     Ok(quote::quote! {
-        pub fn bind() {}
+        #[must_use = "Queries must be executed after construction"]
+        pub fn bind(#(#param_decls),*) -> Self {
+            Self {
+                #(#idents),*
+            }
+        }
     })
 }

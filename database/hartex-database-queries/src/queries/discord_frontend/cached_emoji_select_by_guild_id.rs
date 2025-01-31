@@ -6,3 +6,9 @@
 pub struct CachedEmojiSelectByGuildId {
     guild_id: String,
 }
+impl CachedEmojiSelectByGuildId {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(guild_id: String) -> Self {
+        Self { guild_id }
+    }
+}

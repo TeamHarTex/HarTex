@@ -7,3 +7,12 @@ pub struct StartTimestampUpsert {
     component: String,
     timestamp: chrono::DateTime<chrono::offset::Utc>,
 }
+impl StartTimestampUpsert {
+    #[must_use = "Queries must be executed after construction"]
+    pub fn bind(
+        component: String,
+        timestamp: chrono::DateTime<chrono::offset::Utc>,
+    ) -> Self {
+        Self { component, timestamp }
+    }
+}
