@@ -3,13 +3,58 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::Executor as _;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct PluginEnabled {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     plugin: String,
     guild_id: String,
 }
 impl PluginEnabled {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(plugin: String, guild_id: String) -> Self {
-        Self { plugin, guild_id }
+        Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+            plugin,
+            guild_id,
+        }
+    }
+    #[must_use = "A query must be executed after executor is created"]
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("CONFIGURATION_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
+    }
+    #[must_use = "Query result(s) must be used"]
+    pub async fn one(self) -> crate::result::Result<bool> {
+        use wtx::database::Record;
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .fetch_with_stmt(
+                "SELECT EXISTS (SELECT true FROM \"Configuration\".\"Nightly\".\"GuildConfigurations\" WHERE \"enabled_plugins\" @> ARRAY[$1] AND \"guild_id\" = $2)",
+                (self.plugin, self.guild_id),
+            )
+            .await
+            .into_crate_result()
+            .map(|record| record.decode("exists").into_crate_result())
+            .flatten()
     }
 }

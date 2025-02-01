@@ -3,13 +3,88 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::Executor as _;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct CachedRoleSelectByIdAndGuildId {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     id: String,
     guild_id: String,
 }
 impl CachedRoleSelectByIdAndGuildId {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(id: String, guild_id: String) -> Self {
-        Self { id, guild_id }
+        Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+            id,
+            guild_id,
+        }
+    }
+    #[must_use = "A query must be executed after executor is created"]
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
+    }
+    #[must_use = "Query result(s) must be used"]
+    pub async fn one(
+        self,
+    ) -> crate::result::Result<crate::tables::discord_frontend::NightlyCachedRoles> {
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .fetch_with_stmt(
+                "SELECT * FROM \"DiscordFrontend\".\"Nightly\".\"CachedRoles\" WHERE \"id\" = $1 AND \"guild_id\" = $2",
+                (self.id, self.guild_id),
+            )
+            .await
+            .into_crate_result()
+            .map(|record| crate::tables::discord_frontend::NightlyCachedRoles::try_from(
+                record,
+            ))
+            .flatten()
+    }
+    #[must_use = "Query result(s) must be used"]
+    pub async fn many(
+        self,
+    ) -> crate::result::Result<
+        Vec<crate::tables::discord_frontend::NightlyCachedRoles>,
+    > {
+        use itertools::Itertools;
+        use wtx::database::Records;
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .fetch_many_with_stmt(
+                "SELECT * FROM \"DiscordFrontend\".\"Nightly\".\"CachedRoles\" WHERE \"id\" = $1 AND \"guild_id\" = $2",
+                (self.id, self.guild_id),
+                |_| Ok::<_, wtx::Error>(()),
+            )
+            .await
+            .into_crate_result()?
+            .iter()
+            .map(|record| crate::tables::discord_frontend::NightlyCachedRoles::try_from(
+                record,
+            ))
+            .process_results(|iter| iter.collect_vec())
     }
 }

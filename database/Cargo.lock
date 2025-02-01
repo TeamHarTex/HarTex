@@ -979,12 +979,13 @@ dependencies = [
  "cornucopia_async",
  "futures",
  "hartex_database_typedsql",
+ "itertools",
  "postgres-types",
  "serde_json",
  "time",
  "tokio",
  "tokio-postgres",
- "wtx",
+ "wtx 0.27.0 (git+https://github.com/TeamHarTex/wtx.git)",
 ]
 
 [[package]]
@@ -998,7 +999,9 @@ dependencies = [
  "quote",
  "sqlparser",
  "syn 2.0.96",
+ "tokio",
  "walkdir",
+ "wtx 0.27.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -2977,6 +2980,48 @@ checksum = "1e9df38ee2d2c3c5948ea468a8406ff0db0b29ae1ffde1bcf20ef305bcc95c51"
 [[package]]
 name = "wtx"
 version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49c638efe10ef43e70ea7bf6f55ed908394ac5f341667ef5aa3f5dbecb8dff45"
+dependencies = [
+ "aes-gcm 0.11.0-pre.2",
+ "argon2",
+ "base64",
+ "borsh",
+ "chrono",
+ "cl-aux",
+ "crypto-common 0.1.6",
+ "digest",
+ "embassy-time",
+ "embedded-io-async",
+ "embedded-tls",
+ "fastrand",
+ "foldhash",
+ "hashbrown 0.15.2",
+ "hmac",
+ "httparse",
+ "memchr",
+ "portable-atomic",
+ "portable-atomic-util",
+ "quick-protobuf",
+ "rand_chacha",
+ "rand_core",
+ "ring",
+ "rust_decimal",
+ "rustls-pemfile",
+ "rustls-pki-types",
+ "serde",
+ "serde_json",
+ "sha1",
+ "sha2",
+ "simdutf8",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "wtx"
+version = "0.27.0"
 source = "git+https://github.com/TeamHarTex/wtx.git#2f072a4f4abd61cd7813de9738fb9f318c7ec070"
 dependencies = [
  "aes-gcm 0.11.0-pre.2",
@@ -3010,6 +3055,7 @@ dependencies = [
  "sha1",
  "sha2",
  "simdutf8",
+ "tokio",
  "tracing",
  "tracing-subscriber",
 ]

@@ -3,7 +3,16 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::Executor as _;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct StartTimestampUpsert {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     component: String,
     timestamp: chrono::DateTime<chrono::offset::Utc>,
 }
@@ -13,6 +22,38 @@ impl StartTimestampUpsert {
         component: String,
         timestamp: chrono::DateTime<chrono::offset::Utc>,
     ) -> Self {
-        Self { component, timestamp }
+        Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+            component,
+            timestamp,
+        }
+    }
+    #[must_use = "A query must be executed after executor is created"]
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("API_BACKEND_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
+    }
+    pub async fn execute(self) -> crate::result::Result<u64> {
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .execute_with_stmt(
+                "INSERT INTO \"APIBackend\".public.\"StartTimestamps\" (\"component\", \"timestamp\") VALUES ($1, $2) ON CONFLICT(\"component\") DO UPDATE SET \"timestamp\" = $2",
+                (self.component, self.timestamp),
+            )
+            .await
+            .into_crate_result()
     }
 }

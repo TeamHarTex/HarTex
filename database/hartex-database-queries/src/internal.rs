@@ -19,40 +19,31 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-use std::fs;
-use std::path::Path;
 
-use syn::File;
+use std::pin::Pin;
 
-use crate::codegen::DO_NOT_MODIFY_HEADER;
+use tokio::net::TcpStream;
+use wtx::database::client::postgres::Config;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
+use wtx::misc::Xorshift64;
+use wtx::misc::simple_seed;
 
-pub(crate) fn generate_result_mod<P>(path: P) -> crate::error::Result<()>
-where
-    P: AsRef<Path>,
-{
-    let ts = quote::quote! {
-        use wtx::Error as WtxError;
+pub(crate) type Ret<'a> = Pin<
+    Box<dyn Future<Output = wtx::Result<Executor<wtx::Error, ExecutorBuffer, TcpStream>>> + 'a>,
+>;
 
-        #[derive(Debug)]
-        pub enum Error {
-            Wtx(WtxError),
-        }
+pub(crate) fn __internal_executor_constructor(uri: Uri<&str>) -> Ret {
+    let mut rng = Xorshift64::from(simple_seed());
 
-        impl From<WtxError> for Error {
-            fn from(err: WtxError) -> Self {
-                Self::Wtx(err)
-            }
-        }
-
-        pub type Result<T> = std::result::Result<T, Error>;
-    };
-
-    let synfile = syn::parse2::<File>(ts)?;
-
-    fs::write(
-        path.as_ref().join("result.rs"),
-        DO_NOT_MODIFY_HEADER.to_owned() + prettyplease::unparse(&synfile).as_str(),
-    )?;
-
-    Ok(())
+    Box::pin(async move {
+        Executor::connect(
+            &Config::from_uri(&uri)?,
+            ExecutorBuffer::new(usize::MAX, &mut rng),
+            &mut rng,
+            TcpStream::connect(uri.hostname_with_implied_port()).await?,
+        )
+        .await
+    })
 }

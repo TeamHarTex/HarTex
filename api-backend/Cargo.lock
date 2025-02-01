@@ -111,9 +111,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.89"
+version = "1.0.95"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86fdf8605db99b54d3cd748a44c6d04df638eb5dafb219b135d0149bd0db01f6"
+checksum = "34ac096ce696dc2fcabef30516bb13c0a68a11d30131d3df6f04711467681b04"
 
 [[package]]
 name = "arc-swap"
@@ -1134,12 +1134,13 @@ dependencies = [
  "cornucopia_async",
  "futures",
  "hartex_database_typedsql",
+ "itertools",
  "postgres-types",
  "serde_json",
  "time",
  "tokio",
  "tokio-postgres",
- "wtx",
+ "wtx 0.27.0 (git+https://github.com/TeamHarTex/wtx.git)",
 ]
 
 [[package]]
@@ -1153,7 +1154,9 @@ dependencies = [
  "quote",
  "sqlparser",
  "syn 2.0.96",
+ "tokio",
  "walkdir",
+ "wtx 0.27.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -2693,9 +2696,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.42.0"
+version = "1.43.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cec9b21b0450273377fc97bd4c33a8acffc8c996c987a7c5b319a0083707551"
+checksum = "3d61fa4ffa3de412bfea335c6ecff681de2b609ba3c77ef3e00e521813a9ed9e"
 dependencies = [
  "backtrace",
  "bytes",
@@ -2711,9 +2714,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-macros"
-version = "2.4.0"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "693d596312e88961bc67d7f1f97af8a70227d9f90c31bba5806eec004978d752"
+checksum = "6e06d43f1345a3bcd39f6a56dbb7dcab2ba47e68e8ac134855e7e2bdbaf8cab8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3273,6 +3276,48 @@ checksum = "d135d17ab770252ad95e9a872d365cf3090e3be864a34ab46f48555993efc904"
 [[package]]
 name = "wtx"
 version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49c638efe10ef43e70ea7bf6f55ed908394ac5f341667ef5aa3f5dbecb8dff45"
+dependencies = [
+ "aes-gcm 0.11.0-pre.2",
+ "argon2",
+ "base64",
+ "borsh",
+ "chrono",
+ "cl-aux",
+ "crypto-common 0.1.6",
+ "digest",
+ "embassy-time",
+ "embedded-io-async",
+ "embedded-tls",
+ "fastrand",
+ "foldhash",
+ "hashbrown 0.15.2",
+ "hmac",
+ "httparse",
+ "memchr",
+ "portable-atomic",
+ "portable-atomic-util",
+ "quick-protobuf",
+ "rand_chacha",
+ "rand_core",
+ "ring",
+ "rust_decimal",
+ "rustls-pemfile",
+ "rustls-pki-types",
+ "serde",
+ "serde_json",
+ "sha1",
+ "sha2",
+ "simdutf8",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "wtx"
+version = "0.27.0"
 source = "git+https://github.com/TeamHarTex/wtx.git#218785960fe914536baae5bb9a4637881917fec3"
 dependencies = [
  "aes-gcm 0.11.0-pre.2",
@@ -3306,6 +3351,7 @@ dependencies = [
  "sha1",
  "sha2",
  "simdutf8",
+ "tokio",
  "tracing",
  "tracing-subscriber",
 ]
