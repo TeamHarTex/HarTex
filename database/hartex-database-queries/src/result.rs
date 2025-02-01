@@ -24,6 +24,7 @@ use wtx::Error as WtxError;
 
 #[derive(Debug)]
 pub enum Error {
+    Generic(&'static str),
     Wtx(WtxError),
 }
 
@@ -34,3 +35,16 @@ impl From<WtxError> for Error {
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+pub trait IntoCrateResult<T> {
+    fn into_crate_result(self) -> Result<T>;
+}
+
+impl<T> IntoCrateResult<T> for wtx::Result<T> {
+    fn into_crate_result(self) -> Result<T> {
+        match self {
+            Ok(t) => Ok(t),
+            Err(e) => Err(Error::Wtx(e)),
+        }
+    }
+}

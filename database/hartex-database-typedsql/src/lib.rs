@@ -27,8 +27,6 @@
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
 #![feature(let_chains)]
-#![feature(unboxed_closures)]
-#![feature(type_alias_impl_trait)]
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -62,8 +60,6 @@ where
 
     codegen::tables::generate_table_structs_from_schemas(schemas, &target_dir)?;
     codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
-
-    codegen::library::generate_lib_rs(target_dir)?;
 
     Ok(())
 }

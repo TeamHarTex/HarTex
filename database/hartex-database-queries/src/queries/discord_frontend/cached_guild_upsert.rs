@@ -5,9 +5,11 @@
 
 use std::env;
 use tokio::net::TcpStream;
+use wtx::database::Executor as _;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct CachedGuildUpsert {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
@@ -68,5 +70,32 @@ impl CachedGuildUpsert {
                     .await?,
             );
         Ok(self)
+    }
+    pub async fn execute(self) -> crate::result::Result<u64> {
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .execute_with_stmt(
+                "INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedGuilds\" (\"default_message_notifications\", \"explicit_content_filter\", \"features\", \"icon\", \"large\", \"name\", \"owner_id\", \"id\", \"mfa_level\", \"premium_subscription_count\", \"premium_tier\", \"verification_level\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) ON CONFLICT(\"id\") DO UPDATE SET \"default_message_notifications\" = $1, \"explicit_content_filter\" = $2, \"features\" = $3, \"icon\" = $4, \"large\" = $5, \"mfa_level\" = $9, \"name\" = $6, \"owner_id\" = $7, \"premium_subscription_count\" = $10, \"premium_tier\" = $11, \"verification_level\" = $12",
+                (
+                    self.default_message_notifications,
+                    self.explicit_content_filter,
+                    self.features,
+                    self.icon,
+                    self.large,
+                    self.name,
+                    self.owner_id,
+                    self.id,
+                    self.mfa_level,
+                    self.premium_subscription_count,
+                    self.premium_tier,
+                    self.verification_level,
+                ),
+            )
+            .await
+            .into_crate_result()
     }
 }

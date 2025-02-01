@@ -163,9 +163,12 @@ fn generate_query_struct_token_stream(
         use std::env;
 
         use tokio::net::TcpStream;
+        use wtx::database::Executor as _;
         use wtx::database::client::postgres::Executor;
         use wtx::database::client::postgres::ExecutorBuffer;
         use wtx::misc::Uri;
+
+        use crate::result::IntoCrateResult;
 
         pub struct #structname {
             db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
@@ -233,9 +236,21 @@ fn generate_insert_query_fn_token_stream(
     for (i, placeholder) in insert.placeholders.iter().enumerate() {
         rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
     }
-    let _ = Literal::string(rawstr.as_str());
+    let stmt = Literal::string(rawstr.as_str());
 
-    Ok(vec![])
+    let placeholders = insert
+        .placeholders
+        .iter()
+        .map(|placeholder| Ident::new(placeholder, Span::call_site()))
+        .map(|ident| quote::quote! {self.#ident})
+        .collect_vec();
+
+    Ok(vec![quote::quote! {
+        pub async fn execute(self) -> crate::result::Result<u64> {
+            self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
+                .execute_with_stmt(#stmt, (#(#placeholders),*)).await.into_crate_result()
+        }
+    }])
 }
 
 fn generate_select_query_fns_token_streams(

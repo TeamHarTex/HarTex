@@ -5,9 +5,11 @@
 
 use std::env;
 use tokio::net::TcpStream;
+use wtx::database::Executor as _;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct CachedMemberUpsert {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
@@ -50,5 +52,26 @@ impl CachedMemberUpsert {
                     .await?,
             );
         Ok(self)
+    }
+    pub async fn execute(self) -> crate::result::Result<u64> {
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .execute_with_stmt(
+                "INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedMembers\" (\"flags\", \"joined_at\", \"nick\", \"user_id\", \"guild_id\", \"roles\") VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT(\"user_id\", \"guild_id\") DO UPDATE SET \"flags\" = $1, \"joined_at\" = $2, \"nick\" = $3, \"roles\" = $6",
+                (
+                    self.flags,
+                    self.joined_at,
+                    self.nick,
+                    self.user_id,
+                    self.guild_id,
+                    self.roles,
+                ),
+            )
+            .await
+            .into_crate_result()
     }
 }

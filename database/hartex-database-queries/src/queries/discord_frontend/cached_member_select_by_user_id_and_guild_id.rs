@@ -5,9 +5,11 @@
 
 use std::env;
 use tokio::net::TcpStream;
+use wtx::database::Executor as _;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct CachedMemberSelectByUserIdAndGuildId {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,

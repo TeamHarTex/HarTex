@@ -5,9 +5,11 @@
 
 use std::env;
 use tokio::net::TcpStream;
+use wtx::database::Executor as _;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
+use crate::result::IntoCrateResult;
 pub struct CachedRoleUpsert {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
@@ -59,5 +61,29 @@ impl CachedRoleUpsert {
                     .await?,
             );
         Ok(self)
+    }
+    pub async fn execute(self) -> crate::result::Result<u64> {
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .execute_with_stmt(
+                "INSERT INTO \"DiscordFrontend\".\"Nightly\".\"CachedRoles\" (\"color\", \"icon\", \"id\", \"guild_id\", \"flags\", \"hoist\", \"managed\", \"mentionable\", \"position\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT(\"id\", \"guild_id\") DO UPDATE SET \"color\" = $1, \"icon\" = $2, \"flags\" = $5, \"hoist\" = $6, \"managed\" = $7, \"mentionable\" = $8, \"position\" = $9",
+                (
+                    self.color,
+                    self.icon,
+                    self.id,
+                    self.guild_id,
+                    self.flags,
+                    self.hoist,
+                    self.managed,
+                    self.mentionable,
+                    self.position,
+                ),
+            )
+            .await
+            .into_crate_result()
     }
 }
