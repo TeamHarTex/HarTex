@@ -20,10 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! # Uptime Routes
+//!
+//! Routes interacting with the uptime API.
+
 use axum::Json;
-/// # Uptime Routes
-///
-/// Routes interacting with the uptime API.
 use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -32,16 +33,16 @@ use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::GenericClient;
 use bb8_postgres::tokio_postgres::NoTls;
+use chrono::DateTime;
 use futures_util::stream::TryStreamExt;
 use hartex_backend_models::Response;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeQueryRejection;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_backend_models::uptime::UptimeUpdate;
-use hartex_database_queries::api_backend::queries::start_timestamp_select_by_component::select_start_timestamp_by_component;
-use hartex_database_queries::api_backend::queries::start_timestamp_upsert::start_timestamp_upsert;
+use hartex_database_queries::queries::api_backend::start_timestamp_select_by_component::StartTimestampSelectByComponent;
+use hartex_database_queries::queries::api_backend::start_timestamp_upsert::StartTimestampUpsert;
 use hartex_log::log;
-use time::OffsetDateTime;
 
 /// Get component uptime
 #[allow(clippy::cast_sign_loss)]
@@ -59,32 +60,21 @@ use time::OffsetDateTime;
     )
 )]
 pub async fn get_uptime(
-    State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
 ) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
-    log::trace!("retrieving connection from database pool");
-    let result = pool.get().await;
-    if result.is_err() {
-        return Response::internal_server_error();
-    }
-
-    let connection = result.unwrap();
-    let client = connection.client();
-
     log::trace!("querying timestamp");
     let name = query.component_name();
-    let mut query = select_start_timestamp_by_component();
-    let result = query.bind(client, &name).iter().await;
+    let result = StartTimestampSelectByComponent::bind(name.to_string())
+        .executor()
+        .await;
 
     if result.is_err() {
         return Response::internal_server_error();
     }
 
-    let iterator = result.unwrap();
-    let result = iterator.try_collect::<Vec<_>>().await;
-    if result.is_err() {
-        log::error!("{:?}", result.unwrap_err());
+    let result = result.unwrap().many().await;
 
+    if result.is_err() {
         return Response::internal_server_error();
     }
 
@@ -94,7 +84,7 @@ pub async fn get_uptime(
     }
 
     Response::ok(UptimeResponse::with_start_timestamp(
-        vec[0].timestamp.unix_timestamp() as u128,
+        vec[0].timestamp().timestamp() as u128,
     ))
 }
 
@@ -114,27 +104,24 @@ pub async fn get_uptime(
     )
 )]
 pub async fn patch_uptime(
-    State(pool): State<Pool<PostgresConnectionManager<NoTls>>>,
     Json(query): Json<UptimeUpdate>,
 ) -> (StatusCode, Json<Response<(), String>>) {
-    log::trace!("retrieving connection from database pool");
-    let result = pool.get().await;
-    if result.is_err() {
-        return Response::internal_server_error();
-    }
-
-    let connection = result.unwrap();
-    let client = connection.client();
-
     log::trace!("updating timestamp");
-    let Ok(timestamp) = OffsetDateTime::from_unix_timestamp(query.start_timestamp() as i64) else {
+
+    let Some(timestamp) = DateTime::from_timestamp(query.start_timestamp() as i64, 0) else {
         // FIXME: return a better status code as the timestamp is out of range if this branch is reached
         // just 500 for now
         return Response::internal_server_error();
     };
-    let result = start_timestamp_upsert()
-        .bind(client, &query.component_name(), &timestamp)
+    let result = StartTimestampUpsert::bind(query.component_name().to_string(), timestamp)
+        .executor()
         .await;
+
+    if result.is_err() {
+        return Response::internal_server_error();
+    }
+
+    let result = result.unwrap().execute().await;
 
     if result.is_err() {
         return Response::internal_server_error();
