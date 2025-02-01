@@ -21,7 +21,7 @@
  */
 
 use std::fs;
-
+use owo_colors::OwoColorize;
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -156,9 +156,9 @@ fn clean(project: &'static str, builder: &Builder<'_>) {
         .join(env!("BOOTSTRAP_TARGET"))
         .join(project);
 
-    println!("INFO: deleting {}", dir.display());
+    println!("{} deleting {}", "info:".bold(), dir.display());
     if !dir.exists() {
-        println!("WARN: directory {} does not exist, skipping", dir.display());
+        println!("{} directory {} does not exist, skipping", "warning:".yellow().bold(), dir.display());
         return;
     }
 
