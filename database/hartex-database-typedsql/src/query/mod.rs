@@ -50,7 +50,7 @@ pub(crate) enum QueryInfoInner {
 #[derive(Clone, Debug)]
 pub(crate) struct QueryInfo {
     pub(crate) path: String,
-    pub(crate) raw: String,
+    pub(crate) raw: Statement,
     pub(crate) inner: QueryInfoInner,
     pub(crate) extra_placeholder_tys: HashMap<String, DataType>,
 }
@@ -99,9 +99,9 @@ pub(crate) fn parse_query(
     path.pop();
     let parent = path.components().last().unwrap().as_os_str();
 
-    let inner = match statement {
+    let inner = match statement.clone() {
         Statement::Insert(insert) => {
-            QueryInfoInner::Insert(insert::parse_insert_query(insert, schema_map)?)
+            QueryInfoInner::Insert(insert::parse_insert_query(insert.clone(), schema_map)?)
         }
         Statement::Query(
             deref!(Query {
@@ -127,7 +127,7 @@ pub(crate) fn parse_query(
         .collect();
 
     Ok((query_info.name.clone(), QueryInfo {
-        raw: query_info.contents.clone(),
+        raw: statement,
         path: parent.to_string_lossy().to_string(),
         inner,
         extra_placeholder_tys,

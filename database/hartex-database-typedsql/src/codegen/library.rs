@@ -43,6 +43,7 @@ where
         #[path = "../generated/discord_frontend.rs"]
         pub mod discord_frontend;
 
+        mod internal;
         pub mod queries;
         pub mod result;
         pub mod tables;

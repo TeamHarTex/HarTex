@@ -3,12 +3,35 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
 pub struct StartTimestampSelectByComponent {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     component: String,
 }
 impl StartTimestampSelectByComponent {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(component: String) -> Self {
-        Self { component }
+        Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+            component,
+        }
+    }
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("API_BACKEND_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
     }
 }

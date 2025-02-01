@@ -22,7 +22,6 @@
 
 pub(crate) mod library;
 pub(crate) mod queries;
-pub(crate) mod result;
 pub(crate) mod tables;
 pub(crate) mod types;
 

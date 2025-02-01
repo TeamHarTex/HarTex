@@ -3,13 +3,37 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
 pub struct PluginEnabled {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     plugin: String,
     guild_id: String,
 }
 impl PluginEnabled {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(plugin: String, guild_id: String) -> Self {
-        Self { plugin, guild_id }
+        Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+            plugin,
+            guild_id,
+        }
+    }
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("CONFIGURATION_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
     }
 }

@@ -3,7 +3,14 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
 pub struct CachedEmojiUpsert {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     animated: bool,
     name: String,
     id: String,
@@ -20,11 +27,25 @@ impl CachedEmojiUpsert {
         managed: bool,
     ) -> Self {
         Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
             animated,
             name,
             id,
             guild_id,
             managed,
         }
+    }
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
     }
 }

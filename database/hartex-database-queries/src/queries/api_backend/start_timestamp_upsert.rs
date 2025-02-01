@@ -3,7 +3,14 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
 pub struct StartTimestampUpsert {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     component: String,
     timestamp: chrono::DateTime<chrono::offset::Utc>,
 }
@@ -13,6 +20,23 @@ impl StartTimestampUpsert {
         component: String,
         timestamp: chrono::DateTime<chrono::offset::Utc>,
     ) -> Self {
-        Self { component, timestamp }
+        Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+            component,
+            timestamp,
+        }
+    }
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("API_BACKEND_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
     }
 }

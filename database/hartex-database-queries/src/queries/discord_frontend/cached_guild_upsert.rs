@@ -3,7 +3,14 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
+use std::env;
+use tokio::net::TcpStream;
+use wtx::database::client::postgres::Executor;
+use wtx::database::client::postgres::ExecutorBuffer;
+use wtx::misc::Uri;
 pub struct CachedGuildUpsert {
+    db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+    executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     default_message_notifications: i16,
     explicit_content_filter: i16,
     features: Vec<String>,
@@ -34,6 +41,9 @@ impl CachedGuildUpsert {
         verification_level: i16,
     ) -> Self {
         Self {
+            db_executor: None,
+            executor_constructor: crate::internal::__internal_executor_constructor
+                as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
             default_message_notifications,
             explicit_content_filter,
             features,
@@ -47,5 +57,16 @@ impl CachedGuildUpsert {
             premium_tier,
             verification_level,
         }
+    }
+    pub async fn executor(mut self) -> crate::result::Result<Self> {
+        self.db_executor
+            .replace(
+                (self
+                    .executor_constructor)(
+                        Uri::new(&env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap()),
+                    )
+                    .await?,
+            );
+        Ok(self)
     }
 }

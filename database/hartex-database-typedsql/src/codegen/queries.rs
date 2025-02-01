@@ -28,9 +28,11 @@ use convert_case::Case;
 use convert_case::Casing;
 use itertools::Itertools;
 use proc_macro2::Ident;
+use proc_macro2::Literal;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
+use sqlparser::ast::Statement;
 use syn::File;
 
 use crate::codegen::DO_NOT_MODIFY_HEADER;
@@ -106,7 +108,7 @@ fn generate_query_struct_token_stream(
 ) -> crate::error::Result<TokenStream> {
     let structname = Ident::new(name.to_case(Case::Pascal).as_str(), Span::call_site());
 
-    let (table, placeholders) = match query.inner {
+    let (table, placeholders) = match query.inner.clone() {
         QueryInfoInner::Insert(InsertQueryInfo {
             into_table,
             placeholders,
@@ -149,35 +151,102 @@ fn generate_query_struct_token_stream(
         })
         .collect_vec();
 
-    let bind_constructor =
-        generate_query_struct_bind_constructor_token_stream(placeholders, fields.clone())?;
+    let bind_constructor_and_executor =
+        generate_query_struct_bind_constructor_and_executor_token_stream(
+            placeholders,
+            fields.clone(),
+            &query.path,
+        )?;
+    let query_fns = generate_query_fns_token_streams(query)?;
 
     Ok(quote::quote! {
+        use std::env;
+
+        use tokio::net::TcpStream;
+        use wtx::database::client::postgres::Executor;
+        use wtx::database::client::postgres::ExecutorBuffer;
+        use wtx::misc::Uri;
+
         pub struct #structname {
+            db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
+            executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+
             #(#fields),*
         }
 
         impl #structname {
-            #bind_constructor
+            #bind_constructor_and_executor
+
+            #(#query_fns)*
         }
     })
 }
 
-fn generate_query_struct_bind_constructor_token_stream(
+fn generate_query_struct_bind_constructor_and_executor_token_stream(
     placeholders: Vec<String>,
     param_decls: Vec<TokenStream>,
+    schema_for_env: &str,
 ) -> crate::error::Result<TokenStream> {
     let idents = placeholders
         .iter()
         .map(|string| Ident::new(string, Span::call_site()))
         .collect_vec();
+    let envvarraw = format!("{}_PGSQL_URL", schema_for_env.to_case(Case::Constant));
+    let lit = Literal::string(envvarraw.as_str());
 
     Ok(quote::quote! {
         #[must_use = "Queries must be executed after construction"]
         pub fn bind(#(#param_decls),*) -> Self {
             Self {
+                db_executor: None,
+                executor_constructor: crate::internal::__internal_executor_constructor as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
+
                 #(#idents),*
             }
         }
+
+        pub async fn executor(mut self) -> crate::result::Result<Self> {
+            self.db_executor.replace((self.executor_constructor)(Uri::new(&env::var(#lit).unwrap())).await?);
+            Ok(self)
+        }
     })
+}
+
+fn generate_query_fns_token_streams(
+    query_info: QueryInfo,
+) -> crate::error::Result<Vec<TokenStream>> {
+    match query_info.inner {
+        QueryInfoInner::Insert(insert) => {
+            generate_insert_query_fn_token_stream(insert, query_info.raw)
+        }
+        QueryInfoInner::Select(select) => {
+            generate_select_query_fns_token_streams(select, query_info.raw)
+        }
+    }
+}
+
+fn generate_insert_query_fn_token_stream(
+    insert: InsertQueryInfo,
+    raw: Statement,
+) -> crate::error::Result<Vec<TokenStream>> {
+    let mut rawstr = raw.to_string();
+    for (i, placeholder) in insert.placeholders.iter().enumerate() {
+        rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
+    }
+    let _ = Literal::string(rawstr.as_str());
+
+    Ok(vec![])
+}
+
+fn generate_select_query_fns_token_streams(
+    select: SelectQueryInfo,
+    raw: Statement,
+) -> crate::error::Result<Vec<TokenStream>> {
+    let mut rawstr = raw.to_string();
+    for (i, placeholder) in select.placeholders.iter().enumerate() {
+        rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
+    }
+    let _ = Literal::string(rawstr.as_str());
+
+    Ok(vec![])
 }

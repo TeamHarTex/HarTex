@@ -27,6 +27,8 @@
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
 #![feature(let_chains)]
+#![feature(unboxed_closures)]
+#![feature(type_alias_impl_trait)]
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -57,8 +59,6 @@ where
     let queries = query::read_queries(queries_dir.as_ref())?
         .map(|info| query::parse_query(&info, schemas.clone()))
         .process_results(|iter| iter.collect::<BTreeMap<_, _>>())?;
-
-    codegen::result::generate_result_mod(&target_dir)?;
 
     codegen::tables::generate_table_structs_from_schemas(schemas, &target_dir)?;
     codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
