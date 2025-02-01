@@ -25,6 +25,7 @@ impl CachedGuildSelectById {
             id,
         }
     }
+    #[must_use = "A query must be executed after executor is created"]
     pub async fn executor(mut self) -> crate::result::Result<Self> {
         self.db_executor
             .replace(
@@ -36,6 +37,7 @@ impl CachedGuildSelectById {
             );
         Ok(self)
     }
+    #[must_use = "Query result(s) must be used"]
     pub async fn one(
         self,
     ) -> crate::result::Result<crate::tables::discord_frontend::NightlyCachedGuilds> {
@@ -56,6 +58,7 @@ impl CachedGuildSelectById {
             ))
             .flatten()
     }
+    #[must_use = "Query result(s) must be used"]
     pub async fn many(
         self,
     ) -> crate::result::Result<

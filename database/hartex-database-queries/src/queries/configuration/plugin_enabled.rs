@@ -27,6 +27,7 @@ impl PluginEnabled {
             guild_id,
         }
     }
+    #[must_use = "A query must be executed after executor is created"]
     pub async fn executor(mut self) -> crate::result::Result<Self> {
         self.db_executor
             .replace(
@@ -37,5 +38,23 @@ impl PluginEnabled {
                     .await?,
             );
         Ok(self)
+    }
+    #[must_use = "Query result(s) must be used"]
+    pub async fn one(self) -> crate::result::Result<bool> {
+        use wtx::database::Record;
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .fetch_with_stmt(
+                "SELECT EXISTS (SELECT true FROM \"Configuration\".\"Nightly\".\"GuildConfigurations\" WHERE \"enabled_plugins\" @> ARRAY[$1] AND \"guild_id\" = $2)",
+                (self.plugin, self.guild_id),
+            )
+            .await
+            .into_crate_result()
+            .map(|record| record.decode("exists").into_crate_result())
+            .flatten()
     }
 }

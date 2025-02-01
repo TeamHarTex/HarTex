@@ -285,8 +285,14 @@ fn generate_select_query_fns_token_streams(
 
             quote::quote! {crate::tables::#schemaident::#ident}
         }
-        deref!(SelectWhat::Boolean(_)) => quote::quote! {bool},
-        _ => return Ok(vec![]),
+        deref!(SelectWhat::Exists(_)) => {
+            return Ok(special_token_stream_for_select_exists(
+                quote::quote! {bool},
+                stmt.clone(),
+                placeholders.clone(),
+            ));
+        }
+        _ => return Ok(vec![])
     };
 
     Ok(vec![
@@ -315,4 +321,25 @@ fn generate_select_query_fns_token_streams(
             }
         },
     ])
+}
+
+fn special_token_stream_for_select_exists(
+    rettype: TokenStream,
+    stmt: Literal,
+    placeholders: Vec<TokenStream>,
+) -> Vec<TokenStream> {
+    vec![quote::quote! {
+        #[must_use = "Query result(s) must be used"]
+        pub async fn one(self) -> crate::result::Result<#rettype> {
+            use wtx::database::Record;
+
+            self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
+                .fetch_with_stmt(#stmt, (#(#placeholders),* ,))
+                .await
+                .into_crate_result()
+                .map(|record| record.decode("exists")
+                    .into_crate_result())
+                .flatten()
+        }
+    }]
 }

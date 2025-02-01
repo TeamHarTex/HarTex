@@ -25,6 +25,7 @@ impl StartTimestampSelectByComponent {
             component,
         }
     }
+    #[must_use = "A query must be executed after executor is created"]
     pub async fn executor(mut self) -> crate::result::Result<Self> {
         self.db_executor
             .replace(
@@ -36,6 +37,7 @@ impl StartTimestampSelectByComponent {
             );
         Ok(self)
     }
+    #[must_use = "Query result(s) must be used"]
     pub async fn one(
         self,
     ) -> crate::result::Result<crate::tables::api_backend::StartTimestamps> {
@@ -54,6 +56,7 @@ impl StartTimestampSelectByComponent {
             .map(|record| crate::tables::api_backend::StartTimestamps::try_from(record))
             .flatten()
     }
+    #[must_use = "Query result(s) must be used"]
     pub async fn many(
         self,
     ) -> crate::result::Result<Vec<crate::tables::api_backend::StartTimestamps>> {

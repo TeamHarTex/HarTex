@@ -42,6 +42,7 @@ impl CachedUserUpsert {
             global_name,
         }
     }
+    #[must_use = "A query must be executed after executor is created"]
     pub async fn executor(mut self) -> crate::result::Result<Self> {
         self.db_executor
             .replace(
