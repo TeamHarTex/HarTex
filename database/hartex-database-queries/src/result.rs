@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fmt::Debug;
+use std::fmt::Display;
+use std::fmt::Formatter;
+
 use wtx::Error as WtxError;
 
 #[derive(Debug)]
@@ -27,6 +31,14 @@ pub enum Error {
     Generic(&'static str),
     Wtx(WtxError),
 }
+
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl std::error::Error for Error {}
 
 impl From<WtxError> for Error {
     fn from(err: WtxError) -> Self {
