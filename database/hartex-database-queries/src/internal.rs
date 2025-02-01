@@ -31,7 +31,7 @@ use wtx::misc::Xorshift64;
 use wtx::misc::simple_seed;
 
 pub(crate) type Ret<'a> = Pin<
-    Box<dyn Future<Output = wtx::Result<Executor<wtx::Error, ExecutorBuffer, TcpStream>>> + 'a>,
+    Box<dyn Future<Output = wtx::Result<Executor<wtx::Error, ExecutorBuffer, TcpStream>>> + Send + 'a>,
 >;
 
 pub(crate) fn __internal_executor_constructor(uri: Uri<&str>) -> Ret {
