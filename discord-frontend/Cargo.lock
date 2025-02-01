@@ -1568,6 +1568,7 @@ dependencies = [
  "cornucopia_async",
  "futures",
  "hartex_database_typedsql",
+ "itertools 0.14.0",
  "postgres-types",
  "serde_json",
  "time",

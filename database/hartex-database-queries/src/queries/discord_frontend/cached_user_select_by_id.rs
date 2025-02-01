@@ -4,8 +4,10 @@
 // ==================! DO NOT MODIFY !==================
 
 use std::env;
+use itertools::Itertools;
 use tokio::net::TcpStream;
 use wtx::database::Executor as _;
+use wtx::database::Records;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
@@ -35,5 +37,25 @@ impl CachedUserSelectById {
                     .await?,
             );
         Ok(self)
+    }
+    pub async fn one(
+        self,
+    ) -> crate::result::Result<crate::tables::discord_frontend::NightlyCachedUsers> {
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .fetch_with_stmt(
+                "SELECT * FROM \"DiscordFrontend\".\"Nightly\".\"CachedUsers\" WHERE \"id\" = $1",
+                (self.id,),
+            )
+            .await
+            .into_crate_result()
+            .map(|record| crate::tables::discord_frontend::NightlyCachedUsers::try_from(
+                record,
+            ))
+            .flatten()
     }
 }

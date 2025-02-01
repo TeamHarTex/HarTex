@@ -157,13 +157,15 @@ fn generate_query_struct_token_stream(
             fields.clone(),
             &query.path,
         )?;
-    let query_fns = generate_query_fns_token_streams(query)?;
+    let query_fns = generate_query_fns_token_streams(query.clone(), &query.path)?;
 
     Ok(quote::quote! {
         use std::env;
 
+        use itertools::Itertools;
         use tokio::net::TcpStream;
         use wtx::database::Executor as _;
+        use wtx::database::Records;
         use wtx::database::client::postgres::Executor;
         use wtx::database::client::postgres::ExecutorBuffer;
         use wtx::misc::Uri;
@@ -217,13 +219,14 @@ fn generate_query_struct_bind_constructor_and_executor_token_stream(
 
 fn generate_query_fns_token_streams(
     query_info: QueryInfo,
+    schema: &str,
 ) -> crate::error::Result<Vec<TokenStream>> {
     match query_info.inner {
         QueryInfoInner::Insert(insert) => {
             generate_insert_query_fn_token_stream(insert, query_info.raw)
         }
         QueryInfoInner::Select(select) => {
-            generate_select_query_fns_token_streams(select, query_info.raw)
+            generate_select_query_fns_token_streams(select, query_info.raw, schema)
         }
     }
 }
@@ -248,7 +251,7 @@ fn generate_insert_query_fn_token_stream(
     Ok(vec![quote::quote! {
         pub async fn execute(self) -> crate::result::Result<u64> {
             self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                .execute_with_stmt(#stmt, (#(#placeholders),*)).await.into_crate_result()
+                .execute_with_stmt(#stmt, (#(#placeholders),* ,)).await.into_crate_result()
         }
     }])
 }
@@ -256,12 +259,59 @@ fn generate_insert_query_fn_token_stream(
 fn generate_select_query_fns_token_streams(
     select: SelectQueryInfo,
     raw: Statement,
+    schema: &str,
 ) -> crate::error::Result<Vec<TokenStream>> {
     let mut rawstr = raw.to_string();
     for (i, placeholder) in select.placeholders.iter().enumerate() {
         rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
     }
-    let _ = Literal::string(rawstr.as_str());
+    let stmt = Literal::string(rawstr.as_str());
 
-    Ok(vec![])
+    let placeholders = select
+        .placeholders
+        .iter()
+        .map(|placeholder| Ident::new(placeholder, Span::call_site()))
+        .map(|ident| quote::quote! {self.#ident})
+        .collect_vec();
+
+    let schemaident = Ident::new(schema.to_case(Case::Snake).as_str(), Span::call_site());
+    let rettype = match select.what {
+        deref!(SelectWhat::Everything) => {
+            let table = select.from.unwrap();
+            let name = table
+                .name
+                .replace("public.", "")
+                .replace('"', "")
+                .replace('.', "");
+            let ident = Ident::new(&name, Span::call_site());
+
+            quote::quote! {crate::tables::#schemaident::#ident}
+        }
+        deref!(SelectWhat::Boolean(_)) => quote::quote! {bool},
+        _ => return Ok(vec![]),
+    };
+
+    Ok(vec![
+        quote::quote! {
+            pub async fn one(self) -> crate::result::Result<#rettype> {
+                self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
+                    .fetch_with_stmt(#stmt, (#(#placeholders),* ,))
+                    .await
+                    .into_crate_result()
+                    .map(|record| #rettype::try_from(record))
+                    .flatten()
+            }
+        },
+        /*quote::quote! {
+            pub async fn many(self) -> crate::result::Result<Vec<#rettype>> {
+                self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
+                    .fetch_many_with_stmt(#stmt, (#(#placeholders),* ,))
+                    .await
+                    .into_crate_result()?
+                    .iter()
+                    .map(|record| #rettype::try_from(record))
+                    .process_results(|iter| iter.collect_vec())
+            }
+        },*/
+    ])
 }

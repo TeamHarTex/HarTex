@@ -23,6 +23,7 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(result_flattening)]
 
 #[path = "../generated/api_backend.rs"]
 pub mod api_backend;
