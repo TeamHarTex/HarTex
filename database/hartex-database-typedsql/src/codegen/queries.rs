@@ -162,10 +162,8 @@ fn generate_query_struct_token_stream(
     Ok(quote::quote! {
         use std::env;
 
-        use itertools::Itertools;
         use tokio::net::TcpStream;
         use wtx::database::Executor as _;
-        use wtx::database::Records;
         use wtx::database::client::postgres::Executor;
         use wtx::database::client::postgres::ExecutorBuffer;
         use wtx::misc::Uri;
@@ -302,16 +300,19 @@ fn generate_select_query_fns_token_streams(
                     .flatten()
             }
         },
-        /*quote::quote! {
+        quote::quote! {
             pub async fn many(self) -> crate::result::Result<Vec<#rettype>> {
+                use itertools::Itertools;
+                use wtx::database::Records;
+
                 self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                    .fetch_many_with_stmt(#stmt, (#(#placeholders),* ,))
+                    .fetch_many_with_stmt(#stmt, (#(#placeholders),* ,), |_| Ok::<_, wtx::Error>(()))
                     .await
                     .into_crate_result()?
                     .iter()
                     .map(|record| #rettype::try_from(record))
                     .process_results(|iter| iter.collect_vec())
             }
-        },*/
+        },
     ])
 }

@@ -4,10 +4,8 @@
 // ==================! DO NOT MODIFY !==================
 
 use std::env;
-use itertools::Itertools;
 use tokio::net::TcpStream;
 use wtx::database::Executor as _;
-use wtx::database::Records;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
@@ -57,5 +55,31 @@ impl CachedGuildSelectById {
                 record,
             ))
             .flatten()
+    }
+    pub async fn many(
+        self,
+    ) -> crate::result::Result<
+        Vec<crate::tables::discord_frontend::NightlyCachedGuilds>,
+    > {
+        use itertools::Itertools;
+        use wtx::database::Records;
+        self.db_executor
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".executor() has not been called on this query yet",
+                ),
+            )?
+            .fetch_many_with_stmt(
+                "SELECT * FROM \"DiscordFrontend\".\"Nightly\".\"CachedGuilds\" WHERE \"id\" = $1",
+                (self.id,),
+                |_| Ok::<_, wtx::Error>(()),
+            )
+            .await
+            .into_crate_result()?
+            .iter()
+            .map(|record| crate::tables::discord_frontend::NightlyCachedGuilds::try_from(
+                record,
+            ))
+            .process_results(|iter| iter.collect_vec())
     }
 }

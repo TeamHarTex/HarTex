@@ -4,10 +4,8 @@
 // ==================! DO NOT MODIFY !==================
 
 use std::env;
-use itertools::Itertools;
 use tokio::net::TcpStream;
 use wtx::database::Executor as _;
-use wtx::database::Records;
 use wtx::database::client::postgres::Executor;
 use wtx::database::client::postgres::ExecutorBuffer;
 use wtx::misc::Uri;
