@@ -32,6 +32,7 @@ use proc_macro2::Literal;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
+use sqlparser::ast::ColumnOption;
 use sqlparser::ast::Statement;
 use syn::File;
 
@@ -136,7 +137,13 @@ fn generate_query_struct_token_stream(
         .iter()
         .map(|placeholder| {
             let dtype = if let Some(col) = table.columns.get(placeholder) {
-                types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap()
+                let dt = types::sql_type_to_rust_type_token_stream(col.coltype.clone()).unwrap();
+
+                if !col.constraints.contains(&ColumnOption::NotNull) {
+                    quote::quote! {Option<#dt>}
+                } else {
+                    dt
+                }
             } else if let Some(dt) = query.extra_placeholder_tys.get(placeholder) {
                 types::sql_type_to_rust_type_token_stream(dt.clone()).unwrap()
             } else {
@@ -292,7 +299,7 @@ fn generate_select_query_fns_token_streams(
                 placeholders.clone(),
             ));
         }
-        _ => return Ok(vec![])
+        _ => return Ok(vec![]),
     };
 
     Ok(vec![

@@ -52,9 +52,8 @@ impl Repository<MemberEntity> for CachedMemberRepository {
             entity.flags.bits() as i64,
             entity
                 .joined_at
-                .map(|timestamp| DateTime::from_timestamp(timestamp.as_secs(), 0).unwrap())
-                .unwrap(),
-            entity.nick.unwrap_or_default(),
+                .map(|timestamp| DateTime::from_timestamp(timestamp.as_secs(), 0).unwrap()),
+            entity.nick,
             entity.user_id.to_string(),
             entity.guild_id.to_string(),
             entity

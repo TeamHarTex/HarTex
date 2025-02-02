@@ -43,15 +43,12 @@ impl Repository<UserEntity> for CachedUserRepository {
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
         CachedUserUpsert::bind(
-            entity
-                .avatar
-                .map(|hash| hash.to_string())
-                .unwrap_or_default(),
+            entity.avatar.map(|hash| hash.to_string()),
             entity.id.to_string(),
             entity.bot,
             entity.name,
             entity.discriminator.to_string(),
-            entity.global_name.unwrap_or_default(),
+            entity.global_name,
         )
         .executor()
         .await?

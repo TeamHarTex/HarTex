@@ -13,22 +13,22 @@ use crate::result::IntoCrateResult;
 pub struct CachedUserUpsert {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
-    avatar: String,
+    avatar: Option<String>,
     id: String,
     bot: bool,
     name: String,
     discriminator: String,
-    global_name: String,
+    global_name: Option<String>,
 }
 impl CachedUserUpsert {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(
-        avatar: String,
+        avatar: Option<String>,
         id: String,
         bot: bool,
         name: String,
         discriminator: String,
-        global_name: String,
+        global_name: Option<String>,
     ) -> Self {
         Self {
             db_executor: None,

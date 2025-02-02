@@ -77,7 +77,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
         CachedRoleUpsert::bind(
             entity.color as i64,
-            entity.icon.map(|hash| hash.to_string()).unwrap_or_default(),
+            entity.icon.map(|hash| hash.to_string()),
             entity.id.to_string(),
             entity.guild_id.to_string(),
             entity.flags.bits() as i32,
