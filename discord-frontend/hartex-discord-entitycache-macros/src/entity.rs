@@ -368,10 +368,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         };
         let ret_type = syn::parse_str::<Type>(hashmap.get(&*entity).unwrap()).unwrap();
 
-        let query_function_name = make_query_function_name(first, &element.as_value.value());
+        let (query_module_name, query_struct_name) =
+            make_query_function_name(first, &element.as_value.value());
         // FIXME: bad assumption of always calling .to_string() here (mostly just that should suffice, but...)
         let mut full_query_function_call = quote! {
-            let data = hartex_database_queries::discord_frontend::queries::#query_function_name::#query_function_name().bind(client, &#param_name.to_string())
+            let data = hartex_database_queries::queries::discord_frontend::#query_module_name::#query_struct_name::bind(#param_name.to_string()).executor().await?
         };
 
         let function = match &*element.unique_or_multiple.to_string() {
@@ -379,15 +380,11 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
                 full_query_function_call.append_all(quote! {
-                    .all().await?;
+                    .many().await?;
                 });
 
                 quote! {
                     pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<Vec<#ret_type>> {
-                        let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
-                        let pooled = pinned.get().await?;
-                        let client = pooled.client();
-
                         #full_query_function_call
 
                         Ok(data.into_iter().map(|thing| #ret_type::from(thing)).collect())
@@ -403,10 +400,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
 
                 quote! {
                     pub async fn #ident(&self, #param_decl) -> hartex_discord_entitycache_core::error::CacheResult<#ret_type> {
-                        let pinned = std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).await;
-                        let pooled = pinned.get().await?;
-                        let client = pooled.client();
-
                         #full_query_function_call
 
                         Ok(#ret_type::from(data))
@@ -423,10 +416,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
     if input.extra_fields_array.elements.is_empty() {
         let extra = assumed_extra_impls
             .map(|str| {
-                let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
                 let ident_pascal = Ident::new(&str.to_case(Case::Pascal), Span::call_site());
                 let full_ident =
-                    quote! {hartex_database_queries::discord_frontend::queries::#ident_snake::#ident_pascal};
+                    quote! {hartex_database_queries::tables::discord_frontend::#ident_pascal};
 
                 quote! {
                     impl From<#full_ident> for #item_struct_name {
@@ -484,10 +476,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .multiunzip();
     let extra = assumed_extra_impls
         .map(|str| {
-            let ident_snake = Ident::new(&str.to_case(Case::Snake), Span::call_site());
             let ident_pascal = Ident::new(&str.to_case(Case::Pascal), Span::call_site());
             let full_ident =
-                quote! {hartex_database_queries::discord_frontend::queries::#ident_snake::#ident_pascal};
+                quote! {hartex_database_queries::tables::discord_frontend::#ident_pascal};
 
             quote! {
                 impl From<#full_ident> for #item_struct_name {
@@ -568,7 +559,7 @@ fn make_field_decl_and_assignments(
         return (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name.parse().unwrap()},
+            quote! {#field_name: model.#field_name().parse().unwrap()},
         );
     }
 
@@ -582,85 +573,100 @@ fn make_field_decl_and_assignments(
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: #field_type::from(model.#field_name as u8)},
+            quote! {#field_name: #field_type::from(model.#field_name() as u8)},
         )
     } else if field_type.is("Id") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: std::str::FromStr::from_str(&model.#field_name).unwrap()},
+            quote! {#field_name: std::str::FromStr::from_str(model.#field_name()).unwrap()},
         )
     } else if field_type.is("MemberFlags") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: twilight_model::guild::MemberFlags::from_bits(model.#field_name as u64).unwrap()},
+            quote! {#field_name: twilight_model::guild::MemberFlags::from_bits(model.#field_name() as u64).unwrap()},
         )
     } else if field_type.is("RoleFlags") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: twilight_model::guild::RoleFlags::from_bits(model.#field_name as u64).unwrap()},
+            quote! {#field_name: twilight_model::guild::RoleFlags::from_bits(model.#field_name() as u64).unwrap()},
         )
     } else if field_type.is_option_of("ImageHash") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name.as_deref().map(|str| std::str::FromStr::from_str(str).unwrap())},
+            quote! {#field_name: model.#field_name().map(|str| std::str::FromStr::from_str(str).unwrap())},
         )
     } else if field_type.is_option_of("Timestamp") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name.map(|timestamp| twilight_model::util::Timestamp::from_secs(timestamp.unix_timestamp()).unwrap())},
+            quote! {#field_name: model.#field_name().map(|timestamp| twilight_model::util::Timestamp::from_secs(timestamp.timestamp()).unwrap())},
+        )
+    } else if field_type.is_option_of("String") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name().map(String::from)},
         )
     } else if field_type.is("i64") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name as i64},
+            quote! {#field_name: model.#field_name() as i64},
         )
     } else if field_type.is("u32") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name as u32},
+            quote! {#field_name: model.#field_name() as u32},
+        )
+    } else if field_type.is("String") {
+        (
+            quote! {pub #field_name: #field_type},
+            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name().to_string()},
         )
     } else if field_type.is_option_of("u64") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name.map(|i| i as u64)},
+            quote! {#field_name: model.#field_name().map(|i| i as u64)},
         )
     } else if field_type.is_vec_of("GuildFeature") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name.iter().cloned().map(From::from).collect()},
+            quote! {#field_name: model.#field_name().iter().cloned().map(From::from).collect()},
         )
     } else if field_type.is_vec_of("Id") {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name.iter().map(|str| std::str::FromStr::from_str(str).unwrap()).collect()},
+            quote! {#field_name: model.#field_name().iter().map(|str| std::str::FromStr::from_str(str).unwrap()).collect()},
         )
     } else {
         (
             quote! {pub #field_name: #field_type},
             quote! {#field_name: model.#field_name},
-            quote! {#field_name: model.#field_name},
+            quote! {#field_name: model.#field_name()},
         )
     }
 }
 
 // FIXME: may need to generalize for multiple fields
 /// Construct an identifier containing the database query function name.
-fn make_query_function_name(target_entity: &str, by_field: &str) -> Ident {
+fn make_query_function_name(target_entity: &str, by_field: &str) -> (Ident, Ident) {
     let name = format!(
         "cached_{}_select_by_{}",
         target_entity.to_lowercase(),
         by_field.to_lowercase()
     );
 
-    Ident::new(&name, Span::call_site())
+    (
+        Ident::new(&name, Span::call_site()),
+        Ident::new(name.to_case(Case::Pascal).as_str(), Span::call_site()),
+    )
 }

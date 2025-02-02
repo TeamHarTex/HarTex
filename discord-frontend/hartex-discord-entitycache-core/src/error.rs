@@ -28,41 +28,32 @@ use std::fmt;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
-use bb8::RunError;
-use tokio_postgres::Error as PostgresError;
+use hartex_database_queries::result::Error as DatabaseError;
 
 /// A cache error..
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum CacheError {
-    Bb8(RunError<PostgresError>),
     /// Error related to environment variables.
     Env(VarError),
     /// A postgres error occurred.
-    Postgres(PostgresError),
+    Database(DatabaseError),
 }
 
 impl Display for CacheError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Bb8(error) => writeln!(f, "bb8 postgres error: {error}"),
             Self::Env(error) => writeln!(f, "env error: {error}"),
-            Self::Postgres(error) => writeln!(f, "postgres error: {error}"),
+            Self::Database(error) => writeln!(f, "database error: {error}"),
         }
     }
 }
 
 impl Error for CacheError {}
 
-impl From<RunError<PostgresError>> for CacheError {
-    fn from(error: RunError<PostgresError>) -> Self {
-        Self::Bb8(error)
-    }
-}
-
-impl From<PostgresError> for CacheError {
-    fn from(error: PostgresError) -> Self {
-        Self::Postgres(error)
+impl From<DatabaseError> for CacheError {
+    fn from(error: DatabaseError) -> Self {
+        Self::Database(error)
     }
 }
 

@@ -20,12 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
 use std::str::FromStr;
 
-use hartex_database_queries::discord_frontend::queries::cached_role_select_by_guild_id::cached_role_select_by_guild_id;
-use hartex_database_queries::discord_frontend::queries::cached_role_select_by_id_and_guild_id::cached_role_select_by_id_and_guild_id;
-use hartex_database_queries::discord_frontend::queries::cached_role_upsert::cached_role_upsert;
+use hartex_database_queries::queries::discord_frontend::cached_role_select_by_guild_id::CachedRoleSelectByGuildId;
+use hartex_database_queries::queries::discord_frontend::cached_role_select_by_id_and_guild_id::CachedRoleSelectByIdAndGuildId;
+use hartex_database_queries::queries::discord_frontend::cached_role_upsert::CachedRoleUpsert;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use hartex_discord_core::discord::model::id::marker::RoleMarker;
@@ -33,8 +32,6 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
-use hartex_discord_utils::DATABASE_POOL;
-use tokio_postgres::GenericClient;
 
 /// Repository for role entities.
 pub struct CachedRoleRepository;
@@ -47,18 +44,15 @@ impl CachedRoleRepository {
         &self,
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<RoleMarker>>> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        let roles = cached_role_select_by_guild_id()
-            .bind(client, &guild_id.to_string())
-            .all()
+        let roles = CachedRoleSelectByGuildId::bind(guild_id.to_string())
+            .executor()
+            .await?
+            .many()
             .await?;
 
         Ok(roles
             .into_iter()
-            .map(|role| Id::<RoleMarker>::from_str(&role.id).unwrap())
+            .map(|role| Id::<RoleMarker>::from_str(role.id()).unwrap())
             .collect())
     }
 }
@@ -68,12 +62,9 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        let data = cached_role_select_by_id_and_guild_id()
-            .bind(client, &id.to_string(), &guild_id.to_string())
+        let data = CachedRoleSelectByIdAndGuildId::bind(id.to_string(), guild_id.to_string())
+            .executor()
+            .await?
             .one()
             .await?;
 
@@ -84,24 +75,21 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        cached_role_upsert()
-            .bind(
-                client,
-                &(entity.color as i64),
-                &entity.icon.map(|hash| hash.to_string()),
-                &entity.id.to_string(),
-                &entity.guild_id.to_string(),
-                &(entity.flags.bits() as i32),
-                &entity.hoist,
-                &entity.managed,
-                &entity.mentionable,
-                &(entity.position as i32),
-            )
-            .await?;
+        CachedRoleUpsert::bind(
+            entity.color as i64,
+            entity.icon.map(|hash| hash.to_string()).unwrap_or_default(),
+            entity.id.to_string(),
+            entity.guild_id.to_string(),
+            entity.flags.bits() as i32,
+            entity.hoist,
+            entity.managed,
+            entity.mentionable,
+            entity.position as i32,
+        )
+        .executor()
+        .await?
+        .execute()
+        .await?;
 
         Ok(())
     }

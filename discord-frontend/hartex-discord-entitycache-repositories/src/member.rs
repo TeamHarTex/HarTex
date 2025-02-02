@@ -19,18 +19,13 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-use std::pin::Pin;
-
-use hartex_database_queries::discord_frontend::queries::cached_member_select_by_user_id_and_guild_id::cached_member_select_by_user_id_and_guild_id;
-use hartex_database_queries::discord_frontend::queries::cached_member_upsert::cached_member_upsert;
+use chrono::DateTime;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
-use hartex_discord_utils::DATABASE_POOL;
-use time::OffsetDateTime;
-use tokio_postgres::GenericClient;
+use hartex_database_queries::queries::discord_frontend::cached_member_select_by_user_id_and_guild_id::CachedMemberSelectByUserIdAndGuildId;
+use hartex_database_queries::queries::discord_frontend::cached_member_upsert::CachedMemberUpsert;
 
 /// Repository for member entities.
 pub struct CachedMemberRepository;
@@ -41,41 +36,37 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        let data = cached_member_select_by_user_id_and_guild_id()
-            .bind(client, &user_id.to_string(), &guild_id.to_string())
-            .one()
-            .await?;
+        let data =
+            CachedMemberSelectByUserIdAndGuildId::bind(user_id.to_string(), guild_id.to_string())
+                .executor()
+                .await?
+                .one()
+                .await?;
 
         Ok(MemberEntity::from(data))
     }
 
     #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        cached_member_upsert()
-            .bind(
-                client,
-                &(entity.flags.bits() as i64),
-                &entity.joined_at.map(|timestamp| {
-                    OffsetDateTime::from_unix_timestamp(timestamp.as_secs()).unwrap()
-                }),
-                &entity.nick,
-                &entity.user_id.to_string(),
-                &entity.guild_id.to_string(),
-                &entity
-                    .roles
-                    .iter()
-                    .map(ToString::to_string)
-                    .collect::<Vec<_>>(),
-            )
-            .await?;
+        CachedMemberUpsert::bind(
+            entity.flags.bits() as i64,
+            entity
+                .joined_at
+                .map(|timestamp| DateTime::from_timestamp(timestamp.as_secs(), 0).unwrap())
+                .unwrap(),
+            entity.nick.unwrap_or_default(),
+            entity.user_id.to_string(),
+            entity.guild_id.to_string(),
+            entity
+                .roles
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>(),
+        )
+        .executor()
+        .await?
+        .execute()
+        .await?;
 
         Ok(())
     }

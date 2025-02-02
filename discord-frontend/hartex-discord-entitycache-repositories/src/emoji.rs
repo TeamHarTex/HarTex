@@ -20,28 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
-
-use hartex_database_queries::discord_frontend::queries::cached_emoji_select_by_id::cached_emoji_select_by_id;
-use hartex_database_queries::discord_frontend::queries::cached_emoji_upsert::cached_emoji_upsert;
+use hartex_database_queries::queries::discord_frontend::cached_emoji_select_by_id::CachedEmojiSelectById;
+use hartex_database_queries::queries::discord_frontend::cached_emoji_upsert::CachedEmojiUpsert;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::emoji::EmojiEntity;
-use hartex_discord_utils::DATABASE_POOL;
-use tokio_postgres::GenericClient;
 
 /// Repository for emoji entities.
 pub struct CachedEmojiRepository;
 
 impl Repository<EmojiEntity> for CachedEmojiRepository {
     async fn get(&self, id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        let data = cached_emoji_select_by_id()
-            .bind(client, &id.to_string())
+        let data = CachedEmojiSelectById::bind(id.to_string())
+            .executor()
+            .await?
             .one()
             .await?;
 
@@ -49,20 +42,17 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
     }
 
     async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        cached_emoji_upsert()
-            .bind(
-                client,
-                &entity.animated,
-                &entity.id.to_string(),
-                &entity.guild_id.to_string(),
-                &entity.name,
-                &entity.managed,
-            )
-            .await?;
+        CachedEmojiUpsert::bind(
+            entity.animated,
+            entity.id.to_string(),
+            entity.guild_id.to_string(),
+            entity.name,
+            entity.managed,
+        )
+        .executor()
+        .await?
+        .execute()
+        .await?;
 
         Ok(())
     }
