@@ -1736,6 +1736,7 @@ name = "hartex_discord_entitycache_core"
 version = "0.14.0"
 dependencies = [
  "bb8",
+ "hartex_database_queries",
  "hartex_discord_core",
  "hartex_discord_entitycache_macros",
  "tokio-postgres",
