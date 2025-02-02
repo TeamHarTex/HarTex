@@ -74,7 +74,7 @@ pub async fn main() -> miette::Result<()> {
         }
     }
 
-    let api_pgsql_url = env::var("API_PGSQL_URL").into_diagnostic()?;
+    let api_pgsql_url = env::var("API_BACKEND_PGSQL_URL").into_diagnostic()?;
 
     log::debug!("building database connection pool");
     let manager =
