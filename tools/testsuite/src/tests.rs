@@ -120,7 +120,7 @@ fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
 
     let Ok(header) = header::parse_header(&path) else {
         eprintln!(
-            "WARN: test file {} does not have a valid test file header, ignoring",
+            "{} test file {} does not have a valid test file header, ignoring",
             path.display()
         );
         return None;

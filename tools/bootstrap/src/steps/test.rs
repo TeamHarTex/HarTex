@@ -22,7 +22,7 @@
 
 use std::process::Command;
 use std::process::exit;
-
+use owo_colors::OwoColorize;
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -67,7 +67,7 @@ fn build_testsuite_tool(builder: &Builder<'_>) {
     );
     command.env("RUSTFLAGS", rustflags);
 
-    println!("INFO: Building testsuite tool before running tests");
+    println!("{} Building testsuite tool before running tests", "info:".bold());
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));
@@ -103,7 +103,7 @@ fn run_ui_tests(builder: &Builder<'_>) {
     command.args(&builder.config.subcommand_args);
     command.current_dir(&builder.config.root);
 
-    println!("INFO: Running testsuite tool");
+    println!("{} Running testsuite tool", "info:".bold());
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));

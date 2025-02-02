@@ -26,15 +26,9 @@
 
 use axum::Json;
 use axum::extract::Query;
-use axum::extract::State;
 use axum::http::StatusCode;
 use axum_extra::extract::WithRejection;
-use bb8_postgres::PostgresConnectionManager;
-use bb8_postgres::bb8::Pool;
-use bb8_postgres::tokio_postgres::GenericClient;
-use bb8_postgres::tokio_postgres::NoTls;
 use chrono::DateTime;
-use futures_util::stream::TryStreamExt;
 use hartex_backend_models::Response;
 use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeQueryRejection;

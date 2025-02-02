@@ -29,6 +29,7 @@ use std::process;
 use bootstrap::build::Build;
 use bootstrap::config::Config;
 use bootstrap::config::flags::BootstrapSubcommand;
+use owo_colors::OwoColorize;
 use fd_lock::RwLock;
 
 /// Entry point to the bootstrap binary, invoked by x.py.
@@ -64,7 +65,7 @@ pub fn main() {
             }
             error => {
                 drop(error);
-                println!("WARN: build directory locked by process {process_id}");
+                println!("{} build directory locked by process {process_id}", "warning:".yellow().bold());
 
                 let mut lock = lock.write().expect("failed to get write lock on lockfile");
                 lock.write(process::id().to_string().as_ref())
@@ -75,9 +76,10 @@ pub fn main() {
     }
 
     if config.config_path.is_none() && !matches!(config.subcommand, BootstrapSubcommand::Setup) {
-        println!("WARN: no `hartex.conf` configuration file is found, using default configuration");
+        println!("{} no `hartex.conf` configuration file is found, using default configuration", "warning:".yellow().bold());
         println!(
-            "HELP: consider running `./x.py setup` or copying `hartex.example.conf` by running `cp hartex.example.conf hartex.conf`"
+            "{} consider running `./x.py setup` or copying `hartex.example.conf` by running `cp hartex.example.conf hartex.conf`",
+            "help:".bold(),
         )
     }
 

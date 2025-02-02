@@ -2,7 +2,7 @@
 <module type="CPP_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python facet">
-      <configuration sdkName="" />
+      <configuration sdkName="Python 3.11 (HarTex)" />
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
@@ -58,9 +58,11 @@
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/hartex-database-queries/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.7.21" level="project" />
+    <orderEntry type="library" name="Python 3.11 (HarTex) interpreter library" level="application" />
   </component>
 </module>

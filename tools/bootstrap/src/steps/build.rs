@@ -22,7 +22,7 @@
 
 use std::process::Command;
 use std::process::exit;
-
+use owo_colors::OwoColorize;
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -169,7 +169,7 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
     );
     command.env("RUSTFLAGS", rustflags);
 
-    println!("INFO: Building {project} project");
+    println!("{} Building {project} project", "info:".bold());
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));

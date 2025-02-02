@@ -39,7 +39,9 @@ class HarTexBuild(object):
         if "GITHUB_ACTIONS" in env:
             print("::group::Building bootstrap")
         else:
-            print("INFO: Building bootstrap")
+            bold = "\033[1m"
+            end = "\033[0m"
+            print(f"{bold + 'info:' + end} Building bootstrap")
 
         args = self.build_bootstrap_cmd(env)
         run_cmd(args, env=env)

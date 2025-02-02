@@ -22,7 +22,7 @@
 
 use std::process::Command;
 use std::process::exit;
-
+use owo_colors::OwoColorize;
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -162,7 +162,7 @@ fn check_cargo_project(project: &'static str, builder: &Builder<'_>) {
 
     command.current_dir(pwd);
 
-    println!("INFO: Checking {project} project");
+    println!("{} Checking {project} project", "info:".bold());
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));

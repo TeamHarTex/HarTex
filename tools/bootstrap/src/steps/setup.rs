@@ -28,7 +28,7 @@ use std::io::BufRead;
 use std::io::Write;
 use std::path::PathBuf;
 use std::str::FromStr;
-
+use owo_colors::OwoColorize;
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -141,7 +141,8 @@ impl Step for SetupProfile {
             .unwrap_or(PathBuf::from("hartex.conf"));
         if path.exists() {
             eprintln!(
-                "WARN: a configuration file already exists at {}",
+                "{} a configuration file already exists at {}",
+                "warning:".yellow().bold(),
                 path.canonicalize()
                     .expect("failed to canonicalize path")
                     .display()
@@ -202,8 +203,8 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
         break match parse_profile(&choice) {
             Ok(profile) => profile,
             Err(err) => {
-                eprintln!("ERROR: {err}. Please retry.");
-                eprintln!("NOTE: press Ctrl+C to exit");
+                eprintln!("{} {err}. Please retry.", "error:".red().bold());
+                eprintln!("{} press Ctrl+C to exit", "note:".bold());
                 continue;
             }
         };
@@ -216,8 +217,8 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
 #[allow(clippy::missing_panics_doc)]
 #[allow(clippy::module_name_repetitions)]
 pub fn setup_profile(config: &Config, profile: SetupProfile) {
-    println!("INFO: using profile {profile}");
-    println!("INFO: copying `tools/bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`");
+    println!("{} using profile {profile}", "info:".bold());
+    println!("{} copying `tools/bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`", "info:".bold());
 
     fs::copy(
         config
@@ -228,7 +229,7 @@ pub fn setup_profile(config: &Config, profile: SetupProfile) {
     .expect("failed to copy files");
 
     println!(
-        "INFO: Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations."
+        "{} Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.", "info:".bold()
     );
 }
 
@@ -247,7 +248,8 @@ impl Step for ConfigureVscode {
         let vscode_config = run.builder.config.root.join(".vscode/settings.json");
         if vscode_config.exists() {
             eprintln!(
-                "WARN: a vscode configuration file already exists at {}",
+                "{} a vscode configuration file already exists at {}",
+                "warning:".yellow().bold(),
                 vscode_config
                     .canonicalize()
                     .expect("failed to canonicalize path")
@@ -263,7 +265,7 @@ impl Step for ConfigureVscode {
             }
         }
 
-        println!("INFO: Preview of the recommended vscode configuration file is as follows");
+        println!("{} Preview of the recommended vscode configuration file is as follows", "info:".bold());
         println!("{VSCODE_SETTINGS}");
 
         match question_bool("Do you wish to continue?", true) {
@@ -280,7 +282,7 @@ impl Step for ConfigureVscode {
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_io_amount)]
 pub fn setup_vscode_config(builder: &Builder<'_>) {
-    println!("INFO: writing new `.vscode/settings.json`");
+    println!("{} writing new `.vscode/settings.json`", "info:".bold());
 
     let vscode_dir = builder.config.root.join(".vscode");
     if !vscode_dir.exists() {
@@ -312,7 +314,8 @@ impl Step for ConfigureFleet {
 
         if fleet_config.exists() {
             eprintln!(
-                "WARN: a fleet configuration file already exists at {}",
+                "{} a fleet configuration file already exists at {}",
+                "warning:".yellow().bold(),
                 fleet_config
                     .canonicalize()
                     .expect("failed to canonicalize path")
@@ -328,7 +331,7 @@ impl Step for ConfigureFleet {
             }
         }
 
-        println!("INFO: Preview of the recommended fleet configuration file is as follows");
+        println!("{} Preview of the recommended fleet configuration file is as follows", "info:".bold());
         println!("{FLEET_SETTINGS}");
 
         match question_bool("Do you wish to continue?", true) {
@@ -345,7 +348,7 @@ impl Step for ConfigureFleet {
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_io_amount)]
 pub fn setup_fleet_config(builder: &Builder<'_>) {
-    println!("INFO: writing new `.fleet/settings.json`");
+    println!("{} writing new `.fleet/settings.json`", "info:".bold());
 
     let fleet_dir = builder.config.root.join(".fleet");
     if !fleet_dir.exists() {
@@ -377,7 +380,8 @@ impl Step for ConfigureZed {
 
         if zed_config.exists() {
             eprintln!(
-                "WARN: a zed configuration file already exists at {}",
+                "{} a zed configuration file already exists at {}",
+                "warning:".yellow().bold(),
                 zed_config
                     .canonicalize()
                     .expect("failed to canonicalize path")
@@ -393,7 +397,7 @@ impl Step for ConfigureZed {
             }
         }
 
-        println!("INFO: Preview of the recommended Zed configuration file is as follows");
+        println!("{} Preview of the recommended Zed configuration file is as follows", "info:".bold());
         println!("{ZED_SETTINGS}");
 
         match question_bool("Do you wish to continue?", true) {
@@ -410,7 +414,7 @@ impl Step for ConfigureZed {
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::unused_io_amount)]
 pub fn setup_zed_config(builder: &Builder<'_>) {
-    println!("INFO: writing new `.zed/settings.json`");
+    println!("{} writing new `.zed/settings.json`", "info:".bold());
 
     let zed_dir = builder.config.root.join(".zed");
     if !zed_dir.exists() {
