@@ -69,16 +69,13 @@ impl Repository<GuildEntity> for CachedGuildRepository {
                     <GuildFeature as Into<Cow<'static, str>>>::into(feature.clone()).to_string()
                 })
                 .collect(),
-            entity.icon.map(|hash| hash.to_string()).unwrap_or_default(),
+            entity.icon.map(|hash| hash.to_string()),
             entity.large,
             entity.name,
             entity.owner_id.to_string(),
             entity.id.to_string(),
             i16::from(<MfaLevel as Into<u8>>::into(entity.mfa_level)),
-            entity
-                .premium_subscription_count
-                .map(|id| id as i64)
-                .unwrap_or_default(),
+            entity.premium_subscription_count.map(|id| id as i64),
             i16::from(<PremiumTier as Into<u8>>::into(entity.premium_tier)),
             i16::from(<VerificationLevel as Into<u8>>::into(
                 entity.verification_level,

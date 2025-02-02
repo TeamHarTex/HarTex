@@ -14,7 +14,7 @@ pub struct CachedRoleUpsert {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     color: i64,
-    icon: String,
+    icon: Option<String>,
     id: String,
     guild_id: String,
     flags: i32,
@@ -27,7 +27,7 @@ impl CachedRoleUpsert {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(
         color: i64,
-        icon: String,
+        icon: Option<String>,
         id: String,
         guild_id: String,
         flags: i32,

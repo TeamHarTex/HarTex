@@ -14,8 +14,8 @@ pub struct CachedMemberUpsert {
     db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
     executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
     flags: i64,
-    joined_at: chrono::DateTime<chrono::offset::Utc>,
-    nick: String,
+    joined_at: Option<chrono::DateTime<chrono::offset::Utc>>,
+    nick: Option<String>,
     user_id: String,
     guild_id: String,
     roles: Vec<String>,
@@ -24,8 +24,8 @@ impl CachedMemberUpsert {
     #[must_use = "Queries must be executed after construction"]
     pub fn bind(
         flags: i64,
-        joined_at: chrono::DateTime<chrono::offset::Utc>,
-        nick: String,
+        joined_at: Option<chrono::DateTime<chrono::offset::Utc>>,
+        nick: Option<String>,
         user_id: String,
         guild_id: String,
         roles: Vec<String>,
