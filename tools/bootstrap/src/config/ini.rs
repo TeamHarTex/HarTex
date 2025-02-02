@@ -59,6 +59,9 @@ pub struct IniRust {
     /// Number of parallel threads.
     #[serde(default = "rust_default_parallel_threads")]
     pub parallel_threads: u32,
+    /// Release building.
+    #[serde(default = "rust_default_release")]
+    pub release: bool,
 }
 
 impl Default for IniRust {
@@ -68,6 +71,7 @@ impl Default for IniRust {
             debug: rust_default_debug(),
             opt_level: rust_default_opt_level(),
             parallel_threads: rust_default_parallel_threads(),
+            release: rust_default_release(),
         }
     }
 }
@@ -103,4 +107,13 @@ fn rust_default_opt_level() -> u32 {
 #[must_use]
 fn rust_default_parallel_threads() -> u32 {
     8
+}
+
+
+/// Default release build.
+///
+/// Set to `false`.
+#[must_use]
+fn rust_default_release() -> bool {
+    false
 }

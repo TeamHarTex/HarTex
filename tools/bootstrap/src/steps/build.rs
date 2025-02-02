@@ -157,6 +157,10 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
         rustflags.push_str(" -g");
     }
 
+    if builder.config.release {
+        command.arg("--release");
+    }
+
     command.current_dir(pwd);
     command.env(
         "CARGO_TARGET_DIR",

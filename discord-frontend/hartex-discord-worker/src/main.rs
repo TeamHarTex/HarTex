@@ -27,6 +27,8 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(incomplete_features)]
+#![feature(deref_patterns)]
 
 use std::env;
 use std::str;
