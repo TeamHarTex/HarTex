@@ -42,11 +42,9 @@ use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_discord_utils::postgres::PostgresErrorExt;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use regex::Regex;
-use tokio_postgres::error::SqlState;
 
 lazy_static::lazy_static! {
     /// The regex for looking for a Discord emoji in the command input.
@@ -109,7 +107,7 @@ pub async fn execute(
     let result = CachedEmojiRepository.get(emoji_id).await;
     let emoji = match result {
         Ok(emoji) => emoji,
-        Err(CacheError::Postgres(postgres_error)) if postgres_error.is(SqlState::NO_DATA) => {
+        Err(CacheError::Database(_)) /*if postgres_error.is(SqlState::NO_DATA)*/ => {
             interaction_client
                 .create_response(
                     interaction.id,

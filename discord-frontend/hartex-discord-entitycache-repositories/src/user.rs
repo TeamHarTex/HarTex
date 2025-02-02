@@ -20,28 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
-
-use hartex_database_queries::discord_frontend::queries::cached_user_select_by_id::cached_user_select_by_id;
-use hartex_database_queries::discord_frontend::queries::cached_user_upsert::cached_user_upsert;
+use hartex_database_queries::queries::discord_frontend::cached_user_select_by_id::CachedUserSelectById;
+use hartex_database_queries::queries::discord_frontend::cached_user_upsert::CachedUserUpsert;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::user::UserEntity;
-use hartex_discord_utils::DATABASE_POOL;
-use tokio_postgres::GenericClient;
 
 /// Repository for user entities.
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
     async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        let data = cached_user_select_by_id()
-            .bind(client, &id.to_string())
+        let data = CachedUserSelectById::bind(id.to_string())
+            .executor()
+            .await?
             .one()
             .await?;
 
@@ -49,21 +42,21 @@ impl Repository<UserEntity> for CachedUserRepository {
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
-        let pinned = Pin::static_ref(&DATABASE_POOL).await;
-        let pooled = pinned.get().await?;
-        let client = pooled.client();
-
-        cached_user_upsert()
-            .bind(
-                client,
-                &entity.avatar.map(|hash| hash.to_string()),
-                &entity.id.to_string(),
-                &entity.bot,
-                &entity.name,
-                &entity.discriminator.to_string(),
-                &entity.global_name,
-            )
-            .await?;
+        CachedUserUpsert::bind(
+            entity
+                .avatar
+                .map(|hash| hash.to_string())
+                .unwrap_or_default(),
+            entity.id.to_string(),
+            entity.bot,
+            entity.name,
+            entity.discriminator.to_string(),
+            entity.global_name.unwrap_or_default(),
+        )
+        .executor()
+        .await?
+        .execute()
+        .await?;
 
         Ok(())
     }

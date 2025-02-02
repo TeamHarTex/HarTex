@@ -1774,6 +1774,7 @@ dependencies = [
 name = "hartex_discord_entitycache_repositories"
 version = "0.14.0"
 dependencies = [
+ "chrono",
  "hartex_database_queries",
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
