@@ -65,7 +65,7 @@ pub type DatabasePoolFuture = impl Future<Output = PostgresPool>;
 
 /// An asynchronously lazyily initialized database pool.
 pub static DATABASE_POOL: AsyncLazy<PostgresPool, DatabasePoolFuture> = AsyncLazy::new(async {
-    let hartex_pgsql_url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
+    let hartex_pgsql_url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
 
     let manager = PostgresConnectionManager::new_from_stringlike(hartex_pgsql_url, NoTls).unwrap();
 
