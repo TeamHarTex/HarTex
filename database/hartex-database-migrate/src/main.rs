@@ -39,6 +39,10 @@ mod api_backend {
     refinery::embed_migrations!("api-backend-migrations");
 }
 
+mod configuration {
+    refinery::embed_migrations!("configuration-migrations");
+}
+
 mod discord_frontend {
     refinery::embed_migrations!("discord-frontend-migrations");
 }
@@ -52,7 +56,7 @@ pub async fn main() -> miette::Result<()> {
     dotenvy::dotenv().into_diagnostic()?;
 
     log::trace!("establishing database connection: Discord Frontend Migrations");
-    let url = env::var("HARTEX_NIGHTLY_PGSQL_URL").unwrap();
+    let url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
     let (mut client, connection) = tokio_postgres::connect(&url, NoTls)
         .await
         .into_diagnostic()?;
@@ -70,7 +74,7 @@ pub async fn main() -> miette::Result<()> {
         .into_diagnostic()?;
 
     log::trace!("establishing database connection: API Backend Migrations");
-    let url2 = env::var("API_PGSQL_URL").unwrap();
+    let url2 = env::var("API_BACKEND_PGSQL_URL").unwrap();
     let (mut client2, connection2) = tokio_postgres::connect(&url2, NoTls)
         .await
         .into_diagnostic()?;
@@ -81,9 +85,27 @@ pub async fn main() -> miette::Result<()> {
         }
     });
 
-    log::trace!("establishing database connection: API Backend Migrations");
+    log::trace!("running migrations: API Backend Migrations");
     api_backend::migrations::runner()
         .run_async(&mut client2)
+        .await
+        .into_diagnostic()?;
+
+    log::trace!("establishing database connection: CONFIGURATION Migrations");
+    let url3 = env::var("CONFIGURATION_PGSQL_URL").unwrap();
+    let (mut client3, connection3) = tokio_postgres::connect(&url3, NoTls)
+        .await
+        .into_diagnostic()?;
+
+    tokio::spawn(async move {
+        if let Err(error) = connection3.await {
+            log::error!("postgres connection error: {error}");
+        }
+    });
+
+    log::trace!("running migrations: Configuration Migrations");
+    configuration::migrations::runner()
+        .run_async(&mut client3)
         .await
         .into_diagnostic()?;
 
