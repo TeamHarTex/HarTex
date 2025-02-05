@@ -38,19 +38,23 @@ use crate::CacheUpdater;
 
 impl CacheUpdater for GuildCreate {
     async fn update(&self) -> CacheResult<()> {
-        let entity = GuildEntity::from(self.0.clone());
+        let GuildCreate::Available(guild) = self else {
+            return Ok(())
+        };
+
+        let entity = GuildEntity::from(guild.clone());
 
         CachedGuildRepository.upsert(entity).await?;
 
-        for role in &self.0.roles {
+        for role in &guild.roles {
             CachedRoleRepository
-                .upsert(RoleEntity::from((self.0.id, role.clone())))
+                .upsert(RoleEntity::from((guild.id, role.clone())))
                 .await?;
         }
 
-        for emoji in &self.0.emojis {
+        for emoji in &guild.emojis {
             CachedEmojiRepository
-                .upsert(EmojiEntity::from((self.0.id, emoji.clone())))
+                .upsert(EmojiEntity::from((guild.id, emoji.clone())))
                 .await?;
         }
 

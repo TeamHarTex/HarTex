@@ -65,6 +65,8 @@ pub struct Config {
     pub opt_level: u32,
     /// Number of parallel threads to use to speed up compilation.
     pub parallel_threads: u32,
+    /// Whether to compile in release mode.
+    pub release: bool,
 }
 
 impl Config {
@@ -127,6 +129,7 @@ impl Config {
             config.debug = rust.debug;
             config.opt_level = rust.opt_level;
             config.parallel_threads = rust.parallel_threads;
+            config.release = rust.release;
         }
 
         config
@@ -151,6 +154,7 @@ impl Default for Config {
             debug: true,
             opt_level: 3,
             parallel_threads: 8,
+            release: false,
         }
     }
 }

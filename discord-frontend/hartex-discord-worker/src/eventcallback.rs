@@ -31,6 +31,7 @@ use hartex_discord_core::discord::model::application::interaction::InteractionTy
 use hartex_discord_core::discord::model::gateway::OpCode;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
+use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
 use hartex_discord_core::tokio::net::TcpStream;
@@ -65,7 +66,7 @@ pub async fn invoke(
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
-            DispatchEvent::GuildCreate(guild_create) => {
+            DispatchEvent::GuildCreate(deref!(GuildCreate::Available(ref guild_create))) => {
                 log::trace!(
                     "shard {shard} has received GUILD_CREATE payload from Discord (sequence {seq})"
                 );
