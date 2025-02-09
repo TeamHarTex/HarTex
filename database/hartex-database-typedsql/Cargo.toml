@@ -20,7 +20,4 @@ sqlparser = { version = "0.54.0", features = ["visitor"] }
 syn = { version = "2.0.96", features = ["parsing", "proc-macro"] }
 walkdir = "2.5.0"
 
-tokio = {version = "1.43.0", features = ["full"]}
-wtx = {version = "0.27.0", features = ["postgres", "database", "tokio"]}
-
 [build-dependencies]
