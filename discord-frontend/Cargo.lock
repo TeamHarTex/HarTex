@@ -788,29 +788,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
-name = "cornucopia_async"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a3be4786606c0fdb37fd4f1eff8132a5e3b88572e4947bde7dc1c0ab0c77999"
-dependencies = [
- "async-trait",
- "cornucopia_client_core",
- "deadpool-postgres",
- "tokio-postgres",
-]
-
-[[package]]
-name = "cornucopia_client_core"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95a087271917ca54f32499539f3f44c8dc112ffea0f39f47d6cde075df8d2f18"
-dependencies = [
- "fallible-iterator",
- "postgres-protocol",
- "postgres-types",
-]
-
-[[package]]
 name = "cpufeatures"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -911,39 +888,6 @@ name = "data-encoding"
 version = "2.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e60eed09d8c01d3cee5b7d30acb059b76614c918fa0f992e0dd6eeb10daad6f"
-
-[[package]]
-name = "deadpool"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb84100978c1c7b37f09ed3ce3e5f843af02c2a2c431bae5b19230dad2c1b490"
-dependencies = [
- "async-trait",
- "deadpool-runtime",
- "num_cpus",
- "tokio",
-]
-
-[[package]]
-name = "deadpool-postgres"
-version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bda39fa1cfff190d8924d447ad04fd22772c250438ca5ce1dfb3c80621c05aaa"
-dependencies = [
- "deadpool",
- "tokio",
- "tokio-postgres",
- "tracing",
-]
-
-[[package]]
-name = "deadpool-runtime"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "092966b41edc516079bdf31ec78a2e0588d1d0c08f78b91d8307215928642b2b"
-dependencies = [
- "tokio",
-]
 
 [[package]]
 name = "deflate64"
@@ -1578,16 +1522,10 @@ name = "hartex_database_queries"
 version = "0.14.0"
 dependencies = [
  "chrono",
- "cornucopia_async",
- "futures",
  "hartex_database_typedsql",
  "itertools 0.14.0",
- "postgres-types",
- "serde_json",
- "time",
  "tokio",
- "tokio-postgres",
- "wtx 0.27.0 (git+https://github.com/TeamHarTex/wtx.git)",
+ "wtx",
 ]
 
 [[package]]
@@ -1601,9 +1539,7 @@ dependencies = [
  "quote",
  "sqlparser",
  "syn 2.0.98",
- "tokio",
  "walkdir",
- "wtx 0.27.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1999,12 +1935,6 @@ name = "heck"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
-
-[[package]]
-name = "hermit-abi"
-version = "0.3.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
 
 [[package]]
 name = "hkdf"
@@ -2901,16 +2831,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "num_cpus"
-version = "1.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4161fcb6d602d4d2081af7c3a45852d875a03dd337a6bfdd6e06407b61342a43"
-dependencies = [
- "hermit-abi",
- "libc",
-]
-
-[[package]]
 name = "num_enum"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3189,9 +3109,6 @@ dependencies = [
  "bytes",
  "fallible-iterator",
  "postgres-protocol",
- "serde",
- "serde_json",
- "time",
 ]
 
 [[package]]
@@ -5402,48 +5319,6 @@ name = "writeable"
 version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e9df38ee2d2c3c5948ea468a8406ff0db0b29ae1ffde1bcf20ef305bcc95c51"
-
-[[package]]
-name = "wtx"
-version = "0.27.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49c638efe10ef43e70ea7bf6f55ed908394ac5f341667ef5aa3f5dbecb8dff45"
-dependencies = [
- "aes-gcm 0.11.0-pre.2",
- "argon2",
- "base64",
- "borsh",
- "chrono",
- "cl-aux",
- "crypto-common 0.1.6",
- "digest 0.10.7",
- "embassy-time",
- "embedded-io-async",
- "embedded-tls",
- "fastrand",
- "foldhash",
- "hashbrown 0.15.2",
- "hmac",
- "httparse",
- "memchr",
- "portable-atomic",
- "portable-atomic-util",
- "quick-protobuf",
- "rand_chacha 0.3.1",
- "rand_core 0.6.4",
- "ring 0.17.8",
- "rust_decimal",
- "rustls-pemfile",
- "rustls-pki-types",
- "serde",
- "serde_json",
- "sha1",
- "sha2 0.10.8",
- "simdutf8",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
 
 [[package]]
 name = "wtx"
