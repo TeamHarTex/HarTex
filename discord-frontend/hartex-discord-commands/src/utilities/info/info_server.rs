@@ -191,9 +191,8 @@ pub async fn execute(
     let humans = users.iter().filter(|user| !user.bot).count();
 
     if verbose {
-        default_general_information.push_str(&format!(
-            "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}",
-        ));
+        write!(default_general_information, "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}")
+            .into_diagnostic()?;
     }
 
     let roles = guild

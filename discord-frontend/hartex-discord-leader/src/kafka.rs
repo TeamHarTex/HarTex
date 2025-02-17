@@ -119,8 +119,6 @@ where
                     .await
                 {
                     println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-
-                    continue;
                 }
             }
             Err(error) => {

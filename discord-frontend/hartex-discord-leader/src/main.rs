@@ -38,13 +38,10 @@ use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::task::JoinSet;
-use hartex_discord_utils::CLIENT;
-use hartex_discord_utils::TOKEN;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use hartex_log::log;
 use miette::IntoDiagnostic;
-use once_cell::sync::Lazy;
 use rdkafka::ClientConfig;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
@@ -61,9 +58,6 @@ pub async fn main() -> miette::Result<()> {
 
     log::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
-
-    Lazy::force(&CLIENT);
-    Lazy::force(&TOKEN);
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
         .into_diagnostic()?

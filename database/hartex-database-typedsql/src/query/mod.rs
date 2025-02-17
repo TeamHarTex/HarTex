@@ -42,6 +42,7 @@ pub(crate) mod select;
 mod types;
 
 #[derive(Clone, Debug)]
+#[non_exhaustive]
 pub(crate) enum QueryInfoInner {
     Insert(insert::InsertQueryInfo),
     Select(select::SelectQueryInfo),
@@ -62,6 +63,7 @@ pub(crate) struct RawQueryInfo {
     pub(crate) contents: String,
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Item = RawQueryInfo>> {
     Ok(WalkDir::new(dir)
         .contents_first(true)
@@ -86,7 +88,7 @@ pub(crate) fn read_queries(dir: &Path) -> crate::error::Result<impl Iterator<Ite
 
 pub(crate) fn parse_query(
     query_info: &RawQueryInfo,
-    schema_map: BTreeMap<String, SchemaInfo>,
+    schema_map: &BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<(String, QueryInfo)> {
     let statement = Parser::parse_sql(&POSTGRESQL_DIALECT, &query_info.contents)?
         .first()
@@ -97,18 +99,18 @@ pub(crate) fn parse_query(
 
     let mut path = query_info.path.clone();
     path.pop();
-    let parent = path.components().last().unwrap().as_os_str();
+    let parent = path.components().next_back().unwrap().as_os_str();
 
     let inner = match statement.clone() {
         Statement::Insert(insert) => {
-            QueryInfoInner::Insert(insert::parse_insert_query(insert.clone(), schema_map)?)
+            QueryInfoInner::Insert(insert::parse_insert_query(&insert, schema_map)?)
         }
         Statement::Query(
             deref!(Query {
                 body: deref!(SetExpr::Select(deref!(ref select))),
                 ..
             }),
-        ) => QueryInfoInner::Select(select::parse_select_query(select.clone(), schema_map)?),
+        ) => QueryInfoInner::Select(select::parse_select_query(select, schema_map)?),
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
 

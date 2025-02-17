@@ -35,14 +35,11 @@ impl Visitor for PlaceholderVisitor {
     type Break = ();
 
     fn pre_visit_expr(&mut self, expr: &Expr) -> ControlFlow<Self::Break> {
-        match expr {
-            Expr::Value(Value::Placeholder(ph)) => {
-                if !self.placeholders.contains(&ph[1..].to_string()) {
-                    self.placeholders.push(String::from(&ph[1..]))
-                }
+        if let Expr::Value(Value::Placeholder(ph)) = expr {
+            if !self.placeholders.contains(&ph[1..].to_string()) {
+                self.placeholders.push(String::from(&ph[1..]));
             }
-            _ => (),
-        };
+        }
 
         ControlFlow::Continue(())
     }

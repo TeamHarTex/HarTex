@@ -22,7 +22,7 @@
 
 //! # Compile-time Reflection Types
 
-#![allow(dead_code)]
+#![deny(clippy::pedantic)]
 
 /// Represents an enum.
 #[derive(Debug, Clone)]

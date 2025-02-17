@@ -53,8 +53,8 @@ pub(crate) struct SelectQueryInfo {
 }
 
 pub(crate) fn parse_select_query(
-    select: Select,
-    schema_infos: BTreeMap<String, SchemaInfo>,
+    select: &Select,
+    schema_infos: &BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<SelectQueryInfo> {
     let what = match select.projection.first() {
         Some(SelectItem::UnnamedExpr(Expr::Exists {
@@ -65,8 +65,8 @@ pub(crate) fn parse_select_query(
                 }),
             ..
         })) => SelectWhat::Exists(parse_select_query(
-            select_inner.clone(),
-            schema_infos.clone(),
+            select_inner,
+            schema_infos,
         )?),
         Some(SelectItem::UnnamedExpr(Expr::Value(Value::Boolean(boolean)))) => {
             SelectWhat::Boolean(*boolean)

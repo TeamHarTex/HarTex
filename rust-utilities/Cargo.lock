@@ -611,7 +611,6 @@ dependencies = [
  "hartex_discord_core",
  "hartex_localization_core",
  "miette",
- "once_cell",
  "tokio-postgres",
  "tokio-rustls",
  "unic-langid",
