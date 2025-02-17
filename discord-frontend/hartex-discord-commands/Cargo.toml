@@ -6,7 +6,7 @@ description = """
 Commands for the bot.
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.86.0"
+rust-version = "1.87.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -16,8 +16,18 @@ hartex_backend_models = { path = "../../api-backend/hartex-backend-models" }
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
 hartex_discord_cdn = { path = "../hartex-discord-cdn" }
-hartex_discord_core = { path = "../hartex-discord-core", features = ["async-net", "discord-http", "discord-mention", "discord-model", "discord-util", "discord-util-builder", "discord-util-snowflake"] }
-hartex_discord_commands_core = { path = "../hartex-discord-commands-core", features = ["derive"] }
+hartex_discord_core = { path = "../hartex-discord-core", features = [
+    "async-net",
+    "discord-http",
+    "discord-mention",
+    "discord-model",
+    "discord-util",
+    "discord-util-builder",
+    "discord-util-snowflake",
+] }
+hartex_discord_commands_core = { path = "../hartex-discord-commands-core", features = [
+    "derive",
+] }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_repositories = { path = "../hartex-discord-entitycache-repositories" }
 

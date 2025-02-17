@@ -6,7 +6,7 @@ description = """
 Database queries generated for use in Rust code in HarTex.
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.86.0"
+rust-version = "1.87.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -14,7 +14,13 @@ rust-version = "1.86.0"
 chrono = "0.4.39"
 itertools = "0.14.0"
 tokio = { version = "1.42.0", features = ["full"] }
-wtx = { git = "https://github.com/TeamHarTex/wtx.git", features = ["chrono", "database", "postgres", "std", "tokio"] }
+wtx = { git = "https://github.com/TeamHarTex/wtx.git", features = [
+    "chrono",
+    "database",
+    "postgres",
+    "std",
+    "tokio",
+] }
 
 [build-dependencies]
 hartex_database_typedsql = { path = "../hartex-database-typedsql" }
