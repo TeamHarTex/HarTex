@@ -6,14 +6,16 @@ description = """
 The repository declarations of the repository cache middleware for HarTex.
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.86.0"
+rust-version = "1.87.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
-hartex_discord_core = { path = "../hartex-discord-core", features = ["discord-model"] }
+hartex_discord_core = { path = "../hartex-discord-core", features = [
+    "discord-model",
+] }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_entities = { path = "../hartex-discord-entitycache-entities" }
 
