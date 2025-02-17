@@ -28,7 +28,9 @@ use std::io::BufRead;
 use std::io::Write;
 use std::path::PathBuf;
 use std::str::FromStr;
+
 use owo_colors::OwoColorize;
+
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -67,7 +69,7 @@ impl SetupProfile {
             Self::ApiBackend => "Contribute to the API backend",
             Self::DiscordFrontend => "Contribute to the Discord frontend",
             Self::Hosting => "Host an instance of HarTex",
-            Self::Localization => "Contribute to the localization infastructure",
+            Self::Localization => "Contribute to the localization infrastructure",
             Self::WebFrontend => "Contribute to the web frontend",
             Self::None => "Do not modify `hartex.conf`",
         }
@@ -218,7 +220,10 @@ pub fn interactive_profile() -> io::Result<SetupProfile> {
 #[allow(clippy::module_name_repetitions)]
 pub fn setup_profile(config: &Config, profile: SetupProfile) {
     println!("{} using profile {profile}", "info:".bold());
-    println!("{} copying `tools/bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`", "info:".bold());
+    println!(
+        "{} copying `tools/bootstrap/profiles/hartex.{profile}.conf` to `hartex.conf`",
+        "info:".bold()
+    );
 
     fs::copy(
         config
@@ -229,7 +234,8 @@ pub fn setup_profile(config: &Config, profile: SetupProfile) {
     .expect("failed to copy files");
 
     println!(
-        "{} Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.", "info:".bold()
+        "{} Done. `x.py` will now use the specified configuration in `hartex.conf` for further invocations.",
+        "info:".bold()
     );
 }
 
@@ -265,7 +271,10 @@ impl Step for ConfigureVscode {
             }
         }
 
-        println!("{} Preview of the recommended vscode configuration file is as follows", "info:".bold());
+        println!(
+            "{} Preview of the recommended vscode configuration file is as follows",
+            "info:".bold()
+        );
         println!("{VSCODE_SETTINGS}");
 
         match question_bool("Do you wish to continue?", true) {
@@ -331,7 +340,10 @@ impl Step for ConfigureFleet {
             }
         }
 
-        println!("{} Preview of the recommended fleet configuration file is as follows", "info:".bold());
+        println!(
+            "{} Preview of the recommended fleet configuration file is as follows",
+            "info:".bold()
+        );
         println!("{FLEET_SETTINGS}");
 
         match question_bool("Do you wish to continue?", true) {
@@ -397,7 +409,10 @@ impl Step for ConfigureZed {
             }
         }
 
-        println!("{} Preview of the recommended Zed configuration file is as follows", "info:".bold());
+        println!(
+            "{} Preview of the recommended Zed configuration file is as follows",
+            "info:".bold()
+        );
         println!("{ZED_SETTINGS}");
 
         match question_bool("Do you wish to continue?", true) {
