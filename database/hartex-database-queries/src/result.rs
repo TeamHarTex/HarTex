@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
+
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -49,6 +52,7 @@ impl From<WtxError> for Error {
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub trait IntoCrateResult<T> {
+    #[allow(clippy::missing_errors_doc)]
     fn into_crate_result(self) -> Result<T>;
 }
 

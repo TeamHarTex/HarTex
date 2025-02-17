@@ -55,10 +55,10 @@ where
         })?;
 
     let queries = query::read_queries(queries_dir.as_ref())?
-        .map(|info| query::parse_query(&info, schemas.clone()))
+        .map(|info| query::parse_query(&info, &schemas))
         .process_results(|iter| iter.collect::<BTreeMap<_, _>>())?;
 
-    codegen::tables::generate_table_structs_from_schemas(schemas, &target_dir)?;
+    codegen::tables::generate_table_structs_from_schemas(&schemas, &target_dir)?;
     codegen::queries::generate_query_structs_from_queries(queries, &target_dir)?;
 
     Ok(())

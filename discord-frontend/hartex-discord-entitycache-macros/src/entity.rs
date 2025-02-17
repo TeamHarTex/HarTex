@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+
 use std::collections::HashMap;
 
 use convert_case::Case;

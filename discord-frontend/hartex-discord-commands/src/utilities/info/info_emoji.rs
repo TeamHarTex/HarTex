@@ -25,7 +25,7 @@
 //! This command returns information of a custom Discord emoji.
 
 use std::str::FromStr;
-
+use std::sync::LazyLock;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
@@ -46,10 +46,10 @@ use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use regex::Regex;
 
-lazy_static::lazy_static! {
-    /// The regex for looking for a Discord emoji in the command input.
-    static ref EMOJI_REGEX: Regex = Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap();
-}
+/// The regex for looking for a Discord emoji in the command input.
+static EMOJI_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap()
+});
 
 /// Executes the `info emoji` command.
 #[allow(clippy::too_many_lines)]

@@ -24,12 +24,10 @@ use sqlparser::ast::ArrayElemTypeDef;
 use sqlparser::ast::DataType;
 use sqlparser::ast::TimezoneInfo;
 
-pub(crate) fn sql_type_to_rust_type_token_stream(dt: DataType) -> Option<proc_macro2::TokenStream> {
+pub(crate) fn sql_type_to_rust_type_token_stream(dt: &DataType) -> Option<proc_macro2::TokenStream> {
     Some(match dt {
-        DataType::Array(ArrayElemTypeDef::SquareBracket(deref!(ref dt_inner), _)) => {
-            let Some(ts) = sql_type_to_rust_type_token_stream(dt_inner.clone()) else {
-                return None;
-            };
+        DataType::Array(ArrayElemTypeDef::SquareBracket(deref!(dt_inner), _)) => {
+            let ts = sql_type_to_rust_type_token_stream(dt_inner)?;
 
             quote::quote! {Vec<#ts>}
         }
@@ -43,8 +41,7 @@ pub(crate) fn sql_type_to_rust_type_token_stream(dt: DataType) -> Option<proc_ma
         DataType::Real => quote::quote! {f32},
         DataType::SmallInt(_) => quote::quote! {i16},
         DataType::Integer(_) => quote::quote! {i32},
-        DataType::Time(_, tz)
-            if matches!(tz, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
+        DataType::Time(_, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
         {
             quote::quote! {time::Time}
         }
@@ -61,13 +58,11 @@ pub(crate) fn sql_type_to_rust_type_token_stream(dt: DataType) -> Option<proc_ma
 }
 
 pub(crate) fn sql_type_to_rust_reftype_token_stream(
-    dt: DataType,
+    dt: &DataType,
 ) -> Option<proc_macro2::TokenStream> {
     Some(match dt {
-        DataType::Array(ArrayElemTypeDef::SquareBracket(deref!(ref dt_inner), _)) => {
-            let Some(ts) = sql_type_to_rust_type_token_stream(dt_inner.clone()) else {
-                return None;
-            };
+        DataType::Array(ArrayElemTypeDef::SquareBracket(deref!(dt_inner), _)) => {
+            let ts = sql_type_to_rust_type_token_stream(dt_inner)?;
 
             quote::quote! {&[#ts]}
         }
@@ -81,8 +76,7 @@ pub(crate) fn sql_type_to_rust_reftype_token_stream(
         DataType::Real => quote::quote! {f32},
         DataType::SmallInt(_) => quote::quote! {i16},
         DataType::Integer(_) => quote::quote! {i32},
-        DataType::Time(_, tz)
-            if matches!(tz, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
+        DataType::Time(_, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
         {
             quote::quote! {time::Time}
         }

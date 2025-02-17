@@ -21,6 +21,7 @@
  */
 
 use std::collections::HashMap;
+use std::sync::LazyLock;
 
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::contributors::Contributors;
@@ -37,7 +38,6 @@ use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use hartex_log::log;
 use miette::IntoDiagnostic;
-use once_cell::sync::Lazy;
 
 use crate::errorhandler::ErrorPayload;
 
@@ -45,8 +45,8 @@ use crate::errorhandler::ErrorPayload;
 ///
 /// This is used for retrieving the command instance by its name such that precommand checks
 /// can be executed via dynamic dispatch without the need of match arms and if guards.
-pub static COMMAND_LOOKUP: Lazy<HashMap<String, Box<dyn Command + Send + Sync>>> =
-    Lazy::new(|| {
+pub static COMMAND_LOOKUP: LazyLock<HashMap<String, Box<dyn Command + Send + Sync>>> =
+    LazyLock::new(|| {
         let mut map = HashMap::<String, Box<dyn Command + Send + Sync>>::new();
         map.insert(About.name(), Box::new(About));
         map.insert(Contributors.name(), Box::new(Contributors));

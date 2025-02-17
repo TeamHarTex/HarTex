@@ -33,12 +33,11 @@
 use std::env;
 use std::future::Future;
 use std::ops::Deref;
-
+use std::sync::LazyLock;
 use async_once_cell::Lazy as AsyncLazy;
 use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::bb8::Pool;
 use hartex_discord_core::discord::http::Client;
-use once_cell::sync::Lazy;
 use tokio_postgres::NoTls;
 
 pub mod commands;
@@ -49,7 +48,7 @@ pub mod markdown;
 pub mod postgres;
 
 /// A proxied Discord HTTP cliemt.
-pub static CLIENT: Lazy<Client> = Lazy::new(|| {
+pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
     Client::builder()
         .token(TOKEN.deref().to_owned())
         .proxy(String::from("localhost:3000"), true)
@@ -73,4 +72,4 @@ pub static DATABASE_POOL: AsyncLazy<PostgresPool, DatabasePoolFuture> = AsyncLaz
 });
 
 /// The bot token used for logging in to the Discord gateway and sending HTTP requests.
-pub static TOKEN: Lazy<String> = Lazy::new(|| env::var("BOT_TOKEN").unwrap());
+pub static TOKEN: LazyLock<String> = LazyLock::new(|| env::var("BOT_TOKEN").unwrap());

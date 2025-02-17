@@ -44,7 +44,7 @@ pub(crate) struct GeneratedTableStructsFile {
 }
 
 pub(crate) fn generate_table_structs_from_schemas<P>(
-    schemas: BTreeMap<String, SchemaInfo>,
+    schemas: &BTreeMap<String, SchemaInfo>,
     root_path: P,
 ) -> crate::error::Result<()>
 where
@@ -99,7 +99,7 @@ pub(crate) fn generate_table_structs_from_schema(
         use wtx::database::Record as _;
         use wtx::database::client::postgres::Record;
     };
-    stream.append_all(generate_token_stream(schema)?);
+    stream.append_all(generate_token_stream(&schema)?);
 
     let file = syn::parse2::<File>(stream)?;
 
@@ -109,7 +109,7 @@ pub(crate) fn generate_table_structs_from_schema(
     })
 }
 
-fn generate_token_stream(schema: SchemaInfo) -> crate::error::Result<TokenStream> {
+fn generate_token_stream(schema: &SchemaInfo) -> crate::error::Result<TokenStream> {
     let structs = schema
         .tables
         .clone()
@@ -117,12 +117,11 @@ fn generate_token_stream(schema: SchemaInfo) -> crate::error::Result<TokenStream
         .map(|(name, table)| {
             let unquoted_name = name
                 .replace("public.", "")
-                .replace('"', "")
-                .replace('.', "");
+                .replace(['"', '.'], "");
             let ident = Ident::new(unquoted_name.as_str(), Span::call_site());
             let fields = generate_table_fields_token_streams(table.clone())?;
-            let impl_block = generate_struct_impl_token_stream(ident.clone(), table.clone())?;
-            let impl_tryfrom = generate_tryfrom_impl(ident.clone(), table)?;
+            let impl_block = generate_struct_impl_token_stream(&ident, table.clone())?;
+            let impl_tryfrom = generate_tryfrom_impl(&ident, table);
 
             Ok::<TokenStream, crate::error::Error>(quote::quote! {
                 pub struct #ident {
@@ -145,7 +144,7 @@ fn generate_table_fields_token_streams(table: TableInfo) -> crate::error::Result
         .into_iter()
         .map(|(name, column)| {
             let ident = Ident::new(name.as_str(), Span::call_site());
-            let dtype = super::types::sql_type_to_rust_type_token_stream(column.coltype)
+            let dtype = super::types::sql_type_to_rust_type_token_stream(&column.coltype)
                 .ok_or(crate::error::Error::QueryFile("unsupported data type"))?;
 
             Ok::<TokenStream, crate::error::Error>(
@@ -164,7 +163,7 @@ fn generate_table_fields_token_streams(table: TableInfo) -> crate::error::Result
 }
 
 fn generate_struct_impl_token_stream(
-    ident: Ident,
+    ident: &Ident,
     table: TableInfo,
 ) -> crate::error::Result<TokenStream> {
     let tss = table
@@ -172,14 +171,14 @@ fn generate_struct_impl_token_stream(
         .into_iter()
         .map(|(name, column)| {
             let fn_name = Ident::new(name.as_str(), Span::call_site());
-            let dtype = super::types::sql_type_to_rust_reftype_token_stream(column.coltype)
+            let dtype = super::types::sql_type_to_rust_reftype_token_stream(&column.coltype)
                 .ok_or(crate::error::Error::QueryFile("unsupported data type"))?;
             let rettype = if column.constraints.contains(&ColumnOption::NotNull) {
                 quote::quote! {#dtype}
             } else {
                 quote::quote! {Option<#dtype>}
             };
-            let body = generate_getter_body(fn_name.clone(), rettype.to_string())?;
+            let body = generate_getter_body(&fn_name, rettype.to_string().as_str());
 
             Ok::<TokenStream, crate::error::Error>(quote::quote! {
                 #[must_use]
@@ -197,16 +196,16 @@ fn generate_struct_impl_token_stream(
     })
 }
 
-fn generate_getter_body(name: Ident, ty: String) -> crate::error::Result<TokenStream> {
-    Ok(match ty.as_str() {
+fn generate_getter_body(name: &Ident, ty: &str) -> TokenStream {
+    match ty {
         "& str" => quote::quote! {self.#name.as_str()},
         "Option < & str >" => quote::quote! {self.#name.as_deref()},
         "& [String]" => quote::quote! {self.#name.as_slice()},
         _ => quote::quote! {self.#name},
-    })
+    }
 }
 
-fn generate_tryfrom_impl(name: Ident, table: TableInfo) -> crate::error::Result<TokenStream> {
+fn generate_tryfrom_impl(name: &Ident, table: TableInfo) -> TokenStream {
     let fieldinits = table
         .columns
         .into_iter()
@@ -223,7 +222,7 @@ fn generate_tryfrom_impl(name: Ident, table: TableInfo) -> crate::error::Result<
         })
         .collect_vec();
 
-    Ok(quote::quote! {
+    quote::quote! {
         impl<'exec, E: From<wtx::Error>> TryFrom<Record<'exec, E>> for #name
         where
             crate::result::Error: From<E>,
@@ -236,5 +235,5 @@ fn generate_tryfrom_impl(name: Ident, table: TableInfo) -> crate::error::Result<
                 })
             }
         }
-    })
+    }
 }

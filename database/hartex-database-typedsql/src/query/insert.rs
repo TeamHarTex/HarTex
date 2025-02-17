@@ -40,8 +40,8 @@ pub(crate) struct InsertQueryInfo {
 }
 
 pub(crate) fn parse_insert_query(
-    insert: Insert,
-    schema_infos: BTreeMap<String, SchemaInfo>,
+    insert: &Insert,
+    schema_infos: &BTreeMap<String, SchemaInfo>,
 ) -> crate::error::Result<InsertQueryInfo> {
     let TableObject::TableName(ref name) = insert.table else {
         return Err(crate::error::Error::QueryFile(

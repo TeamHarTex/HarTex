@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+
 use syn::GenericArgument;
 use syn::PathArguments;
 use syn::Type;

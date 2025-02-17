@@ -24,9 +24,7 @@
 //!
 //! Useful macros for the entity cache.
 
-#![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
-#![deny(warnings)]
 #![allow(clippy::too_many_lines)]
 #![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
