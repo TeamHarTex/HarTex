@@ -37,6 +37,7 @@ use test::TestFn;
 use test::TestName;
 use test::TestOpts;
 use test::TestType;
+use owo_colors::OwoColorize;
 use walkdir::WalkDir;
 
 use crate::config::Config;
@@ -121,6 +122,7 @@ fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
     let Ok(header) = header::parse_header(&path) else {
         eprintln!(
             "{} test file {} does not have a valid test file header, ignoring",
+            "WARN".yellow().bold(),
             path.display()
         );
         return None;
