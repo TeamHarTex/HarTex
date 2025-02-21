@@ -15,7 +15,7 @@ dotenvy = { version = "0.15.7", optional = true }
 num_enum = "0.7.3"
 num_enum_derive = "0.7.3"
 socket2 = { git = "https://github.com/rust-lang/socket2.git", branch = "v0.4.x" }
-tokio = { version = "1.42.0", optional = true }
+tokio = { version = "1.43.0", optional = true }
 twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-http = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-mention = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }

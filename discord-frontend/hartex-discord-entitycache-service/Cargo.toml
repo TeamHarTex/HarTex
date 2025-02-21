@@ -25,14 +25,14 @@ hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 futures-util = "0.3.31"
-miette = { version = "7.4.0", features = ["fancy"] }
+miette = { version = "7.5.0", features = ["fancy"] }
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",
     "external-lz4",
     "tokio",
 ] }
-serde_json = "1.0.135"
-serde = "1.0.217"
+serde_json = "1.0.139"
+serde = "1.0.218"
 serde_scan = "0.4.1"
 tracing = { version = "0.1.41", features = ["log-always"] }
 

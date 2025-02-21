@@ -22,7 +22,7 @@ axum-extra = "0.10.0"
 bb8-postgres = "0.9.0"
 chrono = "0.4.39"
 futures-util = "0.3.31"
-serde_json = "1.0.135"
+serde_json = "1.0.139"
 utoipa = "5.3.1"
 
 [features]

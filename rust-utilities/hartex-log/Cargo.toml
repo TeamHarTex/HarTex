@@ -11,7 +11,7 @@ rust-version = "1.87.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-log = "0.4.22"
+log = "0.4.26"
 log4rs = { git = "https://github.com/TeamHarTex/log4rs.git", branch = "master", default-features = false, features = [
     "console_appender",
 ] }

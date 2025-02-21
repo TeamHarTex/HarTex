@@ -15,7 +15,7 @@ hartex_discord_configuration_models = { path = "../../discord-frontend/hartex-di
 
 axum = "0.8.1"
 either = { version = "1.13.0", features = ["serde"] }
-serde = { version = "1.0.217", features = ["derive"] }
+serde = { version = "1.0.218", features = ["derive"] }
 utoipa = "5.3.1"
 utoipa-axum = "0.2.0"
 

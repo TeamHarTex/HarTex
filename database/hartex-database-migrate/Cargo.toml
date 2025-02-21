@@ -15,7 +15,7 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 barrel = { version = "0.7.0", features = ["pg"] }
 dotenvy = "0.15.7"
-miette = { version = "7.4.0", features = ["fancy"] }
-refinery = { version = "0.8.14", features = ["tokio-postgres"] }
-tokio = { version = "1.42.0", features = ["macros", "rt-multi-thread"] }
-tokio-postgres = "0.7.12"
+miette = { version = "7.5.0", features = ["fancy"] }
+refinery = { version = "0.8.15", features = ["tokio-postgres"] }
+tokio = { version = "1.43.0", features = ["macros", "rt-multi-thread"] }
+tokio-postgres = "0.7.13"
