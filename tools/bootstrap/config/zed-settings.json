@@ -1,41 +1,44 @@
 {
-    "lsp": {
-        "rust-analyzer": {
-            "initialization_options": {
-                "cargo": {
-                    "buildScripts": {
-                        "enable": true,
-                        "invocationLocation": "root",
-                        "invocationStrategy": "once",
-                        "overrideCommand": ["python", "x.py", "--json", "check"]
-                    }
-                },
-                "check": {
-                    "invocationLocation": "root",
-                    "invocationStrategy": "once",
-                    "overrideCommand": ["python", "x.py", "--json", "check"]
-                },
-                "imports": {
-                    "granularity": {
-                        "group": "item"
-                    },
-                    "merge": {
-                        "glob": false
-                    }
-                },
-                "linkedProjects": [
-                    "./api-backend/Cargo.toml",
-                    "./database/Cargo.toml",
-                    "./discord-frontend/Cargo.toml",
-                    "./localization/Cargo.toml",
-                    "./rust-utilities/Cargo.toml",
-                    "./tools/Cargo.toml"
-                ],
-                "procMacro": {
-                    "enable": true
-                },
-                "checkOnSave": true
-            }
+  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "cargo": {
+          "buildScripts": {
+            "enable": true,
+            "invocationLocation": "root",
+            "invocationStrategy": "once",
+            "overrideCommand": ["python", "x.py", "--json", "check"]
+          }
+        },
+        "check": {
+          "invocationLocation": "root",
+          "invocationStrategy": "once",
+          "overrideCommand": ["python", "x.py", "--json", "check"]
+        },
+        "checkOnSave": true,
+        "imports": {
+          "granularity": {
+            "group": "item"
+          },
+          "merge": {
+            "glob": false
+          }
+        },
+        "linkedProjects": [
+          "./api-backend/Cargo.toml",
+          "./database/Cargo.toml",
+          "./discord-frontend/Cargo.toml",
+          "./localization/Cargo.toml",
+          "./rust-utilities/Cargo.toml",
+          "./tools/Cargo.toml"
+        ],
+        "procMacro": {
+          "enable": true
+        },
+        "rustc": {
+          "source": "discover"
         }
+      }
     }
+  }
 }

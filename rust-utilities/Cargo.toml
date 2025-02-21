@@ -6,6 +6,7 @@ members = [
     "hartex-kafka-utils",
     "hartex-log",
     "hartex-macro-utils",
+    "hartex-reflect",
 ]
 
 resolver = "3"

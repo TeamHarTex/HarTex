@@ -1,13 +1,14 @@
 {
-    "rust-analyzer.cargo.buildScripts.enable": true,
-    "rust-analyzer.cargo.buildScripts.invocationLocation": "root",
-    "rust-analyzer.cargo.buildScripts.invocationStrategy": "once",
-    "rust-analyzer.cargo.buildScripts.overrideCommand": "python x.py --json check",
-    "rust-analyzer.check.invocationLocation": "root",
-    "rust-analyzer.check.invocationStrategy": "once",
-    "rust-analyzer.check.overrideCommand": "python x.py --json check",
-    "rust-analyzer.imports.granularity.group": "item",
-    "rust-analyzer.imports.merge.glob": false,
-    "rust-analyzer.procMacro.enable": true,
-    "rust-analyzer.checkOnSave": true
+  "rust-analyzer.checkOnSave": true,
+  "rust-analyzer.cargo.buildScripts.enable": true,
+  "rust-analyzer.cargo.buildScripts.invocationLocation": "root",
+  "rust-analyzer.cargo.buildScripts.invocationStrategy": "once",
+  "rust-analyzer.cargo.buildScripts.overrideCommand": "python x.py --json check",
+  "rust-analyzer.check.invocationLocation": "root",
+  "rust-analyzer.check.invocationStrategy": "once",
+  "rust-analyzer.check.overrideCommand": "python x.py --json check",
+  "rust-analyzer.imports.granularity.group": "item",
+  "rust-analyzer.imports.merge.glob": false,
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.rustc.source": "discover"
 }
