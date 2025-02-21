@@ -49,6 +49,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-internal-events/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-bitflags-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/database/hartex-database-typedsql/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-reflect/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
       <excludeFolder url="file://$MODULE_DIR$/localization/target" />

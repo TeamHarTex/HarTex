@@ -1,0 +1,14 @@
+[package]
+name = "hartex-reflect"
+version = "0.14.0"
+edition = "2024"
+description = "Reimagining compile-time reflection"
+license = "AGPL-3.0-or-later"
+rust-version = "1.87.0"
+
+[package.metadata.rust-analyzer]
+rustc_private = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
