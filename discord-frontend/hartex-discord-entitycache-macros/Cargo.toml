@@ -11,21 +11,21 @@ rust-version = "1.87.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-convert_case = "0.7.0"
+convert_case = "0.7.1"
 itertools = "0.14.0"
 lazy_static = "1.5.0"
 pluralizer = "0.5.0"
-proc-macro2 = "1.0.92"
+proc-macro2 = "1.0.93"
 quote = "1.0.38"
-syn = { version = "2.0.95", features = ["extra-traits", "full"] }
+syn = { version = "2.0.98", features = ["extra-traits", "full"] }
 hartex-macro-utils = { path = "../../rust-utilities/hartex-macro-utils" }
 
 [build-dependencies]
-convert_case = "0.7.0"
-proc-macro2 = "1.0.92"
+convert_case = "0.7.1"
+proc-macro2 = "1.0.93"
 quote = "1.0.38"
 reqwest = { version = "0.12.12", features = ["blocking"] }
-syn = { version = "2.0.95", features = ["extra-traits", "full"] }
+syn = { version = "2.0.98", features = ["extra-traits", "full"] }
 zip = { version = "2.2.2" }
 
 [features]

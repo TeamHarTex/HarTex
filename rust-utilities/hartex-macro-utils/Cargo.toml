@@ -10,4 +10,4 @@ rust-version = "1.87.0"
 
 [dependencies]
 quote = "1.0.38"
-syn = { version = "2.0.95", features = ["full"] }
+syn = { version = "2.0.98", features = ["full"] }

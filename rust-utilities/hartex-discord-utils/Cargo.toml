@@ -24,10 +24,10 @@ hartex_localization_core = { path = "../../localization/hartex-localization-core
 
 async-once-cell = "0.5.4"
 bb8-postgres = "0.9.0"
-miette = "7.4.0"
-tokio-postgres = "0.7.12"
+miette = "7.5.0"
+tokio-postgres = "0.7.13"
 tokio-rustls = { version = "0.26.1", features = ["ring"] }
 unic-langid = "0.9.5"
-webpki-roots = "0.26.7"
+webpki-roots = "0.26.8"
 
 [features]

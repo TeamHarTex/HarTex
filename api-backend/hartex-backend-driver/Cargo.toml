@@ -19,12 +19,12 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 axum = "0.8.1"
 bb8-postgres = "0.9.0"
 dotenvy = "0.15.7"
-hyper = { version = "1.5.2", features = ["http1", "server"] }
+hyper = { version = "1.6.0", features = ["http1", "server"] }
 hyper-util = { version = "0.1.10", features = ["http1", "tokio"] }
-miette = { version = "7.4.0", features = ["fancy"] }
-serde = "1.0.217"
-serde_json = "1.0.135"
-tokio = { version = "1.42.0", features = ["full"] }
+miette = { version = "7.5.0", features = ["fancy"] }
+serde = "1.0.218"
+serde_json = "1.0.139"
+tokio = { version = "1.43.0", features = ["full"] }
 tower = "0.5.2"
 tower-http = { version = "0.6.2", features = ["timeout", "trace"] }
 tower-service = "0.3.3"

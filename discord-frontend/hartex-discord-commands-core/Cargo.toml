@@ -19,8 +19,8 @@ hartex_discord_configuration_provider = { path = "../hartex-discord-configuratio
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
-async-trait = "0.1.85"
-miette = "7.4.0"
+async-trait = "0.1.86"
+miette = "7.5.0"
 
 [features]
 derive = ["dep:hartex_discord_commands_macros"]

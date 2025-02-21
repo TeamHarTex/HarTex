@@ -13,7 +13,7 @@ rust-version = "1.87.0"
 [dependencies]
 hartex_discord_configuration_models = { path = "../hartex-discord-configuration-models" }
 
-mlua = { version = "0.10.2", features = ["lua54", "vendored"] }
+mlua = { version = "0.10.3", features = ["lua54", "vendored"] }
 
 [dev-dependencies]
 expect-test = "1.5.1"

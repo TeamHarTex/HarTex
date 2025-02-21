@@ -14,7 +14,7 @@ rust-version = "1.87.0"
 fluent-bundle = "0.15.3"
 fluent-syntax = "0.11.1"
 intl-memoizer = "0.5.2"
-miette = "7.4.0"
+miette = "7.5.0"
 unic-langid = { version = "0.9.5", features = ["macros"] }
 walkdir = "2.5.0"
 
