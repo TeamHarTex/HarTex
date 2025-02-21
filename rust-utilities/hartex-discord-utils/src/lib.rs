@@ -31,9 +31,9 @@
 #![feature(type_alias_impl_trait)]
 
 use std::env;
-use std::future::Future;
 use std::ops::Deref;
 use std::sync::LazyLock;
+
 use async_once_cell::Lazy as AsyncLazy;
 use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::bb8::Pool;
