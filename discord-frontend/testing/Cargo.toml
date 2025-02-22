@@ -1,15 +1,19 @@
 [package]
-name = "hartex-reflect"
+name = "testing"
 version = "0.14.0"
 edition = "2024"
-description = "Reimagining compile-time reflection"
+description = """
+Macros for the command framework.
+"""
 license = "AGPL-3.0-or-later"
 rust-version = "1.87.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cargo = "0.86.0"
 
 [package.metadata.rust-analyzer]
 rustc_private = true
+
+[build-dependencies]
+hartex-reflect = { path = "../../rust-utilities/hartex-reflect" }
