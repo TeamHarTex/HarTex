@@ -35,4 +35,5 @@
 **/downloaded
 discord-frontend/hartex-discord-entitycache-macros/generated
 
+**/rustc-ice-*.txt
 hartex.conf
