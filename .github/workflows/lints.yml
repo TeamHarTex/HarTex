@@ -25,6 +25,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Print Rustc Target Libdir
+        run: ls $(rustc --print target-libdir)
       - name: Run Clippy
         run: python ./x.py clippy
 
