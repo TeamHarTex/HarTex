@@ -20,7 +20,7 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: nightly
-          components: clippy, rustc-dev
+          components: clippy, llvm-tools, rustc-dev
       - name: Install Python 3.11
         uses: actions/setup-python@v5
         with:
