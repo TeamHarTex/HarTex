@@ -22,17 +22,18 @@
 
 #![feature(rustc_private)]
 
+extern crate rustc_data_structures;
+extern crate rustc_driver;
+extern crate rustc_hir;
 extern crate rustc_interface;
+extern crate rustc_middle;
+extern crate rustc_session;
 
 use std::env;
-use std::sync::Arc;
 
-use cargo::GlobalContext;
-use cargo::core::Workspace;
-use cargo::core::compiler::CompileMode;
-use cargo::core::compiler::Executor;
-use cargo::ops::CompileOptions;
-use cargo::ops::compile;
+use cargo_metadata::MetadataCommand;
+
+mod rustc;
 
 /// Generates type information for a certain crate relying on cargo and the
 /// Rust compiler itself.
@@ -43,15 +44,25 @@ pub fn reflect_crate(crate_name: &str) {
     let pwd = env::current_dir().unwrap();
     let manifest = pwd.join("Cargo.toml");
 
-    let ctx = GlobalContext::default().unwrap();
-    let ws = Workspace::new(manifest.as_path(), &ctx).unwrap();
+    let result = MetadataCommand::new()
+        .current_dir(pwd)
+        .manifest_path(manifest)
+        .exec();
 
-    //let executor: Arc<dyn Executor> = Arc::new(ReflectExecutor::new(crate_name));
-    let mut options = CompileOptions::new(&ctx, CompileMode::Build).unwrap();
-    options.build_config.build_plan = true;
-    options.build_config.dry_run = true;
-    /*let _ = compile(
-        &ws, &options,
-        //&executor,
-    );*/
+    if result.is_err() {
+        println!(
+            "cargo::error=failed to run `cargo metadata` to obtain information about crate to reflect"
+        );
+    }
+
+    let metadata = result.unwrap();
+    let Some(reflect_pkg) = metadata
+        .packages
+        .into_iter()
+        .find(|pkg| pkg.name == crate_name)
+    else {
+        unreachable!()
+    };
+
+    rustc::run_compiler_for_pkg(reflect_pkg, |_| {});
 }
