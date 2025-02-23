@@ -24,23 +24,29 @@ use std::sync::LazyLock;
 use std::sync::atomic::AtomicBool;
 
 use cargo_metadata::Package;
+use convert_case::Case;
+use convert_case::Casing;
 use rustc_data_structures::unord::UnordSet;
 use rustc_hir::def_id::LocalDefId;
 use rustc_interface::Config;
 use rustc_interface::interface;
+use rustc_interface::passes;
+use rustc_middle::ty::TyCtxt;
 use rustc_session::config::Input;
 use rustc_session::config::Options;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
-pub fn run_compiler_for_pkg(package: Package) {
+pub fn run_compiler_for_pkg<F>(package: Package, cb: F)
+where
+    F: FnOnce(TyCtxt<'_>) + Send,
+{
     let Some(Ok(lib_rs_path)) = package
         .targets
         .iter()
-        .find(|targ| targ.name == package.name)
+        .find(|targ| targ.name == package.name.to_case(Case::Snake))
         .cloned()
-        .map(|targ| targ.src_path.as_std_path())
-        .map(|path| path.canonicalize())
+        .map(|targ| targ.src_path.canonicalize())
     else {
         return;
     };
@@ -75,5 +81,20 @@ pub fn run_compiler_for_pkg(package: Package) {
         expanded_args: vec![],
     };
 
-    interface::run_compiler(config, |compiler| {});
+    interface::run_compiler(conf, |compiler| {
+        let session = &compiler.sess;
+
+        let krate = passes::parse(&session);
+        rustc_interface::create_and_enter_global_ctxt(compiler, krate, |tcx| {
+            if session.dcx().has_errors().is_some() {
+                session.dcx().fatal("compilation failed, aborting");
+            }
+
+            if tcx.dcx().has_errors().is_some() {
+                tcx.dcx().fatal("errors occurred, aborting");
+            }
+
+            cb(tcx)
+        });
+    });
 }

@@ -26,7 +26,10 @@ extern crate rustc_data_structures;
 extern crate rustc_driver;
 extern crate rustc_hir;
 extern crate rustc_interface;
+extern crate rustc_middle;
 extern crate rustc_session;
+
+use std::env;
 
 use cargo_metadata::MetadataCommand;
 
@@ -60,4 +63,6 @@ pub fn reflect_crate(crate_name: &str) {
     else {
         unreachable!()
     };
+
+    rustc::run_compiler_for_pkg(reflect_pkg, |_| {});
 }
