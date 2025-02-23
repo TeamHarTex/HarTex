@@ -11,6 +11,7 @@ rust-version = "1.87.0"
 [dependencies]
 cargo_metadata = "0.19.1"
 convert_case = "0.7.1"
+itertools = "0.14.0"
 
 [package.metadata.rust-analyzer]
 rustc_private = true

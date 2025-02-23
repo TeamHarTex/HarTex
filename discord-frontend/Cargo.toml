@@ -12,13 +12,13 @@ members = [
     "hartex-discord-entitycache-core",
     "hartex-discord-entitycache-entities",
     "hartex-discord-entitycache-macros",
+    "hartex-discord-entitycache-macros2",
     "hartex-discord-configuration-provider",
     "hartex-discord-entitycache-repositories",
     "hartex-discord-entitycache-service",
     "hartex-discord-internal-events",
     "hartex-discord-leader",
     "hartex-discord-worker",
-    "testing",
 ]
 
 resolver = "3"

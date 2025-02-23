@@ -1535,6 +1535,7 @@ version = "0.14.0"
 dependencies = [
  "cargo_metadata",
  "convert_case",
+ "itertools 0.14.0",
 ]
 
 [[package]]
@@ -1752,6 +1753,13 @@ dependencies = [
  "reqwest",
  "syn 2.0.98",
  "zip",
+]
+
+[[package]]
+name = "hartex_discord_entitycache_macros2"
+version = "0.14.0"
+dependencies = [
+ "hartex-reflect",
 ]
 
 [[package]]
@@ -4180,13 +4188,6 @@ checksum = "5352447f921fda68cf61b4101566c0bdb5104eff6804d0678e5227580ab6a4e9"
 dependencies = [
  "rustix",
  "windows-sys 0.59.0",
-]
-
-[[package]]
-name = "testing"
-version = "0.14.0"
-dependencies = [
- "hartex-reflect",
 ]
 
 [[package]]

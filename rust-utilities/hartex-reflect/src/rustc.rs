@@ -20,6 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::os::unix::process::CommandExt;
+use std::path::PathBuf;
+use std::process::Command;
+use std::str::FromStr;
 use std::sync::LazyLock;
 use std::sync::atomic::AtomicBool;
 
@@ -32,6 +36,7 @@ use rustc_interface::Config;
 use rustc_interface::interface;
 use rustc_interface::passes;
 use rustc_middle::ty::TyCtxt;
+use rustc_middle::ty::TypeckResults;
 use rustc_session::config::Input;
 use rustc_session::config::Options;
 
@@ -51,8 +56,17 @@ where
         return;
     };
 
+    let cmd = Command::new("rustc")
+        .arg("--print=sysroot")
+        .output()
+        .expect("failed to get sysroot from rustc");
+    let maybe_sysroot = PathBuf::from_str(str::from_utf8(&cmd.stdout).unwrap()).ok();
+
     let conf = Config {
-        opts: Options::default(),
+        opts: Options {
+            maybe_sysroot,
+            ..Default::default()
+        },
         crate_cfg: vec![],
         crate_check_cfg: vec![],
         input: Input::File(lib_rs_path),

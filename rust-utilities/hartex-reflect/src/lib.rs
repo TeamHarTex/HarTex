@@ -32,6 +32,8 @@ extern crate rustc_session;
 use std::env;
 
 use cargo_metadata::MetadataCommand;
+use itertools::Itertools;
+use rustc_hir::def::DefKind;
 
 mod rustc;
 
@@ -64,5 +66,14 @@ pub fn reflect_crate(crate_name: &str) {
         unreachable!()
     };
 
-    rustc::run_compiler_for_pkg(reflect_pkg, |_| {});
+    rustc::run_compiler_for_pkg(reflect_pkg, |tcx| {
+        let module_items = tcx.hir_crate_items(());
+        let adtds = module_items
+            .definitions()
+            .map(|ldi| (ldi, tcx.def_kind(ldi)))
+            .filter(|(_, dk)| matches!(dk, DefKind::Struct))
+            .map(|(ldi, _)| tcx.adt_def(ldi))
+            .collect_vec();
+        panic!("{adtds:?}");
+    });
 }
