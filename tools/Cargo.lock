@@ -163,9 +163,9 @@ checksum = "945462a4b81e43c4e3ba96bd7b49d834c6f61198356aa858733bc4acf3cbe62e"
 
 [[package]]
 name = "owo-colors"
-version = "4.1.0"
+version = "4.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb37767f6569cd834a413442455e0f066d0d522de8630436e2a1761d9726ba56"
+checksum = "c1338d6deb23bc10a7767b72185570dd73cb3616188eec1088e19b5835f8cabb"
 
 [[package]]
 name = "path-slash"
