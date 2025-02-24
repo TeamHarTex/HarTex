@@ -20,7 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::os::unix::process::CommandExt;
+use std::collections::BTreeMap;
+use std::env;
 use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
@@ -37,8 +38,13 @@ use rustc_interface::interface;
 use rustc_interface::passes;
 use rustc_middle::ty::TyCtxt;
 use rustc_middle::ty::TypeckResults;
+use rustc_session::config::ExternEntry;
+use rustc_session::config::ExternLocation;
+use rustc_session::config::Externs;
 use rustc_session::config::Input;
 use rustc_session::config::Options;
+use rustc_session::search_paths::PathKind;
+use rustc_session::search_paths::SearchPath;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
@@ -56,15 +62,38 @@ where
         return;
     };
 
-    let cmd = Command::new("rustc")
+    let sysroot_cmd = Command::new("rustc")
         .arg("--print=sysroot")
         .output()
         .expect("failed to get sysroot from rustc");
-    let maybe_sysroot = PathBuf::from_str(str::from_utf8(&cmd.stdout).unwrap()).ok();
+    let maybe_sysroot = PathBuf::from_str(str::from_utf8(&sysroot_cmd.stdout).unwrap().trim()).ok();
+
+    let current_dir = env::current_dir().unwrap();
+    let mut target_deps = current_dir.parent().unwrap().to_path_buf();
+    target_deps.push("target/debug/deps");
+
+    let externs = package
+        .dependencies
+        .iter()
+        .map(|dep| {
+            (
+                dep.name.clone(),
+                ExternEntry {
+                    location: ExternLocation::FoundInLibrarySearchDirectories,
+                    is_private_dep: false,
+                    add_prelude: false,
+                    nounused_dep: false,
+                    force: true,
+                },
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
 
     let conf = Config {
         opts: Options {
+            externs: Externs::new(externs),
             maybe_sysroot,
+            search_paths: vec![SearchPath::new(PathKind::All, target_deps)],
             ..Default::default()
         },
         crate_cfg: vec![],
@@ -97,18 +126,8 @@ where
 
     interface::run_compiler(conf, |compiler| {
         let session = &compiler.sess;
-
         let krate = passes::parse(&session);
-        rustc_interface::create_and_enter_global_ctxt(compiler, krate, |tcx| {
-            if session.dcx().has_errors().is_some() {
-                session.dcx().fatal("compilation failed, aborting");
-            }
 
-            if tcx.dcx().has_errors().is_some() {
-                tcx.dcx().fatal("errors occurred, aborting");
-            }
-
-            cb(tcx)
-        });
+        rustc_interface::create_and_enter_global_ctxt(compiler, krate, cb);
     });
 }
