@@ -21,7 +21,10 @@
  */
 
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::env;
+use std::fs;
+use std::path::Path;
 use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
@@ -31,11 +34,13 @@ use std::sync::atomic::AtomicBool;
 use cargo_metadata::Package;
 use convert_case::Case;
 use convert_case::Casing;
+use itertools::Itertools;
 use rustc_data_structures::unord::UnordSet;
 use rustc_hir::def_id::LocalDefId;
 use rustc_interface::Config;
 use rustc_interface::interface;
 use rustc_interface::passes;
+use rustc_lint_defs::Edition;
 use rustc_middle::ty::TyCtxt;
 use rustc_middle::ty::TypeckResults;
 use rustc_session::config::ExternEntry;
@@ -45,6 +50,7 @@ use rustc_session::config::Input;
 use rustc_session::config::Options;
 use rustc_session::search_paths::PathKind;
 use rustc_session::search_paths::SearchPath;
+use rustc_session::utils::CanonicalizedPath;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
@@ -72,14 +78,41 @@ where
     let mut target_deps = current_dir.parent().unwrap().to_path_buf();
     target_deps.push("target/debug/deps");
 
+    let rlibs = fs::read_dir(&target_deps)
+        .unwrap()
+        .filter(|result| result.is_ok())
+        .map(|entry| entry.unwrap())
+        .filter(|entry| {
+            let result = entry.metadata();
+            let Ok(metadata) = result else {
+                return false;
+            };
+
+            metadata.is_file()
+                && matches!(
+                    entry.path().extension().map(|s| s.to_str()),
+                    Some(Some("rmeta"))
+                )
+        })
+        .map(|entry| entry.file_name().into_string().unwrap())
+        .collect_vec();
+
     let externs = package
         .dependencies
         .iter()
         .map(|dep| {
+            let mut exact = BTreeSet::new();
+            if let Some(first) = rlibs
+                .iter()
+                .find(|rlib| rlib.contains(&format!("{}-", &dep.name)))
+            {
+                exact.insert(CanonicalizedPath::new(target_deps.join(first).as_path()));
+            }
+
             (
                 dep.name.clone(),
                 ExternEntry {
-                    location: ExternLocation::FoundInLibrarySearchDirectories,
+                    location: ExternLocation::ExactPaths(exact),
                     is_private_dep: false,
                     add_prelude: false,
                     nounused_dep: false,
@@ -91,9 +124,9 @@ where
 
     let conf = Config {
         opts: Options {
+            edition: Edition::Edition2024,
             externs: Externs::new(externs),
             maybe_sysroot,
-            search_paths: vec![SearchPath::new(PathKind::All, target_deps)],
             ..Default::default()
         },
         crate_cfg: vec![],
