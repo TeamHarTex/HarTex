@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(rustc_private)]
 
 extern crate rustc_data_structures;
@@ -70,12 +73,13 @@ pub fn reflect_crate(crate_name: &str) {
 
     rustc::run_compiler_for_pkg(reflect_pkg, |tcx| {
         let module_items = tcx.hir_crate_items(());
-        let adtds = module_items
+        let _ = module_items
             .definitions()
             .map(|ldi| (ldi, tcx.def_kind(ldi)))
             .filter(|(_, dk)| matches!(dk, DefKind::Struct))
             .map(|(ldi, _)| tcx.adt_def(ldi))
             .collect_vec();
-        panic!("{adtds:?}");
+
+        // todo
     });
 }

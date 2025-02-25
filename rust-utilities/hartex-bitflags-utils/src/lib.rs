@@ -22,6 +22,10 @@
 
 //! Useful extensions for the `bitflags` crate.
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
 use bitflags::Flags;
 
 /// Extension trait for items implementing the `Flags` trait containing convenience methods
