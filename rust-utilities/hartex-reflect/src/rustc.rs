@@ -92,7 +92,7 @@ where
             metadata.is_file()
                 && matches!(
                     entry.path().extension().map(|s| s.to_str()),
-                    Some(Some("rmeta" | "dylib"))
+                    Some(Some("rlib" | "dylib"))
                 )
         })
         .map(|entry| entry.file_name().into_string().unwrap())
@@ -115,7 +115,7 @@ where
                 ExternEntry {
                     location: ExternLocation::ExactPaths(exact),
                     is_private_dep: false,
-                    add_prelude: false,
+                    add_prelude: true,
                     nounused_dep: false,
                     force: false,
                 },
