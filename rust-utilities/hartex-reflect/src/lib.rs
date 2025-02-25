@@ -20,18 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(rustc_private)]
 
 extern crate rustc_data_structures;
 extern crate rustc_driver;
 extern crate rustc_hir;
 extern crate rustc_interface;
+extern crate rustc_lint_defs;
 extern crate rustc_middle;
 extern crate rustc_session;
+extern crate rustc_target;
 
 use std::env;
 
 use cargo_metadata::MetadataCommand;
+use itertools::Itertools;
+use rustc_hir::def::DefKind;
 
 mod rustc;
 
@@ -64,5 +71,15 @@ pub fn reflect_crate(crate_name: &str) {
         unreachable!()
     };
 
-    rustc::run_compiler_for_pkg(reflect_pkg, |_| {});
+    rustc::run_compiler_for_pkg(reflect_pkg, |tcx| {
+        let module_items = tcx.hir_crate_items(());
+        let _ = module_items
+            .definitions()
+            .map(|ldi| (ldi, tcx.def_kind(ldi)))
+            .filter(|(_, dk)| matches!(dk, DefKind::Struct))
+            .map(|(ldi, _)| tcx.adt_def(ldi))
+            .collect_vec();
+
+        // todo
+    });
 }

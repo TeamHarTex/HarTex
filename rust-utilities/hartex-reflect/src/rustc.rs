@@ -20,20 +20,36 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeMap;
+use std::collections::BTreeSet;
+use std::env;
+use std::fs;
+use std::path::PathBuf;
+use std::process::Command;
+use std::str::FromStr;
 use std::sync::LazyLock;
 use std::sync::atomic::AtomicBool;
 
 use cargo_metadata::Package;
 use convert_case::Case;
 use convert_case::Casing;
+use itertools::Itertools;
 use rustc_data_structures::unord::UnordSet;
 use rustc_hir::def_id::LocalDefId;
 use rustc_interface::Config;
 use rustc_interface::interface;
 use rustc_interface::passes;
+use rustc_lint_defs::Edition;
 use rustc_middle::ty::TyCtxt;
+use rustc_session::config::CrateType;
+use rustc_session::config::ExternEntry;
+use rustc_session::config::ExternLocation;
+use rustc_session::config::Externs;
 use rustc_session::config::Input;
 use rustc_session::config::Options;
+use rustc_session::search_paths::PathKind;
+use rustc_session::search_paths::SearchPath;
+use rustc_session::utils::CanonicalizedPath;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
@@ -51,8 +67,70 @@ where
         return;
     };
 
+    let sysroot_cmd = Command::new("rustc")
+        .arg("--print=sysroot")
+        .output()
+        .expect("failed to get sysroot from rustc");
+    let maybe_sysroot = PathBuf::from_str(str::from_utf8(&sysroot_cmd.stdout).unwrap().trim()).ok();
+
+    let current_dir = env::current_dir().unwrap();
+    let mut target_deps = current_dir.parent().unwrap().to_path_buf();
+    target_deps.push("target/debug/deps");
+
+    let rlibs = fs::read_dir(&target_deps)
+        .unwrap()
+        .filter(|result| result.is_ok())
+        .map(|entry| entry.unwrap())
+        .filter(|entry| {
+            let result = entry.metadata();
+            let Ok(metadata) = result else {
+                return false;
+            };
+
+            metadata.is_file()
+                && matches!(
+                    entry.path().extension().map(|s| s.to_str()),
+                    Some(Some("rlib" | "dylib"))
+                )
+        })
+        .map(|entry| entry.file_name().into_string().unwrap())
+        .collect_vec();
+
+    let externs = package
+        .dependencies
+        .iter()
+        .map(|dep| {
+            let mut exact = BTreeSet::new();
+            if let Some(first) = rlibs.iter().find(|rlib| {
+                rlib.contains(&format!("{}-", &dep.name))
+                    || rlib.contains(&format!("{}-", &dep.name.to_case(Case::Snake)))
+            }) {
+                exact.insert(CanonicalizedPath::new(target_deps.join(first).as_path()));
+            }
+
+            (
+                dep.name.to_case(Case::Snake),
+                ExternEntry {
+                    location: ExternLocation::ExactPaths(exact),
+                    is_private_dep: false,
+                    add_prelude: true,
+                    nounused_dep: false,
+                    force: false,
+                },
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+
     let conf = Config {
-        opts: Options::default(),
+        opts: Options {
+            crate_name: Some(package.name.clone().to_case(Case::Snake)),
+            crate_types: vec![CrateType::Rlib],
+            edition: Edition::from_str(package.edition.as_str()).unwrap(),
+            externs: Externs::new(externs),
+            maybe_sysroot,
+            search_paths: vec![SearchPath::new(PathKind::Dependency, target_deps)],
+            ..Default::default()
+        },
         crate_cfg: vec![],
         crate_check_cfg: vec![],
         input: Input::File(lib_rs_path),
@@ -83,18 +161,8 @@ where
 
     interface::run_compiler(conf, |compiler| {
         let session = &compiler.sess;
-
         let krate = passes::parse(&session);
-        rustc_interface::create_and_enter_global_ctxt(compiler, krate, |tcx| {
-            if session.dcx().has_errors().is_some() {
-                session.dcx().fatal("compilation failed, aborting");
-            }
 
-            if tcx.dcx().has_errors().is_some() {
-                tcx.dcx().fatal("errors occurred, aborting");
-            }
-
-            cb(tcx)
-        });
+        rustc_interface::create_and_enter_global_ctxt(compiler, krate, cb);
     });
 }

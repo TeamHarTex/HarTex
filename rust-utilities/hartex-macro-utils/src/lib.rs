@@ -22,6 +22,9 @@
 
 //! # Macro Utilities
 
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 #![feature(proc_macro_diagnostic)]
 
 use std::any::Any;

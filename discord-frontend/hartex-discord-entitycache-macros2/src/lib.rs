@@ -19,29 +19,3 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-//! Useful extensions for the `bitflags` crate.
-
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
-use bitflags::Flags;
-
-/// Extension trait for items implementing the `Flags` trait containing convenience methods
-/// for various purposes.
-pub trait FlagsExt: Flags {
-    /// Obtain an instance of flags from their names.
-    fn from_names(names: Vec<String>) -> Self {
-        let mut flags = Self::empty();
-
-        names
-            .iter()
-            .filter_map(|name| Self::from_name(name))
-            .for_each(|flag| flags.insert(flag));
-
-        flags
-    }
-}
-
-impl<T> FlagsExt for T where T: Flags {}
