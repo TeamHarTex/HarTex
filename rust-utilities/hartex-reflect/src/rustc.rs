@@ -22,6 +22,7 @@
 
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
+use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::path::PathBuf;
@@ -53,7 +54,7 @@ use rustc_session::utils::CanonicalizedPath;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
-pub fn run_compiler_for_pkg<F>(package: Package, cb: F)
+pub fn run_compiler_for_pkg<F>(package: &Package, cb: F)
 where
     F: FnOnce(TyCtxt<'_>) + Send,
 {
@@ -79,8 +80,7 @@ where
 
     let rlibs = fs::read_dir(&target_deps)
         .unwrap()
-        .filter(|result| result.is_ok())
-        .map(|entry| entry.unwrap())
+        .flatten()
         .filter(|entry| {
             let result = entry.metadata();
             let Ok(metadata) = result else {
@@ -139,7 +139,7 @@ where
         ice_file: None,
         file_loader: None,
         locale_resources: rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(),
-        lint_caps: Default::default(),
+        lint_caps: HashMap::default(),
         psess_created: None,
         hash_untracked_state: None,
         register_lints: None,
@@ -161,7 +161,7 @@ where
 
     interface::run_compiler(conf, |compiler| {
         let session = &compiler.sess;
-        let krate = passes::parse(&session);
+        let krate = passes::parse(session);
 
         rustc_interface::create_and_enter_global_ctxt(compiler, krate, cb);
     });

@@ -32,6 +32,7 @@ use bitflags::Flags;
 /// for various purposes.
 pub trait FlagsExt: Flags {
     /// Obtain an instance of flags from their names.
+    #[must_use]
     fn from_names(names: Vec<String>) -> Self {
         let mut flags = Self::empty();
 
