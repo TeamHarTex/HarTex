@@ -43,6 +43,7 @@ use rustc_interface::passes;
 use rustc_lint_defs::Edition;
 use rustc_middle::ty::TyCtxt;
 use rustc_middle::ty::TypeckResults;
+use rustc_session::config::CrateType;
 use rustc_session::config::ExternEntry;
 use rustc_session::config::ExternLocation;
 use rustc_session::config::Externs;
@@ -91,7 +92,7 @@ where
             metadata.is_file()
                 && matches!(
                     entry.path().extension().map(|s| s.to_str()),
-                    Some(Some("rmeta"))
+                    Some(Some("rmeta" | "dylib"))
                 )
         })
         .map(|entry| entry.file_name().into_string().unwrap())
@@ -102,21 +103,21 @@ where
         .iter()
         .map(|dep| {
             let mut exact = BTreeSet::new();
-            if let Some(first) = rlibs
-                .iter()
-                .find(|rlib| rlib.contains(&format!("{}-", &dep.name)))
-            {
+            if let Some(first) = rlibs.iter().find(|rlib| {
+                rlib.contains(&format!("{}-", &dep.name))
+                    || rlib.contains(&format!("{}-", &dep.name.to_case(Case::Snake)))
+            }) {
                 exact.insert(CanonicalizedPath::new(target_deps.join(first).as_path()));
             }
 
             (
-                dep.name.clone(),
+                dep.name.to_case(Case::Snake),
                 ExternEntry {
                     location: ExternLocation::ExactPaths(exact),
                     is_private_dep: false,
                     add_prelude: false,
                     nounused_dep: false,
-                    force: true,
+                    force: false,
                 },
             )
         })
@@ -124,9 +125,12 @@ where
 
     let conf = Config {
         opts: Options {
-            edition: Edition::Edition2024,
+            crate_name: Some(package.name.clone().to_case(Case::Snake)),
+            crate_types: vec![CrateType::Rlib],
+            edition: Edition::from_str(package.edition.as_str()).unwrap(),
             externs: Externs::new(externs),
             maybe_sysroot,
+            search_paths: vec![SearchPath::new(PathKind::Dependency, target_deps)],
             ..Default::default()
         },
         crate_cfg: vec![],
