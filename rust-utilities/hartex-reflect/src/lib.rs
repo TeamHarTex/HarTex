@@ -47,6 +47,7 @@ mod rustc;
 ///
 /// `crate_name` parameter has to specify a crate that is present in the dependency
 /// graph of the workspace.
+#[allow(clippy::missing_panics_doc)]
 pub fn reflect_crate(crate_name: &str) {
     let pwd = env::current_dir().unwrap();
     let manifest = pwd.join("Cargo.toml");
@@ -71,7 +72,7 @@ pub fn reflect_crate(crate_name: &str) {
         unreachable!()
     };
 
-    rustc::run_compiler_for_pkg(reflect_pkg, |tcx| {
+    rustc::run_compiler_for_pkg(&reflect_pkg, |tcx| {
         let module_items = tcx.hir_crate_items(());
         let _ = module_items
             .definitions()
