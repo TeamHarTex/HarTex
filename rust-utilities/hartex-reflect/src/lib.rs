@@ -25,6 +25,7 @@
 // #![deny(warnings)]
 #![allow(unexpected_cfgs)]
 #![feature(rustc_private)]
+#![feature(stmt_expr_attributes)]
 
 extern crate rustc_data_structures;
 extern crate rustc_driver;
