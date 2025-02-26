@@ -164,7 +164,7 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
 
     if builder.config.release {
         command.arg("--release");
-        rustflags.push_str("--cfg release");
+        rustflags.push_str(" --cfg release");
     }
 
     command.arg("--keep-going");
