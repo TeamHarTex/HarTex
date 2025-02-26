@@ -32,6 +32,7 @@ use std::sync::LazyLock;
 use std::sync::atomic::AtomicBool;
 
 use cargo_metadata::Package;
+use cfg_if::cfg_if;
 use convert_case::Case;
 use convert_case::Casing;
 use itertools::Itertools;
@@ -54,6 +55,7 @@ use rustc_session::utils::CanonicalizedPath;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
+#[allow(clippy::too_many_lines)]
 pub fn run_compiler_for_pkg<F>(package: &Package, cb: F)
 where
     F: FnOnce(TyCtxt<'_>) + Send,
@@ -76,7 +78,15 @@ where
 
     let current_dir = env::current_dir().unwrap();
     let mut target_deps = current_dir.parent().unwrap().to_path_buf();
-    target_deps.push("target/debug/deps");
+
+    cfg_if! {
+        if #[cfg(hartexbootstrap)] {
+            target_deps = PathBuf::from(env!("CARGO_TARGET_DIR"));
+            target_deps.push("debug/deps");
+        } else {
+            target_deps.push("target/debug/deps");
+        }
+    };
 
     let rlibs = fs::read_dir(&target_deps)
         .unwrap()

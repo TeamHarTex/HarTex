@@ -1534,6 +1534,7 @@ name = "hartex-reflect"
 version = "0.14.0"
 dependencies = [
  "cargo_metadata",
+ "cfg-if",
  "convert_case",
  "itertools 0.14.0",
 ]

@@ -27,7 +27,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(extract_if)]
 #![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
 
