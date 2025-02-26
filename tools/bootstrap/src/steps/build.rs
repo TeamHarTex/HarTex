@@ -166,6 +166,8 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
         command.arg("--release");
     }
 
+    command.arg("--keep-going");
+
     command.current_dir(pwd);
     command.env(
         "CARGO_TARGET_DIR",
