@@ -112,7 +112,7 @@ where
             metadata.is_file()
                 && matches!(
                     entry.path().extension().map(|s| s.to_str()),
-                    Some(Some("rlib" | "dylib"))
+                    Some(Some("rlib" | "dylib" | "dll" | "so"))
                 )
         })
         .map(|entry| entry.file_name().into_string().unwrap())
