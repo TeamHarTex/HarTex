@@ -55,6 +55,7 @@ use rustc_session::utils::CanonicalizedPath;
 
 static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
+#[allow(clippy::too_many_lines)]
 pub fn run_compiler_for_pkg<F>(package: &Package, cb: F)
 where
     F: FnOnce(TyCtxt<'_>) + Send,
