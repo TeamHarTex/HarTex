@@ -79,11 +79,13 @@ where
     let current_dir = env::current_dir().unwrap();
     let mut target_deps = current_dir.parent().unwrap().to_path_buf();
 
-    let profile = cfg_if! {
+    let mut profile = "";
+
+    cfg_if! {
         if #[cfg(release)] {
-            "release"
+            profile = "release";
         } else {
-            "debug"
+            profile = "debug";
         }
     };
 
