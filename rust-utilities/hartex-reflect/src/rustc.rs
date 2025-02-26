@@ -79,14 +79,24 @@ where
     let current_dir = env::current_dir().unwrap();
     let mut target_deps = current_dir.parent().unwrap().to_path_buf();
 
+    let profile = cfg_if! {
+        if #[cfg(release)] {
+            "release"
+        } else {
+            "debug"
+        }
+    };
+
     cfg_if! {
         if #[cfg(hartexbootstrap)] {
             target_deps = PathBuf::from(env!("CARGO_TARGET_DIR"));
-            target_deps.push("debug/deps");
         } else {
-            target_deps.push("target/debug/deps");
+            target_deps.push("target");
         }
     };
+
+    target_deps.push(profile);
+    target_deps.push("deps");
 
     let rlibs = fs::read_dir(&target_deps)
         .unwrap()
