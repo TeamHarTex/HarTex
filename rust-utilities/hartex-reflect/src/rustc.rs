@@ -79,14 +79,26 @@ where
     let current_dir = env::current_dir().unwrap();
     let mut target_deps = current_dir.parent().unwrap().to_path_buf();
 
+    let mut profile = "";
+
+    cfg_if! {
+        if #[cfg(release)] {
+            profile = "release";
+        } else {
+            profile = "debug";
+        }
+    };
+
     cfg_if! {
         if #[cfg(hartexbootstrap)] {
             target_deps = PathBuf::from(env!("CARGO_TARGET_DIR"));
-            target_deps.push("debug/deps");
         } else {
-            target_deps.push("target/debug/deps");
+            target_deps.push("target");
         }
     };
+
+    target_deps.push(profile);
+    target_deps.push("deps");
 
     let rlibs = fs::read_dir(&target_deps)
         .unwrap()
@@ -100,7 +112,7 @@ where
             metadata.is_file()
                 && matches!(
                     entry.path().extension().map(|s| s.to_str()),
-                    Some(Some("rlib" | "dylib"))
+                    Some(Some("rlib" | "dylib" | "dll" | "so"))
                 )
         })
         .map(|entry| entry.file_name().into_string().unwrap())
