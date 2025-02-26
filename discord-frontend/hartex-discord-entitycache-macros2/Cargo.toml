@@ -11,7 +11,6 @@ rust-version = "1.87.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde_repr = "0.1.19" # this is only here so the dependency is found by reflect
 
 [package.metadata.rust-analyzer]
 rustc_private = true
