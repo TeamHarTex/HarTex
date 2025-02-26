@@ -1761,6 +1761,7 @@ name = "hartex_discord_entitycache_macros2"
 version = "0.14.0"
 dependencies = [
  "hartex-reflect",
+ "serde_repr",
 ]
 
 [[package]]
