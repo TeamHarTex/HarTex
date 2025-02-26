@@ -22,7 +22,8 @@
 
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
-#![deny(warnings)]
+// #![deny(warnings)]
+#![allow(unexpected_cfgs)]
 #![feature(rustc_private)]
 
 extern crate rustc_data_structures;

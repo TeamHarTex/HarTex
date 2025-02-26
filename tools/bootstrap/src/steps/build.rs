@@ -22,7 +22,9 @@
 
 use std::process::Command;
 use std::process::exit;
+
 use owo_colors::OwoColorize;
+
 use crate::builder::Builder;
 use crate::builder::RunConfig;
 use crate::builder::Step;
@@ -151,7 +153,10 @@ pub fn build_cargo_project(project: &'static str, builder: &Builder<'_>) {
     let mut command = Command::new("cargo");
     command.arg("build");
 
-    let mut rustflags = format!("-C opt-level={}", builder.config.opt_level);
+    let mut rustflags = format!(
+        "-C opt-level={} --cfg hartexbootstrap",
+        builder.config.opt_level
+    );
 
     if builder.config.debug {
         rustflags.push_str(" -g");
