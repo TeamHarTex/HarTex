@@ -9,15 +9,15 @@ license = "AGPL-3.0-or-later"
 rust-version = "1.87.0"
 
 [dependencies]
-clap = { version = "4.5.30", default-features = false, features = [
+clap = { version = "4.5.31", default-features = false, features = [
     "std",
     "usage",
     "help",
     "derive",
     "error-context",
 ] }
-console = "0.15.10"
-owo-colors = "4.1.0"
+console = "0.15.11"
+owo-colors = "4.2.0"
 path-slash = "0.2.1"
 similar = { version = "2.7.0", features = ["inline"] }
 walkdir = "2.5.0"

@@ -17,7 +17,7 @@ hartex_discord_core = { path = "../hartex-discord-core", features = [
 
 hartex_bitflags_utils = { path = "../../rust-utilities/hartex-bitflags-utils" }
 
-bitflags = { version = "2.8.0", features = ["serde"] }
+bitflags = { version = "2.9.0", features = ["serde"] }
 itertools = "0.14.0"
 mlua = { version = "0.10.3", features = ["lua54", "vendored"] }
 serde = { version = "1.0.218", features = ["derive"] }
