@@ -19,7 +19,7 @@ hartex_discord_configuration_provider = { path = "../hartex-discord-configuratio
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
-async-trait = "0.1.86"
+async-trait = "0.1.87"
 miette = "7.5.0"
 
 [features]

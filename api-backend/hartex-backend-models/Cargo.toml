@@ -14,7 +14,7 @@ rust-version = "1.87.0"
 hartex_discord_configuration_models = { path = "../../discord-frontend/hartex-discord-configuration-models" }
 
 axum = "0.8.1"
-either = { version = "1.13.0", features = ["serde"] }
+either = { version = "1.14.0", features = ["serde"] }
 serde = { version = "1.0.218", features = ["derive"] }
 utoipa = "5.3.1"
 utoipa-axum = "0.2.0"

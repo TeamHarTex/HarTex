@@ -9,7 +9,7 @@ license = "AGPL-3.0-or-later"
 rust-version = "1.87.0"
 
 [dependencies]
-clap = { version = "4.5.30", default-features = false, features = [
+clap = { version = "4.5.31", default-features = false, features = [
     "std",
     "usage",
     "help",
@@ -17,7 +17,7 @@ clap = { version = "4.5.30", default-features = false, features = [
     "error-context",
 ] }
 fd-lock = "4.0.2"
-owo-colors = "4.1.0"
+owo-colors = "4.2.0"
 serde = { version = "1.0.218", features = ["derive"] }
 toml = "0.8.20"
 
