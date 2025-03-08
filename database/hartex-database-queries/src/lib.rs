@@ -23,7 +23,6 @@
 #![deny(unsafe_code)]
 #![feature(result_flattening)]
 
-mod internal;
 pub mod queries;
 pub mod result;
 pub mod tables;
