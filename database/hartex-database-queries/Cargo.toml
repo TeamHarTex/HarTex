@@ -14,13 +14,6 @@ rust-version = "1.87.0"
 chrono = "0.4.40"
 itertools = "0.14.0"
 tokio = { version = "1.43.0", features = ["full"] }
-wtx = { git = "https://github.com/TeamHarTex/wtx.git", features = [
-    "chrono",
-    "database",
-    "postgres",
-    "std",
-    "tokio",
-] }
 
 [build-dependencies]
 hartex_database_typedsql = { path = "../hartex-database-typedsql" }
