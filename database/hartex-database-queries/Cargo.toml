@@ -13,6 +13,7 @@ rust-version = "1.87.0"
 [dependencies]
 chrono = "0.4.40"
 itertools = "0.14.0"
+sqlx = { version = "0.8.3", features = ["runtime-tokio", "tls-native-tls", "postgres", "macros"] }
 tokio = { version = "1.43.0", features = ["full"] }
 
 [build-dependencies]
