@@ -27,12 +27,9 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
-use wtx::Error as WtxError;
-
 #[derive(Debug)]
 pub enum Error {
     Generic(&'static str),
-    Wtx(WtxError),
 }
 
 impl Display for Error {
@@ -43,24 +40,9 @@ impl Display for Error {
 
 impl std::error::Error for Error {}
 
-impl From<WtxError> for Error {
-    fn from(err: WtxError) -> Self {
-        Self::Wtx(err)
-    }
-}
-
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub trait IntoCrateResult<T> {
     #[allow(clippy::missing_errors_doc)]
     fn into_crate_result(self) -> Result<T>;
-}
-
-impl<T> IntoCrateResult<T> for wtx::Result<T> {
-    fn into_crate_result(self) -> Result<T> {
-        match self {
-            Ok(t) => Ok(t),
-            Err(e) => Err(Error::Wtx(e)),
-        }
-    }
 }
