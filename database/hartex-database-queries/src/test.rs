@@ -19,11 +19,19 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use sqlx::{query_as, Error, FromRow, PgPool, Postgres};
+use sqlx::postgres::PgRow;
 
-#![deny(unsafe_code)]
-#![feature(result_flattening)]
+pub struct Idk;
 
-pub mod queries;
-pub mod result;
-pub mod tables;
-mod test;
+impl FromRow<'_, PgRow> for Idk {
+    fn from_row(row: &'_ PgRow) -> Result<Self, Error> {
+        Ok(Self {})
+    }
+}
+
+async fn shitwood() {
+    let mut pool = PgPool::connect("").await.unwrap();
+
+    let thing = query_as::<Postgres, Idk>("SELECT id FROM idk ORDER BY id DESC LIMIT 5");
+}
