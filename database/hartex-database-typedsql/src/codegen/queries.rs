@@ -162,29 +162,23 @@ fn generate_query_struct_token_stream(
         generate_query_struct_bind_constructor_and_executor_token_stream(
             &placeholders,
             &fields,
-            &query.path,
         );
     let query_fns = generate_query_fns_token_streams(query.clone(), &query.path);
 
     Ok(quote::quote! {
         use std::env;
 
-        use tokio::net::TcpStream;
-        use wtx::database::Executor as _;
-        use wtx::database::client::postgres::Executor;
-        use wtx::database::client::postgres::ExecutorBuffer;
-        use wtx::misc::Uri;
+        use sqlx::postgres::PgPool;
+        use sqlx::postgres::Postgres;
 
         use crate::result::IntoCrateResult;
 
-        pub struct #structname {
-            db_executor: Option<Executor<wtx::Error, ExecutorBuffer, TcpStream>>,
-            executor_constructor: for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
-
-            #(#fields),*
+        pub struct #structname<'a> {
+            pool: &'a mut PgPool,
+            query: Option<()>
         }
 
-        impl #structname {
+        impl #structname<'a> {
             #bind_constructor_and_executor
 
             #(#query_fns)*
@@ -195,29 +189,23 @@ fn generate_query_struct_token_stream(
 fn generate_query_struct_bind_constructor_and_executor_token_stream(
     placeholders: &[String],
     param_decls: &[TokenStream],
-    schema_for_env: &str,
 ) -> TokenStream {
     let idents = placeholders
         .iter()
         .map(|string| Ident::new(string, Span::call_site()))
         .collect_vec();
-    let envvarraw = format!("{}_PGSQL_URL", schema_for_env.to_case(Case::Constant));
-    let lit = Literal::string(envvarraw.as_str());
-
     quote::quote! {
-        #[must_use = "Queries must be executed after construction"]
-        pub fn bind(#(#param_decls),*) -> Self {
+        pub fn new(pool: &'a mut PgPool) -> Self {
             Self {
-                db_executor: None,
-                executor_constructor: crate::internal::__internal_executor_constructor as for<'a> fn(Uri<&'a str>) -> crate::internal::Ret<'a>,
-
-                #(#idents),*
+                pool,
+                query: None,
             }
         }
 
-        pub async fn executor(mut self) -> crate::result::Result<Self> {
-            self.db_executor.replace((self.executor_constructor)(Uri::new(&env::var(#lit).unwrap())).await?);
-            Ok(self)
+        #[must_use = "Queries must be executed after construction"]
+        pub fn bind(mut self, #(#param_decls),*) -> Self {
+            // query.replace();
+            self
         }
     }
 }
