@@ -52,7 +52,10 @@ pub(crate) fn parse_insert_query(
         .0
         .first()
         .ok_or(crate::error::Error::QueryFile("schema name not found"))?;
-    let key = schema_name.value.to_case(Case::Snake);
+    let Some(ident) = schema_name.as_ident() else {
+        return Err(crate::error::Error::QueryFile("unexpected object name part"));
+    };
+    let key = ident.value.to_case(Case::Snake);
     let schema_info = schema_infos
         .get(&key)
         .ok_or(crate::error::Error::QueryFile("schema not found"))?;

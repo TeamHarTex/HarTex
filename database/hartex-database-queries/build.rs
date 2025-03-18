@@ -21,7 +21,7 @@
  */
 
 pub fn main() {
-    if let Err(error) = hartex_database_typedsql::generate_crate("schemas", "queries", "src") {
+     /*if let Err(error) = hartex_database_typedsql::generate_crate("schemas", "queries", "src") {
         println!("cargo::error=Error while generating typed queries: {error:?}");
-    }
+    }*/
 }
