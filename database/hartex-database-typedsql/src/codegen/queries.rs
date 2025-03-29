@@ -190,7 +190,7 @@ fn generate_query_struct_bind_constructor_and_executor_token_stream(
     placeholders: &[String],
     param_decls: &[TokenStream],
 ) -> TokenStream {
-    let idents = placeholders
+    let _ = placeholders
         .iter()
         .map(|string| Ident::new(string, Span::call_site()))
         .collect_vec();
