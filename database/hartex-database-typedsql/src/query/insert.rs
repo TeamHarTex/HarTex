@@ -68,7 +68,7 @@ pub(crate) fn parse_insert_query(
         .ok_or(crate::error::Error::QueryFile("table not found in schema"))?;
 
     let mut plvisit = PlaceholderVisitor::default();
-    insert.visit(&mut plvisit);
+    let _ = insert.visit(&mut plvisit);
 
     Ok(InsertQueryInfo {
         into_table,
