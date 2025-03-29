@@ -102,7 +102,7 @@ pub(crate) fn parse_select_query(
     };
 
     let mut plvisit = PlaceholderVisitor::default();
-    select.visit(&mut plvisit);
+    let _ = select.visit(&mut plvisit);
 
     Ok(SelectQueryInfo {
         what: Box::new(what),
