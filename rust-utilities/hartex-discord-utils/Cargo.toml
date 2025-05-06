@@ -28,6 +28,6 @@ miette = "7.5.0"
 tokio-postgres = "0.7.13"
 tokio-rustls = { version = "0.26.2", features = ["ring"] }
 unic-langid = "0.9.5"
-webpki-roots = "0.26.8"
+webpki-roots = "1.0.0"
 
 [features]
