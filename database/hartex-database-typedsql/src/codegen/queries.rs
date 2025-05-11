@@ -163,22 +163,30 @@ fn generate_query_struct_token_stream(
             &placeholders,
             &fields,
         );
-    let query_fns = generate_query_fns_token_streams(query.clone(), &query.path);
+    let mut rettype = TokenStream::new();
+    let query_fns = generate_query_fns_token_streams(query.clone(), &query.path, &mut rettype);
+    
+    let query_type = if rettype.is_empty() {
+        quote::quote! {Query<'a, Postgres, PgArguments>}
+    } else {
+        quote::quote! {QueryAs<'a, #rettype, (), PgArguments>}
+    };
 
     Ok(quote::quote! {
-        use std::env;
-
+        use sqlx::Postgres;
+        use sqlx::postgres::PgArguments;
         use sqlx::postgres::PgPool;
-        use sqlx::postgres::Postgres;
+        use sqlx::query::Query;
+        use sqlx::query::QueryAs;
 
         use crate::result::IntoCrateResult;
 
         pub struct #structname<'a> {
             pool: &'a mut PgPool,
-            query: Option<()>
+            query: Option<#query_type>
         }
 
-        impl #structname<'a> {
+        impl<'a> #structname<'a> {
             #bind_constructor_and_executor
 
             #(#query_fns)*
@@ -194,6 +202,7 @@ fn generate_query_struct_bind_constructor_and_executor_token_stream(
         .iter()
         .map(|string| Ident::new(string, Span::call_site()))
         .collect_vec();
+
     quote::quote! {
         pub fn new(pool: &'a mut PgPool) -> Self {
             Self {
@@ -204,7 +213,7 @@ fn generate_query_struct_bind_constructor_and_executor_token_stream(
 
         #[must_use = "Queries must be executed after construction"]
         pub fn bind(mut self, #(#param_decls),*) -> Self {
-            // query.replace();
+            self.query.replace();
             self
         }
     }
@@ -213,13 +222,14 @@ fn generate_query_struct_bind_constructor_and_executor_token_stream(
 fn generate_query_fns_token_streams(
     query_info: QueryInfo,
     schema: &str,
+    rettype: &mut TokenStream,
 ) -> Vec<TokenStream> {
     match query_info.inner {
         QueryInfoInner::Insert(insert) => {
             generate_insert_query_fn_token_stream(&insert, &query_info.raw)
         }
         QueryInfoInner::Select(select) => {
-            generate_select_query_fns_token_streams(&select, &query_info.raw, schema)
+            generate_select_query_fns_token_streams(&select, &query_info.raw, schema, rettype)
         }
     }
 }
@@ -253,6 +263,7 @@ fn generate_select_query_fns_token_streams(
     select: &SelectQueryInfo,
     raw: &Statement,
     schema: &str,
+    rettype_out: &mut TokenStream,
 ) -> Vec<TokenStream> {
     let mut rawstr = raw.to_string();
     for (i, placeholder) in select.placeholders.iter().enumerate() {
@@ -288,6 +299,8 @@ fn generate_select_query_fns_token_streams(
         }
         _ => return vec![],
     };
+    
+    rettype_out.append_all(rettype);
 
     vec![
         quote::quote! {
