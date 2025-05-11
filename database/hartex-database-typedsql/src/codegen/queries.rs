@@ -183,7 +183,7 @@ fn generate_query_struct_token_stream(
 
         pub struct #structname<'a> {
             pool: &'a mut PgPool,
-            query: Option<#query_type>
+            query: #query_type
         }
 
         impl<'a> #structname<'a> {
@@ -213,7 +213,6 @@ fn generate_query_struct_bind_constructor_and_executor_token_stream(
 
         #[must_use = "Queries must be executed after construction"]
         pub fn bind(mut self, #(#param_decls),*) -> Self {
-            self.query.replace();
             self
         }
     }
@@ -300,7 +299,7 @@ fn generate_select_query_fns_token_streams(
         _ => return vec![],
     };
     
-    rettype_out.append_all(rettype);
+    rettype_out.append_all(rettype.clone());
 
     vec![
         quote::quote! {
