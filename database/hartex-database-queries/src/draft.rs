@@ -29,26 +29,25 @@ use sqlx::query::{Query, QueryAs};
 // INSERT INTO things
 pub struct IdkInsert<'a> {
     pool: &'a mut PgPool,
-    query: Option<Query<'a, Postgres, PgArguments>>,
+    query: Query<'a, Postgres, PgArguments>,
 }
 
 // SELECT things
 pub struct IdkSelect<'a> {
     pool: &'a mut PgPool,
-    query: Option<QueryAs<'a, Postgres, (), PgArguments>>,
+    query: QueryAs<'a, Postgres, (), PgArguments>,
 }
 
 impl<'a> IdkInsert<'a> {
     pub fn new(pool: &'a mut PgPool) -> Self {
         Self {
             pool,
-            query: None,
+            query: sqlx::query(""),
         }
     }
 
     #[must_use = "Queries must be executed after construction"]
-    pub fn bind(mut self) -> Self {
-        self.query.replace(sqlx::query(""));
+    pub fn bind(self) -> Self {
         self
     }
 }
@@ -57,13 +56,12 @@ impl<'a> IdkSelect<'a> {
     pub fn new(pool: &'a mut PgPool) -> Self {
         Self {
             pool,
-            query: None,
+            query: sqlx::query_as(""),
         }
     }
 
     #[must_use = "Queries must be executed after construction"]
-    pub fn bind(mut self) -> Self {
-        self.query.replace(sqlx::query_as(""));
+    pub fn bind(self) -> Self {
         self
     }
 }
