@@ -23,8 +23,8 @@
 #![deny(unsafe_code)]
 #![feature(result_flattening)]
 
-// pub mod queries;
+pub mod queries;
 pub mod result;
-// pub mod tables;
+pub mod tables;
 
 mod draft;
