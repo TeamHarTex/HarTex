@@ -157,20 +157,21 @@ fn generate_query_struct_token_stream(
             }
         })
         .collect_vec();
+    let mut rettype = TokenStream::new();
+    let query_fns = generate_query_fns_token_streams(query.clone(), &query.path, &mut rettype);
+    
+    let (query_type, is_query_as) = if rettype.is_empty() {
+        (quote::quote! {Query<'a, Postgres, PgArguments>}, false)
+    } else {
+        (quote::quote! {QueryAs<'a, #rettype, (), PgArguments>}, true)
+    };
 
     let bind_constructor_and_executor =
         generate_query_struct_bind_constructor_and_executor_token_stream(
             &placeholders,
             &fields,
+            is_query_as
         );
-    let mut rettype = TokenStream::new();
-    let query_fns = generate_query_fns_token_streams(query.clone(), &query.path, &mut rettype);
-    
-    let query_type = if rettype.is_empty() {
-        quote::quote! {Query<'a, Postgres, PgArguments>}
-    } else {
-        quote::quote! {QueryAs<'a, #rettype, (), PgArguments>}
-    };
 
     Ok(quote::quote! {
         use sqlx::Postgres;
@@ -197,17 +198,24 @@ fn generate_query_struct_token_stream(
 fn generate_query_struct_bind_constructor_and_executor_token_stream(
     placeholders: &[String],
     param_decls: &[TokenStream],
+    is_query_as: bool,
 ) -> TokenStream {
     let _ = placeholders
         .iter()
         .map(|string| Ident::new(string, Span::call_site()))
         .collect_vec();
+    
+    let sqlx_call = if is_query_as {
+        quote::quote! {sqlx::query_as()}
+    } else {
+        quote::quote! {sqlx::query()}
+    };
 
     quote::quote! {
         pub fn new(pool: &'a mut PgPool) -> Self {
             Self {
                 pool,
-                query: None,
+                query: #sqlx_call,
             }
         }
 
