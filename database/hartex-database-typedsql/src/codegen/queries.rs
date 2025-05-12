@@ -133,7 +133,7 @@ fn generate_query_struct_token_stream(
         _ => return Err(crate::error::Error::QueryFile("unsupported query type")),
     };
 
-    let fields = placeholders
+    let bind_params = placeholders
         .iter()
         .map(|placeholder| {
             let dtype = if let Some(col) = table.columns.get(placeholder) {
@@ -160,18 +160,13 @@ fn generate_query_struct_token_stream(
     let mut rettype = TokenStream::new();
     let query_fns = generate_query_fns_token_streams(query.clone(), &query.path, &mut rettype);
     
-    let (query_type, is_query_as) = if rettype.is_empty() {
-        (quote::quote! {Query<'a, Postgres, PgArguments>}, false)
+    let query_type = if rettype.is_empty() {
+        quote::quote! {Query<'a, Postgres, PgArguments>}
     } else {
-        (quote::quote! {QueryAs<'a, #rettype, (), PgArguments>}, true)
+        quote::quote! {QueryAs<'a, Postgres, #rettype, PgArguments>}
     };
-
-    let bind_constructor_and_executor =
-        generate_query_struct_bind_constructor_and_executor_token_stream(
-            &placeholders,
-            &fields,
-            is_query_as
-        );
+    
+    let bind_fn = generate_bind_fn_token_stream(query.clone(), rettype.is_empty(), bind_params);
 
     Ok(quote::quote! {
         use sqlx::Postgres;
@@ -188,39 +183,48 @@ fn generate_query_struct_token_stream(
         }
 
         impl<'a> #structname<'a> {
-            #bind_constructor_and_executor
+            pub fn new(pool: &'a mut PgPool) -> Self {
+                Self {
+                    pool,
+                    query: None,
+                }
+            }
+            
+            #bind_fn
 
             #(#query_fns)*
         }
     })
 }
 
-fn generate_query_struct_bind_constructor_and_executor_token_stream(
-    placeholders: &[String],
-    param_decls: &[TokenStream],
-    is_query_as: bool,
-) -> TokenStream {
-    let _ = placeholders
+fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_params: Vec<TokenStream>) -> TokenStream {
+    let mut rawstr = query_info.raw.to_string();
+    let placeholders = match query_info.inner {
+        QueryInfoInner::Insert(insert) => insert.placeholders,
+        QueryInfoInner::Select(select) => select.placeholders,
+    };
+    
+    for (i, placeholder) in placeholders.iter().enumerate() {
+        rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
+    }
+    let stmt = Literal::string(rawstr.as_str());
+
+    let placeholder_binding = placeholders
         .iter()
-        .map(|string| Ident::new(string, Span::call_site()))
+        .map(|placeholder| Ident::new(placeholder, Span::call_site()))
+        .map(|ident| quote::quote! {self.#ident})
+        .map(|ident| quote::quote! {.bind(#ident)})
         .collect_vec();
     
     let sqlx_call = if is_query_as {
-        quote::quote! {sqlx::query_as()}
+        quote::quote! {sqlx::query_as(#stmt)}
     } else {
-        quote::quote! {sqlx::query()}
-    };
-
+        quote::quote! {sqlx::query(#stmt)}
+    }; 
+    
     quote::quote! {
-        pub fn new(pool: &'a mut PgPool) -> Self {
-            Self {
-                pool,
-                query: #sqlx_call,
-            }
-        }
-
-        #[must_use = "Queries must be executed after construction"]
-        pub fn bind(mut self, #(#param_decls),*) -> Self {
+        pub async fn bind(self, #(#bind_params),*) -> Self {
+            self.query.replace(#sqlx_call #(#placeholder_binding)*);
             self
         }
     }
@@ -232,59 +236,31 @@ fn generate_query_fns_token_streams(
     rettype: &mut TokenStream,
 ) -> Vec<TokenStream> {
     match query_info.inner {
-        QueryInfoInner::Insert(insert) => {
-            generate_insert_query_fn_token_stream(&insert, &query_info.raw)
+        QueryInfoInner::Insert(_) => {
+            generate_insert_query_fn_token_stream()
         }
         QueryInfoInner::Select(select) => {
-            generate_select_query_fns_token_streams(&select, &query_info.raw, schema, rettype)
+            generate_select_query_fns_token_streams(&select, schema, rettype)
         }
     }
 }
 
-fn generate_insert_query_fn_token_stream(
-    insert: &InsertQueryInfo,
-    raw: &Statement,
-) -> Vec<TokenStream> {
-    let mut rawstr = raw.to_string();
-    for (i, placeholder) in insert.placeholders.iter().enumerate() {
-        rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
-    }
-    let stmt = Literal::string(rawstr.as_str());
-
-    let placeholders = insert
-        .placeholders
-        .iter()
-        .map(|placeholder| Ident::new(placeholder, Span::call_site()))
-        .map(|ident| quote::quote! {self.#ident})
-        .collect_vec();
-
+fn generate_insert_query_fn_token_stream() -> Vec<TokenStream> {
     vec![quote::quote! {
-        pub async fn execute(self) -> crate::result::Result<u64> {
-            self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                .execute_with_stmt(#stmt, (#(#placeholders),* ,)).await.into_crate_result()
+        pub async fn execute(mut self) -> crate::result::Result<u64> {
+            self.query.ok_or(crate::result::Error::Generic(".bind() has not been called on this query yet"))?
+                .execute(&mut self.pool)
+                .await
+                .into_crate_result()
         }
     }]
 }
 
 fn generate_select_query_fns_token_streams(
     select: &SelectQueryInfo,
-    raw: &Statement,
     schema: &str,
     rettype_out: &mut TokenStream,
 ) -> Vec<TokenStream> {
-    let mut rawstr = raw.to_string();
-    for (i, placeholder) in select.placeholders.iter().enumerate() {
-        rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
-    }
-    let stmt = Literal::string(rawstr.as_str());
-
-    let placeholders = select
-        .placeholders
-        .iter()
-        .map(|placeholder| Ident::new(placeholder, Span::call_site()))
-        .map(|ident| quote::quote! {self.#ident})
-        .collect_vec();
-
     let schemaident = Ident::new(schema.to_case(Case::Snake).as_str(), Span::call_site());
     let rettype = match select.what {
         deref!(SelectWhat::Everything) => {
@@ -300,8 +276,6 @@ fn generate_select_query_fns_token_streams(
         deref!(SelectWhat::Exists(_)) => {
             return special_token_stream_for_select_exists(
                 &quote::quote! {bool},
-                &stmt,
-                &placeholders,
             );
         }
         _ => return vec![],
@@ -311,27 +285,19 @@ fn generate_select_query_fns_token_streams(
 
     vec![
         quote::quote! {
-            pub async fn one(self) -> crate::result::Result<#rettype> {
-                self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                    .fetch_with_stmt(#stmt, (#(#placeholders),* ,))
+            pub async fn one(mut self) -> crate::result::Result<#rettype> {
+                self.query.ok_or(crate::result::Error::Generic(".bind() has not been called on this query yet"))?
+                    .fetch_one(&mut self.pool)
                     .await
                     .into_crate_result()
-                    .map(|record| #rettype::try_from(record))
-                    .flatten()
             }
         },
         quote::quote! {
-            pub async fn many(self) -> crate::result::Result<Vec<#rettype>> {
-                use itertools::Itertools;
-                use wtx::database::Records;
-
-                self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                    .fetch_many_with_stmt(#stmt, (#(#placeholders),* ,), |_| Ok::<_, wtx::Error>(()))
+            pub async fn all(mut self) -> crate::result::Result<Vec<#rettype>> {
+                self.query.ok_or(crate::result::Error::Generic(".bind() has not been called on this query yet"))?
+                    .fetch_all(&mut self.pool)
                     .await
-                    .into_crate_result()?
-                    .iter()
-                    .map(|record| #rettype::try_from(record))
-                    .process_results(|iter| iter.collect_vec())
+                    .into_crate_result()
             }
         },
     ]
@@ -339,21 +305,15 @@ fn generate_select_query_fns_token_streams(
 
 fn special_token_stream_for_select_exists(
     rettype: &TokenStream,
-    stmt: &Literal,
-    placeholders: &[TokenStream],
 ) -> Vec<TokenStream> {
     vec![quote::quote! {
         #[must_use = "Query result(s) must be used"]
-        pub async fn one(self) -> crate::result::Result<#rettype> {
-            use wtx::database::Record;
-
-            self.db_executor.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                .fetch_with_stmt(#stmt, (#(#placeholders),* ,))
+        pub async fn one(mut self) -> crate::result::Result<#rettype> {
+            self.query.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
+                .fetch_one(&mut self.pool)
                 .await
+                .get::<#rettype, &str>("exists")
                 .into_crate_result()
-                .map(|record| record.decode("exists")
-                    .into_crate_result())
-                .flatten()
         }
     }]
 }
