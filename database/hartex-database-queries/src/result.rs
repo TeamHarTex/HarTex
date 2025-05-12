@@ -30,6 +30,7 @@ use std::fmt::Formatter;
 #[derive(Debug)]
 pub enum Error {
     Generic(&'static str),
+    Sqlx(sqlx::Error),
 }
 
 impl Display for Error {
@@ -45,4 +46,10 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub trait IntoCrateResult<T> {
     #[allow(clippy::missing_errors_doc)]
     fn into_crate_result(self) -> Result<T>;
+}
+
+impl<T> IntoCrateResult<T> for sqlx::Result<T> {
+    fn into_crate_result(self) -> Result<T> {
+        self.map_err(|e| Error::Sqlx(e))
+    }
 }
