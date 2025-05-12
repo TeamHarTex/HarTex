@@ -33,7 +33,6 @@ use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
 use sqlparser::ast::ColumnOption;
-use sqlparser::ast::Statement;
 use syn::File;
 
 use crate::codegen::DO_NOT_MODIFY_HEADER;
@@ -165,8 +164,8 @@ fn generate_query_struct_token_stream(
     } else {
         quote::quote! {QueryAs<'a, Postgres, #rettype, PgArguments>}
     };
-    
-    let bind_fn = generate_bind_fn_token_stream(query.clone(), rettype.is_empty(), bind_params);
+
+    let bind_fn = generate_bind_fn_token_stream(query.clone(), !rettype.is_empty(), bind_params);
 
     Ok(quote::quote! {
         use sqlx::Postgres;
@@ -178,18 +177,18 @@ fn generate_query_struct_token_stream(
         use crate::result::IntoCrateResult;
 
         pub struct #structname<'a> {
-            pool: &'a mut PgPool,
-            query: #query_type
+            pool: &'a PgPool,
+            query: Option<#query_type>
         }
 
         impl<'a> #structname<'a> {
-            pub fn new(pool: &'a mut PgPool) -> Self {
+            pub fn new(pool: &'a PgPool) -> Self {
                 Self {
                     pool,
                     query: None,
                 }
             }
-            
+
             #bind_fn
 
             #(#query_fns)*
@@ -203,7 +202,7 @@ fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_
         QueryInfoInner::Insert(insert) => insert.placeholders,
         QueryInfoInner::Select(select) => select.placeholders,
     };
-    
+
     for (i, placeholder) in placeholders.iter().enumerate() {
         rawstr = rawstr.replace(&format!(":{placeholder}"), &format!("${}", i + 1));
     }
@@ -212,18 +211,17 @@ fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_
     let placeholder_binding = placeholders
         .iter()
         .map(|placeholder| Ident::new(placeholder, Span::call_site()))
-        .map(|ident| quote::quote! {self.#ident})
         .map(|ident| quote::quote! {.bind(#ident)})
         .collect_vec();
-    
+
     let sqlx_call = if is_query_as {
         quote::quote! {sqlx::query_as(#stmt)}
     } else {
         quote::quote! {sqlx::query(#stmt)}
-    }; 
-    
+    };
+
     quote::quote! {
-        pub async fn bind(self, #(#bind_params),*) -> Self {
+        pub async fn bind(mut self, #(#bind_params),*) -> Self {
             self.query.replace(#sqlx_call #(#placeholder_binding)*);
             self
         }
@@ -247,11 +245,13 @@ fn generate_query_fns_token_streams(
 
 fn generate_insert_query_fn_token_stream() -> Vec<TokenStream> {
     vec![quote::quote! {
-        pub async fn execute(mut self) -> crate::result::Result<u64> {
+        pub async fn execute(self) -> crate::result::Result<()> {
             self.query.ok_or(crate::result::Error::Generic(".bind() has not been called on this query yet"))?
-                .execute(&mut self.pool)
+                .execute(self.pool)
                 .await
-                .into_crate_result()
+                .into_crate_result()?;
+            
+            Ok(())
         }
     }]
 }
@@ -285,17 +285,17 @@ fn generate_select_query_fns_token_streams(
 
     vec![
         quote::quote! {
-            pub async fn one(mut self) -> crate::result::Result<#rettype> {
+            pub async fn one(self) -> crate::result::Result<#rettype> {
                 self.query.ok_or(crate::result::Error::Generic(".bind() has not been called on this query yet"))?
-                    .fetch_one(&mut self.pool)
+                    .fetch_one(self.pool)
                     .await
                     .into_crate_result()
             }
         },
         quote::quote! {
-            pub async fn all(mut self) -> crate::result::Result<Vec<#rettype>> {
+            pub async fn all(self) -> crate::result::Result<Vec<#rettype>> {
                 self.query.ok_or(crate::result::Error::Generic(".bind() has not been called on this query yet"))?
-                    .fetch_all(&mut self.pool)
+                    .fetch_all(self.pool)
                     .await
                     .into_crate_result()
             }
@@ -308,9 +308,9 @@ fn special_token_stream_for_select_exists(
 ) -> Vec<TokenStream> {
     vec![quote::quote! {
         #[must_use = "Query result(s) must be used"]
-        pub async fn one(mut self) -> crate::result::Result<#rettype> {
+        pub async fn exists(self) -> crate::result::Result<#rettype> {
             self.query.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
-                .fetch_one(&mut self.pool)
+                .fetch_one(self.pool)
                 .await
                 .get::<#rettype, &str>("exists")
                 .into_crate_result()
