@@ -15,6 +15,7 @@ hartex_backend_models = { path = "../hartex-backend-models" }
 
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
+hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 axum = { version = "0.8.1", features = ["json", "macros"] }
