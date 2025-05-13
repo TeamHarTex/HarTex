@@ -17,7 +17,7 @@ impl<'a> StartTimestampUpsert<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(
+    pub fn bind(
         mut self,
         component: String,
         timestamp: chrono::DateTime<chrono::offset::Utc>,

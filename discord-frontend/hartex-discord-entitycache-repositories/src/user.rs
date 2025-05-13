@@ -26,15 +26,15 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::user::UserEntity;
+use hartex_discord_utils::DATABASE_POOL;
 
 /// Repository for user entities.
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
     async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        let data = CachedUserSelectById::bind(id.to_string())
-            .executor()
-            .await?
+        let data = CachedUserSelectById::new(DATABASE_POOL.get_unpin().await)
+            .bind(id.to_string())
             .one()
             .await?;
 
@@ -42,18 +42,17 @@ impl Repository<UserEntity> for CachedUserRepository {
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
-        CachedUserUpsert::bind(
-            entity.avatar.map(|hash| hash.to_string()),
-            entity.id.to_string(),
-            entity.bot,
-            entity.name,
-            entity.discriminator.to_string(),
-            entity.global_name,
-        )
-        .executor()
-        .await?
-        .execute()
-        .await?;
+        CachedUserUpsert::new(DATABASE_POOL.get_unpin().await)
+            .bind(
+                entity.avatar.map(|hash| hash.to_string()),
+                entity.id.to_string(),
+                entity.bot,
+                entity.name,
+                entity.discriminator.to_string(),
+                entity.global_name,
+            )
+            .execute()
+            .await?;
 
         Ok(())
     }

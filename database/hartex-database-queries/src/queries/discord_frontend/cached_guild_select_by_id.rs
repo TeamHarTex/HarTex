@@ -24,7 +24,7 @@ impl<'a> CachedGuildSelectById<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(mut self, id: String) -> Self {
+    pub fn bind(mut self, id: String) -> Self {
         self.query
             .replace(
                 sqlx::query_as(
