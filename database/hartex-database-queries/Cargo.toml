@@ -6,14 +6,19 @@ description = """
 Database queries generated for use in Rust code in HarTex.
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.88.0"
+rust-version = "1.89.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 chrono = "0.4.40"
 itertools = "0.14.0"
-sqlx = { version = "0.8.3", features = ["runtime-tokio", "tls-native-tls", "postgres", "macros"] }
+sqlx = { version = "0.8.3", features = [
+    "runtime-tokio",
+    "tls-native-tls",
+    "postgres",
+    "macros",
+] }
 tokio = { version = "1.43.0", features = ["full"] }
 
 [build-dependencies]
