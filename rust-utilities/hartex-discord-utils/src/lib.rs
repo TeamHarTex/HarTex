@@ -35,9 +35,9 @@ use std::ops::Deref;
 use std::sync::LazyLock;
 
 use async_once_cell::Lazy as AsyncLazy;
-use bb8_postgres::PostgresConnectionManager;
-use bb8_postgres::bb8::Pool;
 use hartex_discord_core::discord::http::Client;
+use sqlx::PgPool;
+use sqlx::postgres::PgPoolOptions;
 use tokio_postgres::NoTls;
 
 pub mod commands;
@@ -56,19 +56,13 @@ pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
         .build()
 });
 
-/// A typealias for a Postgres database pool.
-pub type PostgresPool = Pool<PostgresConnectionManager<NoTls>>;
-
 /// A typealias for a future returned from database pool operations.
-pub type DatabasePoolFuture = impl Future<Output = PostgresPool>;
+pub type PgPoolFuture = impl Future<Output = PgPool>;
 
 /// An asynchronously lazyily initialized database pool.
-pub static DATABASE_POOL: AsyncLazy<PostgresPool, DatabasePoolFuture> = AsyncLazy::new(async {
+pub static DATABASE_POOL: AsyncLazy<PgPool, PgPoolFuture> = AsyncLazy::new(async {
     let hartex_pgsql_url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
-
-    let manager = PostgresConnectionManager::new_from_stringlike(hartex_pgsql_url, NoTls).unwrap();
-
-    Pool::builder().build(manager).await.unwrap()
+    PgPool::connect(&hartex_pgsql_url).await.unwrap()
 });
 
 /// The bot token used for logging in to the Discord gateway and sending HTTP requests.

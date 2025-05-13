@@ -158,7 +158,7 @@ fn generate_query_struct_token_stream(
         .collect_vec();
     let mut rettype = TokenStream::new();
     let query_fns = generate_query_fns_token_streams(query.clone(), &query.path, &mut rettype);
-    
+
     let query_type = if rettype.is_empty() {
         quote::quote! {Query<'a, Postgres, PgArguments>}
     } else {
@@ -221,7 +221,7 @@ fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_
     };
 
     quote::quote! {
-        pub async fn bind(mut self, #(#bind_params),*) -> Self {
+        pub fn bind(mut self, #(#bind_params),*) -> Self {
             self.query.replace(#sqlx_call #(#placeholder_binding)*);
             self
         }
@@ -250,7 +250,7 @@ fn generate_insert_query_fn_token_stream() -> Vec<TokenStream> {
                 .execute(self.pool)
                 .await
                 .into_crate_result()?;
-            
+
             Ok(())
         }
     }]
@@ -280,7 +280,7 @@ fn generate_select_query_fns_token_streams(
         }
         _ => return vec![],
     };
-    
+
     rettype_out.append_all(rettype.clone());
 
     vec![
