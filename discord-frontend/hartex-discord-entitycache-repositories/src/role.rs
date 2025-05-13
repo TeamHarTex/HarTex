@@ -32,6 +32,7 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
+use hartex_discord_utils::DATABASE_POOL;
 
 /// Repository for role entities.
 pub struct CachedRoleRepository;
@@ -44,10 +45,9 @@ impl CachedRoleRepository {
         &self,
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<RoleMarker>>> {
-        let roles = CachedRoleSelectByGuildId::bind(guild_id.to_string())
-            .executor()
-            .await?
-            .many()
+        let roles = CachedRoleSelectByGuildId::new(DATABASE_POOL.get_unpin().await)
+            .bind(guild_id.to_string())
+            .all()
             .await?;
 
         Ok(roles
@@ -62,9 +62,8 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        let data = CachedRoleSelectByIdAndGuildId::bind(id.to_string(), guild_id.to_string())
-            .executor()
-            .await?
+        let data = CachedRoleSelectByIdAndGuildId::new(DATABASE_POOL.get_unpin().await)
+            .bind(id.to_string(), guild_id.to_string())
             .one()
             .await?;
 
@@ -75,21 +74,20 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        CachedRoleUpsert::bind(
-            entity.color as i64,
-            entity.icon.map(|hash| hash.to_string()),
-            entity.id.to_string(),
-            entity.guild_id.to_string(),
-            entity.flags.bits() as i32,
-            entity.hoist,
-            entity.managed,
-            entity.mentionable,
-            entity.position as i32,
-        )
-        .executor()
-        .await?
-        .execute()
-        .await?;
+        CachedRoleUpsert::new(DATABASE_POOL.get_unpin().await)
+            .bind(
+                entity.color as i64,
+                entity.icon.map(|hash| hash.to_string()),
+                entity.id.to_string(),
+                entity.guild_id.to_string(),
+                entity.flags.bits() as i32,
+                entity.hoist,
+                entity.managed,
+                entity.mentionable,
+                entity.position as i32,
+            )
+            .execute()
+            .await?;
 
         Ok(())
     }

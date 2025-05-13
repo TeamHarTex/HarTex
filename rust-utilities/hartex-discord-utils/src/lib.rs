@@ -34,11 +34,9 @@ use std::env;
 use std::ops::Deref;
 use std::sync::LazyLock;
 
-use async_once_cell::Lazy as AsyncLazy;
+use async_once_cell::Lazy;
 use hartex_discord_core::discord::http::Client;
 use sqlx::PgPool;
-use sqlx::postgres::PgPoolOptions;
-use tokio_postgres::NoTls;
 
 pub mod commands;
 pub mod hyper;
@@ -60,7 +58,7 @@ pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
 pub type PgPoolFuture = impl Future<Output = PgPool>;
 
 /// An asynchronously lazyily initialized database pool.
-pub static DATABASE_POOL: AsyncLazy<PgPool, PgPoolFuture> = AsyncLazy::new(async {
+pub static DATABASE_POOL: Lazy<PgPool, PgPoolFuture> = Lazy::new(async {
     let hartex_pgsql_url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
     PgPool::connect(&hartex_pgsql_url).await.unwrap()
 });

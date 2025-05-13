@@ -17,7 +17,7 @@ impl<'a> PluginEnabled<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(mut self, plugin: String, guild_id: String) -> Self {
+    pub fn bind(mut self, plugin: String, guild_id: String) -> Self {
         self.query
             .replace(
                 sqlx::query(

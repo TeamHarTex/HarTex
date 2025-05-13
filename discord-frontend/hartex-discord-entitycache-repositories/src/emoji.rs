@@ -35,7 +35,6 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
     async fn get(&self, id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
         let data = CachedEmojiSelectById::new(DATABASE_POOL.get_unpin().await)
             .bind(id.to_string())
-            .await
             .one()
             .await?;
 
@@ -43,17 +42,16 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
     }
 
     async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
-        CachedEmojiUpsert::bind(
-            entity.animated,
-            entity.id.to_string(),
-            entity.guild_id.to_string(),
-            entity.name,
-            entity.managed,
-        )
-        .executor()
-        .await?
-        .execute()
-        .await?;
+        CachedEmojiUpsert::new(DATABASE_POOL.get_unpin().await)
+            .bind(
+                entity.animated,
+                entity.id.to_string(),
+                entity.guild_id.to_string(),
+                entity.name,
+                entity.managed,
+            )
+            .execute()
+            .await?;
 
         Ok(())
     }

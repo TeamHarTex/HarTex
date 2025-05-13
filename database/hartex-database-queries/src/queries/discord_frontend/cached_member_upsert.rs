@@ -17,7 +17,7 @@ impl<'a> CachedMemberUpsert<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(
+    pub fn bind(
         mut self,
         flags: i64,
         joined_at: Option<chrono::DateTime<chrono::offset::Utc>>,
