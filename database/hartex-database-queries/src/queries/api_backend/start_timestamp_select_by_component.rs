@@ -19,7 +19,7 @@ impl<'a> StartTimestampSelectByComponent<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(mut self, component: String) -> Self {
+    pub fn bind(mut self, component: String) -> Self {
         self.query
             .replace(
                 sqlx::query_as(
