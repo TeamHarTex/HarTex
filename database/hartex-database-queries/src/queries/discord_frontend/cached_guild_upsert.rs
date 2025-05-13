@@ -17,7 +17,7 @@ impl<'a> CachedGuildUpsert<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(
+    pub fn bind(
         mut self,
         default_message_notifications: i16,
         explicit_content_filter: i16,

@@ -44,6 +44,7 @@
       <excludeFolder url="file://$MODULE_DIR$/localization/target" />
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
+      <excludeFolder url="file://$MODULE_DIR$/database/hartex-database-queries/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

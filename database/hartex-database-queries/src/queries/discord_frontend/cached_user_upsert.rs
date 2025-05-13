@@ -17,7 +17,7 @@ impl<'a> CachedUserUpsert<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
-    pub async fn bind(
+    pub fn bind(
         mut self,
         avatar: Option<String>,
         id: String,
