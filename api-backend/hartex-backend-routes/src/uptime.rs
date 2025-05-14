@@ -24,6 +24,8 @@
 //!
 //! Routes interacting with the uptime API.
 
+use std::pin::Pin;
+
 use axum::Json;
 use axum::extract::Query;
 use axum::http::StatusCode;
@@ -59,7 +61,7 @@ pub async fn get_uptime(
 ) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
     log::trace!("querying timestamp");
     let name = query.component_name();
-    let result = StartTimestampSelectByComponent::new(DATABASE_POOL.get_unpin().await)
+    let result = StartTimestampSelectByComponent::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
         .bind(name.to_string());
 
     let result = result.all().await;
@@ -103,7 +105,7 @@ pub async fn patch_uptime(
         // just 500 for now
         return Response::internal_server_error();
     };
-    let result = StartTimestampUpsert::new(DATABASE_POOL.get_unpin().await)
+    let result = StartTimestampUpsert::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
         .bind(query.component_name().to_string(), timestamp)
         .execute()
         .await;
