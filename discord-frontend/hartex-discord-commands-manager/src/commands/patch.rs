@@ -101,7 +101,7 @@ pub async fn patch_command(matches: ArgMatches) -> miette::Result<()> {
 
     spawn(async move {
         if let Err(err) = connection.await {
-            log::error!("TCP connection failed: {:?}", err);
+            log::error!("TCP connection failed: {err:?}");
         }
     });
 

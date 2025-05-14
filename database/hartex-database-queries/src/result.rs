@@ -50,6 +50,6 @@ pub trait IntoCrateResult<T> {
 
 impl<T> IntoCrateResult<T> for sqlx::Result<T> {
     fn into_crate_result(self) -> Result<T> {
-        self.map_err(|e| Error::Sqlx(e))
+        self.map_err(Error::Sqlx)
     }
 }

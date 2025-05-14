@@ -39,11 +39,8 @@ impl Visitor for PlaceholderVisitor {
         if let Expr::Value(ValueWithSpan {
             value: Value::Placeholder(ph),
             ..
-        }) = expr
-        {
-            if !self.placeholders.contains(&ph[1..].to_string()) {
-                self.placeholders.push(String::from(&ph[1..]));
-            }
+        }) = expr && !self.placeholders.contains(&ph[1..].to_string()) {
+            self.placeholders.push(String::from(&ph[1..]));
         }
 
         ControlFlow::Continue(())
