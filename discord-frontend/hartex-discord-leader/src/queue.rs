@@ -74,7 +74,7 @@ impl Queue for LocalQueue {
         let (tx, rx) = oneshot::channel::<()>();
 
         if let Err(error) = self.0.clone().send(tx) {
-            log::warn!("skipping, send failed: {:?}", error);
+            log::warn!("skipping, send failed: {error:?}");
         }
 
         rx
@@ -107,7 +107,7 @@ impl Queue for LargeBotQueue {
         let bucket = (shard_id % (self.0.len() as u32)) as usize;
         let (tx, rx) = oneshot::channel();
         if let Err(error) = self.0[bucket].clone().send(tx) {
-            log::warn!("skipping, send failed: {:?}", error);
+            log::warn!("skipping, send failed: {error:?}");
         }
 
         rx
@@ -118,7 +118,7 @@ impl Queue for LargeBotQueue {
 async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duration) {
     while let Some(tx) = rx.recv().await {
         if let Err(error) = tx.send(()) {
-            log::warn!("skipping, send failed: {:?}", error);
+            log::warn!("skipping, send failed: {error:?}");
         }
 
         sleep(duration).await;
