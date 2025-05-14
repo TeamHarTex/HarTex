@@ -11,16 +11,16 @@ rust-version = "1.89.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4.40"
+chrono = "0.4.41"
 itertools = "0.14.0"
-sqlx = { version = "0.8.3", features = [
+sqlx = { version = "0.8.5", features = [
     "chrono",
     "runtime-tokio",
     "tls-native-tls",
     "postgres",
     "macros",
 ] }
-tokio = { version = "1.43.0", features = ["full"] }
+tokio = { version = "1.45.0", features = ["full"] }
 
 [build-dependencies]
 hartex_database_typedsql = { path = "../hartex-database-typedsql" }
