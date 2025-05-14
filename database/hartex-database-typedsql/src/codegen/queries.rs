@@ -165,7 +165,7 @@ fn generate_query_struct_token_stream(
         quote::quote! {QueryAs<'a, Postgres, #rettype, PgArguments>}
     };
 
-    let bind_fn = generate_bind_fn_token_stream(query.clone(), !rettype.is_empty(), bind_params);
+    let bind_fn = generate_bind_fn_token_stream(query.clone(), !rettype.is_empty(), &bind_params);
 
     Ok(quote::quote! {
         use sqlx::Postgres;
@@ -196,7 +196,7 @@ fn generate_query_struct_token_stream(
     })
 }
 
-fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_params: Vec<TokenStream>) -> TokenStream {
+fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_params: &Vec<TokenStream>) -> TokenStream {
     let mut rawstr = query_info.raw.to_string();
     let placeholders = match query_info.inner {
         QueryInfoInner::Insert(insert) => insert.placeholders,

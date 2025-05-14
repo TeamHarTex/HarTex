@@ -28,10 +28,13 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::pin::Pin;
+
 use hartex_database_queries::queries::configuration::plugin_enabled::PluginEnabled;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
 use miette::IntoDiagnostic;
+use hartex_discord_utils::DATABASE_POOL;
 
 /// The configuration provide for fetching configuration.
 pub struct ConfigurationProvider;
@@ -43,11 +46,9 @@ impl ConfigurationProvider {
         guild_id: Id<GuildMarker>,
         plugin: impl Into<String>,
     ) -> miette::Result<bool> {
-        PluginEnabled::bind(plugin.into(), guild_id.to_string())
-            .executor()
-            .await
-            .into_diagnostic()?
-            .one()
+        PluginEnabled::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+            .bind(plugin.into(), guild_id.to_string())
+            .exists()
             .await
             .into_diagnostic()
     }

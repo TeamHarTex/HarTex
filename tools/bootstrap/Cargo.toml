@@ -9,17 +9,17 @@ license = "AGPL-3.0-or-later"
 rust-version = "1.89.0"
 
 [dependencies]
-clap = { version = "4.5.31", default-features = false, features = [
+clap = { version = "4.5.38", default-features = false, features = [
     "std",
     "usage",
     "help",
     "derive",
     "error-context",
 ] }
-fd-lock = "4.0.2"
+fd-lock = "4.0.4"
 owo-colors = "4.2.0"
-serde = { version = "1.0.218", features = ["derive"] }
-toml = "0.8.20"
+serde = { version = "1.0.219", features = ["derive"] }
+toml = "0.8.22"
 
 [[bin]]
 name = "bootstrap"

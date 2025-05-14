@@ -31,7 +31,6 @@
 
 use std::env;
 use std::io::Error;
-use std::io::ErrorKind;
 use std::str;
 use std::str::Utf8Error;
 
@@ -95,7 +94,7 @@ pub async fn main() -> miette::Result<()> {
             }
 
             let result = GatewayEventDeserializer::from_json(result.unwrap())
-                .ok_or(Error::new(ErrorKind::Other, ""))
+                .ok_or(Error::other("failed to deserialize gateway event"))
                 .into_diagnostic()?;
 
             let json_deserializer = serde_json::Deserializer::from_slice(bytes);
