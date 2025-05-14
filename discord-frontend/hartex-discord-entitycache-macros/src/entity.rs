@@ -374,7 +374,9 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             make_query_function_name(first, &element.as_value.value());
         // FIXME: bad assumption of always calling .to_string() here (mostly just that should suffice, but...)
         let mut full_query_function_call = quote! {
-            let data = hartex_database_queries::queries::discord_frontend::#query_module_name::#query_struct_name::bind(#param_name.to_string()).executor().await?
+            let data = hartex_database_queries::queries::discord_frontend::#query_module_name::#query_struct_name::new(
+                std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).get().await.get_ref()
+            ).bind(#param_name.to_string())
         };
 
         let function = match &*element.unique_or_multiple.to_string() {
@@ -382,7 +384,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
                 let ident = Ident::new(&pluralize(first, 2, false), Span::call_site());
 
                 full_query_function_call.append_all(quote! {
-                    .many().await?;
+                    .all().await?;
                 });
 
                 quote! {
