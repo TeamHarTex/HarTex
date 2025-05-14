@@ -1,24 +1,37 @@
-# [Next Version, Silicon I](https://github.com/TeamHarTex/HarTex/compare/0.13.0...nightly)
+# [Next Version, Phosphorus I](https://github.com/TeamHarTex/HarTex/compare/0.14.0...nightly)
 
-> **x** contributor made contributions to this release
+# [0.14.0, Silicon I](https://github.com/TeamHarTex/HarTex/compare/0.13.0..0.14.0)
 
-> **y** commits since 2025-01-01
+> **1** contributor made contributions to this release
+
+> **388** commits since 2025-01-01
 
 ## API Backend
 
+- **Changed:** updated `rust-version` to 1.89
+- **Changed:** adapted database calls to use new database codegen
+
 ## Buildsystem
 
+- **Changed:** updated `rust-version` to 1.89
 
 ## Database Infrastructure
 
+- **Added:** custom database codegen replacing `cornucopia`
+- **Changed:** updated `rust-version` to 1.89
+
 ## Discord Frontend
+
+- **Changed:** updated `rust-version` to 1.89
+- **Changed:** adapted database calls to use new database codegen
 
 ## Localization Infrastructure
 
+- **Changed:** updated `rust-version` to 1.89
+
 ## Rust Utilities
 
-## Web Frontend
-
+- **Changed:** updated `rust-version` to 1.89
 
 # [0.13.0, Aluminium I](https://github.com/TeamHarTex/HarTex/compare/0.12.0..0.13.0)
 
