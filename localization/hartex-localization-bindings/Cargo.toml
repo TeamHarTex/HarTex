@@ -16,11 +16,11 @@ hartex_localization_loader = { path = "../hartex-localization-loader" }
 fluent-bundle = "0.15.3"
 fluent-syntax = "0.11.1"
 intl-memoizer = "0.5.2"
-miette = "7.5.0"
-proc-macro2 = "1.0.94"
-quote = "1.0.39"
-syn = "2.0.99"
-unic-langid = { version = "0.9.5", features = ["macros"] }
+miette = "7.6.0"
+proc-macro2 = "1.0.95"
+quote = "1.0.40"
+syn = "2.0.101"
+unic-langid = { version = "0.9.6", features = ["macros"] }
 
 [lib]
 name = "hartex_localization_bindings"

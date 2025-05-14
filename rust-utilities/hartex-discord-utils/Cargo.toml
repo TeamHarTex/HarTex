@@ -23,15 +23,15 @@ hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", fea
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
 async-once-cell = "0.5.4"
-miette = "7.5.0"
-sqlx = { version = "0.8.3", features = [
+miette = "7.6.0"
+sqlx = { version = "0.8.5", features = [
     "runtime-tokio",
     "tls-native-tls",
     "postgres",
 ] }
 tokio-postgres = "0.7.13"
 tokio-rustls = { version = "0.26.2", features = ["ring"] }
-unic-langid = "0.9.5"
+unic-langid = "0.9.6"
 webpki-roots = "1.0.0"
 
 [features]
