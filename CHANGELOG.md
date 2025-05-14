@@ -1,5 +1,23 @@
 # [Next Version, Phosphorus I](https://github.com/TeamHarTex/HarTex/compare/0.14.0...nightly)
 
+> **x** contributor made contributions to this release
+
+> **y** commits since 2025-05-14
+
+## API Backend
+
+## Buildsystem
+
+## Database Infrastructure
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
 # [0.14.0, Silicon I](https://github.com/TeamHarTex/HarTex/compare/0.13.0..0.14.0)
 
 > **1** contributor made contributions to this release
