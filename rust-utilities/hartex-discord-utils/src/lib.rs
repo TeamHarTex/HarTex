@@ -57,11 +57,13 @@ pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
 /// A typealias for a future returned from database pool operations.
 pub type PgPoolFuture = impl Future<Output = PgPool>;
 
-/// An asynchronously lazyily initialized database pool.
-pub static DATABASE_POOL: Lazy<PgPool, PgPoolFuture> = Lazy::new(async {
+#[define_opaque(PgPoolFuture)]
+const FUTURE_IDK: PgPoolFuture = async {
     let hartex_pgsql_url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
     PgPool::connect(&hartex_pgsql_url).await.unwrap()
-});
+};
+/// An asynchronously lazyily initialized database pool.
+pub static DATABASE_POOL: Lazy<PgPool, PgPoolFuture> = Lazy::new(FUTURE_IDK);
 
 /// The bot token used for logging in to the Discord gateway and sending HTTP requests.
 pub static TOKEN: LazyLock<String> = LazyLock::new(|| env::var("BOT_TOKEN").unwrap());

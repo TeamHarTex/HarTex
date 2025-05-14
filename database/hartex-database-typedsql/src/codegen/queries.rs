@@ -309,11 +309,13 @@ fn special_token_stream_for_select_exists(
     vec![quote::quote! {
         #[must_use = "Query result(s) must be used"]
         pub async fn exists(self) -> crate::result::Result<#rettype> {
-            self.query.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
+            use sqlx::Row;
+
+            Ok(self.query.ok_or(crate::result::Error::Generic(".executor() has not been called on this query yet"))?
                 .fetch_one(self.pool)
                 .await
-                .get::<#rettype, &str>("exists")
-                .into_crate_result()
+                .into_crate_result()?
+                .get::<#rettype, &str>("exists"))
         }
     }]
 }

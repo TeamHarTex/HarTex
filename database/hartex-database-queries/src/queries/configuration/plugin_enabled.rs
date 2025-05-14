@@ -30,15 +30,19 @@ impl<'a> PluginEnabled<'a> {
     }
     #[must_use = "Query result(s) must be used"]
     pub async fn exists(self) -> crate::result::Result<bool> {
-        self.query
-            .ok_or(
-                crate::result::Error::Generic(
-                    ".executor() has not been called on this query yet",
-                ),
-            )?
-            .fetch_one(self.pool)
-            .await
-            .get::<bool, &str>("exists")
-            .into_crate_result()
+        use sqlx::Row;
+        Ok(
+            self
+                .query
+                .ok_or(
+                    crate::result::Error::Generic(
+                        ".executor() has not been called on this query yet",
+                    ),
+                )?
+                .fetch_one(self.pool)
+                .await
+                .into_crate_result()?
+                .get::<bool, &str>("exists"),
+        )
     }
 }
