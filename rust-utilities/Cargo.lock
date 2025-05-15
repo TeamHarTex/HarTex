@@ -187,9 +187,9 @@ dependencies = [
 
 [[package]]
 name = "bitflags"
-version = "2.9.0"
+version = "2.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c8214115b7bf84099f1309324e63141d4c5d7cc26862f97a0a857dbefe165bd"
+checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 dependencies = [
  "serde",
 ]
@@ -757,7 +757,7 @@ dependencies = [
 
 [[package]]
 name = "hartex-macro-utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "quote",
  "syn 2.0.101",
@@ -765,14 +765,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_bitflags_utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "bitflags",
 ]
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "num_enum",
  "num_enum_derive",
@@ -785,7 +785,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "async-once-cell",
  "hartex_discord_core",
@@ -800,7 +800,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "miette",
  "thiserror 2.0.12",
@@ -808,14 +808,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -830,7 +830,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -844,7 +844,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -856,7 +856,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "log",
  "log4rs",
