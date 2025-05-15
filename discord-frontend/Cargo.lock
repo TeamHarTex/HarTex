@@ -865,11 +865,12 @@ checksum = "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
 
 [[package]]
 name = "flate2"
-version = "1.1.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11faaf5a5236997af9848be0bef4db95824b1d534ebc64d0f0c6cf3e67bd38dc"
+checksum = "7ced92e76e966ca2fd84c8f7aa01a4aea65b0eb6648d72f7c8f3e2764a67fece"
 dependencies = [
  "crc32fast",
+ "libz-rs-sys",
  "miniz_oxide",
 ]
 
@@ -1128,7 +1129,7 @@ dependencies = [
 
 [[package]]
 name = "hartex-macro-utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "quote",
  "syn 2.0.101",
@@ -1136,7 +1137,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "axum",
  "either",
@@ -1148,14 +1149,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_bitflags_utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "bitflags",
 ]
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "chrono",
  "hartex_database_typedsql",
@@ -1166,7 +1167,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_typedsql"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "convert_case",
  "itertools 0.14.0",
@@ -1180,14 +1181,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_cdn"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "hartex_discord_core",
 ]
 
 [[package]]
 name = "hartex_discord_commands"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "async-trait",
  "fluent-bundle",
@@ -1215,7 +1216,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_core"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "async-trait",
  "hartex_discord_commands_macros",
@@ -1227,7 +1228,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_macros"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1236,7 +1237,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_manager"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "clap",
  "hartex_discord_core",
@@ -1256,7 +1257,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_luart"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "expect-test",
  "hartex_discord_configuration_models",
@@ -1265,7 +1266,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_models"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "bitflags",
  "hartex_bitflags_utils",
@@ -1277,7 +1278,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_provider"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "hartex_database_queries",
  "hartex_discord_core",
@@ -1288,7 +1289,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "dotenvy",
  "num_enum",
@@ -1304,7 +1305,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_cacheupdaters"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "hartex_discord_core",
  "hartex_discord_entitycache_core",
@@ -1314,7 +1315,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_core"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "bb8",
  "hartex_database_queries",
@@ -1325,7 +1326,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_entities"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "hartex_database_queries",
  "hartex_discord_core",
@@ -1337,7 +1338,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_macros"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "convert_case",
  "hartex-macro-utils",
@@ -1353,7 +1354,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_repositories"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "chrono",
  "hartex_database_queries",
@@ -1368,7 +1369,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_entitycache_service"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
@@ -1387,11 +1388,11 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_internal_events"
-version = "0.14.0"
+version = "0.15.0"
 
 [[package]]
 name = "hartex_discord_leader"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "futures-util",
  "hartex_discord_core",
@@ -1407,7 +1408,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "async-once-cell",
  "hartex_discord_core",
@@ -1422,7 +1423,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_worker"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "chrono",
  "futures-util",
@@ -1452,14 +1453,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_kafka_utils"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "rdkafka",
 ]
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1474,7 +1475,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1488,7 +1489,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1500,7 +1501,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_log"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "log",
  "log4rs",
@@ -2096,6 +2097,15 @@ checksum = "2e99fb7a497b1e3339bc746195567ed8d3e24945ecd636e3619d20b9de9e9149"
 dependencies = [
  "pkg-config",
  "vcpkg",
+]
+
+[[package]]
+name = "libz-rs-sys"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6489ca9bd760fe9642d7644e827b0c9add07df89857b0416ee15c1cc1a3b8c5a"
+dependencies = [
+ "zlib-rs",
 ]
 
 [[package]]
@@ -5267,16 +5277,15 @@ dependencies = [
 
 [[package]]
 name = "zip"
-version = "2.6.1"
+version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1dcb24d0152526ae49b9b96c1dcf71850ca1e0b882e4e28ed898a93c41334744"
+checksum = "12598812502ed0105f607f941c386f43d441e00148fce9dec3ca5ffb0bde9308"
 dependencies = [
  "aes",
  "arbitrary",
  "bzip2",
  "constant_time_eq",
  "crc32fast",
- "crossbeam-utils",
  "deflate64",
  "flate2",
  "getrandom 0.3.3",
@@ -5292,6 +5301,12 @@ dependencies = [
  "zopfli",
  "zstd",
 ]
+
+[[package]]
+name = "zlib-rs"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "868b928d7949e09af2f6086dfc1e01936064cc7a819253bce650d4e2a2d63ba8"
 
 [[package]]
 name = "zopfli"
