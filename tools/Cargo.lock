@@ -16,7 +16,7 @@ checksum = "5c8214115b7bf84099f1309324e63141d4c5d7cc26862f97a0a857dbefe165bd"
 
 [[package]]
 name = "bootstrap"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "clap",
  "fd-lock",
@@ -163,9 +163,9 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "owo-colors"
-version = "4.2.0"
+version = "4.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1036865bb9422d3300cf723f657c2851d0e9ab12567854b1f4eba3d77decf564"
+checksum = "26995317201fa17f3656c36716aed4a7c81743a9634ac4c99c0eeda495db0cec"
 
 [[package]]
 name = "path-slash"
@@ -261,7 +261,7 @@ dependencies = [
 
 [[package]]
 name = "testsuite"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
  "clap",
  "console",
