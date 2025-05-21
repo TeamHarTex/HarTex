@@ -37,7 +37,7 @@ use hartex_discord_core::discord::model::gateway::payload::outgoing::request_gui
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::spawn;
 use hartex_discord_utils::CLIENT;
-use hartex_log::log;
+use hartex_log::formati;
 use hyper::Method;
 use hyper::Request;
 use hyper::client::conn::http1::handshake;
@@ -67,7 +67,7 @@ pub async fn invoke(
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
             DispatchEvent::GuildCreate(deref!(GuildCreate::Available(ref guild_create))) => {
-                log::trace!(
+                formati::trace!(
                     "shard {shard} has received GUILD_CREATE payload from Discord (sequence {seq})"
                 );
 
@@ -100,7 +100,7 @@ pub async fn invoke(
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>
             {
-                log::trace!(
+                formati::trace!(
                     "shard {shard} has received INTERACTION_CREATE payload from Discord (sequence {seq})"
                 );
 
@@ -129,7 +129,7 @@ pub async fn invoke(
                 Ok(())
             }
             DispatchEvent::Ready(ready) => {
-                log::info!(
+                formati::info!(
                     "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
                     ready.user.name,
                     ready.user.discriminator,
@@ -149,11 +149,11 @@ pub async fn invoke(
 
                 spawn(async move {
                     if let Err(err) = connection.await {
-                        log::error!("TCP connection failed: {err:?}");
+                        formati::error!("TCP connection failed: {err:?}");
                     }
                 });
 
-                log::debug!("sending a request to {}", &uri);
+                formati::debug!("sending a request to {}", &uri);
 
                 let query = UptimeUpdate::new("HarTex Nightly", duration.as_secs() as u128);
                 let request = Request::builder()

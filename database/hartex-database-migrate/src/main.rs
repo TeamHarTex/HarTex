@@ -31,7 +31,7 @@
 
 use std::env;
 
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use tokio_postgres::NoTls;
 
@@ -52,10 +52,10 @@ mod discord_frontend {
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    log::trace!("establishing database connection: Discord Frontend Migrations");
+    formati::trace!("establishing database connection: Discord Frontend Migrations");
     let url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
     let (mut client, connection) = tokio_postgres::connect(&url, NoTls)
         .await
@@ -63,17 +63,17 @@ pub async fn main() -> miette::Result<()> {
 
     tokio::spawn(async move {
         if let Err(error) = connection.await {
-            log::error!("postgres connection error: {error}");
+            formati::error!("postgres connection error: {error}");
         }
     });
 
-    log::trace!("running migrations: Discord Frontend Migrations");
+    formati::trace!("running migrations: Discord Frontend Migrations");
     discord_frontend::migrations::runner()
         .run_async(&mut client)
         .await
         .into_diagnostic()?;
 
-    log::trace!("establishing database connection: API Backend Migrations");
+    formati::trace!("establishing database connection: API Backend Migrations");
     let url2 = env::var("API_BACKEND_PGSQL_URL").unwrap();
     let (mut client2, connection2) = tokio_postgres::connect(&url2, NoTls)
         .await
@@ -81,17 +81,17 @@ pub async fn main() -> miette::Result<()> {
 
     tokio::spawn(async move {
         if let Err(error) = connection2.await {
-            log::error!("postgres connection error: {error}");
+            formati::error!("postgres connection error: {error}");
         }
     });
 
-    log::trace!("running migrations: API Backend Migrations");
+    formati::trace!("running migrations: API Backend Migrations");
     api_backend::migrations::runner()
         .run_async(&mut client2)
         .await
         .into_diagnostic()?;
 
-    log::trace!("establishing database connection: CONFIGURATION Migrations");
+    formati::trace!("establishing database connection: CONFIGURATION Migrations");
     let url3 = env::var("CONFIGURATION_PGSQL_URL").unwrap();
     let (mut client3, connection3) = tokio_postgres::connect(&url3, NoTls)
         .await
@@ -99,11 +99,11 @@ pub async fn main() -> miette::Result<()> {
 
     tokio::spawn(async move {
         if let Err(error) = connection3.await {
-            log::error!("postgres connection error: {error}");
+            formati::error!("postgres connection error: {error}");
         }
     });
 
-    log::trace!("running migrations: Configuration Migrations");
+    formati::trace!("running migrations: Configuration Migrations");
     configuration::migrations::runner()
         .run_async(&mut client3)
         .await

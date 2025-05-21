@@ -26,7 +26,7 @@ use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::hyper::tls_stream;
-use hartex_log::log;
+use hartex_log::formati;
 use http_body_util::Empty;
 use hyper::Method;
 use hyper::Request;
@@ -43,18 +43,18 @@ use miette::IntoDiagnostic;
 /// Unregistering a command.
 #[allow(clippy::module_name_repetitions)]
 pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
     let command_id = matches.get_one::<String>("command-id").unwrap().clone();
 
-    log::trace!("making tcp connection");
+    formati::trace!("making tcp connection");
     let stream = tls_stream().await?;
     let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {
-            log::error!("TCP connection failed: {err:?}");
+            formati::error!("TCP connection failed: {err:?}");
         }
     });
 
@@ -65,7 +65,7 @@ pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
         token.insert_str(0, "Bot ");
     }
 
-    log::trace!("sending request");
+    formati::trace!("sending request");
     let request = Request::builder()
         .uri(format!(
             "/api/v10/applications/{application_id}/commands/{command_id}"
@@ -83,7 +83,7 @@ pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
-    log::info!("received response with status {}", result.status());
+    formati::info!("received response with status {}", result.status());
 
     Ok(())
 }

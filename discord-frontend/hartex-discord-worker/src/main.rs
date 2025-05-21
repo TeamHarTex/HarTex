@@ -41,7 +41,7 @@ use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use rdkafka::ClientConfig;
 use rdkafka::consumer::Consumer;
@@ -66,7 +66,7 @@ mod interaction;
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
@@ -135,7 +135,7 @@ pub async fn main() -> miette::Result<()> {
         let key = result.unwrap();
         let scanned: u8 = scan!("INBOUND_GATEWAY_PAYLOAD_SHARD_{}" <- key).into_diagnostic()?;
 
-        log::trace!(
+        formati::trace!(
             "[shard {scanned}] received {} event; attempting to deserialize",
             gateway_deserializer.event_type().unwrap_or("UNKNOWN")
         );
@@ -155,7 +155,7 @@ pub async fn main() -> miette::Result<()> {
     }
 
     signal::ctrl_c().await.into_diagnostic()?;
-    log::warn!("ctrl-c signal received, shutting down");
+    formati::warn!("ctrl-c signal received, shutting down");
 
     Ok(())
 }

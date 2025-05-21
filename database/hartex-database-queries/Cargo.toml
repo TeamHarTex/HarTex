@@ -12,7 +12,6 @@ rust-version = "1.89.0"
 
 [dependencies]
 chrono = "0.4.41"
-itertools = "0.14.0"
 sqlx = { version = "0.8.6", features = [
     "chrono",
     "runtime-tokio",
@@ -20,7 +19,6 @@ sqlx = { version = "0.8.6", features = [
     "postgres",
     "macros",
 ] }
-tokio = { version = "1.45.0", features = ["full"] }
 
 [build-dependencies]
 hartex_database_typedsql = { path = "../hartex-database-typedsql" }

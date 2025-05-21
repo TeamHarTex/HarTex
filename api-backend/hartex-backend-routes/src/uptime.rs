@@ -39,7 +39,7 @@ use hartex_backend_models::uptime::UptimeUpdate;
 use hartex_database_queries::queries::api_backend::start_timestamp_select_by_component::StartTimestampSelectByComponent;
 use hartex_database_queries::queries::api_backend::start_timestamp_upsert::StartTimestampUpsert;
 use hartex_discord_utils::DATABASE_POOL;
-use hartex_log::log;
+use hartex_log::formati;
 
 /// Get component uptime
 #[allow(clippy::cast_sign_loss)]
@@ -59,7 +59,7 @@ use hartex_log::log;
 pub async fn get_uptime(
     WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
 ) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
-    log::trace!("querying timestamp");
+    formati::trace!("querying timestamp");
     let name = query.component_name();
     let result = StartTimestampSelectByComponent::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
         .bind(name.to_string());
@@ -98,7 +98,7 @@ pub async fn get_uptime(
 pub async fn patch_uptime(
     Json(query): Json<UptimeUpdate>,
 ) -> (StatusCode, Json<Response<(), String>>) {
-    log::trace!("updating timestamp");
+    formati::trace!("updating timestamp");
 
     let Some(timestamp) = DateTime::from_timestamp(query.start_timestamp() as i64, 0) else {
         // FIXME: return a better status code as the timestamp is out of range if this branch is reached
