@@ -13,7 +13,7 @@ rust-version = "1.89.0"
 [dependencies]
 chrono = "0.4.41"
 itertools = "0.14.0"
-sqlx = { version = "0.8.5", features = [
+sqlx = { version = "0.8.6", features = [
     "chrono",
     "runtime-tokio",
     "tls-native-tls",
