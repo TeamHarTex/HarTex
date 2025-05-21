@@ -27,7 +27,7 @@ use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::hyper::tls_stream;
-use hartex_log::log;
+use hartex_log::formati;
 use http_body_util::BodyExt;
 use http_body_util::Empty;
 use hyper::Method;
@@ -48,7 +48,7 @@ use crate::model::command::CommandManagerCommand;
 /// List commands from discord.
 #[allow(clippy::module_name_repetitions)]
 pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()> {
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
     let application_id = env::var("APPLICATION_ID").into_diagnostic()?;
@@ -58,13 +58,13 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         token.insert_str(0, "Bot ");
     }
 
-    log::trace!("making tcp connection");
+    formati::trace!("making tcp connection");
     let stream = tls_stream().await?;
     let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {
-            log::error!("TCP connection failed: {err:?}");
+            formati::error!("TCP connection failed: {err:?}");
         }
     });
 
@@ -73,7 +73,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         uri.push_str("?with_localizations=true");
     }
 
-    log::trace!("sending request");
+    formati::trace!("sending request");
     let request = Request::builder()
         .uri(uri)
         .method(Method::GET)
@@ -88,7 +88,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
     let result = sender.send_request(request).await.into_diagnostic()?;
-    log::info!("received response with status {}", result.status());
+    formati::info!("received response with status {}", result.status());
 
     if !result.status().is_success() {
         let body = result
@@ -101,7 +101,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         body.reader()
             .read_to_string(&mut string)
             .into_diagnostic()?;
-        log::info!("response body: {string:?}");
+        formati::info!("response body: {string:?}");
 
         return Ok(());
     }

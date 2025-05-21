@@ -25,7 +25,7 @@
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_entitycache_cacheupdaters::CacheUpdater;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 
 /// Update entity cache.
@@ -36,11 +36,11 @@ pub async fn update(event: GatewayEvent) -> miette::Result<()> {
 
     match dispatch {
         DispatchEvent::GuildCreate(guild_create) => {
-            log::trace!("updating cache using GUILD_CREATE event");
+            formati::trace!("updating cache using GUILD_CREATE event");
             guild_create.update().await.into_diagnostic()?;
         }
         DispatchEvent::MemberChunk(member_chunk) => {
-            log::trace!("updating cache using GUILD_MEMBER_CHUNK event");
+            formati::trace!("updating cache using GUILD_MEMBER_CHUNK event");
             member_chunk.update().await.into_diagnostic()?;
         }
         _ => (),

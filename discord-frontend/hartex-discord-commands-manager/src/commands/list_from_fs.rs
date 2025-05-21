@@ -24,7 +24,7 @@ use std::fs::File;
 use std::io::Read;
 
 use hartex_discord_core::dotenvy;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use walkdir::WalkDir;
 
@@ -33,11 +33,11 @@ use crate::model::command::CommandManagerCommand;
 /// List commands from filesystem.
 #[allow(clippy::module_name_repetitions)]
 pub fn list_from_fs_command() -> miette::Result<()> {
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    log::trace!("reading specification directory");
-    log::warn!(
+    formati::trace!("reading specification directory");
+    formati::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
     for result in WalkDir::new("hartex-discord-commands-spec").same_file_system(true) {
@@ -64,7 +64,7 @@ pub fn list_from_fs_command() -> miette::Result<()> {
         let command = match result {
             Ok(command) => command,
             Err(error) => {
-                log::warn!(
+                formati::warn!(
                     "deserialization failed for file: {}",
                     entry.path().to_str().unwrap()
                 );
@@ -72,7 +72,7 @@ pub fn list_from_fs_command() -> miette::Result<()> {
                     "{:?}",
                     Err::<(), serde_json::Error>(error).into_diagnostic()
                 );
-                log::warn!("skipping file due to above error");
+                formati::warn!("skipping file due to above error");
 
                 continue;
             }

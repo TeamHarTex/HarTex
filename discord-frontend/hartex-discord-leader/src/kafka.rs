@@ -32,7 +32,7 @@ use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use rdkafka::Message;
 use rdkafka::consumer::StreamConsumer;
@@ -82,7 +82,7 @@ where
                     continue;
                 };
 
-                log::trace!(
+                formati::trace!(
                     "[shard {shard_id}] received binary payload from gateway",
                     shard_id = shard.id().number()
                 );
@@ -122,7 +122,7 @@ where
                 }
             }
             Err(error) => {
-                log::warn!(
+                formati::warn!(
                     "[shard {shard_id}] error when receiving gateway message: {error}",
                     shard_id = shard.id().number()
                 );

@@ -602,6 +602,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "formati"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "500b93f80b5f9b9feb7f095c3d4c0427e7a25dc07b731ef46e88e38b395d270d"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.101",
+]
+
+[[package]]
 name = "fs_extra"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -774,9 +785,6 @@ dependencies = [
 name = "hartex_discord_core"
 version = "0.15.0"
 dependencies = [
- "num_enum",
- "num_enum_derive",
- "socket2 0.4.10",
  "tokio",
  "twilight-http",
  "twilight-model",
@@ -858,6 +866,7 @@ dependencies = [
 name = "hartex_log"
 version = "0.15.0"
 dependencies = [
+ "formati",
  "log",
  "log4rs",
 ]
@@ -1013,7 +1022,7 @@ dependencies = [
  "hyper",
  "libc",
  "pin-project-lite",
- "socket2 0.5.9",
+ "socket2",
  "tokio",
  "tower-service",
  "tracing",
@@ -2280,15 +2289,6 @@ dependencies = [
 
 [[package]]
 name = "socket2"
-version = "0.4.10"
-source = "git+https://github.com/rust-lang/socket2.git?branch=v0.4.x#65085d9dff270e588c0fbdd7217ec0b392b05ef2"
-dependencies = [
- "libc",
- "winapi",
-]
-
-[[package]]
-name = "socket2"
 version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4f5fd57c80058a56cf5c777ab8a126398ece8e442983605d280a44ce79d0edef"
@@ -2690,7 +2690,7 @@ dependencies = [
  "libc",
  "mio",
  "pin-project-lite",
- "socket2 0.5.9",
+ "socket2",
  "tokio-macros",
  "windows-sys 0.52.0",
 ]
@@ -2726,7 +2726,7 @@ dependencies = [
  "postgres-protocol",
  "postgres-types",
  "rand 0.9.1",
- "socket2 0.5.9",
+ "socket2",
  "tokio",
  "tokio-util",
  "whoami",

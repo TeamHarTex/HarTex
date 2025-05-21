@@ -22,7 +22,7 @@
 
 //! # Logging Facilities
 
-pub use log;
+pub use formati;
 use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::Appender;

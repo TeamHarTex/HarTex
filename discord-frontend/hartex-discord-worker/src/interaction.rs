@@ -36,7 +36,7 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 
 use crate::errorhandler::ErrorPayload;
@@ -65,7 +65,7 @@ pub async fn application_command(
         unreachable!("this should not be possible")
     };
 
-    log::trace!("running interaction command {}", &command.name);
+    formati::trace!("running interaction command {}", &command.name);
 
     let cloned = interaction_create.clone();
 

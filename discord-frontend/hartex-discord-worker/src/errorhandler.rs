@@ -37,7 +37,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::Report;
 use sha2::Digest;
 use sha2::Sha224;
@@ -98,7 +98,7 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
-            log::warn!("command errorred: {report:?}; error hash: {hash}");
+            formati::warn!("command errorred: {report:?}; error hash: {hash}");
         }
         ErrorPayload::Panic(message) => {
             let message = strip_ansi_escapes::strip_str(message);
@@ -141,7 +141,7 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
-            log::error!("interaction command panicked: {message:?}; error hash: {hash}");
+            formati::error!("interaction command panicked: {message:?}; error hash: {hash}");
         }
     }
 }
