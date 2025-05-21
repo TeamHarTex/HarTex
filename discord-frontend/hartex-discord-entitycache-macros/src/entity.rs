@@ -435,8 +435,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
             .collect::<Vec<_>>();
 
         return Some(quote! {
-            use tokio_postgres::GenericClient;
-
             #(#attrs)*
             #item_struct_vis struct #item_struct_name {
                 #(#fields_tokens),*
@@ -495,8 +493,6 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         .collect::<Vec<_>>();
 
     Some(quote! {
-        use tokio_postgres::GenericClient;
-
         #(#attrs)*
         #item_struct_vis struct #item_struct_name {
             #(#fields_tokens),*,

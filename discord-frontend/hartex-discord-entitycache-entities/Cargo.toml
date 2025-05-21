@@ -16,6 +16,9 @@ hartex_database_queries = { path = "../../database/hartex-database-queries" }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core", features = [
     "derive",
 ] }
+
+hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
+
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next" }
 
 [features]
