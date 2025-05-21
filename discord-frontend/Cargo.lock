@@ -1297,6 +1297,7 @@ version = "0.15.0"
 dependencies = [
  "hartex_database_queries",
  "hartex_discord_entitycache_core",
+ "hartex_discord_utils",
  "twilight-model",
 ]
 
