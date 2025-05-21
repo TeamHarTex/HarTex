@@ -28,7 +28,7 @@ use clap::ArgMatches;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::hyper::tls_stream;
-use hartex_log::log;
+use hartex_log::formati;
 use http_body_util::Full;
 use hyper::Method;
 use hyper::Request;
@@ -48,11 +48,11 @@ use walkdir::WalkDir;
 /// Register a command.
 #[allow(clippy::module_name_repetitions)]
 pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    log::trace!("searching for the command specification");
-    log::warn!(
+    formati::trace!("searching for the command specification");
+    formati::warn!(
         "an error will occur if this command is not ran within the discord-frontend directory"
     );
 
@@ -91,13 +91,13 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
     let mut json = String::new();
     file.read_to_string(&mut json).into_diagnostic()?;
 
-    log::trace!("making tcp connection");
+    formati::trace!("making tcp connection");
     let stream = tls_stream().await?;
     let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
     spawn(async move {
         if let Err(err) = connection.await {
-            log::error!("TCP connection failed: {err:?}");
+            formati::error!("TCP connection failed: {err:?}");
         }
     });
 
@@ -110,7 +110,7 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
 
     let bytes = Bytes::from(json);
 
-    log::trace!("sending request with body {:?}", bytes.clone());
+    formati::trace!("sending request with body {:?}", bytes.clone());
     let request = Request::builder()
         .uri(format!("/api/v10/applications/{application_id}/commands"))
         .method(Method::POST)
@@ -127,7 +127,7 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
-    log::info!("received response with status {}", result.status());
+    formati::info!("received response with status {}", result.status());
 
     Ok(())
 }

@@ -110,12 +110,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "barrel"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad9e605929a6964efbec5ac0884bd0fe93f12a3b1eb271f52c251316640c68d9"
-
-[[package]]
 name = "base64"
 version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -448,6 +442,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "formati"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "500b93f80b5f9b9feb7f095c3d4c0427e7a25dc07b731ef46e88e38b395d270d"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.101",
+]
+
+[[package]]
 name = "futures-channel"
 version = "0.3.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -574,9 +579,9 @@ checksum = "07e28edb80900c19c28f1072f2e8aeca7fa06b23cd4169cefe1af5aa3260783f"
 name = "hartex_database_migrate"
 version = "0.15.0"
 dependencies = [
- "barrel",
  "dotenvy",
  "hartex_log",
+ "log",
  "miette",
  "refinery",
  "tokio",
@@ -589,9 +594,7 @@ version = "0.15.0"
 dependencies = [
  "chrono",
  "hartex_database_typedsql",
- "itertools",
  "sqlx",
- "tokio",
 ]
 
 [[package]]
@@ -612,6 +615,7 @@ dependencies = [
 name = "hartex_log"
 version = "0.15.0"
 dependencies = [
+ "formati",
  "log",
  "log4rs",
 ]
@@ -1671,15 +1675,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
-name = "signal-hook-registry"
-version = "1.4.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9203b8055f63a2a00e2f593bb0510367fe707d7ff1e5c872de2f537b339e5410"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "signature"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2196,9 +2191,7 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
- "parking_lot",
  "pin-project-lite",
- "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.52.0",
