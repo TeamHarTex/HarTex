@@ -13,16 +13,12 @@ rust-version = "1.89.0"
 [dependencies]
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
-hartex_discord_core = { path = "../hartex-discord-core", features = [
-    "discord-model",
-] }
 hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core", features = [
     "derive",
 ] }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 
-tokio-postgres = "0.7.13"
 twilight-model = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next" }
 
 [features]

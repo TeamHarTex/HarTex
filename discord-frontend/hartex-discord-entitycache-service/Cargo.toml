@@ -17,14 +17,13 @@ hartex_discord_core = { path = "../hartex-discord-core", features = [
     "discord-model",
     "environment",
 ] }
-hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
 hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 
-hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
 hartex_log = { path = "../../rust-utilities/hartex-log" }
 
 futures-util = "0.3.31"
+log = "0.4.27"
 miette = { version = "7.6.0", features = ["fancy"] }
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",

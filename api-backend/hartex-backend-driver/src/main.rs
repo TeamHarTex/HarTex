@@ -41,7 +41,7 @@ use bb8_postgres::bb8::Pool;
 use bb8_postgres::tokio_postgres::NoTls;
 use dotenvy::Error;
 use hartex_errors::dotenv;
-use hartex_log::log;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
 use tokio::signal;
@@ -63,7 +63,7 @@ use utoipa_scalar::Servable;
 pub async fn main() -> miette::Result<()> {
     hartex_log::initialize();
 
-    log::trace!("loading environment variables");
+    formati::trace!("loading environment variables");
     if let Err(error) = dotenvy::dotenv() {
         match error {
             Error::LineParse(content, index) => Err(dotenv::LineParseError {
@@ -76,12 +76,12 @@ pub async fn main() -> miette::Result<()> {
 
     let api_pgsql_url = env::var("API_BACKEND_PGSQL_URL").into_diagnostic()?;
 
-    log::debug!("building database connection pool");
+    formati::debug!("building database connection pool");
     let manager =
         PostgresConnectionManager::new_from_stringlike(api_pgsql_url, NoTls).into_diagnostic()?;
     let pool = Pool::builder().build(manager).await.into_diagnostic()?;
 
-    log::debug!("starting axum server");
+    formati::debug!("starting axum server");
     let (app, mut openapi) = OpenApiRouter::new()
         .layer(TraceLayer::new_for_http())
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
@@ -94,7 +94,7 @@ pub async fn main() -> miette::Result<()> {
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
-    log::debug!("listening on {}", &domain);
+    formati::debug!("listening on {}", &domain);
 
     openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
     let router = app.merge(Scalar::with_url("/openapi", openapi));

@@ -40,7 +40,7 @@ use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
-use hartex_log::log;
+use hartex_log::formati;
 use http_body_util::BodyExt;
 use hyper::Method;
 use hyper::Request;
@@ -68,11 +68,11 @@ pub async fn execute(
 
     spawn(async move {
         if let Err(err) = connection.await {
-            log::error!("TCP connection failed: {err:?}");
+            formati::error!("TCP connection failed: {err:?}");
         }
     });
 
-    log::debug!("sending a request to {}", &uri);
+    formati::debug!("sending a request to {}", &uri);
 
     let query = UptimeQuery::new("HarTex Nightly");
     let request = Request::builder()
@@ -84,7 +84,7 @@ pub async fn execute(
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
-    log::debug!("deserializing result");
+    formati::debug!("deserializing result");
     let body = result.collect().await.into_diagnostic()?.aggregate();
     let response: Response<UptimeResponse, String> =
         serde_json::from_reader(body.reader()).into_diagnostic()?;
