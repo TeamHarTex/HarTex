@@ -21,7 +21,7 @@ hartex_log = { path = "../../rust-utilities/hartex-log" }
 axum = { version = "0.8.4", features = ["json", "macros"] }
 axum-extra = "0.10.1"
 chrono = "0.4.41"
-formati = { version = "0.1.1", features = ["log"] }
+formati = { version = "0.1.3", features = ["log"] }
 log = "0.4.27"
 utoipa = "5.3.1"
 
