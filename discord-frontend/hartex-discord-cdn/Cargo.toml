@@ -15,4 +15,6 @@ hartex_discord_core = { path = "../hartex-discord-core", features = [
     "discord-model",
 ] }
 
+formati = "0.1.2"
+
 [features]

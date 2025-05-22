@@ -928,9 +928,9 @@ dependencies = [
 
 [[package]]
 name = "formati"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "500b93f80b5f9b9feb7f095c3d4c0427e7a25dc07b731ef46e88e38b395d270d"
+checksum = "a5dfdc233a4c0a2698321c0245acd77e5477ac4195f746c374a49c76c1fff749"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1161,6 +1161,7 @@ dependencies = [
 name = "hartex_discord_cdn"
 version = "0.15.0"
 dependencies = [
+ "formati",
  "hartex_discord_core",
 ]
 
