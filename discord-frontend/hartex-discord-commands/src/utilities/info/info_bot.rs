@@ -72,7 +72,7 @@ pub async fn execute(
         }
     });
 
-    formati::debug!("sending a request to {}", &uri);
+    formati::debug!("sending a request to {&uri}");
 
     let query = UptimeQuery::new("HarTex Nightly");
     let request = Request::builder()

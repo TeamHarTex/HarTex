@@ -65,7 +65,7 @@ pub async fn application_command(
         unreachable!("this should not be possible")
     };
 
-    formati::trace!("running interaction command {}", &command.name);
+    formati::trace!("running interaction command {&command.name}");
 
     let cloned = interaction_create.clone();
 
