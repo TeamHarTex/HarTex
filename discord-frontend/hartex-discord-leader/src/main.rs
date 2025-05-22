@@ -88,7 +88,7 @@ pub async fn main() -> miette::Result<()> {
 
     let (tx, rx) = watch::channel(false);
 
-    formati::trace!("launching {} shard(s)", shards.len());
+    formati::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();
     for mut shard in shards {
         let mut rx = rx.clone();
