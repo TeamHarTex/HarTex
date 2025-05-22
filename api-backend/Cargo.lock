@@ -733,9 +733,9 @@ dependencies = [
 
 [[package]]
 name = "formati"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5dfdc233a4c0a2698321c0245acd77e5477ac4195f746c374a49c76c1fff749"
+checksum = "11fe8653d94ee4743d84fcb5f04b720443981d56e809240085184447f6aec828"
 dependencies = [
  "proc-macro2",
  "quote",
