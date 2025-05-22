@@ -88,7 +88,7 @@ pub async fn list_from_discord_command(matches: ArgMatches) -> miette::Result<()
         .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
     let result = sender.send_request(request).await.into_diagnostic()?;
-    formati::info!("received response with status {}", result.status());
+    formati::info!("received response with status {result.status()}");
 
     if !result.status().is_success() {
         let body = result

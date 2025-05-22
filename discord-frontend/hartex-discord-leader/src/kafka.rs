@@ -83,17 +83,15 @@ where
                 };
 
                 formati::trace!(
-                    "[shard {shard_id}] received binary payload from gateway",
-                    shard_id = shard.id().number()
+                    "[shard {shard.id().number()}] received binary payload from gateway",
                 );
 
                 // send payload to worker process
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic)
-                            .key(&format!(
-                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
-                                shard_id = shard.id().number()
+                            .key(&formati::format!(
+                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard.id().number()}",
                             ))
                             .payload(&bytes),
                         Timeout::After(Duration::from_secs(0)),
@@ -109,9 +107,8 @@ where
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic_2)
-                            .key(&format!(
-                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard_id}",
-                                shard_id = shard.id().number()
+                            .key(&formati::format!(
+                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard.id().number()}",
                             ))
                             .payload(&bytes),
                         Timeout::After(Duration::from_secs(0)),
@@ -123,8 +120,7 @@ where
             }
             Err(error) => {
                 formati::warn!(
-                    "[shard {shard_id}] error when receiving gateway message: {error}",
-                    shard_id = shard.id().number()
+                    "[shard {shard.id()}] error when receiving gateway message: {error}",
                 );
             }
         }

@@ -94,7 +94,7 @@ pub async fn main() -> miette::Result<()> {
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
-    formati::debug!("listening on {}", &domain);
+    formati::debug!("listening on {&domain}");
 
     openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
     let router = app.merge(Scalar::with_url("/openapi", openapi));

@@ -83,7 +83,7 @@ pub async fn unregister_command(matches: ArgMatches) -> miette::Result<()> {
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
-    formati::info!("received response with status {}", result.status());
+    formati::info!("received response with status {result.status()}");
 
     Ok(())
 }
