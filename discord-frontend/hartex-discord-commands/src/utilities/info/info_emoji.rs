@@ -45,6 +45,7 @@ use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use regex::Regex;
+use hartex_log::formati;
 
 /// The regex for looking for a Discord emoji in the command input.
 static EMOJI_REGEX: LazyLock<Regex> = LazyLock::new(|| {
@@ -165,6 +166,7 @@ pub async fn execute(
         )
         .await
         .into_diagnostic()?;
+    formati::debug!("responded");
 
     Ok(())
 }
