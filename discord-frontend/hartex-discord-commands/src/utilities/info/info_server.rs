@@ -48,6 +48,7 @@ use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
+use hartex_log::formati;
 
 /// Executes the `info server` command.
 #[allow(clippy::too_many_lines)]
@@ -300,6 +301,7 @@ pub async fn execute(
         )
         .await
         .into_diagnostic()?;
+    formati::debug!("responded");
 
     Ok(())
 }

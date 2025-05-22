@@ -127,6 +127,7 @@ pub async fn execute(
         )
         .await
         .into_diagnostic()?;
+    formati::debug!("responded");
 
     Ok(())
 }

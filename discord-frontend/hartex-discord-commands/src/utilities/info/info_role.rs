@@ -42,6 +42,7 @@ use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
+use hartex_log::formati;
 
 /// Executes the `info emoji` command.
 pub async fn execute(
@@ -132,6 +133,7 @@ pub async fn execute(
         )
         .await
         .into_diagnostic()?;
+    formati::debug!("responded");
 
     Ok(())
 }

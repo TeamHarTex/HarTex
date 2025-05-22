@@ -44,6 +44,7 @@ use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
 use rand::thread_rng;
+use hartex_log::formati;
 
 /// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]
@@ -165,6 +166,7 @@ pub async fn execute(
         )
         .await
         .into_diagnostic()?;
+    formati::debug!("responded");
 
     Ok(())
 }
