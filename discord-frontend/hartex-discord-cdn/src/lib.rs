@@ -53,13 +53,13 @@ impl Cdn {
             unreachable!()
         };
 
-        format!("{}embed/avatars/{index}.png", Self::URL_BASE)
+        formati::format!("{Self::URL_BASE}embed/avatars/{index}.png")
     }
 
     /// Constructs a content delivery network URL for obtaining the guild icon of a guild.
     #[must_use]
     pub fn guild_icon(guild_id: Id<GuildMarker>, icon: ImageHash) -> String {
-        let mut url = format!("{}icons/{guild_id}/{icon}", Self::URL_BASE);
+        let mut url = formati::format!("{Self::URL_BASE}icons/{guild_id}/{icon}");
         if icon.is_animated() {
             url.push_str(".gif");
         } else {
@@ -72,7 +72,7 @@ impl Cdn {
     /// Constructs a content delivery network URL for obtaining the role icon of a role.
     #[must_use]
     pub fn role_icon(role_id: Id<RoleMarker>, icon: ImageHash) -> String {
-        let mut url = format!("{}icons/{role_id}/{icon}", Self::URL_BASE);
+        let mut url = formati::format!("{Self::URL_BASE}icons/{role_id}/{icon}");
         if icon.is_animated() {
             url.push_str(".gif");
         } else {
@@ -85,7 +85,7 @@ impl Cdn {
     /// Constructs a content delivery network URL for obtaining the user avatar of a user.
     #[must_use]
     pub fn user_avatar(user_id: Id<UserMarker>, avatar: ImageHash) -> String {
-        let mut url = format!("{}avatars/{user_id}/{avatar}", Self::URL_BASE);
+        let mut url = formati::format!("{Self::URL_BASE}avatars/{user_id}/{avatar}");
         if avatar.is_animated() {
             url.push_str(".gif");
         } else {
