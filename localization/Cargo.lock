@@ -96,9 +96,9 @@ dependencies = [
 
 [[package]]
 name = "intl-memoizer"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe22e020fce238ae18a6d5d8c502ee76a52a6e880d99477657e6acc30ec57bda"
+checksum = "310da2e345f5eb861e7a07ee182262e94975051db9e4223e909ba90f392f163f"
 dependencies = [
  "type-map",
  "unic-langid",
