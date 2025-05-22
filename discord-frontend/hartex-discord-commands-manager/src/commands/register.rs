@@ -110,7 +110,7 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
 
     let bytes = Bytes::from(json);
 
-    formati::trace!("sending request with body {:?}", bytes.clone());
+    formati::trace!("sending request with body {bytes.clone():?}");
     let request = Request::builder()
         .uri(format!("/api/v10/applications/{application_id}/commands"))
         .method(Method::POST)
@@ -127,7 +127,7 @@ pub async fn register_command(matches: ArgMatches) -> miette::Result<()> {
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
-    formati::info!("received response with status {}", result.status());
+    formati::info!("received response with status {result.status()}");
 
     Ok(())
 }

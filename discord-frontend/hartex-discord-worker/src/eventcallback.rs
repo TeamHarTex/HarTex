@@ -153,7 +153,7 @@ pub async fn invoke(
                     }
                 });
 
-                formati::debug!("sending a request to {}", &uri);
+                formati::debug!("sending a request to {&uri}");
 
                 let query = UptimeUpdate::new("HarTex Nightly", duration.as_secs() as u128);
                 let request = Request::builder()
