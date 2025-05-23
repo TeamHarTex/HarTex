@@ -11,7 +11,7 @@ rust-version = "1.89.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fluent-bundle = "0.15.3"
+fluent-bundle = "0.16.0"
 fluent-syntax = "0.11.1"
 intl-memoizer = "0.5.2"
 miette = "7.6.0"
