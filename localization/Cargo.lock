@@ -26,7 +26,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "01203cb8918f5711e73891b347816d932046f95f54207710bda99beaeb423bf4"
 dependencies = [
  "fluent-langneg",
- "fluent-syntax 0.12.0",
+ "fluent-syntax",
  "intl-memoizer",
  "intl_pluralrules",
  "rustc-hash 2.1.1",
@@ -46,21 +46,12 @@ dependencies = [
 
 [[package]]
 name = "fluent-syntax"
-version = "0.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a530c4694a6a8d528794ee9bbd8ba0122e779629ac908d15ad5a7ae7763a33d"
-dependencies = [
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "fluent-syntax"
 version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "54f0d287c53ffd184d04d8677f590f4ac5379785529e5e08b1c8083acdd5c198"
 dependencies = [
  "memchr",
- "thiserror 2.0.12",
+ "thiserror",
 ]
 
 [[package]]
@@ -68,7 +59,7 @@ name = "hartex_localization_bindings"
 version = "0.15.0"
 dependencies = [
  "fluent-bundle",
- "fluent-syntax 0.11.1",
+ "fluent-syntax",
  "hartex_localization_loader",
  "intl-memoizer",
  "miette",
@@ -83,7 +74,7 @@ name = "hartex_localization_core"
 version = "0.15.0"
 dependencies = [
  "fluent-bundle",
- "fluent-syntax 0.11.1",
+ "fluent-syntax",
  "hartex_localization_bindings",
  "hartex_localization_loader",
  "intl-memoizer",
@@ -97,7 +88,7 @@ name = "hartex_localization_loader"
 version = "0.15.0"
 dependencies = [
  "fluent-bundle",
- "fluent-syntax 0.11.1",
+ "fluent-syntax",
  "intl-memoizer",
  "miette",
  "unic-langid",
@@ -227,31 +218,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
-dependencies = [
- "thiserror-impl 1.0.69",
-]
-
-[[package]]
-name = "thiserror"
 version = "2.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "567b8a2dae586314f7be2a752ec7474332959c6460e02bde30d702a66d488708"
 dependencies = [
- "thiserror-impl 2.0.12",
-]
-
-[[package]]
-name = "thiserror-impl"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
+ "thiserror-impl",
 ]
 
 [[package]]
