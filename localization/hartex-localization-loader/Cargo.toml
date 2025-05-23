@@ -12,7 +12,7 @@ rust-version = "1.89.0"
 
 [dependencies]
 fluent-bundle = "0.16.0"
-fluent-syntax = "0.11.1"
+fluent-syntax = "0.12.0"
 intl-memoizer = "0.5.2"
 miette = "7.6.0"
 unic-langid = { version = "0.9.6", features = ["macros"] }
