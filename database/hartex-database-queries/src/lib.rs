@@ -21,7 +21,6 @@
  */
 
 #![deny(unsafe_code)]
-#![feature(result_flattening)]
 
 pub mod queries;
 pub mod result;
