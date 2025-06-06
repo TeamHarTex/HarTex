@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
-
 use hartex_database_queries::queries::discord_frontend::cached_emoji_select_by_id::CachedEmojiSelectById;
 use hartex_database_queries::queries::discord_frontend::cached_emoji_upsert::CachedEmojiUpsert;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -35,16 +33,17 @@ pub struct CachedEmojiRepository;
 
 impl Repository<EmojiEntity> for CachedEmojiRepository {
     async fn get(&self, id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
-        let data = CachedEmojiSelectById::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
-            .bind(id.to_string())
-            .one()
-            .await?;
+        let data =
+            CachedEmojiSelectById::new((&DATABASE_POOL).await)
+                .bind(id.to_string())
+                .one()
+                .await?;
 
         Ok(EmojiEntity::from(data))
     }
 
     async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
-        CachedEmojiUpsert::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+        CachedEmojiUpsert::new((&DATABASE_POOL).await)
             .bind(
                 entity.animated,
                 entity.id.to_string(),
