@@ -37,6 +37,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_localization_core::Localizer;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 
 use crate::general::General;
@@ -81,6 +82,7 @@ impl Command for About {
             )
             .await
             .into_diagnostic()?;
+        formati::debug!("responded");
 
         Ok(())
     }

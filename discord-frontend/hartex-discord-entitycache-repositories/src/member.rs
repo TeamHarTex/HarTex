@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
-
 use chrono::DateTime;
 use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
@@ -40,18 +38,19 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
-        let data =
-            CachedMemberSelectByUserIdAndGuildId::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
-                .bind(user_id.to_string(), guild_id.to_string())
-                .one()
-                .await?;
+        let data = CachedMemberSelectByUserIdAndGuildId::new(
+            (&DATABASE_POOL).await,
+        )
+        .bind(user_id.to_string(), guild_id.to_string())
+        .one()
+        .await?;
 
         Ok(MemberEntity::from(data))
     }
 
     #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
-        CachedMemberUpsert::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+        CachedMemberUpsert::new((&DATABASE_POOL).await)
             .bind(
                 entity.flags.bits() as i64,
                 entity

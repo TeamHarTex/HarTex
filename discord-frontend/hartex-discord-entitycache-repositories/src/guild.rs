@@ -23,7 +23,6 @@
 //! # Guild Repository
 
 use std::borrow::Cow;
-use std::pin::Pin;
 
 use hartex_database_queries::queries::discord_frontend::cached_guild_select_by_id::CachedGuildSelectById;
 use hartex_database_queries::queries::discord_frontend::cached_guild_upsert::CachedGuildUpsert;
@@ -46,17 +45,18 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
-        let data = CachedGuildSelectById::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
-            .bind(id.to_string())
-            .one()
-            .await?;
+        let data =
+            CachedGuildSelectById::new((&DATABASE_POOL).await)
+                .bind(id.to_string())
+                .one()
+                .await?;
 
         Ok(GuildEntity::from(data))
     }
 
     #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
-        CachedGuildUpsert::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+        CachedGuildUpsert::new((&DATABASE_POOL).await)
             .bind(
                 i16::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
                     entity.default_message_notifications,
