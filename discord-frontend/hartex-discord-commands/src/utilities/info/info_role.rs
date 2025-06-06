@@ -41,8 +41,8 @@ use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
-use miette::IntoDiagnostic;
 use hartex_log::formati;
+use miette::IntoDiagnostic;
 
 /// Executes the `info emoji` command.
 pub async fn execute(

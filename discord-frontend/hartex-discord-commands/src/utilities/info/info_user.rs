@@ -41,10 +41,10 @@ use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
 use rand::thread_rng;
-use hartex_log::formati;
 
 /// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]

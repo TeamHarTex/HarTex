@@ -375,7 +375,7 @@ pub fn implement_entity(input: &EntityMacroInput, item_struct: &ItemStruct) -> O
         // FIXME: bad assumption of always calling .to_string() here (mostly just that should suffice, but...)
         let mut full_query_function_call = quote! {
             let data = hartex_database_queries::queries::discord_frontend::#query_module_name::#query_struct_name::new(
-                std::pin::Pin::static_ref(&hartex_discord_utils::DATABASE_POOL).get().await.get_ref()
+                (&hartex_discord_utils::DATABASE_POOL).await
             ).bind(#param_name.to_string())
         };
 

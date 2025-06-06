@@ -65,7 +65,11 @@ pub async fn application_command(
         unreachable!("this should not be possible")
     };
 
-    formati::trace!("running interaction command {&command.name}");
+    let Some(guild_id) = interaction_create.guild_id else {
+        todo!("running commands in DMs is not handled yet")
+    };
+
+    formati::trace!("running interaction command {&command.name} in guild {guild_id}");
 
     let cloned = interaction_create.clone();
 
@@ -74,7 +78,7 @@ pub async fn application_command(
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
-    if !plugin.enabled(interaction_create.guild_id.unwrap()).await? {
+    if !plugin.enabled(guild_id).await? {
         interaction_client
             .create_response(
                 interaction_create.id,
@@ -94,13 +98,15 @@ pub async fn application_command(
         return Ok(());
     }
 
+    formati::trace!("check: plugin {plugin.name()} is enabled in guild {guild_id}");
+
     let permissions = command.required_permissions();
-    let member_permissions = interaction_create
-        .member
-        .clone()
-        .unwrap()
-        .permissions
-        .unwrap();
+
+    let Some(member) = interaction_create.member.clone() else {
+        todo!("running commands in DMs is not handled yet")
+    };
+
+    let member_permissions = member.permissions.unwrap();
     if !member_permissions.contains(permissions) {
         interaction_client
             .create_response(
@@ -120,6 +126,10 @@ pub async fn application_command(
 
         return Ok(());
     }
+
+    formati::trace!(
+        "check: member {member.user.unwrap().id} has sufficient permissions to run the command"
+    );
 
     if let Err(error) = command
         .execute(cloned.0, interaction_client, localizer)

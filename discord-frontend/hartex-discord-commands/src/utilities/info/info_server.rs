@@ -47,8 +47,8 @@ use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
-use miette::IntoDiagnostic;
 use hartex_log::formati;
+use miette::IntoDiagnostic;
 
 /// Executes the `info server` command.
 #[allow(clippy::too_many_lines)]
@@ -192,8 +192,11 @@ pub async fn execute(
     let humans = users.iter().filter(|user| !user.bot).count();
 
     if verbose {
-        write!(default_general_information, "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}")
-            .into_diagnostic()?;
+        write!(
+            default_general_information,
+            "\n {serverinfo_embed_generalinfo_enabled_features_subfield_name} {features}"
+        )
+        .into_diagnostic()?;
     }
 
     let roles = guild
