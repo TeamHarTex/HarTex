@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
 use std::str::FromStr;
 
 use hartex_database_queries::queries::discord_frontend::cached_role_select_by_guild_id::CachedRoleSelectByGuildId;
@@ -46,10 +45,11 @@ impl CachedRoleRepository {
         &self,
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<RoleMarker>>> {
-        let roles = CachedRoleSelectByGuildId::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
-            .bind(guild_id.to_string())
-            .all()
-            .await?;
+        let roles =
+            CachedRoleSelectByGuildId::new((&DATABASE_POOL).await)
+                .bind(guild_id.to_string())
+                .all()
+                .await?;
 
         Ok(roles
             .into_iter()
@@ -63,10 +63,12 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        let data = CachedRoleSelectByIdAndGuildId::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
-            .bind(id.to_string(), guild_id.to_string())
-            .one()
-            .await?;
+        let data = CachedRoleSelectByIdAndGuildId::new(
+            (&DATABASE_POOL).await,
+        )
+        .bind(id.to_string(), guild_id.to_string())
+        .one()
+        .await?;
 
         Ok(RoleEntity::from(data))
     }
@@ -75,7 +77,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        CachedRoleUpsert::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+        CachedRoleUpsert::new((&DATABASE_POOL).await)
             .bind(
                 entity.color as i64,
                 entity.icon.map(|hash| hash.to_string()),

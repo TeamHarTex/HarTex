@@ -39,7 +39,7 @@ use crate::CacheUpdater;
 impl CacheUpdater for GuildCreate {
     async fn update(&self) -> CacheResult<()> {
         let GuildCreate::Available(guild) = self else {
-            return Ok(())
+            return Ok(());
         };
 
         let entity = GuildEntity::from(guild.clone());

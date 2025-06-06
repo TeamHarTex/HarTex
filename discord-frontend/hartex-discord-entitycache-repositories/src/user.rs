@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::pin::Pin;
-
 use hartex_database_queries::queries::discord_frontend::cached_user_select_by_id::CachedUserSelectById;
 use hartex_database_queries::queries::discord_frontend::cached_user_upsert::CachedUserUpsert;
 use hartex_discord_entitycache_core::error::CacheResult;
@@ -35,7 +33,7 @@ pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
     async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        let data = CachedUserSelectById::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+        let data = CachedUserSelectById::new((&DATABASE_POOL).await)
             .bind(id.to_string())
             .one()
             .await?;
@@ -44,7 +42,7 @@ impl Repository<UserEntity> for CachedUserRepository {
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
-        CachedUserUpsert::new(Pin::static_ref(&DATABASE_POOL).get().await.get_ref())
+        CachedUserUpsert::new((&DATABASE_POOL).await)
             .bind(
                 entity.avatar.map(|hash| hash.to_string()),
                 entity.id.to_string(),

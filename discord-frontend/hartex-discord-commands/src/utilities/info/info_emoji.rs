@@ -26,6 +26,7 @@
 
 use std::str::FromStr;
 use std::sync::LazyLock;
+
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
@@ -43,14 +44,13 @@ use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
+use hartex_log::formati;
 use miette::IntoDiagnostic;
 use regex::Regex;
-use hartex_log::formati;
 
 /// The regex for looking for a Discord emoji in the command input.
-static EMOJI_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap()
-});
+static EMOJI_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new("<a?:[a-zA-Z0-9_]+:([0-9]{17,19})>").unwrap());
 
 /// Executes the `info emoji` command.
 #[allow(clippy::too_many_lines)]
