@@ -36,15 +36,12 @@ use std::env;
 use std::future;
 use std::time::Duration;
 
-use bb8_postgres::PostgresConnectionManager;
-use bb8_postgres::bb8::Pool;
-use bb8_postgres::tokio_postgres::NoTls;
 use dotenvy::Error;
 use hartex_errors::dotenv;
-use hartex_log::formati;
 use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
 use tokio::signal;
+use tower::ServiceBuilder;
 use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::TraceLayer;
 use utoipa::openapi::Info;
@@ -61,9 +58,9 @@ use utoipa_scalar::Servable;
 #[allow(clippy::no_effect_underscore_binding)]
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
-    hartex_log::initialize();
+    tracing::subscriber::set_global_default(hartex_tracing::subscriber()).unwrap();
 
-    formati::trace!("loading environment variables");
+    hartex_tracing::trace!("loading environment variables");
     if let Err(error) = dotenvy::dotenv() {
         match error {
             Error::LineParse(content, index) => Err(dotenv::LineParseError {
@@ -74,27 +71,21 @@ pub async fn main() -> miette::Result<()> {
         }
     }
 
-    let api_pgsql_url = env::var("API_BACKEND_PGSQL_URL").into_diagnostic()?;
-
-    formati::debug!("building database connection pool");
-    let manager =
-        PostgresConnectionManager::new_from_stringlike(api_pgsql_url, NoTls).into_diagnostic()?;
-    let pool = Pool::builder().build(manager).await.into_diagnostic()?;
-
-    formati::debug!("starting axum server");
+    hartex_tracing::debug!("starting axum server");
     let (app, mut openapi) = OpenApiRouter::new()
-        .layer(TraceLayer::new_for_http())
-        .layer(TimeoutLayer::new(Duration::from_secs(30)))
+        .layer(ServiceBuilder::new()
+            .layer(TraceLayer::new_for_http())
+            .layer(TimeoutLayer::new(Duration::from_secs(30)))
+        )
         .routes(routes!(
             hartex_backend_routes::uptime::get_uptime,
             hartex_backend_routes::uptime::patch_uptime
         ))
-        .with_state(pool)
         .split_for_parts();
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
-    formati::debug!("listening on {&domain}");
+    hartex_tracing::debug!("listening on {&domain}");
 
     openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
     let router = app.merge(Scalar::with_url("/openapi", openapi));

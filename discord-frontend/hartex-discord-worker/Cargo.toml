@@ -26,13 +26,12 @@ hartex_localization_core = { path = "../../localization/hartex-localization-core
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
+hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 chrono = { version = "0.4.41", features = ["clock"], default-features = false }
 futures-util = "0.3.31"
 hyper = { version = "1.6.0", features = ["client", "http1"] }
 hyper-util = { version = "0.1.12", features = ["tokio"] }
-log = "0.4.27"
 miette = { version = "7.6.0", features = ["fancy"] }
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",
@@ -44,6 +43,6 @@ serde_json = "1.0.140"
 serde_scan = "0.4.1"
 sha2 = "0.11.0-pre.5"
 strip-ansi-escapes = "0.2.1"
-tracing = { version = "0.1.41", features = ["log-always"] }
+tracing = "0.1.41"
 
 [features]

@@ -1,5 +1,5 @@
 [package]
-name = "hartex-macro-utils"
+name = "hartex_macro_utils"
 version = "0.15.0"
 edition = "2024"
 description = "Macro facilities"
