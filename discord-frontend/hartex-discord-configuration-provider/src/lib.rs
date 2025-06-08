@@ -31,7 +31,7 @@
 use hartex_database_queries::queries::configuration::plugin_enabled::PluginEnabled;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::DISCORD_FRONTEND;
 use miette::IntoDiagnostic;
 
 /// The configuration provide for fetching configuration.
@@ -44,7 +44,7 @@ impl ConfigurationProvider {
         guild_id: Id<GuildMarker>,
         plugin: impl Into<String>,
     ) -> miette::Result<bool> {
-        PluginEnabled::new((&DATABASE_POOL).await)
+        PluginEnabled::new((&DISCORD_FRONTEND).await)
             .bind(plugin.into(), guild_id.to_string())
             .exists()
             .await
