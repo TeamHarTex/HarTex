@@ -51,6 +51,7 @@ pub fn subscriber() -> impl Subscriber {
         .with_target("hyper_util::client::legacy::client", LevelFilter::OFF)
         .with_target("hyper_util::client::legacy::connect::http", LevelFilter::OFF)
         .with_target("hyper_util::client::legacy::pool", LevelFilter::OFF)
+        .with_target("tower_http", LevelFilter::TRACE)
         .with_target("twilight_gateway::shard", LevelFilter::OFF)
         .with_target("twilight_http::client", LevelFilter::OFF);
 
