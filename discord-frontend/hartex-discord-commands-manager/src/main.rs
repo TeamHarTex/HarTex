@@ -44,7 +44,7 @@ mod model;
 /// Maneger entry point.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> miette::Result<()> {
-    hartex_log::initialize();
+    tracing::subscriber::set_global_default(hartex_tracing::subscriber()).unwrap();
 
     let command = Command::new("cmdmgr")
         .subcommand(

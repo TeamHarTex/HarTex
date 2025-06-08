@@ -29,20 +29,32 @@ pub use formati::info;
 pub use formati::trace;
 pub use formati::warn;
 
-use tracing_core::Level;
+use tracing_core::LevelFilter;
 use tracing_core::Subscriber;
+use tracing_subscriber::filter::Targets;
+use tracing_subscriber::fmt::Layer;
 use tracing_subscriber::fmt::time::OffsetTime;
-use tracing_subscriber::FmtSubscriber;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::Registry;
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
-    FmtSubscriber::builder()
+    let fmt_layer = Layer::default()
         .pretty()
         .with_timer(OffsetTime::local_rfc_3339().unwrap())
         .with_target(true)
         .with_level(true)
         .with_file(true)
-        .with_line_number(true)
-        .with_max_level(Level::TRACE)
-        .finish()
+        .with_line_number(true);
+    let targets_layer = Targets::new()
+        .with_default(LevelFilter::TRACE)
+        .with_target("hyper_util::client::legacy::client", LevelFilter::OFF)
+        .with_target("hyper_util::client::legacy::connect::http", LevelFilter::OFF)
+        .with_target("hyper_util::client::legacy::pool", LevelFilter::OFF)
+        .with_target("twilight_gateway::shard", LevelFilter::OFF)
+        .with_target("twilight_http::client", LevelFilter::OFF);
+
+    Registry::default()
+        .with(fmt_layer)
+        .with(targets_layer)
 }
