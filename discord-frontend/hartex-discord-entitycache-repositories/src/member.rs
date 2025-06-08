@@ -25,7 +25,7 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::member::MemberEntity;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::DISCORD_FRONTEND;
 use hartex_database_queries::queries::discord_frontend::cached_member_select_by_user_id_and_guild_id::CachedMemberSelectByUserIdAndGuildId;
 use hartex_database_queries::queries::discord_frontend::cached_member_upsert::CachedMemberUpsert;
 
@@ -39,7 +39,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
         let data = CachedMemberSelectByUserIdAndGuildId::new(
-            (&DATABASE_POOL).await,
+            (&DISCORD_FRONTEND).await,
         )
         .bind(user_id.to_string(), guild_id.to_string())
         .one()
@@ -50,7 +50,7 @@ impl Repository<MemberEntity> for CachedMemberRepository {
 
     #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: MemberEntity) -> CacheResult<()> {
-        CachedMemberUpsert::new((&DATABASE_POOL).await)
+        CachedMemberUpsert::new((&DISCORD_FRONTEND).await)
             .bind(
                 entity.flags.bits() as i64,
                 entity

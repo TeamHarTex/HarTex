@@ -26,7 +26,7 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::emoji::EmojiEntity;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::DISCORD_FRONTEND;
 
 /// Repository for emoji entities.
 pub struct CachedEmojiRepository;
@@ -34,7 +34,7 @@ pub struct CachedEmojiRepository;
 impl Repository<EmojiEntity> for CachedEmojiRepository {
     async fn get(&self, id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
         let data =
-            CachedEmojiSelectById::new((&DATABASE_POOL).await)
+            CachedEmojiSelectById::new((&DISCORD_FRONTEND).await)
                 .bind(id.to_string())
                 .one()
                 .await?;
@@ -43,7 +43,7 @@ impl Repository<EmojiEntity> for CachedEmojiRepository {
     }
 
     async fn upsert(&self, entity: EmojiEntity) -> CacheResult<()> {
-        CachedEmojiUpsert::new((&DATABASE_POOL).await)
+        CachedEmojiUpsert::new((&DISCORD_FRONTEND).await)
             .bind(
                 entity.animated,
                 entity.id.to_string(),

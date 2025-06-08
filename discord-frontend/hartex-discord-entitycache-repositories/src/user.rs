@@ -26,14 +26,14 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::user::UserEntity;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::DISCORD_FRONTEND;
 
 /// Repository for user entities.
 pub struct CachedUserRepository;
 
 impl Repository<UserEntity> for CachedUserRepository {
     async fn get(&self, id: <UserEntity as Entity>::Id) -> CacheResult<UserEntity> {
-        let data = CachedUserSelectById::new((&DATABASE_POOL).await)
+        let data = CachedUserSelectById::new((&DISCORD_FRONTEND).await)
             .bind(id.to_string())
             .one()
             .await?;
@@ -42,7 +42,7 @@ impl Repository<UserEntity> for CachedUserRepository {
     }
 
     async fn upsert(&self, entity: UserEntity) -> CacheResult<()> {
-        CachedUserUpsert::new((&DATABASE_POOL).await)
+        CachedUserUpsert::new((&DISCORD_FRONTEND).await)
             .bind(
                 entity.avatar.map(|hash| hash.to_string()),
                 entity.id.to_string(),
