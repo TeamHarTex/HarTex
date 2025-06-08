@@ -32,7 +32,6 @@ use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
-use hartex_log::formati;
 use miette::IntoDiagnostic;
 use rdkafka::Message;
 use rdkafka::consumer::StreamConsumer;
@@ -82,7 +81,7 @@ where
                     continue;
                 };
 
-                formati::trace!(
+                hartex_tracing::trace!(
                     "[shard {shard.id().number()}] received binary payload from gateway",
                 );
 
@@ -90,7 +89,7 @@ where
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic)
-                            .key(&formati::format!(
+                            .key(&hartex_tracing::format!(
                                 "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard.id().number()}",
                             ))
                             .payload(&bytes),
@@ -107,7 +106,7 @@ where
                 if let Err((error, _)) = producer
                     .send(
                         FutureRecord::to(&topic_2)
-                            .key(&formati::format!(
+                            .key(&hartex_tracing::format!(
                                 "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard.id().number()}",
                             ))
                             .payload(&bytes),
@@ -119,7 +118,7 @@ where
                 }
             }
             Err(error) => {
-                formati::warn!(
+                hartex_tracing::warn!(
                     "[shard {shard.id()}] error when receiving gateway message: {error}",
                 );
             }

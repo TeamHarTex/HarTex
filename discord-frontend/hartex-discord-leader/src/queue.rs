@@ -31,7 +31,6 @@ use hartex_discord_core::tokio::sync::oneshot;
 use hartex_discord_core::tokio::sync::oneshot::Receiver;
 use hartex_discord_core::tokio::sync::oneshot::Sender;
 use hartex_discord_core::tokio::time::sleep;
-use hartex_log::formati;
 use miette::IntoDiagnostic;
 
 /// A discriminated union of supported bot queues.
@@ -74,7 +73,7 @@ impl Queue for LocalQueue {
         let (tx, rx) = oneshot::channel::<()>();
 
         if let Err(error) = self.0.clone().send(tx) {
-            formati::warn!("skipping, send failed: {error:?}");
+            hartex_tracing::warn!("skipping, send failed: {error:?}");
         }
 
         rx
@@ -107,7 +106,7 @@ impl Queue for LargeBotQueue {
         let bucket = (shard_id % (self.0.len() as u32)) as usize;
         let (tx, rx) = oneshot::channel();
         if let Err(error) = self.0[bucket].clone().send(tx) {
-            formati::warn!("skipping, send failed: {error:?}");
+            hartex_tracing::warn!("skipping, send failed: {error:?}");
         }
 
         rx
@@ -118,7 +117,7 @@ impl Queue for LargeBotQueue {
 async fn wait_for_while(mut rx: UnboundedReceiver<Sender<()>>, duration: Duration) {
     while let Some(tx) = rx.recv().await {
         if let Err(error) = tx.send(()) {
-            formati::warn!("skipping, send failed: {error:?}");
+            hartex_tracing::warn!("skipping, send failed: {error:?}");
         }
 
         sleep(duration).await;

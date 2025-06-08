@@ -40,7 +40,6 @@ use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::task::JoinSet;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
-use hartex_log::formati;
 use miette::IntoDiagnostic;
 use rdkafka::ClientConfig;
 use rdkafka::consumer::Consumer;
@@ -54,9 +53,9 @@ mod shards;
 /// Entry point.
 #[tokio::main(flavor = "multi_thread")]
 pub async fn main() -> miette::Result<()> {
-    hartex_log::initialize();
+    tracing::subscriber::set_global_default(hartex_tracing::subscriber()).unwrap();
 
-    formati::trace!("loading environment variables");
+    hartex_tracing::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
     let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
@@ -82,13 +81,13 @@ pub async fn main() -> miette::Result<()> {
 
     consumer.subscribe(&[&topic]).into_diagnostic()?;
 
-    formati::trace!("building clusters");
+    hartex_tracing::trace!("building clusters");
     let queue = queue::obtain()?;
     let shards = shards::obtain(queue).await?;
 
     let (tx, rx) = watch::channel(false);
 
-    formati::trace!("launching {shards.len()} shard(s)");
+    hartex_tracing::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();
     for mut shard in shards {
         let mut rx = rx.clone();
@@ -107,7 +106,7 @@ pub async fn main() -> miette::Result<()> {
 
     signal::ctrl_c().await.into_diagnostic()?;
 
-    formati::warn!("ctrl-c signal received, shutting down");
+    hartex_tracing::warn!("ctrl-c signal received, shutting down");
 
     tx.send(true).into_diagnostic()?;
 
