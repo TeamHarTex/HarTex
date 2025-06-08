@@ -14,17 +14,15 @@ rust-version = "1.89.0"
 hartex_backend_routes = { path = "../hartex-backend-routes" }
 
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
+hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 axum = "0.8.4"
-bb8-postgres = "0.9.0"
 dotenvy = "0.15.7"
-log = "0.4.27"
 miette = { version = "7.6.0", features = ["fancy"] }
 tokio = { version = "1.45.0", features = ["full"] }
 tower = "0.5.2"
 tower-http = { version = "0.6.4", features = ["timeout", "trace"] }
-tracing = { version = "0.1.41", features = ["log-always"] }
+tracing = "0.1.41"
 utoipa = "5.3.1"
 utoipa-axum = "0.2.0"
 utoipa-scalar = { version = "0.3.0", features = ["axum"] }

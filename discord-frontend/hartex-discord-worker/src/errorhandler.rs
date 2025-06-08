@@ -37,7 +37,6 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_log::formati;
 use miette::Report;
 use sha2::Digest;
 use sha2::Sha224;
@@ -98,7 +97,7 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
-            formati::warn!("command errorred: {report:?}; error hash: {hash}");
+            hartex_tracing::warn!("command errorred: {report:?}; error hash: {hash}");
         }
         ErrorPayload::Panic(message) => {
             let message = strip_ansi_escapes::strip_str(message);
@@ -114,7 +113,7 @@ pub async fn handle_interaction_error(
                     interaction_create.id,
                     &interaction_create.token,
                     &ephemeral_error_response(format!(
-                        ":x: This command encountered an critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                        ":x: This command encountered a critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
                     )),
                 )
                 .await
@@ -141,7 +140,7 @@ pub async fn handle_interaction_error(
                 .await
                 .unwrap();
 
-            formati::error!("interaction command panicked: {message:?}; error hash: {hash}");
+            hartex_tracing::error!("interaction command panicked: {message:?}; error hash: {hash}");
         }
     }
 }

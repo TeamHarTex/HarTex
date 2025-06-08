@@ -32,6 +32,10 @@ use log4rs::config::Root;
 use log4rs::encode::pattern::PatternEncoder;
 
 /// Initialize logging factilities.
+#[deprecated(
+    since = "0.15.0",
+    note = "hartex-log is deprecated; use hartex-tracing instead"
+)]
 pub fn initialize() {
     let conf = Config::builder()
         .appender(

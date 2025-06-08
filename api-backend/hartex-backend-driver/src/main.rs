@@ -38,7 +38,6 @@ use std::time::Duration;
 
 use dotenvy::Error;
 use hartex_errors::dotenv;
-use hartex_log::formati;
 use miette::IntoDiagnostic;
 use tokio::net::TcpListener;
 use tokio::signal;
@@ -59,9 +58,9 @@ use utoipa_scalar::Servable;
 #[allow(clippy::no_effect_underscore_binding)]
 #[tokio::main]
 pub async fn main() -> miette::Result<()> {
-    hartex_log::initialize();
+    tracing::subscriber::set_global_default(hartex_tracing::subscriber()).unwrap();
 
-    formati::trace!("loading environment variables");
+    hartex_tracing::trace!("loading environment variables");
     if let Err(error) = dotenvy::dotenv() {
         match error {
             Error::LineParse(content, index) => Err(dotenv::LineParseError {
@@ -72,7 +71,7 @@ pub async fn main() -> miette::Result<()> {
         }
     }
 
-    formati::debug!("starting axum server");
+    hartex_tracing::debug!("starting axum server");
     let (app, mut openapi) = OpenApiRouter::new()
         .layer(ServiceBuilder::new()
             .layer(TraceLayer::new_for_http())
@@ -86,7 +85,7 @@ pub async fn main() -> miette::Result<()> {
 
     let domain = env::var("API_DOMAIN").into_diagnostic()?;
     let listener = TcpListener::bind(&domain).await.into_diagnostic()?;
-    formati::debug!("listening on {&domain}");
+    hartex_tracing::debug!("listening on {&domain}");
 
     openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
     let router = app.merge(Scalar::with_url("/openapi", openapi));
