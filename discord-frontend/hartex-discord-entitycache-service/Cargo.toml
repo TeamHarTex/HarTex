@@ -20,10 +20,9 @@ hartex_discord_core = { path = "../hartex-discord-core", features = [
 hartex_discord_entitycache_cacheupdaters = { path = "../hartex-discord-entitycache-cacheupdaters" }
 
 hartex_kafka_utils = { path = "../../rust-utilities/hartex-kafka-utils" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
+hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 futures-util = "0.3.31"
-log = "0.4.27"
 miette = { version = "7.6.0", features = ["fancy"] }
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",
@@ -33,6 +32,6 @@ rdkafka = { version = "0.37.0", default-features = false, features = [
 serde_json = "1.0.140"
 serde = "1.0.219"
 serde_scan = "0.4.1"
-tracing = { version = "0.1.41", features = ["log-always"] }
+tracing = "0.1.41"
 
 [features]

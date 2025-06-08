@@ -16,13 +16,12 @@ hartex_backend_models = { path = "../hartex-backend-models" }
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
-hartex_log = { path = "../../rust-utilities/hartex-log" }
+hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 axum = { version = "0.8.4", features = ["json", "macros"] }
 axum-extra = "0.10.1"
 chrono = "0.4.41"
-formati = { version = "0.1.3", features = ["log"] }
-log = "0.4.27"
+tracing = "0.1.41"
 utoipa = "5.3.1"
 
 [features]

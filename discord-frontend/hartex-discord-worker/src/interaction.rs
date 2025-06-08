@@ -36,7 +36,6 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
-use hartex_log::formati;
 use miette::IntoDiagnostic;
 
 use crate::errorhandler::ErrorPayload;
@@ -69,7 +68,7 @@ pub async fn application_command(
         todo!("running commands in DMs is not handled yet")
     };
 
-    formati::trace!("running interaction command {&command.name} in guild {guild_id}");
+    hartex_tracing::trace!("running interaction command {&command.name} in guild {guild_id}");
 
     let cloned = interaction_create.clone();
 
@@ -79,7 +78,7 @@ pub async fn application_command(
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
     if !plugin.enabled(guild_id).await? {
-        formati::trace!("check: plugin {plugin.name()} is disabled in guild {guild_id}");
+        hartex_tracing::trace!("check: plugin {plugin.name()} is disabled in guild {guild_id}");
 
         interaction_client
             .create_response(
@@ -100,7 +99,7 @@ pub async fn application_command(
         return Ok(());
     }
 
-    formati::trace!("check: plugin {plugin.name()} is enabled in guild {guild_id}");
+    hartex_tracing::trace!("check: plugin {plugin.name()} is enabled in guild {guild_id}");
 
     let permissions = command.required_permissions();
 
@@ -129,7 +128,7 @@ pub async fn application_command(
         return Ok(());
     }
 
-    formati::trace!(
+    hartex_tracing::trace!(
         "check: member {member.user.unwrap().id} has sufficient permissions to run the command"
     );
 
