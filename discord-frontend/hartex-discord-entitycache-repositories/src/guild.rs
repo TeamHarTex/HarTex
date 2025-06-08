@@ -36,7 +36,7 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::guild::GuildEntity;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::DISCORD_FRONTEND;
 
 /// Repository for guild entities.
 pub struct CachedGuildRepository;
@@ -46,7 +46,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
         let data =
-            CachedGuildSelectById::new((&DATABASE_POOL).await)
+            CachedGuildSelectById::new((&DISCORD_FRONTEND).await)
                 .bind(id.to_string())
                 .one()
                 .await?;
@@ -56,7 +56,7 @@ impl Repository<GuildEntity> for CachedGuildRepository {
 
     #[allow(clippy::cast_possible_wrap)]
     async fn upsert(&self, entity: GuildEntity) -> CacheResult<()> {
-        CachedGuildUpsert::new((&DATABASE_POOL).await)
+        CachedGuildUpsert::new((&DISCORD_FRONTEND).await)
             .bind(
                 i16::from(<DefaultMessageNotificationLevel as Into<u8>>::into(
                     entity.default_message_notifications,
