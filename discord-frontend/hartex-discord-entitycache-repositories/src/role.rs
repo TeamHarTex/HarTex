@@ -32,7 +32,7 @@ use hartex_discord_entitycache_core::error::CacheResult;
 use hartex_discord_entitycache_core::traits::Entity;
 use hartex_discord_entitycache_core::traits::Repository;
 use hartex_discord_entitycache_entities::role::RoleEntity;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::DISCORD_FRONTEND;
 
 /// Repository for role entities.
 pub struct CachedRoleRepository;
@@ -46,7 +46,7 @@ impl CachedRoleRepository {
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<RoleMarker>>> {
         let roles =
-            CachedRoleSelectByGuildId::new((&DATABASE_POOL).await)
+            CachedRoleSelectByGuildId::new((&DISCORD_FRONTEND).await)
                 .bind(guild_id.to_string())
                 .all()
                 .await?;
@@ -64,7 +64,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
         let data = CachedRoleSelectByIdAndGuildId::new(
-            (&DATABASE_POOL).await,
+            (&DISCORD_FRONTEND).await,
         )
         .bind(id.to_string(), guild_id.to_string())
         .one()
@@ -77,7 +77,7 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn upsert(&self, entity: RoleEntity) -> CacheResult<()> {
-        CachedRoleUpsert::new((&DATABASE_POOL).await)
+        CachedRoleUpsert::new((&DISCORD_FRONTEND).await)
             .bind(
                 entity.color as i64,
                 entity.icon.map(|hash| hash.to_string()),

@@ -36,7 +36,7 @@ use hartex_backend_models::uptime::UptimeResponse;
 use hartex_backend_models::uptime::UptimeUpdate;
 use hartex_database_queries::queries::api_backend::start_timestamp_select_by_component::StartTimestampSelectByComponent;
 use hartex_database_queries::queries::api_backend::start_timestamp_upsert::StartTimestampUpsert;
-use hartex_discord_utils::DATABASE_POOL;
+use hartex_discord_utils::database::API_BACKEND;
 use hartex_log::formati;
 
 /// Get component uptime
@@ -59,7 +59,7 @@ pub async fn get_uptime(
 ) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
     formati::trace!("querying timestamp");
     let name = query.component_name();
-    let result = StartTimestampSelectByComponent::new((&DATABASE_POOL).await)
+    let result = StartTimestampSelectByComponent::new((&API_BACKEND).await)
         .bind(name.to_string());
 
     let result = result.all().await;
@@ -103,7 +103,7 @@ pub async fn patch_uptime(
         // just 500 for now
         return Response::internal_server_error();
     };
-    let result = StartTimestampUpsert::new((&DATABASE_POOL).await)
+    let result = StartTimestampUpsert::new((&API_BACKEND).await)
         .bind(query.component_name().to_string(), timestamp)
         .execute()
         .await;
