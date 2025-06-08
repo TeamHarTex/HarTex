@@ -34,11 +34,10 @@ use std::env;
 use std::ops::Deref;
 use std::sync::LazyLock;
 
-use async_lazy::Lazy;
 use hartex_discord_core::discord::http::Client;
-use sqlx::PgPool;
 
 pub mod commands;
+pub mod database;
 pub mod hyper;
 pub mod interaction;
 pub mod localizable;
@@ -53,12 +52,6 @@ pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
         .ratelimiter(None)
         .build()
 });
-
-/// An asynchronously lazyily initialized database pool.
-pub static DATABASE_POOL: Lazy<PgPool> = Lazy::new(|| Box::pin(async {
-    let hartex_pgsql_url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
-    PgPool::connect(&hartex_pgsql_url).await.unwrap()
-}));
 
 /// The bot token used for logging in to the Discord gateway and sending HTTP requests.
 pub static TOKEN: LazyLock<String> = LazyLock::new(|| env::var("BOT_TOKEN").unwrap());

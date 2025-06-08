@@ -1380,6 +1380,7 @@ dependencies = [
  "async-lazy",
  "hartex_discord_core",
  "hartex_localization_core",
+ "log",
  "miette",
  "sqlx",
  "tokio-postgres",

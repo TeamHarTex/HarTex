@@ -79,6 +79,8 @@ pub async fn application_command(
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
     if !plugin.enabled(guild_id).await? {
+        formati::trace!("check: plugin {plugin.name()} is disabled in guild {guild_id}");
+
         interaction_client
             .create_response(
                 interaction_create.id,
