@@ -22,6 +22,7 @@ dotenvy = "0.15.7"
 log = "0.4.27"
 miette = { version = "7.6.0", features = ["fancy"] }
 tokio = { version = "1.45.0", features = ["full"] }
+tower = "0.5.2"
 tower-http = { version = "0.6.4", features = ["timeout", "trace"] }
 tracing = { version = "0.1.41", features = ["log-always"] }
 utoipa = "5.3.1"

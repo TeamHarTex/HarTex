@@ -913,6 +913,7 @@ dependencies = [
  "log",
  "miette",
  "tokio",
+ "tower",
  "tower-http",
  "tracing",
  "utoipa",
