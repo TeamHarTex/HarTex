@@ -36,7 +36,6 @@ use hartex_discord_core::discord::model::http::interaction::InteractionResponseT
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
-use hartex_tracing::formati;
 use miette::IntoDiagnostic;
 
 use crate::errorhandler::ErrorPayload;
