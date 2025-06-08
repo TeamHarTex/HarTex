@@ -31,7 +31,27 @@ use sqlx::PgPool;
 use sqlx::postgres::PgConnectOptions;
 use sqlx::postgres::PgPoolOptions;
 
-/// An asynchronously lazyily initialized database pool.
+/// An asynchronously lazyily initialized database pool for the API Backend database.
+pub static API_BACKEND: Lazy<PgPool> = Lazy::new(|| Box::pin(async {
+    let hartex_pgsql_url = env::var("API_BACKEND_PGSQL_URL").unwrap();
+    let options = PgConnectOptions::from_str(&hartex_pgsql_url)
+        .unwrap()
+        .log_statements(LevelFilter::Debug)
+        .log_slow_statements(LevelFilter::Debug, Duration::from_secs(1));
+    PgPoolOptions::new().connect_with(options).await.unwrap()
+}));
+
+/// An asynchronously lazyily initialized database pool for the Configuration database.
+pub static CONFIGURATION: Lazy<PgPool> = Lazy::new(|| Box::pin(async {
+    let hartex_pgsql_url = env::var("CONFIGURATION_PGSQL_URL").unwrap();
+    let options = PgConnectOptions::from_str(&hartex_pgsql_url)
+        .unwrap()
+        .log_statements(LevelFilter::Debug)
+        .log_slow_statements(LevelFilter::Debug, Duration::from_secs(1));
+    PgPoolOptions::new().connect_with(options).await.unwrap()
+}));
+
+/// An asynchronously lazyily initialized database pool for the Discord Frontend database.
 pub static DISCORD_FRONTEND: Lazy<PgPool> = Lazy::new(|| Box::pin(async {
     let hartex_pgsql_url = env::var("DISCORD_FRONTEND_PGSQL_URL").unwrap();
     let options = PgConnectOptions::from_str(&hartex_pgsql_url)
