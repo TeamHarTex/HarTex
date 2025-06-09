@@ -43,7 +43,7 @@ use hartex_discord_utils::database::API_BACKEND;
 #[allow(clippy::missing_panics_doc)] // this function cannot panic
 #[allow(clippy::module_name_repetitions)]
 #[utoipa::path(
-    get,
+    post,
     path = "/api/v1/stats/uptime",
     params(UptimeQuery),
     responses(
@@ -53,7 +53,7 @@ use hartex_discord_utils::database::API_BACKEND;
         (status = 500, description = "Generic internal server error")
     )
 )]
-pub async fn get_uptime(
+pub async fn post_uptime(
     WithRejection(Query(query), _): WithRejection<Query<UptimeQuery>, UptimeQueryRejection>,
 ) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
     hartex_tracing::trace!("querying timestamp");
