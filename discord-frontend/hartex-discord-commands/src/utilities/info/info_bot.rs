@@ -45,7 +45,6 @@ use hyper::Request;
 use hyper::body::Buf;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
-use hyper::header::CONTENT_TYPE;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -75,7 +74,9 @@ pub async fn execute(
     let request = Request::builder()
         .uri(uri)
         .method(Method::GET)
-        .header(ACCEPT, "application/json");
+        .header(ACCEPT, "application/json")
+        .body(())
+        .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
     hartex_tracing::debug!("deserializing result");
