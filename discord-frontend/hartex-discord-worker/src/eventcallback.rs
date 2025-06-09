@@ -129,14 +129,11 @@ pub async fn invoke(
             }
             DispatchEvent::Ready(ready) => {
                 hartex_tracing::info!(
-                    "{}#{} (shard {shard}) has received READY payload from Discord (gateway v{}) (sequence {seq})",
-                    ready.user.name,
-                    ready.user.discriminator,
-                    ready.version
+                    "{ready.user.name}#{ready.user.discriminator} (shard {shard}) has received READY payload from Discord (gateway v{ready.version}) (sequence {seq})",
                 );
 
                 let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-                let uri = format!("http://{}/api/v0110/stats/uptime", api_domain.clone());
+                let uri = hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime");
                 let now = SystemTime::now();
                 let duration = now
                     .duration_since(SystemTime::UNIX_EPOCH)
