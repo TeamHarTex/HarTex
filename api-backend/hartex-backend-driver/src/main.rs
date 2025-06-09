@@ -74,8 +74,8 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::debug!("starting axum server");
     let (app, mut openapi) = OpenApiRouter::new()
         .routes(routes!(
+            hartex_backend_routes::uptime::get_uptime,
             hartex_backend_routes::uptime::patch_uptime,
-            hartex_backend_routes::uptime::post_uptime,
         ))
         .split_for_parts();
 
