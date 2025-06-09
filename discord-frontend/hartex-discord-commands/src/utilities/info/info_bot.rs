@@ -40,9 +40,11 @@ use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use http_body_util::BodyExt;
+use http_body_util::Empty;
 use hyper::Method;
 use hyper::Request;
 use hyper::body::Buf;
+use hyper::body::Bytes;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
 use hyper_util::rt::TokioIo;
@@ -57,7 +59,7 @@ pub async fn execute(
     localizer: Localizer<'_>,
 ) -> miette::Result<()> {
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime?query=HarTex%20Nightly");
+    let uri = hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly");
     let now = SystemTime::now();
 
     let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
@@ -75,7 +77,7 @@ pub async fn execute(
         .uri(uri)
         .method(Method::GET)
         .header(ACCEPT, "application/json")
-        .body(())
+        .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
