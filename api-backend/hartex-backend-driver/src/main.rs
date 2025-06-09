@@ -73,13 +73,9 @@ pub async fn main() -> miette::Result<()> {
 
     hartex_tracing::debug!("starting axum server");
     let (app, mut openapi) = OpenApiRouter::new()
-        .layer(ServiceBuilder::new()
-            .layer(TraceLayer::new_for_http())
-            .layer(TimeoutLayer::new(Duration::from_secs(30)))
-        )
         .routes(routes!(
             hartex_backend_routes::uptime::get_uptime,
-            hartex_backend_routes::uptime::patch_uptime
+            hartex_backend_routes::uptime::patch_uptime,
         ))
         .split_for_parts();
 
@@ -88,7 +84,12 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::debug!("listening on {&domain}");
 
     openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
-    let router = app.merge(Scalar::with_url("/openapi", openapi));
+    let router = app
+        .merge(Scalar::with_url("/openapi", openapi))
+        .layer(ServiceBuilder::new()
+            .layer(TraceLayer::new_for_http())
+            .layer(TimeoutLayer::new(Duration::from_secs(30)))
+        );
 
     axum::serve(listener, router)
         .with_graceful_shutdown(shutdown())

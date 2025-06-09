@@ -28,7 +28,6 @@ use std::env;
 use std::time::SystemTime;
 
 use hartex_backend_models::Response;
-use hartex_backend_models::uptime::UptimeQuery;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -41,12 +40,13 @@ use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
 use http_body_util::BodyExt;
+use http_body_util::Empty;
 use hyper::Method;
 use hyper::Request;
 use hyper::body::Buf;
+use hyper::body::Bytes;
 use hyper::client::conn::http1::handshake;
 use hyper::header::ACCEPT;
-use hyper::header::CONTENT_TYPE;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 use miette::Report;
@@ -59,7 +59,7 @@ pub async fn execute(
     localizer: Localizer<'_>,
 ) -> miette::Result<()> {
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = format!("http://{}/api/v0110/stats/uptime", api_domain.clone());
+    let uri = hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly");
     let now = SystemTime::now();
 
     let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
@@ -73,13 +73,11 @@ pub async fn execute(
 
     hartex_tracing::debug!("sending a request to {&uri}");
 
-    let query = UptimeQuery::new("HarTex Nightly");
     let request = Request::builder()
         .uri(uri)
-        .method(Method::POST)
+        .method(Method::GET)
         .header(ACCEPT, "application/json")
-        .header(CONTENT_TYPE, "application/json")
-        .body(serde_json::to_string(&query).into_diagnostic()?)
+        .body(Empty::<Bytes>::new())
         .into_diagnostic()?;
 
     let result = sender.send_request(request).await.into_diagnostic()?;
