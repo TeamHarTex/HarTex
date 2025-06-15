@@ -19,15 +19,15 @@ lazy_static = "1.5.0"
 pluralizer = "0.5.0"
 proc-macro2 = "1.0.95"
 quote = "1.0.40"
-syn = { version = "2.0.101", features = ["extra-traits", "full"] }
+syn = { version = "2.0.103", features = ["extra-traits", "full"] }
 
 [build-dependencies]
 convert_case = "0.8.0"
 proc-macro2 = "1.0.95"
 quote = "1.0.40"
-reqwest = { version = "0.12.15", features = ["blocking"] }
-syn = { version = "2.0.101", features = ["extra-traits", "full"] }
-zip = { version = "4.0.0" }
+reqwest = { version = "0.12.20", features = ["blocking"] }
+syn = { version = "2.0.103", features = ["extra-traits", "full"] }
+zip = { version = "4.1.0" }
 
 [features]
 default = ["discord_model_v_0_15_4"]

@@ -58,6 +58,8 @@ pub async fn handle_interaction_error(
     let channel_id_str = env::var("ERROR_CHANNEL_ID").unwrap();
     let channel_id = Id::<ChannelMarker>::from_str(channel_id_str.as_str()).unwrap();
 
+    let error_line_two = localizer.error_error_line_two().unwrap();
+
     match payload {
         ErrorPayload::Miette(report) => {
             let report = strip_ansi_escapes::strip_str(report.to_string());
@@ -65,14 +67,16 @@ pub async fn handle_interaction_error(
             hasher.update(report.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
 
+            let error_line_one = localizer.error_error_line_one("unexpected").unwrap();
+
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
             interaction_client
                 .create_response(
                     interaction_create.id,
                     &interaction_create.token,
-                    &ephemeral_error_response(format!(
-                        ":x: This command encountered an unexpected error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                    &ephemeral_error_response(hartex_tracing::format!(
+                        "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
                     ))
                 )
                 .await
@@ -107,6 +111,8 @@ pub async fn handle_interaction_error(
             hasher.update(message.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
 
+            let error_line_one = localizer.error_error_line_one("critical").unwrap();
+
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
 
@@ -114,8 +120,8 @@ pub async fn handle_interaction_error(
                 .create_response(
                     interaction_create.id,
                     &interaction_create.token,
-                    &ephemeral_error_response(format!(
-                        ":x: This command encountered a critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                    &ephemeral_error_response(hartex_tracing::format!(
+                        "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
                     )),
                 )
                 .await
