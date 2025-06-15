@@ -31,7 +31,7 @@ hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 chrono = { version = "0.4.41", features = ["clock"], default-features = false }
 futures-util = "0.3.31"
 hyper = { version = "1.6.0", features = ["client", "http1"] }
-hyper-util = { version = "0.1.12", features = ["tokio"] }
+hyper-util = { version = "0.1.14", features = ["tokio"] }
 miette = { version = "7.6.0", features = ["fancy"] }
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",
@@ -41,7 +41,7 @@ rdkafka = { version = "0.37.0", default-features = false, features = [
 serde = "1.0.219"
 serde_json = "1.0.140"
 serde_scan = "0.4.1"
-sha2 = "0.11.0-pre.5"
+sha2 = "0.11.0-rc.0"
 strip-ansi-escapes = "0.2.1"
 tracing = "0.1.41"
 

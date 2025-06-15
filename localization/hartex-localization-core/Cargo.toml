@@ -16,7 +16,7 @@ hartex_localization_loader = { path = "../../localization/hartex-localization-lo
 
 fluent-bundle = "0.16.0"
 fluent-syntax = "0.12.0"
-intl-memoizer = "0.5.2"
+intl-memoizer = "0.5.3"
 lazy_static = "1.5.0"
 miette = "7.6.0"
 unic-langid = { version = "0.9.6", features = ["macros"] }
