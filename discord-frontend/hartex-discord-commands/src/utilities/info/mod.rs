@@ -49,7 +49,7 @@ impl Command for Info {
         &self,
         interaction: Interaction,
         interaction_client: &InteractionClient<'_>,
-        localizer: Localizer<'_>,
+        localizer: &Localizer<'_>,
     ) -> miette::Result<()> {
         let Some(InteractionData::ApplicationCommand(command)) = interaction.clone().data else {
             unreachable!()

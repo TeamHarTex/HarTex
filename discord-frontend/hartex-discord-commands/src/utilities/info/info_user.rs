@@ -51,7 +51,7 @@ pub async fn execute(
     interaction: Interaction,
     interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
-    localizer: Localizer<'_>,
+    localizer: &Localizer<'_>,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
