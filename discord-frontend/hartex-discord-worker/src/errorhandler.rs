@@ -37,6 +37,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
+use hartex_localization_core::Localizer;
 use miette::Report;
 use sha2::Digest;
 use sha2::Sha224;
@@ -50,6 +51,7 @@ pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
     interaction_client: &InteractionClient<'_>,
+    localizer: Localizer<'_>,
 ) {
     let mut hasher = Sha224::new();
 
