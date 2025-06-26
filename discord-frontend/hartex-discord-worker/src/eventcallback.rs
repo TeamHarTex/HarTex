@@ -107,7 +107,7 @@ pub async fn invoke(
 
                 let interaction_client = CLIENT.interaction(interaction_create.application_id);
 
-                let locale = interaction_create.locale.as_deref().unwrap_or("en-GB");
+                let locale = interaction_create.clone().locale.as_deref().unwrap_or("en-GB");
                 let localizer = Localizer::new(&LOCALIZATION_HOLDER, locale);
 
                 if let Err(error) = AssertUnwindSafe(crate::interaction::application_command(
