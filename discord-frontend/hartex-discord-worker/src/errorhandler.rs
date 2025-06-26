@@ -51,7 +51,7 @@ pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
     interaction_client: &InteractionClient<'_>,
-    localizer: Localizer<'_>,
+    localizer: &Localizer<'_>,
 ) {
     let mut hasher = Sha224::new();
 
