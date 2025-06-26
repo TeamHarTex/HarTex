@@ -77,7 +77,7 @@ pub async fn handle_interaction_error(
                     &interaction_create.token,
                     &ephemeral_error_response(hartex_tracing::format!(
                         "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
-                    ))
+                    )),
                 )
                 .await
                 .unwrap();

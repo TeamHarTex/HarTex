@@ -34,7 +34,6 @@ use hartex_discord_core::discord::model::gateway::payload::incoming::Interaction
 use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
 use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
 use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
-use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
@@ -58,6 +57,7 @@ pub static COMMAND_LOOKUP: LazyLock<HashMap<String, Box<dyn Command + Send + Syn
 pub async fn application_command(
     interaction_create: Box<InteractionCreate>,
     interaction_client: &InteractionClient<'_>,
+    localizer: &Localizer<'_>,
 ) -> miette::Result<()> {
     let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap()
     else {
@@ -71,9 +71,6 @@ pub async fn application_command(
     hartex_tracing::trace!("running interaction command {&command.name} in guild {guild_id}");
 
     let cloned = interaction_create.clone();
-
-    let locale = interaction_create.locale.as_deref().unwrap_or("en-GB");
-    let localizer = Localizer::new(&LOCALIZATION_HOLDER, locale);
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
