@@ -45,11 +45,10 @@ impl CachedRoleRepository {
         &self,
         guild_id: Id<GuildMarker>,
     ) -> CacheResult<Vec<Id<RoleMarker>>> {
-        let roles =
-            CachedRoleSelectByGuildId::new((&DISCORD_FRONTEND).await)
-                .bind(guild_id.to_string())
-                .all()
-                .await?;
+        let roles = CachedRoleSelectByGuildId::new((&DISCORD_FRONTEND).await)
+            .bind(guild_id.to_string())
+            .all()
+            .await?;
 
         Ok(roles
             .into_iter()
@@ -63,12 +62,10 @@ impl Repository<RoleEntity> for CachedRoleRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, (guild_id, id): <RoleEntity as Entity>::Id) -> CacheResult<RoleEntity> {
-        let data = CachedRoleSelectByIdAndGuildId::new(
-            (&DISCORD_FRONTEND).await,
-        )
-        .bind(id.to_string(), guild_id.to_string())
-        .one()
-        .await?;
+        let data = CachedRoleSelectByIdAndGuildId::new((&DISCORD_FRONTEND).await)
+            .bind(id.to_string(), guild_id.to_string())
+            .one()
+            .await?;
 
         Ok(RoleEntity::from(data))
     }

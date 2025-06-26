@@ -59,7 +59,9 @@ pub async fn execute(
     localizer: &Localizer<'_>,
 ) -> miette::Result<()> {
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly");
+    let uri = hartex_tracing::format!(
+        "http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly"
+    );
     let now = SystemTime::now();
 
     let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
