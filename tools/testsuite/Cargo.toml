@@ -16,7 +16,7 @@ clap = { version = "4.5.40", default-features = false, features = [
     "derive",
     "error-context",
 ] }
-console = "0.15.11"
+console = "0.16.0"
 owo-colors = "4.2.1"
 path-slash = "0.2.1"
 similar = { version = "2.7.0", features = ["inline"] }
