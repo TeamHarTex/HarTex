@@ -130,7 +130,7 @@ pub async fn application_command(
     );
 
     if let Err(error) = command
-        .execute(cloned.0, interaction_client, &localizer)
+        .execute(cloned.0, interaction_client, localizer)
         .await
     {
         crate::errorhandler::handle_interaction_error(
