@@ -52,7 +52,7 @@ pub trait Command: CommandMetadata {
         &self,
         interaction: Interaction,
         interaction_client: &InteractionClient<'_>,
-        localizer: Localizer<'_>,
+        localizer: &Localizer<'_>,
     ) -> miette::Result<()>;
 }
 

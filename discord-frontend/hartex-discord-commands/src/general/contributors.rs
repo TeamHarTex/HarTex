@@ -49,7 +49,7 @@ impl Command for Contributors {
         &self,
         interaction: Interaction,
         interaction_client: &InteractionClient<'_>,
-        localizer: Localizer<'_>,
+        localizer: &Localizer<'_>,
     ) -> miette::Result<()> {
         let contributors_embed_title = localizer.general_plugin_contributors_embed_title()?;
         let contributors_embed_description =

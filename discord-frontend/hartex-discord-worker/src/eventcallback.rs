@@ -37,6 +37,8 @@ use hartex_discord_core::discord::model::gateway::payload::outgoing::request_gui
 use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::spawn;
 use hartex_discord_utils::CLIENT;
+use hartex_localization_core::LOCALIZATION_HOLDER;
+use hartex_localization_core::Localizer;
 use hyper::Method;
 use hyper::Request;
 use hyper::client::conn::http1::handshake;
@@ -105,9 +107,14 @@ pub async fn invoke(
 
                 let interaction_client = CLIENT.interaction(interaction_create.application_id);
 
+                let cloned = interaction_create.clone();
+                let locale = cloned.locale.as_deref().unwrap_or("en-GB");
+                let localizer = Localizer::new(&LOCALIZATION_HOLDER, locale);
+
                 if let Err(error) = AssertUnwindSafe(crate::interaction::application_command(
                     interaction_create.clone(),
                     &interaction_client,
+                    &localizer,
                 ))
                 .catch_unwind()
                 .await
@@ -121,6 +128,7 @@ pub async fn invoke(
                         ),
                         interaction_create,
                         &interaction_client,
+                        &localizer,
                     )
                     .await;
                 }
@@ -133,7 +141,8 @@ pub async fn invoke(
                 );
 
                 let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-                let uri = hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime");
+                let uri =
+                    hartex_tracing::format!("http://{api_domain.clone()}/api/v1/stats/uptime");
                 let now = SystemTime::now();
                 let duration = now
                     .duration_since(SystemTime::UNIX_EPOCH)
