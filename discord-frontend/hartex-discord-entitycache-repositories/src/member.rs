@@ -38,12 +38,10 @@ impl Repository<MemberEntity> for CachedMemberRepository {
         &self,
         (guild_id, user_id): <MemberEntity as Entity>::Id,
     ) -> CacheResult<MemberEntity> {
-        let data = CachedMemberSelectByUserIdAndGuildId::new(
-            (&DISCORD_FRONTEND).await,
-        )
-        .bind(user_id.to_string(), guild_id.to_string())
-        .one()
-        .await?;
+        let data = CachedMemberSelectByUserIdAndGuildId::new((&DISCORD_FRONTEND).await)
+            .bind(user_id.to_string(), guild_id.to_string())
+            .one()
+            .await?;
 
         Ok(MemberEntity::from(data))
     }

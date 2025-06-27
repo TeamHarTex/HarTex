@@ -37,6 +37,7 @@ use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
+use hartex_localization_core::Localizer;
 use miette::Report;
 use sha2::Digest;
 use sha2::Sha224;
@@ -50,11 +51,14 @@ pub async fn handle_interaction_error(
     payload: ErrorPayload,
     interaction_create: Box<InteractionCreate>,
     interaction_client: &InteractionClient<'_>,
+    localizer: &Localizer<'_>,
 ) {
     let mut hasher = Sha224::new();
 
     let channel_id_str = env::var("ERROR_CHANNEL_ID").unwrap();
     let channel_id = Id::<ChannelMarker>::from_str(channel_id_str.as_str()).unwrap();
+
+    let error_line_two = localizer.error_error_line_two().unwrap();
 
     match payload {
         ErrorPayload::Miette(report) => {
@@ -63,15 +67,17 @@ pub async fn handle_interaction_error(
             hasher.update(report.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
 
+            let error_line_one = localizer.error_error_line_one("unexpected").unwrap();
+
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
             interaction_client
                 .create_response(
                     interaction_create.id,
                     &interaction_create.token,
-                    &ephemeral_error_response(format!(
-                        ":x: This command encountered an unexpected error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
-                    ))
+                    &ephemeral_error_response(hartex_tracing::format!(
+                        "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
+                    )),
                 )
                 .await
                 .unwrap();
@@ -105,6 +111,8 @@ pub async fn handle_interaction_error(
             hasher.update(message.as_bytes());
             hasher.update(Utc::now().timestamp().to_string().as_bytes());
 
+            let error_line_one = localizer.error_error_line_one("critical").unwrap();
+
             let output = hasher.finalize();
             let hash = output.map(|int| format!("{int:x}")).join("");
 
@@ -112,8 +120,8 @@ pub async fn handle_interaction_error(
                 .create_response(
                     interaction_create.id,
                     &interaction_create.token,
-                    &ephemeral_error_response(format!(
-                        ":x: This command encountered a critical error. Please provide the following error code for support.\n\nError code: {}", hash.clone().discord_inline_code()
+                    &ephemeral_error_response(hartex_tracing::format!(
+                        "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
                     )),
                 )
                 .await

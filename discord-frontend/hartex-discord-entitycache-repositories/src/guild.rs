@@ -45,11 +45,10 @@ impl Repository<GuildEntity> for CachedGuildRepository {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     async fn get(&self, id: <GuildEntity as Entity>::Id) -> CacheResult<GuildEntity> {
-        let data =
-            CachedGuildSelectById::new((&DISCORD_FRONTEND).await)
-                .bind(id.to_string())
-                .one()
-                .await?;
+        let data = CachedGuildSelectById::new((&DISCORD_FRONTEND).await)
+            .bind(id.to_string())
+            .one()
+            .await?;
 
         Ok(GuildEntity::from(data))
     }

@@ -51,7 +51,7 @@ impl Command for About {
         &self,
         interaction: Interaction,
         interaction_client: &InteractionClient<'_>,
-        localizer: Localizer<'_>,
+        localizer: &Localizer<'_>,
     ) -> miette::Result<()> {
         let about_embed_title = localizer.general_plugin_about_embed_title()?;
         let about_embed_description = localizer.general_plugin_about_embed_description()?;

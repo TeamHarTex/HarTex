@@ -33,11 +33,10 @@ pub struct CachedEmojiRepository;
 
 impl Repository<EmojiEntity> for CachedEmojiRepository {
     async fn get(&self, id: <EmojiEntity as Entity>::Id) -> CacheResult<EmojiEntity> {
-        let data =
-            CachedEmojiSelectById::new((&DISCORD_FRONTEND).await)
-                .bind(id.to_string())
-                .one()
-                .await?;
+        let data = CachedEmojiSelectById::new((&DISCORD_FRONTEND).await)
+            .bind(id.to_string())
+            .one()
+            .await?;
 
         Ok(EmojiEntity::from(data))
     }
