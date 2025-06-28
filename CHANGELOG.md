@@ -91,7 +91,8 @@
 
 ## Buildsystem
 
-- **Changed:** updated `rust-version` to 1.85- **Changed:** use Rust 2024 Edition
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
 
 
 ## Database Infrastructure
