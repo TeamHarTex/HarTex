@@ -170,7 +170,7 @@ pub async fn execute(
         .filter(|channel| channel.kind == ChannelType::GuildForum)
         .count();
 
-    let mut features = guild
+    let features = guild
         .features
         .iter()
         .cloned()
