@@ -49,6 +49,7 @@
 - **Changed:** migrated to `formati` for format strings
 - **Changed:** migrated to `tracing` for logging
 - **Changed:** moved localization setup earlier
+- **Changed:** small code optimizations for `/info server`
 
 ## Localization Infrastructure
 
