@@ -42,7 +42,7 @@
 
 ## Web Frontend
 
-# [0.14.0, Silicon I](https://github.com/TeamHarTex/HarTex/compare/0.13.0..0.14.0)
+# [Version 0.14.0, Silicon I (2025-05-14)](https://github.com/TeamHarTex/HarTex/compare/0.13.0..0.14.0)
 
 > **1** contributor made contributions to this release
 
@@ -75,7 +75,7 @@
 
 - **Changed:** updated `rust-version` to 1.89
 
-# [0.13.0, Aluminium I](https://github.com/TeamHarTex/HarTex/compare/0.12.0..0.13.0)
+# [Version 0.13.0, Aluminium I (2025-01-01)](https://github.com/TeamHarTex/HarTex/compare/0.12.0..0.13.0)
 
 > **1** contributor made contributions to this release
 
@@ -91,7 +91,8 @@
 
 ## Buildsystem
 
-- **Changed:** updated `rust-version` to 1.85- **Changed:** use Rust 2024 Edition
+- **Changed:** updated `rust-version` to 1.85
+- **Changed:** use Rust 2024 Edition
 
 
 ## Database Infrastructure
@@ -117,9 +118,7 @@
 - **Changed:** updated `rust-version` to 1.85
 - **Changed:** use Rust 2024 Edition
 
-## Web Frontend
-
-# [0.12.0, Magnesium I](https://github.com/TeamHarTex/HarTex/compare/0.11.0..0.12.0)
+# [Version 0.12.0, Magnesium I (2024-08-04)](https://github.com/TeamHarTex/HarTex/compare/0.11.0..0.12.0)
 
 > **4** contributors made contributions to this release
 
@@ -158,7 +157,7 @@
 - **Added:** added several components
 - **Changed:** updated website
 
-# [0.11.0, Sodium I](https://github.com/TeamHarTex/HarTex/compare/0.10.0..0.11.0)
+# [Version 0.11.0, Sodium I (2024-05-31)](https://github.com/TeamHarTex/HarTex/compare/0.10.0..0.11.0)
 
 > **2** contributors made contributions to this release
 
@@ -203,7 +202,7 @@
 - **Added:** added utility functions for working with `CommandDataOption`
 - **Changed:** updated `rust-version` to 1.80
 
-# [0.10.0, Neon I](https://github.com/TeamHarTex/HarTex/compare/0.9.0..0.10.0)
+# [Version 0.10.0, Neon I (2024-04-30)](https://github.com/TeamHarTex/HarTex/compare/0.9.0..0.10.0)
 
 > **3** contributors made contributions to this release
 
@@ -249,7 +248,7 @@
 
 - **Changed:** migrated to the Bun runtime
 
-# [0.9.0, Fluorine I](https://github.com/TeamHarTex/HarTex/compare/0.8.0..0.9.0)
+# [Version 0.9.0, Fluorine I (2024-03-08)](https://github.com/TeamHarTex/HarTex/compare/0.8.0..0.9.0)
 
 > **4** contributors made contributions to this release
 
@@ -283,7 +282,7 @@
 
 - **Changed:** renamed `.cargo/config` to `.cargo/config.toml`
 
-# [0.8.0, Oxygen I](https://github.com/TeamHarTex/HarTex/compare/0.7.1..0.8.0)
+# [Version 0.8.0, Oxygen I (2024-02-05)](https://github.com/TeamHarTex/HarTex/compare/0.7.1..0.8.0)
 
 > **4** contributors made contributions to this release
 
@@ -340,7 +339,7 @@
 
 - **Changed:** de-`Arc` the bot gateway queue as per changes in twilight
 
-# [0.7.0, Nitrogen I](https://github.com/TeamHarTex/HarTex/compare/0.6.0..0.7.0)
+# [Version 0.7.0, Nitrogen I (2024-01-01)](https://github.com/TeamHarTex/HarTex/compare/0.6.0..0.7.0)
 
 > **4** contributor made contributions to this release
 
@@ -399,7 +398,7 @@
 
 - **Changed:** increment copyright year to 2024
 
-# [0.6.0, Carbon I](https://github.com/TeamHarTex/HarTex/compare/0.5.1..0.6.0)
+# [Version 0.6.0, Carbon I (2023-12-10)](https://github.com/TeamHarTex/HarTex/compare/0.5.1..0.6.0)
 
 > **1** contributor made contributions to this release
 
@@ -448,7 +447,7 @@
 - **Changed:** updated Rust Version to 1.76
 - **Changed:** leverage parallel rustc compilation frontend
 
-# [0.5.1, Boron II](https://github.com/TeamHarTex/HarTex/compare/0.5.0..0.5.1)
+# [Version 0.5.1, Boron II (2023-11-05)](https://github.com/TeamHarTex/HarTex/compare/0.5.0..0.5.1)
 
 > **1** contributor made contributions to this release
 
@@ -472,7 +471,7 @@
 
 - **Changed:** app components updated
 
-# [0.5.0, Boron I](https://github.com/TeamHarTex/HarTex/compare/0.4.0..0.5.0)
+# [Version 0.5.0, Boron I (2023-11-03)](https://github.com/TeamHarTex/HarTex/compare/0.4.0..0.5.0)
 
 > **2** contributors made contributions to this release
 
