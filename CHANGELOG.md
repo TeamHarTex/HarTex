@@ -118,8 +118,6 @@
 - **Changed:** updated `rust-version` to 1.85
 - **Changed:** use Rust 2024 Edition
 
-## Web Frontend
-
 # [Version 0.12.0, Magnesium I (2024-08-04)](https://github.com/TeamHarTex/HarTex/compare/0.11.0..0.12.0)
 
 > **4** contributors made contributions to this release
