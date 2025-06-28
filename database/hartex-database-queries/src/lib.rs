@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(unused_imports)]
 #![deny(unsafe_code)]
 
 pub mod queries;
