@@ -33,6 +33,6 @@ sqlx = { version = "0.8.6", features = [
 tokio-postgres = "0.7.13"
 tokio-rustls = { version = "0.26.2", features = ["ring"] }
 unic-langid = "0.9.6"
-webpki-roots = "1.0.0"
+webpki-roots = "1.0.1"
 
 [features]

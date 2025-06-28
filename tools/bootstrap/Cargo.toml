@@ -17,7 +17,7 @@ clap = { version = "4.5.40", default-features = false, features = [
     "error-context",
 ] }
 fd-lock = "4.0.4"
-owo-colors = "4.2.1"
+owo-colors = "4.2.2"
 serde = { version = "1.0.219", features = ["derive"] }
 toml = "0.8.23"
 
