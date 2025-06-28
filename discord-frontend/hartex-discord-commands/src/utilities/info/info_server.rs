@@ -170,15 +170,11 @@ pub async fn execute(
         .filter(|channel| channel.kind == ChannelType::GuildForum)
         .count();
 
-    let mut features_vec = guild
+    let features = guild
         .features
-        .clone()
-        .into_iter()
-        .map(Into::into)
-        .collect::<Vec<Cow<'static, str>>>();
-    features_vec.sort();
-    let features = features_vec
         .iter()
+        .cloned()
+        .map::<Cow<'static, str>, _>(Into::into)
         .fold(String::new(), |mut output, feature| {
             let _ = write!(output, "\n- `{feature}`");
             output
