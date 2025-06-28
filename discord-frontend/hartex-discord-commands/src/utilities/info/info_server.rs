@@ -245,9 +245,7 @@ pub async fn execute(
         .field(EmbedFieldBuilder::new(
             format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
             format!(
-                "{} {}",
-                serverinfo_embed_roleinfo_rolecount_subfield_name,
-                roles,
+                "{serverinfo_embed_roleinfo_rolecount_subfield_name} {roles}",
             ),
         ))
         .field(EmbedFieldBuilder::new(
