@@ -141,6 +141,7 @@ pub async fn application_command(
         )
         .await;
     }
+    hartex_tracing::debug!("responded to interaction command");
 
     Ok(())
 }
