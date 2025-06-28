@@ -1,8 +1,28 @@
-# [Next Version, Phosphorus I](https://github.com/TeamHarTex/HarTex/compare/0.14.0...nightly)
+# [Next Version, Sulphur I](https://github.com/TeamHarTex/HarTex/compare/0.15.0...nightly)
 
 > **x** contributor made contributions to this release
 
 > **y** commits since 2025-05-14
+
+## API Backend
+
+## Buildsystem
+
+## Database Infrastructure
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [Version 0.15.0, Phosphorus I (2025-06-28)](https://github.com/TeamHarTex/HarTex/compare/0.14.0..0.15.0)
+
+> **1** contributor made contributions to this release
+
+> **144** commits since 2025-05-14
 
 ## API Backend
 
@@ -39,8 +59,6 @@
 - **Changed:** updated `rust-version` to 1.90
 - **Changed:** migrated to `formati` for format strings
 - **Changed:** migrated to `tracing` for logging
-
-## Web Frontend
 
 # [Version 0.14.0, Silicon I (2025-05-14)](https://github.com/TeamHarTex/HarTex/compare/0.13.0..0.14.0)
 
