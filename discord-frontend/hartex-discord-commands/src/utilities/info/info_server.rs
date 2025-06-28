@@ -198,9 +198,7 @@ pub async fn execute(
         .roles(guild.id)
         .await
         .into_diagnostic()?
-        .iter()
-        .map(|entity| entity.id)
-        .collect::<Vec<_>>();
+        .len();
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -249,7 +247,7 @@ pub async fn execute(
             format!(
                 "{} {}",
                 serverinfo_embed_roleinfo_rolecount_subfield_name,
-                roles.len(),
+                roles,
             ),
         ))
         .field(EmbedFieldBuilder::new(
