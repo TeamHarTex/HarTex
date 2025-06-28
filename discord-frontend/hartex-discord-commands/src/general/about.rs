@@ -81,7 +81,6 @@ impl Command for About {
             )
             .await
             .into_diagnostic()?;
-        hartex_tracing::debug!("responded");
 
         Ok(())
     }
