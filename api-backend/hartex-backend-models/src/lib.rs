@@ -90,11 +90,10 @@ where
     T: Clone + Deserialize<'a>,
 {
     /// Constructs a response object with a status code of 404 and its corresponding message.
-    #[allow(clippy::needless_pass_by_value)]
-    pub fn not_found(component_missing: String) -> (StatusCode, Json<Response<T, String>>) {
+    pub fn not_found(what: &str) -> (StatusCode, Json<Response<T, String>>) {
         Self::from_code_with_data(
             StatusCode::NOT_FOUND,
-            Either::Right(format!("{component_missing} not found")),
+            Either::Right(format!("{what} not found")),
         )
     }
 }
