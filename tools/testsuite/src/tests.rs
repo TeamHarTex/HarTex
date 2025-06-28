@@ -56,8 +56,7 @@ pub fn run_tests(config: Arc<Config>) -> bool {
 }
 
 #[allow(clippy::module_name_repetitions)]
-#[allow(clippy::needless_pass_by_value)]
-fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
+fn discover_tests(config: &Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
     if config.confeval {}
 
     if config.ui {
@@ -113,8 +112,7 @@ fn discover_tests(config: Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
     }
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn make_test(config: Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
+fn make_test(config: &Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
     let relative_path = path
         .strip_prefix(&config.root)
         .expect("failed to strip path prefix");

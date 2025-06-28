@@ -48,7 +48,7 @@ where
     P: AsRef<Path>,
 {
     let schemas = schema::read_schemas(schemas_dir.as_ref())?
-        .map(schema::parse_schema)
+        .map(|schema| schema::parse_schema(&schema))
         .process_results(|iter| {
             iter.map(|schema| (schema.name.clone(), schema))
                 .collect::<BTreeMap<_, _>>()

@@ -69,7 +69,7 @@ pub async fn get_uptime(
 
     let vec = result.unwrap();
     if vec.is_empty() {
-        return Response::not_found(String::from("component"));
+        return Response::not_found("component");
     }
 
     Response::ok(UptimeResponse::with_start_timestamp(

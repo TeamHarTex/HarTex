@@ -22,6 +22,6 @@ axum = { version = "0.8.4", features = ["json", "macros"] }
 axum-extra = "0.10.1"
 chrono = "0.4.41"
 tracing = "0.1.41"
-utoipa = "5.3.1"
+utoipa = "5.4.0"
 
 [features]

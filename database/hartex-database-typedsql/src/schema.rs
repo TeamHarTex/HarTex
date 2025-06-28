@@ -103,8 +103,7 @@ pub(crate) fn read_schemas(
         let name = path
             .file_stem()
             .expect("is a file")
-            .to_str()
-            .expect("valid UTF-8")
+            .to_string_lossy()
             .to_string();
         let Ok(contents) = fs::read_to_string(&path) else {
             return None;
@@ -119,9 +118,8 @@ pub(crate) fn read_schemas(
 }
 
 #[allow(clippy::missing_errors_doc)]
-#[allow(clippy::needless_pass_by_value)]
-pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
-    let tables = Parser::parse_sql(&POSTGRESQL_DIALECT, schema_info.contents.as_str())?
+pub(crate) fn parse_schema(schema_info: &RawSchemaInfo) -> crate::error::Result<SchemaInfo> {
+    let tables = Parser::parse_sql(&POSTGRESQL_DIALECT, &schema_info.contents)?
         .into_iter()
         .filter_map(|st| {
             let Statement::CreateTable(ct) = st else {
@@ -133,7 +131,7 @@ pub(crate) fn parse_schema(schema_info: RawSchemaInfo) -> crate::error::Result<S
         .collect();
 
     Ok(SchemaInfo {
-        name: schema_info.name,
+        name: schema_info.name.clone(),
         tables,
     })
 }
