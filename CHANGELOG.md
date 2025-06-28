@@ -6,15 +6,39 @@
 
 ## API Backend
 
+- **Changed:** updated `rust-version` to 1.90
+- **Changed:** migrated to `formati` for format strings
+- **Changed:** migrated to `tracing` for logging
+- **Fixed:** logging with `TraceLayer` has been fixed
+
 ## Buildsystem
+
+- **Changed:** updated `rust-version` to 1.90
+- **Changed:** migrated to `formati` for format strings
+- **Changed:** migrated to `tracing` for logging
 
 ## Database Infrastructure
 
+- **Changed:** updated `rust-version` to 1.90
+- **Changed:** migrated to `formati` for format strings
+- **Changed:** migrated to `tracing` for logging
+
 ## Discord Frontend
+
+- **Changed:** updated `rust-version` to 1.90
+- **Changed:** migrated to `formati` for format strings
+- **Changed:** migrated to `tracing` for logging
+- **Changed:** moved localization setup earlier
 
 ## Localization Infrastructure
 
+- **Changed:** updated `rust-version` to 1.90
+
 ## Rust Utilities
+
+- **Changed:** updated `rust-version` to 1.90
+- **Changed:** migrated to `formati` for format strings
+- **Changed:** migrated to `tracing` for logging
 
 ## Web Frontend
 
