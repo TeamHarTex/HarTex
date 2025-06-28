@@ -303,7 +303,6 @@ pub async fn execute(
         )
         .await
         .into_diagnostic()?;
-    hartex_tracing::debug!("responded");
 
     Ok(())
 }

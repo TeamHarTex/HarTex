@@ -97,7 +97,6 @@ impl Command for Contributors {
             )
             .await
             .into_diagnostic()?;
-        hartex_tracing::debug!("responded");
 
         Ok(())
     }
