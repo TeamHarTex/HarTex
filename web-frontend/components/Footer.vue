@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 This file is part of HarTex.
 
 HarTex
-Copyright (c) 2021-2024 HarTex Project Developers
+Copyright (c) 2021-2025 HarTex Project Developers
 
 HarTex is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@ with HarTex. If not, see <https://www.gnu.org/licenses/>.
 
 <template>
   <footer>
-    <p>© Copyright 2021-2024, Team HarTex. All Rights Reserved.</p>
+    <p>© Copyright 2021-2025, Team HarTex. All Rights Reserved.</p>
     <p>
       HarTex and its affiliated software are protected under the GNU Affero
       General Public License.
