@@ -35,6 +35,7 @@ use std::str;
 use std::str::Utf8Error;
 
 use futures_util::StreamExt;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
@@ -88,6 +89,8 @@ pub async fn main() -> miette::Result<()> {
         .into_diagnostic()?;
 
     consumer.subscribe(&[&topic]).into_diagnostic()?;
+
+    let cache = DefaultInMemoryCache::new();
 
     while let Some(result) = consumer.stream().next().await {
         let Ok(message) = result else {
@@ -150,7 +153,7 @@ pub async fn main() -> miette::Result<()> {
 
         let event = result.unwrap();
 
-        eventcallback::invoke(event, scanned, producer.clone()).await?;
+        eventcallback::invoke(event, scanned, producer.clone(), &cache).await?;
     }
 
     signal::ctrl_c().await.into_diagnostic()?;

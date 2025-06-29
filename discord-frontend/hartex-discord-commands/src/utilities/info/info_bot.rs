@@ -58,6 +58,8 @@ pub async fn execute(
     _: CommandDataOption,
     localizer: &Localizer<'_>,
 ) -> miette::Result<()> {
+    // TODO: only call API once
+
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
     let uri = hartex_tracing::format!(
         "http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly"

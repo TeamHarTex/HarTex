@@ -22,6 +22,7 @@
 
 use async_trait::async_trait;
 use hartex_discord_configuration_provider::ConfigurationProvider;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::guild::Permissions;
@@ -53,6 +54,7 @@ pub trait Command: CommandMetadata {
         interaction: Interaction,
         interaction_client: &InteractionClient<'_>,
         localizer: &Localizer<'_>,
+        cache: &DefaultInMemoryCache
     ) -> miette::Result<()>;
 }
 
