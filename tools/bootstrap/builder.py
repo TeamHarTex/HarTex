@@ -57,7 +57,7 @@ class HarTexBuild(object):
         return args
 
     def bootstrap_binpath(self):
-        return os.path.join(self.output_dir, "bootstrap/debug/bootstrap")
+        return os.path.join(self.output_dir, "bootstrap/release/bootstrap")
 
     def get_conf(self, section="", option=""):
         try:
