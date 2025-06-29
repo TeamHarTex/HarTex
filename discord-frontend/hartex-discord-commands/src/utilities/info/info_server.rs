@@ -27,7 +27,6 @@
 use std::borrow::Cow;
 use std::fmt::Write;
 
-use futures::future;
 use hartex_discord_cdn::Cdn;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
@@ -39,7 +38,6 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
-use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
