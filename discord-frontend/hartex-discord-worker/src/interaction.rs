@@ -59,7 +59,7 @@ pub async fn application_command(
     interaction_create: Box<InteractionCreate>,
     interaction_client: &InteractionClient<'_>,
     localizer: &Localizer<'_>,
-    _: &DefaultInMemoryCache,
+    cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
     let InteractionData::ApplicationCommand(command) = interaction_create.data.clone().unwrap()
     else {
@@ -132,7 +132,7 @@ pub async fn application_command(
     );
 
     if let Err(error) = command
-        .execute(cloned.0, interaction_client, localizer)
+        .execute(cloned.0, interaction_client, localizer, cache)
         .await
     {
         crate::errorhandler::handle_interaction_error(
