@@ -39,6 +39,7 @@ use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
+use itertools::Itertools;
 use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
 use rand::thread_rng;
@@ -107,11 +108,7 @@ pub async fn execute(
             .flags()
             .iter_names()
             .map(|(name, _)| name);
-        let flags_display = if flags.is_empty() {
-            "None".to_string()
-        } else {
-            flags.join(", ")
-        };
+        let flags_display = flags.join(", ");
 
         builder = builder
             .field(EmbedFieldBuilder::new(

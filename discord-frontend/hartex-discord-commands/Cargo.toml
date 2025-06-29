@@ -37,10 +37,10 @@ hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 async-trait = "0.1.88"
-futures = "0.3.31"
 http-body-util = "0.1.3"
 hyper = { version = "1.6.0", features = ["client", "http2"] }
 hyper-util = { version = "0.1.14", features = ["http2", "tokio"] }
+itertools = "0.14.0"
 miette = "7.6.0"
 rand = "0.9.1"
 regex = "1.11.1"
