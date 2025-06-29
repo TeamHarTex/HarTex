@@ -5,13 +5,11 @@
         "cargo": {
           "buildScripts": {
             "enable": true,
-            "invocationLocation": "root",
             "invocationStrategy": "once",
             "overrideCommand": ["python", "x.py", "--json", "check"]
           }
         },
         "check": {
-          "invocationLocation": "root",
           "invocationStrategy": "once",
           "overrideCommand": ["python", "x.py", "--json", "check"]
         },
@@ -34,9 +32,6 @@
         ],
         "procMacro": {
           "enable": true
-        },
-        "rustc": {
-          "source": "discover"
         }
       }
     }
