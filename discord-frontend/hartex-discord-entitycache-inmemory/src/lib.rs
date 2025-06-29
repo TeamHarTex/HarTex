@@ -20,20 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::process;
-use std::sync::Arc;
-
-use testsuite::config::Config;
-use testsuite::flags::Flags;
-use testsuite::tests::run_tests;
-
-pub fn main() {
-    let args = env::args().skip(1).collect::<Vec<_>>();
-    let flags = Flags::parse_from_args(&args);
-    let config = Config::from_flags(flags);
-
-    if !run_tests(&Arc::new(config)) {
-        process::exit(1);
-    }
-}
+pub struct InMemoryCache;

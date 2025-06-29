@@ -1,15 +1,8 @@
 {
   "rust-analyzer.checkOnSave": true,
   "rust-analyzer.cargo.buildScripts.enable": true,
-  "rust-analyzer.cargo.buildScripts.invocationLocation": "root",
   "rust-analyzer.cargo.buildScripts.invocationStrategy": "once",
-  "rust-analyzer.cargo.buildScripts.overrideCommand": [
-    "python",
-    "x.py",
-    "--json",
-    "check"
-  ],
-  "rust-analyzer.check.invocationLocation": "root",
+  "rust-analyzer.cargo.buildScripts.overrideCommand": ["python", "x.py", "--json", "check"],
   "rust-analyzer.check.invocationStrategy": "once",
   "rust-analyzer.check.overrideCommand": ["python", "x.py", "--json", "check"],
   "rust-analyzer.imports.granularity.group": "item",
@@ -22,6 +15,5 @@
     "./rust-utilities/Cargo.toml",
     "./tools/Cargo.toml"
   ],
-  "rust-analyzer.procMacro.enable": true,
-  "rust-analzyer.rustc.source": "discover"
+  "rust-analyzer.procMacro.enable": true
 }
