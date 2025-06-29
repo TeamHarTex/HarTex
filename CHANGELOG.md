@@ -9,7 +9,7 @@
 ## Buildsystem
 
 - **Changed:** `bootstrap` is now built with `--release`
-- **Changed:** `setup` configuratins now have their `rust-analyzer.*.invocationLocation` options removed
+- **Changed:** `setup` configurations now have their `rust-analyzer.*.invocationLocation` options removed
 
 ## Database Infrastructure
 
