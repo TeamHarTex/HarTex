@@ -27,10 +27,12 @@ use std::time::SystemTime;
 
 use futures_util::FutureExt;
 use hartex_backend_models::uptime::UptimeUpdate;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
 use hartex_discord_core::discord::model::gateway::OpCode;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
+use hartex_discord_core::discord::model::gateway::event::Event;
 use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
@@ -61,8 +63,12 @@ pub async fn invoke(
     event: GatewayEvent,
     shard: u8,
     producer: FutureProducer,
+    cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
     let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION").into_diagnostic()?;
+
+    let flattened_event = Event::from(event.clone());
+    cache.update(&flattened_event);
 
     #[allow(clippy::collapsible_match)]
     match event {
@@ -115,6 +121,7 @@ pub async fn invoke(
                     interaction_create.clone(),
                     &interaction_client,
                     &localizer,
+                    cache,
                 ))
                 .catch_unwind()
                 .await

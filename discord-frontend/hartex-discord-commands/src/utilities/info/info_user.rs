@@ -25,6 +25,7 @@
 //! This command returns informatiomn about a user.
 
 use hartex_discord_cdn::Cdn;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -33,14 +34,12 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
-use hartex_discord_entitycache_core::traits::Repository;
-use hartex_discord_entitycache_repositories::member::CachedMemberRepository;
-use hartex_discord_entitycache_repositories::user::CachedUserRepository;
 use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
 use hartex_localization_core::Localizer;
+use itertools::Itertools;
 use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
 use rand::thread_rng;
@@ -52,12 +51,15 @@ pub async fn execute(
     interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
     localizer: &Localizer<'_>,
+    cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
     let user_id = options.user_value_of("user");
 
-    let user = CachedUserRepository.get(user_id).await.into_diagnostic()?;
+    let Some(user) = cache.user(user_id) else {
+        unreachable!()
+    };
 
     let userinfo_embed_generalinfo_field_name =
         localizer.utilities_plugin_userinfo_embed_generalinfo_field_name()?;
@@ -98,21 +100,15 @@ pub async fn execute(
         ));
 
     if let Some(guild_id) = interaction.guild_id {
-        let member = CachedMemberRepository
-            .get((guild_id, user_id))
-            .await
-            .into_diagnostic()?;
-
-        let flags = member
-            .flags
-            .iter_names()
-            .map(|(name, _)| name)
-            .collect::<Vec<_>>();
-        let flags_display = if flags.is_empty() {
-            "None".to_string()
-        } else {
-            flags.join(", ")
+        let Some(member) = cache.member(guild_id, user_id) else {
+            unreachable!()
         };
+
+        let mut flags = member
+            .flags()
+            .iter_names()
+            .map(|(name, _)| name);
+        let flags_display = flags.join(", ");
 
         builder = builder
             .field(EmbedFieldBuilder::new(
@@ -120,26 +116,25 @@ pub async fn execute(
                 format!(
                     "{} {}\n{} {}\n{} {}\n{} {}",
                     userinfo_embed_serverpresence_nickname_subfield_name,
-                    member.nick.unwrap_or(String::from("<not set>")),
+                    member.nick().unwrap_or("not set"),
                     userinfo_embed_serverpresence_joined_subfield_name,
                     member
-                        .joined_at
+                        .joined_at()
                         .map_or(String::from("unknown"), |timestamp| timestamp
                             .as_secs()
                             .to_string()
                             .discord_relative_timestamp()),
                     userinfo_embed_serverpresence_roles_subfield_name,
                     member
-                        .roles
+                        .roles()
                         .choose_multiple(&mut thread_rng(), 10)
                         .map(|id| id.mention().to_string())
-                        .collect::<Vec<_>>()
                         .join(", "),
                     userinfo_embed_serverpresence_flags_subfield_name,
                     flags_display,
                 ),
             ))
-            .title(user.name);
+            .title(&user.name);
     }
 
     builder = if let Some(avatar) = user.avatar {

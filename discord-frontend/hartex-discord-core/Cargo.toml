@@ -13,6 +13,7 @@ rust-version = "1.90.0"
 [dependencies]
 dotenvy = { version = "0.15.7", optional = true }
 tokio = { version = "1.45.1", optional = true }
+twilight-cache-inmemory = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-gateway = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-http = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
 twilight-mention = { git = "https://github.com/TeamHarTex/twilight.git", branch = "next", optional = true }
@@ -28,6 +29,7 @@ async-runtime = [
     "tokio?/rt-multi-thread",
 ]
 async-signal = ["tokio?/signal"]
+discord-cache = ["dep:twilight-cache-inmemory"]
 discord-gateway = ["dep:twilight-gateway"]
 discord-gateway-enable-http = ["twilight-gateway?/twilight-http"]
 discord-http = ["dep:twilight-http"]
