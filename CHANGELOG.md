@@ -8,9 +8,14 @@
 
 ## Buildsystem
 
+- **Changed:** `bootstrap` is now built with `--release`
+- **Changed:** `setup` configurations now have their `rust-analyzer.*.invocationLocation` options removed
+
 ## Database Infrastructure
 
 ## Discord Frontend
+
+- **Added:** work on in-memory cache has been initiated
 
 ## Localization Infrastructure
 

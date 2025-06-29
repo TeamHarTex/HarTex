@@ -52,12 +52,12 @@ class HarTexBuild(object):
     def build_bootstrap_cmd(self, env):
         env["CARGO_TARGET_DIR"] = os.path.join(self.output_dir, "bootstrap")
         
-        args = ["cargo", "build", "--manifest-path", os.path.join(self.root, "tools/bootstrap/Cargo.toml")]
+        args = ["cargo", "build", "--manifest-path", os.path.join(self.root, "tools/bootstrap/Cargo.toml"), "--release"]
 
         return args
 
     def bootstrap_binpath(self):
-        return os.path.join(self.output_dir, "bootstrap/debug/bootstrap")
+        return os.path.join(self.output_dir, "bootstrap/release/bootstrap")
 
     def get_conf(self, section="", option=""):
         try:
