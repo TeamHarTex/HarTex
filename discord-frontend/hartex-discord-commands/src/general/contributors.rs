@@ -27,6 +27,7 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::command;
 use hartex_discord_commands_core::traits::Command;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
@@ -50,6 +51,7 @@ impl Command for Contributors {
         interaction: Interaction,
         interaction_client: &InteractionClient<'_>,
         localizer: &Localizer<'_>,
+        _: &DefaultInMemoryCache,
     ) -> miette::Result<()> {
         let contributors_embed_title = localizer.general_plugin_contributors_embed_title()?;
         let contributors_embed_description =

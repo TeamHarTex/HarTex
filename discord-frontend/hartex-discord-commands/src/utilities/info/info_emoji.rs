@@ -27,6 +27,7 @@
 use std::str::FromStr;
 use std::sync::LazyLock;
 
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
@@ -34,9 +35,6 @@ use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::EmojiMarker;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_entitycache_core::error::CacheError;
-use hartex_discord_entitycache_core::traits::Repository;
-use hartex_discord_entitycache_repositories::emoji::CachedEmojiRepository;
 use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
@@ -58,6 +56,7 @@ pub async fn execute(
     interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
     localizer: &Localizer<'_>,
+    cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
@@ -104,22 +103,17 @@ pub async fn execute(
     let id = captures.get(1).unwrap().as_str();
     let emoji_id = Id::<EmojiMarker>::from_str(id).unwrap();
 
-    let result = CachedEmojiRepository.get(emoji_id).await;
-    let emoji = match result {
-        Ok(emoji) => emoji,
-        Err(CacheError::Database(_)) /*if postgres_error.is(SqlState::NO_DATA)*/ => {
-            interaction_client
-                .create_response(
-                    interaction.id,
-                    &interaction.token,
-                    &ephemeral_error_response(emojiinfo_error_unknown_emoji),
-                )
-                .await
-                .into_diagnostic()?;
+    let Some(emoji) = cache.emoji(emoji_id) else {
+        interaction_client
+            .create_response(
+                interaction.id,
+                &interaction.token,
+                &ephemeral_error_response(emojiinfo_error_unknown_emoji),
+            )
+            .await
+            .into_diagnostic()?;
 
-            return Ok(());
-        }
-        error => error.into_diagnostic()?,
+        return Ok(());
     };
 
     let emojiinfo_embed_generalinfo_field_name =
@@ -142,15 +136,15 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}\n{} {}\n{} {}\n{} {}",
                 emojiinfo_embed_generalinfo_id_subfield_name,
-                emoji.id.to_string().discord_inline_code(),
+                emoji.id().to_string().discord_inline_code(),
                 emojiinfo_embed_generalinfo_name_subfield_name,
-                emoji.name,
+                emoji.name(),
                 emojiinfo_embed_generalinfo_guild_id_subfield_name,
-                emoji.guild_id.to_string().discord_inline_code(),
+                emoji.guild_id().to_string().discord_inline_code(),
                 emojiinfo_embed_generalinfo_animated_subfield_name,
-                emoji.animated.localize(langid_locale.clone())?,
+                emoji.animated().localize(langid_locale.clone())?,
                 emojiinfo_embed_generalinfo_managed_subfield_name,
-                emoji.managed.localize(langid_locale)?,
+                emoji.managed().localize(langid_locale)?,
             ),
         ))
         .validate()
