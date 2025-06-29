@@ -33,7 +33,7 @@ pub fn main() {
     let flags = Flags::parse_from_args(&args);
     let config = Config::from_flags(flags);
 
-    if !run_tests(Arc::new(config)) {
+    if !run_tests(&Arc::new(config)) {
         process::exit(1);
     }
 }

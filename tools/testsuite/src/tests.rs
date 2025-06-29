@@ -47,7 +47,7 @@ use crate::testrunner;
 
 #[allow(clippy::module_name_repetitions)]
 #[must_use]
-pub fn run_tests(config: Arc<Config>) -> bool {
+pub fn run_tests(config: &Arc<Config>) -> bool {
     let mut tests = Vec::new();
     discover_tests(config, &mut tests);
 
@@ -105,7 +105,7 @@ fn discover_tests(config: &Arc<Config>, tests: &mut Vec<TestDescAndFn>) {
                 _ => (),
             }
 
-            if let Some(test) = make_test(config.clone(), entry.path().to_path_buf()) {
+            if let Some(test) = make_test(config, entry.path().to_path_buf()) {
                 tests.push(test);
             }
         }
@@ -147,7 +147,7 @@ fn make_test(config: &Arc<Config>, path: PathBuf) -> Option<TestDescAndFn> {
             test_type: TestType::Unknown,
         },
         testfn: TestFn::DynTestFn(Box::new(move || {
-            testrunner::run(testrunner_config, path);
+            testrunner::run(&testrunner_config, path);
             Ok(())
         })),
     })
