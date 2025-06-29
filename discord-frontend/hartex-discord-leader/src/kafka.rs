@@ -101,21 +101,6 @@ where
 
                     continue;
                 }
-
-                // send payloaad to caching process
-                if let Err((error, _)) = producer
-                    .send(
-                        FutureRecord::to(&topic_2)
-                            .key(&hartex_tracing::format!(
-                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard.id().number()}",
-                            ))
-                            .payload(&bytes),
-                        Timeout::After(Duration::from_secs(0)),
-                    )
-                    .await
-                {
-                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-                }
             }
             Err(error) => {
                 hartex_tracing::warn!(
