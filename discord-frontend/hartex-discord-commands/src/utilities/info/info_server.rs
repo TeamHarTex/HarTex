@@ -29,6 +29,7 @@ use std::fmt::Write;
 
 use futures::future;
 use hartex_discord_cdn::Cdn;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -38,8 +39,6 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
-use hartex_discord_entitycache_core::traits::Repository;
-use hartex_discord_entitycache_repositories::guild::CachedGuildRepository;
 use hartex_discord_utils::CLIENT;
 use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
@@ -56,6 +55,7 @@ pub async fn execute(
     interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
     localizer: &Localizer<'_>,
+    cache: &DefaultInMemoryCache
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
@@ -66,10 +66,9 @@ pub async fn execute(
 
     let verbose = options.boolean_value_of("verbose");
 
-    let guild = CachedGuildRepository
-        .get(interaction.guild_id.unwrap())
-        .await
-        .into_diagnostic()?;
+    let Some(guild) = cache.guild(interaction.guild_id.unwrap()) else {
+        unreachable!()
+    };
 
     let serverinfo_embed_generalinfo_id_subfield_name =
         localizer.utilities_plugin_serverinfo_embed_generalinfo_id_subfield_name()?;
@@ -129,50 +128,45 @@ pub async fn execute(
     let mut default_general_information = format!(
         "{} {}\n{} {}\n{} {}",
         serverinfo_embed_generalinfo_id_subfield_name,
-        guild.id.to_string().discord_inline_code(),
+        guild.id().to_string().discord_inline_code(),
         serverinfo_embed_generalinfo_created_subfield_name,
-        (guild.id.timestamp() / 1000)
+        (guild.id().timestamp() / 1000)
             .to_string()
             .discord_relative_timestamp(),
         serverinfo_embed_generalinfo_owner_subfield_name,
-        guild.owner_id.mention(),
+        guild.owner_id().mention(),
     );
+    let Some(channel_ids) = cache.guild_channels(guild.id()) else {
+        unreachable!()
+    };
+    let channels = channel_ids.iter().filter_map(|id| cache.channel(*id));
 
-    let channels = CLIENT
-        .guild_channels(guild.id)
-        .await
-        .into_diagnostic()?
-        .model()
-        .await
-        .into_diagnostic()?;
     let category_count = channels
-        .iter()
+        .clone()
         .filter(|channel| channel.kind == ChannelType::GuildCategory)
         .count();
     let text_count = channels
-        .iter()
+        .clone()
         .filter(|channel| channel.kind == ChannelType::GuildText)
         .count();
     let voice_count = channels
-        .iter()
+        .clone()
         .filter(|channel| channel.kind == ChannelType::GuildVoice)
         .count();
     let announcement_count = channels
-        .iter()
+        .clone()
         .filter(|channel| channel.kind == ChannelType::GuildAnnouncement)
         .count();
     let stage_count = channels
-        .iter()
+        .clone()
         .filter(|channel| channel.kind == ChannelType::GuildStageVoice)
         .count();
     let forum_count = channels
-        .iter()
         .filter(|channel| channel.kind == ChannelType::GuildForum)
         .count();
 
     let features = guild
-        .features
-        .iter()
+        .features()
         .cloned()
         .map::<Cow<'static, str>, _>(Into::into)
         .fold(String::new(), |mut output, feature| {
@@ -180,11 +174,11 @@ pub async fn execute(
             output
         });
 
-    let members = guild.members(guild.id).await.into_diagnostic()?;
-    let users = future::try_join_all(members.iter().map(|member| member.user(member.user_id)))
-        .await
-        .into_diagnostic()?;
-    let humans = users.iter().filter(|user| !user.bot).count();
+    let Some(member_ids) = cache.guild_members(guild.id()) else {
+        unreachable!()
+    };
+    let users = member_ids.iter().filter_map(|id| cache.user(*id));
+    let humans = users.filter(|user| !user.bot).count();
 
     if verbose {
         write!(
@@ -194,11 +188,10 @@ pub async fn execute(
         .into_diagnostic()?;
     }
 
-    let roles = guild
-        .roles(guild.id)
-        .await
-        .into_diagnostic()?
-        .len();
+    let Some(role_ids) = cache.guild_roles(guild.id()) else {
+        unreachable!()
+    };
+    let roles = role_ids.len();
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -235,11 +228,11 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}\n{} {}",
                 serverinfo_embed_memberinfo_membercount_subfield_name,
-                members.len(),
+                member_ids.len(),
                 serverinfo_embed_memberinfo_humancount_subfield_name,
                 humans,
                 serverinfo_embed_memberinfo_botcount_subfield_name,
-                members.len() - humans,
+                member_ids.len() - humans,
             ),
         ))
         .field(EmbedFieldBuilder::new(
@@ -253,9 +246,9 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}",
                 serverinfo_embed_nitroinfo_boostlevel_subfield_name,
-                guild.premium_tier.localize(langid_locale.clone())?,
+                guild.premium_tier().localize(langid_locale.clone())?,
                 serverinfo_embed_nitroinfo_boosts_subfield_name,
-                guild.premium_subscription_count.unwrap_or_default(),
+                guild.premium_subscription_count().unwrap_or_default(),
             ),
         ))
         .field(EmbedFieldBuilder::new(
@@ -263,26 +256,26 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}\n{} {}\n{} {}\n{} {}",
                 serverinfo_embed_flags_large_subfield_name,
-                guild.large.localize(langid_locale.clone())?,
+                guild.large().localize(langid_locale.clone())?,
                 serverinfo_embed_flags_default_message_notifications_subfield_name,
                 guild
-                    .default_message_notifications
+                    .default_message_notifications()
                     .localize(langid_locale.clone())?,
                 serverinfo_embed_flags_explicit_content_filter_subfield_name,
                 guild
-                    .explicit_content_filter
+                    .explicit_content_filter()
                     .localize(langid_locale.clone())?,
                 serverinfo_embed_flags_mfa_level_subfield_name,
-                guild.mfa_level.localize(langid_locale.clone())?,
+                guild.mfa_level().localize(langid_locale.clone())?,
                 serverinfo_embed_flags_verification_level_subfield_name,
-                guild.verification_level.localize(langid_locale)?,
+                guild.verification_level().localize(langid_locale)?,
             ),
         ))
-        .title(guild.name);
+        .title(guild.name());
 
-    if let Some(icon) = guild.icon {
+    if let Some(icon) = guild.icon() {
         builder =
-            builder.thumbnail(ImageSource::url(Cdn::guild_icon(guild.id, icon)).into_diagnostic()?);
+            builder.thumbnail(ImageSource::url(Cdn::guild_icon(guild.id(), *icon)).into_diagnostic()?);
     }
 
     let embed = builder.validate().into_diagnostic()?.build();
