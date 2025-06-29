@@ -91,6 +91,7 @@ impl Command for Info {
                     interaction_client,
                     subcommand.clone(),
                     localizer,
+                    cache,
                 )
                 .await
             }

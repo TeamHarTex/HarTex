@@ -25,6 +25,7 @@
 //! This command returns informatiomn about a role.
 
 use hartex_discord_cdn::Cdn;
+use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::mention::Mention;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -33,8 +34,6 @@ use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_core::discord::util::snowflake::Snowflake;
-use hartex_discord_entitycache_core::traits::Repository;
-use hartex_discord_entitycache_repositories::role::CachedRoleRepository;
 use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
@@ -49,6 +48,7 @@ pub async fn execute(
     interaction_client: &InteractionClient<'_>,
     option: CommandDataOption,
     localizer: &Localizer<'_>,
+    cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
@@ -80,10 +80,9 @@ pub async fn execute(
     let roleinfo_embed_attributes_position_subfield_name =
         localizer.utilities_plugin_roleinfo_embed_attributes_position_subfield_name()?;
 
-    let role = CachedRoleRepository
-        .get((interaction.guild_id.unwrap(), role_id))
-        .await
-        .into_diagnostic()?;
+    let Some(role) = cache.role(role_id) else {
+        todo!()
+    };
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
