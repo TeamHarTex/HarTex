@@ -15,7 +15,7 @@
 
 ## Discord Frontend
 
-- **Added:** work on in-memory cache has been initiated
+- **Changed:** in-memory cache is now used instead of a database-based cache
 
 ## Localization Infrastructure
 
