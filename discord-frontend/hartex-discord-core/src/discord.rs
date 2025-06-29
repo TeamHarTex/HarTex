@@ -22,6 +22,8 @@
 
 //! Re-exports of the twilight ecosystem.
 
+#[cfg(feature = "discord-cache")]
+pub use twilight_cache_inmemory as cache;
 #[cfg(feature = "discord-gateway")]
 pub use twilight_gateway as gateway;
 #[cfg(feature = "discord-http")]
