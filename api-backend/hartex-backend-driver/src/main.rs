@@ -39,6 +39,7 @@ use std::time::Duration;
 use dotenvy::Error;
 use hartex_errors::dotenv;
 use miette::IntoDiagnostic;
+use mimalloc::MiMalloc;
 use tokio::net::TcpListener;
 use tokio::signal;
 use tower::ServiceBuilder;
@@ -49,6 +50,9 @@ use utoipa_axum::router::OpenApiRouter;
 use utoipa_axum::routes;
 use utoipa_scalar::Scalar;
 use utoipa_scalar::Servable;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 /// # Entry Point
 ///

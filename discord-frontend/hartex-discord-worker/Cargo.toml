@@ -34,6 +34,7 @@ futures-util = "0.3.31"
 hyper = { version = "1.6.0", features = ["client", "http1"] }
 hyper-util = { version = "0.1.14", features = ["tokio"] }
 miette = { version = "7.6.0", features = ["fancy"] }
+mimalloc = "0.1.47"
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",
     "external-lz4",
