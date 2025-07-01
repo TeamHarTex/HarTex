@@ -28,8 +28,6 @@ hartex_discord_core = { path = "../hartex-discord-core", features = [
 hartex_discord_commands_core = { path = "../hartex-discord-commands-core", features = [
     "derive",
 ] }
-hartex_discord_entitycache_core = { path = "../hartex-discord-entitycache-core" }
-hartex_discord_entitycache_repositories = { path = "../hartex-discord-entitycache-repositories" }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
