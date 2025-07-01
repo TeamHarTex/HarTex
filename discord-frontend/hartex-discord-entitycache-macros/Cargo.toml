@@ -25,7 +25,7 @@ syn = { version = "2.0.104", features = ["extra-traits", "full"] }
 convert_case = "0.8.0"
 proc-macro2 = "1.0.95"
 quote = "1.0.40"
-reqwest = { version = "0.12.20", features = ["blocking"] }
+reqwest = { version = "0.12.21", features = ["blocking"] }
 syn = { version = "2.0.104", features = ["extra-traits", "full"] }
 zip = { version = "4.2.0" }
 
