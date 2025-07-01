@@ -26,6 +26,7 @@ hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 futures-util = "0.3.31"
 miette = { version = "7.6.0", features = ["fancy"] }
+mimalloc = "0.1.47"
 rdkafka = { version = "0.37.0", default-features = false, features = [
     "cmake-build",
     "external-lz4",

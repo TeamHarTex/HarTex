@@ -43,6 +43,7 @@ use hartex_discord_core::tokio::signal;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use miette::IntoDiagnostic;
+use mimalloc::MiMalloc;
 use rdkafka::ClientConfig;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
@@ -59,6 +60,9 @@ mod error;
 mod errorhandler;
 mod eventcallback;
 mod interaction;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 /// Entry point.
 #[allow(clippy::large_futures)]
