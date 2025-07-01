@@ -1146,8 +1146,6 @@ dependencies = [
  "hartex_discord_cdn",
  "hartex_discord_commands_core",
  "hartex_discord_core",
- "hartex_discord_entitycache_core",
- "hartex_discord_entitycache_repositories",
  "hartex_discord_utils",
  "hartex_localization_core",
  "hartex_tracing",
