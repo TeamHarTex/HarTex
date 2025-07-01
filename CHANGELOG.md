@@ -16,6 +16,7 @@
 ## Discord Frontend
 
 - **Changed:** in-memory cache is now used instead of a database-based cache
+- **Removed:** database-based `hartex-discord-entitycache-*` removed
 
 ## Localization Infrastructure
 
