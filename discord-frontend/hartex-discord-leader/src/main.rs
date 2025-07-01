@@ -41,6 +41,7 @@ use hartex_discord_core::tokio::task::JoinSet;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use miette::IntoDiagnostic;
+use mimalloc::MiMalloc;
 use rdkafka::ClientConfig;
 use rdkafka::consumer::Consumer;
 use rdkafka::consumer::StreamConsumer;
@@ -49,6 +50,9 @@ use rdkafka::producer::FutureProducer;
 mod kafka;
 mod queue;
 mod shards;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 /// Entry point.
 #[tokio::main(flavor = "multi_thread")]
