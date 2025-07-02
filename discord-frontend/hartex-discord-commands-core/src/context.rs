@@ -48,6 +48,7 @@ pub struct CommandContext<'a> {
 
 impl<'a> CommandContext<'a> {
     /// Construct a new command context.
+    #[allow(clippy::missing_panics_doc)]
     pub fn new(
         interaction: &'a Interaction,
         cache: &'a DefaultInMemoryCache,
@@ -71,6 +72,11 @@ impl<'a> CommandContext<'a> {
         }
     }
 
+    /// Creates a response for this interaction.
+    ///
+    /// # Errors
+    ///
+    /// See twilight's documentation on `InteractionClient::create_response`.
     pub async fn create_response(&self, response: InteractionResponse) -> miette::Result<()> {
         self.client
             .create_response(self.id, self.token, &response)
