@@ -27,17 +27,14 @@
 
 use async_trait::async_trait;
 use hartex_discord_commands_core::command;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_commands_core::traits::Command;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_core::discord::util::builder::embed::ImageSource;
 use hartex_discord_utils::interaction::embed_response;
-use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
 use crate::general::General;
@@ -48,19 +45,15 @@ pub struct About;
 
 #[async_trait]
 impl Command for About {
-    async fn execute(
-        &self,
-        interaction: Interaction,
-        interaction_client: &InteractionClient<'_>,
-        localizer: &Localizer<'_>,
-        _: &DefaultInMemoryCache,
-    ) -> miette::Result<()> {
-        let about_embed_title = localizer.general_plugin_about_embed_title()?;
-        let about_embed_description = localizer.general_plugin_about_embed_description()?;
-        let about_embed_github_repo_field_name =
-            localizer.general_plugin_about_embed_github_repo_field_name()?;
-        let about_embed_footer =
-            localizer.general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
+    async fn execute(&self, context: &CommandContext<'_>) -> miette::Result<()> {
+        let about_embed_title = context.localizer.general_plugin_about_embed_title()?;
+        let about_embed_description = context.localizer.general_plugin_about_embed_description()?;
+        let about_embed_github_repo_field_name = context
+            .localizer
+            .general_plugin_about_embed_github_repo_field_name()?;
+        let about_embed_footer = context
+            .localizer
+            .general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
         let embed = EmbedBuilder::new()
             .author(
                 EmbedAuthorBuilder::new(about_embed_title)
@@ -75,14 +68,9 @@ impl Command for About {
             .into_diagnostic()?
             .build();
 
-        interaction_client
-            .create_response(
-                interaction.id,
-                &interaction.token,
-                &embed_response(vec![embed]),
-            )
-            .await
-            .into_diagnostic()?;
+        context
+            .create_response(embed_response(vec![embed]))
+            .await?;
 
         Ok(())
     }

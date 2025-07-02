@@ -36,4 +36,5 @@ extern crate hartex_discord_commands_macros;
 #[cfg(feature = "derive")]
 pub use hartex_discord_commands_macros::*;
 
+pub mod context;
 pub mod traits;

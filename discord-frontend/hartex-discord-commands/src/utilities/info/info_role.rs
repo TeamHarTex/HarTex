@@ -25,10 +25,8 @@
 //! This command returns informatiomn about a role.
 
 use hartex_discord_cdn::Cdn;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::discord::mention::Mention;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
@@ -39,48 +37,54 @@ use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
 /// Executes the `info emoji` command.
 pub async fn execute(
-    interaction: Interaction,
-    interaction_client: &InteractionClient<'_>,
-    option: CommandDataOption,
-    localizer: &Localizer<'_>,
-    cache: &DefaultInMemoryCache,
+    context: &CommandContext<'_>,
+    option: &CommandDataOption,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
-    let langid_locale = interaction
+    let langid_locale = context
         .locale
-        .clone()
+        .as_ref()
         .and_then(|locale| locale.parse().ok());
 
     let role_id = options.role_value_of("role");
 
-    let roleinfo_embed_generalinfo_field_name =
-        localizer.utilities_plugin_roleinfo_embed_generalinfo_field_name()?;
-    let roleinfo_embed_generalinfo_id_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_generalinfo_id_subfield_name()?;
-    let roleinfo_embed_generalinfo_created_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_generalinfo_created_subfield_name()?;
-    let roleinfo_embed_generalinfo_color_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
-    let roleinfo_embed_description =
-        localizer.utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
-    let roleinfo_embed_attributes_field_name =
-        localizer.utilities_plugin_roleinfo_embed_attributes_field_name()?;
-    let roleinfo_embed_attributes_hoist_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_attributes_hoist_subfield_name()?;
-    let roleinfo_embed_attributes_managed_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_attributes_managed_subfield_name()?;
-    let roleinfo_embed_attributes_mentionable_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_attributes_mentionable_subfield_name()?;
-    let roleinfo_embed_attributes_position_subfield_name =
-        localizer.utilities_plugin_roleinfo_embed_attributes_position_subfield_name()?;
+    let roleinfo_embed_generalinfo_field_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_generalinfo_field_name()?;
+    let roleinfo_embed_generalinfo_id_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_generalinfo_id_subfield_name()?;
+    let roleinfo_embed_generalinfo_created_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_generalinfo_created_subfield_name()?;
+    let roleinfo_embed_generalinfo_color_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_generalinfo_color_subfield_name()?;
+    let roleinfo_embed_description = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_description(role_id.mention().to_string())?;
+    let roleinfo_embed_attributes_field_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_attributes_field_name()?;
+    let roleinfo_embed_attributes_hoist_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_attributes_hoist_subfield_name()?;
+    let roleinfo_embed_attributes_managed_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_attributes_managed_subfield_name()?;
+    let roleinfo_embed_attributes_mentionable_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_attributes_mentionable_subfield_name()?;
+    let roleinfo_embed_attributes_position_subfield_name = context
+        .localizer
+        .utilities_plugin_roleinfo_embed_attributes_position_subfield_name()?;
 
-    let Some(role) = cache.role(role_id) else {
+    let Some(role) = context.cache.role(role_id) else {
         todo!()
     };
 
@@ -123,14 +127,9 @@ pub async fn execute(
 
     let embed = builder.validate().into_diagnostic()?.build();
 
-    interaction_client
-        .create_response(
-            interaction.id,
-            &interaction.token,
-            &embed_response(vec![embed]),
-        )
-        .await
-        .into_diagnostic()?;
+    context
+        .create_response(embed_response(vec![embed]))
+        .await?;
 
     Ok(())
 }
