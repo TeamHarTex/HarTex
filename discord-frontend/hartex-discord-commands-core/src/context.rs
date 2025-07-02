@@ -20,8 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::ops::Deref;
-
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
@@ -40,7 +38,7 @@ pub struct CommandContext<'a> {
     pub author: Id<UserMarker>,
     pub cache: &'a DefaultInMemoryCache,
     client: &'a InteractionClient<'a>,
-    pub command: &'a CommandData,
+    pub command: Box<CommandData>,
     pub guild: Option<Id<GuildMarker>>,
     pub locale: Option<&'a String>,
     id: Id<InteractionMarker>,
@@ -51,7 +49,7 @@ pub struct CommandContext<'a> {
 impl<'a> CommandContext<'a> {
     /// Construct a new command context.
     pub fn new(
-        interaction: &Interaction,
+        interaction: &'a Interaction,
         cache: &'a DefaultInMemoryCache,
         client: &'a InteractionClient<'a>,
         localizer: &'a Localizer<'a>,
@@ -64,7 +62,7 @@ impl<'a> CommandContext<'a> {
             author: interaction.author_id().unwrap(),
             cache,
             client,
-            command: command.as_ref(),
+            command,
             guild: interaction.guild_id,
             id: interaction.id,
             locale: interaction.locale.as_ref(),
