@@ -27,7 +27,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(let_chains)]
 #![feature(proc_macro_diagnostic)]
 
 extern crate proc_macro;

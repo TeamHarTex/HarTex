@@ -27,9 +27,7 @@
 use std::str::FromStr;
 use std::sync::LazyLock;
 
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::id::Id;
 use hartex_discord_core::discord::model::id::marker::EmojiMarker;
@@ -41,7 +39,6 @@ use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::interaction::ephemeral_error_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 use regex::Regex;
 
@@ -52,35 +49,31 @@ static EMOJI_REGEX: LazyLock<Regex> =
 /// Executes the `info emoji` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
-    interaction: Interaction,
-    interaction_client: &InteractionClient<'_>,
-    option: CommandDataOption,
-    localizer: &Localizer<'_>,
-    cache: &DefaultInMemoryCache,
+    context: &CommandContext<'_>,
+    option: &CommandDataOption,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
-    let langid_locale = interaction
+    let langid_locale = context
         .locale
-        .clone()
+        .as_ref()
         .and_then(|locale| locale.parse().ok());
 
     let emoji = options.string_value_of("emoji");
 
-    let emojiinfo_error_only_custom_emojis =
-        localizer.utilities_plugin_emojiinfo_error_only_custom_emojis()?;
-    let emojiinfo_error_only_one_emoji =
-        localizer.utilities_plugin_emojiinfo_error_only_one_emoji()?;
-    let emojiinfo_error_unknown_emoji =
-        localizer.utilities_plugin_emojiinfo_error_unknown_emoji()?;
+    let emojiinfo_error_only_custom_emojis = context
+        .localizer
+        .utilities_plugin_emojiinfo_error_only_custom_emojis()?;
+    let emojiinfo_error_only_one_emoji = context
+        .localizer
+        .utilities_plugin_emojiinfo_error_only_one_emoji()?;
+    let emojiinfo_error_unknown_emoji = context
+        .localizer
+        .utilities_plugin_emojiinfo_error_unknown_emoji()?;
 
     let Some(captures) = EMOJI_REGEX.captures(&emoji) else {
-        interaction_client
-            .create_response(
-                interaction.id,
-                &interaction.token,
-                &ephemeral_error_response(emojiinfo_error_only_custom_emojis),
-            )
+        context
+            .create_response(ephemeral_error_response(emojiinfo_error_only_custom_emojis))
             .await
             .into_diagnostic()?;
 
@@ -88,12 +81,8 @@ pub async fn execute(
     };
 
     if captures.len() > 2 {
-        interaction_client
-            .create_response(
-                interaction.id,
-                &interaction.token,
-                &ephemeral_error_response(emojiinfo_error_only_one_emoji),
-            )
+        context
+            .create_response(ephemeral_error_response(emojiinfo_error_only_one_emoji))
             .await
             .into_diagnostic()?;
 
@@ -103,31 +92,33 @@ pub async fn execute(
     let id = captures.get(1).unwrap().as_str();
     let emoji_id = Id::<EmojiMarker>::from_str(id).unwrap();
 
-    let Some(emoji) = cache.emoji(emoji_id) else {
-        interaction_client
-            .create_response(
-                interaction.id,
-                &interaction.token,
-                &ephemeral_error_response(emojiinfo_error_unknown_emoji),
-            )
+    let Some(emoji) = context.cache.emoji(emoji_id) else {
+        context
+            .create_response(ephemeral_error_response(emojiinfo_error_unknown_emoji))
             .await
             .into_diagnostic()?;
 
         return Ok(());
     };
 
-    let emojiinfo_embed_generalinfo_field_name =
-        localizer.utilities_plugin_emojiinfo_embed_generalinfo_field_name()?;
-    let emojiinfo_embed_generalinfo_id_subfield_name =
-        localizer.utilities_plugin_emojiinfo_embed_generalinfo_id_subfield_name()?;
-    let emojiinfo_embed_generalinfo_name_subfield_name =
-        localizer.utilities_plugin_emojiinfo_embed_generalinfo_name_subfield_name()?;
-    let emojiinfo_embed_generalinfo_guild_id_subfield_name =
-        localizer.utilities_plugin_emojiinfo_embed_generalinfo_guild_id_subfield_name()?;
-    let emojiinfo_embed_generalinfo_animated_subfield_name =
-        localizer.utilities_plugin_emojiinfo_embed_generalinfo_animated_subfield_name()?;
-    let emojiinfo_embed_generalinfo_managed_subfield_name =
-        localizer.utilities_plugin_emojiinfo_embed_generalinfo_managed_subfield_name()?;
+    let emojiinfo_embed_generalinfo_field_name = context
+        .localizer
+        .utilities_plugin_emojiinfo_embed_generalinfo_field_name()?;
+    let emojiinfo_embed_generalinfo_id_subfield_name = context
+        .localizer
+        .utilities_plugin_emojiinfo_embed_generalinfo_id_subfield_name()?;
+    let emojiinfo_embed_generalinfo_name_subfield_name = context
+        .localizer
+        .utilities_plugin_emojiinfo_embed_generalinfo_name_subfield_name()?;
+    let emojiinfo_embed_generalinfo_guild_id_subfield_name = context
+        .localizer
+        .utilities_plugin_emojiinfo_embed_generalinfo_guild_id_subfield_name()?;
+    let emojiinfo_embed_generalinfo_animated_subfield_name = context
+        .localizer
+        .utilities_plugin_emojiinfo_embed_generalinfo_animated_subfield_name()?;
+    let emojiinfo_embed_generalinfo_managed_subfield_name = context
+        .localizer
+        .utilities_plugin_emojiinfo_embed_generalinfo_managed_subfield_name()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -151,12 +142,8 @@ pub async fn execute(
         .into_diagnostic()?
         .build();
 
-    interaction_client
-        .create_response(
-            interaction.id,
-            &interaction.token,
-            &embed_response(vec![embed]),
-        )
+    context
+        .create_response(embed_response(vec![embed]))
         .await
         .into_diagnostic()?;
 

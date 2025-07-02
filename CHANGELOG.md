@@ -17,6 +17,7 @@
 
 ## Discord Frontend
 
+- **Added:** `CommandContext` to simplify parameters in command handlers
 - **Changed:** in-memory cache is now used instead of a database-based cache
 - **Changed:** `mimalloc` allocator is now used, replacing system allocator
 - **Removed:** database-based `hartex-discord-entitycache-*` removed
