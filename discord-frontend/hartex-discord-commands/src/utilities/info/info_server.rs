@@ -53,7 +53,7 @@ pub async fn execute(
 
     let langid_locale = context
         .locale
-        .clone()
+        .as_ref()
         .and_then(|locale| locale.parse().ok());
 
     let verbose = options.boolean_value_of("verbose");
