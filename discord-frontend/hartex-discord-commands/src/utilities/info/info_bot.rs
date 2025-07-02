@@ -30,8 +30,6 @@ use std::time::SystemTime;
 use hartex_backend_models::Response;
 use hartex_backend_models::uptime::UptimeResponse;
 use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
@@ -39,7 +37,6 @@ use hartex_discord_core::tokio::net::TcpStream;
 use hartex_discord_core::tokio::task::spawn;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_localization_core::Localizer;
 use http_body_util::BodyExt;
 use http_body_util::Empty;
 use hyper::Method;
@@ -120,8 +117,7 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
 
     context
         .create_response(embed_response(vec![embed]))
-        .await
-        .into_diagnostic()?;
+        .await?;
 
     Ok(())
 }
