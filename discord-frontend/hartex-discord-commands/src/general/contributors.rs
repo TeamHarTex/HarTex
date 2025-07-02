@@ -26,16 +26,13 @@
 
 use async_trait::async_trait;
 use hartex_discord_commands_core::command;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_commands_core::traits::Command;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
 use hartex_discord_utils::interaction::embed_response;
-use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
 use crate::general::General;
@@ -46,23 +43,25 @@ pub struct Contributors;
 
 #[async_trait]
 impl Command for Contributors {
-    async fn execute(
-        &self,
-        interaction: Interaction,
-        interaction_client: &InteractionClient<'_>,
-        localizer: &Localizer<'_>,
-        _: &DefaultInMemoryCache,
-    ) -> miette::Result<()> {
-        let contributors_embed_title = localizer.general_plugin_contributors_embed_title()?;
-        let contributors_embed_description =
-            localizer.general_plugin_contributors_embed_description()?;
-        let contributors_embed_global_admin_field_name =
-            localizer.general_plugin_contributors_embed_global_admin_field_name()?;
-        let contributors_embed_front_dev_field_name =
-            localizer.general_plugin_contributors_embed_front_dev_field_name()?;
-        let contributors_embed_translation_team_field_name =
-            localizer.general_plugin_contributors_embed_translation_team_field_name()?;
-        let contributors_embed_footer = localizer.general_plugin_contributors_embed_footer()?;
+    async fn execute(&self, context: &CommandContext<'_>) -> miette::Result<()> {
+        let contributors_embed_title = context
+            .localizer
+            .general_plugin_contributors_embed_title()?;
+        let contributors_embed_description = context
+            .localizer
+            .general_plugin_contributors_embed_description()?;
+        let contributors_embed_global_admin_field_name = context
+            .localizer
+            .general_plugin_contributors_embed_global_admin_field_name()?;
+        let contributors_embed_front_dev_field_name = context
+            .localizer
+            .general_plugin_contributors_embed_front_dev_field_name()?;
+        let contributors_embed_translation_team_field_name = context
+            .localizer
+            .general_plugin_contributors_embed_translation_team_field_name()?;
+        let contributors_embed_footer = context
+            .localizer
+            .general_plugin_contributors_embed_footer()?;
 
         let embed = EmbedBuilder::new()
             .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
@@ -91,12 +90,8 @@ impl Command for Contributors {
             .into_diagnostic()?
             .build();
 
-        interaction_client
-            .create_response(
-                interaction.id,
-                &interaction.token,
-                &embed_response(vec![embed]),
-            )
+        context
+            .create_response(embed_response(vec![embed]))
             .await
             .into_diagnostic()?;
 

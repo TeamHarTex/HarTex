@@ -29,6 +29,7 @@ use std::time::SystemTime;
 
 use hartex_backend_models::Response;
 use hartex_backend_models::uptime::UptimeResponse;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::discord::http::client::InteractionClient;
 use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
@@ -52,12 +53,7 @@ use miette::IntoDiagnostic;
 use miette::Report;
 
 /// Executes the `info bot` command
-pub async fn execute(
-    interaction: Interaction,
-    interaction_client: &InteractionClient<'_>,
-    _: CommandDataOption,
-    localizer: &Localizer<'_>,
-) -> miette::Result<()> {
+pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> miette::Result<()> {
     // TODO: only call API once
 
     let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
@@ -99,11 +95,13 @@ pub async fn execute(
         .ok_or(Report::msg("failed to obtain uptime data"))?
         .start_timestamp();
 
-    let botinfo_embed_botstarted_field_name =
-        localizer.utilities_plugin_botinfo_embed_botstarted_field_name()?;
-    let botinfo_embed_latency_field_name =
-        localizer.utilities_plugin_botinfo_embed_latency_field_name()?;
-    let botinfo_embed_title = localizer.utilities_plugin_botinfo_embed_title()?;
+    let botinfo_embed_botstarted_field_name = context
+        .localizer
+        .utilities_plugin_botinfo_embed_botstarted_field_name()?;
+    let botinfo_embed_latency_field_name = context
+        .localizer
+        .utilities_plugin_botinfo_embed_latency_field_name()?;
+    let botinfo_embed_title = context.localizer.utilities_plugin_botinfo_embed_title()?;
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -120,12 +118,8 @@ pub async fn execute(
         .into_diagnostic()?
         .build();
 
-    interaction_client
-        .create_response(
-            interaction.id,
-            &interaction.token,
-            &embed_response(vec![embed]),
-        )
+    context
+        .create_response(embed_response(vec![embed]))
         .await
         .into_diagnostic()?;
 

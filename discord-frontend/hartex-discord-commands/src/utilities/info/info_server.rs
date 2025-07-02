@@ -28,10 +28,8 @@ use std::borrow::Cow;
 use std::fmt::Write;
 
 use hartex_discord_cdn::Cdn;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::discord::mention::Mention;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::model::channel::ChannelType;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
@@ -43,85 +41,108 @@ use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::localizable::Localizable;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 
 /// Executes the `info server` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
-    interaction: Interaction,
-    interaction_client: &InteractionClient<'_>,
-    option: CommandDataOption,
-    localizer: &Localizer<'_>,
-    cache: &DefaultInMemoryCache
+    context: &CommandContext<'_>,
+    option: &CommandDataOption,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
-    let langid_locale = interaction
+    let langid_locale = context
         .locale
         .clone()
         .and_then(|locale| locale.parse().ok());
 
     let verbose = options.boolean_value_of("verbose");
 
-    let Some(guild) = cache.guild(interaction.guild_id.unwrap()) else {
+    let Some(guild) = context.cache.guild(context.guild.unwrap()) else {
         unreachable!()
     };
 
-    let serverinfo_embed_generalinfo_id_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_generalinfo_id_subfield_name()?;
-    let serverinfo_embed_generalinfo_created_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_generalinfo_created_subfield_name()?;
-    let serverinfo_embed_generalinfo_owner_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_generalinfo_owner_subfield_name()?;
-    let serverinfo_embed_generalinfo_enabled_features_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_generalinfo_enabled_features_subfield_name()?;
-    let serverinfo_embed_generalinfo_field_name =
-        localizer.utilities_plugin_serverinfo_embed_generalinfo_field_name()?;
-    let serverinfo_embed_channelinfo_field_name =
-        localizer.utilities_plugin_serverinfo_embed_channelinfo_field_name()?;
-    let serverinfo_embed_channelinfo_categories_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_channelinfo_categories_subfield_name()?;
-    let serverinfo_embed_channelinfo_textchannels_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_channelinfo_textchannels_subfield_name()?;
-    let serverinfo_embed_channelinfo_voicechannels_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_channelinfo_voicechannels_subfield_name()?;
-    let serverinfo_embed_channelinfo_announcementchannels_subfield_name = localizer
+    let serverinfo_embed_generalinfo_id_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_generalinfo_id_subfield_name()?;
+    let serverinfo_embed_generalinfo_created_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_generalinfo_created_subfield_name()?;
+    let serverinfo_embed_generalinfo_owner_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_generalinfo_owner_subfield_name()?;
+    let serverinfo_embed_generalinfo_enabled_features_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_generalinfo_enabled_features_subfield_name()?;
+    let serverinfo_embed_generalinfo_field_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_generalinfo_field_name()?;
+    let serverinfo_embed_channelinfo_field_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_field_name()?;
+    let serverinfo_embed_channelinfo_categories_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_categories_subfield_name()?;
+    let serverinfo_embed_channelinfo_textchannels_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_textchannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_voicechannels_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_voicechannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_announcementchannels_subfield_name = context
+        .localizer
         .utilities_plugin_serverinfo_embed_channelinfo_announcementchannels_subfield_name()?;
-    let serverinfo_embed_channelinfo_stagechannels_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_channelinfo_stagechannels_subfield_name()?;
-    let serverinfo_embed_channelinfo_forumchannels_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_channelinfo_forumchannels_subfield_name()?;
-    let serverinfo_embed_memberinfo_field_name =
-        localizer.utilities_plugin_serverinfo_embed_memberinfo_field_name()?;
-    let serverinfo_embed_memberinfo_membercount_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_memberinfo_membercount_subfield_name()?;
-    let serverinfo_embed_memberinfo_humancount_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_memberinfo_humancount_subfield_name()?;
-    let serverinfo_embed_memberinfo_botcount_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_memberinfo_botcount_subfield_name()?;
-    let serverinfo_embed_roleinfo_field_name =
-        localizer.utilities_plugin_serverinfo_embed_roleinfo_field_name()?;
-    let serverinfo_embed_roleinfo_rolecount_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_roleinfo_rolecount_subfield_name()?;
-    let serverinfo_embed_nitroinfo_field_name =
-        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_name()?;
-    let serverinfo_embed_nitroinfo_boostlevel_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_boostlevel_subfield_name()?;
-    let serverinfo_embed_nitroinfo_boosts_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_nitroinfo_field_boosts_subfield_name()?;
-    let serverinfo_embed_flags_field_name =
-        localizer.utilities_plugin_serverinfo_embed_flags_field_name()?;
-    let serverinfo_embed_flags_large_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_flags_large_subfield_name()?;
-    let serverinfo_embed_flags_default_message_notifications_subfield_name = localizer
+    let serverinfo_embed_channelinfo_stagechannels_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_stagechannels_subfield_name()?;
+    let serverinfo_embed_channelinfo_forumchannels_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_channelinfo_forumchannels_subfield_name()?;
+    let serverinfo_embed_memberinfo_field_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_memberinfo_field_name()?;
+    let serverinfo_embed_memberinfo_membercount_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_memberinfo_membercount_subfield_name()?;
+    let serverinfo_embed_memberinfo_humancount_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_memberinfo_humancount_subfield_name()?;
+    let serverinfo_embed_memberinfo_botcount_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_memberinfo_botcount_subfield_name()?;
+    let serverinfo_embed_roleinfo_field_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_roleinfo_field_name()?;
+    let serverinfo_embed_roleinfo_rolecount_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_roleinfo_rolecount_subfield_name()?;
+    let serverinfo_embed_nitroinfo_field_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_nitroinfo_field_name()?;
+    let serverinfo_embed_nitroinfo_boostlevel_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_nitroinfo_field_boostlevel_subfield_name()?;
+    let serverinfo_embed_nitroinfo_boosts_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_nitroinfo_field_boosts_subfield_name()?;
+    let serverinfo_embed_flags_field_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_flags_field_name()?;
+    let serverinfo_embed_flags_large_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_flags_large_subfield_name()?;
+    let serverinfo_embed_flags_default_message_notifications_subfield_name = context
+        .localizer
         .utilities_plugin_serverinfo_embed_flags_default_message_notifications_subfield_name()?;
-    let serverinfo_embed_flags_explicit_content_filter_subfield_name = localizer
+    let serverinfo_embed_flags_explicit_content_filter_subfield_name = context
+        .localizer
         .utilities_plugin_serverinfo_embed_flags_explicit_content_filter_subfield_name()?;
-    let serverinfo_embed_flags_mfa_level_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_flags_mfa_level_subfield_name()?;
-    let serverinfo_embed_flags_verification_level_subfield_name =
-        localizer.utilities_plugin_serverinfo_embed_flags_verification_level_subfield_name()?;
+    let serverinfo_embed_flags_mfa_level_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_flags_mfa_level_subfield_name()?;
+    let serverinfo_embed_flags_verification_level_subfield_name = context
+        .localizer
+        .utilities_plugin_serverinfo_embed_flags_verification_level_subfield_name()?;
 
     let mut default_general_information = format!(
         "{} {}\n{} {}\n{} {}",
@@ -134,10 +155,12 @@ pub async fn execute(
         serverinfo_embed_generalinfo_owner_subfield_name,
         guild.owner_id().mention(),
     );
-    let Some(channel_ids) = cache.guild_channels(guild.id()) else {
+    let Some(channel_ids) = context.cache.guild_channels(guild.id()) else {
         unreachable!()
     };
-    let channels = channel_ids.iter().filter_map(|id| cache.channel(*id));
+    let channels = channel_ids
+        .iter()
+        .filter_map(|id| context.cache.channel(*id));
 
     let category_count = channels
         .clone()
@@ -172,10 +195,10 @@ pub async fn execute(
             output
         });
 
-    let Some(member_ids) = cache.guild_members(guild.id()) else {
+    let Some(member_ids) = context.cache.guild_members(guild.id()) else {
         unreachable!()
     };
-    let users = member_ids.iter().filter_map(|id| cache.user(*id));
+    let users = member_ids.iter().filter_map(|id| context.cache.user(*id));
     let humans = users.filter(|user| !user.bot).count();
 
     if verbose {
@@ -186,7 +209,7 @@ pub async fn execute(
         .into_diagnostic()?;
     }
 
-    let Some(role_ids) = cache.guild_roles(guild.id()) else {
+    let Some(role_ids) = context.cache.guild_roles(guild.id()) else {
         unreachable!()
     };
     let roles = role_ids.len();
@@ -235,9 +258,7 @@ pub async fn execute(
         ))
         .field(EmbedFieldBuilder::new(
             format!("<:role:1139004530277765211> {serverinfo_embed_roleinfo_field_name}"),
-            format!(
-                "{serverinfo_embed_roleinfo_rolecount_subfield_name} {roles}",
-            ),
+            format!("{serverinfo_embed_roleinfo_rolecount_subfield_name} {roles}",),
         ))
         .field(EmbedFieldBuilder::new(
             format!("<:nitroBoost:1190566150963200030> {serverinfo_embed_nitroinfo_field_name}"),
@@ -272,18 +293,14 @@ pub async fn execute(
         .title(guild.name());
 
     if let Some(icon) = guild.icon() {
-        builder =
-            builder.thumbnail(ImageSource::url(Cdn::guild_icon(guild.id(), *icon)).into_diagnostic()?);
+        builder = builder
+            .thumbnail(ImageSource::url(Cdn::guild_icon(guild.id(), *icon)).into_diagnostic()?);
     }
 
     let embed = builder.validate().into_diagnostic()?.build();
 
-    interaction_client
-        .create_response(
-            interaction.id,
-            &interaction.token,
-            &embed_response(vec![embed]),
-        )
+    context
+        .create_response(embed_response(vec![embed]))
         .await
         .into_diagnostic()?;
 
