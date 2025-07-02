@@ -25,10 +25,8 @@
 //! This command returns informatiomn about a user.
 
 use hartex_discord_cdn::Cdn;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::discord::mention::Mention;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
 use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
 use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
@@ -38,7 +36,6 @@ use hartex_discord_utils::commands::CommandDataOptionExt;
 use hartex_discord_utils::commands::CommandDataOptionsExt;
 use hartex_discord_utils::interaction::embed_response;
 use hartex_discord_utils::markdown::MarkdownStyle;
-use hartex_localization_core::Localizer;
 use itertools::Itertools;
 use miette::IntoDiagnostic;
 use rand::seq::IndexedRandom;
@@ -47,38 +44,44 @@ use rand::thread_rng;
 /// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
-    interaction: Interaction,
-    interaction_client: &InteractionClient<'_>,
-    option: CommandDataOption,
-    localizer: &Localizer<'_>,
-    cache: &DefaultInMemoryCache,
+    context: &CommandContext<'_>,
+    option: &CommandDataOption,
 ) -> miette::Result<()> {
     let options = option.assume_subcommand();
 
     let user_id = options.user_value_of("user");
 
-    let Some(user) = cache.user(user_id) else {
+    let Some(user) = context.cache.user(user_id) else {
         unreachable!()
     };
 
-    let userinfo_embed_generalinfo_field_name =
-        localizer.utilities_plugin_userinfo_embed_generalinfo_field_name()?;
-    let userinfo_embed_generalinfo_id_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_generalinfo_id_subfield_name()?;
-    let userinfo_embed_generalinfo_name_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_generalinfo_name_subfield_name()?;
-    let userinfo_embed_generalinfo_created_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_generalinfo_created_subfield_name()?;
-    let userinfo_embed_serverpresence_field_name =
-        localizer.utilities_plugin_userinfo_embed_serverpresence_field_name()?;
-    let userinfo_embed_serverpresence_nickname_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_serverpresence_nickname_subfield_name()?;
-    let userinfo_embed_serverpresence_joined_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_serverpresence_joinedat_subfield_name()?;
-    let userinfo_embed_serverpresence_roles_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_serverpresence_roles_subfield_name()?;
-    let userinfo_embed_serverpresence_flags_subfield_name =
-        localizer.utilities_plugin_userinfo_embed_serverpresence_flags_subfield_name()?;
+    let userinfo_embed_generalinfo_field_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_generalinfo_field_name()?;
+    let userinfo_embed_generalinfo_id_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_generalinfo_id_subfield_name()?;
+    let userinfo_embed_generalinfo_name_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_generalinfo_name_subfield_name()?;
+    let userinfo_embed_generalinfo_created_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_generalinfo_created_subfield_name()?;
+    let userinfo_embed_serverpresence_field_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_serverpresence_field_name()?;
+    let userinfo_embed_serverpresence_nickname_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_serverpresence_nickname_subfield_name()?;
+    let userinfo_embed_serverpresence_joined_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_serverpresence_joinedat_subfield_name()?;
+    let userinfo_embed_serverpresence_roles_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_serverpresence_roles_subfield_name()?;
+    let userinfo_embed_serverpresence_flags_subfield_name = context
+        .localizer
+        .utilities_plugin_userinfo_embed_serverpresence_flags_subfield_name()?;
 
     let mut builder = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -99,15 +102,12 @@ pub async fn execute(
             ),
         ));
 
-    if let Some(guild_id) = interaction.guild_id {
-        let Some(member) = cache.member(guild_id, user_id) else {
+    if let Some(guild_id) = context.guild {
+        let Some(member) = context.cache.member(guild_id, user_id) else {
             unreachable!()
         };
 
-        let mut flags = member
-            .flags()
-            .iter_names()
-            .map(|(name, _)| name);
+        let mut flags = member.flags().iter_names().map(|(name, _)| name);
         let flags_display = flags.join(", ");
 
         builder = builder
@@ -152,14 +152,9 @@ pub async fn execute(
 
     let embed = builder.validate().into_diagnostic()?.build();
 
-    interaction_client
-        .create_response(
-            interaction.id,
-            &interaction.token,
-            &embed_response(vec![embed]),
-        )
-        .await
-        .into_diagnostic()?;
+    context
+        .create_response(embed_response(vec![embed]))
+        .await?;
 
     Ok(())
 }

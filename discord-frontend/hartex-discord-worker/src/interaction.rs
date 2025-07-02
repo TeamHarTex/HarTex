@@ -26,6 +26,7 @@ use std::sync::LazyLock;
 use hartex_discord_commands::general::about::About;
 use hartex_discord_commands::general::contributors::Contributors;
 use hartex_discord_commands::utilities::info::Info;
+use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_commands_core::traits::Command;
 use hartex_discord_commands_core::traits::CommandMetadata;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
@@ -71,8 +72,6 @@ pub async fn application_command(
     };
 
     hartex_tracing::trace!("running interaction command {&command.name} in guild {guild_id}");
-
-    let cloned = interaction_create.clone();
 
     let command = COMMAND_LOOKUP.get(&command.name).unwrap();
     let plugin = command.plugin();
@@ -131,10 +130,9 @@ pub async fn application_command(
         "check: member {member.user.unwrap().id} has sufficient permissions to run the command"
     );
 
-    if let Err(error) = command
-        .execute(cloned.0, interaction_client, localizer, cache)
-        .await
-    {
+    let context = CommandContext::new(&interaction_create.0, cache, interaction_client, localizer);
+
+    if let Err(error) = command.execute(&context).await {
         crate::errorhandler::handle_interaction_error(
             ErrorPayload::Miette(error),
             interaction_create,
