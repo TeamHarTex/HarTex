@@ -74,8 +74,7 @@ pub async fn execute(
     let Some(captures) = EMOJI_REGEX.captures(&emoji) else {
         context
             .create_response(ephemeral_error_response(emojiinfo_error_only_custom_emojis))
-            .await
-            .into_diagnostic()?;
+            .await?;
 
         return Ok(());
     };
@@ -83,8 +82,7 @@ pub async fn execute(
     if captures.len() > 2 {
         context
             .create_response(ephemeral_error_response(emojiinfo_error_only_one_emoji))
-            .await
-            .into_diagnostic()?;
+            .await?;
 
         return Ok(());
     }
@@ -95,8 +93,7 @@ pub async fn execute(
     let Some(emoji) = context.cache.emoji(emoji_id) else {
         context
             .create_response(ephemeral_error_response(emojiinfo_error_unknown_emoji))
-            .await
-            .into_diagnostic()?;
+            .await?;
 
         return Ok(());
     };
