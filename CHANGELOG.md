@@ -12,8 +12,11 @@
 
 - **Changed:** `bootstrap` is now built with `--release`
 - **Changed:** `setup` configurations now have their `rust-analyzer.*.invocationLocation` options removed
+- **Removed:** removed `let_chains` feature flag due to stabilization
 
 ## Database Infrastructure
+
+- **Removed:** removed `let_chains` feature flag due to stabilization
 
 ## Discord Frontend
 
@@ -21,6 +24,7 @@
 - **Changed:** in-memory cache is now used instead of a database-based cache
 - **Changed:** `mimalloc` allocator is now used, replacing system allocator
 - **Removed:** database-based `hartex-discord-entitycache-*` removed
+- **Removed:** removed `let_chains` feature flag due to stabilization
 
 ## Localization Infrastructure
 
