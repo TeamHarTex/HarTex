@@ -23,3 +23,5 @@
 syntax = "proto3";
 
 package dev.teamhartex.hartex.grpc.gateway;
+
+service GatewayService {}
