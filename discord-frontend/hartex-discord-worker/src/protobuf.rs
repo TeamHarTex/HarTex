@@ -20,28 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-syntax = "proto3";
-
-package dev.teamhartex.hartex.grpc.gateway;
-
-enum GatewayClientEventResponseStatus {
-  // The event was handled successfully after all chunks were sent to the server.
-  STATUS_HANDLED = 0;
-  // Acknowledges a chunk has been sent, continue sending next chunk.
-  STATUS_CHUNK_ACK_CONTINUE = 1;
-}
-
-message GatewayClientEventMessage {
-  uint64 event_seq = 1;
-  bytes chunk_data = 2;
-  uint32 nth_chunk = 3;
-  uint32 total_chunks = 4;
-}
-
-message GatewayClientEventResponse {
-  GatewayClientEventResponseStatus status = 1;
-}
-
-service Gateway {
-  rpc ClientEventStreaming(stream GatewayClientEventMessage) returns (stream GatewayClientEventResponse);
-}
+tonic::include_proto!("dev.teamhartex.hartex.grpc.gateway");
