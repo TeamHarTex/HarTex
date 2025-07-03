@@ -1,0 +1,8 @@
+version = 1
+revision = 1
+requires-python = ">=3.11"
+
+[[package]]
+name = "x-py"
+version = "0.15.0"
+source = { virtual = "." }

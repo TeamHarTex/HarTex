@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="EMPTY_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Python" name="Python facet">
+      <configuration sdkName="uv (HarTex)" />
+    </facet>
+  </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/api-backend/hartex-backend-driver/src" isTestSource="false" />
@@ -47,8 +52,10 @@
       <excludeFolder url="file://$MODULE_DIR$/rust-utilities/target" />
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/hartex-database-queries/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="uv (HarTex) interpreter library" level="application" />
   </component>
 </module>
