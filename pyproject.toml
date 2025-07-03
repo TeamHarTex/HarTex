@@ -1,0 +1,6 @@
+[project]
+name = "x.py"
+version = "0.15.0"
+description = "Buildsystem for HarTex"
+requires-python = ">=3.11"
+dependencies = []

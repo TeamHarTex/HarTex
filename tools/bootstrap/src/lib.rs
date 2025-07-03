@@ -27,7 +27,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(let_chains)]
 #![feature(io_error_uncategorized)]
 
 pub mod build;

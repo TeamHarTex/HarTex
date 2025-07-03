@@ -28,7 +28,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-#![feature(let_chains)]
 
 extern crate core;
 

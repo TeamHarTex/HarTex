@@ -26,7 +26,6 @@
 #![allow(dead_code)]
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
-#![feature(let_chains)]
 
 use std::collections::BTreeMap;
 use std::path::Path;
