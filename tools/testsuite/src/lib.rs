@@ -24,7 +24,6 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 #![feature(io_error_uncategorized)]
-#![feature(let_chains)]
 #![feature(test)]
 
 extern crate test;
