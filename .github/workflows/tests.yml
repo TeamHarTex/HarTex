@@ -32,9 +32,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install Protoc
-        uses: arduino/setup-protoc@v3
-        with:
-          version: "29.3"
+        run: sudo apt install -y protobuf-compiler
       - name: Print Rust Version
         run: rustc --version --verbose
       - name: Run Build
@@ -59,9 +57,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install Protoc
-        uses: arduino/setup-protoc@v3
-        with:
-          version: "29.3"
+        run: sudo apt install -y protobuf-compiler
       - name: Print Rust Version
         run: rustc --version --verbose
       - name: Run Build
