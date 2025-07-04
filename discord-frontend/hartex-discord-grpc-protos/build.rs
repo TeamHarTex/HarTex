@@ -20,4 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-tonic::include_proto!("dev.teamhartex.hartex.grpc.gateway");
+pub fn main() {
+    tonic_build::configure()
+        .bytes(&["chunk_data"])
+        .compile_protos(&["protos/gateway.proto"], &["protos"]).unwrap();
+}

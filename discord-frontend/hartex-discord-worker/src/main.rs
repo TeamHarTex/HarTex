@@ -60,7 +60,6 @@ mod error;
 mod errorhandler;
 mod eventcallback;
 mod interaction;
-mod protobuf;
 
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;

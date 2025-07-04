@@ -1,0 +1,19 @@
+[package]
+name = "hartex_discord_grpc_protos"
+version = "0.15.0"
+edition = "2024"
+description = """
+GRPC protobufs for HarTex
+"""
+license = "AGPL-3.0-or-later"
+rust-version = "1.90.0"
+
+[dependencies]
+tonic = "0.13.1"
+prost = "0.14.1"
+
+[build-dependencies]
+tonic-build = "0.13.1"
+
+[features]
+gateway = []

@@ -50,7 +50,6 @@ use rdkafka::producer::FutureProducer;
 mod kafka;
 mod queue;
 mod shards;
-mod protobuf;
 
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;

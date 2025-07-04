@@ -20,4 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-tonic::include_proto!("dev.teamhartex.hartex.grpc.gateway");
+#![deny(clippy::pedantic)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
+
+#[cfg(feature = "gateway")]
+/// Gateway GRPC protocol.
+pub mod gateway {
+    tonic::include_proto!("dev.teamhartex.hartex.grpc.gateway");
+}
