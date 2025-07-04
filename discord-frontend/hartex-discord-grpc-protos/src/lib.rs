@@ -20,10 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
 #[cfg(feature = "gateway")]
 /// Gateway GRPC protocol.
 pub mod gateway {
