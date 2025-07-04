@@ -31,6 +31,7 @@ use tokio_stream::wrappers::ReceiverStream;
 use tonic::Request;
 use tonic::Response;
 use tonic::Result;
+use tonic::Status;
 use tonic::Streaming;
 use tonic::async_trait;
 
@@ -47,9 +48,18 @@ impl Gateway for GatewayWorkerServer {
         request: Request<Streaming<GatewayClientEventMessage>>,
     ) -> Result<Response<Self::ClientEventStreamingStream>> {
         let mut stream = request.into_inner();
-        let (_, rx) = mpsc::channel(1000);
+        let (tx, rx) = mpsc::channel(1000);
 
-        tokio::spawn(async move { while let Some(_) = stream.next().await {} });
+        tokio::spawn(async move {
+            while let Some(result) = stream.next().await {
+                let Ok(_) = result else {
+                    tx.send(Err(Status::aborted(
+                        "failed to retrieve message from payload",
+                    )))
+                    .await
+                };
+            }
+        });
 
         Ok(Response::new(ReceiverStream::new(rx)))
     }
