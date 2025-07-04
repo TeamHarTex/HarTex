@@ -30,33 +30,16 @@
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
 
-use std::env;
-use std::str;
-use std::str::Utf8Error;
-
-use futures_util::StreamExt;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_grpc_protos::gateway::gateway_server::GatewayServer;
-use hartex_kafka_utils::traits::ClientConfigUtils;
-use hartex_kafka_utils::types::CompressionType;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;
-use rdkafka::ClientConfig;
-use rdkafka::consumer::Consumer;
-use rdkafka::consumer::StreamConsumer;
-use rdkafka::error::KafkaError;
-use rdkafka::message::Message;
-use rdkafka::producer::FutureProducer;
 use serde::de::DeserializeSeed;
-use serde_scan::scan;
 use tonic::transport::Server;
 
-use crate::error::ConsumerError;
-use crate::error::ConsumerErrorKind;
 use crate::grpc::GatewayWorkerServer;
 
 mod error;
