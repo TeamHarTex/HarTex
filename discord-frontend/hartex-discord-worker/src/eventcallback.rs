@@ -36,8 +36,8 @@ use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
+use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::net::TcpStream;
-use hartex_discord_core::tokio::spawn;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
@@ -159,7 +159,7 @@ pub async fn invoke(
                 let (mut sender, connection) =
                     handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
-                spawn(async move {
+                tokio::spawn(async move {
                     if let Err(err) = connection.await {
                         hartex_tracing::error!("TCP connection failed: {err:?}");
                     }

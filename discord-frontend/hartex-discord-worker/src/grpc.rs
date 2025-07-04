@@ -19,10 +19,14 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
+use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::sync::mpsc;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventResponse;
 use hartex_discord_grpc_protos::gateway::gateway_server::Gateway;
+use tokio_stream::StreamExt;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::Request;
 use tonic::Response;
@@ -40,8 +44,13 @@ impl Gateway for GatewayWorkerServer {
 
     async fn client_event_streaming(
         &self,
-        _: Request<Streaming<GatewayClientEventMessage>>,
+        request: Request<Streaming<GatewayClientEventMessage>>,
     ) -> Result<Response<Self::ClientEventStreamingStream>> {
-        todo!()
+        let mut stream = request.into_inner();
+        let (_, rx) = mpsc::channel(1000);
+
+        tokio::spawn(async move { while let Some(_) = stream.next().await {} });
+
+        Ok(Response::new(ReceiverStream::new(rx)))
     }
 }

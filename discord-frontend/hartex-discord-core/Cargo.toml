@@ -28,7 +28,8 @@ async-runtime = [
     "tokio?/rt",
     "tokio?/rt-multi-thread",
 ]
-async-signal = ["tokio?/signal"]
+async-signal = ["dep:tokio", "tokio?/signal"]
+async-sync = ["dep:tokio", "tokio?/sync"]
 discord-cache = ["dep:twilight-cache-inmemory"]
 discord-gateway = ["dep:twilight-gateway"]
 discord-gateway-enable-http = ["twilight-gateway?/twilight-http"]
