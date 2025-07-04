@@ -22,7 +22,7 @@
 
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
-
+use std::sync::Arc;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc;
@@ -65,7 +65,7 @@ impl Gateway for GatewayWorkerServer {
     type ClientEventStreamingStream = ReceiverStream<Result<GatewayClientEventResponse>>;
 
     async fn client_event_streaming(
-        &mut self,
+        self: Arc<Self>,
         request: Request<Streaming<GatewayClientEventMessage>>,
     ) -> Result<Response<Self::ClientEventStreamingStream>> {
         let mut stream = request.into_inner();
