@@ -21,7 +21,6 @@
  */
 
 use std::collections::BTreeMap;
-use std::collections::BTreeSet;
 use std::sync::Arc;
 
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
@@ -30,6 +29,7 @@ use hartex_discord_core::tokio::sync::mpsc;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventResponse;
 use hartex_discord_grpc_protos::gateway::gateway_server::Gateway;
+use parking_lot::Mutex;
 use tokio_stream::StreamExt;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::Request;
@@ -43,14 +43,14 @@ use tonic::codegen::Bytes;
 /// A gateway worker server service.
 pub struct GatewayWorkerServer {
     cache: DefaultInMemoryCache,
-    payloads: BTreeMap<u64, GatewayPayloadChunked>,
+    payloads: Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>,
 }
 
 impl GatewayWorkerServer {
     pub fn new(cache: DefaultInMemoryCache) -> Self {
         Self {
             cache,
-            payloads: BTreeMap::new(),
+            payloads: Arc::new(Mutex::new(BTreeMap::new())),
         }
     }
 }
@@ -58,7 +58,7 @@ impl GatewayWorkerServer {
 struct GatewayPayloadChunked {
     total: u32,
     received: u32,
-    chunks: BTreeSet<(u32, Bytes)>,
+    chunks: BTreeMap<u32, Bytes>,
 }
 
 #[async_trait]
@@ -85,14 +85,36 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 };
 
-                let _ = self
-                    .payloads
+                let mut payloads = self.payloads.lock_arc();
+                let payload = payloads
                     .entry(message.event_seq)
                     .or_insert(GatewayPayloadChunked {
                         total: message.total_chunks,
                         received: 0,
-                        chunks: BTreeSet::new(),
+                        chunks: BTreeMap::new(),
                     });
+
+                if payload.total != message.total_chunks {
+                    // drop(payloads);
+                    response_tx
+                        .send(Err(Status::invalid_argument(
+                            "inconsistent total_chunks for same event_seq",
+                        )))
+                        .await
+                        .unwrap();
+                    continue;
+                }
+
+                if payload.chunks.try_insert(message.nth_chunk, message.chunk_data).is_err() {
+                    // drop(payloads);
+                    response_tx
+                        .send(Err(Status::invalid_argument(
+                            format!("duplicate chunk {} in payload", message.nth_chunk),
+                        )))
+                        .await
+                        .unwrap();
+                }
+                payload.received += 1;
             }
         });
 
