@@ -54,7 +54,7 @@ impl GatewayWorkerServer {
     }
 }
 
-pub struct GatewayPayloadChunked {
+struct GatewayPayloadChunked {
     total: u32,
     received: u32,
     chunks: BTreeSet<(u32, Bytes)>,
