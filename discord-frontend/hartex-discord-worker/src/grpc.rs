@@ -20,6 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::BTreeMap;
+use std::collections::BTreeSet;
+
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc;
@@ -34,9 +37,27 @@ use tonic::Result;
 use tonic::Status;
 use tonic::Streaming;
 use tonic::async_trait;
+use tonic::codegen::Bytes;
 
+/// A gateway worker server service.
 pub struct GatewayWorkerServer {
-    pub(crate) cache: DefaultInMemoryCache,
+    cache: DefaultInMemoryCache,
+    payloads: BTreeMap<u64, GatewayPayloadChunked>,
+}
+
+impl GatewayWorkerServer {
+    pub fn new(cache: DefaultInMemoryCache) -> Self {
+        Self {
+            cache,
+            payloads: BTreeMap::new(),
+        }
+    }
+}
+
+pub struct GatewayPayloadChunked {
+    total: u32,
+    received: u32,
+    chunks: BTreeSet<(u32, Bytes)>,
 }
 
 #[async_trait]
@@ -44,26 +65,36 @@ impl Gateway for GatewayWorkerServer {
     type ClientEventStreamingStream = ReceiverStream<Result<GatewayClientEventResponse>>;
 
     async fn client_event_streaming(
-        &self,
+        &mut self,
         request: Request<Streaming<GatewayClientEventMessage>>,
     ) -> Result<Response<Self::ClientEventStreamingStream>> {
         let mut stream = request.into_inner();
-        let (tx, rx) = mpsc::channel(1000);
+        let (response_tx, response_rx) = mpsc::channel(1000);
 
         tokio::spawn(async move {
             while let Some(result) = stream.next().await {
-                let Ok(_) = result else {
-                    tx.send(Err(Status::aborted(
-                        "failed to retrieve message from payload",
-                    )))
-                    .await
-                    .unwrap();
+                let Ok(message) = result else {
+                    response_tx
+                        .send(Err(Status::aborted(
+                            "failed to retrieve message from payload",
+                        )))
+                        .await
+                        .unwrap();
 
                     continue;
                 };
+
+                let _ = self
+                    .payloads
+                    .entry(message.event_seq)
+                    .or_insert(GatewayPayloadChunked {
+                        total: message.total_chunks,
+                        received: 0,
+                        chunks: BTreeSet::new(),
+                    });
             }
         });
 
-        Ok(Response::new(ReceiverStream::new(rx)))
+        Ok(Response::new(ReceiverStream::new(response_rx)))
     }
 }

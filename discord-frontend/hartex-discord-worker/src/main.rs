@@ -147,7 +147,7 @@ pub async fn main() -> miette::Result<()> {
 
     let cache = DefaultInMemoryCache::new();
 
-    let service = GatewayServer::new(GatewayWorkerServer { cache });
+    let service = GatewayServer::new(GatewayWorkerServer::new(cache));
     Server::builder()
         .add_service(service)
         .serve("[::1]:10001".parse().unwrap())
