@@ -1225,6 +1225,8 @@ dependencies = [
  "serde_scan",
  "sha2 0.11.0-rc.0",
  "strip-ansi-escapes",
+ "tokio-stream",
+ "tonic",
  "tracing",
 ]
 

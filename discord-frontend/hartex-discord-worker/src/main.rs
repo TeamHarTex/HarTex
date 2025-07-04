@@ -40,6 +40,7 @@ use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserialize
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
+use hartex_discord_grpc_protos::gateway::gateway_server::GatewayServer;
 use hartex_kafka_utils::traits::ClientConfigUtils;
 use hartex_kafka_utils::types::CompressionType;
 use miette::IntoDiagnostic;
@@ -52,13 +53,16 @@ use rdkafka::message::Message;
 use rdkafka::producer::FutureProducer;
 use serde::de::DeserializeSeed;
 use serde_scan::scan;
+use tonic::transport::Server;
 
 use crate::error::ConsumerError;
 use crate::error::ConsumerErrorKind;
+use crate::grpc::GatewayWorkerServer;
 
 mod error;
 mod errorhandler;
 mod eventcallback;
+mod grpc;
 mod interaction;
 
 #[global_allocator]
@@ -73,7 +77,7 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
+    /*let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
         .into_diagnostic()?
         .split(';')
         .map(String::from)
@@ -92,11 +96,9 @@ pub async fn main() -> miette::Result<()> {
         .create::<StreamConsumer>()
         .into_diagnostic()?;
 
-    consumer.subscribe(&[&topic]).into_diagnostic()?;
+    consumer.subscribe(&[&topic]).into_diagnostic()?;*/
 
-    let cache = DefaultInMemoryCache::new();
-
-    while let Some(result) = consumer.stream().next().await {
+    /*while let Some(result) = consumer.stream().next().await {
         let Ok(message) = result else {
             let error = result.unwrap_err();
             println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
@@ -158,7 +160,16 @@ pub async fn main() -> miette::Result<()> {
         let event = result.unwrap();
 
         eventcallback::invoke(event, scanned, producer.clone(), &cache).await?;
-    }
+    }*/
+
+    let cache = DefaultInMemoryCache::new();
+
+    let service = GatewayServer::new(GatewayWorkerServer { cache });
+    Server::builder()
+        .add_service(service)
+        .serve("[::1]:10001".parse().unwrap())
+        .await
+        .into_diagnostic()?;
 
     signal::ctrl_c().await.into_diagnostic()?;
     hartex_tracing::warn!("ctrl-c signal received, shutting down");
