@@ -29,6 +29,7 @@
 #![deny(warnings)]
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
+#![feature(map_try_insert)]
 
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::dotenvy;
