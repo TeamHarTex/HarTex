@@ -18,6 +18,7 @@ hartex_discord_commands_core = { path = "../hartex-discord-commands-core" }
 hartex_discord_core = { path = "../hartex-discord-core", features = [
     "async-runtime",
     "async-signal",
+    "async-sync",
     "discord-cache",
     "discord-model",
     "environment",
