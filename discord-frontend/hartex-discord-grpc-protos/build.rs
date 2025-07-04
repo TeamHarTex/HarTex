@@ -23,5 +23,6 @@
 pub fn main() {
     tonic_build::configure()
         .bytes(&["chunk_data"])
-        .compile_protos(&["protos/gateway.proto"], &["protos"]).unwrap();
+        .compile_protos(&["protos/gateway.proto"], &["protos"])
+        .unwrap();
 }
