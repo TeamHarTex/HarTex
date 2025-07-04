@@ -23,6 +23,7 @@
 pub fn main() {
     tonic_build::configure()
         .bytes(["chunk_data"])
+        .use_arc_self(true)
         .compile_protos(&["protos/gateway.proto"], &["protos"])
         .unwrap();
 }
