@@ -57,6 +57,9 @@ impl Gateway for GatewayWorkerServer {
                         "failed to retrieve message from payload",
                     )))
                     .await
+                    .unwrap();
+
+                    continue;
                 };
             }
         });
