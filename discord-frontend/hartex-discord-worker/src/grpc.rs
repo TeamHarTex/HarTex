@@ -24,9 +24,12 @@ use std::collections::BTreeMap;
 use std::collections::btree_map::Entry;
 use std::sync::Arc;
 
+use bytes::Bytes;
+use bytes::BytesMut;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc;
+use hartex_discord_core::tokio::sync::mpsc::Sender;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventResponse;
 use hartex_discord_grpc_protos::gateway::gateway_server::Gateway;
@@ -39,7 +42,6 @@ use tonic::Result;
 use tonic::Status;
 use tonic::Streaming;
 use tonic::async_trait;
-use tonic::codegen::Bytes;
 
 /// A gateway worker server service.
 pub struct GatewayWorkerServer {
@@ -60,6 +62,7 @@ impl GatewayWorkerServer {
 struct GatewayPayloads(Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>);
 
 impl GatewayPayloads {
+
     pub fn consistent_totals(&self, event_seq: u64, received_total: u32) -> bool {
         let mut payloads = self.0.lock();
         let entry = payloads.entry(event_seq);
@@ -71,7 +74,7 @@ impl GatewayPayloads {
         entry.get().total == received_total
     }
 
-    pub fn try_insert_payload(&self, event_seq: u64, nth: u32, total: u32, data: Bytes) -> bool {
+    pub fn try_insert_payload_with_completeness_check(&self, event_seq: u64, nth: u32, total: u32, data: Bytes, tx: Sender<BTreeMap<u32, Bytes>>) -> bool {
         let mut payloads = self.0.lock();
         let chunked = payloads.entry(event_seq).or_insert(GatewayPayloadChunked {
             total,
@@ -83,6 +86,11 @@ impl GatewayPayloads {
             return false; // duplicate payload chunk
         }
         chunked.received += 1;
+
+        if chunked.received == chunked.total {
+            let payload = payloads.remove(&event_seq).unwrap();
+            tx.try_send(payload.chunks).unwrap();
+        }
 
         true
     }
@@ -104,7 +112,8 @@ impl Gateway for GatewayWorkerServer {
         request: Request<Streaming<GatewayClientEventMessage>>,
     ) -> Result<Response<Self::ClientEventStreamingStream>> {
         let mut stream = request.into_inner();
-        let (response_tx, response_rx) = mpsc::channel(1000);
+        let (response_tx, response_rx) = mpsc::channel(32);
+        let (internal_tx, mut internal_rx) = mpsc::channel(32);
 
         let payloads = self.payloads.clone();
 
@@ -128,14 +137,16 @@ impl Gateway for GatewayWorkerServer {
                         )))
                         .await
                         .unwrap();
+
                     continue;
                 }
 
-                if !payloads.try_insert_payload(
+                if !payloads.try_insert_payload_with_completeness_check(
                     message.event_seq,
                     message.nth_chunk,
                     message.total_chunks,
                     message.chunk_data,
+                    internal_tx.clone(),
                 ) {
                     response_tx
                         .send(Err(Status::invalid_argument(format!(
@@ -145,6 +156,13 @@ impl Gateway for GatewayWorkerServer {
                         .await
                         .unwrap();
                 }
+            }
+        });
+
+        tokio::spawn(async move {
+            while let Some(chunks) = internal_rx.recv().await {
+                let mut buffer = BytesMut::new();
+                chunks.values().for_each(|bytes| buffer.extend_from_slice(bytes));
             }
         });
 

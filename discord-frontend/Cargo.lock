@@ -1204,6 +1204,7 @@ dependencies = [
 name = "hartex_discord_worker"
 version = "0.15.0"
 dependencies = [
+ "bytes",
  "chrono",
  "futures-util",
  "hartex_backend_models",
