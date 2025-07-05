@@ -77,7 +77,7 @@ impl GatewayPayloads {
         entry.get().total == received_total
     }
 
-    pub fn try_insert_payload_with_completeness_check(&self, event_seq: u64, nth: u32, total: u32, data: Bytes, tx: Sender<BTreeMap<u32, Bytes>>) -> bool {
+    pub fn try_insert_payload_with_completeness_check(&self, event_seq: u64, nth: u32, total: u32, data: Bytes, tx: &Sender<BTreeMap<u32, Bytes>>) -> bool {
         let mut payloads = self.0.lock();
         let chunked = payloads.entry(event_seq).or_insert(GatewayPayloadChunked {
             total,
@@ -149,7 +149,7 @@ impl Gateway for GatewayWorkerServer {
                     message.nth_chunk,
                     message.total_chunks,
                     message.chunk_data,
-                    internal_tx.clone(),
+                    &internal_tx,
                 ) {
                     response_tx
                         .send(Err(Status::invalid_argument(format!(
@@ -167,11 +167,14 @@ impl Gateway for GatewayWorkerServer {
         tokio::spawn(async move {
             while let Some(chunks) = internal_rx.recv().await {
                 let mut buffer = BytesMut::new();
-                chunks.values().for_each(|bytes| buffer.extend_from_slice(bytes));
+                for chunk in chunks.values() {
+                    buffer.extend_from_slice(chunk);
+                }
+                let done = buffer.freeze();
 
-                let string = str::from_utf8(&buffer).unwrap();
+                let string = str::from_utf8(&done).unwrap();
                 let deserializer = GatewayEventDeserializer::from_json(string).unwrap();
-                let mut json = Deserializer::from_slice(&buffer);
+                let mut json = Deserializer::from_slice(&done);
 
                 let event = deserializer.deserialize(&mut json).unwrap();
                 crate::eventcallback::invoke(event, 0, cache.as_ref()).await.unwrap();

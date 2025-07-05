@@ -42,7 +42,6 @@ use tonic::transport::Server;
 
 use crate::grpc::GatewayWorkerServer;
 
-mod error;
 mod errorhandler;
 mod eventcallback;
 mod grpc;
