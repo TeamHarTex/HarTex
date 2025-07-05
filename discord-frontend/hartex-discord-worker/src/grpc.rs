@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
 use std::collections::BTreeMap;
 use std::collections::btree_map::Entry;
 use std::sync::Arc;
@@ -53,9 +54,14 @@ impl GatewayWorkerServer {
             payloads: GatewayPayloads(Arc::new(Mutex::new(BTreeMap::new()))),
         }
     }
+}
 
+#[derive(Clone)]
+struct GatewayPayloads(Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>);
+
+impl GatewayPayloads {
     pub fn consistent_totals(&self, event_seq: u64, received_total: u32) -> bool {
-        let mut payloads = self.payloads.0.lock();
+        let mut payloads = self.0.lock();
         let entry = payloads.entry(event_seq);
         let Entry::Occupied(entry) = entry else {
             // this is a new event sequence, total always assumed to be consistent
@@ -66,7 +72,7 @@ impl GatewayWorkerServer {
     }
 
     pub fn try_insert_payload(&self, event_seq: u64, nth: u32, total: u32, data: Bytes) -> bool {
-        let mut payloads = self.payloads.0.lock();
+        let mut payloads = self.0.lock();
         let chunked = payloads.entry(event_seq).or_insert(GatewayPayloadChunked {
             total,
             received: 0,
@@ -82,8 +88,7 @@ impl GatewayWorkerServer {
     }
 }
 
-struct GatewayPayloads(Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>);
-
+#[derive(Clone)]
 struct GatewayPayloadChunked {
     total: u32,
     received: u32,
@@ -101,6 +106,8 @@ impl Gateway for GatewayWorkerServer {
         let mut stream = request.into_inner();
         let (response_tx, response_rx) = mpsc::channel(1000);
 
+        let payloads = self.payloads.clone();
+
         tokio::spawn(async move {
             while let Some(result) = stream.next().await {
                 let Ok(message) = result else {
@@ -114,7 +121,7 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 };
 
-                if !self.consistent_totals(message.event_seq, message.total_chunks) {
+                if !payloads.consistent_totals(message.event_seq, message.total_chunks) {
                     response_tx
                         .send(Err(Status::invalid_argument(
                             "inconsistent total_chunks for same event_seq",
@@ -124,7 +131,7 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 }
 
-                if !self.try_insert_payload(
+                if !payloads.try_insert_payload(
                     message.event_seq,
                     message.nth_chunk,
                     message.total_chunks,
