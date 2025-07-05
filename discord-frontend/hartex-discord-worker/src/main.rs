@@ -38,7 +38,6 @@ use hartex_discord_core::tokio::signal;
 use hartex_discord_grpc_protos::gateway::gateway_server::GatewayServer;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;
-use serde::de::DeserializeSeed;
 use tonic::transport::Server;
 
 use crate::grpc::GatewayWorkerServer;
