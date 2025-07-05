@@ -64,7 +64,7 @@ where
                 };
 
                 hartex_tracing::trace!(
-                    "[shard {shard.id().number()}] received binary payload from gateway",
+                    "[shard {shard.id().number()}] received payload from gateway",
                 );
 
                 // send payload to worker process
