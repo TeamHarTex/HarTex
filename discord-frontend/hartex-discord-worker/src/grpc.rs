@@ -177,6 +177,7 @@ impl Gateway for GatewayWorkerServer {
                 let mut json = Deserializer::from_slice(&done);
 
                 let event = deserializer.deserialize(&mut json).unwrap();
+                // TODO: add shard ID in gRPC protocol
                 crate::eventcallback::invoke(event, 0, cache.as_ref()).await.unwrap();
             }
         });
