@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
 use std::collections::BTreeMap;
+use std::collections::btree_map::Entry;
 use std::sync::Arc;
 
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
@@ -43,17 +43,46 @@ use tonic::codegen::Bytes;
 /// A gateway worker server service.
 pub struct GatewayWorkerServer {
     cache: DefaultInMemoryCache,
-    payloads: Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>,
+    payloads: GatewayPayloads,
 }
 
 impl GatewayWorkerServer {
     pub fn new(cache: DefaultInMemoryCache) -> Self {
         Self {
             cache,
-            payloads: Arc::new(Mutex::new(BTreeMap::new())),
+            payloads: GatewayPayloads(Arc::new(Mutex::new(BTreeMap::new()))),
         }
     }
+
+    pub fn consistent_totals(&self, event_seq: u64, received_total: u32) -> bool {
+        let mut payloads = self.payloads.0.lock();
+        let entry = payloads.entry(event_seq);
+        let Entry::Occupied(entry) = entry else {
+            // this is a new event sequence, total always assumed to be consistent
+            return true;
+        };
+
+        entry.get().total == received_total
+    }
+
+    pub fn try_insert_payload(&self, event_seq: u64, nth: u32, total: u32, data: Bytes) -> bool {
+        let mut payloads = self.payloads.0.lock();
+        let chunked = payloads.entry(event_seq).or_insert(GatewayPayloadChunked {
+            total,
+            received: 0,
+            chunks: BTreeMap::new(),
+        });
+
+        if chunked.chunks.try_insert(nth, data).is_err() {
+            return false; // duplicate payload chunk
+        }
+        chunked.received += 1;
+
+        true
+    }
 }
+
+struct GatewayPayloads(Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>);
 
 struct GatewayPayloadChunked {
     total: u32,
@@ -85,17 +114,7 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 };
 
-                let mut payloads = self.payloads.lock_arc();
-                let payload = payloads
-                    .entry(message.event_seq)
-                    .or_insert(GatewayPayloadChunked {
-                        total: message.total_chunks,
-                        received: 0,
-                        chunks: BTreeMap::new(),
-                    });
-
-                if payload.total != message.total_chunks {
-                    // drop(payloads);
+                if !self.consistent_totals(message.event_seq, message.total_chunks) {
                     response_tx
                         .send(Err(Status::invalid_argument(
                             "inconsistent total_chunks for same event_seq",
@@ -105,16 +124,20 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 }
 
-                if payload.chunks.try_insert(message.nth_chunk, message.chunk_data).is_err() {
-                    // drop(payloads);
+                if !self.try_insert_payload(
+                    message.event_seq,
+                    message.nth_chunk,
+                    message.total_chunks,
+                    message.chunk_data,
+                ) {
                     response_tx
-                        .send(Err(Status::invalid_argument(
-                            format!("duplicate chunk {} in payload", message.nth_chunk),
-                        )))
+                        .send(Err(Status::invalid_argument(format!(
+                            "duplicate chunk {} in payload",
+                            message.nth_chunk
+                        ))))
                         .await
                         .unwrap();
                 }
-                payload.received += 1;
             }
         });
 
