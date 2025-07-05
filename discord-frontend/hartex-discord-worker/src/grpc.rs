@@ -27,6 +27,7 @@ use std::sync::Arc;
 use bytes::Bytes;
 use bytes::BytesMut;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
+use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc;
 use hartex_discord_core::tokio::sync::mpsc::Sender;
@@ -34,6 +35,8 @@ use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventResponse;
 use hartex_discord_grpc_protos::gateway::gateway_server::Gateway;
 use parking_lot::Mutex;
+use serde::de::DeserializeSeed;
+use serde_json::Deserializer;
 use tokio_stream::StreamExt;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::Request;
@@ -45,14 +48,14 @@ use tonic::async_trait;
 
 /// A gateway worker server service.
 pub struct GatewayWorkerServer {
-    cache: DefaultInMemoryCache,
+    cache: Arc<DefaultInMemoryCache>,
     payloads: GatewayPayloads,
 }
 
 impl GatewayWorkerServer {
     pub fn new(cache: DefaultInMemoryCache) -> Self {
         Self {
-            cache,
+            cache: Arc::new(cache),
             payloads: GatewayPayloads(Arc::new(Mutex::new(BTreeMap::new()))),
         }
     }
@@ -159,10 +162,19 @@ impl Gateway for GatewayWorkerServer {
             }
         });
 
+        let cache = self.cache.clone();
+
         tokio::spawn(async move {
             while let Some(chunks) = internal_rx.recv().await {
                 let mut buffer = BytesMut::new();
                 chunks.values().for_each(|bytes| buffer.extend_from_slice(bytes));
+
+                let string = str::from_utf8(&buffer).unwrap();
+                let deserializer = GatewayEventDeserializer::from_json(string).unwrap();
+                let mut json = Deserializer::from_slice(&buffer);
+
+                let event = deserializer.deserialize(&mut json).unwrap();
+                crate::eventcallback::invoke(event, 0, cache.as_ref()).await.unwrap();
             }
         });
 
