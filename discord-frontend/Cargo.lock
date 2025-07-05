@@ -1181,6 +1181,7 @@ dependencies = [
  "rdkafka",
  "serde_json",
  "serde_scan",
+ "tonic",
  "tracing",
 ]
 

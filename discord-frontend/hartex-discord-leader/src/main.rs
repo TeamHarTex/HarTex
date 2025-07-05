@@ -29,8 +29,6 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use std::env;
-use std::sync::Arc;
 
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::dotenvy;
@@ -38,16 +36,11 @@ use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
 use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::task::JoinSet;
-use hartex_kafka_utils::traits::ClientConfigUtils;
-use hartex_kafka_utils::types::CompressionType;
+use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;
-use rdkafka::ClientConfig;
-use rdkafka::consumer::Consumer;
-use rdkafka::consumer::StreamConsumer;
-use rdkafka::producer::FutureProducer;
 
-mod kafka;
+mod grpc;
 mod queue;
 mod shards;
 
@@ -62,45 +55,23 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
-        .into_diagnostic()?
-        .split(';')
-        .map(String::from)
-        .collect::<Vec<_>>();
-    let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION").into_diagnostic()?;
-
-    let producer = ClientConfig::new()
-        .bootstrap_servers(bootstrap_servers.clone().into_iter())
-        .compression_type(CompressionType::Lz4)
-        .delivery_timeout_ms(30000)
-        .create::<FutureProducer>()
-        .into_diagnostic()?;
-    let consumer = Arc::new(
-        ClientConfig::new()
-            .bootstrap_servers(bootstrap_servers.into_iter())
-            .group_id("com.github.teamhartex.hartex.inbound.gateway.command.consumer")
-            .create::<StreamConsumer>()
-            .into_diagnostic()?,
-    );
-
-    consumer.subscribe(&[&topic]).into_diagnostic()?;
-
     hartex_tracing::trace!("building clusters");
     let queue = queue::obtain()?;
     let shards = shards::obtain(queue).await?;
 
     let (tx, rx) = watch::channel(false);
 
+    let client = GatewayClient::connect("http://[::1]:10001").await.unwrap();
+
     hartex_tracing::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();
     for mut shard in shards {
         let mut rx = rx.clone();
-        let consumer_clone = consumer.clone();
-        let producer_clone = producer.clone();
+        let client_cloned = client.clone();
 
         set.spawn(async move {
             tokio::select! {
-                _ = kafka::handle(&mut shard, producer_clone, consumer_clone) => {},
+                _ = grpc::handle(&mut shard, client_cloned) => {},
                 _ = rx.changed() => {
                     shard.close(CloseFrame::NORMAL);
                 }
