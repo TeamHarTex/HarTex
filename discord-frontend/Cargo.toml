@@ -9,6 +9,7 @@ members = [
     'hartex-discord-configuration-luart',
     "hartex-discord-configuration-provider",
     "hartex-discord-core",
+    "hartex-discord-grpc-protos",
     "hartex-discord-internal-events",
     "hartex-discord-leader",
     "hartex-discord-worker",

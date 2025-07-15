@@ -29,36 +29,22 @@
 #![deny(warnings)]
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
+#![feature(map_try_insert)]
 
-use std::env;
-use std::str;
-use std::str::Utf8Error;
-
-use futures_util::StreamExt;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
-use hartex_kafka_utils::traits::ClientConfigUtils;
-use hartex_kafka_utils::types::CompressionType;
+use hartex_discord_grpc_protos::gateway::gateway_server::GatewayServer;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;
-use rdkafka::ClientConfig;
-use rdkafka::consumer::Consumer;
-use rdkafka::consumer::StreamConsumer;
-use rdkafka::error::KafkaError;
-use rdkafka::message::Message;
-use rdkafka::producer::FutureProducer;
-use serde::de::DeserializeSeed;
-use serde_scan::scan;
+use tonic::transport::Server;
 
-use crate::error::ConsumerError;
-use crate::error::ConsumerErrorKind;
+use crate::grpc::GatewayWorkerServer;
 
-mod error;
 mod errorhandler;
 mod eventcallback;
+mod grpc;
 mod interaction;
 
 #[global_allocator]
@@ -73,92 +59,14 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
-    let bootstrap_servers = env::var("KAFKA_BOOTSTRAP_SERVERS")
-        .into_diagnostic()?
-        .split(';')
-        .map(String::from)
-        .collect::<Vec<_>>();
-    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
-
-    let producer = ClientConfig::new()
-        .bootstrap_servers(bootstrap_servers.clone().into_iter())
-        .compression_type(CompressionType::Lz4)
-        .delivery_timeout_ms(30000)
-        .create::<FutureProducer>()
-        .into_diagnostic()?;
-    let consumer = ClientConfig::new()
-        .bootstrap_servers(bootstrap_servers.into_iter())
-        .group_id("com.github.teamhartex.hartex.inbound.gateway.payload.consumer")
-        .create::<StreamConsumer>()
-        .into_diagnostic()?;
-
-    consumer.subscribe(&[&topic]).into_diagnostic()?;
-
     let cache = DefaultInMemoryCache::new();
 
-    while let Some(result) = consumer.stream().next().await {
-        let Ok(message) = result else {
-            let error = result.unwrap_err();
-            println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-
-            continue;
-        };
-
-        let bytes = message.payload().unwrap();
-
-        let (gateway_deserializer, mut json_deserializer) = {
-            let result = str::from_utf8(bytes);
-            if let Err(error) = result {
-                println!("{:?}", Err::<(), Utf8Error>(error).into_diagnostic());
-
-                continue;
-            }
-
-            let result =
-                GatewayEventDeserializer::from_json(result.unwrap()).ok_or(ConsumerError {
-                    kind: ConsumerErrorKind::InvalidGatewayPayload,
-                });
-
-            if let Err(error) = result {
-                println!("{:?}", Err::<(), ConsumerError>(error).into_diagnostic());
-
-                continue;
-            }
-
-            let json_deserializer = serde_json::Deserializer::from_slice(bytes);
-
-            (result.unwrap(), json_deserializer)
-        };
-
-        let key_bytes = message.key().unwrap();
-        let result = str::from_utf8(key_bytes);
-        if let Err(error) = result {
-            println!("{:?}", Err::<(), Utf8Error>(error).into_diagnostic());
-
-            continue;
-        }
-
-        let key = result.unwrap();
-        let scanned: u8 = scan!("INBOUND_GATEWAY_PAYLOAD_SHARD_{}" <- key).into_diagnostic()?;
-
-        hartex_tracing::trace!(
-            "[shard {scanned}] received {} event; attempting to deserialize",
-            gateway_deserializer.event_type().unwrap_or("UNKNOWN")
-        );
-        let result = gateway_deserializer.deserialize(&mut json_deserializer);
-        if let Err(error) = result {
-            println!(
-                "{:?}",
-                Err::<(), serde_json::Error>(error).into_diagnostic()
-            );
-
-            continue;
-        }
-
-        let event = result.unwrap();
-
-        eventcallback::invoke(event, scanned, producer.clone(), &cache).await?;
-    }
+    let service = GatewayServer::new(GatewayWorkerServer::new(cache));
+    Server::builder()
+        .add_service(service)
+        .serve("[::1]:10001".parse().unwrap())
+        .await
+        .into_diagnostic()?;
 
     signal::ctrl_c().await.into_diagnostic()?;
     hartex_tracing::warn!("ctrl-c signal received, shutting down");

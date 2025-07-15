@@ -22,22 +22,18 @@
 
 use std::env;
 use std::panic::AssertUnwindSafe;
-use std::time::Duration;
 use std::time::SystemTime;
 
 use futures_util::FutureExt;
 use hartex_backend_models::uptime::UptimeUpdate;
 use hartex_discord_core::discord::cache::DefaultInMemoryCache;
 use hartex_discord_core::discord::model::application::interaction::InteractionType;
-use hartex_discord_core::discord::model::gateway::OpCode;
 use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
 use hartex_discord_core::discord::model::gateway::event::Event;
 use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
 use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
-use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
-use hartex_discord_core::discord::model::gateway::payload::outgoing::request_guild_members::RequestGuildMembersInfo;
+use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::net::TcpStream;
-use hartex_discord_core::tokio::spawn;
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::LOCALIZATION_HOLDER;
 use hartex_localization_core::Localizer;
@@ -48,10 +44,6 @@ use hyper::header::ACCEPT;
 use hyper::header::CONTENT_TYPE;
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
-use rdkafka::error::KafkaError;
-use rdkafka::producer::FutureProducer;
-use rdkafka::producer::FutureRecord;
-use rdkafka::util::Timeout;
 
 use crate::errorhandler::ErrorPayload;
 
@@ -62,23 +54,20 @@ use crate::errorhandler::ErrorPayload;
 pub async fn invoke(
     event: GatewayEvent,
     shard: u8,
-    producer: FutureProducer,
     cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
-    let topic = env::var("KAFKA_TOPIC_OUTBOUND_COMMUNICATION").into_diagnostic()?;
-
     let flattened_event = Event::from(event.clone());
     cache.update(&flattened_event);
 
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
-            DispatchEvent::GuildCreate(deref!(GuildCreate::Available(ref guild_create))) => {
+            DispatchEvent::GuildCreate(deref!(GuildCreate::Available(ref _guild_create))) => {
                 hartex_tracing::trace!(
                     "shard {shard} has received GUILD_CREATE payload from Discord (sequence {seq})"
                 );
 
-                let request = RequestGuildMembers {
+                /*let request = RequestGuildMembers {
                     d: RequestGuildMembersInfo {
                         guild_id: guild_create.id,
                         limit: Some(0),
@@ -100,7 +89,7 @@ pub async fn invoke(
                     .await
                 {
                     println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-                }
+                }*/
 
                 Ok(())
             }
@@ -159,7 +148,7 @@ pub async fn invoke(
                 let (mut sender, connection) =
                     handshake(TokioIo::new(stream)).await.into_diagnostic()?;
 
-                spawn(async move {
+                tokio::spawn(async move {
                     if let Err(err) = connection.await {
                         hartex_tracing::error!("TCP connection failed: {err:?}");
                     }

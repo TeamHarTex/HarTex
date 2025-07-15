@@ -139,9 +139,7 @@ pub async fn execute(
         .into_diagnostic()?
         .build();
 
-    context
-        .create_response(embed_response(vec![embed]))
-        .await?;
+    context.create_response(embed_response(vec![embed])).await?;
 
     Ok(())
 }
