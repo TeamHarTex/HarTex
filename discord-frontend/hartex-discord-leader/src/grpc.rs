@@ -55,6 +55,7 @@ where
 }
 
 /// Handle inbound traffic.
+#[allow(clippy::cast_possible_truncation)]
 #[allow(clippy::match_wildcard_for_single_variants)]
 async fn inbound<Q>(
     shard: Arc<Mutex<Shard<Q>>>,
@@ -94,7 +95,7 @@ where
                             chunk_data: Bytes::from(chunk_data.to_vec()),
                             nth_chunk: nth_chunk as u32,
                             total_chunks: total_chunks as u32,
-                            shard_id: shard_id as u64,
+                            shard_id: u64::from(shard_id),
                         };
 
                         tx.send(message).await?;
