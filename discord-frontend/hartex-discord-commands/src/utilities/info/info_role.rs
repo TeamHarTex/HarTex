@@ -127,9 +127,7 @@ pub async fn execute(
 
     let embed = builder.validate().into_diagnostic()?.build();
 
-    context
-        .create_response(embed_response(vec![embed]))
-        .await?;
+    context.create_response(embed_response(vec![embed])).await?;
 
     Ok(())
 }

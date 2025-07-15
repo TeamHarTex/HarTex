@@ -20,41 +20,27 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::str;
-use std::sync::Arc;
-use std::time::Duration;
-
 use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
-use hartex_discord_core::discord::gateway::MessageSender;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::model::gateway::payload::outgoing::RequestGuildMembers;
 use hartex_discord_core::tokio;
-use miette::IntoDiagnostic;
-use rdkafka::Message;
-use rdkafka::consumer::StreamConsumer;
-use rdkafka::error::KafkaError;
-use rdkafka::producer::FutureProducer;
-use rdkafka::producer::FutureRecord;
-use rdkafka::util::Timeout;
-use serde_scan::scan;
+use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
+use tonic::transport::Channel;
 
 /// Handle inbound AND outbound messages for a given shard.
 pub async fn handle<Q>(
     shard: &mut Shard<Q>,
-    producer: FutureProducer,
-    consumer: Arc<StreamConsumer>,
+    client: GatewayClient<Channel>
 ) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    let shard_id = shard.id().number();
-    let sender = shard.sender();
+    // let shard_id = shard.id().number();
+    // let sender = shard.sender();
     tokio::select! {
-        _ = inbound(shard, producer) => {},
-        _ = outbound((shard_id, sender), consumer) => {}
+        _ = inbound(shard, client) => {},
+        // _ = outbound((shard_id, sender), consumer) => {}
     }
 
     Ok(())
@@ -62,16 +48,14 @@ where
 
 /// Handle inbound traffic.
 #[allow(clippy::match_wildcard_for_single_variants)]
-async fn inbound<Q>(shard: &mut Shard<Q>, producer: FutureProducer) -> miette::Result<()>
+async fn inbound<Q>(shard: &mut Shard<Q>, _: GatewayClient<Channel>) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    let topic = env::var("KAFKA_TOPIC_INBOUND_DISCORD_GATEWAY_PAYLOAD").into_diagnostic()?;
-
     while let Some(result) = shard.next().await {
         match result {
             Ok(message) => {
-                let Some(bytes) = (match message {
+                let Some(_) = (match message {
                     // todo: handle close frame
                     GatewayMessage::Text(string) => Some(string.into_bytes()),
                     _ => None,
@@ -80,23 +64,10 @@ where
                 };
 
                 hartex_tracing::trace!(
-                    "[shard {shard.id().number()}] received binary payload from gateway",
+                    "[shard {shard.id().number()}] received payload from gateway",
                 );
 
                 // send payload to worker process
-                if let Err((error, _)) = producer
-                    .send(
-                        FutureRecord::to(&topic)
-                            .key(&hartex_tracing::format!(
-                                "INBOUND_GATEWAY_PAYLOAD_SHARD_{shard.id().number()}",
-                            ))
-                            .payload(&bytes),
-                        Timeout::After(Duration::from_secs(0)),
-                    )
-                    .await
-                {
-                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-                }
             }
             Err(error) => {
                 hartex_tracing::warn!(
@@ -109,7 +80,7 @@ where
     Ok(())
 }
 
-/// Handle outbound traffic.
+/*/// Handle outbound traffic.
 async fn outbound(
     (shard_id, sender): (u32, MessageSender),
     consumer: Arc<StreamConsumer>,
@@ -140,4 +111,4 @@ async fn outbound(
     }
 
     Ok(())
-}
+}*/

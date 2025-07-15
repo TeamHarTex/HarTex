@@ -68,9 +68,7 @@ impl Command for About {
             .into_diagnostic()?
             .build();
 
-        context
-            .create_response(embed_response(vec![embed]))
-            .await?;
+        context.create_response(embed_response(vec![embed])).await?;
 
         Ok(())
     }
