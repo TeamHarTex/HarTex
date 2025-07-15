@@ -26,6 +26,7 @@ use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::sync::mpsc;
+use hartex_discord_core::tokio::sync::mpsc::error::SendError;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
 use tokio_stream::wrappers::ReceiverStream;
@@ -100,7 +101,7 @@ where
             }
         }
 
-        Ok(())
+        Ok::<(), SendError<GatewayClientEventMessage>>(())
     });
 
     // send payload to worker process
