@@ -14,7 +14,7 @@ rust-version = "1.90.0"
 hartex_bitflags_utils = { path = "../../rust-utilities/hartex-bitflags-utils" }
 
 bitflags = { version = "2.9.1", features = ["serde"] }
-mlua = { version = "0.10.5", features = ["lua54", "vendored"] }
+mlua = { version = "0.11.0", features = ["lua54", "vendored"] }
 serde = { version = "1.0.219", features = ["derive"] }
 
 [features]
