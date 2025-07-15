@@ -19,24 +19,32 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use std::sync::Arc;
 
+use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::sync::Mutex;
+use hartex_discord_core::tokio::sync::mpsc;
+use hartex_discord_core::tokio::sync::mpsc::error::SendError;
+use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
+use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
+
+const CHUNK_SIZE: usize = 1024 * 1024;
 
 /// Handle inbound AND outbound messages for a given shard.
 pub async fn handle<Q>(
-    shard: &mut Shard<Q>,
-    client: GatewayClient<Channel>
+    shard: Arc<Mutex<Shard<Q>>>,
+    client: GatewayClient<Channel>,
 ) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    // let shard_id = shard.id().number();
     // let sender = shard.sender();
     tokio::select! {
         _ = inbound(shard, client) => {},
@@ -47,36 +55,65 @@ where
 }
 
 /// Handle inbound traffic.
+#[allow(clippy::cast_possible_truncation)]
 #[allow(clippy::match_wildcard_for_single_variants)]
-async fn inbound<Q>(shard: &mut Shard<Q>, _: GatewayClient<Channel>) -> miette::Result<()>
+async fn inbound<Q>(
+    shard: Arc<Mutex<Shard<Q>>>,
+    mut client: GatewayClient<Channel>,
+) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    while let Some(result) = shard.next().await {
-        match result {
-            Ok(message) => {
-                let Some(_) = (match message {
-                    // todo: handle close frame
-                    GatewayMessage::Text(string) => Some(string.into_bytes()),
-                    _ => None,
-                }) else {
-                    continue;
-                };
+    let (tx, rx) = mpsc::channel(1000);
 
-                hartex_tracing::trace!(
-                    "[shard {shard.id().number()}] received payload from gateway",
-                );
+    let cloned = Arc::clone(&shard);
+    tokio::spawn(async move {
+        let mut shard = cloned.lock().await;
+        while let Some(result) = shard.next().await {
+            let shard_id = shard.id().number();
+            let session = shard.session().unwrap();
+            let event_seq = session.sequence();
 
-                // send payload to worker process
-            }
-            Err(error) => {
-                hartex_tracing::warn!(
-                    "[shard {shard.id()}] error when receiving gateway message: {error}",
-                );
+            match result {
+                Ok(message) => {
+                    let Some(bytes) = (match message {
+                        // todo: handle close frame
+                        GatewayMessage::Text(string) => Some(string.into_bytes()),
+                        _ => None,
+                    }) else {
+                        continue;
+                    };
+
+                    hartex_tracing::trace!(
+                        "[shard {shard.id().number()}] received payload from gateway",
+                    );
+
+                    let total_chunks = bytes.len().div_ceil(CHUNK_SIZE);
+                    for (nth_chunk, chunk_data) in bytes.chunks(CHUNK_SIZE).enumerate() {
+                        let message = GatewayClientEventMessage {
+                            event_seq,
+                            chunk_data: Bytes::from(chunk_data.to_vec()),
+                            nth_chunk: nth_chunk as u32,
+                            total_chunks: total_chunks as u32,
+                            shard_id: u64::from(shard_id),
+                        };
+
+                        tx.send(message).await?;
+                    }
+                }
+                Err(error) => {
+                    hartex_tracing::warn!(
+                        "[shard {shard.id()}] error when receiving gateway message: {error}",
+                    );
+                }
             }
         }
-    }
 
+        Ok::<(), SendError<GatewayClientEventMessage>>(())
+    });
+
+    // send payload to worker process
+    let _ = client.client_event_streaming(ReceiverStream::new(rx)).await;
     Ok(())
 }
 

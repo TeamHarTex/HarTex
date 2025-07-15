@@ -1170,6 +1170,7 @@ version = "0.15.0"
 name = "hartex_discord_leader"
 version = "0.15.0"
 dependencies = [
+ "bytes",
  "futures-util",
  "hartex_discord_core",
  "hartex_discord_grpc_protos",
