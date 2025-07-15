@@ -31,6 +31,7 @@ use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
+use bytes::Bytes;
 
 const CHUNK_SIZE: usize = 1024 * 1024;
 
@@ -84,7 +85,7 @@ where
                     for (nth_chunk, chunk_data) in bytes.chunks(CHUNK_SIZE).enumerate() {
                         let message = GatewayClientEventMessage {
                             event_seq,
-                            chunk_data: chunk_data.into(),
+                            chunk_data: Bytes::from(chunk_data.to_vec()),
                             nth_chunk: nth_chunk as u32,
                             total_chunks: total_chunks as u32,
                             shard_id: shard_id as u64,
