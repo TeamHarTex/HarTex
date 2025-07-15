@@ -19,28 +19,32 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use std::sync::Arc;
 
+use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::discord::gateway::Message as GatewayMessage;
 use hartex_discord_core::discord::gateway::Shard;
 use hartex_discord_core::discord::gateway::queue::Queue;
 use hartex_discord_core::tokio;
+use hartex_discord_core::tokio::sync::Mutex;
 use hartex_discord_core::tokio::sync::mpsc;
 use hartex_discord_core::tokio::sync::mpsc::error::SendError;
 use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
 use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
-use bytes::Bytes;
 
 const CHUNK_SIZE: usize = 1024 * 1024;
 
 /// Handle inbound AND outbound messages for a given shard.
-pub async fn handle<Q>(shard: &mut Shard<Q>, client: GatewayClient<Channel>) -> miette::Result<()>
+pub async fn handle<Q>(
+    shard: Arc<Mutex<Shard<Q>>>,
+    client: GatewayClient<Channel>,
+) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    // let shard_id = shard.id().number();
     // let sender = shard.sender();
     tokio::select! {
         _ = inbound(shard, client) => {},
@@ -52,20 +56,22 @@ where
 
 /// Handle inbound traffic.
 #[allow(clippy::match_wildcard_for_single_variants)]
-async fn inbound<Q>(shard: &mut Shard<Q>, mut client: GatewayClient<Channel>) -> miette::Result<()>
+async fn inbound<Q>(
+    shard: Arc<Mutex<Shard<Q>>>,
+    mut client: GatewayClient<Channel>,
+) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
     let (tx, rx) = mpsc::channel(1000);
 
+    let cloned = Arc::clone(&shard);
     tokio::spawn(async move {
+        let mut shard = cloned.lock().await;
         while let Some(result) = shard.next().await {
-            let Some(session) = shard.session() else {
-                break;
-            };
-
-            let event_seq = session.sequence();
             let shard_id = shard.id().number();
+            let session = shard.session().unwrap();
+            let event_seq = session.sequence();
 
             match result {
                 Ok(message) => {
