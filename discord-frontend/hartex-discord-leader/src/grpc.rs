@@ -83,10 +83,10 @@ where
                     for (nth_chunk, chunk_data) in bytes.chunks(CHUNK_SIZE).enumerate() {
                         let message = GatewayClientEventMessage {
                             event_seq,
-                            chunk_data,
-                            nth_chunk,
-                            total_chunks,
-                            shard_id,
+                            chunk_data: chunk_data.into(),
+                            nth_chunk: nth_chunk as u32,
+                            total_chunks: total_chunks as u32,
+                            shard_id: shard_id as u64,
                         };
 
                         tx.send(message).await?;
@@ -99,10 +99,12 @@ where
                 }
             }
         }
+
+        Ok(())
     });
 
     // send payload to worker process
-    client.client_event_streaming(ReceiverStream::new(rx)).await?;
+    let _ = client.client_event_streaming(ReceiverStream::new(rx)).await;
     Ok(())
 }
 
