@@ -29,11 +29,13 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+use std::sync::Arc;
 
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;
 use hartex_discord_core::tokio::signal;
+use hartex_discord_core::tokio::sync::Mutex;
 use hartex_discord_core::tokio::sync::watch;
 use hartex_discord_core::tokio::task::JoinSet;
 use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
@@ -65,15 +67,18 @@ pub async fn main() -> miette::Result<()> {
 
     hartex_tracing::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();
-    for mut shard in shards {
+    for shard in shards {
         let mut rx = rx.clone();
         let client_cloned = client.clone();
 
+        let mutex_shard = Arc::new(Mutex::new(shard));
+        let shard_cloned = Arc::clone(&mutex_shard);
+
         set.spawn(async move {
             tokio::select! {
-                _ = grpc::handle(&mut shard, client_cloned) => {},
+                _ = grpc::handle(shard_cloned, client_cloned) => {},
                 _ = rx.changed() => {
-                    shard.close(CloseFrame::NORMAL);
+                    mutex_shard.lock().await.close(CloseFrame::NORMAL);
                 }
             }
         });

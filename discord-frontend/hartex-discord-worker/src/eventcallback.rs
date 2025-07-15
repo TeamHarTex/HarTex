@@ -53,7 +53,7 @@ use crate::errorhandler::ErrorPayload;
 #[allow(clippy::too_many_lines)]
 pub async fn invoke(
     event: GatewayEvent,
-    shard: u8,
+    shard: u64,
     cache: &DefaultInMemoryCache,
 ) -> miette::Result<()> {
     let flattened_event = Event::from(event.clone());

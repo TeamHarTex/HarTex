@@ -24,6 +24,7 @@ hartex_discord_grpc_protos = { path = "../hartex-discord-grpc-protos", features 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
+bytes = "1.10.1"
 futures-util = "0.3.31"
 miette = { version = "7.6.0", features = ["fancy"] }
 mimalloc = "0.1.47"
