@@ -29,7 +29,6 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-
 use hartex_discord_core::discord::gateway::CloseFrame;
 use hartex_discord_core::dotenvy;
 use hartex_discord_core::tokio;

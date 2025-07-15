@@ -36,6 +36,7 @@ message GatewayClientEventMessage {
   bytes chunk_data = 2;
   uint32 nth_chunk = 3;
   uint32 total_chunks = 4;
+  uint64 shard_id = 5;
 }
 
 message GatewayClientEventResponse {

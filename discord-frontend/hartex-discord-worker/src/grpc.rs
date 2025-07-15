@@ -62,13 +62,12 @@ impl GatewayWorkerServer {
 }
 
 #[derive(Clone)]
-struct GatewayPayloads(Arc<Mutex<BTreeMap<u64, GatewayPayloadChunked>>>);
+struct GatewayPayloads(Arc<Mutex<BTreeMap<(u64, u64), GatewayPayloadChunked>>>);
 
 impl GatewayPayloads {
-
-    pub fn consistent_totals(&self, event_seq: u64, received_total: u32) -> bool {
+    pub fn consistent_totals(&self, event_seq: u64, received_total: u32, shard_id: u64) -> bool {
         let mut payloads = self.0.lock();
-        let entry = payloads.entry(event_seq);
+        let entry = payloads.entry((event_seq, shard_id));
         let Entry::Occupied(entry) = entry else {
             // this is a new event sequence, total always assumed to be consistent
             return true;
@@ -77,13 +76,23 @@ impl GatewayPayloads {
         entry.get().total == received_total
     }
 
-    pub fn try_insert_payload_with_completeness_check(&self, event_seq: u64, nth: u32, total: u32, data: Bytes, tx: &Sender<BTreeMap<u32, Bytes>>) -> bool {
+    pub fn try_insert_payload_with_completeness_check(
+        &self,
+        event_seq: u64,
+        nth: u32,
+        total: u32,
+        shard_id: u64,
+        data: Bytes,
+        tx: &Sender<(u64, BTreeMap<u32, Bytes>)>,
+    ) -> bool {
         let mut payloads = self.0.lock();
-        let chunked = payloads.entry(event_seq).or_insert(GatewayPayloadChunked {
-            total,
-            received: 0,
-            chunks: BTreeMap::new(),
-        });
+        let chunked = payloads
+            .entry((event_seq, shard_id))
+            .or_insert(GatewayPayloadChunked {
+                total,
+                received: 0,
+                chunks: BTreeMap::new(),
+            });
 
         if chunked.chunks.try_insert(nth, data).is_err() {
             return false; // duplicate payload chunk
@@ -91,8 +100,8 @@ impl GatewayPayloads {
         chunked.received += 1;
 
         if chunked.received == chunked.total {
-            let payload = payloads.remove(&event_seq).unwrap();
-            tx.try_send(payload.chunks).unwrap();
+            let payload = payloads.remove(&(event_seq, shard_id)).unwrap();
+            tx.try_send((shard_id, payload.chunks)).unwrap();
         }
 
         true
@@ -133,7 +142,11 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 };
 
-                if !payloads.consistent_totals(message.event_seq, message.total_chunks) {
+                if !payloads.consistent_totals(
+                    message.event_seq,
+                    message.total_chunks,
+                    message.shard_id,
+                ) {
                     response_tx
                         .send(Err(Status::invalid_argument(
                             "inconsistent total_chunks for same event_seq",
@@ -148,6 +161,7 @@ impl Gateway for GatewayWorkerServer {
                     message.event_seq,
                     message.nth_chunk,
                     message.total_chunks,
+                    message.shard_id,
                     message.chunk_data,
                     &internal_tx,
                 ) {
@@ -165,7 +179,7 @@ impl Gateway for GatewayWorkerServer {
         let cache = self.cache.clone();
 
         tokio::spawn(async move {
-            while let Some(chunks) = internal_rx.recv().await {
+            while let Some((shard_id, chunks)) = internal_rx.recv().await {
                 let mut buffer = BytesMut::new();
                 for chunk in chunks.values() {
                     buffer.extend_from_slice(chunk);
@@ -177,8 +191,9 @@ impl Gateway for GatewayWorkerServer {
                 let mut json = Deserializer::from_slice(&done);
 
                 let event = deserializer.deserialize(&mut json).unwrap();
-                // TODO: add shard ID in gRPC protocol
-                crate::eventcallback::invoke(event, 0, cache.as_ref()).await.unwrap();
+                crate::eventcallback::invoke(event, shard_id, cache.as_ref())
+                    .await
+                    .unwrap();
             }
         });
 
