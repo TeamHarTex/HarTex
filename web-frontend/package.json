@@ -22,7 +22,7 @@
     "@unocss/transformer-directives": "^66.0.0",
     "@vueuse/core": "^13.0.0",
     "@vueuse/nuxt": "^13.0.0",
-    "nuxt": "^3.9.3",
+    "nuxt": "^4.0.0",
     "typescript": "^5.3.3",
     "unocss": "^66.0.0"
   }
