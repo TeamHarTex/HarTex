@@ -20,21 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-use std::fs;
-use std::path::Path;
+use std::{collections::BTreeMap, fs, path::Path};
 
 use itertools::Itertools;
-use proc_macro2::Ident;
-use proc_macro2::Span;
-use proc_macro2::TokenStream;
+use proc_macro2::{Ident, Span, TokenStream};
 use sqlparser::ast::ColumnOption;
 use syn::File;
 
-use crate::codegen::DO_NOT_MODIFY_HEADER;
-use crate::codegen::tables;
-use crate::schema::SchemaInfo;
-use crate::schema::TableInfo;
+use crate::{
+    codegen::{DO_NOT_MODIFY_HEADER, tables},
+    schema::{SchemaInfo, TableInfo},
+};
 
 pub(crate) struct GeneratedTableStructsFile {
     pub(crate) filename: String,
@@ -108,9 +104,7 @@ fn generate_token_stream(schema: &SchemaInfo) -> crate::error::Result<TokenStrea
         .clone()
         .into_iter()
         .map(|(name, table)| {
-            let unquoted_name = name
-                .replace("public.", "")
-                .replace(['"', '.'], "");
+            let unquoted_name = name.replace("public.", "").replace(['"', '.'], "");
             let ident = Ident::new(unquoted_name.as_str(), Span::call_site());
             let fields = generate_table_fields_token_streams(table.clone())?;
             let impl_block = generate_struct_impl_token_stream(&ident, table.clone())?;

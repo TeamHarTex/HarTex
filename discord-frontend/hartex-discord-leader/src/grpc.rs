@@ -24,15 +24,14 @@ use std::sync::Arc;
 
 use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
-use hartex_discord_core::discord::gateway::Message as GatewayMessage;
-use hartex_discord_core::discord::gateway::Shard;
-use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::sync::Mutex;
-use hartex_discord_core::tokio::sync::mpsc;
-use hartex_discord_core::tokio::sync::mpsc::error::SendError;
-use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
-use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
+use hartex_discord_core::{
+    discord::gateway::{Message as GatewayMessage, Shard, queue::Queue},
+    tokio,
+    tokio::sync::{Mutex, mpsc, mpsc::error::SendError},
+};
+use hartex_discord_grpc_protos::gateway::{
+    GatewayClientEventMessage, gateway_client::GatewayClient,
+};
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
 

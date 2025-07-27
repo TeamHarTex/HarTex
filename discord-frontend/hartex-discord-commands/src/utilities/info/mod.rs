@@ -23,9 +23,7 @@
 //! # The Info Command
 
 use async_trait::async_trait;
-use hartex_discord_commands_core::command;
-use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_commands_core::traits::Command;
+use hartex_discord_commands_core::{command, context::CommandContext, traits::Command};
 use hartex_discord_core::discord::model::application::interaction::application_command::CommandOptionValue;
 
 use crate::utilities::Utilities;

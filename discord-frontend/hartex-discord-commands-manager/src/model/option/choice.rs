@@ -20,13 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::fmt;
-use std::fmt::Formatter;
+use std::{collections::HashMap, fmt, fmt::Formatter};
 
 use owo_colors::OwoColorize;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// Command option choice,
 ///

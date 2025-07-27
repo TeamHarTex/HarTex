@@ -22,17 +22,16 @@
 
 //! # Command Line Configuration
 
-use std::fs;
-use std::mem;
-use std::path::Path;
-use std::path::PathBuf;
-use std::path::absolute;
-use std::process::exit;
+use std::{
+    fs, mem,
+    path::{Path, PathBuf, absolute},
+    process::exit,
+};
 
-use self::flags::BootstrapSubcommand;
-use self::flags::Flags;
-use self::ini::IniBuild;
-use self::ini::IniConfig;
+use self::{
+    flags::{BootstrapSubcommand, Flags},
+    ini::{IniBuild, IniConfig},
+};
 
 pub mod flags;
 pub mod ini;

@@ -26,25 +26,18 @@
 
 #![feature(proc_macro_diagnostic)]
 
-use std::collections::HashMap;
-use std::collections::HashSet;
-use std::sync::Arc;
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Arc,
+};
 
 use fluent_bundle::FluentResource;
-use fluent_syntax::ast::Entry;
-use fluent_syntax::ast::Expression;
-use fluent_syntax::ast::InlineExpression;
-use fluent_syntax::ast::PatternElement;
-use hartex_localization_loader::env::base_path;
-use hartex_localization_loader::load_resources;
+use fluent_syntax::ast::{Entry, Expression, InlineExpression, PatternElement};
+use hartex_localization_loader::{env::base_path, load_resources};
 use proc_macro::TokenStream;
 use proc_macro2::Span;
-use quote::TokenStreamExt;
-use quote::quote;
-use syn::GenericParam;
-use syn::Ident;
-use syn::LitStr;
-use syn::TypeParam;
+use quote::{TokenStreamExt, quote};
+use syn::{GenericParam, Ident, LitStr, TypeParam};
 
 /// A localization node.
 struct LocalizationNode<'a> {

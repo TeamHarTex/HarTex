@@ -24,30 +24,27 @@
 //!
 //! This command returns latency and uptime information about the bot.
 
-use std::env;
-use std::time::SystemTime;
+use std::{env, time::SystemTime};
 
-use hartex_backend_models::Response;
-use hartex_backend_models::uptime::UptimeResponse;
+use hartex_backend_models::{Response, uptime::UptimeResponse};
 use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_core::tokio::net::TcpStream;
-use hartex_discord_core::tokio::task::spawn;
-use hartex_discord_utils::interaction::embed_response;
-use hartex_discord_utils::markdown::MarkdownStyle;
-use http_body_util::BodyExt;
-use http_body_util::Empty;
-use hyper::Method;
-use hyper::Request;
-use hyper::body::Buf;
-use hyper::body::Bytes;
-use hyper::client::conn::http1::handshake;
-use hyper::header::ACCEPT;
+use hartex_discord_core::{
+    discord::{
+        model::application::interaction::application_command::CommandDataOption,
+        util::builder::embed::{EmbedBuilder, EmbedFieldBuilder},
+    },
+    tokio::{net::TcpStream, task::spawn},
+};
+use hartex_discord_utils::{interaction::embed_response, markdown::MarkdownStyle};
+use http_body_util::{BodyExt, Empty};
+use hyper::{
+    Method, Request,
+    body::{Buf, Bytes},
+    client::conn::http1::handshake,
+    header::ACCEPT,
+};
 use hyper_util::rt::TokioIo;
-use miette::IntoDiagnostic;
-use miette::Report;
+use miette::{IntoDiagnostic, Report};
 
 /// Executes the `info bot` command
 pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> miette::Result<()> {

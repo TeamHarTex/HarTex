@@ -22,8 +22,7 @@
 
 use std::iter;
 
-use clap::Parser;
-use clap::Subcommand;
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[clap(

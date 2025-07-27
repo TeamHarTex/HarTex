@@ -22,11 +22,13 @@
 
 //! # Utilities for Interaction Handling
 
-use hartex_discord_core::discord::model::channel::message::Embed;
-use hartex_discord_core::discord::model::channel::message::MessageFlags;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_core::discord::{
+    model::{
+        channel::message::{Embed, MessageFlags},
+        http::interaction::{InteractionResponse, InteractionResponseType},
+    },
+    util::builder::InteractionResponseDataBuilder,
+};
 
 /// Constructs an embed response.
 #[must_use]

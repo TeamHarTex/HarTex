@@ -31,13 +31,15 @@
 
 use std::sync::Arc;
 
-use hartex_discord_core::discord::gateway::CloseFrame;
-use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::signal;
-use hartex_discord_core::tokio::sync::Mutex;
-use hartex_discord_core::tokio::sync::watch;
-use hartex_discord_core::tokio::task::JoinSet;
+use hartex_discord_core::{
+    discord::gateway::CloseFrame,
+    dotenvy, tokio,
+    tokio::{
+        signal,
+        sync::{Mutex, watch},
+        task::JoinSet,
+    },
+};
 use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;

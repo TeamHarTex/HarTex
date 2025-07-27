@@ -24,17 +24,13 @@
 //!
 //! This governs how the project is built for individual commands and tasks.
 
-use std::any::type_name;
-use std::ops::Deref;
+use std::{any::type_name, ops::Deref};
 
-use crate::build::Build;
-use crate::config::flags::BootstrapSubcommand;
-use crate::steps::build;
-use crate::steps::check;
-use crate::steps::clean;
-use crate::steps::clippy;
-use crate::steps::setup;
-use crate::steps::test;
+use crate::{
+    build::Build,
+    config::flags::BootstrapSubcommand,
+    steps::{build, check, clean, clippy, setup, test},
+};
 
 /// The type of build to perform.
 #[derive(Clone, Copy)]

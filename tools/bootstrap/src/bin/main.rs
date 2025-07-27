@@ -20,17 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::fs;
-use std::fs::OpenOptions;
-use std::io::Write;
-use std::process;
+use std::{env, fs, fs::OpenOptions, io::Write, process};
 
-use bootstrap::build::Build;
-use bootstrap::config::Config;
-use bootstrap::config::flags::BootstrapSubcommand;
-use owo_colors::OwoColorize;
+use bootstrap::{
+    build::Build,
+    config::{Config, flags::BootstrapSubcommand},
+};
 use fd_lock::RwLock;
+use owo_colors::OwoColorize;
 
 /// Entry point to the bootstrap binary, invoked by x.py.
 #[allow(clippy::unused_io_amount)]
@@ -65,7 +62,10 @@ pub fn main() {
             }
             error => {
                 drop(error);
-                println!("{} build directory locked by process {process_id}", "warning:".yellow().bold());
+                println!(
+                    "{} build directory locked by process {process_id}",
+                    "warning:".yellow().bold()
+                );
 
                 let mut lock = lock.write().expect("failed to get write lock on lockfile");
                 lock.write(process::id().to_string().as_ref())
@@ -76,7 +76,10 @@ pub fn main() {
     }
 
     if config.config_path.is_none() && !matches!(config.subcommand, BootstrapSubcommand::Setup) {
-        println!("{} no `hartex.conf` configuration file is found, using default configuration", "warning:".yellow().bold());
+        println!(
+            "{} no `hartex.conf` configuration file is found, using default configuration",
+            "warning:".yellow().bold()
+        );
         println!(
             "{} consider running `./x.py setup` or copying `hartex.example.conf` by running `cp hartex.example.conf hartex.conf`",
             "help:".bold(),

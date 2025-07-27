@@ -13,7 +13,7 @@ rust-version = "1.90.0"
 [dependencies]
 convert_case = "0.8.0"
 itertools = "0.14.0"
-prettyplease = "0.2.35"
+prettyplease = "0.2.36"
 proc-macro2 = "1.0.95"
 quote = "1.0.40"
 sqlparser = { version = "0.58.0", features = ["visitor"] }

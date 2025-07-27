@@ -20,22 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
-use std::path::PathBuf;
+use std::{
+    collections::{BTreeMap, HashMap},
+    fs,
+    path::{Path, PathBuf},
+};
 
 use itertools::Itertools;
-use sqlparser::ast::DataType;
-use sqlparser::ast::Query;
-use sqlparser::ast::SetExpr;
-use sqlparser::ast::Statement;
-use sqlparser::parser::Parser;
+use sqlparser::{
+    ast::{DataType, Query, SetExpr, Statement},
+    parser::Parser,
+};
 use walkdir::WalkDir;
 
-use crate::POSTGRESQL_DIALECT;
-use crate::schema::SchemaInfo;
+use crate::{POSTGRESQL_DIALECT, schema::SchemaInfo};
 
 pub(crate) mod insert;
 pub(crate) mod select;
@@ -128,10 +126,13 @@ pub(crate) fn parse_query(
         })
         .collect();
 
-    Ok((query_info.name.clone(), QueryInfo {
-        raw: statement,
-        path: parent.to_string_lossy().to_string(),
-        inner,
-        extra_placeholder_tys,
-    }))
+    Ok((
+        query_info.name.clone(),
+        QueryInfo {
+            raw: statement,
+            path: parent.to_string_lossy().to_string(),
+            inner,
+            extra_placeholder_tys,
+        },
+    ))
 }

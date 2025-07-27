@@ -26,20 +26,22 @@
 
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_core::discord::mention::Mention;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_core::discord::util::builder::embed::ImageSource;
-use hartex_discord_core::discord::util::snowflake::Snowflake;
-use hartex_discord_utils::commands::CommandDataOptionExt;
-use hartex_discord_utils::commands::CommandDataOptionsExt;
-use hartex_discord_utils::interaction::embed_response;
-use hartex_discord_utils::markdown::MarkdownStyle;
+use hartex_discord_core::discord::{
+    mention::Mention,
+    model::application::interaction::application_command::CommandDataOption,
+    util::{
+        builder::embed::{EmbedBuilder, EmbedFieldBuilder, ImageSource},
+        snowflake::Snowflake,
+    },
+};
+use hartex_discord_utils::{
+    commands::{CommandDataOptionExt, CommandDataOptionsExt},
+    interaction::embed_response,
+    markdown::MarkdownStyle,
+};
 use itertools::Itertools;
 use miette::IntoDiagnostic;
-use rand::seq::IndexedRandom;
-use rand::thread_rng;
+use rand::{seq::IndexedRandom, thread_rng};
 
 /// Executes the `info user` command.
 #[allow(clippy::too_many_lines)]

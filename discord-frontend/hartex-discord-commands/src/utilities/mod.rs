@@ -26,8 +26,7 @@
 //! - info
 
 use async_trait::async_trait;
-use hartex_discord_commands_core::plugin;
-use hartex_discord_commands_core::traits::Plugin;
+use hartex_discord_commands_core::{plugin, traits::Plugin};
 
 pub mod info;
 

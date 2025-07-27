@@ -22,22 +22,15 @@
 
 use std::collections::BTreeMap;
 
-use convert_case::Case;
-use convert_case::Casing;
-use sqlparser::ast::Expr;
-use sqlparser::ast::ObjectName;
-use sqlparser::ast::Query;
-use sqlparser::ast::Select;
-use sqlparser::ast::SelectItem;
-use sqlparser::ast::SetExpr;
-use sqlparser::ast::TableFactor;
-use sqlparser::ast::Value;
-use sqlparser::ast::ValueWithSpan;
-use sqlparser::ast::Visit;
+use convert_case::{Case, Casing};
+use sqlparser::ast::{
+    Expr, ObjectName, Query, Select, SelectItem, SetExpr, TableFactor, Value, ValueWithSpan, Visit,
+};
 
-use crate::schema::SchemaInfo;
-use crate::schema::TableInfo;
-use crate::visitor::PlaceholderVisitor;
+use crate::{
+    schema::{SchemaInfo, TableInfo},
+    visitor::PlaceholderVisitor,
+};
 
 #[derive(Clone, Debug)]
 pub(crate) enum SelectWhat {

@@ -20,19 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
+use std::{
+    collections::HashMap,
+    fmt,
+    fmt::{Display, Formatter},
+};
 
-use hartex_discord_core::discord::model::application::command::CommandType;
-use hartex_discord_core::discord::model::guild::Permissions;
+use hartex_discord_core::discord::model::{application::command::CommandType, guild::Permissions};
 use owo_colors::OwoColorize;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-use super::TypeEnumExt;
-use super::option::CommandManagerCommandOption;
+use super::{TypeEnumExt, option::CommandManagerCommandOption};
 
 /// Command.
 ///

@@ -20,28 +20,23 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-use std::fs;
-use std::path::Path;
+use std::{collections::BTreeMap, fs, path::Path};
 
-use convert_case::Case;
-use convert_case::Casing;
+use convert_case::{Case, Casing};
 use itertools::Itertools;
-use proc_macro2::Ident;
-use proc_macro2::Literal;
-use proc_macro2::Span;
-use proc_macro2::TokenStream;
+use proc_macro2::{Ident, Literal, Span, TokenStream};
 use quote::TokenStreamExt;
 use sqlparser::ast::ColumnOption;
 use syn::File;
 
-use crate::codegen::DO_NOT_MODIFY_HEADER;
-use crate::codegen::types;
-use crate::query::QueryInfo;
-use crate::query::QueryInfoInner;
-use crate::query::insert::InsertQueryInfo;
-use crate::query::select::SelectQueryInfo;
-use crate::query::select::SelectWhat;
+use crate::{
+    codegen::{DO_NOT_MODIFY_HEADER, types},
+    query::{
+        QueryInfo, QueryInfoInner,
+        insert::InsertQueryInfo,
+        select::{SelectQueryInfo, SelectWhat},
+    },
+};
 
 pub(crate) fn generate_query_structs_from_queries<P>(
     query_map: BTreeMap<String, QueryInfo>,
@@ -196,7 +191,11 @@ fn generate_query_struct_token_stream(
     })
 }
 
-fn generate_bind_fn_token_stream(query_info: QueryInfo, is_query_as: bool, bind_params: &Vec<TokenStream>) -> TokenStream {
+fn generate_bind_fn_token_stream(
+    query_info: QueryInfo,
+    is_query_as: bool,
+    bind_params: &Vec<TokenStream>,
+) -> TokenStream {
     let mut rawstr = query_info.raw.to_string();
     let placeholders = match query_info.inner {
         QueryInfoInner::Insert(insert) => insert.placeholders,
@@ -234,9 +233,7 @@ fn generate_query_fns_token_streams(
     rettype: &mut TokenStream,
 ) -> Vec<TokenStream> {
     match query_info.inner {
-        QueryInfoInner::Insert(_) => {
-            generate_insert_query_fn_token_stream()
-        }
+        QueryInfoInner::Insert(_) => generate_insert_query_fn_token_stream(),
         QueryInfoInner::Select(select) => {
             generate_select_query_fns_token_streams(&select, schema, rettype)
         }
@@ -265,18 +262,13 @@ fn generate_select_query_fns_token_streams(
     let rettype = match select.what {
         deref!(SelectWhat::Everything) => {
             let table = select.from.as_ref().unwrap();
-            let name = table
-                .name
-                .replace("public.", "")
-                .replace(['"', '.'], "");
+            let name = table.name.replace("public.", "").replace(['"', '.'], "");
             let ident = Ident::new(&name, Span::call_site());
 
             quote::quote! {crate::tables::#schemaident::#ident}
         }
         deref!(SelectWhat::Exists(_)) => {
-            return special_token_stream_for_select_exists(
-                &quote::quote! {bool},
-            );
+            return special_token_stream_for_select_exists(&quote::quote! {bool});
         }
         _ => return vec![],
     };
@@ -303,9 +295,7 @@ fn generate_select_query_fns_token_streams(
     ]
 }
 
-fn special_token_stream_for_select_exists(
-    rettype: &TokenStream,
-) -> Vec<TokenStream> {
+fn special_token_stream_for_select_exists(rettype: &TokenStream) -> Vec<TokenStream> {
     vec![quote::quote! {
         #[must_use = "Query result(s) must be used"]
         pub async fn exists(self) -> crate::result::Result<#rettype> {

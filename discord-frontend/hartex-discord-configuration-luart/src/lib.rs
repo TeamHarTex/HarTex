@@ -30,10 +30,7 @@
 #![deny(warnings)]
 
 use hartex_discord_configuration_models::Configuration;
-use mlua::Lua;
-use mlua::LuaOptions;
-use mlua::Result;
-use mlua::StdLib;
+use mlua::{Lua, LuaOptions, Result, StdLib};
 
 /// Evaluates the configuration code and returns a configuration object.
 #[allow(clippy::missing_errors_doc)]

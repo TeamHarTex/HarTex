@@ -20,11 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use sqlparser::ast::ArrayElemTypeDef;
-use sqlparser::ast::DataType;
-use sqlparser::ast::TimezoneInfo;
+use sqlparser::ast::{ArrayElemTypeDef, DataType, TimezoneInfo};
 
-pub(crate) fn sql_type_to_rust_type_token_stream(dt: &DataType) -> Option<proc_macro2::TokenStream> {
+pub(crate) fn sql_type_to_rust_type_token_stream(
+    dt: &DataType,
+) -> Option<proc_macro2::TokenStream> {
     Some(match dt {
         DataType::Array(ArrayElemTypeDef::SquareBracket(deref!(dt_inner), _)) => {
             let ts = sql_type_to_rust_type_token_stream(dt_inner)?;
@@ -41,8 +41,7 @@ pub(crate) fn sql_type_to_rust_type_token_stream(dt: &DataType) -> Option<proc_m
         DataType::Real => quote::quote! {f32},
         DataType::SmallInt(_) => quote::quote! {i16},
         DataType::Integer(_) => quote::quote! {i32},
-        DataType::Time(_, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
-        {
+        DataType::Time(_, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) => {
             quote::quote! {time::Time}
         }
         DataType::Timestamp(_, tz) => match tz {
@@ -76,8 +75,7 @@ pub(crate) fn sql_type_to_rust_reftype_token_stream(
         DataType::Real => quote::quote! {f32},
         DataType::SmallInt(_) => quote::quote! {i16},
         DataType::Integer(_) => quote::quote! {i32},
-        DataType::Time(_, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) =>
-        {
+        DataType::Time(_, TimezoneInfo::None | TimezoneInfo::WithoutTimeZone) => {
             quote::quote! {time::Time}
         }
         DataType::Timestamp(_, tz) => match tz {

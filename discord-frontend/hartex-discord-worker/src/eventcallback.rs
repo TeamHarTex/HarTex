@@ -20,28 +20,31 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::panic::AssertUnwindSafe;
-use std::time::SystemTime;
+use std::{env, panic::AssertUnwindSafe, time::SystemTime};
 
 use futures_util::FutureExt;
 use hartex_backend_models::uptime::UptimeUpdate;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::model::application::interaction::InteractionType;
-use hartex_discord_core::discord::model::gateway::event::DispatchEvent;
-use hartex_discord_core::discord::model::gateway::event::Event;
-use hartex_discord_core::discord::model::gateway::event::GatewayEvent;
-use hartex_discord_core::discord::model::gateway::payload::incoming::GuildCreate;
-use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::net::TcpStream;
+use hartex_discord_core::{
+    discord::{
+        cache::DefaultInMemoryCache,
+        model::{
+            application::interaction::InteractionType,
+            gateway::{
+                event::{DispatchEvent, Event, GatewayEvent},
+                payload::incoming::GuildCreate,
+            },
+        },
+    },
+    tokio,
+    tokio::net::TcpStream,
+};
 use hartex_discord_utils::CLIENT;
-use hartex_localization_core::LOCALIZATION_HOLDER;
-use hartex_localization_core::Localizer;
-use hyper::Method;
-use hyper::Request;
-use hyper::client::conn::http1::handshake;
-use hyper::header::ACCEPT;
-use hyper::header::CONTENT_TYPE;
+use hartex_localization_core::{LOCALIZATION_HOLDER, Localizer};
+use hyper::{
+    Method, Request,
+    client::conn::http1::handshake,
+    header::{ACCEPT, CONTENT_TYPE},
+};
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 

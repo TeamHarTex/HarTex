@@ -24,21 +24,22 @@
 //!
 //! This command returns information of a custom Discord emoji.
 
-use std::str::FromStr;
-use std::sync::LazyLock;
+use std::{str::FromStr, sync::LazyLock};
 
 use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::id::marker::EmojiMarker;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_utils::commands::CommandDataOptionExt;
-use hartex_discord_utils::commands::CommandDataOptionsExt;
-use hartex_discord_utils::interaction::embed_response;
-use hartex_discord_utils::interaction::ephemeral_error_response;
-use hartex_discord_utils::localizable::Localizable;
-use hartex_discord_utils::markdown::MarkdownStyle;
+use hartex_discord_core::discord::{
+    model::{
+        application::interaction::application_command::CommandDataOption,
+        id::{Id, marker::EmojiMarker},
+    },
+    util::builder::embed::{EmbedBuilder, EmbedFieldBuilder},
+};
+use hartex_discord_utils::{
+    commands::{CommandDataOptionExt, CommandDataOptionsExt},
+    interaction::{embed_response, ephemeral_error_response},
+    localizable::Localizable,
+    markdown::MarkdownStyle,
+};
 use miette::IntoDiagnostic;
 use regex::Regex;
 
