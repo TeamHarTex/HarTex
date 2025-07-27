@@ -28,11 +28,9 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use axum::Json;
-use axum::http::StatusCode;
+use axum::{Json, http::StatusCode};
 use either::Either;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub mod uptime;
 

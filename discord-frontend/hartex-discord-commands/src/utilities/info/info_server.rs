@@ -24,23 +24,26 @@
 //!
 //! This command returns informatiomn about the current server (the server the command is run in).
 
-use std::borrow::Cow;
-use std::fmt::Write;
+use std::{borrow::Cow, fmt::Write};
 
 use hartex_discord_cdn::Cdn;
 use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_core::discord::mention::Mention;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandDataOption;
-use hartex_discord_core::discord::model::channel::ChannelType;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_core::discord::util::builder::embed::ImageSource;
-use hartex_discord_core::discord::util::snowflake::Snowflake;
-use hartex_discord_utils::commands::CommandDataOptionExt;
-use hartex_discord_utils::commands::CommandDataOptionsExt;
-use hartex_discord_utils::interaction::embed_response;
-use hartex_discord_utils::localizable::Localizable;
-use hartex_discord_utils::markdown::MarkdownStyle;
+use hartex_discord_core::discord::{
+    mention::Mention,
+    model::{
+        application::interaction::application_command::CommandDataOption, channel::ChannelType,
+    },
+    util::{
+        builder::embed::{EmbedBuilder, EmbedFieldBuilder, ImageSource},
+        snowflake::Snowflake,
+    },
+};
+use hartex_discord_utils::{
+    commands::{CommandDataOptionExt, CommandDataOptionsExt},
+    interaction::embed_response,
+    localizable::Localizable,
+    markdown::MarkdownStyle,
+};
 use miette::IntoDiagnostic;
 
 /// Executes the `info server` command.

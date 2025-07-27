@@ -22,18 +22,14 @@
 
 use std::ops::Deref;
 
-use hartex_discord_core::discord::gateway::ConfigBuilder;
-use hartex_discord_core::discord::gateway::Intents;
-use hartex_discord_core::discord::gateway::Shard;
-use hartex_discord_core::discord::gateway::ShardId;
-use hartex_discord_core::discord::gateway::create_recommended;
-use hartex_discord_core::discord::gateway::queue::Queue;
-use hartex_discord_core::discord::model::gateway::payload::outgoing::update_presence::UpdatePresencePayload;
-use hartex_discord_core::discord::model::gateway::presence::Activity;
-use hartex_discord_core::discord::model::gateway::presence::ActivityType;
-use hartex_discord_core::discord::model::gateway::presence::Status;
-use hartex_discord_utils::CLIENT;
-use hartex_discord_utils::TOKEN;
+use hartex_discord_core::discord::{
+    gateway::{ConfigBuilder, Intents, Shard, ShardId, create_recommended, queue::Queue},
+    model::gateway::{
+        payload::outgoing::update_presence::UpdatePresencePayload,
+        presence::{Activity, ActivityType, Status},
+    },
+};
+use hartex_discord_utils::{CLIENT, TOKEN};
 use miette::IntoDiagnostic;
 
 /// Obtain a list of shards.

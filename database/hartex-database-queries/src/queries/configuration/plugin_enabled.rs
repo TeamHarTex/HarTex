@@ -3,11 +3,12 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-use sqlx::Postgres;
-use sqlx::postgres::PgArguments;
-use sqlx::postgres::PgPool;
-use sqlx::query::Query;
-use sqlx::query::QueryAs;
+use sqlx::{
+    Postgres,
+    postgres::{PgArguments, PgPool},
+    query::{Query, QueryAs},
+};
+
 use crate::result::IntoCrateResult;
 pub struct PluginEnabled<'a> {
     pool: &'a PgPool,
@@ -31,18 +32,14 @@ impl<'a> PluginEnabled<'a> {
     #[must_use = "Query result(s) must be used"]
     pub async fn exists(self) -> crate::result::Result<bool> {
         use sqlx::Row;
-        Ok(
-            self
-                .query
-                .ok_or(
-                    crate::result::Error::Generic(
-                        ".executor() has not been called on this query yet",
-                    ),
-                )?
-                .fetch_one(self.pool)
-                .await
-                .into_crate_result()?
-                .get::<bool, &str>("exists"),
-        )
+        Ok(self
+            .query
+            .ok_or(crate::result::Error::Generic(
+                ".executor() has not been called on this query yet",
+            ))?
+            .fetch_one(self.pool)
+            .await
+            .into_crate_result()?
+            .get::<bool, &str>("exists"))
     }
 }

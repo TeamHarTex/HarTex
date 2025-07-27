@@ -20,11 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::PathBuf;
-use std::sync::Arc;
+use std::{path::PathBuf, sync::Arc};
 
-use crate::config::Config;
-use crate::testrunner::context::TestContext;
+use crate::{config::Config, testrunner::context::TestContext};
 
 mod context;
 mod diff;

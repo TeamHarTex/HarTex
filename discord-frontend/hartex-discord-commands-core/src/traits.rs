@@ -22,9 +22,10 @@
 
 use async_trait::async_trait;
 use hartex_discord_configuration_provider::ConfigurationProvider;
-use hartex_discord_core::discord::model::guild::Permissions;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::{
+    guild::Permissions,
+    id::{Id, marker::GuildMarker},
+};
 
 use crate::context::CommandContext;
 

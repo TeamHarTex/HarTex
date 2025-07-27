@@ -22,20 +22,14 @@
 
 //! # Logging Facilities
 
-pub use formati::debug;
-pub use formati::format;
-pub use formati::error;
-pub use formati::info;
-pub use formati::trace;
-pub use formati::warn;
-
-use tracing_core::LevelFilter;
-use tracing_core::Subscriber;
-use tracing_subscriber::filter::Targets;
-use tracing_subscriber::fmt::Layer;
-use tracing_subscriber::fmt::time::OffsetTime;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::Registry;
+pub use formati::{debug, error, format, info, trace, warn};
+use tracing_core::{LevelFilter, Subscriber};
+use tracing_subscriber::{
+    Registry,
+    filter::Targets,
+    fmt::{Layer, time::OffsetTime},
+    layer::SubscriberExt,
+};
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
@@ -49,13 +43,14 @@ pub fn subscriber() -> impl Subscriber {
     let targets_layer = Targets::new()
         .with_default(LevelFilter::TRACE)
         .with_target("hyper_util::client::legacy::client", LevelFilter::OFF)
-        .with_target("hyper_util::client::legacy::connect::http", LevelFilter::OFF)
+        .with_target(
+            "hyper_util::client::legacy::connect::http",
+            LevelFilter::OFF,
+        )
         .with_target("hyper_util::client::legacy::pool", LevelFilter::OFF)
         .with_target("tower_http", LevelFilter::TRACE)
         .with_target("twilight_gateway::shard", LevelFilter::OFF)
         .with_target("twilight_http::client", LevelFilter::OFF);
 
-    Registry::default()
-        .with(fmt_layer)
-        .with(targets_layer)
+    Registry::default().with(fmt_layer).with(targets_layer)
 }

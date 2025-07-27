@@ -31,10 +31,7 @@
 #![feature(deref_patterns)]
 #![feature(map_try_insert)]
 
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::signal;
+use hartex_discord_core::{discord::cache::DefaultInMemoryCache, dotenvy, tokio, tokio::signal};
 use hartex_discord_grpc_protos::gateway::gateway_server::GatewayServer;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;

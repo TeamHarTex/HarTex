@@ -29,8 +29,7 @@
 #![deny(warnings)]
 
 use hartex_database_queries::queries::configuration::plugin_enabled::PluginEnabled;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
+use hartex_discord_core::discord::model::id::{Id, marker::GuildMarker};
 use hartex_discord_utils::database::CONFIGURATION;
 use miette::IntoDiagnostic;
 

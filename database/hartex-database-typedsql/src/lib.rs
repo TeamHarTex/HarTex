@@ -27,8 +27,7 @@
 #![allow(incomplete_features)]
 #![feature(deref_patterns)]
 
-use std::collections::BTreeMap;
-use std::path::Path;
+use std::{collections::BTreeMap, path::Path};
 
 use itertools::Itertools;
 use sqlparser::dialect::PostgreSqlDialect;

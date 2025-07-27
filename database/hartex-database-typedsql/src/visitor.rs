@@ -22,10 +22,7 @@
 
 use std::ops::ControlFlow;
 
-use sqlparser::ast::Expr;
-use sqlparser::ast::Value;
-use sqlparser::ast::ValueWithSpan;
-use sqlparser::ast::Visitor;
+use sqlparser::ast::{Expr, Value, ValueWithSpan, Visitor};
 
 #[derive(Default)]
 pub struct PlaceholderVisitor {
@@ -39,7 +36,9 @@ impl Visitor for PlaceholderVisitor {
         if let Expr::Value(ValueWithSpan {
             value: Value::Placeholder(ph),
             ..
-        }) = expr && !self.placeholders.contains(&ph[1..].to_string()) {
+        }) = expr
+            && !self.placeholders.contains(&ph[1..].to_string())
+        {
             self.placeholders.push(String::from(&ph[1..]));
         }
 

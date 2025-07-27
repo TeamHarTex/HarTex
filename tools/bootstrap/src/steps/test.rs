@@ -20,12 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::process::Command;
-use std::process::exit;
+use std::process::{Command, exit};
+
 use owo_colors::OwoColorize;
-use crate::builder::Builder;
-use crate::builder::RunConfig;
-use crate::builder::Step;
+
+use crate::builder::{Builder, RunConfig, Step};
 
 /// Step for compiling the test suite.
 pub struct BuildTestsuiteTool;
@@ -67,7 +66,10 @@ fn build_testsuite_tool(builder: &Builder<'_>) {
     );
     command.env("RUSTFLAGS", rustflags);
 
-    println!("{} Building testsuite tool before running tests", "info:".bold());
+    println!(
+        "{} Building testsuite tool before running tests",
+        "info:".bold()
+    );
     let status = command.status().expect("failed to get status");
     if !status.success() {
         exit(status.code().unwrap_or(1));

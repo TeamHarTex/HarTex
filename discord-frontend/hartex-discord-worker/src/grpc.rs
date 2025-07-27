@@ -20,31 +20,25 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-use std::collections::btree_map::Entry;
-use std::sync::Arc;
+use std::{
+    collections::{BTreeMap, btree_map::Entry},
+    sync::Arc,
+};
 
-use bytes::Bytes;
-use bytes::BytesMut;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::model::gateway::event::GatewayEventDeserializer;
-use hartex_discord_core::tokio;
-use hartex_discord_core::tokio::sync::mpsc;
-use hartex_discord_core::tokio::sync::mpsc::Sender;
-use hartex_discord_grpc_protos::gateway::GatewayClientEventMessage;
-use hartex_discord_grpc_protos::gateway::GatewayClientEventResponse;
-use hartex_discord_grpc_protos::gateway::gateway_server::Gateway;
+use bytes::{Bytes, BytesMut};
+use hartex_discord_core::{
+    discord::{cache::DefaultInMemoryCache, model::gateway::event::GatewayEventDeserializer},
+    tokio,
+    tokio::sync::{mpsc, mpsc::Sender},
+};
+use hartex_discord_grpc_protos::gateway::{
+    GatewayClientEventMessage, GatewayClientEventResponse, gateway_server::Gateway,
+};
 use parking_lot::Mutex;
 use serde::de::DeserializeSeed;
 use serde_json::Deserializer;
-use tokio_stream::StreamExt;
-use tokio_stream::wrappers::ReceiverStream;
-use tonic::Request;
-use tonic::Response;
-use tonic::Result;
-use tonic::Status;
-use tonic::Streaming;
-use tonic::async_trait;
+use tokio_stream::{StreamExt, wrappers::ReceiverStream};
+use tonic::{Request, Response, Result, Status, Streaming, async_trait};
 
 /// A gateway worker server service.
 pub struct GatewayWorkerServer {
