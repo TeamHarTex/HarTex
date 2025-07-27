@@ -20,13 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fmt;
-use std::fmt::Display;
+use std::{fmt, fmt::Display};
 
-use console::Style;
-use console::style;
-use similar::ChangeTag;
-use similar::TextDiff;
+use console::{Style, style};
+use similar::{ChangeTag, TextDiff};
 
 struct DiffLine(Option<usize>);
 

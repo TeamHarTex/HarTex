@@ -24,23 +24,23 @@
 //!
 //! This module defines handlers for errors and panics.
 
-use std::env;
-use std::str::FromStr;
+use std::{env, str::FromStr};
 
 use chrono::Utc;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::id::marker::ChannelMarker;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_utils::CLIENT;
-use hartex_discord_utils::interaction::ephemeral_error_response;
-use hartex_discord_utils::markdown::MarkdownStyle;
+use hartex_discord_core::discord::{
+    http::client::InteractionClient,
+    model::{
+        gateway::payload::incoming::InteractionCreate,
+        id::{Id, marker::ChannelMarker},
+    },
+    util::builder::embed::{EmbedBuilder, EmbedFieldBuilder},
+};
+use hartex_discord_utils::{
+    CLIENT, interaction::ephemeral_error_response, markdown::MarkdownStyle,
+};
 use hartex_localization_core::Localizer;
 use miette::Report;
-use sha2::Digest;
-use sha2::Sha224;
+use sha2::{Digest, Sha224};
 
 /// This function handle errors from an interaction. It does the following things:
 ///

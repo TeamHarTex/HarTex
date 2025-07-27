@@ -20,17 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::BTreeMap;
-use std::fs;
-use std::path::Path;
-use std::path::PathBuf;
+use std::{
+    collections::BTreeMap,
+    fs,
+    path::{Path, PathBuf},
+};
 
-use sqlparser::ast::ColumnDef;
-use sqlparser::ast::ColumnOption;
-use sqlparser::ast::CreateTable;
-use sqlparser::ast::DataType;
-use sqlparser::ast::Statement;
-use sqlparser::parser::Parser;
+use sqlparser::{
+    ast::{ColumnDef, ColumnOption, CreateTable, DataType, Statement},
+    parser::Parser,
+};
 
 use crate::POSTGRESQL_DIALECT;
 

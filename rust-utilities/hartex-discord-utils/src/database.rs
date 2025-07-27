@@ -20,16 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::str::FromStr;
-use std::time::Duration;
+use std::{env, str::FromStr, time::Duration};
 
 use async_lazy::Lazy;
 use log::LevelFilter;
-use sqlx::ConnectOptions;
-use sqlx::PgPool;
-use sqlx::postgres::PgConnectOptions;
-use sqlx::postgres::PgPoolOptions;
+use sqlx::{
+    ConnectOptions, PgPool,
+    postgres::{PgConnectOptions, PgPoolOptions},
+};
 
 /// An asynchronously lazyily initialized database pool for the API Backend database.
 pub static API_BACKEND: Lazy<PgPool> = Lazy::new(|| {

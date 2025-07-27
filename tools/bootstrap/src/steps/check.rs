@@ -20,12 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::process::Command;
-use std::process::exit;
+use std::process::{Command, exit};
+
 use owo_colors::OwoColorize;
-use crate::builder::Builder;
-use crate::builder::RunConfig;
-use crate::builder::Step;
+
+use crate::builder::{Builder, RunConfig, Step};
 
 /// Step for checking the api-backend project.
 #[allow(clippy::module_name_repetitions)]

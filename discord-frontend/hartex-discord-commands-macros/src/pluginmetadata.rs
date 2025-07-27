@@ -20,13 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use proc_macro2::Ident;
-use proc_macro2::TokenStream as TokenStream2;
-use syn::ItemStruct;
-use syn::Lit;
-use syn::Token;
-use syn::parse::Parse;
-use syn::parse::ParseStream;
+use proc_macro2::{Ident, TokenStream as TokenStream2};
+use syn::{
+    ItemStruct, Lit, Token,
+    parse::{Parse, ParseStream},
+};
 
 /// Represents input to the `metadata` derive macro.
 #[allow(dead_code)]

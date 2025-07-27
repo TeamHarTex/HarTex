@@ -109,7 +109,6 @@ fn rust_default_parallel_threads() -> u32 {
     8
 }
 
-
 /// Default release build.
 ///
 /// Set to `false`.

@@ -20,8 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::builder::Builder;
-use crate::config::Config;
+use crate::{builder::Builder, config::Config};
 
 /// Represents a build session.
 pub struct Build {

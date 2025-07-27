@@ -20,8 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fs::File;
-use std::io::Read;
+use std::{fs::File, io::Read};
 
 use hartex_discord_core::dotenvy;
 use miette::IntoDiagnostic;

@@ -20,21 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fmt;
-use std::fmt::Display;
-use std::fs;
-use std::io;
-use std::io::BufRead;
-use std::io::Write;
-use std::path::PathBuf;
-use std::str::FromStr;
+use std::{
+    fmt,
+    fmt::Display,
+    fs, io,
+    io::{BufRead, Write},
+    path::PathBuf,
+    str::FromStr,
+};
 
 use owo_colors::OwoColorize;
 
-use crate::builder::Builder;
-use crate::builder::RunConfig;
-use crate::builder::Step;
-use crate::config::Config;
+use crate::{
+    builder::{Builder, RunConfig, Step},
+    config::Config,
+};
 
 /// Path to a default Fleet settings file.
 const FLEET_SETTINGS: &str = include_str!("../../config/fleet-settings.json");

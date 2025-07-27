@@ -31,9 +31,7 @@
 
 extern crate core;
 
-use clap::Arg;
-use clap::ArgAction;
-use clap::Command;
+use clap::{Arg, ArgAction, Command};
 use hartex_discord_core::tokio;
 
 mod cmdline;

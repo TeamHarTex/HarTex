@@ -21,10 +21,10 @@
  */
 
 use std::fs;
+
 use owo_colors::OwoColorize;
-use crate::builder::Builder;
-use crate::builder::RunConfig;
-use crate::builder::Step;
+
+use crate::builder::{Builder, RunConfig, Step};
 
 /// Step for cleaning the api-backend built artifacts.
 #[allow(clippy::module_name_repetitions)]
@@ -158,7 +158,11 @@ fn clean(project: &'static str, builder: &Builder<'_>) {
 
     println!("{} deleting {}", "info:".bold(), dir.display());
     if !dir.exists() {
-        println!("{} directory {} does not exist, skipping", "warning:".yellow().bold(), dir.display());
+        println!(
+            "{} directory {} does not exist, skipping",
+            "warning:".yellow().bold(),
+            dir.display()
+        );
         return;
     }
 

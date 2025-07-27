@@ -22,8 +22,7 @@
 
 //! # Environment Utilities
 
-use std::env;
-use std::path::PathBuf;
+use std::{env, path::PathBuf};
 
 /// Returns the containing directory of the localization files.
 pub fn base_path() -> PathBuf {

@@ -24,18 +24,17 @@
 //!
 //! Routes interacting with the uptime API.
 
-use axum::Json;
-use axum::extract::Query;
-use axum::http::StatusCode;
+use axum::{Json, extract::Query, http::StatusCode};
 use axum_extra::extract::WithRejection;
 use chrono::DateTime;
-use hartex_backend_models::Response;
-use hartex_backend_models::uptime::UptimeQuery;
-use hartex_backend_models::uptime::UptimeQueryRejection;
-use hartex_backend_models::uptime::UptimeResponse;
-use hartex_backend_models::uptime::UptimeUpdate;
-use hartex_database_queries::queries::api_backend::start_timestamp_select_by_component::StartTimestampSelectByComponent;
-use hartex_database_queries::queries::api_backend::start_timestamp_upsert::StartTimestampUpsert;
+use hartex_backend_models::{
+    Response,
+    uptime::{UptimeQuery, UptimeQueryRejection, UptimeResponse, UptimeUpdate},
+};
+use hartex_database_queries::queries::api_backend::{
+    start_timestamp_select_by_component::StartTimestampSelectByComponent,
+    start_timestamp_upsert::StartTimestampUpsert,
+};
 use hartex_discord_utils::database::API_BACKEND;
 
 /// Get component uptime
@@ -58,8 +57,7 @@ pub async fn get_uptime(
 ) -> (StatusCode, Json<Response<UptimeResponse, String>>) {
     hartex_tracing::trace!("querying timestamp");
     let name = query.component_name();
-    let result = StartTimestampSelectByComponent::new((&API_BACKEND).await)
-        .bind(name.to_string());
+    let result = StartTimestampSelectByComponent::new((&API_BACKEND).await).bind(name.to_string());
 
     let result = result.all().await;
 

@@ -30,9 +30,7 @@
 #![feature(const_async_blocks)]
 #![feature(type_alias_impl_trait)]
 
-use std::env;
-use std::ops::Deref;
-use std::sync::LazyLock;
+use std::{env, ops::Deref, sync::LazyLock};
 
 use hartex_discord_core::discord::http::Client;
 

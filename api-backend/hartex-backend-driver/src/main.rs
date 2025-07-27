@@ -31,25 +31,20 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use std::env;
 #[cfg(not(unix))]
 use std::future;
-use std::time::Duration;
+use std::{env, time::Duration};
 
 use dotenvy::Error;
 use hartex_errors::dotenv;
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;
-use tokio::net::TcpListener;
-use tokio::signal;
+use tokio::{net::TcpListener, signal};
 use tower::ServiceBuilder;
-use tower_http::timeout::TimeoutLayer;
-use tower_http::trace::TraceLayer;
+use tower_http::{timeout::TimeoutLayer, trace::TraceLayer};
 use utoipa::openapi::Info;
-use utoipa_axum::router::OpenApiRouter;
-use utoipa_axum::routes;
-use utoipa_scalar::Scalar;
-use utoipa_scalar::Servable;
+use utoipa_axum::{router::OpenApiRouter, routes};
+use utoipa_scalar::{Scalar, Servable};
 
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
@@ -88,12 +83,11 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::debug!("listening on {&domain}");
 
     openapi.info = Info::new("HarTex API", env!("CARGO_PKG_VERSION"));
-    let router = app
-        .merge(Scalar::with_url("/openapi", openapi))
-        .layer(ServiceBuilder::new()
+    let router = app.merge(Scalar::with_url("/openapi", openapi)).layer(
+        ServiceBuilder::new()
             .layer(TraceLayer::new_for_http())
-            .layer(TimeoutLayer::new(Duration::from_secs(30)))
-        );
+            .layer(TimeoutLayer::new(Duration::from_secs(30))),
+    );
 
     axum::serve(listener, router)
         .with_graceful_shutdown(shutdown())

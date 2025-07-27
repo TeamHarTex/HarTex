@@ -22,10 +22,7 @@
 
 //! # Plugins Configuration Object
 
-use mlua::Error;
-use mlua::FromLua;
-use mlua::Lua;
-use mlua::Value;
+use mlua::{Error, FromLua, Lua, Value};
 use serde::Serialize;
 
 pub mod management;
