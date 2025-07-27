@@ -12,6 +12,7 @@ rust-version = "1.90.0"
 
 [dependencies]
 hartex_discord_core = { path = "../hartex-discord-core", features = [
+    "discord-cache",
     "discord-model",
 ] }
 hartex_discord_commands_macros = { path = "../hartex-discord-commands-macros", optional = true }
