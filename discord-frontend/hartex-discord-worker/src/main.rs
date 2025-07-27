@@ -61,7 +61,7 @@ pub async fn main() -> miette::Result<()> {
     let service = GatewayServer::new(GatewayWorkerServer::new(cache));
     Server::builder()
         .add_service(service)
-        .serve("[::1]:10001".parse().unwrap())
+        .serve("127.0.0.1:6553".parse().unwrap())
         .await
         .into_diagnostic()?;
 

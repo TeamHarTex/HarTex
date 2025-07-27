@@ -65,7 +65,7 @@ pub async fn main() -> miette::Result<()> {
 
     let (tx, rx) = watch::channel(false);
 
-    let client = GatewayClient::connect("http://[::1]:10001").await.unwrap();
+    let client = GatewayClient::connect("http://127.0.0.1:6553").await.unwrap();
 
     hartex_tracing::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();
