@@ -20,22 +20,26 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::sync::LazyLock;
+use std::{collections::HashMap, sync::LazyLock};
 
-use hartex_discord_commands::general::about::About;
-use hartex_discord_commands::general::contributors::Contributors;
-use hartex_discord_commands::utilities::info::Info;
-use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_commands_core::traits::Command;
-use hartex_discord_commands_core::traits::CommandMetadata;
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::application::interaction::InteractionData;
-use hartex_discord_core::discord::model::gateway::payload::incoming::InteractionCreate;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponseType;
-use hartex_discord_core::discord::util::builder::InteractionResponseDataBuilder;
+use hartex_discord_commands::{
+    general::{about::About, contributors::Contributors},
+    utilities::info::Info,
+};
+use hartex_discord_commands_core::{
+    context::CommandContext,
+    traits::{Command, CommandMetadata},
+};
+use hartex_discord_core::discord::{
+    cache::DefaultInMemoryCache,
+    http::client::InteractionClient,
+    model::{
+        application::interaction::InteractionData,
+        gateway::payload::incoming::InteractionCreate,
+        http::interaction::{InteractionResponse, InteractionResponseType},
+    },
+    util::builder::InteractionResponseDataBuilder,
+};
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 

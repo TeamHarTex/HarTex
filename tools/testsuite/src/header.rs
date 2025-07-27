@@ -20,12 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fmt;
-use std::fmt::Display;
-use std::fs;
-use std::io;
-use std::path::Path;
-use std::str::FromStr;
+use std::{fmt, fmt::Display, fs, io, path::Path, str::FromStr};
 
 pub struct Header {
     pub testsuite_ignore: TestsuiteIgnore,

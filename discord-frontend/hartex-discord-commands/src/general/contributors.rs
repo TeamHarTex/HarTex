@@ -25,13 +25,10 @@
 //! This command returns information about the contributors of the bot.
 
 use async_trait::async_trait;
-use hartex_discord_commands_core::command;
-use hartex_discord_commands_core::context::CommandContext;
-use hartex_discord_commands_core::traits::Command;
-use hartex_discord_core::discord::util::builder::embed::EmbedAuthorBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFieldBuilder;
-use hartex_discord_core::discord::util::builder::embed::EmbedFooterBuilder;
+use hartex_discord_commands_core::{command, context::CommandContext, traits::Command};
+use hartex_discord_core::discord::util::builder::embed::{
+    EmbedAuthorBuilder, EmbedBuilder, EmbedFieldBuilder, EmbedFooterBuilder,
+};
 use hartex_discord_utils::interaction::embed_response;
 use miette::IntoDiagnostic;
 

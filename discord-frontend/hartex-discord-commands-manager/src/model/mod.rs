@@ -20,14 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::fmt;
-use std::fmt::Formatter;
+use std::{collections::HashMap, fmt, fmt::Formatter};
 
-use hartex_discord_core::discord::model::application::command::CommandOptionType;
-use hartex_discord_core::discord::model::application::command::CommandOptionValue;
-use hartex_discord_core::discord::model::application::command::CommandType;
-use hartex_discord_core::discord::model::channel::ChannelType;
+use hartex_discord_core::discord::model::{
+    application::command::{CommandOptionType, CommandOptionValue, CommandType},
+    channel::ChannelType,
+};
 use owo_colors::OwoColorize;
 
 pub mod command;

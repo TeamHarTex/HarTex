@@ -24,10 +24,7 @@
 
 use bitflags::Flags;
 use hartex_bitflags_utils::FlagsExt;
-use mlua::Error;
-use mlua::FromLua;
-use mlua::Lua;
-use mlua::Value;
+use mlua::{Error, FromLua, Lua, Value};
 use serde::Serialize;
 
 bitflags::bitflags! {

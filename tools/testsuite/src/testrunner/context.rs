@@ -20,19 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fs;
-use std::fs::OpenOptions;
-use std::io::Write;
-use std::panic;
-use std::path::Component;
-use std::path::Path;
-use std::process::Command;
+use std::{
+    fs,
+    fs::OpenOptions,
+    io::Write,
+    panic,
+    path::{Component, Path},
+    process::Command,
+};
 
-use path_slash::PathBufExt;
-use path_slash::PathExt;
+use path_slash::{PathBufExt, PathExt};
 
-use crate::config::Config;
-use crate::testrunner::diff;
+use crate::{config::Config, testrunner::diff};
 
 #[allow(clippy::module_name_repetitions)]
 pub struct TestContext<'test> {

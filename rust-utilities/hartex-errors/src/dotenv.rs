@@ -22,8 +22,7 @@
 
 //! # Dotenv Errors
 
-use miette::Diagnostic;
-use miette::SourceSpan;
+use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
 /// Line parse error

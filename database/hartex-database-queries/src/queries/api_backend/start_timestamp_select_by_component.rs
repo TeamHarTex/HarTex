@@ -3,41 +3,35 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-use sqlx::Postgres;
-use sqlx::postgres::PgArguments;
-use sqlx::postgres::PgPool;
-use sqlx::query::Query;
-use sqlx::query::QueryAs;
+use sqlx::{
+    Postgres,
+    postgres::{PgArguments, PgPool},
+    query::{Query, QueryAs},
+};
+
 use crate::result::IntoCrateResult;
 pub struct StartTimestampSelectByComponent<'a> {
     pool: &'a PgPool,
-    query: Option<
-        QueryAs<'a, Postgres, crate::tables::api_backend::StartTimestamps, PgArguments>,
-    >,
+    query: Option<QueryAs<'a, Postgres, crate::tables::api_backend::StartTimestamps, PgArguments>>,
 }
 impl<'a> StartTimestampSelectByComponent<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool, query: None }
     }
     pub fn bind(mut self, component: String) -> Self {
-        self.query
-            .replace(
-                sqlx::query_as(
-                        "SELECT * FROM \"APIBackend\".public.\"StartTimestamps\" WHERE \"component\" = $1",
-                    )
-                    .bind(component),
-            );
+        self.query.replace(
+            sqlx::query_as(
+                "SELECT * FROM \"APIBackend\".public.\"StartTimestamps\" WHERE \"component\" = $1",
+            )
+            .bind(component),
+        );
         self
     }
-    pub async fn one(
-        self,
-    ) -> crate::result::Result<crate::tables::api_backend::StartTimestamps> {
+    pub async fn one(self) -> crate::result::Result<crate::tables::api_backend::StartTimestamps> {
         self.query
-            .ok_or(
-                crate::result::Error::Generic(
-                    ".bind() has not been called on this query yet",
-                ),
-            )?
+            .ok_or(crate::result::Error::Generic(
+                ".bind() has not been called on this query yet",
+            ))?
             .fetch_one(self.pool)
             .await
             .into_crate_result()
@@ -46,11 +40,9 @@ impl<'a> StartTimestampSelectByComponent<'a> {
         self,
     ) -> crate::result::Result<Vec<crate::tables::api_backend::StartTimestamps>> {
         self.query
-            .ok_or(
-                crate::result::Error::Generic(
-                    ".bind() has not been called on this query yet",
-                ),
-            )?
+            .ok_or(crate::result::Error::Generic(
+                ".bind() has not been called on this query yet",
+            ))?
             .fetch_all(self.pool)
             .await
             .into_crate_result()

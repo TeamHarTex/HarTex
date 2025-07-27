@@ -20,8 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::iter;
-use std::path::PathBuf;
+use std::{iter, path::PathBuf};
 
 use clap::Parser;
 

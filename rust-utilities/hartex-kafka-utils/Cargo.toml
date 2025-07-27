@@ -11,7 +11,7 @@ rust-version = "1.90.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rdkafka = { version = "0.37.0", default-features = false, features = [
+rdkafka = { version = "0.38.0", default-features = false, features = [
     "cmake-build",
     "external-lz4",
     "tokio",

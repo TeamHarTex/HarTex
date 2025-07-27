@@ -20,30 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
-use std::fs::File;
-use std::io::Read;
+use std::{env, fs::File, io::Read};
 
 use clap::ArgMatches;
-use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio::task::spawn;
+use hartex_discord_core::{dotenvy, tokio::task::spawn};
 use hartex_discord_utils::hyper::tls_stream;
-use http_body_util::BodyExt;
-use http_body_util::Full;
-use hyper::Method;
-use hyper::Request;
-use hyper::body::Buf;
-use hyper::body::Bytes;
-use hyper::client::conn::http1::handshake;
-use hyper::header::ACCEPT;
-use hyper::header::AUTHORIZATION;
-use hyper::header::CONTENT_LENGTH;
-use hyper::header::CONTENT_TYPE;
-use hyper::header::HOST;
-use hyper::header::USER_AGENT;
+use http_body_util::{BodyExt, Full};
+use hyper::{
+    Method, Request,
+    body::{Buf, Bytes},
+    client::conn::http1::handshake,
+    header::{ACCEPT, AUTHORIZATION, CONTENT_LENGTH, CONTENT_TYPE, HOST, USER_AGENT},
+};
 use hyper_util::rt::TokioIo;
-use miette::IntoDiagnostic;
-use miette::Report;
+use miette::{IntoDiagnostic, Report};
 use minify::json::minify;
 use walkdir::WalkDir;
 

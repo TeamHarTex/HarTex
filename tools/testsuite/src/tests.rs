@@ -20,30 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fs;
-use std::path::Component;
-use std::path::PathBuf;
-use std::sync::Arc;
+use std::{
+    fs,
+    path::{Component, PathBuf},
+    sync::Arc,
+};
 
-use path_slash::PathExt;
-use test::ColorConfig;
-use test::Options;
-use test::OutputFormat;
-use test::RunIgnored;
-use test::ShouldPanic;
-use test::TestDesc;
-use test::TestDescAndFn;
-use test::TestFn;
-use test::TestName;
-use test::TestOpts;
-use test::TestType;
 use owo_colors::OwoColorize;
+use path_slash::PathExt;
+use test::{
+    ColorConfig, Options, OutputFormat, RunIgnored, ShouldPanic, TestDesc, TestDescAndFn, TestFn,
+    TestName, TestOpts, TestType,
+};
 use walkdir::WalkDir;
 
-use crate::config::Config;
-use crate::header;
-use crate::header::TestsuiteOutcome;
-use crate::testrunner;
+use crate::{config::Config, header, header::TestsuiteOutcome, testrunner};
 
 #[allow(clippy::module_name_repetitions)]
 #[must_use]

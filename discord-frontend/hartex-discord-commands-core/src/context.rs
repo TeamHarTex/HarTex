@@ -20,16 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_core::discord::cache::DefaultInMemoryCache;
-use hartex_discord_core::discord::http::client::InteractionClient;
-use hartex_discord_core::discord::model::application::interaction::Interaction;
-use hartex_discord_core::discord::model::application::interaction::InteractionData;
-use hartex_discord_core::discord::model::application::interaction::application_command::CommandData;
-use hartex_discord_core::discord::model::http::interaction::InteractionResponse;
-use hartex_discord_core::discord::model::id::Id;
-use hartex_discord_core::discord::model::id::marker::GuildMarker;
-use hartex_discord_core::discord::model::id::marker::InteractionMarker;
-use hartex_discord_core::discord::model::id::marker::UserMarker;
+use hartex_discord_core::discord::{
+    cache::DefaultInMemoryCache,
+    http::client::InteractionClient,
+    model::{
+        application::interaction::{
+            Interaction, InteractionData, application_command::CommandData,
+        },
+        http::interaction::InteractionResponse,
+        id::{
+            Id,
+            marker::{GuildMarker, InteractionMarker, UserMarker},
+        },
+    },
+};
 use hartex_localization_core::Localizer;
 use miette::IntoDiagnostic;
 

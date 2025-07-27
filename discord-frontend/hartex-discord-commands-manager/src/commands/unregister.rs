@@ -23,19 +23,15 @@
 use std::env;
 
 use clap::ArgMatches;
-use hartex_discord_core::dotenvy;
-use hartex_discord_core::tokio::task::spawn;
+use hartex_discord_core::{dotenvy, tokio::task::spawn};
 use hartex_discord_utils::hyper::tls_stream;
 use http_body_util::Empty;
-use hyper::Method;
-use hyper::Request;
-use hyper::body::Bytes;
-use hyper::client::conn::http1::handshake;
-use hyper::header::ACCEPT;
-use hyper::header::AUTHORIZATION;
-use hyper::header::CONTENT_LENGTH;
-use hyper::header::HOST;
-use hyper::header::USER_AGENT;
+use hyper::{
+    Method, Request,
+    body::Bytes,
+    client::conn::http1::handshake,
+    header::{ACCEPT, AUTHORIZATION, CONTENT_LENGTH, HOST, USER_AGENT},
+};
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
 

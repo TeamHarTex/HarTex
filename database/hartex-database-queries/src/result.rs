@@ -23,9 +23,7 @@
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
 
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::fmt::Formatter;
+use std::fmt::{Debug, Display, Formatter};
 
 #[derive(Debug)]
 pub enum Error {

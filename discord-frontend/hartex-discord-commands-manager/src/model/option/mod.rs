@@ -20,19 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::fmt;
-use std::fmt::Formatter;
+use std::{collections::HashMap, fmt, fmt::Formatter};
 
-use hartex_discord_core::discord::model::application::command::CommandOptionType;
-use hartex_discord_core::discord::model::application::command::CommandOptionValue;
-use hartex_discord_core::discord::model::channel::ChannelType;
+use hartex_discord_core::discord::model::{
+    application::command::{CommandOptionType, CommandOptionValue},
+    channel::ChannelType,
+};
 use owo_colors::OwoColorize;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-use super::DisplayExt;
-use super::TypeEnumExt;
+use super::{DisplayExt, TypeEnumExt};
 
 pub mod choice;
 

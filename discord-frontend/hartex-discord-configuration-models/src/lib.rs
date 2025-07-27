@@ -29,11 +29,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use mlua::Error;
-use mlua::FromLuaMulti;
-use mlua::Lua;
-use mlua::MultiValue;
-use mlua::Value;
+use mlua::{Error, FromLuaMulti, Lua, MultiValue, Value};
 use serde::Serialize;
 
 pub mod appearance;

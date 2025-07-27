@@ -24,15 +24,14 @@
 //!
 //! Models for the uptime API specification V2 of the backend.
 
-use axum::extract::rejection::QueryRejection;
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
-use axum::response::Response;
+use axum::{
+    extract::rejection::QueryRejection,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+};
 use either::Either;
-use serde::Deserialize;
-use serde::Serialize;
-use utoipa::IntoParams;
-use utoipa::ToSchema;
+use serde::{Deserialize, Serialize};
+use utoipa::{IntoParams, ToSchema};
 
 /// An uptime query.
 #[allow(clippy::module_name_repetitions)]

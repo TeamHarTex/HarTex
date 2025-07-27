@@ -22,8 +22,7 @@
 
 //! # Postgres Utilities
 
-use tokio_postgres::error::Error;
-use tokio_postgres::error::SqlState;
+use tokio_postgres::error::{Error, SqlState};
 
 /// Extension trait for `PostgreSQL` errors.
 #[allow(clippy::module_name_repetitions)]

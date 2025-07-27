@@ -24,13 +24,9 @@
 //!
 //! The component that loads Fluent localizations from its files.
 
-use std::collections::HashMap;
-use std::fs;
-use std::path::PathBuf;
-use std::sync::Arc;
+use std::{collections::HashMap, fs, path::PathBuf, sync::Arc};
 
-use fluent_bundle::FluentResource;
-use fluent_bundle::bundle::FluentBundle;
+use fluent_bundle::{FluentResource, bundle::FluentBundle};
 use intl_memoizer::concurrent::IntlLangMemoizer as ConcurrentIntlLangMemoizer;
 use miette::IntoDiagnostic;
 use unic_langid::LanguageIdentifier;

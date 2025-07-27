@@ -22,16 +22,13 @@
 
 use std::collections::BTreeMap;
 
-use convert_case::Case;
-use convert_case::Casing;
-use sqlparser::ast::Insert;
-use sqlparser::ast::ObjectName;
-use sqlparser::ast::TableObject;
-use sqlparser::ast::Visit;
+use convert_case::{Case, Casing};
+use sqlparser::ast::{Insert, ObjectName, TableObject, Visit};
 
-use crate::schema::SchemaInfo;
-use crate::schema::TableInfo;
-use crate::visitor::PlaceholderVisitor;
+use crate::{
+    schema::{SchemaInfo, TableInfo},
+    visitor::PlaceholderVisitor,
+};
 
 #[derive(Clone, Debug)]
 pub(crate) struct InsertQueryInfo {
@@ -53,7 +50,9 @@ pub(crate) fn parse_insert_query(
         .first()
         .ok_or(crate::error::Error::QueryFile("schema name not found"))?;
     let Some(ident) = schema_name.as_ident() else {
-        return Err(crate::error::Error::QueryFile("unexpected object name part"));
+        return Err(crate::error::Error::QueryFile(
+            "unexpected object name part",
+        ));
     };
     let key = ident.value.to_case(Case::Snake);
     let schema_info = schema_infos
