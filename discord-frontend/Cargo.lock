@@ -1056,7 +1056,6 @@ dependencies = [
  "hartex_discord_commands_core",
  "hartex_discord_core",
  "hartex_discord_utils",
- "hartex_localization_core",
  "hartex_tracing",
  "http-body-util",
  "hyper",
@@ -3727,7 +3726,7 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 [[package]]
 name = "twilight-cache-inmemory"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "bitflags",
  "dashmap",
@@ -3738,7 +3737,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "bitflags",
  "fastrand",
@@ -3758,7 +3757,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "tokio",
  "tracing",
@@ -3767,7 +3766,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "brotli-decompressor",
  "fastrand",
@@ -3790,7 +3789,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "tokio",
  "tracing",
@@ -3799,7 +3798,7 @@ dependencies = [
 [[package]]
 name = "twilight-mention"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "twilight-model",
 ]
@@ -3807,7 +3806,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "bitflags",
  "serde",
@@ -3819,7 +3818,7 @@ dependencies = [
 [[package]]
 name = "twilight-util"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "twilight-model",
  "twilight-validate",
@@ -3828,7 +3827,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "twilight-model",
 ]

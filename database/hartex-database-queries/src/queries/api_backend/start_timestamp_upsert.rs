@@ -3,12 +3,11 @@
 // any way.
 // ==================! DO NOT MODIFY !==================
 
-use sqlx::{
-    Postgres,
-    postgres::{PgArguments, PgPool},
-    query::{Query, QueryAs},
-};
-
+use sqlx::Postgres;
+use sqlx::postgres::PgArguments;
+use sqlx::postgres::PgPool;
+use sqlx::query::Query;
+use sqlx::query::QueryAs;
 use crate::result::IntoCrateResult;
 pub struct StartTimestampUpsert<'a> {
     pool: &'a PgPool,
@@ -35,9 +34,11 @@ impl<'a> StartTimestampUpsert<'a> {
     }
     pub async fn execute(self) -> crate::result::Result<()> {
         self.query
-            .ok_or(crate::result::Error::Generic(
-                ".bind() has not been called on this query yet",
-            ))?
+            .ok_or(
+                crate::result::Error::Generic(
+                    ".bind() has not been called on this query yet",
+                ),
+            )?
             .execute(self.pool)
             .await
             .into_crate_result()?;

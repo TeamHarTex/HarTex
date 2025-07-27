@@ -24,14 +24,30 @@
 
 use hartex_discord_core::discord::{
     model::{
-        channel::message::{Embed, MessageFlags},
+        channel::message::{Component, Embed, MessageFlags},
         http::interaction::{InteractionResponse, InteractionResponseType},
     },
     util::builder::InteractionResponseDataBuilder,
 };
 
+/// Constructs a response with components
+#[must_use]
+pub fn component_response(
+    components: impl IntoIterator<Item = impl Into<Component>>,
+) -> InteractionResponse {
+    InteractionResponse {
+        kind: InteractionResponseType::ChannelMessageWithSource,
+        data: Some(
+            InteractionResponseDataBuilder::new()
+                .components(components.into_iter().map(Into::into))
+                .build(),
+        ),
+    }
+}
+
 /// Constructs an embed response.
 #[must_use]
+#[deprecated(since = "0.16.0", note = "embeds in responses are deprecated")]
 pub fn embed_response(embeds: Vec<Embed>) -> InteractionResponse {
     InteractionResponse {
         kind: InteractionResponseType::ChannelMessageWithSource,
@@ -39,7 +55,7 @@ pub fn embed_response(embeds: Vec<Embed>) -> InteractionResponse {
     }
 }
 
-/// Constructs an ephemeral text response, used for error display.
+/// Constructs an ephemeral text response, used for errors.
 #[must_use]
 pub fn ephemeral_error_response(message: impl Into<String>) -> InteractionResponse {
     InteractionResponse {
