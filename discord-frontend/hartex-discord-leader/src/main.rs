@@ -29,7 +29,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-use std::sync::Arc;
+use std::{env, sync::Arc};
 
 use hartex_discord_core::{
     discord::gateway::CloseFrame,
@@ -65,7 +65,10 @@ pub async fn main() -> miette::Result<()> {
 
     let (tx, rx) = watch::channel(false);
 
-    let client = GatewayClient::connect("http://[::1]:10001").await.unwrap();
+    hartex_tracing::trace!("connecting to gRPC server");
+    let client = GatewayClient::connect(env::var("GRPC_DOMAIN").expect("GRPC_DOMAIN is not set"))
+        .await
+        .into_diagnostic()?;
 
     hartex_tracing::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();

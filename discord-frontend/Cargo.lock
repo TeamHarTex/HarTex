@@ -1056,7 +1056,6 @@ dependencies = [
  "hartex_discord_commands_core",
  "hartex_discord_core",
  "hartex_discord_utils",
- "hartex_localization_core",
  "hartex_tracing",
  "http-body-util",
  "hyper",
@@ -1157,7 +1156,7 @@ dependencies = [
 name = "hartex_discord_grpc_protos"
 version = "0.15.0"
 dependencies = [
- "prost 0.14.1",
+ "prost",
  "tonic",
  "tonic-build",
 ]
@@ -1225,6 +1224,7 @@ dependencies = [
  "strip-ansi-escapes",
  "tokio-stream",
  "tonic",
+ "tonic-reflection",
  "tracing",
 ]
 
@@ -1748,7 +1748,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07033963ba89ebaf1584d767badaa2e8fcec21aedea6b8c0346d487d49c28667"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.53.2",
 ]
 
 [[package]]
@@ -2364,17 +2364,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2796faa41db3ec313a31f7624d9286acf277b52de526150b7e69f3debf891ee5"
 dependencies = [
  "bytes",
- "prost-derive 0.13.5",
-]
-
-[[package]]
-name = "prost"
-version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7231bd9b3d3d33c86b58adbac74b5ec0ad9f496b19d22801d773636feaa95f3d"
-dependencies = [
- "bytes",
- "prost-derive 0.14.1",
+ "prost-derive",
 ]
 
 [[package]]
@@ -2384,13 +2374,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be769465445e8c1474e9c5dac2018218498557af32d9ed057325ec9a41ae81bf"
 dependencies = [
  "heck",
- "itertools 0.12.1",
+ "itertools 0.14.0",
  "log",
  "multimap",
  "once_cell",
  "petgraph",
  "prettyplease",
- "prost 0.13.5",
+ "prost",
  "prost-types",
  "regex",
  "syn",
@@ -2404,20 +2394,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a56d757972c98b346a9b766e3f02746cde6dd1cd1d1d563472929fdd74bec4d"
 dependencies = [
  "anyhow",
- "itertools 0.12.1",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "prost-derive"
-version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9120690fafc389a67ba3803df527d0ec9cbbc9cc45e4cc20b332996dfb672425"
-dependencies = [
- "anyhow",
- "itertools 0.12.1",
+ "itertools 0.14.0",
  "proc-macro2",
  "quote",
  "syn",
@@ -2429,7 +2406,7 @@ version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52c2c1bf36ddb1a1c396b3601a3cec27c2462e45f07c386894ec3ccf5332bd16"
 dependencies = [
- "prost 0.13.5",
+ "prost",
 ]
 
 [[package]]
@@ -3627,7 +3604,7 @@ dependencies = [
  "hyper-util",
  "percent-encoding",
  "pin-project",
- "prost 0.13.5",
+ "prost",
  "socket2 0.5.10",
  "tokio",
  "tokio-stream",
@@ -3649,6 +3626,19 @@ dependencies = [
  "prost-types",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "tonic-reflection"
+version = "0.13.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9687bd5bfeafebdded2356950f278bba8226f0b32109537c4253406e09aafe1"
+dependencies = [
+ "prost",
+ "prost-types",
+ "tokio",
+ "tokio-stream",
+ "tonic",
 ]
 
 [[package]]
@@ -3750,7 +3740,7 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 [[package]]
 name = "twilight-cache-inmemory"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "bitflags",
  "dashmap",
@@ -3761,7 +3751,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "bitflags",
  "fastrand",
@@ -3781,7 +3771,7 @@ dependencies = [
 [[package]]
 name = "twilight-gateway-queue"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "tokio",
  "tracing",
@@ -3790,7 +3780,7 @@ dependencies = [
 [[package]]
 name = "twilight-http"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "brotli-decompressor",
  "fastrand",
@@ -3813,7 +3803,7 @@ dependencies = [
 [[package]]
 name = "twilight-http-ratelimiting"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "tokio",
  "tracing",
@@ -3822,7 +3812,7 @@ dependencies = [
 [[package]]
 name = "twilight-mention"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "twilight-model",
 ]
@@ -3830,7 +3820,7 @@ dependencies = [
 [[package]]
 name = "twilight-model"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "bitflags",
  "serde",
@@ -3842,7 +3832,7 @@ dependencies = [
 [[package]]
 name = "twilight-util"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "twilight-model",
  "twilight-validate",
@@ -3851,7 +3841,7 @@ dependencies = [
 [[package]]
 name = "twilight-validate"
 version = "0.16.0"
-source = "git+https://github.com/TeamHarTex/twilight.git?branch=next#6823bb3d9dd4b1c48cb0113511e9359626a917e1"
+source = "git+https://github.com/twilight-rs/twilight.git?branch=erk%2Fuikit#4ecd2adb8cb6f5abcdae0a403c04062053a71834"
 dependencies = [
  "twilight-model",
 ]
@@ -4236,7 +4226,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
