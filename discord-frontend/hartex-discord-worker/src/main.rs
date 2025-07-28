@@ -31,6 +31,8 @@
 #![feature(deref_patterns)]
 #![feature(map_try_insert)]
 
+use std::env;
+
 use hartex_discord_core::{discord::cache::DefaultInMemoryCache, dotenvy, tokio, tokio::signal};
 use hartex_discord_grpc_protos::gateway::{
     GATEWAY_GRPC_FILE_DESCRIPTOR_SET, gateway_server::GatewayServer,
@@ -68,7 +70,10 @@ pub async fn main() -> miette::Result<()> {
         .build_v1()
         .into_diagnostic()?;
 
-    let addr = "127.0.0.1:6553".parse().unwrap();
+    let addr = env::var("GRPC_DOMAIN")
+        .expect("GRPC_DOMAIN is not set")
+        .parse()
+        .unwrap();
     hartex_tracing::trace!("starting gRPC server, listing on {addr}");
     let service = GatewayServer::new(GatewayWorkerServer::new(cache));
     Server::builder()
