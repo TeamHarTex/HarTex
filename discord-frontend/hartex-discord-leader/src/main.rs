@@ -66,9 +66,9 @@ pub async fn main() -> miette::Result<()> {
     let (tx, rx) = watch::channel(false);
 
     hartex_tracing::trace!("connecting to gRPC server");
-    let client = GatewayClient::connect("http://[::1]:6553")
+    let client = GatewayClient::connect("http://127.0.0.1:6553")
         .await
-        .unwrap();
+        .into_diagnostic()?;
 
     hartex_tracing::trace!("launching {shards.len()} shard(s)");
     let mut set = JoinSet::new();
