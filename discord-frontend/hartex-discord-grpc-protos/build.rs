@@ -20,9 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::{env, path::PathBuf};
+
 pub fn main() {
+    let outdir = PathBuf::from(env::var("OUT_DIR").unwrap());
+
     tonic_build::configure()
         .bytes(["chunk_data"])
+        .file_descriptor_set_path(outdir.join("grpc-descriptor.bin"))
         .compile_protos(&["protos/gateway.proto"], &["protos"])
         .unwrap();
 }

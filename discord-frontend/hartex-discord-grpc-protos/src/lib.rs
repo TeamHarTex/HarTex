@@ -24,4 +24,7 @@
 /// Gateway GRPC protocol.
 pub mod gateway {
     tonic::include_proto!("dev.teamhartex.hartex.grpc.gateway");
+
+    pub const GATEWAY_GRPC_FILE_DESCRIPTOR_SET: &[u8] =
+        tonic::include_file_descriptor_set!("grpc-descriptor");
 }
