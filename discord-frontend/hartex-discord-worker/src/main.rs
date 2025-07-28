@@ -31,11 +31,16 @@
 #![feature(deref_patterns)]
 #![feature(map_try_insert)]
 
+use std::env;
+
 use hartex_discord_core::{discord::cache::DefaultInMemoryCache, dotenvy, tokio, tokio::signal};
-use hartex_discord_grpc_protos::gateway::gateway_server::GatewayServer;
+use hartex_discord_grpc_protos::gateway::{
+    GATEWAY_GRPC_FILE_DESCRIPTOR_SET, gateway_server::GatewayServer,
+};
 use miette::IntoDiagnostic;
 use mimalloc::MiMalloc;
 use tonic::transport::Server;
+use tonic_reflection::server::Builder;
 
 use crate::grpc::GatewayWorkerServer;
 
@@ -56,12 +61,25 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::trace!("loading environment variables");
     dotenvy::dotenv().into_diagnostic()?;
 
+    hartex_tracing::trace!("initializing cache");
     let cache = DefaultInMemoryCache::new();
 
+    let reflect = Builder::configure()
+        .include_reflection_service(false)
+        .register_encoded_file_descriptor_set(GATEWAY_GRPC_FILE_DESCRIPTOR_SET)
+        .build_v1()
+        .into_diagnostic()?;
+
+    let addr = env::var("GRPC_DOMAIN")
+        .expect("GRPC_DOMAIN is not set")
+        .parse()
+        .unwrap();
+    hartex_tracing::trace!("starting gRPC server, listing on {addr}");
     let service = GatewayServer::new(GatewayWorkerServer::new(cache));
     Server::builder()
         .add_service(service)
-        .serve("[::1]:10001".parse().unwrap())
+        .add_service(reflect)
+        .serve(addr)
         .await
         .into_diagnostic()?;
 

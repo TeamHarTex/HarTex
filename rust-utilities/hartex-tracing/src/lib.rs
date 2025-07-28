@@ -42,6 +42,10 @@ pub fn subscriber() -> impl Subscriber {
         .with_line_number(true);
     let targets_layer = Targets::new()
         .with_default(LevelFilter::TRACE)
+        .with_target("h2::codec::framed_write", LevelFilter::OFF)
+        .with_target("h2::frame::reset", LevelFilter::OFF)
+        .with_target("h2::proto::streams::counts", LevelFilter::OFF)
+        .with_target("h2::proto::streams::prioritize", LevelFilter::OFF)
         .with_target("hyper_util::client::legacy::client", LevelFilter::OFF)
         .with_target(
             "hyper_util::client::legacy::connect::http",
