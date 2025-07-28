@@ -68,7 +68,7 @@ pub async fn main() -> miette::Result<()> {
         .build_v1()
         .into_diagnostic()?;
 
-    let addr = "[::1]:6553".parse().unwrap();
+    let addr = "127.0.0.1:6553".parse().unwrap();
     hartex_tracing::trace!("starting gRPC server, listing on {addr}");
     let service = GatewayServer::new(GatewayWorkerServer::new(cache));
     Server::builder()
