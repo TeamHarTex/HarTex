@@ -10,6 +10,7 @@ rust-version = "1.90.0"
 
 [dependencies]
 tonic = "0.14.0"
+tonic-prost = "0.14.0"
 
 [build-dependencies]
 tonic-prost-build = "0.14.0"

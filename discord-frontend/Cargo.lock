@@ -1157,6 +1157,7 @@ name = "hartex_discord_grpc_protos"
 version = "0.15.0"
 dependencies = [
  "tonic",
+ "tonic-prost",
  "tonic-prost-build",
 ]
 
