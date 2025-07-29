@@ -72,16 +72,16 @@ impl Command for About {
 
         let section = SectionBuilder::new(thumbnail)
             .component(title)
+            .build();
+
+        let container = ContainerBuilder::new()
+            .accent_color(Some(0x41_A0_DE))
+            .component(section)
             .component(SeparatorBuilder::new().build())
             .component(description)
             .component(github_repo)
             .component(SeparatorBuilder::new().build())
             .component(footer)
-            .build();
-
-        let container = ContainerBuilder::new()
-            .accent_color(0x41_A0_DE)
-            .component(section)
             .id(1)
             .spoiler(false)
             .build();

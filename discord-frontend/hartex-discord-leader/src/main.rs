@@ -66,7 +66,8 @@ pub async fn main() -> miette::Result<()> {
     let (tx, rx) = watch::channel(false);
 
     hartex_tracing::trace!("connecting to gRPC server");
-    let client = GatewayClient::connect(env::var("GRPC_DOMAIN").expect("GRPC_DOMAIN is not set"))
+    let domain = env::var("GRPC_DOMAIN").expect("GRPC_DOMAIN is not set");
+    let client = GatewayClient::connect(format!("http://{domain}"))
         .await
         .into_diagnostic()?;
 
