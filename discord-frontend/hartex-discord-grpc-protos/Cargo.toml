@@ -9,11 +9,12 @@ license = "AGPL-3.0-or-later"
 rust-version = "1.90.0"
 
 [dependencies]
-tonic = "0.13.1"
-prost = "0.13.5"
+prost = "0.14.1"
+tonic = "0.14.0"
+tonic-prost = "0.14.0"
 
 [build-dependencies]
-tonic-build = "0.13.1"
+tonic-prost-build = "0.14.0"
 
 [features]
 gateway = []
