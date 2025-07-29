@@ -71,8 +71,7 @@ where
         let mut shard = cloned.lock().await;
         while let Some(result) = shard.next().await {
             let shard_id = shard.id().number();
-            let session = shard.session().unwrap();
-            let event_seq = session.sequence();
+            let event_seq = shard.session().map(|sess| sess.sequence()).unwrap_or(0);
 
             match result {
                 Ok(message) => {
