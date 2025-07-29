@@ -24,8 +24,6 @@
 #[cfg(feature = "gateway")]
 /// Gateway GRPC protocol.
 pub mod gateway {
-    use tonic_prost::prost;
-
     tonic::include_proto!("dev.teamhartex.hartex.grpc.gateway");
 
     pub const GATEWAY_GRPC_FILE_DESCRIPTOR_SET: &[u8] =
