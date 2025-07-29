@@ -1158,6 +1158,7 @@ version = "0.15.0"
 dependencies = [
  "prost",
  "tonic",
+ "tonic-prost",
  "tonic-prost-build",
 ]
 
