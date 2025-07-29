@@ -20,7 +20,6 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 #[cfg(feature = "gateway")]
 /// Gateway GRPC protocol.
 pub mod gateway {

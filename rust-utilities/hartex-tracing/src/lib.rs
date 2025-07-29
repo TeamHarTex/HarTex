@@ -42,16 +42,42 @@ pub fn subscriber() -> impl Subscriber {
         .with_line_number(true);
     let targets_layer = Targets::new()
         .with_default(LevelFilter::TRACE)
+        .with_target("h2::client", LevelFilter::OFF)
+        .with_target("h2::codec::framed_read", LevelFilter::OFF)
         .with_target("h2::codec::framed_write", LevelFilter::OFF)
+        .with_target("h2::frame::headers", LevelFilter::OFF)
         .with_target("h2::frame::reset", LevelFilter::OFF)
+        .with_target("h2::frame::settings", LevelFilter::OFF)
+        .with_target("h2::frame::window_update", LevelFilter::OFF)
+        .with_target("h2::hpack::decoder", LevelFilter::OFF)
+        .with_target("h2::proto::connection", LevelFilter::OFF)
+        .with_target("h2::proto::settings", LevelFilter::OFF)
         .with_target("h2::proto::streams::counts", LevelFilter::OFF)
+        .with_target("h2::proto::streams::flow_control", LevelFilter::OFF)
         .with_target("h2::proto::streams::prioritize", LevelFilter::OFF)
+        .with_target("h2::proto::streams::recv", LevelFilter::OFF)
+        .with_target("h2::proto::streams::send", LevelFilter::OFF)
+        .with_target("h2::proto::streams::state", LevelFilter::OFF)
+        .with_target("h2::proto::streams::store", LevelFilter::OFF)
+        .with_target("h2::proto::streams::stream", LevelFilter::OFF)
+        .with_target("h2::proto::streams::streams", LevelFilter::OFF)
+        .with_target("h2::server", LevelFilter::OFF)
         .with_target("hyper_util::client::legacy::client", LevelFilter::OFF)
         .with_target(
             "hyper_util::client::legacy::connect::http",
             LevelFilter::OFF,
         )
         .with_target("hyper_util::client::legacy::pool", LevelFilter::OFF)
+        .with_target(
+            "tonic::transport::channel::service::connection",
+            LevelFilter::OFF,
+        )
+        .with_target(
+            "tonic::transport::channel::service::reconnect",
+            LevelFilter::OFF,
+        )
+        .with_target("tower::buffer::service", LevelFilter::OFF)
+        .with_target("tower::buffer::worker", LevelFilter::OFF)
         .with_target("tower_http", LevelFilter::TRACE)
         .with_target("twilight_gateway::shard", LevelFilter::OFF)
         .with_target("twilight_http::client", LevelFilter::OFF);
