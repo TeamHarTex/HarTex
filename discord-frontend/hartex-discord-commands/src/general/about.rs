@@ -28,7 +28,7 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::{command, context::CommandContext, traits::Command};
 use hartex_discord_core::discord::{
-    model::channel::message::component::UnfurledMediaItem,
+    model::channel::message::component::{SeparatorSpacingSize, UnfurledMediaItem},
     util::builder::message::{
         ContainerBuilder, SectionBuilder, SeparatorBuilder, TextDisplayBuilder, ThumbnailBuilder,
     },
@@ -70,17 +70,23 @@ impl Command for About {
 
         let footer = TextDisplayBuilder::new(format!("-# {about_embed_footer}")).build();
 
-        let section = SectionBuilder::new(thumbnail)
-            .component(title)
-            .build();
+        let section = SectionBuilder::new(thumbnail).component(title).build();
 
         let container = ContainerBuilder::new()
             .accent_color(Some(0x41_A0_DE))
             .component(section)
-            .component(SeparatorBuilder::new().build())
+            .component(
+                SeparatorBuilder::new()
+                    .spacing(SeparatorSpacingSize::Small)
+                    .build(),
+            )
             .component(description)
             .component(github_repo)
-            .component(SeparatorBuilder::new().build())
+            .component(
+                SeparatorBuilder::new()
+                    .spacing(SeparatorSpacingSize::Small)
+                    .build(),
+            )
             .component(footer)
             .id(1)
             .spoiler(false)
