@@ -25,7 +25,7 @@ use std::sync::Arc;
 use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::{
-    discord::gateway::{Message as GatewayMessage, Shard, queue::Queue},
+    discord::gateway::{Message as GatewayMessage, Session, Shard, queue::Queue},
     tokio,
     tokio::sync::{Mutex, mpsc, mpsc::error::SendError},
 };
@@ -71,7 +71,7 @@ where
         let mut shard = cloned.lock().await;
         while let Some(result) = shard.next().await {
             let shard_id = shard.id().number();
-            let event_seq = shard.session().map(|sess| sess.sequence()).unwrap_or(0);
+            let event_seq = shard.session().map_or(0, Session::sequence);
 
             match result {
                 Ok(message) => {
