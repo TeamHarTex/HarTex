@@ -17,6 +17,7 @@
 ## Database Infrastructure
 
 - **Removed:** removed `let_chains` feature flag due to stabilization
+- **Removed:** database cache tables have been removed as with the discord frontend
 
 ## Discord Frontend
 
@@ -26,10 +27,12 @@
 - **Changed:** `mimalloc` allocator is now used, replacing system allocator
 - **Removed:** database-based `hartex-discord-entitycache-*` removed
 - **Removed:** removed `let_chains` feature flag due to stabilization
+- **Removed:** Kafka-based interprocess communication has been removed
 
 ## Localization Infrastructure
 
 ## Rust Utilities
+- **Removed:** Kafka utilities crate has been removed
 
 ## Web Frontend
 
