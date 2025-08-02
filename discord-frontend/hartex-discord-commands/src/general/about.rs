@@ -28,7 +28,7 @@
 use async_trait::async_trait;
 use hartex_discord_commands_core::{command, context::CommandContext, traits::Command};
 use hartex_discord_core::discord::{
-    model::channel::message::component::UnfurledMediaItem,
+    model::channel::message::component::{SeparatorSpacingSize, UnfurledMediaItem},
     util::builder::message::{
         ContainerBuilder, SectionBuilder, SeparatorBuilder, TextDisplayBuilder, ThumbnailBuilder,
     },
@@ -54,7 +54,7 @@ impl Command for About {
             .general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
 
         let thumbnail = ThumbnailBuilder::new(UnfurledMediaItem {
-            url: "https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png".into(),
+            url: "https://cdn.discordapp.com/avatars/936432439767740436/fe242059e8161e66722dab68bc30532b.png".into(),
             proxy_url: None,
             height: None,
             width: None,
@@ -64,41 +64,32 @@ impl Command for About {
         let title = TextDisplayBuilder::new(format!("# {about_embed_title}")).build();
         let description = TextDisplayBuilder::new(about_embed_description).build();
         let github_repo = TextDisplayBuilder::new(format!(
-            "{about_embed_github_repo_field_name}: https://github.com/TeamHarTex/HarTex"
+            "{about_embed_github_repo_field_name} https://github.com/TeamHarTex/HarTex"
         ))
         .build();
 
         let footer = TextDisplayBuilder::new(format!("-# {about_embed_footer}")).build();
 
-        let section = SectionBuilder::new(thumbnail)
-            .component(title)
-            .build();
+        let section = SectionBuilder::new(thumbnail).component(title).build();
 
         let container = ContainerBuilder::new()
             .accent_color(Some(0x41_A0_DE))
             .component(section)
-            .component(SeparatorBuilder::new().build())
+            .component(
+                SeparatorBuilder::new()
+                    .spacing(SeparatorSpacingSize::Small)
+                    .build(),
+            )
             .component(description)
             .component(github_repo)
-            .component(SeparatorBuilder::new().build())
+            .component(
+                SeparatorBuilder::new()
+                    .spacing(SeparatorSpacingSize::Small)
+                    .build(),
+            )
             .component(footer)
-            .id(1)
             .spoiler(false)
             .build();
-
-        // let embed = EmbedBuilder::new()
-        //     .author(
-        //         EmbedAuthorBuilder::new(about_embed_title)
-        //             .icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png").into_diagnostic()?)
-        //             .build()
-        //     )
-        //     .color(0x41_A0_DE)
-        //     .description(about_embed_description)
-        //     .field(EmbedFieldBuilder::new(about_embed_github_repo_field_name, "https://github.com/TeamHarTex/HarTex").build())
-        //     .footer(EmbedFooterBuilder::new(about_embed_footer).build())
-        //     .validate()
-        //     .into_diagnostic()?
-        //     .build();
 
         context
             .create_response(component_response(vec![container]))
