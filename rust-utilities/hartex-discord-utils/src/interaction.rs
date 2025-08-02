@@ -40,6 +40,7 @@ pub fn component_response(
         data: Some(
             InteractionResponseDataBuilder::new()
                 .components(components.into_iter().map(Into::into))
+                .flags(MessageFlags::IS_COMPONENTS_V2)
                 .build(),
         ),
     }
