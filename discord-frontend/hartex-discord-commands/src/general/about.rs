@@ -54,7 +54,7 @@ impl Command for About {
             .general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
 
         let thumbnail = ThumbnailBuilder::new(UnfurledMediaItem {
-            url: "https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png".into(),
+            url: "https://cdn.discordapp.com/avatars/936432439767740436/fe242059e8161e66722dab68bc30532b.png".into(),
             proxy_url: None,
             height: None,
             width: None,
@@ -64,7 +64,7 @@ impl Command for About {
         let title = TextDisplayBuilder::new(format!("# {about_embed_title}")).build();
         let description = TextDisplayBuilder::new(about_embed_description).build();
         let github_repo = TextDisplayBuilder::new(format!(
-            "{about_embed_github_repo_field_name}: https://github.com/TeamHarTex/HarTex"
+            "{about_embed_github_repo_field_name} https://github.com/TeamHarTex/HarTex"
         ))
         .build();
 
@@ -88,23 +88,8 @@ impl Command for About {
                     .build(),
             )
             .component(footer)
-            .id(1)
             .spoiler(false)
             .build();
-
-        // let embed = EmbedBuilder::new()
-        //     .author(
-        //         EmbedAuthorBuilder::new(about_embed_title)
-        //             .icon_url(ImageSource::url("https://cdn.discordapp.com/avatars/936431574310879332/9a46b39c031ca84e8351ee97867afc96.png").into_diagnostic()?)
-        //             .build()
-        //     )
-        //     .color(0x41_A0_DE)
-        //     .description(about_embed_description)
-        //     .field(EmbedFieldBuilder::new(about_embed_github_repo_field_name, "https://github.com/TeamHarTex/HarTex").build())
-        //     .footer(EmbedFooterBuilder::new(about_embed_footer).build())
-        //     .validate()
-        //     .into_diagnostic()?
-        //     .build();
 
         context
             .create_response(component_response(vec![container]))
