@@ -22,6 +22,8 @@
 
 //! # Utilities for Interaction Handling
 
+mod components;
+
 use hartex_discord_core::discord::{
     model::{
         channel::message::{Component, Embed, MessageFlags},

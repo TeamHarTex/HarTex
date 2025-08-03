@@ -29,9 +29,9 @@ use hartex_discord_commands_core::{command, context::CommandContext, traits::Com
 use hartex_discord_core::discord::util::builder::embed::{
     EmbedAuthorBuilder, EmbedBuilder, EmbedFieldBuilder, EmbedFooterBuilder,
 };
-use hartex_discord_utils::interaction::embed_response;
+use hartex_discord_utils::interaction::component_response;
 use miette::IntoDiagnostic;
-
+use hartex_discord_core::discord::util::builder::message::{ContainerBuilder, TextDisplayBuilder};
 use crate::general::General;
 
 /// The `contributors` command declaration.
@@ -60,34 +60,41 @@ impl Command for Contributors {
             .localizer
             .general_plugin_contributors_embed_footer()?;
 
-        let embed = EmbedBuilder::new()
-            .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
-            .color(0x41_A0_DE)
-            .description(contributors_embed_description)
-            .field(
-                EmbedFieldBuilder::new(
-                    contributors_embed_global_admin_field_name,
-                    "htgazurex1212.",
-                )
-                .build(),
-            )
-            .field(
-                EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "arizlunari")
-                    .build(),
-            )
-            .field(
-                EmbedFieldBuilder::new(
-                    contributors_embed_translation_team_field_name,
-                    "madonuko (Locale: `ja`)\nteddyji (Locale: `zh-CN`)\nxzihnago (Locale: `zh-TW`)",
-                )
-                .build(),
-            )
-            .footer(EmbedFooterBuilder::new(contributors_embed_footer))
-            .validate()
-            .into_diagnostic()?
+        let title = TextDisplayBuilder::new(format!("# {contributors_embed_title}")).build();
+
+        let component = ContainerBuilder::new()
+            .accent_color(Some(0x41_A0_DE))
+            .component(title)
             .build();
 
-        context.create_response(embed_response(vec![embed])).await?;
+        // let embed = EmbedBuilder::new()
+        //     .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
+        //     .color(0x41_A0_DE)
+        //     .description(contributors_embed_description)
+        //     .field(
+        //         EmbedFieldBuilder::new(
+        //             contributors_embed_global_admin_field_name,
+        //             "htgazurex1212.",
+        //         )
+        //         .build(),
+        //     )
+        //     .field(
+        //         EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "arizlunari")
+        //             .build(),
+        //     )
+        //     .field(
+        //         EmbedFieldBuilder::new(
+        //             contributors_embed_translation_team_field_name,
+        //             "madonuko (Locale: `ja`)\nteddyji (Locale: `zh-CN`)\nxzihnago (Locale: `zh-TW`)",
+        //         )
+        //         .build(),
+        //     )
+        //     .footer(EmbedFooterBuilder::new(contributors_embed_footer))
+        //     .validate()
+        //     .into_diagnostic()?
+        //     .build();
+
+        context.create_response(component_response(vec![component])).await?;
 
         Ok(())
     }
