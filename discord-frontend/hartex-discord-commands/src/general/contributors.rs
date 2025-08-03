@@ -26,12 +26,12 @@
 
 use async_trait::async_trait;
 use hartex_discord_commands_core::{command, context::CommandContext, traits::Command};
-use hartex_discord_core::discord::util::builder::embed::{
-    EmbedAuthorBuilder, EmbedBuilder, EmbedFieldBuilder, EmbedFooterBuilder,
+use hartex_discord_core::discord::{
+    model::channel::message::component::SeparatorSpacingSize,
+    util::builder::message::{ContainerBuilder, SeparatorBuilder, TextDisplayBuilder},
 };
 use hartex_discord_utils::interaction::component_response;
-use miette::IntoDiagnostic;
-use hartex_discord_core::discord::util::builder::message::{ContainerBuilder, TextDisplayBuilder};
+
 use crate::general::General;
 
 /// The `contributors` command declaration.
@@ -60,41 +60,50 @@ impl Command for Contributors {
             .localizer
             .general_plugin_contributors_embed_footer()?;
 
-        let title = TextDisplayBuilder::new(format!("# {contributors_embed_title}")).build();
+        let title_desc = TextDisplayBuilder::new(format!(
+            "# {contributors_embed_title}\n{contributors_embed_description}"
+        ))
+        .build();
+
+        let glob_admin = TextDisplayBuilder::new(format!(
+            "## {contributors_embed_global_admin_field_name}\nhtgazurex1212."
+        ))
+        .build();
+
+        let front = TextDisplayBuilder::new(format!(
+            "## {contributors_embed_front_dev_field_name}\narizlunari"
+        ))
+        .build();
+
+        let translate = TextDisplayBuilder::new(format!(
+            "## {contributors_embed_translation_team_field_name}\nmadonuko (`ja`)\nteddyji (`zh-CN`)\nxzihnago (`zh-TW`)"
+        ))
+        .build();
+
+        let footer = TextDisplayBuilder::new(format!("-# {contributors_embed_footer}")).build();
 
         let component = ContainerBuilder::new()
             .accent_color(Some(0x41_A0_DE))
-            .component(title)
+            .component(title_desc)
+            .component(
+                SeparatorBuilder::new()
+                    .spacing(SeparatorSpacingSize::Small)
+                    .build(),
+            )
+            .component(glob_admin)
+            .component(front)
+            .component(translate)
+            .component(
+                SeparatorBuilder::new()
+                    .spacing(SeparatorSpacingSize::Small)
+                    .build(),
+            )
+            .component(footer)
             .build();
 
-        // let embed = EmbedBuilder::new()
-        //     .author(EmbedAuthorBuilder::new(contributors_embed_title).build())
-        //     .color(0x41_A0_DE)
-        //     .description(contributors_embed_description)
-        //     .field(
-        //         EmbedFieldBuilder::new(
-        //             contributors_embed_global_admin_field_name,
-        //             "htgazurex1212.",
-        //         )
-        //         .build(),
-        //     )
-        //     .field(
-        //         EmbedFieldBuilder::new(contributors_embed_front_dev_field_name, "arizlunari")
-        //             .build(),
-        //     )
-        //     .field(
-        //         EmbedFieldBuilder::new(
-        //             contributors_embed_translation_team_field_name,
-        //             "madonuko (Locale: `ja`)\nteddyji (Locale: `zh-CN`)\nxzihnago (Locale: `zh-TW`)",
-        //         )
-        //         .build(),
-        //     )
-        //     .footer(EmbedFooterBuilder::new(contributors_embed_footer))
-        //     .validate()
-        //     .into_diagnostic()?
-        //     .build();
-
-        context.create_response(component_response(vec![component])).await?;
+        context
+            .create_response(component_response(vec![component]))
+            .await?;
 
         Ok(())
     }

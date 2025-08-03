@@ -20,4 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[allow(dead_code)]
 pub trait ComponentBuilder {}
