@@ -30,6 +30,8 @@ use hartex_discord_core::discord::{
     util::builder::InteractionResponseDataBuilder,
 };
 
+mod components;
+
 /// Constructs a response with components
 #[must_use]
 pub fn component_response(
