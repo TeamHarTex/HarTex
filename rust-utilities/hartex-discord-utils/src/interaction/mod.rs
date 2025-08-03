@@ -22,8 +22,6 @@
 
 //! # Utilities for Interaction Handling
 
-mod components;
-
 use hartex_discord_core::discord::{
     model::{
         channel::message::{Component, Embed, MessageFlags},
@@ -31,6 +29,8 @@ use hartex_discord_core::discord::{
     },
     util::builder::InteractionResponseDataBuilder,
 };
+
+mod components;
 
 /// Constructs a response with components
 #[must_use]
