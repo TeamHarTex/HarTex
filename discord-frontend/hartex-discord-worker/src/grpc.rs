@@ -184,8 +184,14 @@ impl Gateway for GatewayWorkerServer {
                 let deserializer = GatewayEventDeserializer::from_json(string).unwrap();
                 let mut json = Deserializer::from_slice(&done);
 
-                let event = deserializer.deserialize(&mut json).unwrap();
-                crate::eventcallback::invoke(event, shard_id, cache.as_ref())
+                let result = deserializer.deserialize(&mut json);
+                if let Err(error) = &result {
+                    hartex_tracing::error!("failed to deserialize gateway event: {error}");
+                    hartex_tracing::error!("payload: {string}");
+                    continue;
+                }
+
+                crate::eventcallback::invoke(result.unwrap(), shard_id, cache.as_ref())
                     .await
                     .unwrap();
             }
