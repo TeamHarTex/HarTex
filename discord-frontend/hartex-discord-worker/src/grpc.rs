@@ -126,12 +126,14 @@ impl Gateway for GatewayWorkerServer {
         tokio::spawn(async move {
             while let Some(result) = stream.next().await {
                 let Ok(message) = result else {
-                    response_tx
+                    let Ok(_) = response_tx
                         .send(Err(Status::aborted(
                             "failed to retrieve message from payload",
                         )))
                         .await
-                        .unwrap();
+                    else {
+                        continue;
+                    };
 
                     continue;
                 };
@@ -141,12 +143,14 @@ impl Gateway for GatewayWorkerServer {
                     message.total_chunks,
                     message.shard_id,
                 ) {
-                    response_tx
+                    let Ok(_) = response_tx
                         .send(Err(Status::invalid_argument(
                             "inconsistent total_chunks for same event_seq",
                         )))
                         .await
-                        .unwrap();
+                    else {
+                        continue;
+                    };
 
                     continue;
                 }
@@ -159,13 +163,15 @@ impl Gateway for GatewayWorkerServer {
                     message.chunk_data,
                     &internal_tx,
                 ) {
-                    response_tx
+                    let Ok(_) = response_tx
                         .send(Err(Status::invalid_argument(format!(
                             "duplicate chunk {} in payload",
                             message.nth_chunk
                         ))))
                         .await
-                        .unwrap();
+                    else {
+                        continue;
+                    };
                 }
             }
         });
