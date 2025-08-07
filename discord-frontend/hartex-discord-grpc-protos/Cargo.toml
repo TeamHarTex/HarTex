@@ -6,7 +6,7 @@ description = """
 GRPC protobufs for HarTex
 """
 license = "AGPL-3.0-or-later"
-rust-version = "1.90.0"
+rust-version = "1.91.0"
 
 [dependencies]
 prost = "0.14.1"
