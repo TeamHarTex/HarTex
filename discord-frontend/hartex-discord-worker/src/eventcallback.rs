@@ -123,7 +123,7 @@ pub async fn invoke(
                             error
                                 .downcast_ref::<String>()
                                 .unwrap_or(&String::new())
-                                .to_string(),
+                                .clone(),
                         ),
                         interaction_create,
                         &interaction_client,
