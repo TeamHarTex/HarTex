@@ -14,7 +14,7 @@ rust-version = "1.91.0"
 convert_case = "0.8.0"
 itertools = "0.14.0"
 prettyplease = "0.2.36"
-proc-macro2 = "1.0.95"
+proc-macro2 = "1.0.96"
 quote = "1.0.40"
 sqlparser = { version = "0.58.0", features = ["visitor"] }
 syn = { version = "2.0.104", features = ["full", "parsing", "proc-macro"] }
