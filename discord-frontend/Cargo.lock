@@ -1049,6 +1049,7 @@ dependencies = [
 name = "hartex_discord_commands"
 version = "0.15.0"
 dependencies = [
+ "async-lazy",
  "async-trait",
  "hartex_backend_models",
  "hartex_database_queries",
