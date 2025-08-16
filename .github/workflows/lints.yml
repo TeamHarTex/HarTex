@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
@@ -37,6 +37,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run CodeSpell
         uses: codespell-project/actions-codespell@master
