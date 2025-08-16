@@ -32,6 +32,7 @@ hartex_discord_commands_core = { path = "../hartex-discord-commands-core", featu
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
+async-lazy = "0.1.2"
 async-trait = "0.1.88"
 http-body-util = "0.1.3"
 hyper = { version = "1.6.0", features = ["client", "http2"] }
