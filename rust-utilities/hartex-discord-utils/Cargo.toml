@@ -22,7 +22,8 @@ hartex_discord_core = { path = "../../discord-frontend/hartex-discord-core", fea
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
 
-async-lazy = { version = "0.1.2", features = ["nightly"] }
+hartex_async_lazy = { path = "../hartex-async-lazy" }
+
 log = "0.4.27"
 miette = "7.6.0"
 sqlx = { version = "0.8.6", features = [

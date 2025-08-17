@@ -998,6 +998,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_async_lazy"
+version = "0.15.0"
+dependencies = [
+ "tokio",
+]
+
+[[package]]
 name = "hartex_backend_models"
 version = "0.15.0"
 dependencies = [
@@ -1051,6 +1058,7 @@ version = "0.15.0"
 dependencies = [
  "async-lazy",
  "async-trait",
+ "hartex_async_lazy",
  "hartex_backend_models",
  "hartex_database_queries",
  "hartex_discord_cdn",
@@ -1188,7 +1196,7 @@ dependencies = [
 name = "hartex_discord_utils"
 version = "0.15.0"
 dependencies = [
- "async-lazy",
+ "hartex_async_lazy",
  "hartex_discord_core",
  "hartex_localization_core",
  "log",
