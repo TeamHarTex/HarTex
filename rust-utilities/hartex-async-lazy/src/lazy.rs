@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#![allow(clippy::items_after_statements)]
+
 use std::{
     cell::UnsafeCell,
     marker::PhantomData,
@@ -91,6 +93,7 @@ where
     R: Future<Output = Result<T, E>> + Unpin,
     F: Fn() -> R,
 {
+    #[allow(clippy::missing_panics_doc)]
     pub async fn force(&self) -> &T {
         if !self.initialized() {
             unsafe {
@@ -147,8 +150,7 @@ where
 
         let uninit_data = unsafe {
             let ptr = self.val.get();
-            let mutref = &mut (*ptr).uninitialized;
-            mutref
+            &mut (*ptr).uninitialized
         };
 
         let mut iod = InitializationOnDrop {
@@ -169,10 +171,10 @@ where
 
                     **uninit_data = LazyResultUninitializedData::Future(ManuallyDrop::new(fut));
 
-                    match &mut **uninit_data {
-                        LazyResultUninitializedData::Future(fut) => fut,
-                        _ => unreachable!(),
-                    }
+                    let LazyResultUninitializedData::Future(fut) = &mut **uninit_data else {
+                        unreachable!()
+                    };
+                    fut
                 }
                 LazyResultUninitializedData::Future(fut) => fut,
             };
