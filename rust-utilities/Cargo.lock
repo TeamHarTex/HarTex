@@ -48,15 +48,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
 
 [[package]]
-name = "async-lazy"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42b26d628201db54edfaa7e0f9848295b272610d97759a0ff61d6de7bb885b5f"
-dependencies = [
- "tokio",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.88"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -721,6 +712,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex_async_lazy"
+version = "0.15.0"
+dependencies = [
+ "tokio",
+]
+
+[[package]]
 name = "hartex_bitflags_utils"
 version = "0.15.0"
 dependencies = [
@@ -741,7 +739,7 @@ dependencies = [
 name = "hartex_discord_utils"
 version = "0.15.0"
 dependencies = [
- "async-lazy",
+ "hartex_async_lazy",
  "hartex_discord_core",
  "hartex_localization_core",
  "log",
