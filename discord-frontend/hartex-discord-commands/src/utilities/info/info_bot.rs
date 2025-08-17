@@ -26,7 +26,7 @@
 
 use std::{env, time::SystemTime};
 
-use async_lazy::Lazy;
+use hartex_async_lazy::LazyResult;
 use hartex_backend_models::{Response, uptime::UptimeResponse};
 use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::{
@@ -45,16 +45,16 @@ use hyper::{
     header::ACCEPT,
 };
 use hyper_util::rt::TokioIo;
-use miette::IntoDiagnostic;
+use miette::{IntoDiagnostic, Report};
 
 // TODO: this needs to be changed so initialization could be called again if previous calls fail
-static START_TIMESTAMP: Lazy<miette::Result<u128>> = Lazy::new(|| {
+static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
     Box::pin(async {
         let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
         let uri = hartex_tracing::format!(
             "http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly"
         );
-        let now = SystemTime::now();
+        // let now = SystemTime::now();
 
         let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
         let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
@@ -82,11 +82,11 @@ static START_TIMESTAMP: Lazy<miette::Result<u128>> = Lazy::new(|| {
 
         let data = response.data();
 
-        data
+        let data = data
             .left()
             .flatten()
-            .map(|resp| resp.start_timestamp())
-            .ok()
+            .ok_or(Report::msg("no data in response"))?;
+        Ok(data.start_timestamp())
     })
 });
 
@@ -103,9 +103,6 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
     START_TIMESTAMP.force().await;
 
     let timestamp = START_TIMESTAMP.get().unwrap();
-    let Ok(timestamp) = timestamp else {
-        return Ok(());
-    };
 
     let embed = EmbedBuilder::new()
         .color(0x41_A0_DE)
@@ -115,7 +112,7 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
         ))
         .field(EmbedFieldBuilder::new(
             botinfo_embed_latency_field_name,
-            timestamp.to_string().discord_inline_code(),  // TODO
+            timestamp.to_string().discord_inline_code(), // TODO
         ))
         .title(botinfo_embed_title)
         .validate()
