@@ -24,7 +24,7 @@
 //!
 //! This command returns latency and uptime information about the bot.
 
-use std::{env, time::SystemTime};
+use std::env;
 
 use hartex_async_lazy::LazyResult;
 use hartex_backend_models::{Response, uptime::UptimeResponse};
@@ -45,7 +45,7 @@ use hyper::{
     header::ACCEPT,
 };
 use hyper_util::rt::TokioIo;
-use miette::{IntoDiagnostic, Report};
+use miette::{IntoDiagnostic, Report, miette};
 
 // TODO: this needs to be changed so initialization could be called again if previous calls fail
 static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
@@ -85,7 +85,7 @@ static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
         let data = data
             .left()
             .flatten()
-            .ok_or(Report::msg("no data in response"))?;
+            .ok_or(miette!("no data in response"))?;
         Ok(data.start_timestamp())
     })
 });
