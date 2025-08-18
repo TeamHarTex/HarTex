@@ -94,9 +94,9 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
     let botinfo_embed_botstarted_field_name = context
         .localizer
         .utilities_plugin_botinfo_embed_botstarted_field_name()?;
-    // let botinfo_embed_latency_field_name = context
-    //     .localizer
-    //     .utilities_plugin_botinfo_embed_latency_field_name()?;
+    let botinfo_embed_latency_field_name = context
+        .localizer
+        .utilities_plugin_botinfo_embed_latency_field_name()?;
     let botinfo_embed_title = context.localizer.utilities_plugin_botinfo_embed_title()?;
 
     START_TIMESTAMP.force().await;
