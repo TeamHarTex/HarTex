@@ -150,11 +150,11 @@ pub async fn execute(
     let mut default_general_information = format!(
         "{} {}\n{} {}\n{} {}",
         serverinfo_embed_generalinfo_id_subfield_name,
-        guild.id().to_string().discord_inline_code(),
+        guild.id().to_string().inline_code(),
         serverinfo_embed_generalinfo_created_subfield_name,
         (guild.id().timestamp() / 1000)
             .to_string()
-            .discord_relative_timestamp(),
+            .relative_timestamp(),
         serverinfo_embed_generalinfo_owner_subfield_name,
         guild.owner_id().mention(),
     );

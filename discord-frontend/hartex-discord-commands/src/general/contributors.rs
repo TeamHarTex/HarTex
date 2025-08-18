@@ -30,7 +30,7 @@ use hartex_discord_core::discord::{
     model::channel::message::component::SeparatorSpacingSize,
     util::builder::message::{ContainerBuilder, SeparatorBuilder, TextDisplayBuilder},
 };
-use hartex_discord_utils::interaction::component_response;
+use hartex_discord_utils::{interaction::component_response, markdown::MarkdownStyle};
 
 use crate::general::General;
 
@@ -60,27 +60,27 @@ impl Command for Contributors {
             .localizer
             .general_plugin_contributors_embed_footer()?;
 
-        let title_desc = TextDisplayBuilder::new(format!(
-            "# {contributors_embed_title}\n{contributors_embed_description}"
+        let title_desc = TextDisplayBuilder::new(formati::format!(
+            "{contributors_embed_title.h1()}\n{contributors_embed_description}"
         ))
         .build();
 
         let glob_admin = TextDisplayBuilder::new(format!(
-            "## {contributors_embed_global_admin_field_name}\nhtgazurex1212."
+            "{contributors_embed_global_admin_field_name.h2()}\nhtgazurex1212."
         ))
         .build();
 
         let front = TextDisplayBuilder::new(format!(
-            "## {contributors_embed_front_dev_field_name}\narizlunari"
+            "{contributors_embed_front_dev_field_name.h2()}\narizlunari"
         ))
         .build();
 
         let translate = TextDisplayBuilder::new(format!(
-            "## {contributors_embed_translation_team_field_name}\nmadonuko (`ja`)\nteddyji (`zh-CN`)\nxzihnago (`zh-TW`)"
+            "{contributors_embed_translation_team_field_name.h1()}\nmadonuko (`ja`)\nteddyji (`zh-CN`)\nxzihnago (`zh-TW`)"
         ))
         .build();
 
-        let footer = TextDisplayBuilder::new(format!("-# {contributors_embed_footer}")).build();
+        let footer = TextDisplayBuilder::new(contributors_embed_footer.footnote()).build();
 
         let component = ContainerBuilder::new()
             .accent_color(Some(0x41_A0_DE))

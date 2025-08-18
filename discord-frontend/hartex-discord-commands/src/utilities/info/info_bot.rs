@@ -31,12 +31,11 @@ use hartex_backend_models::{Response, uptime::UptimeResponse};
 use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::{
     discord::{
-        model::application::interaction::application_command::CommandDataOption,
-        util::builder::embed::{EmbedBuilder, EmbedFieldBuilder},
+        model::application::interaction::application_command::CommandDataOption, util::builder::message::TextDisplayBuilder,
     },
     tokio::{net::TcpStream, task::spawn},
 };
-use hartex_discord_utils::{interaction::embed_response, markdown::MarkdownStyle};
+use hartex_discord_utils::{interaction::component_response, markdown::MarkdownStyle};
 use http_body_util::{BodyExt, Empty};
 use hyper::{
     Method, Request,
@@ -46,8 +45,8 @@ use hyper::{
 };
 use hyper_util::rt::TokioIo;
 use miette::{IntoDiagnostic, Report, miette};
+use hartex_discord_core::discord::util::builder::message::ContainerBuilder;
 
-// TODO: this needs to be changed so initialization could be called again if previous calls fail
 static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
     Box::pin(async {
         let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
@@ -95,31 +94,38 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
     let botinfo_embed_botstarted_field_name = context
         .localizer
         .utilities_plugin_botinfo_embed_botstarted_field_name()?;
-    let botinfo_embed_latency_field_name = context
-        .localizer
-        .utilities_plugin_botinfo_embed_latency_field_name()?;
+    // let botinfo_embed_latency_field_name = context
+    //     .localizer
+    //     .utilities_plugin_botinfo_embed_latency_field_name()?;
     let botinfo_embed_title = context.localizer.utilities_plugin_botinfo_embed_title()?;
 
     START_TIMESTAMP.force().await;
 
-    let timestamp = START_TIMESTAMP.get().unwrap();
+    // let timestamp = START_TIMESTAMP.get().unwrap();
 
-    let embed = EmbedBuilder::new()
-        .color(0x41_A0_DE)
-        .field(EmbedFieldBuilder::new(
-            botinfo_embed_botstarted_field_name,
-            timestamp.to_string().discord_relative_timestamp(),
-        ))
-        .field(EmbedFieldBuilder::new(
-            botinfo_embed_latency_field_name,
-            timestamp.to_string().discord_inline_code(), // TODO
-        ))
-        .title(botinfo_embed_title)
-        .validate()
-        .into_diagnostic()?
+    // let embed = EmbedBuilder::new()
+    //     .color(0x41_A0_DE)
+    //     .field(EmbedFieldBuilder::new(
+    //         botinfo_embed_botstarted_field_name,
+    //         timestamp.to_string().discord_relative_timestamp(),
+    //     ))
+    //     .field(EmbedFieldBuilder::new(
+    //         botinfo_embed_latency_field_name,
+    //         timestamp.to_string().discord_inline_code(), // TODO
+    //     ))
+    //     .title(botinfo_embed_title)
+    //     .validate()
+    //     .into_diagnostic()?
+    //     .build();
+
+    let title = TextDisplayBuilder::new(botinfo_embed_title.h1()).build();
+
+    let container = ContainerBuilder::new()
+        .accent_color(Some(0x41_A0_DE))
+        .component(title)
         .build();
 
-    context.create_response(embed_response(vec![embed])).await?;
+    context.create_response(component_response(vec![container])).await?;
 
     Ok(())
 }
