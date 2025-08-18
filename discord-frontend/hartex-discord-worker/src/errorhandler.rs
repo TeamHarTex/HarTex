@@ -76,7 +76,7 @@ pub async fn handle_interaction_error(
                     interaction_create.id,
                     &interaction_create.token,
                     &ephemeral_error_response(hartex_tracing::format!(
-                        "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
+                        "{error_line_one}\n\n{error_line_two} {hash.clone().inline_code()}"
                     )),
                 )
                 .await
@@ -87,11 +87,11 @@ pub async fn handle_interaction_error(
                 .title("Unexpected Error")
                 .field(EmbedFieldBuilder::new(
                     "Error Hash",
-                    hash.clone().discord_inline_code(),
+                    hash.clone().inline_code(),
                 ))
                 .field(EmbedFieldBuilder::new(
                     "Error",
-                    report.clone().discord_codeblock(),
+                    report.clone().codeblock(),
                 ))
                 .validate()
                 .unwrap()
@@ -121,7 +121,7 @@ pub async fn handle_interaction_error(
                     interaction_create.id,
                     &interaction_create.token,
                     &ephemeral_error_response(hartex_tracing::format!(
-                        "{error_line_one}\n\n{error_line_two} {hash.clone().discord_inline_code()}"
+                        "{error_line_one}\n\n{error_line_two} {hash.clone().inline_code()}"
                     )),
                 )
                 .await
@@ -132,11 +132,11 @@ pub async fn handle_interaction_error(
                 .title("Critical Error")
                 .field(EmbedFieldBuilder::new(
                     "Error Hash",
-                    hash.clone().discord_inline_code(),
+                    hash.clone().inline_code(),
                 ))
                 .field(EmbedFieldBuilder::new(
                     "Error",
-                    message.clone().discord_codeblock(),
+                    message.clone().codeblock(),
                 ))
                 .validate()
                 .unwrap()

@@ -33,7 +33,7 @@ use hartex_discord_core::discord::{
         ContainerBuilder, SectionBuilder, SeparatorBuilder, TextDisplayBuilder, ThumbnailBuilder,
     },
 };
-use hartex_discord_utils::interaction::component_response;
+use hartex_discord_utils::{interaction::component_response, markdown::MarkdownStyle};
 
 use crate::general::General;
 
@@ -61,14 +61,14 @@ impl Command for About {
             content_type: None,
         }).build();
 
-        let title = TextDisplayBuilder::new(format!("# {about_embed_title}")).build();
+        let title = TextDisplayBuilder::new(about_embed_title.h1()).build();
         let description = TextDisplayBuilder::new(about_embed_description).build();
         let github_repo = TextDisplayBuilder::new(format!(
             "{about_embed_github_repo_field_name} https://github.com/TeamHarTex/HarTex"
         ))
         .build();
 
-        let footer = TextDisplayBuilder::new(format!("-# {about_embed_footer}")).build();
+        let footer = TextDisplayBuilder::new(about_embed_footer.footnote()).build();
 
         let section = SectionBuilder::new(thumbnail).component(title).build();
 
