@@ -1058,6 +1058,7 @@ version = "0.15.0"
 dependencies = [
  "async-lazy",
  "async-trait",
+ "formati",
  "hartex_async_lazy",
  "hartex_backend_models",
  "hartex_database_queries",

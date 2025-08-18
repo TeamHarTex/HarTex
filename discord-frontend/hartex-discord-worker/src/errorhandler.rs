@@ -89,10 +89,7 @@ pub async fn handle_interaction_error(
                     "Error Hash",
                     hash.clone().inline_code(),
                 ))
-                .field(EmbedFieldBuilder::new(
-                    "Error",
-                    report.clone().codeblock(),
-                ))
+                .field(EmbedFieldBuilder::new("Error", report.clone().codeblock()))
                 .validate()
                 .unwrap()
                 .build();
@@ -134,10 +131,7 @@ pub async fn handle_interaction_error(
                     "Error Hash",
                     hash.clone().inline_code(),
                 ))
-                .field(EmbedFieldBuilder::new(
-                    "Error",
-                    message.clone().codeblock(),
-                ))
+                .field(EmbedFieldBuilder::new("Error", message.clone().codeblock()))
                 .validate()
                 .unwrap()
                 .build();

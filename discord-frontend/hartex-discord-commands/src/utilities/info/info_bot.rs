@@ -31,7 +31,8 @@ use hartex_backend_models::{Response, uptime::UptimeResponse};
 use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::{
     discord::{
-        model::application::interaction::application_command::CommandDataOption, util::builder::message::TextDisplayBuilder,
+        model::application::interaction::application_command::CommandDataOption,
+        util::builder::message::{ContainerBuilder, TextDisplayBuilder},
     },
     tokio::{net::TcpStream, task::spawn},
 };
@@ -45,7 +46,6 @@ use hyper::{
 };
 use hyper_util::rt::TokioIo;
 use miette::{IntoDiagnostic, Report, miette};
-use hartex_discord_core::discord::util::builder::message::ContainerBuilder;
 
 static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
     Box::pin(async {
@@ -94,9 +94,9 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
     let botinfo_embed_botstarted_field_name = context
         .localizer
         .utilities_plugin_botinfo_embed_botstarted_field_name()?;
-    let botinfo_embed_latency_field_name = context
-        .localizer
-        .utilities_plugin_botinfo_embed_latency_field_name()?;
+    // let botinfo_embed_latency_field_name = context
+    //     .localizer
+    //     .utilities_plugin_botinfo_embed_latency_field_name()?;
     let botinfo_embed_title = context.localizer.utilities_plugin_botinfo_embed_title()?;
 
     START_TIMESTAMP.force().await;
@@ -119,13 +119,19 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
     //     .build();
 
     let title = TextDisplayBuilder::new(botinfo_embed_title.h1()).build();
+    let bot_started = TextDisplayBuilder::new(formati::format!(
+        "{botinfo_embed_botstarted_field_name.h2()}\n{timestamp.to_string().relative_timestamp()}"
+    ));
 
     let container = ContainerBuilder::new()
         .accent_color(Some(0x41_A0_DE))
         .component(title)
+        .component(bot_started)
         .build();
 
-    context.create_response(component_response(vec![container])).await?;
+    context
+        .create_response(component_response(vec![container]))
+        .await?;
 
     Ok(())
 }
