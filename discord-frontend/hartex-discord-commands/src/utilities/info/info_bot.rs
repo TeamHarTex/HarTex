@@ -121,7 +121,8 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
     let title = TextDisplayBuilder::new(botinfo_embed_title.h1()).build();
     let bot_started = TextDisplayBuilder::new(formati::format!(
         "{botinfo_embed_botstarted_field_name.h2()}\n{timestamp.to_string().relative_timestamp()}"
-    ));
+    ))
+    .build();
 
     let container = ContainerBuilder::new()
         .accent_color(Some(0x41_A0_DE))
