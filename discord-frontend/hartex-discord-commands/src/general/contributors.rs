@@ -65,17 +65,17 @@ impl Command for Contributors {
         ))
         .build();
 
-        let glob_admin = TextDisplayBuilder::new(format!(
+        let glob_admin = TextDisplayBuilder::new(formati::format!(
             "{contributors_embed_global_admin_field_name.h2()}\nhtgazurex1212."
         ))
         .build();
 
-        let front = TextDisplayBuilder::new(format!(
+        let front = TextDisplayBuilder::new(formati::format!(
             "{contributors_embed_front_dev_field_name.h2()}\narizlunari"
         ))
         .build();
 
-        let translate = TextDisplayBuilder::new(format!(
+        let translate = TextDisplayBuilder::new(formati::format!(
             "{contributors_embed_translation_team_field_name.h1()}\nmadonuko (`ja`)\nteddyji (`zh-CN`)\nxzihnago (`zh-TW`)"
         ))
         .build();
