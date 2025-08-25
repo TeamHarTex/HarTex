@@ -92,7 +92,7 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}\n{} {}",
                 userinfo_embed_generalinfo_id_subfield_name,
-                user_id.to_string().discord_inline_code(),
+                user_id.to_string().inline_code(),
                 userinfo_embed_generalinfo_name_subfield_name,
                 user.global_name
                     .clone()
@@ -100,7 +100,7 @@ pub async fn execute(
                 userinfo_embed_generalinfo_created_subfield_name,
                 (user.id.timestamp() / 1000)
                     .to_string()
-                    .discord_relative_timestamp(),
+                    .relative_timestamp(),
             ),
         ));
 
@@ -125,7 +125,7 @@ pub async fn execute(
                         .map_or(String::from("unknown"), |timestamp| timestamp
                             .as_secs()
                             .to_string()
-                            .discord_relative_timestamp()),
+                            .relative_timestamp()),
                     userinfo_embed_serverpresence_roles_subfield_name,
                     member
                         .roles()

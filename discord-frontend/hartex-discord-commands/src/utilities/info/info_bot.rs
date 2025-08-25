@@ -24,18 +24,19 @@
 //!
 //! This command returns latency and uptime information about the bot.
 
-use std::{env, time::SystemTime};
+use std::env;
 
+use hartex_async_lazy::LazyResult;
 use hartex_backend_models::{Response, uptime::UptimeResponse};
 use hartex_discord_commands_core::context::CommandContext;
 use hartex_discord_core::{
     discord::{
         model::application::interaction::application_command::CommandDataOption,
-        util::builder::embed::{EmbedBuilder, EmbedFieldBuilder},
+        util::builder::message::{ContainerBuilder, TextDisplayBuilder},
     },
     tokio::{net::TcpStream, task::spawn},
 };
-use hartex_discord_utils::{interaction::embed_response, markdown::MarkdownStyle};
+use hartex_discord_utils::{interaction::component_response, markdown::MarkdownStyle};
 use http_body_util::{BodyExt, Empty};
 use hyper::{
     Method, Request,
@@ -44,75 +45,94 @@ use hyper::{
     header::ACCEPT,
 };
 use hyper_util::rt::TokioIo;
-use miette::{IntoDiagnostic, Report};
+use miette::{IntoDiagnostic, Report, miette};
+
+static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
+    Box::pin(async {
+        let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
+        let uri = hartex_tracing::format!(
+            "http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly"
+        );
+        // let now = SystemTime::now();
+
+        let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
+        let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
+
+        spawn(async move {
+            if let Err(err) = connection.await {
+                hartex_tracing::error!("TCP connection failed: {err:?}");
+            }
+        });
+
+        hartex_tracing::debug!("sending a request to {&uri}");
+
+        let request = Request::builder()
+            .uri(uri)
+            .method(Method::GET)
+            .header(ACCEPT, "application/json")
+            .body(Empty::<Bytes>::new())
+            .into_diagnostic()?;
+
+        let result = sender.send_request(request).await.into_diagnostic()?;
+        hartex_tracing::debug!("deserializing result");
+        let body = result.collect().await.into_diagnostic()?.aggregate();
+        let response: Response<UptimeResponse, String> =
+            serde_json::from_reader(body.reader()).into_diagnostic()?;
+
+        let data = response.data();
+
+        let data = data
+            .left()
+            .flatten()
+            .ok_or(miette!("no data in response"))?;
+        Ok(data.start_timestamp())
+    })
+});
 
 /// Executes the `info bot` command
 pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> miette::Result<()> {
-    // TODO: only call API once
-
-    let api_domain = env::var("API_DOMAIN").into_diagnostic()?;
-    let uri = hartex_tracing::format!(
-        "http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly"
-    );
-    let now = SystemTime::now();
-
-    let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
-    let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;
-
-    spawn(async move {
-        if let Err(err) = connection.await {
-            hartex_tracing::error!("TCP connection failed: {err:?}");
-        }
-    });
-
-    hartex_tracing::debug!("sending a request to {&uri}");
-
-    let request = Request::builder()
-        .uri(uri)
-        .method(Method::GET)
-        .header(ACCEPT, "application/json")
-        .body(Empty::<Bytes>::new())
-        .into_diagnostic()?;
-
-    let result = sender.send_request(request).await.into_diagnostic()?;
-    hartex_tracing::debug!("deserializing result");
-    let body = result.collect().await.into_diagnostic()?.aggregate();
-    let response: Response<UptimeResponse, String> =
-        serde_json::from_reader(body.reader()).into_diagnostic()?;
-
-    let latency = now.elapsed().into_diagnostic()?.as_millis();
-
-    let data = response.data();
-    let timestamp = data
-        .left()
-        .flatten()
-        .ok_or(Report::msg("failed to obtain uptime data"))?
-        .start_timestamp();
-
     let botinfo_embed_botstarted_field_name = context
         .localizer
         .utilities_plugin_botinfo_embed_botstarted_field_name()?;
-    let botinfo_embed_latency_field_name = context
-        .localizer
-        .utilities_plugin_botinfo_embed_latency_field_name()?;
+    // let botinfo_embed_latency_field_name = context
+    //     .localizer
+    //     .utilities_plugin_botinfo_embed_latency_field_name()?;
     let botinfo_embed_title = context.localizer.utilities_plugin_botinfo_embed_title()?;
 
-    let embed = EmbedBuilder::new()
-        .color(0x41_A0_DE)
-        .field(EmbedFieldBuilder::new(
-            botinfo_embed_botstarted_field_name,
-            timestamp.to_string().discord_relative_timestamp(),
-        ))
-        .field(EmbedFieldBuilder::new(
-            botinfo_embed_latency_field_name,
-            latency.to_string().discord_inline_code(),
-        ))
-        .title(botinfo_embed_title)
-        .validate()
-        .into_diagnostic()?
+    START_TIMESTAMP.force().await;
+
+    let timestamp = START_TIMESTAMP.get().unwrap();
+
+    // let embed = EmbedBuilder::new()
+    //     .color(0x41_A0_DE)
+    //     .field(EmbedFieldBuilder::new(
+    //         botinfo_embed_botstarted_field_name,
+    //         timestamp.to_string().discord_relative_timestamp(),
+    //     ))
+    //     .field(EmbedFieldBuilder::new(
+    //         botinfo_embed_latency_field_name,
+    //         timestamp.to_string().discord_inline_code(), // TODO
+    //     ))
+    //     .title(botinfo_embed_title)
+    //     .validate()
+    //     .into_diagnostic()?
+    //     .build();
+
+    let title = TextDisplayBuilder::new(botinfo_embed_title.h1()).build();
+    let bot_started = TextDisplayBuilder::new(formati::format!(
+        "{botinfo_embed_botstarted_field_name.h2()}\n{timestamp.to_string().relative_timestamp()}"
+    ))
+    .build();
+
+    let container = ContainerBuilder::new()
+        .accent_color(Some(0x41_A0_DE))
+        .component(title)
+        .component(bot_started)
         .build();
 
-    context.create_response(embed_response(vec![embed])).await?;
+    context
+        .create_response(component_response(vec![container]))
+        .await?;
 
     Ok(())
 }
