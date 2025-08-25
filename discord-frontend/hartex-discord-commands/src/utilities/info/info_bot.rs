@@ -101,7 +101,7 @@ pub async fn execute(context: &CommandContext<'_>, _: &CommandDataOption) -> mie
 
     START_TIMESTAMP.force().await;
 
-    // let timestamp = START_TIMESTAMP.get().unwrap();
+    let timestamp = START_TIMESTAMP.get().unwrap();
 
     // let embed = EmbedBuilder::new()
     //     .color(0x41_A0_DE)
