@@ -125,11 +125,11 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}\n{} {}\n{} {}\n{} {}",
                 emojiinfo_embed_generalinfo_id_subfield_name,
-                emoji.id().to_string().discord_inline_code(),
+                emoji.id().to_string().inline_code(),
                 emojiinfo_embed_generalinfo_name_subfield_name,
                 emoji.name(),
                 emojiinfo_embed_generalinfo_guild_id_subfield_name,
-                emoji.guild_id().to_string().discord_inline_code(),
+                emoji.guild_id().to_string().inline_code(),
                 emojiinfo_embed_generalinfo_animated_subfield_name,
                 emoji.animated().localize(langid_locale.clone())?,
                 emojiinfo_embed_generalinfo_managed_subfield_name,

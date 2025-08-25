@@ -99,11 +99,11 @@ pub async fn execute(
             format!(
                 "{} {}\n{} {}\n{} `#{:06X}`",
                 roleinfo_embed_generalinfo_id_subfield_name,
-                role.id.to_string().discord_inline_code(),
+                role.id.to_string().inline_code(),
                 roleinfo_embed_generalinfo_created_subfield_name,
                 (role.id.timestamp() / 1000)
                     .to_string()
-                    .discord_relative_timestamp(),
+                    .relative_timestamp(),
                 roleinfo_embed_generalinfo_color_subfield_name,
                 role.color,
             ),

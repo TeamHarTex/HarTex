@@ -46,6 +46,7 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-tracing/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-inmemory/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-grpc-protos/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-async-lazy/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />

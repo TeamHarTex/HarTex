@@ -22,64 +22,109 @@
 
 //! # Discord Markdown Utilities
 
+use std::fmt::Display;
+
 /// A trait for a DSL to add certain markdonw styles.
 #[allow(clippy::module_name_repetitions)]
 pub trait MarkdownStyle {
     /// Apply the bold style.
     #[must_use]
-    fn discord_bold(self) -> Self;
+    fn bold(self) -> String;
 
     /// Apply the codeblock style.
     #[must_use]
-    fn discord_codeblock(self) -> Self;
+    fn codeblock(self) -> String;
+
+    /// Apply the footnote style.
+    #[must_use]
+    fn footnote(self) -> String;
+
+    /// Apply the H1 style.
+    #[must_use]
+    fn h1(self) -> String;
+
+    /// Apply the H2 style.
+    #[must_use]
+    fn h2(self) -> String;
+
+    /// Apply the H3 style.
+    #[must_use]
+    fn h3(self) -> String;
 
     /// Apply the inline code style.
     #[must_use]
-    fn discord_inline_code(self) -> Self;
+    fn inline_code(self) -> String;
 
     /// Apply the italic style.
     #[must_use]
-    fn discord_italic(self) -> Self;
+    fn italic(self) -> String;
 
     /// Apply the relative timestamp style.
     #[must_use]
-    fn discord_relative_timestamp(self) -> Self;
+    fn relative_timestamp(self) -> String;
 
     /// Apply the underline style.
     #[must_use]
-    fn discord_underline(self) -> Self;
+    fn underline(self) -> String;
+
+    /// Apply the spoiler style.
+    #[must_use]
+    fn spoiler(self) -> String;
 
     /// Apply the strikethrough style.
     #[must_use]
-    fn discord_strikethrough(self) -> Self;
+    fn strikethrough(self) -> String;
 }
 
-impl MarkdownStyle for String {
-    fn discord_bold(self) -> Self {
+impl<T> MarkdownStyle for T
+where
+    T: Display,
+{
+    fn bold(self) -> String {
         format!("**{self}**")
     }
 
-    fn discord_codeblock(self) -> Self {
+    fn codeblock(self) -> String {
         format!("```{self}```")
     }
 
-    fn discord_inline_code(self) -> Self {
+    fn footnote(self) -> String {
+        format!("-# {self}")
+    }
+
+    fn h1(self) -> String {
+        format!("# {self}")
+    }
+
+    fn h2(self) -> String {
+        format!("## {self}")
+    }
+
+    fn h3(self) -> String {
+        format!("### {self}")
+    }
+
+    fn inline_code(self) -> String {
         format!("`{self}`")
     }
 
-    fn discord_italic(self) -> Self {
+    fn italic(self) -> String {
         format!("*{self}*")
     }
 
-    fn discord_relative_timestamp(self) -> Self {
+    fn relative_timestamp(self) -> String {
         format!("<t:{self}:R>")
     }
 
-    fn discord_underline(self) -> Self {
+    fn underline(self) -> String {
         format!("__{self}__")
     }
 
-    fn discord_strikethrough(self) -> Self {
+    fn spoiler(self) -> String {
+        format!("||{self}||")
+    }
+
+    fn strikethrough(self) -> String {
         format!("~~{self}~~")
     }
 }
