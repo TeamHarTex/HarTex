@@ -27,8 +27,8 @@ package dev.teamhartex.hartex.grpc.gateway;
 enum GatewayClientEventResponseStatus {
   // The event was handled successfully after all chunks were sent to the server.
   STATUS_HANDLED = 0;
-  // Acknowledges a chunk has been sent, continue sending next chunk.
-  STATUS_CHUNK_ACK_CONTINUE = 1;
+  // The server requests guild members.
+  STATUS_REQUEST_GUILD_MEMBERS = 1;
 }
 
 message GatewayClientEventMessage {
@@ -41,6 +41,8 @@ message GatewayClientEventMessage {
 
 message GatewayClientEventResponse {
   GatewayClientEventResponseStatus status = 1;
+  // an optional guild_id, only present then STATUS_REQUEST_GUILD_MEMBERS
+  optional string guild_id = 2;
 }
 
 service Gateway {
