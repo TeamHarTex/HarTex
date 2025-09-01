@@ -30,8 +30,7 @@ use hartex_discord_core::{
     tokio::sync::{Mutex, mpsc, mpsc::error::SendError},
 };
 use hartex_discord_grpc_protos::gateway::{
-    GatewayClientEventMessage, gateway_client::GatewayClient,
-    GatewayClientEventResponseStatus,
+    GatewayClientEventMessage, GatewayClientEventResponseStatus, gateway_client::GatewayClient,
 };
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
@@ -121,9 +120,17 @@ where
             continue;
         };
 
-        match response.status {
-            GatewayClientEventResponseStatus::StatusHandled => continue,
-            GatewayClientEventResponseStatus::StatusRequestGuildMembers => todo!(),
+        let Ok(status) = GatewayClientEventResponseStatus::try_from(response.status) else {
+            continue;
+        };
+
+        match status {
+            GatewayClientEventResponseStatus::StatusHandled => {
+                hartex_tracing::debug!("event handled")
+            }
+            GatewayClientEventResponseStatus::StatusRequestGuildMembers => hartex_tracing::debug!(
+                "guild members for guild {status.guild_id.unwrap()} requested"
+            ),
         }
     }
 
