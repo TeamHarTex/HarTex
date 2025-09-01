@@ -24,6 +24,7 @@ use std::sync::Arc;
 
 use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
+use miette::IntoDiagnostic;
 use hartex_discord_core::{
     discord::gateway::{Message as GatewayMessage, Session, Shard, queue::Queue},
     tokio,
@@ -113,7 +114,8 @@ where
     // send payload to worker process
     let mut resp = client
         .client_event_streaming(ReceiverStream::new(rx))
-        .await?
+        .await
+        .into_diagnostic()?
         .into_inner();
     while let Some(res) = resp.next().await {
         let Ok(response) = res else {
@@ -129,7 +131,7 @@ where
                 hartex_tracing::debug!("event handled")
             }
             GatewayClientEventResponseStatus::StatusRequestGuildMembers => hartex_tracing::debug!(
-                "guild members for guild {status.guild_id.unwrap()} requested"
+                "guild members for guild {response.guild_id.unwrap()} requested"
             ),
         }
     }
