@@ -31,6 +31,7 @@ use hartex_discord_core::{
 };
 use hartex_discord_grpc_protos::gateway::{
     GatewayClientEventMessage, gateway_client::GatewayClient,
+    GatewayClientEventResponseStatus,
 };
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
@@ -111,14 +112,26 @@ where
     });
 
     // send payload to worker process
-    let _ = client.client_event_streaming(ReceiverStream::new(rx)).await;
+    let mut resp = client
+        .client_event_streaming(ReceiverStream::new(rx))
+        .await?
+        .into_inner();
+    while let Some(res) = resp.next().await {
+        let Ok(response) = res else {
+            continue;
+        };
+
+        match response.status {
+            GatewayClientEventResponseStatus::StatusHandled => continue,
+            GatewayClientEventResponseStatus::StatusRequestGuildMembers => todo!(),
+        }
+    }
+
     Ok(())
 }
 
 /// Handle outbound traffic.
-async fn outbound<Q>(
-    _: Arc<Mutex<Shard<Q>>>,
-) -> miette::Result<()> {
+async fn outbound<Q>(_: Arc<Mutex<Shard<Q>>>) -> miette::Result<()> {
     // while let Some(result) = consumer.stream().next().await {
     //     let Ok(message) = result else {
     //         let error = result.unwrap_err();
