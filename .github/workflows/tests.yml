@@ -27,7 +27,7 @@ jobs:
         with:
           toolchain: nightly-2025-08-10
       - name: Install Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Install Protoc
@@ -51,7 +51,7 @@ jobs:
         with:
           toolchain: nightly-2025-08-10
       - name: Install Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Install Protoc
