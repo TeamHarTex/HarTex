@@ -128,7 +128,7 @@ where
 
         match status {
             GatewayClientEventResponseStatus::StatusHandled => {
-                hartex_tracing::debug!("event handled")
+                hartex_tracing::debug!("event handled");
             }
             GatewayClientEventResponseStatus::StatusRequestGuildMembers => hartex_tracing::debug!(
                 "guild members for guild {response.guild_id.unwrap()} requested"
