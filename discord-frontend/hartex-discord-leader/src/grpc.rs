@@ -48,7 +48,7 @@ where
 {
     tokio::select! {
         _ = inbound(shard.clone(), client) => {},
-        _ = outbound(shard) => {}
+        // _ = outbound(shard) => {}
     }
 
     Ok(())
@@ -139,32 +139,32 @@ where
     Ok(())
 }
 
-/// Handle outbound traffic.
+/*/// Handle outbound traffic.
 async fn outbound<Q>(_: Arc<Mutex<Shard<Q>>>) -> miette::Result<()> {
-    // while let Some(result) = consumer.stream().next().await {
-    //     let Ok(message) = result else {
-    //         let error = result.unwrap_err();
-    //         println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-    //
-    //         continue;
-    //     };
-    //
-    //     let key = str::from_utf8(message.key().unwrap()).unwrap();
-    //
-    //     if key.contains("REQUEST_GUILD_MEMBERS") {
-    //         let bytes = message.payload().unwrap();
-    //
-    //         let command = serde_json::from_slice::<RequestGuildMembers>(bytes).into_diagnostic()?;
-    //         let scanned: u32 =
-    //             scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
-    //
-    //         if shard_id != scanned {
-    //             continue;
-    //         }
-    //
-    //         sender.command(&command).into_diagnostic()?;
-    //     }
-    // }
+    while let Some(result) = consumer.stream().next().await {
+        let Ok(message) = result else {
+            let error = result.unwrap_err();
+            println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
 
-    Ok(())
-}
+            continue;
+        };
+
+        let key = str::from_utf8(message.key().unwrap()).unwrap();
+
+        if key.contains("REQUEST_GUILD_MEMBERS") {
+            let bytes = message.payload().unwrap();
+
+            let command = serde_json::from_slice::<RequestGuildMembers>(bytes).into_diagnostic()?;
+            let scanned: u32 =
+                scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
+
+            if shard_id != scanned {
+                continue;
+            }
+
+            sender.command(&command).into_diagnostic()?;
+        }
+    }
+
+    loop {}
+}*/
