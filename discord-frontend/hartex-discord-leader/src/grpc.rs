@@ -24,7 +24,6 @@ use std::sync::Arc;
 
 use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
-use miette::IntoDiagnostic;
 use hartex_discord_core::{
     discord::gateway::{Message as GatewayMessage, Session, Shard, queue::Queue},
     tokio,
@@ -33,6 +32,7 @@ use hartex_discord_core::{
 use hartex_discord_grpc_protos::gateway::{
     GatewayClientEventMessage, GatewayClientEventResponseStatus, gateway_client::GatewayClient,
 };
+use miette::IntoDiagnostic;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
 
@@ -111,7 +111,7 @@ where
         Ok::<(), SendError<GatewayClientEventMessage>>(())
     });
 
-    // send payload to worker process
+    // receive payload from worker process
     let mut resp = client
         .client_event_streaming(ReceiverStream::new(rx))
         .await
@@ -138,33 +138,3 @@ where
 
     Ok(())
 }
-
-/*/// Handle outbound traffic.
-async fn outbound<Q>(_: Arc<Mutex<Shard<Q>>>) -> miette::Result<()> {
-    while let Some(result) = consumer.stream().next().await {
-        let Ok(message) = result else {
-            let error = result.unwrap_err();
-            println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-
-            continue;
-        };
-
-        let key = str::from_utf8(message.key().unwrap()).unwrap();
-
-        if key.contains("REQUEST_GUILD_MEMBERS") {
-            let bytes = message.payload().unwrap();
-
-            let command = serde_json::from_slice::<RequestGuildMembers>(bytes).into_diagnostic()?;
-            let scanned: u32 =
-                scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
-
-            if shard_id != scanned {
-                continue;
-            }
-
-            sender.command(&command).into_diagnostic()?;
-        }
-    }
-
-    loop {}
-}*/
