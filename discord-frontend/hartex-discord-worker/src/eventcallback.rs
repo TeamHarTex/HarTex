@@ -36,7 +36,10 @@ use hartex_discord_core::{
         },
     },
     tokio,
-    tokio::net::TcpStream,
+    tokio::{net::TcpStream, sync::mpsc::Sender},
+};
+use hartex_discord_grpc_protos::gateway::{
+    GatewayClientEventResponse, GatewayClientEventResponseStatus,
 };
 use hartex_discord_utils::CLIENT;
 use hartex_localization_core::{LOCALIZATION_HOLDER, Localizer};
@@ -47,6 +50,7 @@ use hyper::{
 };
 use hyper_util::rt::TokioIo;
 use miette::IntoDiagnostic;
+use tonic::Status;
 
 use crate::errorhandler::ErrorPayload;
 
@@ -58,6 +62,7 @@ pub async fn invoke(
     event: GatewayEvent,
     shard: u64,
     cache: &DefaultInMemoryCache,
+    response_tx: &Sender<Result<GatewayClientEventResponse, Status>>,
 ) -> miette::Result<()> {
     let flattened_event = Event::from(event.clone());
     cache.update(&flattened_event);
@@ -65,36 +70,18 @@ pub async fn invoke(
     #[allow(clippy::collapsible_match)]
     match event {
         GatewayEvent::Dispatch(seq, dispatch) => match dispatch {
-            DispatchEvent::GuildCreate(deref!(GuildCreate::Available(ref _guild_create))) => {
+            DispatchEvent::GuildCreate(deref!(GuildCreate::Available(ref guild_create))) => {
                 hartex_tracing::trace!(
                     "shard {shard} has received GUILD_CREATE payload from Discord (sequence {seq})"
                 );
 
-                /*let request = RequestGuildMembers {
-                    d: RequestGuildMembersInfo {
-                        guild_id: guild_create.id,
-                        limit: Some(0),
-                        nonce: None,
-                        presences: Some(true),
-                        query: Some(String::new()),
-                        user_ids: None,
-                    },
-                    op: OpCode::RequestGuildMembers,
-                };
-                let string = serde_json::to_string(&request).into_diagnostic()?;
-                if let Err((error, _)) = producer
-                    .send(
-                        FutureRecord::to(&topic)
-                            .key(&format!("OUTBOUND_REQUEST_GUILD_MEMBERS_{shard}"))
-                            .payload(&string),
-                        Timeout::After(Duration::from_secs(0)),
-                    )
+                response_tx
+                    .send(Ok(GatewayClientEventResponse {
+                        status: GatewayClientEventResponseStatus::StatusRequestGuildMembers.into(),
+                        guild_id: Some(guild_create.id.to_string()),
+                    }))
                     .await
-                {
-                    println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-                }*/
-
-                Ok(())
+                    .into_diagnostic()
             }
             DispatchEvent::InteractionCreate(interaction_create)
                 if interaction_create.kind == InteractionType::ApplicationCommand =>

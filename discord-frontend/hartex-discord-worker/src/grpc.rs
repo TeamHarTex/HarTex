@@ -32,7 +32,8 @@ use hartex_discord_core::{
     tokio::sync::{mpsc, mpsc::Sender},
 };
 use hartex_discord_grpc_protos::gateway::{
-    GatewayClientEventMessage, GatewayClientEventResponse, gateway_server::Gateway,
+    GatewayClientEventMessage, GatewayClientEventResponse, GatewayClientEventResponseStatus,
+    gateway_server::Gateway,
 };
 use parking_lot::Mutex;
 use serde::de::DeserializeSeed;
@@ -197,9 +198,25 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 }
 
-                crate::eventcallback::invoke(result.unwrap(), shard_id, cache.as_ref())
-                    .await
-                    .unwrap();
+                if crate::eventcallback::invoke(
+                    result.unwrap(),
+                    shard_id,
+                    cache.as_ref(),
+                    &response_tx,
+                )
+                .await
+                .is_ok()
+                {
+                    let Ok(()) = response_tx
+                        .send(Ok(GatewayClientEventResponse {
+                            status: GatewayClientEventResponseStatus::StatusHandled.into(),
+                            guild_id: None,
+                        }))
+                        .await
+                    else {
+                        continue;
+                    };
+                }
             }
         });
 
