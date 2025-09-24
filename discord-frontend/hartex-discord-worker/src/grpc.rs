@@ -32,7 +32,8 @@ use hartex_discord_core::{
     tokio::sync::{mpsc, mpsc::Sender},
 };
 use hartex_discord_grpc_protos::gateway::{
-    GatewayClientEventMessage, GatewayClientEventResponse, gateway_server::Gateway,
+    GatewayClientEventMessage, GatewayClientEventResponse, GatewayClientEventResponseStatus,
+    gateway_server::Gateway,
 };
 use parking_lot::Mutex;
 use serde::de::DeserializeSeed;
@@ -123,10 +124,11 @@ impl Gateway for GatewayWorkerServer {
 
         let payloads = self.payloads.clone();
 
+        let cloned_response_tx = response_tx.clone();
         tokio::spawn(async move {
             while let Some(result) = stream.next().await {
                 let Ok(message) = result else {
-                    let Ok(()) = response_tx
+                    let Ok(()) = cloned_response_tx
                         .send(Err(Status::aborted(
                             "failed to retrieve message from payload",
                         )))
@@ -143,7 +145,7 @@ impl Gateway for GatewayWorkerServer {
                     message.total_chunks,
                     message.shard_id,
                 ) {
-                    let Ok(()) = response_tx
+                    let Ok(()) = cloned_response_tx
                         .send(Err(Status::invalid_argument(
                             "inconsistent total_chunks for same event_seq",
                         )))
@@ -163,7 +165,7 @@ impl Gateway for GatewayWorkerServer {
                     message.chunk_data,
                     &internal_tx,
                 ) {
-                    let Ok(()) = response_tx
+                    let Ok(()) = cloned_response_tx
                         .send(Err(Status::invalid_argument(format!(
                             "duplicate chunk {} in payload",
                             message.nth_chunk
@@ -197,9 +199,25 @@ impl Gateway for GatewayWorkerServer {
                     continue;
                 }
 
-                crate::eventcallback::invoke(result.unwrap(), shard_id, cache.as_ref())
-                    .await
-                    .unwrap();
+                if crate::eventcallback::invoke(
+                    result.unwrap(),
+                    shard_id,
+                    cache.as_ref(),
+                    &response_tx,
+                )
+                .await
+                .is_ok()
+                {
+                    let Ok(()) = response_tx
+                        .send(Ok(GatewayClientEventResponse {
+                            status: GatewayClientEventResponseStatus::StatusHandled.into(),
+                            guild_id: None,
+                        }))
+                        .await
+                    else {
+                        continue;
+                    };
+                }
             }
         });
 
