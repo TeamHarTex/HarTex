@@ -53,7 +53,6 @@ static START_TIMESTAMP: LazyResult<u128, Report> = LazyResult::new(|| {
         let uri = hartex_tracing::format!(
             "http://{api_domain.clone()}/api/v1/stats/uptime?component=HarTex%20Nightly"
         );
-        // let now = SystemTime::now();
 
         let stream = TcpStream::connect(api_domain).await.into_diagnostic()?;
         let (mut sender, connection) = handshake(TokioIo::new(stream)).await.into_diagnostic()?;

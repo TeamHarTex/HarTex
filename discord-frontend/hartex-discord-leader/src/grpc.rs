@@ -30,8 +30,9 @@ use hartex_discord_core::{
     tokio::sync::{Mutex, mpsc, mpsc::error::SendError},
 };
 use hartex_discord_grpc_protos::gateway::{
-    GatewayClientEventMessage, gateway_client::GatewayClient,
+    GatewayClientEventMessage, GatewayClientEventResponseStatus, gateway_client::GatewayClient,
 };
+use miette::IntoDiagnostic;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::transport::Channel;
 
@@ -45,10 +46,9 @@ pub async fn handle<Q>(
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    // let sender = shard.sender();
     tokio::select! {
-        _ = inbound(shard, client) => {},
-        // _ = outbound((shard_id, sender), consumer) => {}
+        _ = inbound(shard.clone(), client) => {},
+        // _ = outbound(shard) => {}
     }
 
     Ok(())
@@ -111,40 +111,30 @@ where
         Ok::<(), SendError<GatewayClientEventMessage>>(())
     });
 
-    // send payload to worker process
-    let _ = client.client_event_streaming(ReceiverStream::new(rx)).await;
-    Ok(())
-}
-
-/*/// Handle outbound traffic.
-async fn outbound(
-    (shard_id, sender): (u32, MessageSender),
-    consumer: Arc<StreamConsumer>,
-) -> miette::Result<()> {
-    while let Some(result) = consumer.stream().next().await {
-        let Ok(message) = result else {
-            let error = result.unwrap_err();
-            println!("{:?}", Err::<(), KafkaError>(error).into_diagnostic());
-
+    // receive payload from worker process
+    let mut resp = client
+        .client_event_streaming(ReceiverStream::new(rx))
+        .await
+        .into_diagnostic()?
+        .into_inner();
+    while let Some(res) = resp.next().await {
+        let Ok(response) = res else {
             continue;
         };
 
-        let key = str::from_utf8(message.key().unwrap()).unwrap();
+        let Ok(status) = GatewayClientEventResponseStatus::try_from(response.status) else {
+            continue;
+        };
 
-        if key.contains("REQUEST_GUILD_MEMBERS") {
-            let bytes = message.payload().unwrap();
-
-            let command = serde_json::from_slice::<RequestGuildMembers>(bytes).into_diagnostic()?;
-            let scanned: u32 =
-                scan!("OUTBOUND_REQUEST_GUILD_MEMBERS_{}" <- key).into_diagnostic()?;
-
-            if shard_id != scanned {
-                continue;
+        match status {
+            GatewayClientEventResponseStatus::StatusHandled => {
+                hartex_tracing::debug!("event handled");
             }
-
-            sender.command(&command).into_diagnostic()?;
+            GatewayClientEventResponseStatus::StatusRequestGuildMembers => hartex_tracing::debug!(
+                "guild members for guild {response.guild_id.unwrap()} requested"
+            ),
         }
     }
 
     Ok(())
-}*/
+}
