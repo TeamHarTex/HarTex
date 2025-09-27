@@ -20,12 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::Arc;
+use std::{str::FromStr, sync::Arc};
 
 use bytes::Bytes;
 use futures_util::StreamExt as FutureStreamExt;
 use hartex_discord_core::{
-    discord::gateway::{Message as GatewayMessage, Session, Shard, queue::Queue},
+    discord::{
+        gateway::{Message as GatewayMessage, Session, Shard, queue::Queue},
+        model::{
+            gateway::payload::outgoing::request_guild_members::RequestGuildMembersBuilder, id::Id,
+        },
+    },
     tokio,
     tokio::sync::{Mutex, mpsc, mpsc::error::SendError},
 };
@@ -122,17 +127,21 @@ where
             continue;
         };
 
-        let Ok(status) = GatewayClientEventResponseStatus::try_from(response.status) else {
-            continue;
-        };
-
-        match status {
+        match response.status() {
             GatewayClientEventResponseStatus::StatusHandled => {
                 hartex_tracing::debug!("event handled");
             }
-            GatewayClientEventResponseStatus::StatusRequestGuildMembers => hartex_tracing::debug!(
-                "guild members for guild {response.guild_id.unwrap()} requested"
-            ),
+            GatewayClientEventResponseStatus::StatusRequestGuildMembers => {
+                let guild_id = response.guild_id();
+
+                hartex_tracing::debug!("guild members for guild {guild_id} requested");
+
+                let command =
+                    RequestGuildMembersBuilder::new(Id::new(u64::from_str(guild_id).unwrap()))
+                        .query("", Some(1000));
+
+                shard.lock().await.command(&command);
+            }
         }
     }
 
