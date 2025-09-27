@@ -134,9 +134,7 @@ where
             GatewayClientEventResponseStatus::StatusRequestGuildMembers => {
                 let guild_id = response.guild_id();
 
-                hartex_tracing::debug!(
-                    "guild members for guild {response.guild_id.unwrap()} requested"
-                );
+                hartex_tracing::debug!("guild members for guild {guild_id} requested");
 
                 let command =
                     RequestGuildMembersBuilder::new(Id::new(u64::from_str(guild_id).unwrap()))
