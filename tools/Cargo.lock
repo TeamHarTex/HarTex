@@ -16,7 +16,7 @@ checksum = "2261d10cca569e4643e526d8dc2e62e433cc8aba21ab764233731f8d369bf394"
 
 [[package]]
 name = "bootstrap"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "clap",
  "fd-lock",
@@ -265,7 +265,7 @@ dependencies = [
 
 [[package]]
 name = "testsuite"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "clap",
  "console",
