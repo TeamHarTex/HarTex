@@ -32,7 +32,7 @@ use hartex_discord_core::{
         },
     },
     tokio,
-    tokio::sync::{Mutex, mpsc, mpsc::error::SendError},
+    tokio::sync::{Mutex, mpsc, mpsc::error::SendError, watch::Receiver},
 };
 use hartex_discord_grpc_protos::gateway::{
     GatewayClientEventMessage, GatewayClientEventResponseStatus, gateway_client::GatewayClient,
@@ -47,16 +47,12 @@ const CHUNK_SIZE: usize = 1024 * 1024;
 pub async fn handle<Q>(
     shard: Arc<Mutex<Shard<Q>>>,
     client: GatewayClient<Channel>,
+    terminator: Receiver<bool>,
 ) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
 {
-    tokio::select! {
-        _ = inbound(shard.clone(), client) => {},
-        // _ = outbound(shard) => {}
-    }
-
-    Ok(())
+    inbound(shard, client, terminator).await
 }
 
 /// Handle inbound traffic.
@@ -65,6 +61,7 @@ where
 async fn inbound<Q>(
     shard: Arc<Mutex<Shard<Q>>>,
     mut client: GatewayClient<Channel>,
+    terminator: Receiver<bool>,
 ) -> miette::Result<()>
 where
     Q: Queue + Send + Sync + Sized + Unpin + 'static,
@@ -74,7 +71,9 @@ where
     let cloned = Arc::clone(&shard);
     tokio::spawn(async move {
         let mut shard = cloned.lock().await;
-        while let Some(result) = shard.next().await {
+        while let Some(result) = shard.next().await
+            && !terminator.has_changed().unwrap()
+        {
             let shard_id = shard.id().number();
             let event_seq = shard.session().map_or(0, Session::sequence);
 
@@ -122,7 +121,9 @@ where
         .await
         .into_diagnostic()?
         .into_inner();
-    while let Some(res) = resp.next().await {
+    while let Some(res) = resp.next().await
+        && !terminator.has_changed().unwrap()
+    {
         let Ok(response) = res else {
             continue;
         };
