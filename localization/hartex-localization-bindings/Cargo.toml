@@ -17,9 +17,9 @@ fluent-bundle = "0.16.0"
 fluent-syntax = "0.12.0"
 intl-memoizer = "0.5.3"
 miette = "7.6.0"
-proc-macro2 = "1.0.96"
-quote = "1.0.40"
-syn = "2.0.104"
+proc-macro2 = "1.0.101"
+quote = "1.0.41"
+syn = "2.0.106"
 unic-langid = { version = "0.9.6", features = ["macros"] }
 
 [lib]

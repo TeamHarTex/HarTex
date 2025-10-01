@@ -12,6 +12,6 @@ rust-version = "1.92.0"
 
 [dependencies]
 miette = "7.6.0"
-thiserror = "2.0.12"
+thiserror = "2.0.17"
 
 [features]
