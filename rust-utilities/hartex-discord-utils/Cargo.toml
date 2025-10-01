@@ -24,15 +24,15 @@ hartex_localization_core = { path = "../../localization/hartex-localization-core
 
 hartex_async_lazy = { path = "../hartex-async-lazy" }
 
-log = "0.4.27"
+log = "0.4.28"
 miette = "7.6.0"
 sqlx = { version = "0.8.6", features = [
     "runtime-tokio",
     "tls-native-tls",
     "postgres",
 ] }
-tokio-postgres = "0.7.13"
-tokio-rustls = { version = "0.26.2", features = ["ring"] }
+tokio-postgres = "0.7.14"
+tokio-rustls = { version = "0.26.4", features = ["ring"] }
 unic-langid = "0.9.6"
 webpki-roots = "1.0.2"
 

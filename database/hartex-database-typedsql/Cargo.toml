@@ -13,11 +13,11 @@ rust-version = "1.92.0"
 [dependencies]
 convert_case = "0.8.0"
 itertools = "0.14.0"
-prettyplease = "0.2.36"
-proc-macro2 = "1.0.96"
-quote = "1.0.40"
+prettyplease = "0.2.37"
+proc-macro2 = "1.0.101"
+quote = "1.0.41"
 sqlparser = { version = "0.59.0", features = ["visitor"] }
-syn = { version = "2.0.104", features = ["full", "parsing", "proc-macro"] }
+syn = { version = "2.0.106", features = ["full", "parsing", "proc-macro"] }
 walkdir = "2.5.0"
 
 [build-dependencies]
