@@ -995,14 +995,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_async_lazy"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "tokio",
 ]
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "axum",
  "either",
@@ -1012,14 +1012,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_bitflags_utils"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "bitflags",
 ]
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "chrono",
  "hartex_database_typedsql",
@@ -1028,7 +1028,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_typedsql"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "convert_case",
  "itertools 0.14.0",
@@ -1042,7 +1042,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_cdn"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "formati",
  "hartex_discord_core",
@@ -1050,7 +1050,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "async-lazy",
  "async-trait",
@@ -1076,7 +1076,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "async-trait",
  "hartex_discord_commands_macros",
@@ -1088,7 +1088,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_macros"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1097,7 +1097,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_commands_manager"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "clap",
  "hartex_discord_core",
@@ -1117,7 +1117,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_luart"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "expect-test",
  "hartex_discord_configuration_models",
@@ -1126,7 +1126,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_models"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "bitflags",
  "hartex_bitflags_utils",
@@ -1136,7 +1136,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_configuration_provider"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "hartex_database_queries",
  "hartex_discord_core",
@@ -1146,7 +1146,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "dotenvy",
  "tokio",
@@ -1160,7 +1160,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_grpc_protos"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "prost",
  "tonic",
@@ -1170,11 +1170,11 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_internal_events"
-version = "0.15.0"
+version = "0.16.0"
 
 [[package]]
 name = "hartex_discord_leader"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "bytes",
  "futures-util",
@@ -1191,7 +1191,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "hartex_async_lazy",
  "hartex_discord_core",
@@ -1207,7 +1207,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_worker"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "bytes",
  "chrono",
@@ -1237,7 +1237,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1252,7 +1252,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1266,7 +1266,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -1278,7 +1278,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_tracing"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "formati",
  "tracing-core",

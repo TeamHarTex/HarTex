@@ -706,21 +706,21 @@ dependencies = [
 
 [[package]]
 name = "hartex_async_lazy"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "tokio",
 ]
 
 [[package]]
 name = "hartex_bitflags_utils"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "bitflags",
 ]
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "tokio",
  "twilight-http",
@@ -730,7 +730,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "hartex_async_lazy",
  "hartex_discord_core",
@@ -746,7 +746,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "miette",
  "thiserror 2.0.17",
@@ -754,7 +754,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -769,7 +769,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -783,7 +783,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -795,7 +795,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_macro_utils"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "quote",
  "syn",
@@ -803,7 +803,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_tracing"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "formati",
  "tracing-core",
