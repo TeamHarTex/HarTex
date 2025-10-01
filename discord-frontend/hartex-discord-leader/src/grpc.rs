@@ -69,10 +69,11 @@ where
     let (tx, rx) = mpsc::channel(1000);
 
     let cloned = Arc::clone(&shard);
+    let terminator_cloned = terminator.clone();
     tokio::spawn(async move {
         let mut shard = cloned.lock().await;
         while let Some(result) = shard.next().await
-            && !terminator.has_changed().unwrap()
+            && !terminator_cloned.has_changed().unwrap()
         {
             let shard_id = shard.id().number();
             let event_seq = shard.session().map_or(0, Session::sequence);
