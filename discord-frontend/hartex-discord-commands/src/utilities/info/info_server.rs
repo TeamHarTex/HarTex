@@ -165,29 +165,23 @@ pub async fn execute(
         .iter()
         .filter_map(|id| context.cache.channel(*id));
 
-    let category_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildCategory)
-        .count();
-    let text_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildText)
-        .count();
-    let voice_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildVoice)
-        .count();
-    let announcement_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildAnnouncement)
-        .count();
-    let stage_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildStageVoice)
-        .count();
-    let forum_count = channels
-        .filter(|channel| channel.kind == ChannelType::GuildForum)
-        .count();
+    let (categories, non_categories): (Vec<_>, Vec<_>) =
+        channels.partition(|channel| channel.kind == ChannelType::GuildCategory);
+    let (texts, non_texts): (Vec<_>, Vec<_>) = non_categories
+        .into_iter()
+        .partition(|channel| channel.kind == ChannelType::GuildText);
+    let (voices, non_voices): (Vec<_>, Vec<_>) = non_texts
+        .into_iter()
+        .partition(|channel| channel.kind == ChannelType::GuildVoice);
+    let (announcements, non_announcements): (Vec<_>, Vec<_>) = non_voices
+        .into_iter()
+        .partition(|channel| channel.kind == ChannelType::GuildAnnouncement);
+    let (stages, non_stages): (Vec<_>, Vec<_>) = non_announcements
+        .into_iter()
+        .partition(|channel| channel.kind == ChannelType::GuildStageVoice);
+    let (forums, _): (Vec<_>, Vec<_>) = non_stages
+        .into_iter()
+        .partition(|channel| channel.kind == ChannelType::GuildForum);
 
     let features = guild
         .features()
@@ -229,22 +223,22 @@ pub async fn execute(
                 "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
                 "<:category:1131915276980600872>",
                 serverinfo_embed_channelinfo_categories_subfield_name,
-                category_count,
+                categories.len(),
                 "<:textChannel:1131860470488375316>",
                 serverinfo_embed_channelinfo_textchannels_subfield_name,
-                text_count,
+                texts.len(),
                 "<:voiceChannel:1131908258945318923>",
                 serverinfo_embed_channelinfo_voicechannels_subfield_name,
-                voice_count,
+                voices.len(),
                 "<:announcement:1131923904324186296>",
                 serverinfo_embed_channelinfo_announcementchannels_subfield_name,
-                announcement_count,
+                announcements.len(),
                 "<:stage:1131926172574421032>",
                 serverinfo_embed_channelinfo_stagechannels_subfield_name,
-                stage_count,
+                stages.len(),
                 "<:forum:1131928666176241735>",
                 serverinfo_embed_channelinfo_forumchannels_subfield_name,
-                forum_count,
+                forums.len(),
             ),
         ))
         .field(EmbedFieldBuilder::new(
