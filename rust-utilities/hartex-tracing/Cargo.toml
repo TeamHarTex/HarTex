@@ -13,6 +13,6 @@ rust-version = "1.92.0"
 [dependencies]
 formati = { version = "0.1.4", features = ["tracing"] }
 tracing-core = "0.1.34"
-tracing-subscriber = { version = "0.3.19", features = ["local-time", "registry", "time"] }
+tracing-subscriber = { version = "0.3.20", features = ["local-time", "registry", "time"] }
 
 [features]

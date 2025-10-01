@@ -10,11 +10,11 @@ rust-version = "1.92.0"
 
 [dependencies]
 prost = "0.14.1"
-tonic = "0.14.1"
-tonic-prost = "0.14.1"
+tonic = "0.14.2"
+tonic-prost = "0.14.2"
 
 [build-dependencies]
-tonic-prost-build = "0.14.1"
+tonic-prost-build = "0.14.2"
 
 [features]
 gateway = []
