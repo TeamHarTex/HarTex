@@ -12,6 +12,8 @@
 
 ## Discord Frontend
 
+- **Fixed**: fixed Ctrl-C termination
+
 ## Localization Infrastructure
 
 ## Rust Utilities
