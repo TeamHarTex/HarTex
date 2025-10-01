@@ -1,21 +1,44 @@
-# [Next Version, Sulphur I](https://github.com/TeamHarTex/HarTex/compare/0.15.0...nightly)
+# [Next Version, Chlorine I](https://github.com/TeamHarTex/HarTex/compare/0.16.0...nightly)
 
 > **x** contributor made contributions to this release
 
-> **y** commits since 2025-05-14
+> **y** commits since 2025-10-01
+
+## API Backend
+
+## Buildsystem
+
+## Database Infrastructure
+
+## Discord Frontend
+
+## Localization Infrastructure
+
+## Rust Utilities
+
+## Web Frontend
+
+# [0.16.0, Sulphur I](https://github.com/TeamHarTex/HarTex/compare/0.15.0...nightly)
+
+> **1** contributor made contributions to this release
+
+> **316** commits since 2025-05-14
 
 ## API Backend
 
 - **Changed:** `mimalloc` allocator is now used, replacing system allocator
+- **Changed:** updated `rust-version` to 1.92
 
 ## Buildsystem
 
 - **Changed:** `bootstrap` is now built with `--release`
 - **Changed:** `setup` configurations now have their `rust-analyzer.*.invocationLocation` options removed
+- **Changed:** updated `rust-version` to 1.92
 - **Removed:** removed `let_chains` feature flag due to stabilization
 
 ## Database Infrastructure
 
+- **Changed:** updated `rust-version` to 1.92
 - **Removed:** removed `let_chains` feature flag due to stabilization
 - **Removed:** database cache tables have been removed as with the discord frontend
 
@@ -25,16 +48,19 @@
 - **Added:** GRPC protocols
 - **Changed:** in-memory cache is now used instead of a database-based cache
 - **Changed:** `mimalloc` allocator is now used, replacing system allocator
+- **Changed:** updated `rust-version` to 1.92
 - **Removed:** database-based `hartex-discord-entitycache-*` removed
 - **Removed:** removed `let_chains` feature flag due to stabilization
 - **Removed:** Kafka-based interprocess communication has been removed
 
 ## Localization Infrastructure
 
-## Rust Utilities
-- **Removed:** Kafka utilities crate has been removed
+- **Changed:** updated `rust-version` to 1.92
 
-## Web Frontend
+## Rust Utilities
+
+- **Changed:** updated `rust-version` to 1.92
+- **Removed:** Kafka utilities crate has been removed
 
 # [Version 0.15.0, Phosphorus I (2025-06-28)](https://github.com/TeamHarTex/HarTex/compare/0.14.0..0.15.0)
 

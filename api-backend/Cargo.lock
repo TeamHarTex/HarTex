@@ -832,14 +832,14 @@ dependencies = [
 
 [[package]]
 name = "hartex_async_lazy"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "tokio",
 ]
 
 [[package]]
 name = "hartex_backend_driver"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "axum",
  "dotenvy",
@@ -859,7 +859,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_models"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "axum",
  "either",
@@ -869,7 +869,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_backend_routes"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "axum",
  "axum-extra",
@@ -884,7 +884,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "chrono",
  "hartex_database_typedsql",
@@ -893,7 +893,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_typedsql"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "convert_case",
  "itertools 0.14.0",
@@ -907,7 +907,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "tokio",
  "twilight-http",
@@ -917,7 +917,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_discord_utils"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "hartex_async_lazy",
  "hartex_discord_core",
@@ -933,7 +933,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_errors"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "miette",
  "thiserror 2.0.17",
@@ -941,7 +941,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_bindings"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -956,7 +956,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_core"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -970,7 +970,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_localization_loader"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "fluent-bundle",
  "fluent-syntax",
@@ -982,7 +982,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_tracing"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "formati",
  "tracing-core",
