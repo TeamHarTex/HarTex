@@ -80,9 +80,10 @@ pub async fn main() -> miette::Result<()> {
         let mutex_shard = Arc::new(Mutex::new(shard));
         let shard_cloned = Arc::clone(&mutex_shard);
 
+        let rx_cloned = rx.clone();
         set.spawn(async move {
             tokio::select! {
-                _ = grpc::handle(shard_cloned, client_cloned, rx) => {},
+                _ = grpc::handle(shard_cloned, client_cloned, rx_cloned) => {},
                 _ = rx.changed() => {
                     mutex_shard.lock().await.close(CloseFrame::NORMAL);
                 }
