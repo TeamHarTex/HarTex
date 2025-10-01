@@ -536,7 +536,7 @@ checksum = "e629b9b98ef3dd8afe6ca2bd0f89306cec16d43d907889945bc5d6687f2f13c7"
 
 [[package]]
 name = "hartex_database_migrate"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "dotenvy",
  "hartex_tracing",
@@ -549,7 +549,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_queries"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "chrono",
  "hartex_database_typedsql",
@@ -558,7 +558,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_database_typedsql"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "convert_case",
  "itertools",
@@ -572,7 +572,7 @@ dependencies = [
 
 [[package]]
 name = "hartex_tracing"
-version = "0.15.0"
+version = "0.16.0"
 dependencies = [
  "formati",
  "tracing-core",
