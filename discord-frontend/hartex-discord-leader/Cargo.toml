@@ -27,9 +27,9 @@ hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 bytes = "1.10.1"
 futures-util = "0.3.31"
 miette = { version = "7.6.0", features = ["fancy"] }
-mimalloc = "0.1.47"
+mimalloc = "0.1.48"
 tokio-stream = "0.1.17"
-tonic = "0.14.1"
+tonic = "0.14.2"
 tracing = { version = "0.1.41" }
 
 [build-dependencies]
