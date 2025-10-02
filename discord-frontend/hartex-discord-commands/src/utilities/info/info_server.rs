@@ -57,7 +57,7 @@ struct ChannelCounts {
 }
 
 impl ChannelCounts {
-    pub fn update(mut self, kind: ChannelType) {
+    pub fn update(mut self, kind: ChannelType) -> Self {
         match kind {
             ChannelType::GuildAnnouncement => self.announcement += 1,
             ChannelType::GuildCategory => self.category += 1,
@@ -67,6 +67,8 @@ impl ChannelCounts {
             ChannelType::GuildVoice => self.voice += 1,
             _ => (),
         }
+
+        self
     }
 }
 
