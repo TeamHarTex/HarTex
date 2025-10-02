@@ -46,6 +46,32 @@ use hartex_discord_utils::{
 };
 use miette::IntoDiagnostic;
 
+#[derive(Default)]
+struct ChannelCounts {
+    announcement: usize,
+    category: usize,
+    forum: usize,
+    stage: usize,
+    text: usize,
+    voice: usize,
+}
+
+impl ChannelCounts {
+    pub fn update(mut self, kind: ChannelType) -> Self {
+        match kind {
+            ChannelType::GuildAnnouncement => self.announcement += 1,
+            ChannelType::GuildCategory => self.category += 1,
+            ChannelType::GuildForum => self.forum += 1,
+            ChannelType::GuildStageVoice => self.stage += 1,
+            ChannelType::GuildText => self.text += 1,
+            ChannelType::GuildVoice => self.voice += 1,
+            _ => (),
+        }
+
+        self
+    }
+}
+
 /// Executes the `info server` command.
 #[allow(clippy::too_many_lines)]
 pub async fn execute(
@@ -161,33 +187,18 @@ pub async fn execute(
     let Some(channel_ids) = context.cache.guild_channels(guild.id()) else {
         unreachable!()
     };
-    let channels = channel_ids
-        .iter()
-        .filter_map(|id| context.cache.channel(*id));
 
-    let category_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildCategory)
-        .count();
-    let text_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildText)
-        .count();
-    let voice_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildVoice)
-        .count();
-    let announcement_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildAnnouncement)
-        .count();
-    let stage_count = channels
-        .clone()
-        .filter(|channel| channel.kind == ChannelType::GuildStageVoice)
-        .count();
-    let forum_count = channels
-        .filter(|channel| channel.kind == ChannelType::GuildForum)
-        .count();
+    let ChannelCounts {
+        announcement,
+        category,
+        forum,
+        stage,
+        text,
+        voice,
+    } = channel_ids
+        .iter()
+        .filter_map(|id| context.cache.channel(*id).map(|channel| channel.kind))
+        .fold(ChannelCounts::default(), ChannelCounts::update);
 
     let features = guild
         .features()
@@ -229,22 +240,22 @@ pub async fn execute(
                 "{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}\n{} {} {}",
                 "<:category:1131915276980600872>",
                 serverinfo_embed_channelinfo_categories_subfield_name,
-                category_count,
+                category,
                 "<:textChannel:1131860470488375316>",
                 serverinfo_embed_channelinfo_textchannels_subfield_name,
-                text_count,
+                text,
                 "<:voiceChannel:1131908258945318923>",
                 serverinfo_embed_channelinfo_voicechannels_subfield_name,
-                voice_count,
+                voice,
                 "<:announcement:1131923904324186296>",
                 serverinfo_embed_channelinfo_announcementchannels_subfield_name,
-                announcement_count,
+                announcement,
                 "<:stage:1131926172574421032>",
                 serverinfo_embed_channelinfo_stagechannels_subfield_name,
-                stage_count,
+                stage,
                 "<:forum:1131928666176241735>",
                 serverinfo_embed_channelinfo_forumchannels_subfield_name,
-                forum_count,
+                forum,
             ),
         ))
         .field(EmbedFieldBuilder::new(
