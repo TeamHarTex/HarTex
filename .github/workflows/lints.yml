@@ -24,7 +24,7 @@ jobs:
       - name: Install Python 3.11
         uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.14"
       - name: Install Protoc
         run: sudo apt install -y protobuf-compiler
       - name: Print Rust Version
