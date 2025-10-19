@@ -26,6 +26,7 @@ use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
 /// Line parse error
+#[allow(unused_assignments)]
 #[derive(Debug, Diagnostic, Error)]
 #[diagnostic(
     code("E0001: dotenv::syntax_error"),
