@@ -26,7 +26,6 @@ use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
 /// Line parse error
-#[allow(unused_assignments)]
 #[derive(Debug, Diagnostic, Error)]
 #[diagnostic(
     code("E0001: dotenv::syntax_error"),
@@ -34,8 +33,10 @@ use thiserror::Error;
 )]
 #[error("syntax error detected in .env")]
 pub struct LineParseError {
+    #[allow(unused_assignments)]
     #[source_code]
     src: String,
+    #[allow(unused_assignments)]
     #[label("syntax error occurs here")]
     err_span: SourceSpan,
 }
