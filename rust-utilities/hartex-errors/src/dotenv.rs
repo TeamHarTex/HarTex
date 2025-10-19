@@ -34,7 +34,7 @@ use thiserror::Error;
 #[error("syntax error detected in .env")]
 pub struct LineParseError {
     #[source_code]
-    src: String,
+    pub src: String,
     #[label("syntax error occurs here")]
-    err_span: SourceSpan,
+    pub err_span: SourceSpan,
 }
