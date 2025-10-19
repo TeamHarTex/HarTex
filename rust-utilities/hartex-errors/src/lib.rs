@@ -25,5 +25,6 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![allow(unused_assignments)]
 
 pub mod dotenv;
