@@ -20,21 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use i18n_embed::{fluent::fluent_language_loader, I18nEmbedError};
+use std::cell::LazyCell;
+
+use i18n_embed::{
+    I18nEmbedError,
+    fluent::{FluentLanguageLoader, fluent_language_loader},
+};
 use rust_embed::RustEmbed;
+
+pub static LOADER: LazyCell<FluentLanguageLoader> = LazyCell::new(|| fluent_language_loader!());
 
 #[derive(RustEmbed)]
 #[folder = "i18n"]
 pub struct Localizations;
 
 pub fn load_localizations() -> Result<(), I18nEmbedError> {
-    let language_loader = fluent_language_loader!();
-
-    i18n_embed::select(
-        &language_loader,
-        &Localizations,
-        &["en-GB".parse().unwrap()]
-    )?;
+    i18n_embed::select(&LOADER, &Localizations, &["en-GB".parse().unwrap()])?;
 
     Ok(())
 }
