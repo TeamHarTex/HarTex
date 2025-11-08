@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::OnceLock;
+use std::sync::LazyLock;
 
 use i18n_embed::{
     I18nEmbedError,
@@ -28,14 +28,14 @@ use i18n_embed::{
 };
 use rust_embed::RustEmbed;
 
-pub static LOADER: OnceLock<FluentLanguageLoader> = OnceLock::from(fluent_language_loader!());
+pub static LOADER: LazyLock<FluentLanguageLoader> = LazyLock::new(|| fluent_language_loader!());
 
 #[derive(RustEmbed)]
 #[folder = "i18n"]
 pub struct Localizations;
 
 pub fn load_localizations() -> Result<(), I18nEmbedError> {
-    i18n_embed::select(&LOADER, &Localizations, &["en-GB".parse().unwrap()])?;
+    i18n_embed::select(&*LOADER, &Localizations, &["en-GB".parse().unwrap()])?;
 
     Ok(())
 }
