@@ -26,7 +26,6 @@ hartex_discord_core = { path = "../hartex-discord-core", features = [
 hartex_discord_grpc_protos = { path = "../hartex-discord-grpc-protos", features = ["gateway"] }
 
 hartex_localization_core = { path = "../../localization/hartex-localization-core" }
-hartex_localization_embedded = { path = "../../localization/hartex-localization-embedded" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }

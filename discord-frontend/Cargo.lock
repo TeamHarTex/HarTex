@@ -1100,11 +1100,13 @@ dependencies = [
  "http-body-util",
  "hyper",
  "hyper-util",
+ "i18n-embed",
  "i18n-embed-fl",
  "itertools 0.14.0",
  "miette",
  "rand 0.9.2",
  "regex",
+ "rust-embed",
  "serde_json",
  "tracing",
 ]
@@ -1254,7 +1256,6 @@ dependencies = [
  "hartex_discord_grpc_protos",
  "hartex_discord_utils",
  "hartex_localization_core",
- "hartex_localization_embedded",
  "hartex_tracing",
  "hyper",
  "hyper-util",
@@ -1298,14 +1299,6 @@ dependencies = [
  "lazy_static",
  "miette",
  "unic-langid",
-]
-
-[[package]]
-name = "hartex_localization_embedded"
-version = "0.16.0"
-dependencies = [
- "i18n-embed",
- "rust-embed",
 ]
 
 [[package]]
