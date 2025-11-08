@@ -33,6 +33,8 @@ pub static LOADER: LazyLock<FluentLanguageLoader> = LazyLock::new(|| fluent_lang
 #[folder = "i18n"]
 pub struct Localizations;
 
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::missing_panics_doc)]
 pub fn load_localizations() -> Result<(), I18nEmbedError> {
     i18n_embed::select(&*LOADER, &Localizations, &["en-GB".parse().unwrap()])?;
 
