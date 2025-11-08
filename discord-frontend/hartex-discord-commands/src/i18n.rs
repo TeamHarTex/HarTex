@@ -21,7 +21,6 @@
  */
 
 use std::sync::LazyLock;
-
 use i18n_embed::{
     I18nEmbedError,
     fluent::{FluentLanguageLoader, fluent_language_loader},
@@ -39,3 +38,14 @@ pub fn load_localizations() -> Result<(), I18nEmbedError> {
 
     Ok(())
 }
+
+pub macro fl {
+    ($message_id:literal) => {{
+        i18n_embed_fl::fl!($crate::LOADER, $message_id)
+    }},
+
+    ($message_id:literal, $($args:expr),*) => {{
+        i18n_embed_fl::fl!($crate::LOADER, $message_id, $($args), *)
+    }}
+}
+
