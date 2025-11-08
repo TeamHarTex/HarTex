@@ -20,6 +20,19 @@
 # with HarTex. If not, see <https://www.gnu.org/licenses/>.
 #
 
+# Plugin: General
+about-embed-description=HarTex is the open-source speed-of-thought server management bot for Discord. It is designed for servers that have complicated requirements and require fine bot configuration.
+about-embed-footer=Any questions? Join and ask in our community server at {$inviteLink}.
+about-embed-github-repo-field-name=GitHub Repository:
+about-embed-title=About HarTex
+contributors-embed-title=Amazing Contributors
+contributors-embed-description=Countless people came together to develop and maintain HarTex. Below lists the main contributors:
+contributors-embed-global-admin-field-name=Global Administrator & Lead Developer
+contributors-embed-front-dev-field-name=Frontend Developer
+contributors-embed-translation-team-field-name=Translation Team
+contributors-embed-footer=This is not a complete list (preserve more screen real estate) - but thanks to all who contributed!
+
+# Plugin: Utilities
 botinfo-embed-title=Runtime Information
 botinfo-embed-botstarted-field-name=Bot Started
 botinfo-embed-latency-field-name=Latency (Milliseconds)
@@ -78,3 +91,37 @@ userinfo-embed-serverpresence-nickname-subfield-name=Server Nickname:
 userinfo-embed-serverpresence-joinedat-subfield-name=Joined:
 userinfo-embed-serverpresence-roles-subfield-name=Roles (max. 10 displayed):
 userinfo-embed-serverpresence-flags-subfield-name=Flags:
+
+# Error
+error-line-one=:x: This command encountered{ $errorKind ->
+  [critical] a critical
+  [unexpected] an unexpected
+  *[other] an
+} error. Please provide the following error code for support.
+error-line-two=Error code:
+error-plugin-disabled=The `{$plugin}` plugin is not enabled. Please enable it in the guild configuration.
+error-insufficient-permissions=Invoking user has insufficient permissions.
+
+# General
+boolean-true=Yes
+boolean-false=No
+enum-unknown=Unknown
+
+# Guild
+default-message-notification-level-all=All
+default-message-notification-level-mentions=Mentions
+explicit-content-filter-disabled=Disabled
+explicit-content-filter-members-without-roles=Members Without Roles
+explicit-content-filter-all-members=All Members
+mfa-level-none=None
+mfa-level-elevated=Elevated
+premium-tier-none=None
+premium-tier-one=Level 1
+premium-tier-two=Level 2
+premium-tier-three=Level 3
+verification-level-none=None
+verification-level-low=Low
+verification-level-medium=Medium
+verification-level-high=High
+verification-level-very-high=Highest
+
