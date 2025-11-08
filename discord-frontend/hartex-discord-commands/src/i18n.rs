@@ -21,7 +21,6 @@
  */
 
 use std::sync::LazyLock;
-
 use i18n_embed::{
     I18nEmbedError,
     fluent::{FluentLanguageLoader, fluent_language_loader},
@@ -34,8 +33,21 @@ pub static LOADER: LazyLock<FluentLanguageLoader> = LazyLock::new(|| fluent_lang
 #[folder = "i18n"]
 pub struct Localizations;
 
+#[allow(clippy::missing_errors_doc)]
+#[allow(clippy::missing_panics_doc)]
 pub fn load_localizations() -> Result<(), I18nEmbedError> {
     i18n_embed::select(&*LOADER, &Localizations, &["en-GB".parse().unwrap()])?;
 
     Ok(())
 }
+
+pub macro fl {
+    ($message_id:literal) => {{
+        i18n_embed_fl::fl!(*crate::i18n::LOADER, $message_id)
+    }},
+
+    ($message_id:literal, $($args:expr),*) => {{
+        i18n_embed_fl::fl!(*crate::i18n::LOADER, $message_id, $($args), *)
+    }}
+}
+

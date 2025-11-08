@@ -2,7 +2,6 @@
 members = [
     "hartex-localization-bindings",
     "hartex-localization-core",
-    "hartex-localization-embedded",
     "hartex-localization-loader",
 ]
 
