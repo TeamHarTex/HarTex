@@ -34,5 +34,5 @@
 #![feature(if_let_guard)]
 
 pub mod general;
+pub mod i18n;
 pub mod utilities;
-mod i18n;
