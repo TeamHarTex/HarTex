@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::cell::LazyCell;
+use std::sync::OnceLock;
 
 use i18n_embed::{
     I18nEmbedError,
@@ -28,7 +28,7 @@ use i18n_embed::{
 };
 use rust_embed::RustEmbed;
 
-pub static LOADER: LazyCell<FluentLanguageLoader> = LazyCell::new(|| fluent_language_loader!());
+pub static LOADER: OnceLock<FluentLanguageLoader> = OnceLock::from(fluent_language_loader!());
 
 #[derive(RustEmbed)]
 #[folder = "i18n"]
