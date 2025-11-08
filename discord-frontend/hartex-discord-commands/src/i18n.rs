@@ -41,11 +41,11 @@ pub fn load_localizations() -> Result<(), I18nEmbedError> {
 
 pub macro fl {
     ($message_id:literal) => {{
-        i18n_embed_fl::fl!($LOADER, $message_id)
+        i18n_embed_fl::fl!(LOADER, $message_id)
     }},
 
     ($message_id:literal, $($args:expr),*) => {{
-        i18n_embed_fl::fl!($LOADER, $message_id, $($args), *)
+        i18n_embed_fl::fl!(LOADER, $message_id, $($args), *)
     }}
 }
 
