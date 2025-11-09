@@ -35,7 +35,7 @@ use hartex_discord_core::discord::{
 };
 use hartex_discord_utils::{interaction::component_response, markdown::MarkdownStyle};
 
-use crate::general::General;
+use crate::{general::General, i18n};
 
 /// The `about` command declaration.
 #[command(name = "about", plugin = General)]
@@ -44,7 +44,7 @@ pub struct About;
 #[async_trait]
 impl Command for About {
     async fn execute(&self, context: &CommandContext<'_>) -> miette::Result<()> {
-        let about_embed_title = context.localizer.general_plugin_about_embed_title()?;
+        let about_embed_title = i18n::fl!("about-embed-title");
         let about_embed_description = context.localizer.general_plugin_about_embed_description()?;
         let about_embed_github_repo_field_name = context
             .localizer
