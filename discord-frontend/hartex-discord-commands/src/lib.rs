@@ -30,7 +30,9 @@
 #![deny(clippy::pedantic)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
+#![feature(decl_macro)]
 #![feature(if_let_guard)]
 
 pub mod general;
+pub mod i18n;
 pub mod utilities;

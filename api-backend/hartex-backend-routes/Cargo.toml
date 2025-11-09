@@ -19,7 +19,7 @@ hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
 hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 axum = { version = "0.8.6", features = ["json", "macros"] }
-axum-extra = "0.10.3"
+axum-extra = { version = "0.12.1", features = ["with-rejection"] }
 chrono = "0.4.42"
 tracing = "0.1.41"
 utoipa = "5.4.0"

@@ -64,6 +64,8 @@ pub async fn main() -> miette::Result<()> {
     hartex_tracing::trace!("initializing cache");
     let cache = DefaultInMemoryCache::new();
 
+    hartex_discord_commands::i18n::load_localizations().into_diagnostic()?;
+
     let reflect = Builder::configure()
         .include_reflection_service(false)
         .register_encoded_file_descriptor_set(GATEWAY_GRPC_FILE_DESCRIPTOR_SET)

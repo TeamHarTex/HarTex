@@ -20,11 +20,11 @@
 
 ## Web Frontend
 
-# [0.16.0, Sulphur I](https://github.com/TeamHarTex/HarTex/compare/0.15.0...nightly)
+# [0.16.0, Sulphur I (2025-10-01)](https://github.com/TeamHarTex/HarTex/compare/0.15.0...nightly)
 
 > **1** contributor made contributions to this release
 
-> **316** commits since 2025-05-14
+> **316** commits since 2025-06-28
 
 ## API Backend
 
