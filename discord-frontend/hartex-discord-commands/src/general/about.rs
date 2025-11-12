@@ -45,13 +45,9 @@ pub struct About;
 impl Command for About {
     async fn execute(&self, context: &CommandContext<'_>) -> miette::Result<()> {
         let about_embed_title = i18n::fl!("about-embed-title");
-        let about_embed_description = context.localizer.general_plugin_about_embed_description()?;
-        let about_embed_github_repo_field_name = context
-            .localizer
-            .general_plugin_about_embed_github_repo_field_name()?;
-        let about_embed_footer = context
-            .localizer
-            .general_plugin_about_embed_footer("https://discord.gg/Xu8453VBAv")?;
+        let about_embed_description = i18n::fl!("about-embed-description");
+        let about_embed_github_repo_field_name = i18n::fl!("about-embed-github-repo-field-name");
+        let about_embed_footer = i18n::fl!("about-embed-footer");
 
         let thumbnail = ThumbnailBuilder::new(UnfurledMediaItem {
             url: "https://cdn.discordapp.com/avatars/936432439767740436/fe242059e8161e66722dab68bc30532b.png".into(),
