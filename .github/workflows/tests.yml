@@ -25,7 +25,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2025-08-10
+          toolchain: nightly
       - name: Install Python 3.11
         uses: actions/setup-python@v6
         with:
@@ -49,7 +49,7 @@ jobs:
       - name: Install latest nightly Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2025-08-10
+          toolchain: nightly
       - name: Install Python 3.11
         uses: actions/setup-python@v6
         with:
