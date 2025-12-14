@@ -15,7 +15,7 @@
     "@nuxt/content": "^3.0.0",
     "@nuxt/image": "^2.0.0",
     "@studio-freight/lenis": "^1.0.34",
-    "@types/node": "^24.0.0",
+    "@types/node": "^25.0.0",
     "@unocss/nuxt": "^66.0.0",
     "@unocss/preset-icons": "^66.0.0",
     "@unocss/preset-web-fonts": "^66.0.0",
