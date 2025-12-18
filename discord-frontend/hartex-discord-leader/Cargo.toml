@@ -6,6 +6,7 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+git-version = { workspace = true }
 rootcause = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
@@ -13,6 +14,9 @@ twilight-gateway = { workspace = true }
 twilight-model = { workspace = true }
 
 hartex-tracing = { workspace = true }
+
+[build-dependencies]
+time = { workspace = true }
 
 [[bin]]
 name = "leader"
