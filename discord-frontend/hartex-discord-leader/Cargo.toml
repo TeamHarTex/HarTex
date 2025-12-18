@@ -7,8 +7,12 @@ version = { workspace = true }
 
 [dependencies]
 rootcause = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
 twilight-gateway = { workspace = true }
 twilight-model = { workspace = true }
+
+hartex-tracing = { workspace = true }
 
 [[bin]]
 name = "leader"

@@ -2,13 +2,28 @@
 members = [
     "hartex-async-lazy",
     "hartex-bitflags-utils",
-    "hartex-discord-utils",
     "hartex-errors",
     "hartex-macro-utils",
     "hartex-tracing",
 ]
-
 resolver = "3"
+
+[workspace.package]
+edition = "2024"
+license = "AGPL-3.0-or-later"
+rust-version = "1.94.0"
+version = "0.17.0"
+
+[workspace.lints.clippy]
+pedantic = "deny"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+warnings = "deny"
+
+[workspace.dependencies]
+tracing-core = "0.1.35"
+tracing-subscriber = { version = "0.3.22", features = ["local-time", "registry", "time"] }
 
 [profile.release]
 codegen-units = 1

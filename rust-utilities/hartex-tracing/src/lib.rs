@@ -22,7 +22,6 @@
 
 //! # Logging Facilities
 
-pub use formati::{debug, error, format, info, trace, warn};
 use tracing_core::{LevelFilter, Subscriber};
 use tracing_subscriber::{
     Registry,

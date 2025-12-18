@@ -20,6 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {
-    println!("Hello world!");
+use rootcause::Report;
+use tracing::subscriber;
+
+// TODO: put this somewhere else
+type HarTexResult<T> = Result<T, Report>;
+
+#[tokio::main]
+pub async fn main() -> HarTexResult<()> {
+    subscriber::set_global_default(hartex_tracing::subscriber())?;
+
+    Ok(())
 }
