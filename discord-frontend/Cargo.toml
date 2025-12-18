@@ -1,23 +1,23 @@
 [workspace]
 members = [
-    "hartex-discord-cdn",
-    "hartex-discord-commands",
-    "hartex-discord-commands-core",
-    "hartex-discord-commands-macros",
-    "hartex-discord-commands-manager",
-    "hartex-discord-configuration-models",
-    'hartex-discord-configuration-luart',
-    "hartex-discord-configuration-provider",
-    "hartex-discord-core",
-    "hartex-discord-grpc-protos",
-    "hartex-discord-internal-events",
-    "hartex-discord-leader",
-    "hartex-discord-worker",
+    "hartex-discord-leader"
 ]
-
 resolver = "3"
 
-[profile.release]
-codegen-units = 1
-debug = true
-lto = "fat"
+[workspace.package]
+edition = "2024"
+license = "AGPL-3.0-or-later"
+rust-version = "1.94.0"
+version = "0.18.0"
+
+[workspace.dependencies]
+rootcause = "0.11.0"
+twilight-gateway = "0.17.1"
+twilight-model = "0.17.1"
+
+[workspace.lints.clippy]
+pedantic = "deny"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+warnings = "deny"

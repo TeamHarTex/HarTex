@@ -1,37 +1,15 @@
 [package]
-name = "hartex_discord_leader"
-version = "0.16.0"
-edition = "2024"
-description = """
-The leader component of the bot.
-"""
-license = "AGPL-3.0-or-later"
-rust-version = "1.92.0"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+name = "hartex-disord-leader"
+description = "The leader component of the bot, maintaining gateway connections."
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
 
 [dependencies]
-hartex_discord_core = { path = "../hartex-discord-core", features = [
-    "async-runtime",
-    "async-signal",
-    "discord-model",
-    "discord-gateway",
-    "discord-gateway-enable-http",
-    "environment",
-] }
-hartex_discord_grpc_protos = { path = "../hartex-discord-grpc-protos", features = ["gateway"] }
+rootcause = { workspace = true }
+twilight-gateway = { workspace = true }
+twilight-model = { workspace = true }
 
-hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
-hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
-
-bytes = "1.10.1"
-futures-util = "0.3.31"
-miette = { version = "7.6.0", features = ["fancy"] }
-mimalloc = "0.1.48"
-tokio-stream = "0.1.17"
-tonic = "0.14.2"
-tracing = { version = "0.1.41" }
-
-[build-dependencies]
-
-[features]
+[[bin]]
+name = "leader"
+path = "./src/main.rs"
