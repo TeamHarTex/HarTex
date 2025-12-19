@@ -20,32 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::LazyLock;
+pub mod error;
 
-use git_version::git_version;
-use hartex_discord_utils::{TOKEN, error::HarTexResult};
-use tracing::subscriber;
+use std::{env, sync::LazyLock};
 
-mod shards;
+use rootcause::prelude::ResultExt;
+use twilight_http::Client;
 
-#[tokio::main]
-pub async fn main() -> HarTexResult<()> {
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
+pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
+    Client::builder()
+        .proxy(String::from("localhost:3000"), true)
+        .ratelimiter(None)
+        .token(TOKEN.clone().unwrap())
+        .build()
+});
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::debug!("starting up...");
-
-    if let Err(report) = LazyLock::force(&TOKEN) {
-        tracing::error!("`TOKEN` environment variable: {report}");
-        return Ok(());
-    }
-
-    let _ = shards::create().await?;
-
-    Ok(())
-}
+pub static TOKEN: LazyLock<error::HarTexResult<String>> = LazyLock::new(|| {
+    let token = env::var("TOKEN").context("environment variable `TOKEN` is not set")?;
+    Ok(token)
+});

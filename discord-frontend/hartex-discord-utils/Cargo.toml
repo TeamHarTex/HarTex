@@ -1,0 +1,10 @@
+[package]
+name = "hartex-discord-utils"
+description = "Useful utilities for the Discord frontend."
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
+
+[dependencies]
+rootcause = { workspace = true }
+twilight-http = { workspace = true }

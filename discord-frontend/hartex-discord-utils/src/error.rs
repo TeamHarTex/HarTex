@@ -20,32 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::LazyLock;
+use rootcause::{
+    Report,
+    markers::{Cloneable, Dynamic},
+};
 
-use git_version::git_version;
-use hartex_discord_utils::{TOKEN, error::HarTexResult};
-use tracing::subscriber;
-
-mod shards;
-
-#[tokio::main]
-pub async fn main() -> HarTexResult<()> {
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
-
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::debug!("starting up...");
-
-    if let Err(report) = LazyLock::force(&TOKEN) {
-        tracing::error!("`TOKEN` environment variable: {report}");
-        return Ok(());
-    }
-
-    let _ = shards::create().await?;
-
-    Ok(())
-}
+pub type HarTexResult<T, C = Dynamic, O = Cloneable> = Result<T, Report<C, O>>;
