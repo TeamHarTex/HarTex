@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "hartex-discord-actors",
     "hartex-discord-leader",
     "hartex-discord-utils"
 ]
@@ -13,6 +14,8 @@ version = "0.17.0"
 
 [workspace.dependencies]
 git-version = "0.3.9"
+kameo = { version = "0.19.2", features = ["tracing", "remote"] }
+mimalloc = "0.1.48"
 rootcause = "0.11.0"
 time = "0.3.44"
 tokio = { version = "1.48.0", features = ["macros", "rt", "rt-multi-thread"] }
@@ -21,6 +24,7 @@ twilight-gateway = "0.17.1"
 twilight-http = "0.17.1"
 twilight-model = "0.17.1"
 
+hartex-discord-actors = { path = "hartex-discord-actors" }
 hartex-discord-utils = { path = "hartex-discord-utils" }
 hartex-tracing = { path = "../rust-utilities/hartex-tracing" }
 

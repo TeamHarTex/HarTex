@@ -20,37 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::LazyLock;
+use kameo::{Actor, actor::ActorRef};
+use twilight_gateway::Shard;
 
-use git_version::git_version;
-use hartex_discord_actors::leader::ShardActor;
-use hartex_discord_utils::{TOKEN, error::HarTexResult};
-use mimalloc::MiMalloc;
-use tracing::subscriber;
+pub struct ShardActor {
+    shard: Shard,
+}
 
-mod shards;
-
-#[global_allocator]
-static ALLOCATOR: MiMalloc = MiMalloc;
-
-#[tokio::main]
-pub async fn main() -> HarTexResult<()> {
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
-
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::debug!("starting up...");
-
-    if let Err(report) = LazyLock::force(&TOKEN) {
-        tracing::error!("`TOKEN` environment variable: {report}");
-        return Ok(());
+impl ShardActor {
+    pub fn new(shard: Shard) -> Self {
+        Self { shard }
     }
+}
 
-    let _ = shards::create().await?.map(ShardActor::new);
+impl Actor for ShardActor {
+    type Args = Self;
+    type Error = ();
 
-    Ok(())
+    async fn on_start(args: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
+        todo!()
+    }
 }

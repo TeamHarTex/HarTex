@@ -1,0 +1,10 @@
+[package]
+name = "hartex-discord-actors"
+description = "The actors used by the bot in the actor system."
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
+
+[dependencies]
+kameo = { workspace = true }
+twilight-gateway = { workspace = true }
