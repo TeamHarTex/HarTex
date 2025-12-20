@@ -7,4 +7,5 @@ version = { workspace = true }
 
 [dependencies]
 kameo = { workspace = true }
+tokio = { workspace = true }
 twilight-gateway = { workspace = true }

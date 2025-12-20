@@ -23,7 +23,6 @@
 use std::sync::LazyLock;
 
 use git_version::git_version;
-use hartex_discord_actors::leader::ShardActor;
 use hartex_discord_utils::{TOKEN, error::HarTexResult};
 use mimalloc::MiMalloc;
 use tracing::subscriber;
@@ -46,11 +45,9 @@ pub async fn main() -> HarTexResult<()> {
     tracing::debug!("starting up...");
 
     if let Err(report) = LazyLock::force(&TOKEN) {
-        tracing::error!("`TOKEN` environment variable: {report}");
-        return Ok(());
+        tracing::error!("`TOKEN` environment variable error: {report}");
+        return Err(report.clone());
     }
-
-    let _ = shards::create().await?.map(ShardActor::new);
 
     Ok(())
 }
