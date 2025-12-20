@@ -20,33 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::{Arc, Mutex};
-
-use kameo::{Actor, actor::ActorRef};
-use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
-
-pub struct ShardActor {
-    shard: Arc<Mutex<Shard>>,
-}
-
-impl Actor for ShardActor {
-    type Args = Shard;
-    type Error = ();
-
-    async fn on_start(shard: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
-        let shardref = Arc::new(Mutex::new(shard));
-        let cloned = shardref.clone();
-
-        tokio::spawn(async move {
-            let mut lock = cloned.lock().unwrap();
-
-            while let Some(_) = lock.next_event(EventTypeFlags::all()).await {
-
-            }
-        });
-
-        Ok(Self {
-            shard: shardref,
-        })
-    }
-}
+pub struct ShardLatency;
