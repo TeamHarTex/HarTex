@@ -20,4 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use twilight_gateway::ShardId;
+
+pub struct ForwardToShard<M> {
+    pub(crate) id: ShardId,
+    pub(crate) message: M,
+}
+
+impl<M> ForwardToShard<M> {
+    pub const fn new(id: ShardId, message: M) -> Self {
+        Self { id, message }
+    }
+}
+
 pub struct ShardLatency;

@@ -7,6 +7,7 @@ version = { workspace = true }
 
 [dependencies]
 git-version = { workspace = true }
+kameo = { workspace = true }
 mimalloc = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
@@ -23,3 +24,6 @@ time = { workspace = true }
 [[bin]]
 name = "leader"
 path = "./src/main.rs"
+
+[lints]
+workspace = true

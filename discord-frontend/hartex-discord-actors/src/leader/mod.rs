@@ -20,67 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::Arc;
-
-use kameo::{
-    actor::{Actor, ActorRef},
-    message::{Context, Message},
-    remote::{RemoteActor, RemoteMessage},
-};
-use tokio::sync::Mutex;
-use twilight_gateway::{EventTypeFlags, MessageSender, Shard, StreamExt};
-
-use crate::leader::{messages::ShardLatency, replies::ShardLatencyReply};
-
 pub mod messages;
 pub mod replies;
 
-pub struct ShardActor {
-    sender: MessageSender,
-    shard: Arc<Mutex<Shard>>,
-}
+mod shard_actor;
+mod shard_manager;
 
-impl Actor for ShardActor {
-    type Args = Shard;
-    type Error = ();
-
-    async fn on_start(shard: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
-        let sender = shard.sender();
-        let shard_arc = Arc::new(Mutex::new(shard));
-
-        let shard_cloned = shard_arc.clone();
-
-        tokio::spawn(async move {
-            while let Some(_) = shard_cloned
-                .lock()
-                .await
-                .next_event(EventTypeFlags::all())
-                .await
-            {
-                todo!()
-            }
-        });
-
-        Ok(Self {
-            sender,
-            shard: shard_arc,
-        })
-    }
-}
-
-impl Message<ShardLatency> for ShardActor {
-    type Reply = ShardLatencyReply;
-
-    async fn handle(&mut self, _: ShardLatency, _: &mut Context<Self, Self::Reply>) -> Self::Reply {
-        let latency = self.shard.lock().await.latency().clone();
-        ShardLatencyReply { latency }
-    }
-}
-
-impl RemoteActor for ShardActor {
-    const REMOTE_ID: &'static str = "SHARD_ACTOR";
-}
-
-impl RemoteMessage<ShardLatency> for ShardActor {
-    const REMOTE_ID: &'static str = "SHARD_LATENCY_MESSAGE";
-}
+pub use self::{shard_actor::Shard, shard_manager::ShardManager};

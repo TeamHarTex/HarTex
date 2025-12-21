@@ -28,7 +28,7 @@ use twilight_model::gateway::{
     presence::{Activity, ActivityType, Status},
 };
 
-pub async fn create() -> HarTexResult<impl ExactSizeIterator + Iterator<Item = Shard>> {
+pub async fn create() -> HarTexResult<impl Iterator<Item = Shard>> {
     let config = ConfigBuilder::new(TOKEN.clone()?, Intents::all()).build();
 
     Ok(create_recommended(&CLIENT, config, |shard_id, builder| {

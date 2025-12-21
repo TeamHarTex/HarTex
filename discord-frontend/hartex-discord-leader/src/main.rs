@@ -23,8 +23,11 @@
 use std::sync::LazyLock;
 
 use git_version::git_version;
+use hartex_discord_actors::leader::ShardManager;
 use hartex_discord_utils::{TOKEN, error::HarTexResult};
+use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
+use tokio::signal;
 use tracing::subscriber;
 
 mod shards;
@@ -42,12 +45,19 @@ pub async fn main() -> HarTexResult<()> {
         git_version!(),
         env!("CARGO_BUILD_DATE")
     );
-    tracing::debug!("starting up...");
+    tracing::info!("starting up...");
 
+    tracing::trace!("loading environment variables...");
     if let Err(report) = LazyLock::force(&TOKEN) {
         tracing::error!("`TOKEN` environment variable error: {report}");
         return Err(report.clone());
     }
+
+    let shards = shards::create().await?.collect::<Vec<_>>();
+    let shard_manager_ref = ShardManager::spawn(shards);
+
+    signal::ctrl_c().await?;
+    shard_manager_ref.stop_gracefully().await?;
 
     Ok(())
 }
