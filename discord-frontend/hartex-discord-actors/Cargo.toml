@@ -6,6 +6,7 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+futures = { workspace = true }
 kameo = { workspace = true }
 tokio = { workspace = true }
 twilight-gateway = { workspace = true }

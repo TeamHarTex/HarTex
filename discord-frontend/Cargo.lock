@@ -941,6 +941,7 @@ dependencies = [
 name = "hartex-discord-actors"
 version = "0.17.0"
 dependencies = [
+ "futures",
  "kameo",
  "tokio",
  "twilight-gateway",

@@ -20,7 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#![feature(impl_trait_in_assoc_type)]
-#![feature(type_alias_impl_trait)]
-
 pub mod leader;

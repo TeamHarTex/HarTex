@@ -22,15 +22,17 @@
 
 use std::sync::Arc;
 
+use futures::StreamExt;
 use kameo::{
-    Actor,
-    actor::ActorRef,
+    actor::{Actor, ActorRef, WeakActorRef},
+    error::ActorStopReason,
     message::{Context, Message},
     prelude::{RemoteActor, RemoteMessage},
 };
 use tokio::sync::Mutex;
-use twilight_gateway::{EventTypeFlags, MessageSender, Shard as TwilightShard, StreamExt};
+use twilight_gateway::{MessageSender, Shard as TwilightShard};
 use twilight_model::gateway::payload::outgoing::RequestGuildMembers;
+
 use crate::leader::{
     messages::{ShardLatency, ShardRequestGuildMembers},
     replies::ShardLatencyReply,
@@ -53,12 +55,7 @@ impl Actor for Shard {
         let shard_cloned = shard_arc.clone();
 
         tokio::spawn(async move {
-            while let Some(_) = shard_cloned
-                .lock()
-                .await
-                .next_event(EventTypeFlags::all())
-                .await
-            {
+            while let Some(_) = shard_cloned.lock().await.next().await {
                 todo!()
             }
         });
@@ -67,6 +64,14 @@ impl Actor for Shard {
             sender,
             shard: shard_arc,
         })
+    }
+
+    async fn on_stop(
+        &mut self,
+        _: WeakActorRef<Self>,
+        _: ActorStopReason,
+    ) -> Result<(), Self::Error> {
+        todo!()
     }
 }
 
@@ -87,9 +92,7 @@ impl Message<ShardRequestGuildMembers> for Shard {
         cmd: ShardRequestGuildMembers,
         _: &mut Context<Self, Self::Reply>,
     ) -> Self::Reply {
-        let command = RequestGuildMembers::builder(cmd.guild_id)
-            .query("", None);
-
+        let command = RequestGuildMembers::builder(cmd.guild_id).query("", None);
         self.sender.command(&command).unwrap();
     }
 }

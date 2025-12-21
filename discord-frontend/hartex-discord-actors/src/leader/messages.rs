@@ -21,8 +21,7 @@
  */
 
 use twilight_gateway::ShardId;
-use twilight_model::id::Id;
-use twilight_model::id::marker::GuildMarker;
+use twilight_model::id::{Id, marker::GuildMarker};
 
 pub struct ForwardToShard<M> {
     pub(crate) id: ShardId,
