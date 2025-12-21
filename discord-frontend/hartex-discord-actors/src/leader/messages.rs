@@ -21,6 +21,8 @@
  */
 
 use twilight_gateway::ShardId;
+use twilight_model::id::Id;
+use twilight_model::id::marker::GuildMarker;
 
 pub struct ForwardToShard<M> {
     pub(crate) id: ShardId,
@@ -34,3 +36,7 @@ impl<M> ForwardToShard<M> {
 }
 
 pub struct ShardLatency;
+
+pub struct ShardRequestGuildMembers {
+    pub(crate) guild_id: Id<GuildMarker>,
+}

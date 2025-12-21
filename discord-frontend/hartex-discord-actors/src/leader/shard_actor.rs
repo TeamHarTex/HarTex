@@ -30,8 +30,11 @@ use kameo::{
 };
 use tokio::sync::Mutex;
 use twilight_gateway::{EventTypeFlags, MessageSender, Shard as TwilightShard, StreamExt};
-
-use crate::leader::{messages::ShardLatency, replies::ShardLatencyReply};
+use twilight_model::gateway::payload::outgoing::RequestGuildMembers;
+use crate::leader::{
+    messages::{ShardLatency, ShardRequestGuildMembers},
+    replies::ShardLatencyReply,
+};
 
 pub struct Shard {
     sender: MessageSender,
@@ -76,10 +79,29 @@ impl Message<ShardLatency> for Shard {
     }
 }
 
+impl Message<ShardRequestGuildMembers> for Shard {
+    type Reply = ();
+
+    async fn handle(
+        &mut self,
+        cmd: ShardRequestGuildMembers,
+        _: &mut Context<Self, Self::Reply>,
+    ) -> Self::Reply {
+        let command = RequestGuildMembers::builder(cmd.guild_id)
+            .query("", None);
+
+        self.sender.command(&command).unwrap();
+    }
+}
+
 impl RemoteActor for Shard {
     const REMOTE_ID: &'static str = "SHARD_ACTOR";
 }
 
 impl RemoteMessage<ShardLatency> for Shard {
     const REMOTE_ID: &'static str = "SHARD_LATENCY_MESSAGE";
+}
+
+impl RemoteMessage<ShardRequestGuildMembers> for Shard {
+    const REMOTE_ID: &'static str = "SHARD_REQUEST_GUILD_MEMBERS";
 }

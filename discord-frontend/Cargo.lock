@@ -943,8 +943,8 @@ version = "0.17.0"
 dependencies = [
  "kameo",
  "tokio",
- "tracing",
  "twilight-gateway",
+ "twilight-model",
 ]
 
 [[package]]

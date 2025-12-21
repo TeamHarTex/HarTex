@@ -8,8 +8,8 @@ version = { workspace = true }
 [dependencies]
 kameo = { workspace = true }
 tokio = { workspace = true }
-tracing = { workspace = true }
 twilight-gateway = { workspace = true }
+twilight-model = { workspace = true }
 
 [lints]
 workspace = true
