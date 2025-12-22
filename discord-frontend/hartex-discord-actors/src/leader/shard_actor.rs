@@ -31,7 +31,7 @@ use kameo::{
 };
 use tokio::sync::{Mutex, watch::Receiver};
 use twilight_gateway::{MessageSender, Shard as TwilightShard};
-use twilight_model::gateway::payload::outgoing::RequestGuildMembers;
+use twilight_model::gateway::{CloseFrame, ShardId, payload::outgoing::RequestGuildMembers};
 
 use crate::leader::{
     messages::{ShardLatency, ShardRequestGuildMembers},
@@ -39,6 +39,7 @@ use crate::leader::{
 };
 
 pub struct Shard {
+    id: ShardId,
     sender: MessageSender,
     shard: Arc<Mutex<TwilightShard>>,
 }
@@ -52,6 +53,7 @@ impl Actor for Shard {
         _: ActorRef<Self>,
     ) -> Result<Self, Self::Error> {
         // todo: logging
+        let id = shard.id();
         let sender = shard.sender();
         let shard_arc = Arc::new(Mutex::new(shard));
 
@@ -66,6 +68,7 @@ impl Actor for Shard {
         });
 
         Ok(Self {
+            id,
             sender,
             shard: shard_arc,
         })
@@ -76,7 +79,8 @@ impl Actor for Shard {
         _: WeakActorRef<Self>,
         _: ActorStopReason,
     ) -> Result<(), Self::Error> {
-        todo!()
+        self.shard.lock().await.close(CloseFrame::NORMAL);
+        Ok(())
     }
 }
 

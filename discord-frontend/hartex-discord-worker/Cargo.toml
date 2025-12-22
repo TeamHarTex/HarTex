@@ -1,0 +1,29 @@
+[package]
+name = "hartex-discord-worker"
+description = "The worker component of the bot, handling events from leaders."
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
+
+[dependencies]
+git-version = { workspace = true }
+kameo = { workspace = true }
+mimalloc = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+twilight-gateway = { workspace = true }
+twilight-model = { workspace = true }
+
+hartex-discord-actors = { workspace = true }
+hartex-discord-utils = { workspace = true }
+hartex-tracing = { workspace = true }
+
+[build-dependencies]
+time = { workspace = true }
+
+[[bin]]
+name = "worker"
+path = "./src/main.rs"
+
+[lints]
+workspace = true

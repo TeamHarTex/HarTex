@@ -974,6 +974,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "hartex-discord-worker"
+version = "0.17.0"
+dependencies = [
+ "git-version",
+ "hartex-discord-actors",
+ "hartex-discord-utils",
+ "hartex-tracing",
+ "kameo",
+ "mimalloc",
+ "time",
+ "tokio",
+ "tracing",
+ "twilight-gateway",
+ "twilight-model",
+]
+
+[[package]]
 name = "hartex-tracing"
 version = "0.17.0"
 dependencies = [
