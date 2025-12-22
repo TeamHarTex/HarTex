@@ -22,18 +22,21 @@
 
 use std::collections::HashMap;
 
+use futures::future;
 use kameo::{
-    actor::{Actor, ActorRef, Spawn},
+    actor::{Actor, ActorRef, Spawn, WeakActorRef},
+    error::ActorStopReason,
     message::{Context, Message},
     remote::RemoteMessage,
     reply::ForwardedReply,
 };
+use tokio::sync::watch::{self, Sender};
 use twilight_gateway::{Shard as TwilightShard, ShardId};
 
 use crate::leader::{Shard, messages::ForwardToShard};
 
 pub struct ShardManager {
-    shards: HashMap<ShardId, ActorRef<Shard>>,
+    shards: HashMap<ShardId, (Sender<bool>, ActorRef<Shard>)>,
 }
 
 impl Actor for ShardManager {
@@ -44,10 +47,27 @@ impl Actor for ShardManager {
     async fn on_start(args: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
         let shards = args
             .into_iter()
-            .map(|shard| (shard.id(), Shard::spawn(shard)))
+            .map(|shard| {
+                let (sender, receiver) = watch::channel(false);
+                (shard.id(), (sender, Shard::spawn((shard, receiver))))
+            })
             .collect::<HashMap<_, _>>();
 
         Ok(Self { shards })
+    }
+
+    async fn on_stop(
+        &mut self,
+        _: WeakActorRef<Self>,
+        _: ActorStopReason,
+    ) -> Result<(), Self::Error> {
+        let futures = future::join_all(self.shards.values().map(|(sender, shard)| {
+            sender.send(true).unwrap();
+            shard.stop_gracefully()
+        }));
+        futures.await;
+
+        Ok(())
     }
 }
 
@@ -63,7 +83,7 @@ where
         msg: ForwardToShard<M>,
         ctx: &mut Context<Self, Self::Reply>,
     ) -> Self::Reply {
-        let shard_ref = self.shards.get(&msg.id).unwrap();
+        let (_, shard_ref) = self.shards.get(&msg.id).unwrap();
         ctx.forward(shard_ref, msg.message).await
     }
 }

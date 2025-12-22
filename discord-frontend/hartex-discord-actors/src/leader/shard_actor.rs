@@ -29,7 +29,7 @@ use kameo::{
     message::{Context, Message},
     prelude::{RemoteActor, RemoteMessage},
 };
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, watch::Receiver};
 use twilight_gateway::{MessageSender, Shard as TwilightShard};
 use twilight_model::gateway::payload::outgoing::RequestGuildMembers;
 
@@ -44,10 +44,13 @@ pub struct Shard {
 }
 
 impl Actor for Shard {
-    type Args = TwilightShard;
+    type Args = (TwilightShard, Receiver<bool>);
     type Error = ();
 
-    async fn on_start(shard: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
+    async fn on_start(
+        (shard, receiver): Self::Args,
+        _: ActorRef<Self>,
+    ) -> Result<Self, Self::Error> {
         // todo: logging
         let sender = shard.sender();
         let shard_arc = Arc::new(Mutex::new(shard));
@@ -55,7 +58,9 @@ impl Actor for Shard {
         let shard_cloned = shard_arc.clone();
 
         tokio::spawn(async move {
-            while let Some(_) = shard_cloned.lock().await.next().await {
+            while let Some(_) = shard_cloned.lock().await.next().await
+                && !receiver.has_changed().unwrap()
+            {
                 todo!()
             }
         });
