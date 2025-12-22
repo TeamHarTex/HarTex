@@ -39,6 +39,7 @@ use crate::leader::{
 };
 
 pub struct Shard {
+    #[allow(dead_code)]
     id: ShardId,
     sender: MessageSender,
     shard: Arc<Mutex<TwilightShard>>,

@@ -20,9 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use git_version::git_version;
+use tracing::subscriber;
 use hartex_discord_utils::error::HarTexResult;
 
 #[tokio::main]
 pub async fn main() -> HarTexResult<()> {
+    subscriber::set_global_default(hartex_tracing::subscriber())?;
+
+    tracing::info!(
+        "HarTex {} ({} {})",
+        env!("CARGO_PKG_VERSION"),
+        git_version!(),
+        env!("CARGO_BUILD_DATE")
+    );
+    tracing::info!("workers starting up...");
+    
     Ok(())
 }

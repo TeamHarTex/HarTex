@@ -45,7 +45,7 @@ pub async fn main() -> HarTexResult<()> {
         git_version!(),
         env!("CARGO_BUILD_DATE")
     );
-    tracing::info!("starting up...");
+    tracing::info!("leaders starting up...");
 
     tracing::trace!("loading environment variables...");
     if let Err(report) = LazyLock::force(&TOKEN) {
