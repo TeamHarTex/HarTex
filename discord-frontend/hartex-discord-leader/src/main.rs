@@ -53,8 +53,8 @@ pub async fn main() -> HarTexResult<()> {
     tracing::info!("leaders starting up...");
 
     tracing::trace!("loading environment variables...");
-    if let Err(_) = LazyLock::force(&TOKEN) {
-        // todo: make default report formatter
+    if let Err(report) = LazyLock::force(&TOKEN) {
+        tracing::error!("{report}");
         return Ok(());
     }
 

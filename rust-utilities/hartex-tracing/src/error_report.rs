@@ -28,6 +28,7 @@ use rootcause::{
     hooks::report_formatter::ReportFormatter,
     markers::{Dynamic, Local, Uncloneable},
 };
+use yansi::Paint;
 
 #[derive(Debug)]
 pub struct ErrorFormatter;
@@ -35,10 +36,23 @@ pub struct ErrorFormatter;
 impl ReportFormatter for ErrorFormatter {
     fn format_reports(
         &self,
-        _: &[ReportRef<'_, Dynamic, Uncloneable, Local>],
-        _: &mut Formatter<'_>,
+        reports: &[ReportRef<'_, Dynamic, Uncloneable, Local>],
+        fmt: &mut Formatter<'_>,
         _: FormattingFunction,
     ) -> FmtResult {
-        todo!()
+        fmt.write_str("an error occurred, see below:\n\n")?;
+
+        // todo: ANSI doesn't work yet...
+        for (i, report) in reports.iter().enumerate() {
+            let msg = format!("{}: {}", i + 1, report.format_current_context());
+            writeln!(fmt, "{}", msg.red())?;
+
+            let attached = report.attachments();
+            for attach in attached {
+                writeln!(fmt, "  - {}", attach.format_inner().red())?;
+            }
+        }
+
+        Ok(())
     }
 }

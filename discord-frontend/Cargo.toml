@@ -25,7 +25,6 @@ tracing = "0.1.44"
 twilight-gateway = "0.17.1"
 twilight-http = "0.17.1"
 twilight-model = "0.17.1"
-yansi = "1.0.1"
 
 hartex-discord-actors = { path = "hartex-discord-actors" }
 hartex-discord-utils = { path = "hartex-discord-utils" }
