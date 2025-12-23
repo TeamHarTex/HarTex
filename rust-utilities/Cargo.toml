@@ -14,16 +14,17 @@ license = "AGPL-3.0-or-later"
 rust-version = "1.94.0"
 version = "0.17.0"
 
+[workspace.dependencies]
+rootcause = "0.11.0"
+tracing-core = "0.1.36"
+tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
+
 [workspace.lints.clippy]
 pedantic = "deny"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
 warnings = "deny"
-
-[workspace.dependencies]
-tracing-core = "0.1.36"
-tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
 
 [profile.release]
 codegen-units = 1

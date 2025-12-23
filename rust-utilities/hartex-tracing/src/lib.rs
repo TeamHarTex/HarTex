@@ -23,12 +23,9 @@
 //! # Logging Facilities
 
 use tracing_core::{LevelFilter, Subscriber};
-use tracing_subscriber::{
-    Registry,
-    filter::Targets,
-    fmt::Layer,
-    layer::SubscriberExt,
-};
+use tracing_subscriber::{Registry, filter::Targets, fmt::Layer, layer::SubscriberExt};
+
+pub mod error_report;
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {

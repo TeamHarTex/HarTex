@@ -64,13 +64,16 @@ impl Actor for Shard {
 
         let shard_cloned = shard_arc.clone();
 
-        tokio::spawn(async move {
-            while let Some(_) = shard_cloned.lock().await.next().await
-                && !receiver.has_changed().unwrap()
-            {
-                tracing::info!("received message");
+        tokio::spawn(
+            async move {
+                while let Some(_) = shard_cloned.lock().await.next().await
+                    && !receiver.has_changed().unwrap()
+                {
+                    tracing::info!("received message");
+                }
             }
-        }.in_current_span());
+            .in_current_span(),
+        );
 
         Ok(Self {
             id,

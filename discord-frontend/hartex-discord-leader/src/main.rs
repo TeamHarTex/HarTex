@@ -27,8 +27,10 @@ use hartex_discord_actors::leader::ShardManager;
 use hartex_discord_utils::{TOKEN, error::HarTexResult};
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
+use rootcause::hooks::Hooks;
 use tokio::signal;
 use tracing::subscriber;
+use hartex_tracing::error_report::ErrorFormatter;
 
 mod shards;
 
@@ -38,6 +40,9 @@ static ALLOCATOR: MiMalloc = MiMalloc;
 #[tokio::main]
 pub async fn main() -> HarTexResult<()> {
     subscriber::set_global_default(hartex_tracing::subscriber())?;
+    Hooks::new()
+        .report_formatter(ErrorFormatter)
+        .install()?;
 
     tracing::info!(
         "HarTex {} ({} {})",

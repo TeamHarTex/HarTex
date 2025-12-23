@@ -19,3 +19,26 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use std::fmt::{Formatter, Result as FmtResult};
+
+use rootcause::{
+    ReportRef,
+    handlers::FormattingFunction,
+    hooks::report_formatter::ReportFormatter,
+    markers::{Dynamic, Local, Uncloneable},
+};
+
+#[derive(Debug)]
+pub struct ErrorFormatter;
+
+impl ReportFormatter for ErrorFormatter {
+    fn format_reports(
+        &self,
+        _: &[ReportRef<'_, Dynamic, Uncloneable, Local>],
+        _: &mut Formatter<'_>,
+        _: FormattingFunction,
+    ) -> FmtResult {
+        todo!()
+    }
+}

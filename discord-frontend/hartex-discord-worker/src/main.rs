@@ -21,9 +21,9 @@
  */
 
 use git_version::git_version;
+use hartex_discord_utils::error::HarTexResult;
 use mimalloc::MiMalloc;
 use tracing::subscriber;
-use hartex_discord_utils::error::HarTexResult;
 
 #[global_allocator]
 static ALLOCATOR: MiMalloc = MiMalloc;
@@ -39,6 +39,6 @@ pub async fn main() -> HarTexResult<()> {
         env!("CARGO_BUILD_DATE")
     );
     tracing::info!("workers starting up...");
-    
+
     Ok(())
 }
