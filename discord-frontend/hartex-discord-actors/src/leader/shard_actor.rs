@@ -30,6 +30,7 @@ use kameo::{
     prelude::{RemoteActor, RemoteMessage},
 };
 use tokio::sync::{Mutex, watch::Receiver};
+use tracing::Instrument;
 use twilight_gateway::{MessageSender, Shard as TwilightShard};
 use twilight_model::gateway::{CloseFrame, ShardId, payload::outgoing::RequestGuildMembers};
 
@@ -54,6 +55,10 @@ impl Actor for Shard {
         _: ActorRef<Self>,
     ) -> Result<Self, Self::Error> {
         let id = shard.id();
+        let id_num = id.number();
+        let span = tracing::info_span!("shrd_actor", id = id_num);
+        let _ = span.enter();
+
         let sender = shard.sender();
         let shard_arc = Arc::new(Mutex::new(shard));
 
@@ -65,7 +70,7 @@ impl Actor for Shard {
             {
                 tracing::info!("received message");
             }
-        });
+        }.in_current_span());
 
         Ok(Self {
             id,
@@ -79,6 +84,11 @@ impl Actor for Shard {
         _: WeakActorRef<Self>,
         _: ActorStopReason,
     ) -> Result<(), Self::Error> {
+        let id_num = self.id.number();
+        let span = tracing::info_span!("shrd_actor", id = id_num);
+        let _ = span.enter();
+
+        tracing::warn!("shard stopping");
         self.shard.lock().await.close(CloseFrame::NORMAL);
         Ok(())
     }
