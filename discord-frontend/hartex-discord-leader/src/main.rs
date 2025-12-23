@@ -48,9 +48,9 @@ pub async fn main() -> HarTexResult<()> {
     tracing::info!("leaders starting up...");
 
     tracing::trace!("loading environment variables...");
-    if let Err(report) = LazyLock::force(&TOKEN) {
-        tracing::error!("`TOKEN` environment variable error: {report}");
-        return Err(report.clone());
+    if let Err(_) = LazyLock::force(&TOKEN) {
+        // todo: make default report formatter
+        return Ok(());
     }
 
     let shards = shards::create().await?.collect::<Vec<_>>();

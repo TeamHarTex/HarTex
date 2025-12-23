@@ -22,8 +22,8 @@ unsafe_code = "forbid"
 warnings = "deny"
 
 [workspace.dependencies]
-tracing-core = "0.1.35"
-tracing-subscriber = { version = "0.3.22", features = ["local-time", "registry", "time"] }
+tracing-core = "0.1.36"
+tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
 
 [profile.release]
 codegen-units = 1

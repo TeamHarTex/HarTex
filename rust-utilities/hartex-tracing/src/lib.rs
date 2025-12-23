@@ -26,15 +26,13 @@ use tracing_core::{LevelFilter, Subscriber};
 use tracing_subscriber::{
     Registry,
     filter::Targets,
-    fmt::{Layer, time::OffsetTime},
+    fmt::Layer,
     layer::SubscriberExt,
 };
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
     let fmt_layer = Layer::default()
-        .pretty()
-        .with_timer(OffsetTime::local_rfc_3339().unwrap())
         .with_target(true)
         .with_level(true)
         .with_file(true)

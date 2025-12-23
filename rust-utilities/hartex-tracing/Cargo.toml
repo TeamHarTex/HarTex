@@ -13,3 +13,6 @@ tracing-core = { workspace = true }
 tracing-subscriber = { workspace = true }
 
 [features]
+
+[lints]
+workspace = true

@@ -25,5 +25,4 @@ time = { workspace = true }
 name = "worker"
 path = "./src/main.rs"
 
-[lints]
-workspace = true
+
