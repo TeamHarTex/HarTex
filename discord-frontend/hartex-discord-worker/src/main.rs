@@ -21,8 +21,12 @@
  */
 
 use git_version::git_version;
+use mimalloc::MiMalloc;
 use tracing::subscriber;
 use hartex_discord_utils::error::HarTexResult;
+
+#[global_allocator]
+static ALLOCATOR: MiMalloc = MiMalloc;
 
 #[tokio::main]
 pub async fn main() -> HarTexResult<()> {

@@ -944,6 +944,7 @@ dependencies = [
  "futures",
  "kameo",
  "tokio",
+ "tracing",
  "twilight-gateway",
  "twilight-model",
 ]

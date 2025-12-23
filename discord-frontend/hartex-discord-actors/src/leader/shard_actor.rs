@@ -53,7 +53,6 @@ impl Actor for Shard {
         (shard, receiver): Self::Args,
         _: ActorRef<Self>,
     ) -> Result<Self, Self::Error> {
-        // todo: logging
         let id = shard.id();
         let sender = shard.sender();
         let shard_arc = Arc::new(Mutex::new(shard));
@@ -64,7 +63,7 @@ impl Actor for Shard {
             while let Some(_) = shard_cloned.lock().await.next().await
                 && !receiver.has_changed().unwrap()
             {
-                todo!()
+                tracing::info!("received message");
             }
         });
 
