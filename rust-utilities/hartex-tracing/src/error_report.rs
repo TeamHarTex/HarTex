@@ -22,13 +22,13 @@
 
 use std::fmt::{Formatter, Result as FmtResult};
 
+use ansi_term::Colour;
 use rootcause::{
     ReportRef,
     handlers::FormattingFunction,
     hooks::report_formatter::ReportFormatter,
     markers::{Dynamic, Local, Uncloneable},
 };
-use yansi::Paint;
 
 #[derive(Debug)]
 pub struct ErrorFormatter;
@@ -45,11 +45,11 @@ impl ReportFormatter for ErrorFormatter {
         // todo: ANSI doesn't work yet...
         for (i, report) in reports.iter().enumerate() {
             let msg = format!("{}: {}", i + 1, report.format_current_context());
-            writeln!(fmt, "{}", msg.red())?;
+            writeln!(fmt, "{}", Colour::Red.bold().paint(msg))?;
 
             let attached = report.attachments();
             for attach in attached {
-                writeln!(fmt, "  - {}", attach.format_inner().red())?;
+                writeln!(fmt, "  - {}", Colour::Red.paint(attach.format_inner().to_string()))?;
             }
         }
 

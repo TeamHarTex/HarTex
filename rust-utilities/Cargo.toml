@@ -15,10 +15,10 @@ rust-version = "1.94.0"
 version = "0.17.0"
 
 [workspace.dependencies]
+ansi_term = "0.12.1"
 rootcause = "0.11.0"
 tracing-core = "0.1.36"
 tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
-yansi = "1.0.1"
 
 [workspace.lints.clippy]
 pedantic = "deny"
