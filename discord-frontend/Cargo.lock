@@ -1070,6 +1070,7 @@ dependencies = [
 name = "hartex-tracing"
 version = "0.17.0"
 dependencies = [
+ "color-eyre",
  "tracing-core",
  "tracing-error",
  "tracing-subscriber",

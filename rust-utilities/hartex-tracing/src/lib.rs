@@ -26,6 +26,8 @@ use tracing_core::{LevelFilter, Subscriber};
 use tracing_error::ErrorLayer;
 use tracing_subscriber::{Registry, filter::Targets, fmt::Layer, layer::SubscriberExt};
 
+pub mod eyre;
+
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
     let fmt_layer = Layer::default()

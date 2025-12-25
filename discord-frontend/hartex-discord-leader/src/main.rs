@@ -36,7 +36,7 @@ static ALLOCATOR: MiMalloc = MiMalloc;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
-    color_eyre::install()?;
+    hartex_tracing::eyre::initailize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
     tracing::info!(
