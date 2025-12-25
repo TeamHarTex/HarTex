@@ -20,22 +20,32 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod error;
+use std::{
+    env,
+    sync::{LazyLock, OnceLock},
+};
 
-use std::{env, sync::LazyLock};
-
-use rootcause::prelude::ResultExt;
+use color_eyre::{
+    Result,
+    eyre::{WrapErr, eyre},
+};
 use twilight_http::Client;
 
 pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
     Client::builder()
         .proxy(String::from("localhost:3000"), true)
         .ratelimiter(None)
-        .token(TOKEN.clone().unwrap())
+        .token(TOKEN.get().unwrap().clone())
         .build()
 });
 
-pub static TOKEN: LazyLock<error::HarTexResult<String>> = LazyLock::new(|| {
-    let token = env::var("TOKEN").context("environment variable `TOKEN` is not set")?;
-    Ok(token)
-});
+pub static TOKEN: OnceLock<String> = OnceLock::new();
+
+pub fn initialize_env() -> Result<()> {
+    let token = env::var("TOKEN").wrap_err("environment variable `TOKEN` is not set")?;
+    TOKEN
+        .set(token)
+        .map_err(|_| eyre!("TOKEN has already been initialized"))?;
+
+    Ok(())
+}

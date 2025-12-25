@@ -6,10 +6,10 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+color-eyre = { workspace = true }
 git-version = { workspace = true }
 kameo = { workspace = true }
 mimalloc = { workspace = true }
-rootcause = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 twilight-gateway = { workspace = true }

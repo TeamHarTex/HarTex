@@ -20,7 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use hartex_discord_utils::{CLIENT, TOKEN, error::HarTexResult};
+use color_eyre::Result;
+use hartex_discord_utils::{CLIENT, TOKEN};
 use twilight_gateway::{ConfigBuilder, Shard, create_recommended};
 use twilight_model::gateway::{
     Intents,
@@ -28,8 +29,8 @@ use twilight_model::gateway::{
     presence::{Activity, ActivityType, Status},
 };
 
-pub async fn create() -> HarTexResult<impl Iterator<Item = Shard>> {
-    let config = ConfigBuilder::new(TOKEN.clone()?, Intents::all()).build();
+pub async fn create() -> Result<impl Iterator<Item = Shard>> {
+    let config = ConfigBuilder::new(TOKEN.get().unwrap().clone(), Intents::all()).build();
 
     Ok(create_recommended(&CLIENT, config, |shard_id, builder| {
         builder

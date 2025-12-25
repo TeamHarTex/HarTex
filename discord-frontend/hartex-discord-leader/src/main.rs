@@ -20,17 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::LazyLock;
-
+use color_eyre::Result;
 use git_version::git_version;
 use hartex_discord_actors::leader::ShardManager;
-use hartex_discord_utils::{TOKEN, error::HarTexResult};
+use hartex_discord_utils::initialize_env;
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
-use rootcause::hooks::Hooks;
 use tokio::signal;
 use tracing::subscriber;
-use hartex_tracing::error_report::ErrorFormatter;
 
 mod shards;
 
@@ -38,11 +35,9 @@ mod shards;
 static ALLOCATOR: MiMalloc = MiMalloc;
 
 #[tokio::main]
-pub async fn main() -> HarTexResult<()> {
+pub async fn main() -> Result<()> {
+    color_eyre::install()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
-    Hooks::new()
-        .report_formatter(ErrorFormatter)
-        .install()?;
 
     tracing::info!(
         "HarTex {} ({} {})",
@@ -53,10 +48,7 @@ pub async fn main() -> HarTexResult<()> {
     tracing::info!("leaders starting up...");
 
     tracing::trace!("loading environment variables...");
-    if let Err(report) = LazyLock::force(&TOKEN) {
-        tracing::error!("{report}");
-        return Ok(());
-    }
+    initialize_env()?;
 
     let shards = shards::create().await?.collect::<Vec<_>>();
     let shard_manager_ref = ShardManager::spawn(shards);

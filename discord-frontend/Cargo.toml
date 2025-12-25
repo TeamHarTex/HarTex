@@ -14,11 +14,11 @@ rust-version = "1.94.0"
 version = "0.17.0"
 
 [workspace.dependencies]
+color-eyre = "0.6.5"
 futures = "0.3.31"
 git-version = "0.3.9"
 kameo = { version = "0.19.2", features = ["tracing", "remote"] }
 mimalloc = "0.1.48"
-rootcause = "0.11.0"
 time = "0.3.44"
 tokio = { version = "1.48.0", features = ["macros", "rt", "rt-multi-thread", "signal"] }
 tracing = "0.1.44"

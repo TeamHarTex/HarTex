@@ -9,9 +9,8 @@ rust-version = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ansi_term = { workspace = true }
-rootcause = { workspace = true }
 tracing-core = { workspace = true }
+tracing-error = { workspace = true }
 tracing-subscriber = { workspace = true }
 
 [features]

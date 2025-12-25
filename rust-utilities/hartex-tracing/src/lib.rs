@@ -23,9 +23,8 @@
 //! # Logging Facilities
 
 use tracing_core::{LevelFilter, Subscriber};
+use tracing_error::ErrorLayer;
 use tracing_subscriber::{Registry, filter::Targets, fmt::Layer, layer::SubscriberExt};
-
-pub mod error_report;
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
@@ -76,5 +75,5 @@ pub fn subscriber() -> impl Subscriber {
         .with_target("twilight_gateway::shard", LevelFilter::OFF)
         .with_target("twilight_http::client", LevelFilter::OFF);
 
-    Registry::default().with(fmt_layer).with(targets_layer)
+    Registry::default().with(fmt_layer).with(targets_layer).with(ErrorLayer::default())
 }

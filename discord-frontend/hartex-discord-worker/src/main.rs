@@ -20,8 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use color_eyre::Result;
 use git_version::git_version;
-use hartex_discord_utils::error::HarTexResult;
 use mimalloc::MiMalloc;
 use tracing::subscriber;
 
@@ -29,7 +29,7 @@ use tracing::subscriber;
 static ALLOCATOR: MiMalloc = MiMalloc;
 
 #[tokio::main]
-pub async fn main() -> HarTexResult<()> {
+pub async fn main() -> Result<()> {
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
     tracing::info!(
