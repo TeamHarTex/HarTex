@@ -32,9 +32,7 @@ pub mod eyre;
 pub fn subscriber() -> impl Subscriber {
     let fmt_layer = Layer::default()
         .with_target(true)
-        .with_level(true)
-        .with_file(true)
-        .with_line_number(true);
+        .with_level(true);
     let targets_layer = Targets::new()
         .with_default(LevelFilter::TRACE)
         .with_target("h2::client", LevelFilter::OFF)

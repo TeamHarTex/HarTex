@@ -30,9 +30,9 @@ use kameo::{
     prelude::{RemoteActor, RemoteMessage},
 };
 use tokio::sync::{Mutex, watch::Receiver};
-use tracing::Instrument;
+use tracing::{Instrument, instrument};
 use twilight_gateway::{MessageSender, Shard as TwilightShard};
-use twilight_model::gateway::{CloseFrame, ShardId, payload::outgoing::RequestGuildMembers};
+use twilight_model::gateway::{CloseFrame, payload::outgoing::RequestGuildMembers};
 
 use crate::leader::{
     messages::{ShardLatency, ShardRequestGuildMembers},
@@ -40,8 +40,7 @@ use crate::leader::{
 };
 
 pub struct Shard {
-    #[allow(dead_code)]
-    id: ShardId,
+    id: u32,
     sender: MessageSender,
     shard: Arc<Mutex<TwilightShard>>,
 }
@@ -50,14 +49,13 @@ impl Actor for Shard {
     type Args = (TwilightShard, Receiver<bool>);
     type Error = ();
 
+    #[instrument(name = "shard_actor", skip(shard, receiver), fields(id = shard.id().number()))]
     async fn on_start(
         (shard, receiver): Self::Args,
         _: ActorRef<Self>,
     ) -> Result<Self, Self::Error> {
         let id = shard.id();
         let id_num = id.number();
-        let span = tracing::info_span!("shrd_actor", id = id_num);
-        let _ = span.enter();
 
         let sender = shard.sender();
         let shard_arc = Arc::new(Mutex::new(shard));
@@ -76,21 +74,18 @@ impl Actor for Shard {
         );
 
         Ok(Self {
-            id,
+            id: id_num,
             sender,
             shard: shard_arc,
         })
     }
 
+    #[instrument(name = "shard_actor", skip(self), fields(id = self.id))]
     async fn on_stop(
         &mut self,
         _: WeakActorRef<Self>,
         _: ActorStopReason,
     ) -> Result<(), Self::Error> {
-        let id_num = self.id.number();
-        let span = tracing::info_span!("shrd_actor", id = id_num);
-        let _ = span.enter();
-
         tracing::warn!("shard stopping");
         self.shard.lock().await.close(CloseFrame::NORMAL);
         Ok(())

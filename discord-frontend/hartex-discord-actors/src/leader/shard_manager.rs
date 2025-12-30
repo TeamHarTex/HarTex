@@ -45,8 +45,7 @@ impl Actor for ShardManager {
     type Error = ();
 
     async fn on_start(args: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
-        let span = tracing::info_span!("shard_manager");
-        let _ = span.enter();
+        tracing::info!("starting {} shards...", args.len());
 
         let shards = args
             .into_iter()
@@ -64,13 +63,15 @@ impl Actor for ShardManager {
         _: WeakActorRef<Self>,
         _: ActorStopReason,
     ) -> Result<(), Self::Error> {
-        let span = tracing::info_span!("shard_manager");
-        let _ = span.enter();
+        tracing::warn!("stopping {} shards...", self.shards.len());
 
-        let futures = future::join_all(self.shards.values().map(|(sender, shard)| {
+        let futures = future::join_all(self.shards.values().map(|(sender, shard)| async {
             sender.send(true).unwrap();
-            shard.stop_gracefully()
+            shard.stop_gracefully().await.ok();
+
+            shard.wait_for_shutdown_result()
         }));
+
         futures.await;
 
         Ok(())

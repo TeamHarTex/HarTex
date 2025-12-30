@@ -22,7 +22,7 @@
 
 use color_eyre::{config::HookBuilder, Result};
 
-pub fn initailize_eyre() ->  Result<()> {
+pub fn initialize_eyre() -> Result<()> {
     HookBuilder::new()
         .install()
 }

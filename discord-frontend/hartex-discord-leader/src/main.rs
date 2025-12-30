@@ -24,6 +24,7 @@ use color_eyre::Result;
 use git_version::git_version;
 use hartex_discord_actors::leader::ShardManager;
 use hartex_discord_utils::initialize_env;
+use hartex_tracing::{self, eyre};
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
 use tokio::signal;
@@ -36,7 +37,7 @@ static ALLOCATOR: MiMalloc = MiMalloc;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
-    hartex_tracing::eyre::initailize_eyre()?;
+    eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
     tracing::info!(
@@ -55,6 +56,7 @@ pub async fn main() -> Result<()> {
 
     signal::ctrl_c().await?;
     shard_manager_ref.stop_gracefully().await?;
+    shard_manager_ref.wait_for_shutdown_result().await.unwrap();
 
     Ok(())
 }

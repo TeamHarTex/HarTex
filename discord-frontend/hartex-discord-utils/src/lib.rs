@@ -33,8 +33,6 @@ use twilight_http::Client;
 
 pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
     Client::builder()
-        .proxy(String::from("localhost:3000"), true)
-        .ratelimiter(None)
         .token(TOKEN.get().unwrap().clone())
         .build()
 });
