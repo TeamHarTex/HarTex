@@ -27,7 +27,6 @@ use kameo::{
     actor::{Actor, ActorRef, WeakActorRef},
     error::ActorStopReason,
     message::{Context, Message},
-    prelude::{RemoteActor, RemoteMessage},
 };
 use tokio::sync::{Mutex, watch::Receiver};
 use tracing::{Instrument, instrument};
@@ -113,16 +112,4 @@ impl Message<ShardRequestGuildMembers> for Shard {
         let command = RequestGuildMembers::builder(cmd.guild_id).query("", None);
         self.sender.command(&command).unwrap();
     }
-}
-
-impl RemoteActor for Shard {
-    const REMOTE_ID: &'static str = "SHARD_ACTOR";
-}
-
-impl RemoteMessage<ShardLatency> for Shard {
-    const REMOTE_ID: &'static str = "SHARD_LATENCY_MESSAGE";
-}
-
-impl RemoteMessage<ShardRequestGuildMembers> for Shard {
-    const REMOTE_ID: &'static str = "SHARD_REQUEST_GUILD_MEMBERS";
 }

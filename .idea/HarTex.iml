@@ -30,7 +30,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-repositories/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-entitycache-service/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-internal-events/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-leader/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-worker/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-worker/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-bindings/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/localization/hartex-localization-core/src" isTestSource="false" />

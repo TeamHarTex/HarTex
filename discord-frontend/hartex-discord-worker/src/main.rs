@@ -22,9 +22,15 @@
 
 use color_eyre::Result;
 use git_version::git_version;
-use hartex_tracing::eyre;
+use hartex_discord_actors::leader::ShardManager;
+use hartex_discord_utils::initialize_env;
+use hartex_tracing::{self, eyre};
+use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
+use tokio::signal;
 use tracing::subscriber;
+
+mod shards;
 
 #[global_allocator]
 static ALLOCATOR: MiMalloc = MiMalloc;
@@ -41,7 +47,17 @@ pub async fn main() -> Result<()> {
         git_version!(),
         env!("CARGO_BUILD_DATE")
     );
-    tracing::info!("workers starting up...");
+    tracing::info!("worker starting up...");
+
+    tracing::trace!("loading environment variables...");
+    initialize_env()?;
+
+    let shards = shards::create().await?.collect::<Vec<_>>();
+    let shard_manager_ref = ShardManager::spawn(shards);
+
+    signal::ctrl_c().await?;
+    shard_manager_ref.stop_gracefully().await?;
+    shard_manager_ref.wait_for_shutdown_result().await.unwrap();
 
     Ok(())
 }

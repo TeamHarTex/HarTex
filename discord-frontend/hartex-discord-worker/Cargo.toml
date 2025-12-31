@@ -1,6 +1,8 @@
 [package]
 name = "hartex-discord-worker"
-description = "The worker component of the bot, handling events from leaders."
+description = """
+The worker component of the bot, maintaining gateway connections and handling events.
+"""
 edition = { workspace = true }
 license = { workspace = true }
 version = { workspace = true }
@@ -26,3 +28,6 @@ time = { workspace = true }
 [[bin]]
 name = "worker"
 path = "./src/main.rs"
+
+[lints]
+workspace = true

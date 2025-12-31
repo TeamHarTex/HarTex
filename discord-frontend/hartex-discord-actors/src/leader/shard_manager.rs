@@ -27,7 +27,6 @@ use kameo::{
     actor::{Actor, ActorRef, Spawn, WeakActorRef},
     error::ActorStopReason,
     message::{Context, Message},
-    remote::RemoteMessage,
     reply::ForwardedReply,
 };
 use tokio::sync::watch::{self, Sender};
@@ -93,12 +92,4 @@ where
         let (_, shard_ref) = self.shards.get(&msg.id).unwrap();
         ctx.forward(shard_ref, msg.message).await
     }
-}
-
-impl<M> RemoteMessage<ForwardToShard<M>> for ShardManager
-where
-    Shard: RemoteMessage<M>,
-    M: Send + 'static,
-{
-    const REMOTE_ID: &'static str = "SHARD_MANAGER_FORWARD_TO_SHARD";
 }
