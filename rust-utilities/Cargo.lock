@@ -97,6 +97,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e629b9b98ef3dd8afe6ca2bd0f89306cec16d43d907889945bc5d6687f2f13c7"
 
 [[package]]
+name = "hartex-termios-utils"
+version = "0.17.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "hartex-tracing"
 version = "0.17.0"
 dependencies = [

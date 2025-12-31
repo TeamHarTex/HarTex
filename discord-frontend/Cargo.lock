@@ -1030,6 +1030,7 @@ dependencies = [
  "git-version",
  "hartex-discord-actors",
  "hartex-discord-utils",
+ "hartex-termios-utils",
  "hartex-tracing",
  "kameo",
  "mimalloc",
@@ -1064,6 +1065,13 @@ dependencies = [
  "tracing",
  "twilight-gateway",
  "twilight-model",
+]
+
+[[package]]
+name = "hartex-termios-utils"
+version = "0.17.0"
+dependencies = [
+ "libc",
 ]
 
 [[package]]

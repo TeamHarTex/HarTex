@@ -28,6 +28,7 @@ twilight-model = "0.17.1"
 
 hartex-discord-actors = { path = "hartex-discord-actors" }
 hartex-discord-utils = { path = "hartex-discord-utils" }
+hartex-termios-utils = { path = "../rust-utilities/hartex-termios-utils" }
 hartex-tracing = { path = "../rust-utilities/hartex-tracing" }
 
 [workspace.lints.clippy]

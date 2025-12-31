@@ -4,6 +4,7 @@ members = [
     "hartex-bitflags-utils",
     "hartex-errors",
     "hartex-macro-utils",
+    "hartex-termios-utils",
     "hartex-tracing",
 ]
 resolver = "3"
@@ -17,6 +18,7 @@ version = "0.17.0"
 [workspace.dependencies]
 ansi_term = "0.12.1"
 color-eyre = "0.6.5"
+libc = "0.2.178"
 tracing-core = "0.1.36"
 tracing-error = "0.2.1"
 tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
@@ -25,7 +27,7 @@ tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
 pedantic = "deny"
 
 [workspace.lints.rust]
-unsafe_code = "forbid"
+unsafe_code = "deny"
 warnings = "deny"
 
 [profile.release]
