@@ -22,6 +22,7 @@
 
 use color_eyre::Result;
 use git_version::git_version;
+use hartex_tracing::eyre;
 use mimalloc::MiMalloc;
 use tracing::subscriber;
 
@@ -30,6 +31,8 @@ static ALLOCATOR: MiMalloc = MiMalloc;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {
+    hartex_termios_utils::no_echoctl();
+    eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
     tracing::info!(

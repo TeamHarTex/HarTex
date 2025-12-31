@@ -30,9 +30,7 @@ pub mod eyre;
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
-    let fmt_layer = Layer::default()
-        .with_target(true)
-        .with_level(true);
+    let fmt_layer = Layer::default().with_target(true).with_level(true);
     let targets_layer = Targets::new()
         .with_default(LevelFilter::TRACE)
         .with_target("h2::client", LevelFilter::OFF)
@@ -75,5 +73,8 @@ pub fn subscriber() -> impl Subscriber {
         .with_target("twilight_gateway::shard", LevelFilter::OFF)
         .with_target("twilight_http::client", LevelFilter::OFF);
 
-    Registry::default().with(fmt_layer).with(targets_layer).with(ErrorLayer::default())
+    Registry::default()
+        .with(fmt_layer)
+        .with(targets_layer)
+        .with(ErrorLayer::default())
 }

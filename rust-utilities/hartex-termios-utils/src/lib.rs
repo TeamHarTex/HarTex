@@ -25,7 +25,7 @@ pub fn no_echoctl() {
     {
         use std::{io, mem, os::unix::io::AsRawFd};
 
-        use libc::{tcgetattr, tcsetattr, ECHOCTL, TCSANOW};
+        use libc::{ECHOCTL, TCSANOW, tcgetattr, tcsetattr};
 
         let fd = io::stdin().as_raw_fd();
         #[allow(unsafe_code)]

@@ -20,9 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::{config::HookBuilder, Result};
+use color_eyre::{Result, config::HookBuilder};
 
 pub fn initialize_eyre() -> Result<()> {
-    HookBuilder::new()
-        .install()
+    HookBuilder::new().install()
 }

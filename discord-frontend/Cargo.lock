@@ -1057,6 +1057,7 @@ dependencies = [
  "git-version",
  "hartex-discord-actors",
  "hartex-discord-utils",
+ "hartex-termios-utils",
  "hartex-tracing",
  "kameo",
  "mimalloc",
