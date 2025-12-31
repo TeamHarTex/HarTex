@@ -20,28 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use git_version::git_version;
-use hartex_tracing::eyre;
-use mimalloc::MiMalloc;
-use tracing::subscriber;
+use kameo::actor::{Actor, ActorRef};
 
-#[global_allocator]
-static ALLOCATOR: MiMalloc = MiMalloc;
+pub struct Worker;
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    hartex_termios_utils::no_echoctl();
-    eyre::initialize_eyre()?;
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
+impl Actor for Worker {
+    type Args = ();
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::info!("workers starting up...");
+    type Error = ();
 
-    Ok(())
+    async fn on_start(_: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
+        todo!()
+    }
 }

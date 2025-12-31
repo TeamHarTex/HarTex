@@ -14,7 +14,7 @@ rust-version = "1.92.0"
 hartex_backend_routes = { path = "../hartex-backend-routes" }
 
 hartex_errors = { path = "../../rust-utilities/hartex-errors" }
-hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
+hartex-tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 axum = "0.8.6"
 dotenvy = "0.15.7"

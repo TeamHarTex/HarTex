@@ -20,85 +20,44 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! # Leader Process
-//!
-//! The leader process is the process that connects to the Discord API, receives events and
-//! forwards to the workers.
-
-#![deny(clippy::pedantic)]
-#![deny(unsafe_code)]
-#![deny(warnings)]
-
-use std::{env, sync::Arc};
-
-use hartex_discord_core::{
-    discord::gateway::CloseFrame,
-    dotenvy, tokio,
-    tokio::{
-        signal,
-        sync::{Mutex, watch},
-        task::JoinSet,
-    },
-};
-use hartex_discord_grpc_protos::gateway::gateway_client::GatewayClient;
-use miette::IntoDiagnostic;
+use color_eyre::Result;
+use git_version::git_version;
+use hartex_discord_actors::leader::ShardManager;
+use hartex_discord_utils::initialize_env;
+use hartex_tracing::{self, eyre};
+use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
+use tokio::signal;
+use tracing::subscriber;
 
-mod grpc;
-mod queue;
 mod shards;
 
 #[global_allocator]
-static GLOBAL: MiMalloc = MiMalloc;
+static ALLOCATOR: MiMalloc = MiMalloc;
 
-/// Entry point.
-#[tokio::main(flavor = "multi_thread")]
-pub async fn main() -> miette::Result<()> {
-    tracing::subscriber::set_global_default(hartex_tracing::subscriber()).unwrap();
+#[tokio::main]
+pub async fn main() -> Result<()> {
+    hartex_termios_utils::no_echoctl();
+    eyre::initialize_eyre()?;
+    subscriber::set_global_default(hartex_tracing::subscriber())?;
 
-    hartex_tracing::trace!("loading environment variables");
-    dotenvy::dotenv().into_diagnostic()?;
+    tracing::info!(
+        "HarTex {} ({} {})",
+        env!("CARGO_PKG_VERSION"),
+        git_version!(),
+        env!("CARGO_BUILD_DATE")
+    );
+    tracing::info!("leaders starting up...");
 
-    hartex_tracing::trace!("building clusters");
-    let queue = queue::obtain()?;
-    let shards = shards::obtain(queue).await?;
+    tracing::trace!("loading environment variables...");
+    initialize_env()?;
 
-    let (tx, rx) = watch::channel(false);
+    let shards = shards::create().await?.collect::<Vec<_>>();
+    let shard_manager_ref = ShardManager::spawn(shards);
 
-    hartex_tracing::trace!("connecting to gRPC server");
-    let domain = env::var("GRPC_DOMAIN").expect("GRPC_DOMAIN is not set");
-    let client = GatewayClient::connect(format!("http://{domain}"))
-        .await
-        .into_diagnostic()?;
-
-    hartex_tracing::trace!("launching {shards.len()} shard(s)");
-    let mut set = JoinSet::new();
-    for shard in shards {
-        let mut rx = rx.clone();
-        let client_cloned = client.clone();
-
-        let mutex_shard = Arc::new(Mutex::new(shard));
-        let shard_cloned = Arc::clone(&mutex_shard);
-
-        let rx_cloned = rx.clone();
-        set.spawn(async move {
-            tokio::select! {
-                _ = grpc::handle(shard_cloned, client_cloned, rx_cloned) => {},
-                _ = rx.changed() => {
-                    mutex_shard.lock().await.close(CloseFrame::NORMAL);
-                }
-            }
-        });
-    }
-
-    signal::ctrl_c().await.into_diagnostic()?;
-
-    hartex_tracing::warn!("ctrl-c signal received, shutting down");
-
-    tx.send(true).into_diagnostic()?;
-
-    // wait for all tasks to complete
-    while set.join_next().await.is_some() {}
+    signal::ctrl_c().await?;
+    shard_manager_ref.stop_gracefully().await?;
+    shard_manager_ref.wait_for_shutdown_result().await.unwrap();
 
     Ok(())
 }

@@ -16,7 +16,7 @@ hartex_backend_models = { path = "../hartex-backend-models" }
 hartex_database_queries = { path = "../../database/hartex-database-queries" }
 
 hartex_discord_utils = { path = "../../rust-utilities/hartex-discord-utils" }
-hartex_tracing = { path = "../../rust-utilities/hartex-tracing" }
+hartex-tracing = { path = "../../rust-utilities/hartex-tracing" }
 
 axum = { version = "0.8.6", features = ["json", "macros"] }
 axum-extra = { version = "0.12.1", features = ["with-rejection"] }

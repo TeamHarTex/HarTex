@@ -20,28 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use git_version::git_version;
-use hartex_tracing::eyre;
-use mimalloc::MiMalloc;
-use tracing::subscriber;
+use twilight_gateway::ShardId;
+use twilight_model::id::{Id, marker::GuildMarker};
 
-#[global_allocator]
-static ALLOCATOR: MiMalloc = MiMalloc;
+pub struct ForwardToShard<M> {
+    pub(crate) id: ShardId,
+    pub(crate) message: M,
+}
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    hartex_termios_utils::no_echoctl();
-    eyre::initialize_eyre()?;
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
+impl<M> ForwardToShard<M> {
+    pub const fn new(id: ShardId, message: M) -> Self {
+        Self { id, message }
+    }
+}
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::info!("workers starting up...");
+pub struct ShardLatency;
 
-    Ok(())
+pub struct ShardRequestGuildMembers {
+    pub(crate) guild_id: Id<GuildMarker>,
 }

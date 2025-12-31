@@ -20,28 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use git_version::git_version;
-use hartex_tracing::eyre;
-use mimalloc::MiMalloc;
-use tracing::subscriber;
+use time::{Month, OffsetDateTime};
 
-#[global_allocator]
-static ALLOCATOR: MiMalloc = MiMalloc;
-
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    hartex_termios_utils::no_echoctl();
-    eyre::initialize_eyre()?;
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
-
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
+pub fn main() {
+    let time = OffsetDateTime::now_utc();
+    println!(
+        "cargo::rustc-env=CARGO_BUILD_DATE={}-{}-{}",
+        time.year(),
+        <Month as Into<u8>>::into(time.month()),
+        time.day()
     );
-    tracing::info!("workers starting up...");
-
-    Ok(())
 }

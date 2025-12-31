@@ -22,24 +22,15 @@
 
 //! # Logging Facilities
 
-pub use formati::{debug, error, format, info, trace, warn};
 use tracing_core::{LevelFilter, Subscriber};
-use tracing_subscriber::{
-    Registry,
-    filter::Targets,
-    fmt::{Layer, time::OffsetTime},
-    layer::SubscriberExt,
-};
+use tracing_error::ErrorLayer;
+use tracing_subscriber::{Registry, filter::Targets, fmt::Layer, layer::SubscriberExt};
+
+pub mod eyre;
 
 /// Create a new `tracing` subscriber.
 pub fn subscriber() -> impl Subscriber {
-    let fmt_layer = Layer::default()
-        .pretty()
-        .with_timer(OffsetTime::local_rfc_3339().unwrap())
-        .with_target(true)
-        .with_level(true)
-        .with_file(true)
-        .with_line_number(true);
+    let fmt_layer = Layer::default().with_target(true).with_level(true);
     let targets_layer = Targets::new()
         .with_default(LevelFilter::TRACE)
         .with_target("h2::client", LevelFilter::OFF)
@@ -82,5 +73,8 @@ pub fn subscriber() -> impl Subscriber {
         .with_target("twilight_gateway::shard", LevelFilter::OFF)
         .with_target("twilight_http::client", LevelFilter::OFF);
 
-    Registry::default().with(fmt_layer).with(targets_layer)
+    Registry::default()
+        .with(fmt_layer)
+        .with(targets_layer)
+        .with(ErrorLayer::default())
 }

@@ -20,28 +20,27 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use git_version::git_version;
-use hartex_tracing::eyre;
-use mimalloc::MiMalloc;
-use tracing::subscriber;
+use kameo::reply::{Reply, ReplyError};
+use twilight_gateway::Latency;
 
-#[global_allocator]
-static ALLOCATOR: MiMalloc = MiMalloc;
+pub struct ShardLatencyReply {
+    pub(crate) latency: Latency,
+}
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    hartex_termios_utils::no_echoctl();
-    eyre::initialize_eyre()?;
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
+impl Reply for ShardLatencyReply {
+    type Ok = Latency;
+    type Error = ();
+    type Value = Self;
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::info!("workers starting up...");
+    fn to_result(self) -> Result<Self::Ok, Self::Error> {
+        Ok(self.latency)
+    }
 
-    Ok(())
+    fn into_any_err(self) -> Option<Box<dyn ReplyError>> {
+        Some(Box::new(()))
+    }
+
+    fn into_value(self) -> Self::Value {
+        self
+    }
 }

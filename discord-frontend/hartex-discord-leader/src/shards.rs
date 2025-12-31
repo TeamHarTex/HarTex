@@ -20,60 +20,44 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::ops::Deref;
-
-use hartex_discord_core::discord::{
-    gateway::{ConfigBuilder, Intents, Shard, ShardId, create_recommended, queue::Queue},
-    model::gateway::{
-        payload::outgoing::update_presence::UpdatePresencePayload,
-        presence::{Activity, ActivityType, Status},
-    },
-};
+use color_eyre::Result;
 use hartex_discord_utils::{CLIENT, TOKEN};
-use miette::IntoDiagnostic;
+use twilight_gateway::{ConfigBuilder, Shard, create_recommended};
+use twilight_model::gateway::{
+    Intents,
+    payload::outgoing::update_presence::UpdatePresencePayload,
+    presence::{Activity, ActivityType, Status},
+};
 
-/// Obtain a list of shards.
-pub async fn obtain<Q>(queue: Q) -> miette::Result<Vec<Shard<Q>>>
-where
-    Q: Queue + Clone + Send + Sync + Sized,
-{
-    let config = ConfigBuilder::new(TOKEN.deref().clone(), Intents::all())
-        .queue(queue.clone())
-        .build();
+pub async fn create() -> Result<impl Iterator<Item = Shard>> {
+    let config = ConfigBuilder::new(TOKEN.get().unwrap().clone(), Intents::all()).build();
 
-    Ok(create_recommended::<_, Q>(
-        &CLIENT,
-        config,
-        |shard_id: ShardId, builder: ConfigBuilder<Q>| {
-            builder
-                .presence(UpdatePresencePayload {
-                    activities: vec![Activity {
-                        application_id: None,
-                        assets: None,
-                        buttons: vec![],
-                        created_at: None,
-                        details: None,
-                        emoji: None,
-                        flags: None,
-                        id: None,
-                        instance: None,
-                        kind: ActivityType::Watching,
-                        name: format!("development | shard {}", shard_id.number()),
-                        party: None,
-                        secrets: None,
-                        state: None,
-                        timestamps: None,
-                        url: None,
-                    }],
-                    afk: false,
-                    since: None,
-                    status: Status::Online,
-                })
-                .queue(queue.clone())
-                .build()
-        },
-    )
-    .await
-    .into_diagnostic()?
-    .collect::<Vec<_>>())
+    Ok(create_recommended(&CLIENT, config, |shard_id, builder| {
+        builder
+            .presence(UpdatePresencePayload {
+                activities: vec![Activity {
+                    application_id: None,
+                    assets: None,
+                    buttons: vec![],
+                    created_at: None,
+                    details: None,
+                    emoji: None,
+                    flags: None,
+                    id: None,
+                    instance: None,
+                    kind: ActivityType::Watching,
+                    name: format!("development | shard {}", shard_id.number()),
+                    party: None,
+                    secrets: None,
+                    state: None,
+                    timestamps: None,
+                    url: None,
+                }],
+                afk: false,
+                since: None,
+                status: Status::Idle,
+            })
+            .build()
+    })
+    .await?)
 }

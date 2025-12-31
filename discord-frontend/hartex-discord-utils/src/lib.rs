@@ -20,28 +20,30 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use git_version::git_version;
-use hartex_tracing::eyre;
-use mimalloc::MiMalloc;
-use tracing::subscriber;
+use std::{
+    env,
+    sync::{LazyLock, OnceLock},
+};
 
-#[global_allocator]
-static ALLOCATOR: MiMalloc = MiMalloc;
+use color_eyre::{
+    Result,
+    eyre::{WrapErr, eyre},
+};
+use twilight_http::Client;
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    hartex_termios_utils::no_echoctl();
-    eyre::initialize_eyre()?;
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
+pub static CLIENT: LazyLock<Client> = LazyLock::new(|| {
+    Client::builder()
+        .token(TOKEN.get().unwrap().clone())
+        .build()
+});
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::info!("workers starting up...");
+pub static TOKEN: OnceLock<String> = OnceLock::new();
+
+pub fn initialize_env() -> Result<()> {
+    let token = env::var("TOKEN").wrap_err("environment variable `TOKEN` is not set")?;
+    TOKEN
+        .set(token)
+        .map_err(|_| eyre!("TOKEN has already been initialized"))?;
 
     Ok(())
 }
