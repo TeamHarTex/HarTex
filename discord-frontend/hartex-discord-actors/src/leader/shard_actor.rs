@@ -88,6 +88,7 @@ impl Actor for Shard {
     ) -> Result<(), Self::Error> {
         tracing::warn!("shard stopping");
         self.shard.lock().await.close(CloseFrame::NORMAL);
+
         Ok(())
     }
 }

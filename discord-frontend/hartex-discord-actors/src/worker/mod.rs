@@ -19,3 +19,17 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+use kameo::actor::{Actor, ActorRef};
+
+pub struct Worker;
+
+impl Actor for Worker {
+    type Args = ();
+
+    type Error = ();
+
+    async fn on_start(_: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
+        todo!()
+    }
+}

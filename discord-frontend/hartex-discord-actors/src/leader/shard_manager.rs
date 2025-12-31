@@ -67,8 +67,8 @@ impl Actor for ShardManager {
 
         let futures = future::join_all(self.shards.values().map(|(sender, shard)| async {
             sender.send(true).unwrap();
-            shard.stop_gracefully().await.ok();
 
+            shard.stop_gracefully().await.ok();
             shard.wait_for_shutdown_result()
         }));
 
