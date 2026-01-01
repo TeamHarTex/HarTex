@@ -21,8 +21,12 @@
  */
 
 use color_eyre::Result;
+use hartex_discord_grpc::manager::manager_server::ManagerServer;
 use hartex_tracing::{self, eyre};
+use tonic::transport::Server;
 use tracing::subscriber;
+
+use crate::server::ManagerServerImpl;
 
 mod server;
 
@@ -31,6 +35,14 @@ pub async fn main() -> Result<()> {
     hartex_termios_utils::no_echoctl();
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
+
+    // todo: allow port configuration in the command line
+    Server::builder()
+        .serve(
+            "127.0.0.1:3000".parse()?,
+            ManagerServer::new(ManagerServerImpl),
+        )
+        .await?;
 
     Ok(())
 }

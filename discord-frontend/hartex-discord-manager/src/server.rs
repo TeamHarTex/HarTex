@@ -21,10 +21,11 @@
  */
 
 use hartex_discord_grpc::manager::{IdentifyRequest, ReadyResponse, manager_server::Manager};
-use tonic::{Request, Response, Status};
+use tonic::{Request, Response, Status, async_trait};
 
 pub struct ManagerServerImpl;
 
+#[async_trait]
 impl Manager for ManagerServerImpl {
     async fn identify(
         &self,
