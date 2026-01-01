@@ -1,0 +1,20 @@
+[package]
+name = "hartex-discord-manager"
+description = """
+The instance manager of the bot, configuring how many instances of the bot is run.
+"""
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
+
+[dependencies]
+
+[build-dependencies]
+time = { workspace = true }
+
+[[bin]]
+name = "manager"
+path = "./src/main.rs"
+
+[lints]
+workspace = true

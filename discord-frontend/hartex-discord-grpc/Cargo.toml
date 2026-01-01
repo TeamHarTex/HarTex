@@ -1,0 +1,17 @@
+[package]
+name = "hartex-discord-grpc"
+description = """
+gRPC protocols used by the bot.
+"""
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
+
+[dependencies]
+tonic = { workspace = true }
+
+[build-dependencies]
+tonic-prost-build = { workspace = true }
+
+[lints]
+workspace = true
