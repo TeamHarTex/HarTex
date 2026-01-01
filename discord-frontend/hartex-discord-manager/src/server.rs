@@ -55,7 +55,7 @@ impl Manager for ManagerServerImpl {
         next.store(worker_id + 1, Ordering::SeqCst);
 
         Ok(Response::new(ReadyResponse {
-            worker_id: worker_id.to_string(),
+            worker_id,
             initial_assignments: vec![],
         }))
     }
