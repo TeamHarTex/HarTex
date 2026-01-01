@@ -8,6 +8,7 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+tonic = { workspace = true }
 
 [build-dependencies]
 tonic-prost-build = { workspace = true }

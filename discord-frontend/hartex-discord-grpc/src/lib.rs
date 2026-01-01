@@ -19,3 +19,10 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
+pub mod manager {
+    tonic::include_proto!("dev.teamhartex.hartex.protobufs.manager");
+
+    pub const MANAGER_PROTO_FILE_DESCRIPTOR_SET: &[u8] =
+        tonic::include_file_descriptor_set!("grpc-descriptor");
+}

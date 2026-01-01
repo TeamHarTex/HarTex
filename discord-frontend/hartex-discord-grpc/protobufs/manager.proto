@@ -23,3 +23,27 @@
 syntax = "proto3";
 
 package dev.teamhartex.hartex.protobufs.manager;
+
+message IdentifyRequest {
+  uint32 capacity = 1;
+}
+
+message ShardResumeData {
+  string session_id = 1;
+  uint64 seq = 2;
+}
+
+message ShardAssignment {
+  uint32 shard_id = 1;
+  uint32 shard_count = 2;
+  optional ShardResumeData resume_data = 3;
+}
+
+message ReadyResponse {
+  string worker_id = 1;
+  repeated ShardAssignment initial_assignments = 2;
+}
+
+service Manager {
+  rpc Identify(IdentifyRequest) returns (ReadyResponse);
+}
