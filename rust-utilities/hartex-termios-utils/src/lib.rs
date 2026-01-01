@@ -28,7 +28,7 @@ pub fn no_echoctl() {
         use libc::{ECHOCTL, TCSANOW, tcgetattr, tcsetattr};
 
         let fd = io::stdin().as_raw_fd();
-        #[allow(unsafe_code)]
+        #[allow(unsafe_code, reason = "unsafe code is required here to interact with libc")]
         unsafe {
             let mut term = mem::zeroed();
             tcgetattr(fd, &mut term);

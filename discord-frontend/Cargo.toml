@@ -38,6 +38,7 @@ hartex-termios-utils = { path = "../rust-utilities/hartex-termios-utils" }
 hartex-tracing = { path = "../rust-utilities/hartex-tracing" }
 
 [workspace.lints.clippy]
+allow_attributes_without_reason = "forbid"
 pedantic = "deny"
 
 [workspace.lints.rust]

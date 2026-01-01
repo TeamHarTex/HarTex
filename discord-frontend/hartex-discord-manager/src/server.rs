@@ -20,17 +20,44 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::sync::{Arc, atomic::AtomicU32};
+
 use hartex_discord_grpc::manager::{IdentifyRequest, ReadyResponse, manager_server::Manager};
+use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
 
-pub struct ManagerServerImpl;
+pub struct ManagerServerImpl {
+    state: Arc<ManagerServerState>,
+}
+
+impl ManagerServerImpl {
+    pub fn new() -> Self {
+        Self {
+            state: Arc::new(ManagerServerState::new()),
+        }
+    }
+}
 
 #[async_trait]
 impl Manager for ManagerServerImpl {
     async fn identify(
         &self,
-        _: Request<IdentifyRequest>,
+        request: Request<IdentifyRequest>,
     ) -> Result<Response<ReadyResponse>, Status> {
+        let _ = request.into_inner();
+
         todo!()
+    }
+}
+
+struct ManagerServerState {
+    next_worker_id: Arc<Mutex<AtomicU32>>,
+}
+
+impl ManagerServerState {
+    fn new() -> Self {
+        Self {
+            next_worker_id: Arc::new(Mutex::new(AtomicU32::new(0))),
+        }
     }
 }

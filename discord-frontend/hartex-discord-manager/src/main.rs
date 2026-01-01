@@ -40,7 +40,7 @@ pub async fn main() -> Result<()> {
     Server::builder()
         .serve(
             "127.0.0.1:3000".parse()?,
-            ManagerServer::new(ManagerServerImpl),
+            ManagerServer::new(ManagerServerImpl::new()),
         )
         .await?;
 

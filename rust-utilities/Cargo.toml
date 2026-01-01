@@ -24,6 +24,7 @@ tracing-error = "0.2.1"
 tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
 
 [workspace.lints.clippy]
+allow_attributes_without_reason = "forbid"
 pedantic = "deny"
 
 [workspace.lints.rust]

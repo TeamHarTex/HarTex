@@ -500,6 +500,7 @@ dependencies = [
  "tokio",
  "tonic",
  "tracing",
+ "twilight-http",
 ]
 
 [[package]]

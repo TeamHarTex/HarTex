@@ -12,6 +12,7 @@ color-eyre = { workspace = true }
 tokio = { workspace = true }
 tonic = { workspace = true }
 tracing = { workspace = true }
+twilight-http = { workspace = true }
 
 hartex-discord-grpc = { workspace = true }
 hartex-termios-utils = { workspace = true }
