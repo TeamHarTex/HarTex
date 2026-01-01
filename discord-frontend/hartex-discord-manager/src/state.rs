@@ -19,18 +19,19 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
-use std::sync::{Arc, atomic::AtomicU32};
+use std::{
+    collections::HashSet,
+    sync::{Arc, atomic::AtomicU32},
+};
 
 use dashmap::DashMap;
+use hartex_discord_grpc::manager::ShardAssignment;
 use tokio::sync::Mutex;
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 pub struct ManagerServerState {
     pub next_worker_id: Arc<Mutex<AtomicU32>>,
-    #[expect(dead_code)]
-    pub total_shards: u32,
-    #[expect(dead_code)]
+    pub all_shards: HashSet<u32>,
     pub workers: DashMap<u32, Worker>,
 }
 
@@ -38,10 +39,26 @@ impl ManagerServerState {
     pub fn new(info: BotConnectionInfo) -> Self {
         Self {
             next_worker_id: Arc::new(Mutex::new(AtomicU32::new(0))),
-            total_shards: info.shards,
+            all_shards: (0..info.shards).collect(),
             workers: DashMap::new(),
         }
     }
 }
 
-pub struct Worker;
+pub struct Worker {
+    #[expect(dead_code)]
+    pub capacity: u32,
+    #[expect(dead_code)]
+    pub id: u32,
+    pub shard_assignments: HashSet<ShardAssignment>,
+}
+
+impl Worker {
+    pub fn new(id: u32, capacity: u32) -> Self {
+        Self {
+            capacity,
+            id,
+            shard_assignments: HashSet::new(),
+        }
+    }
+}
