@@ -492,9 +492,11 @@ name = "hartex-discord-manager"
 version = "0.17.0"
 dependencies = [
  "color-eyre",
+ "hartex-discord-grpc",
  "hartex-termios-utils",
  "hartex-tracing",
  "tokio",
+ "tonic",
  "tracing",
 ]
 

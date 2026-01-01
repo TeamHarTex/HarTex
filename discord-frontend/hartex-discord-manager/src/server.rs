@@ -20,17 +20,16 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use hartex_tracing::{self, eyre};
-use tracing::subscriber;
+use hartex_discord_grpc::manager::{IdentifyRequest, ReadyResponse, manager_server::Manager};
+use tonic::{Request, Response, Status};
 
-mod server;
+pub struct ManagerServerImpl;
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    hartex_termios_utils::no_echoctl();
-    eyre::initialize_eyre()?;
-    subscriber::set_global_default(hartex_tracing::subscriber())?;
-
-    Ok(())
+impl Manager for ManagerServerImpl {
+    async fn identify(
+        &self,
+        _: Request<IdentifyRequest>,
+    ) -> Result<Response<ReadyResponse>, Status> {
+        todo!()
+    }
 }
