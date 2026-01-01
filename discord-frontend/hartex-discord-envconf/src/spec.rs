@@ -20,24 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn no_echoctl() {
-    #[cfg(unix)]
-    {
-        use std::{io, mem, os::unix::io::AsRawFd};
+use serde::Deserialize;
 
-        use libc::{ECHOCTL, TCSANOW, tcgetattr, tcsetattr};
+#[derive(Deserialize)]
+pub struct Configuration {
+    token: String,
+}
 
-        let fd = io::stdin().as_raw_fd();
-        #[allow(
-            unsafe_code,
-            reason = "unsafe code is required here to interact with libc"
-        )]
-        unsafe {
-            let mut term = mem::zeroed();
-            tcgetattr(fd, &mut term);
-
-            term.c_lflag &= !ECHOCTL;
-            tcsetattr(fd, TCSANOW, &term);
-        }
+impl Configuration {
+    pub fn token(&self) -> &str {
+        self.token.as_ref()
     }
 }

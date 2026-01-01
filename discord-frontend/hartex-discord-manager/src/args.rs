@@ -20,24 +20,17 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn no_echoctl() {
-    #[cfg(unix)]
-    {
-        use std::{io, mem, os::unix::io::AsRawFd};
+use clap::Parser;
 
-        use libc::{ECHOCTL, TCSANOW, tcgetattr, tcsetattr};
+#[derive(Parser)]
+#[command(name = "manager", about = "Worker instance manager for HarTex.", long_about = None)]
+pub struct ManagerCliArgs {
+    #[arg(value_name = "PORT", default_value_t = 3000)]
+    port: u16,
+}
 
-        let fd = io::stdin().as_raw_fd();
-        #[allow(
-            unsafe_code,
-            reason = "unsafe code is required here to interact with libc"
-        )]
-        unsafe {
-            let mut term = mem::zeroed();
-            tcgetattr(fd, &mut term);
-
-            term.c_lflag &= !ECHOCTL;
-            tcsetattr(fd, TCSANOW, &term);
-        }
+impl ManagerCliArgs {
+    pub fn port(&self) -> u16 {
+        self.port
     }
 }

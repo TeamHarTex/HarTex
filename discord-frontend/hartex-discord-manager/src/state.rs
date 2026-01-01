@@ -20,24 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn no_echoctl() {
-    #[cfg(unix)]
-    {
-        use std::{io, mem, os::unix::io::AsRawFd};
+use std::sync::{Arc, atomic::AtomicU32};
 
-        use libc::{ECHOCTL, TCSANOW, tcgetattr, tcsetattr};
+use dashmap::DashMap;
+use tokio::sync::Mutex;
+use twilight_model::gateway::connection_info::BotConnectionInfo;
 
-        let fd = io::stdin().as_raw_fd();
-        #[allow(
-            unsafe_code,
-            reason = "unsafe code is required here to interact with libc"
-        )]
-        unsafe {
-            let mut term = mem::zeroed();
-            tcgetattr(fd, &mut term);
+pub struct ManagerServerState {
+    pub next_worker_id: Arc<Mutex<AtomicU32>>,
+    #[expect(dead_code)]
+    pub total_shards: u32,
+    #[expect(dead_code)]
+    pub workers: DashMap<u32, Worker>,
+}
 
-            term.c_lflag &= !ECHOCTL;
-            tcsetattr(fd, TCSANOW, &term);
+impl ManagerServerState {
+    pub fn new(info: BotConnectionInfo) -> Self {
+        Self {
+            next_worker_id: Arc::new(Mutex::new(AtomicU32::new(0))),
+            total_shards: info.shards,
+            workers: DashMap::new(),
         }
     }
 }
+
+pub struct Worker;

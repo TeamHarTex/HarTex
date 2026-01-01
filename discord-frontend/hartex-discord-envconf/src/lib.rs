@@ -20,24 +20,21 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn no_echoctl() {
-    #[cfg(unix)]
-    {
-        use std::{io, mem, os::unix::io::AsRawFd};
+mod spec;
 
-        use libc::{ECHOCTL, TCSANOW, tcgetattr, tcsetattr};
+use config::{Config, ConfigError, Environment};
 
-        let fd = io::stdin().as_raw_fd();
-        #[allow(
-            unsafe_code,
-            reason = "unsafe code is required here to interact with libc"
-        )]
-        unsafe {
-            let mut term = mem::zeroed();
-            tcgetattr(fd, &mut term);
+pub use crate::spec::Configuration;
 
-            term.c_lflag &= !ECHOCTL;
-            tcsetattr(fd, TCSANOW, &term);
-        }
-    }
+pub fn load_configuration() -> Result<Configuration, ConfigError> {
+    let config = Config::builder()
+        .add_source(
+            Environment::with_prefix("HARTEX")
+                .separator("_")
+                .list_separator(",")
+                .try_parsing(true),
+        )
+        .build()?;
+
+    config.try_deserialize()
 }
