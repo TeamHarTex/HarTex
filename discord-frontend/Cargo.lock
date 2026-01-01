@@ -491,7 +491,11 @@ dependencies = [
 name = "hartex-discord-manager"
 version = "0.17.0"
 dependencies = [
- "time",
+ "color-eyre",
+ "hartex-termios-utils",
+ "hartex-tracing",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

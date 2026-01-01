@@ -20,4 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub fn main() {}
+use color_eyre::Result;
+use hartex_tracing::{self, eyre};
+use tracing::subscriber;
+
+#[tokio::main]
+pub async fn main() -> Result<()> {
+    hartex_termios_utils::no_echoctl();
+    eyre::initialize_eyre()?;
+    subscriber::set_global_default(hartex_tracing::subscriber())?;
+
+    Ok(())
+}

@@ -41,6 +41,8 @@ pub async fn main() -> Result<()> {
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
+    // todo: communicate with shard manager first
+
     tracing::info!(
         "HarTex {} ({} {})",
         env!("CARGO_PKG_VERSION"),

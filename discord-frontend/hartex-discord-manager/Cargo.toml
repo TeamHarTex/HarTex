@@ -8,9 +8,12 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+color-eyre = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
 
-[build-dependencies]
-time = { workspace = true }
+hartex-termios-utils = { workspace = true }
+hartex-tracing = { workspace = true }
 
 [[bin]]
 name = "manager"
