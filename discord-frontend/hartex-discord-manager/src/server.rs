@@ -25,13 +25,15 @@ use std::sync::{Arc, atomic::AtomicU32};
 use hartex_discord_grpc::manager::{IdentifyRequest, ReadyResponse, manager_server::Manager};
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
+use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 pub struct ManagerServerImpl {
+    #[expect(dead_code)]
     state: Arc<ManagerServerState>,
 }
 
 impl ManagerServerImpl {
-    pub fn new() -> Self {
+    pub fn new(_: BotConnectionInfo) -> Self {
         Self {
             state: Arc::new(ManagerServerState::new()),
         }
@@ -51,6 +53,7 @@ impl Manager for ManagerServerImpl {
 }
 
 struct ManagerServerState {
+    #[expect(dead_code)]
     next_worker_id: Arc<Mutex<AtomicU32>>,
 }
 

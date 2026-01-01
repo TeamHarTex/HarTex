@@ -20,14 +20,19 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::net::SocketAddr;
+
+use clap::Parser;
 use color_eyre::Result;
 use hartex_discord_grpc::manager::manager_server::ManagerServer;
 use hartex_tracing::{self, eyre};
 use tonic::transport::Server;
 use tracing::subscriber;
+use twilight_http::Client;
 
-use crate::server::ManagerServerImpl;
+use crate::{args::ManagerCliArgs, server::ManagerServerImpl};
 
+mod args;
 mod server;
 
 #[tokio::main]
@@ -36,12 +41,18 @@ pub async fn main() -> Result<()> {
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
+    let port = ManagerCliArgs::parse().port();
+    let addr = SocketAddr::new("127.0.0.1".parse()?, port);
+
+    tracing::trace!("loading configuration from environment variables");
+    let config = hartex_discord_envconf::load_configuration()?;
+
+    let http = Client::new(config.token().to_owned());
+    let info = http.gateway().authed().await?.model().await?;
+
     // todo: allow port configuration in the command line
     Server::builder()
-        .serve(
-            "127.0.0.1:3000".parse()?,
-            ManagerServer::new(ManagerServerImpl::new()),
-        )
+        .serve(addr, ManagerServer::new(ManagerServerImpl::new(info)))
         .await?;
 
     Ok(())
