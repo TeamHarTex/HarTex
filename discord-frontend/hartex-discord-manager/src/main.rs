@@ -34,6 +34,7 @@ use crate::{args::ManagerCliArgs, server::ManagerServerImpl};
 
 mod args;
 mod server;
+mod state;
 
 #[tokio::main]
 pub async fn main() -> Result<()> {

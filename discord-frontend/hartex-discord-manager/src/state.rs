@@ -20,41 +20,28 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::{Arc, atomic::Ordering};
+use std::sync::{Arc, atomic::AtomicU32};
 
-use hartex_discord_grpc::manager::{IdentifyRequest, ReadyResponse, manager_server::Manager};
-use tonic::{Request, Response, Status, async_trait};
+use dashmap::DashMap;
+use tokio::sync::Mutex;
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
-use crate::state::ManagerServerState;
-
-pub struct ManagerServerImpl {
-    state: Arc<ManagerServerState>,
+pub struct ManagerServerState {
+    pub next_worker_id: Arc<Mutex<AtomicU32>>,
+    #[expect(dead_code)]
+    pub total_shards: u32,
+    #[expect(dead_code)]
+    pub workers: DashMap<u32, Worker>,
 }
 
-impl ManagerServerImpl {
+impl ManagerServerState {
     pub fn new(info: BotConnectionInfo) -> Self {
         Self {
-            state: Arc::new(ManagerServerState::new(info)),
+            next_worker_id: Arc::new(Mutex::new(AtomicU32::new(0))),
+            total_shards: info.shards,
+            workers: DashMap::new(),
         }
     }
 }
 
-#[async_trait]
-impl Manager for ManagerServerImpl {
-    async fn identify(
-        &self,
-        request: Request<IdentifyRequest>,
-    ) -> Result<Response<ReadyResponse>, Status> {
-        let _ = request.into_inner();
-        let next = self.state.next_worker_id.lock().await;
-
-        let worker_id = next.load(Ordering::SeqCst);
-        next.store(worker_id + 1, Ordering::SeqCst);
-
-        Ok(Response::new(ReadyResponse {
-            worker_id,
-            initial_assignments: vec![],
-        }))
-    }
-}
+pub struct Worker;

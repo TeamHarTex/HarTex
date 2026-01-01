@@ -19,6 +19,7 @@ version = "0.17.0"
 clap = { version = "4.5.53", features = ["color", "derive", "suggestions"] }
 color-eyre = "0.6.5"
 config = { version = "0.15.19", default-features = false }
+dashmap = "7.0.0-rc2"
 futures = "0.3.31"
 git-version = "0.3.9"
 kameo = { version = "0.19.2", features = ["tracing"] }
