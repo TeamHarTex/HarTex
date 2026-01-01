@@ -20,7 +20,10 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::{Arc, atomic::AtomicU32};
+use std::sync::{
+    Arc,
+    atomic::{AtomicU32, Ordering},
+};
 
 use hartex_discord_grpc::manager::{IdentifyRequest, ReadyResponse, manager_server::Manager};
 use tokio::sync::Mutex;
@@ -28,14 +31,13 @@ use tonic::{Request, Response, Status, async_trait};
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 pub struct ManagerServerImpl {
-    #[expect(dead_code)]
     state: Arc<ManagerServerState>,
 }
 
 impl ManagerServerImpl {
-    pub fn new(_: BotConnectionInfo) -> Self {
+    pub fn new(info: BotConnectionInfo) -> Self {
         Self {
-            state: Arc::new(ManagerServerState::new()),
+            state: Arc::new(ManagerServerState::new(info)),
         }
     }
 }
@@ -47,20 +49,29 @@ impl Manager for ManagerServerImpl {
         request: Request<IdentifyRequest>,
     ) -> Result<Response<ReadyResponse>, Status> {
         let _ = request.into_inner();
+        let next = self.state.next_worker_id.lock().await;
 
-        todo!()
+        let worker_id = next.load(Ordering::SeqCst);
+        next.store(worker_id + 1, Ordering::SeqCst);
+
+        Ok(Response::new(ReadyResponse {
+            worker_id: worker_id.to_string(),
+            initial_assignments: vec![],
+        }))
     }
 }
 
 struct ManagerServerState {
-    #[expect(dead_code)]
     next_worker_id: Arc<Mutex<AtomicU32>>,
+    #[expect(dead_code)]
+    total_shards: u32,
 }
 
 impl ManagerServerState {
-    fn new() -> Self {
+    fn new(info: BotConnectionInfo) -> Self {
         Self {
             next_worker_id: Arc::new(Mutex::new(AtomicU32::new(0))),
+            total_shards: info.shards,
         }
     }
 }
