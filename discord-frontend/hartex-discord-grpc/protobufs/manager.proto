@@ -31,6 +31,7 @@ message IdentifyRequest {
 message ShardResumeData {
   string session_id = 1;
   uint64 seq = 2;
+  string resume_gateway_url = 3;
 }
 
 message ShardAssignment {
