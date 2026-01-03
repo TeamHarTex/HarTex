@@ -21,7 +21,6 @@
  */
 
 use color_eyre::Result;
-use git_version::git_version;
 use hartex_discord_actors::leader::ShardManager;
 use hartex_discord_utils::initialize_env;
 use hartex_tracing::{self, eyre};
@@ -43,12 +42,7 @@ pub async fn main() -> Result<()> {
 
     // todo: communicate with shard manager first
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
+    tracing::info!("{}", hartex_version::version());
     tracing::info!("worker starting up...");
 
     tracing::trace!("loading environment variables...");

@@ -20,39 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-syntax = "proto3";
+use git_version::git_version;
 
-package dev.teamhartex.hartex.protobufs.manager;
-
-message IdentifyRequest {
-  uint32 capacity = 1;
-}
-
-message ShardResumeData {
-  string session_id = 1;
-  uint64 seq = 2;
-  string resume_gateway_url = 3;
-}
-
-message ShardAssignment {
-  uint32 shard_id = 1;
-  uint32 shard_count = 2;
-  optional ShardResumeData resume_data = 3;
-}
-
-message WorkerSessionStartLimit {
-  uint32 max_concurrency = 1;
-  uint32 remaining = 2;
-  uint64 reset_after = 3;
-  uint32 total = 4;
-}
-
-message ReadyResponse {
-  uint32 worker_id = 1;
-  repeated ShardAssignment initial_assignments = 2;
-  WorkerSessionStartLimit session_start_limit = 3;
-}
-
-service Manager {
-  rpc Identify(IdentifyRequest) returns (ReadyResponse);
+pub fn version() -> String {
+    format!(
+        "HarTex {} ({} {})",
+        env!("CARGO_PKG_VERSION"),
+        git_version!(),
+        env!("CARGO_BUILD_DATE")
+    )
 }

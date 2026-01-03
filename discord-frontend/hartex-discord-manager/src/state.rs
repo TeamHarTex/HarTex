@@ -24,12 +24,13 @@ use std::{collections::HashSet, sync::atomic::AtomicU32};
 
 use dashmap::DashMap;
 use hartex_discord_grpc::manager::ShardAssignment;
-use twilight_model::gateway::connection_info::BotConnectionInfo;
+use twilight_model::gateway::{SessionStartLimit, connection_info::BotConnectionInfo};
 
 pub struct ManagerServerState {
     pub all_shards: HashSet<u32>,
     pub assigned_shards: HashSet<u32>,
     pub next_worker_id: AtomicU32,
+    pub session_start_limit: SessionStartLimit,
     pub workers: DashMap<u32, Worker>,
 }
 
@@ -39,6 +40,7 @@ impl ManagerServerState {
             all_shards: (0..info.shards).collect(),
             assigned_shards: HashSet::new(),
             next_worker_id: AtomicU32::new(0),
+            session_start_limit: info.session_start_limit,
             workers: DashMap::new(),
         }
     }

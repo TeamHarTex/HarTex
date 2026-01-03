@@ -26,6 +26,7 @@ use clap::Parser;
 use color_eyre::Result;
 use hartex_discord_grpc::manager::manager_server::ManagerServer;
 use hartex_tracing::{self, eyre};
+use rustls::crypto::aws_lc_rs;
 use tonic::transport::Server;
 use tracing::subscriber;
 use twilight_http::Client;
@@ -42,15 +43,19 @@ pub async fn main() -> Result<()> {
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
+    aws_lc_rs::default_provider().install_default().unwrap();
+
     let port = ManagerCliArgs::parse().port();
     let addr = SocketAddr::new("127.0.0.1".parse()?, port);
 
     tracing::trace!("loading configuration from environment variables");
     let config = hartex_discord_envconf::load_configuration()?;
 
+    tracing::trace!("obtaining suggested gateway connection configuration from Discord");
     let http = Client::new(config.token().to_owned());
     let info = http.gateway().authed().await?.model().await?;
 
+    tracing::info!("starting gRPC server on {}", &addr);
     Server::builder()
         .serve(addr, ManagerServer::new(ManagerServerImpl::new(info)))
         .await?;

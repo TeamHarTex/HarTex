@@ -9,7 +9,6 @@ version = { workspace = true }
 
 [dependencies]
 color-eyre = { workspace = true }
-git-version = { workspace = true }
 kameo = { workspace = true }
 mimalloc = { workspace = true }
 tokio = { workspace = true }
@@ -21,9 +20,7 @@ hartex-discord-actors = { workspace = true }
 hartex-discord-utils = { workspace = true }
 hartex-termios-utils = { workspace = true }
 hartex-tracing = { workspace = true }
-
-[build-dependencies]
-time = { workspace = true }
+hartex-version = { workspace = true }
 
 [[bin]]
 name = "worker"

@@ -23,7 +23,8 @@
 use std::sync::{Arc, atomic::Ordering};
 
 use hartex_discord_grpc::manager::{
-    IdentifyRequest, ReadyResponse, ShardAssignment, manager_server::Manager,
+    IdentifyRequest, ReadyResponse, ShardAssignment, WorkerSessionStartLimit,
+    manager_server::Manager,
 };
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
@@ -81,6 +82,12 @@ impl Manager for ManagerServerImpl {
         Ok(Response::new(ReadyResponse {
             worker_id,
             initial_assignments,
+            session_start_limit: Some(WorkerSessionStartLimit {
+                max_concurrency: locked.session_start_limit.max_concurrency as u32,
+                remaining: locked.session_start_limit.remaining,
+                reset_after: locked.session_start_limit.reset_after,
+                total: locked.session_start_limit.total,
+            }),
         }))
     }
 }
