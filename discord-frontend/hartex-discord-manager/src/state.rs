@@ -19,27 +19,26 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-use std::{
-    collections::HashSet,
-    sync::{Arc, atomic::AtomicU32},
-};
+
+use std::{collections::HashSet, sync::atomic::AtomicU32};
 
 use dashmap::DashMap;
 use hartex_discord_grpc::manager::ShardAssignment;
-use tokio::sync::Mutex;
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 pub struct ManagerServerState {
-    pub next_worker_id: Arc<Mutex<AtomicU32>>,
     pub all_shards: HashSet<u32>,
+    pub assigned_shards: HashSet<u32>,
+    pub next_worker_id: AtomicU32,
     pub workers: DashMap<u32, Worker>,
 }
 
 impl ManagerServerState {
     pub fn new(info: BotConnectionInfo) -> Self {
         Self {
-            next_worker_id: Arc::new(Mutex::new(AtomicU32::new(0))),
             all_shards: (0..info.shards).collect(),
+            assigned_shards: HashSet::new(),
+            next_worker_id: AtomicU32::new(0),
             workers: DashMap::new(),
         }
     }
@@ -50,15 +49,16 @@ pub struct Worker {
     pub capacity: u32,
     #[expect(dead_code)]
     pub id: u32,
-    pub shard_assignments: HashSet<ShardAssignment>,
+    #[expect(dead_code)]
+    pub shard_assignments: Vec<ShardAssignment>,
 }
 
 impl Worker {
-    pub fn new(id: u32, capacity: u32) -> Self {
+    pub fn new(id: u32, capacity: u32, shard_assignments: Option<Vec<ShardAssignment>>) -> Self {
         Self {
             capacity,
             id,
-            shard_assignments: HashSet::new(),
+            shard_assignments: shard_assignments.unwrap_or_default(),
         }
     }
 }
