@@ -22,7 +22,7 @@
 
 use color_eyre::Result;
 use hartex_discord_actors::leader::ShardManager;
-use hartex_discord_utils::initialize_env;
+use hartex_discord_envconf::load_configuration;
 use hartex_tracing::{self, eyre};
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
@@ -40,15 +40,15 @@ pub async fn main() -> Result<()> {
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
+    tracing::trace!("loading environment variables...");
+    let config = load_configuration()?;
+
     // todo: communicate with shard manager first
 
     tracing::info!("{}", hartex_version::version());
     tracing::info!("worker starting up...");
 
-    tracing::trace!("loading environment variables...");
-    initialize_env()?;
-
-    let shards = shards::create().await?.collect::<Vec<_>>();
+    let shards = shards::create(config.token().to_owned()).await?.collect::<Vec<_>>();
     let shard_manager_ref = ShardManager::spawn(shards);
 
     signal::ctrl_c().await?;

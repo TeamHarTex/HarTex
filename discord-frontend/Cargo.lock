@@ -678,6 +678,7 @@ dependencies = [
  "hartex-discord-grpc",
  "hartex-termios-utils",
  "hartex-tracing",
+ "hartex-version",
  "rustls",
  "tokio",
  "tonic",
@@ -700,6 +701,8 @@ version = "0.17.0"
 dependencies = [
  "color-eyre",
  "hartex-discord-actors",
+ "hartex-discord-envconf",
+ "hartex-discord-grpc",
  "hartex-discord-utils",
  "hartex-termios-utils",
  "hartex-tracing",

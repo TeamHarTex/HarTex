@@ -22,6 +22,7 @@ hartex-discord-envconf = { workspace = true }
 hartex-discord-grpc = { workspace = true }
 hartex-termios-utils = { workspace = true }
 hartex-tracing = { workspace = true }
+hartex-version = { workspace = true }
 
 [[bin]]
 name = "manager"

@@ -45,6 +45,8 @@ pub async fn main() -> Result<()> {
 
     aws_lc_rs::default_provider().install_default().unwrap();
 
+    tracing::info!("{}", hartex_version::version());
+
     let port = ManagerCliArgs::parse().port();
     let addr = SocketAddr::new("127.0.0.1".parse()?, port);
 
