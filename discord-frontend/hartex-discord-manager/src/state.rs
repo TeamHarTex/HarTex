@@ -32,6 +32,7 @@ use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 pub struct ManagerServerState {
     pub all_shards: HashSet<u32>,
+    pub assigned_shards: HashSet<u32>,
     pub lock: Arc<Mutex<()>>,
     pub next_worker_id: AtomicU32,
     pub workers: DashMap<u32, Worker>,
@@ -41,6 +42,7 @@ impl ManagerServerState {
     pub fn new(info: BotConnectionInfo) -> Self {
         Self {
             all_shards: (0..info.shards).collect(),
+            assigned_shards: HashSet::new(),
             lock: Arc::new(Mutex::new(())),
             next_worker_id: AtomicU32::new(0),
             workers: DashMap::new(),
@@ -57,11 +59,7 @@ pub struct Worker {
 }
 
 impl Worker {
-    pub fn new(
-        id: u32,
-        capacity: u32,
-        shard_assignments: Option<Vec<ShardAssignment>>,
-    ) -> Self {
+    pub fn new(id: u32, capacity: u32, shard_assignments: Option<Vec<ShardAssignment>>) -> Self {
         Self {
             capacity,
             id,

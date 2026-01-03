@@ -20,10 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{
-    collections::HashSet,
-    sync::{Arc, atomic::Ordering},
-};
+use std::sync::{Arc, atomic::Ordering};
 
 use hartex_discord_grpc::manager::{
     IdentifyRequest, ReadyResponse, ShardAssignment, manager_server::Manager,
@@ -57,16 +54,14 @@ impl Manager for ManagerServerImpl {
         let initial_assignments = {
             let _guard = self.state.lock.lock().await;
 
-            let already_assigned: HashSet<u32> = self.state.workers
-                .iter()
-                .flat_map(|w| w.shard_assignments.iter().map(|a| a.shard_id))
-                .collect();
-
-            let vec: Vec<_> = self
+            let for_this_shard = self
                 .state
                 .all_shards
-                .difference(&already_assigned)
-                .take(identify.capacity as usize)
+                .difference(&self.state.assigned_shards)
+                .take(identify.capacity as usize);
+            self.state.assigned_shards.extend(for_this_shard.clone());
+
+            let vec: Vec<_> = for_this_shard
                 .map(|shard_id| ShardAssignment {
                     shard_id: *shard_id,
                     shard_count: self.state.all_shards.len() as u32,
