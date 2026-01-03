@@ -25,19 +25,20 @@ use std::sync::{Arc, atomic::Ordering};
 use hartex_discord_grpc::manager::{
     IdentifyRequest, ReadyResponse, ShardAssignment, manager_server::Manager,
 };
+use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 use crate::state::{ManagerServerState, Worker};
 
 pub struct ManagerServerImpl {
-    state: Arc<ManagerServerState>,
+    state: Arc<Mutex<ManagerServerState>>,
 }
 
 impl ManagerServerImpl {
     pub fn new(info: BotConnectionInfo) -> Self {
         Self {
-            state: Arc::new(ManagerServerState::new(info)),
+            state: Arc::new(Mutex::new(ManagerServerState::new(info))),
         }
     }
 }
@@ -49,35 +50,33 @@ impl Manager for ManagerServerImpl {
         request: Request<IdentifyRequest>,
     ) -> Result<Response<ReadyResponse>, Status> {
         let identify = request.into_inner();
-        let worker_id = self.state.next_worker_id.fetch_add(1, Ordering::SeqCst);
 
-        let initial_assignments = {
-            let _guard = self.state.lock.lock().await;
+        let mut locked = self.state.lock().await;
+        let worker_id = locked.next_worker_id.fetch_add(1, Ordering::SeqCst);
+        let for_this_shard: Vec<_> = locked
+            .all_shards
+            .difference(&locked.assigned_shards)
+            .take(identify.capacity as usize)
+            .copied()
+            .collect();
 
-            let for_this_shard = self
-                .state
-                .all_shards
-                .difference(&self.state.assigned_shards)
-                .take(identify.capacity as usize);
-            self.state.assigned_shards.extend(for_this_shard.clone());
+        locked.assigned_shards.extend(for_this_shard.clone());
 
-            let vec: Vec<_> = for_this_shard
-                .map(|shard_id| ShardAssignment {
-                    shard_id: *shard_id,
-                    shard_count: self.state.all_shards.len() as u32,
-                    resume_data: None,
-                })
-                .collect();
-
-            vec
-        };
+        let initial_assignments: Vec<_> = for_this_shard
+            .iter()
+            .map(|shard_id| ShardAssignment {
+                shard_id: *shard_id,
+                shard_count: locked.all_shards.len() as u32,
+                resume_data: None,
+            })
+            .collect();
 
         let worker = Worker::new(
             worker_id,
             identify.capacity,
             Some(initial_assignments.clone()),
         );
-        self.state.workers.insert(worker_id, worker);
+        locked.workers.insert(worker_id, worker);
 
         Ok(Response::new(ReadyResponse {
             worker_id,

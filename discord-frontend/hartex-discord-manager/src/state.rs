@@ -20,20 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{
-    collections::HashSet,
-    sync::{Arc, atomic::AtomicU32},
-};
+use std::{collections::HashSet, sync::atomic::AtomicU32};
 
 use dashmap::DashMap;
 use hartex_discord_grpc::manager::ShardAssignment;
-use tokio::sync::Mutex;
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 pub struct ManagerServerState {
     pub all_shards: HashSet<u32>,
     pub assigned_shards: HashSet<u32>,
-    pub lock: Arc<Mutex<()>>,
     pub next_worker_id: AtomicU32,
     pub workers: DashMap<u32, Worker>,
 }
@@ -43,7 +38,6 @@ impl ManagerServerState {
         Self {
             all_shards: (0..info.shards).collect(),
             assigned_shards: HashSet::new(),
-            lock: Arc::new(Mutex::new(())),
             next_worker_id: AtomicU32::new(0),
             workers: DashMap::new(),
         }
@@ -55,6 +49,7 @@ pub struct Worker {
     pub capacity: u32,
     #[expect(dead_code)]
     pub id: u32,
+    #[expect(dead_code)]
     pub shard_assignments: Vec<ShardAssignment>,
 }
 
