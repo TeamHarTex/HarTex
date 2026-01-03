@@ -28,6 +28,7 @@ use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
 use tokio::signal;
 use tracing::subscriber;
+use twilight_http::Client;
 
 mod shards;
 
@@ -48,7 +49,11 @@ pub async fn main() -> Result<()> {
     tracing::info!("{}", hartex_version::version());
     tracing::info!("worker starting up...");
 
-    let shards = shards::create(config.token().to_owned()).await?.collect::<Vec<_>>();
+    let client = Client::new(config.token().to_owned());
+
+    let shards = shards::create(config.token().to_owned(), &client)
+        .await?
+        .collect::<Vec<_>>();
     let shard_manager_ref = ShardManager::spawn(shards);
 
     signal::ctrl_c().await?;

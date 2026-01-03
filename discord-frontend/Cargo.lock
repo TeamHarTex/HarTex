@@ -703,7 +703,6 @@ dependencies = [
  "hartex-discord-actors",
  "hartex-discord-envconf",
  "hartex-discord-grpc",
- "hartex-discord-utils",
  "hartex-termios-utils",
  "hartex-tracing",
  "hartex-version",
@@ -712,6 +711,7 @@ dependencies = [
  "tokio",
  "tracing",
  "twilight-gateway",
+ "twilight-http",
  "twilight-model",
 ]
 

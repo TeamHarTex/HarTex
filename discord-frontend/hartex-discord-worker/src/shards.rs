@@ -21,18 +21,18 @@
  */
 
 use color_eyre::Result;
-use hartex_discord_utils::CLIENT;
 use twilight_gateway::{ConfigBuilder, Shard, create_recommended};
+use twilight_http::Client;
 use twilight_model::gateway::{
     Intents,
     payload::outgoing::update_presence::UpdatePresencePayload,
     presence::{Activity, ActivityType, Status},
 };
 
-pub async fn create(token: String) -> Result<impl Iterator<Item = Shard>> {
+pub async fn create(token: String, http: &Client) -> Result<impl Iterator<Item = Shard>> {
     let config = ConfigBuilder::new(token, Intents::all()).build();
 
-    Ok(create_recommended(&CLIENT, config, |shard_id, builder| {
+    Ok(create_recommended(http, config, |shard_id, builder| {
         builder
             .presence(UpdatePresencePayload {
                 activities: vec![Activity {

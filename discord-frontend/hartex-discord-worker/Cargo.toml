@@ -14,12 +14,12 @@ mimalloc = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 twilight-gateway = { workspace = true }
+twilight-http = { workspace = true }
 twilight-model = { workspace = true }
 
 hartex-discord-actors = { workspace = true }
 hartex-discord-envconf = { workspace = true }
 hartex-discord-grpc = { workspace = true }
-hartex-discord-utils = { workspace = true }
 hartex-termios-utils = { workspace = true }
 hartex-tracing = { workspace = true }
 hartex-version = { workspace = true }
