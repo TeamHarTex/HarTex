@@ -43,23 +43,6 @@ impl ManagerServerImpl {
             state: Arc::new(ManagerServerState::new(info)),
         }
     }
-
-    pub fn assigned_shards(&self) -> HashSet<u32> {
-        self.state
-            .workers
-            .iter()
-            .fold(HashSet::new(), |set, worker| {
-                set.union(
-                    &worker
-                        .shard_assignments
-                        .iter()
-                        .map(|assignment| assignment.shard_id)
-                        .collect(),
-                )
-                .copied()
-                .collect()
-            })
-    }
 }
 
 #[async_trait]
@@ -69,30 +52,41 @@ impl Manager for ManagerServerImpl {
         request: Request<IdentifyRequest>,
     ) -> Result<Response<ReadyResponse>, Status> {
         let identify = request.into_inner();
-        let next = self.state.next_worker_id.lock().await;
+        let worker_id = self.state.next_worker_id.fetch_add(1, Ordering::SeqCst);
 
-        let worker_id = next.load(Ordering::SeqCst);
-        next.store(worker_id + 1, Ordering::SeqCst);
+        let initial_assignments = {
+            let _guard = self.state.lock.lock().await;
 
-        let worker = Worker::new(worker_id, identify.capacity);
-        self.state.workers.insert(worker_id, worker);
+            let already_assigned: HashSet<u32> = self.state.workers
+                .iter()
+                .flat_map(|w| w.shard_assignments.iter().map(|a| a.shard_id))
+                .collect();
 
-        let already_assigned = self.assigned_shards();
-        let initial_assigned = self
-            .state
-            .all_shards
-            .difference(&already_assigned)
-            .take(identify.capacity as usize);
-
-        Ok(Response::new(ReadyResponse {
-            worker_id,
-            initial_assignments: initial_assigned
+            let vec: Vec<_> = self
+                .state
+                .all_shards
+                .difference(&already_assigned)
+                .take(identify.capacity as usize)
                 .map(|shard_id| ShardAssignment {
                     shard_id: *shard_id,
                     shard_count: self.state.all_shards.len() as u32,
                     resume_data: None,
                 })
-                .collect(),
+                .collect();
+
+            vec
+        };
+
+        let worker = Worker::new(
+            worker_id,
+            identify.capacity,
+            Some(initial_assignments.clone()),
+        );
+        self.state.workers.insert(worker_id, worker);
+
+        Ok(Response::new(ReadyResponse {
+            worker_id,
+            initial_assignments,
         }))
     }
 }
