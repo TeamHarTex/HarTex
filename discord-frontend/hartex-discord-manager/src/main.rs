@@ -51,7 +51,6 @@ pub async fn main() -> Result<()> {
     let http = Client::new(config.token().to_owned());
     let info = http.gateway().authed().await?.model().await?;
 
-    // todo: allow port configuration in the command line
     Server::builder()
         .serve(addr, ManagerServer::new(ManagerServerImpl::new(info)))
         .await?;
