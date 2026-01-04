@@ -24,7 +24,10 @@ tracing-subscriber = { version = "0.3.22", features = ["registry", "time"] }
 
 [workspace.lints.clippy]
 allow_attributes_without_reason = "forbid"
-pedantic = "deny"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+pedantic = { level = "deny", priority = -1 }
+struct_field_names = "allow"
 
 [workspace.lints.rust]
 unsafe_code = "deny"

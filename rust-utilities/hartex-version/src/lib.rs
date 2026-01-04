@@ -22,6 +22,7 @@
 
 use git_version::git_version;
 
+#[must_use]
 pub fn version() -> String {
     format!(
         "HarTex {} ({} {})",

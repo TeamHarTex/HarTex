@@ -28,7 +28,7 @@ use tracing_subscriber::{Registry, filter::Targets, fmt::Layer, layer::Subscribe
 
 pub mod eyre;
 
-/// Create a new `tracing` subscriber.
+#[must_use]
 pub fn subscriber() -> impl Subscriber {
     let fmt_layer = Layer::default().with_target(true).with_level(true);
     let targets_layer = Targets::new()

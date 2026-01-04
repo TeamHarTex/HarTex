@@ -68,7 +68,7 @@ impl Actor for ShardManager {
             sender.send(true).unwrap();
 
             shard.stop_gracefully().await.ok();
-            shard.wait_for_shutdown_result()
+            shard.wait_for_shutdown_result().await
         }));
 
         futures.await;

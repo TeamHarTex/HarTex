@@ -47,11 +47,11 @@ impl ManagerServerState {
 }
 
 pub struct Worker {
-    #[expect(dead_code)]
+    #[expect(dead_code, reason = "temporary")]
     pub capacity: u32,
-    #[expect(dead_code)]
+    #[expect(dead_code, reason = "temporary")]
     pub id: u32,
-    #[expect(dead_code)]
+    #[expect(dead_code, reason = "temporary")]
     pub shard_assignments: Vec<ShardAssignment>,
 }
 
