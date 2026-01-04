@@ -65,7 +65,10 @@ impl Manager for ManagerServerImpl {
             .collect();
 
         locked.assigned_shards.extend(for_this_shard.clone());
-        tracing::info!("worker ID: {worker_id}, initial assignment: {:?}", &for_this_shard);
+        tracing::info!(
+            "worker ID: {worker_id}, initial assignment: {:?}",
+            &for_this_shard
+        );
 
         let initial_assignments: Vec<_> = for_this_shard
             .iter()
