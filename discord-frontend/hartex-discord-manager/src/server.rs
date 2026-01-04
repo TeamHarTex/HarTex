@@ -28,6 +28,7 @@ use hartex_discord_grpc::manager::{
 };
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
+use tracing::instrument;
 use twilight_model::gateway::connection_info::BotConnectionInfo;
 
 use crate::state::{ManagerServerState, Worker};
@@ -46,6 +47,7 @@ impl ManagerServerImpl {
 
 #[async_trait]
 impl Manager for ManagerServerImpl {
+    #[instrument(skip_all)]
     async fn identify(
         &self,
         request: Request<IdentifyRequest>,
@@ -54,6 +56,7 @@ impl Manager for ManagerServerImpl {
 
         let mut locked = self.state.lock().await;
         let worker_id = locked.next_worker_id.fetch_add(1, Ordering::SeqCst);
+
         let for_this_shard: Vec<_> = locked
             .all_shards
             .difference(&locked.assigned_shards)
@@ -62,6 +65,7 @@ impl Manager for ManagerServerImpl {
             .collect();
 
         locked.assigned_shards.extend(for_this_shard.clone());
+        tracing::info!("worker ID: {worker_id}, initial assignment: {:?}", &for_this_shard);
 
         let initial_assignments: Vec<_> = for_this_shard
             .iter()

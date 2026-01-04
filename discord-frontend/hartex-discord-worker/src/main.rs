@@ -53,8 +53,8 @@ pub async fn main() -> Result<()> {
     let config = load_configuration()?;
 
     let addr = args.manger_addr();
-    tracing::trace!("trying to connect to gRPC server at {addr}");
-    let mut client = ManagerClient::connect(addr.to_string()).await?;
+    tracing::trace!("trying to connect to manager via gRPC at {addr}");
+    let mut client = ManagerClient::connect(format!("http://{addr}")).await?;
     let ready = client
         .identify(IdentifyRequest {
             capacity: args.capacity(),
@@ -63,7 +63,7 @@ pub async fn main() -> Result<()> {
         .into_inner();
 
     tracing::info!("{}", hartex_version::version());
-    tracing::info!("worker starting up...");
+    tracing::info!("worker {} starting up...", ready.worker_id);
 
     let shards = shards::create(config.token().to_owned(), ready)
         .await?
