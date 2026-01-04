@@ -24,13 +24,12 @@ use clap::Parser;
 use color_eyre::Result;
 use hartex_discord_actors::leader::ShardManager;
 use hartex_discord_envconf::load_configuration;
-use hartex_discord_grpc::manager::manager_client::ManagerClient;
+use hartex_discord_grpc::manager::{IdentifyRequest, manager_client::ManagerClient};
 use hartex_tracing::{self, eyre};
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
 use tokio::signal;
 use tracing::subscriber;
-use twilight_http::Client;
 
 use crate::args::WorkerCliArgs;
 
@@ -46,19 +45,27 @@ pub async fn main() -> Result<()> {
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
+    let args = WorkerCliArgs::parse();
+
+    tracing::info!("{}", hartex_version::version());
+
     tracing::trace!("loading environment variables...");
     let config = load_configuration()?;
 
-    let addr = WorkerCliArgs::parse().manger_addr();
+    let addr = args.manger_addr();
     tracing::trace!("trying to connect to gRPC server at {addr}");
-    let _ = ManagerClient::connect(addr.to_string()).await?;
+    let mut client = ManagerClient::connect(addr.to_string()).await?;
+    let ready = client
+        .identify(IdentifyRequest {
+            capacity: args.capacity(),
+        })
+        .await?
+        .into_inner();
 
     tracing::info!("{}", hartex_version::version());
     tracing::info!("worker starting up...");
 
-    let client = Client::new(config.token().to_owned());
-
-    let shards = shards::create(config.token().to_owned(), &client)
+    let shards = shards::create(config.token().to_owned(), ready)
         .await?
         .collect::<Vec<_>>();
     let shard_manager_ref = ShardManager::spawn(shards);

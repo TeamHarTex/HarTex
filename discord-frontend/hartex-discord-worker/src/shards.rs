@@ -20,44 +20,72 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::Result;
-use twilight_gateway::{ConfigBuilder, Shard, create_recommended};
-use twilight_http::Client;
+use std::time::Duration;
+
+use color_eyre::{Result, eyre::eyre};
+use hartex_discord_grpc::manager::{ReadyResponse, WorkerSessionStartLimit};
+use twilight_gateway::{ConfigBuilder, Shard, create_iterator, queue::InMemoryQueue};
 use twilight_model::gateway::{
     Intents,
     payload::outgoing::update_presence::UpdatePresencePayload,
     presence::{Activity, ActivityType, Status},
 };
 
-pub async fn create(token: String, http: &Client) -> Result<impl Iterator<Item = Shard>> {
-    let config = ConfigBuilder::new(token, Intents::all()).build();
+pub async fn create(token: String, ready: ReadyResponse) -> Result<impl Iterator<Item = Shard>> {
+    let Some(WorkerSessionStartLimit {
+        max_concurrency,
+        remaining,
+        reset_after,
+        total,
+    }) = ready.session_start_limit
+    else {
+        return Err(eyre!("session start limit not specified"));
+    };
 
-    Ok(create_recommended(http, config, |shard_id, builder| {
-        builder
-            .presence(UpdatePresencePayload {
-                activities: vec![Activity {
-                    application_id: None,
-                    assets: None,
-                    buttons: vec![],
-                    created_at: None,
-                    details: None,
-                    emoji: None,
-                    flags: None,
-                    id: None,
-                    instance: None,
-                    kind: ActivityType::Watching,
-                    name: format!("development | shard {}", shard_id.number()),
-                    party: None,
-                    secrets: None,
-                    state: None,
-                    timestamps: None,
-                    url: None,
-                }],
-                afk: false,
-                since: None,
-                status: Status::Idle,
-            })
-            .build()
-    })
-    .await?)
+    let config = ConfigBuilder::new(token, Intents::all())
+        .queue(InMemoryQueue::new(
+            max_concurrency as u16,
+            remaining,
+            Duration::from_secs(reset_after),
+            total,
+        ))
+        .build();
+    let total = ready.initial_assignments.len();
+    let numbers = ready
+        .initial_assignments
+        .into_iter()
+        .map(|assignment| assignment.shard_id);
+
+    Ok(create_iterator(
+        numbers,
+        total as u32,
+        config,
+        |shard_id, builder| {
+            builder
+                .presence(UpdatePresencePayload {
+                    activities: vec![Activity {
+                        application_id: None,
+                        assets: None,
+                        buttons: vec![],
+                        created_at: None,
+                        details: None,
+                        emoji: None,
+                        flags: None,
+                        id: None,
+                        instance: None,
+                        kind: ActivityType::Watching,
+                        name: format!("development | shard {}", shard_id.number()),
+                        party: None,
+                        secrets: None,
+                        state: None,
+                        timestamps: None,
+                        url: None,
+                    }],
+                    afk: false,
+                    since: None,
+                    status: Status::Idle,
+                })
+                .build()
+        },
+    ))
 }

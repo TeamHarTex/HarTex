@@ -23,9 +23,19 @@
 use clap::Parser;
 
 #[derive(Parser)]
-#[command(name = "manager", about = "Worker instance manager for HarTex.", long_about = None)]
+#[command(
+    name = "manager",
+    about = "Worker instance manager for HarTex.",
+    long_about = None,
+)]
 pub struct ManagerCliArgs {
-    #[arg(value_name = "PORT", default_value_t = 3000, short)]
+    #[arg(
+        value_name = "PORT",
+        default_value_t = 3000,
+        short,
+        long,
+        long_help = "the port to listen on"
+    )]
     port: u16,
 }
 
