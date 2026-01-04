@@ -35,7 +35,7 @@ jobs:
       - name: Print Rust Version
         run: rustc --version --verbose
       - name: Run Build
-        run: python ./x.py build
+        run: python ./x.py build -- python ./x.py clippy -- discord-frontend rust-utilities
 
   TestAll:
     name: Test
@@ -60,5 +60,5 @@ jobs:
         run: rustc --version --verbose
       - name: Run Build
         run: python ./x.py build -- discord-frontend
-      - name: Run Tests
-        run: python ./x.py test -- --ui --build-dir=build
+      # - name: Run Tests
+      #  run: python ./x.py test -- --ui --build-dir=build

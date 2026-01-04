@@ -1,9 +1,5 @@
 [workspace]
 members = [
-    "hartex-async-lazy",
-    "hartex-bitflags-utils",
-    "hartex-errors",
-    "hartex-macro-utils",
     "hartex-termios-utils",
     "hartex-tracing",
     "hartex-version",

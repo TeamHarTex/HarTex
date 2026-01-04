@@ -21,4 +21,3 @@
  */
 
 pub mod leader;
-pub mod worker;

@@ -30,7 +30,7 @@ use kameo::{
 };
 use tokio::sync::{Mutex, watch::Receiver};
 use tracing::{Instrument, instrument};
-use twilight_gateway::{MessageSender, Shard as TwilightShard};
+use twilight_gateway::{MessageSender, Shard as TwilightShard, Message as GatewayMessage};
 use twilight_model::gateway::{CloseFrame, payload::outgoing::RequestGuildMembers};
 
 use crate::leader::{
@@ -39,7 +39,7 @@ use crate::leader::{
 };
 
 pub struct Shard {
-    id: u32,
+    shard_id: u32,
     sender: MessageSender,
     shard: Arc<Mutex<TwilightShard>>,
 }
@@ -48,7 +48,11 @@ impl Actor for Shard {
     type Args = (TwilightShard, Receiver<bool>);
     type Error = ();
 
-    #[instrument(name = "shard_actor", skip(shard, receiver), fields(id = shard.id().number()))]
+    #[instrument(
+        name = "shard_actor",
+        skip(shard, receiver),
+        fields(shard_id = shard.id().number())
+    )]
     async fn on_start(
         (shard, receiver): Self::Args,
         _: ActorRef<Self>,
@@ -63,23 +67,26 @@ impl Actor for Shard {
 
         tokio::spawn(
             async move {
-                while let Some(_) = shard_cloned.lock().await.next().await
+                while let Some(message) = shard_cloned.lock().await.next().await
                     && !receiver.has_changed().unwrap()
                 {
-                    tracing::info!("received message");
+                    match message {
+                        Ok(GatewayMessage::Text(_)) => todo!(),
+                        _ => continue,
+                    }
                 }
             }
             .in_current_span(),
         );
 
         Ok(Self {
-            id: id_num,
+            shard_id: id_num,
             sender,
             shard: shard_arc,
         })
     }
 
-    #[instrument(name = "shard_actor", skip(self), fields(id = self.id))]
+    #[instrument(name = "shard_actor", skip(self), fields(id = self.shard_id))]
     async fn on_stop(
         &mut self,
         _: WeakActorRef<Self>,
