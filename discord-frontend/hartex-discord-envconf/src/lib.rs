@@ -31,8 +31,7 @@ pub fn load_configuration() -> Result<Configuration, ConfigError> {
         .add_source(
             Environment::with_prefix("HARTEX")
                 .separator("_")
-                .list_separator(",")
-                .try_parsing(true),
+                .list_separator(","),
         )
         .build()?;
 

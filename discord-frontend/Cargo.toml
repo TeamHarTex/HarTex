@@ -21,10 +21,10 @@ color-eyre = "0.6.5"
 config = { version = "0.15.19", default-features = false }
 dashmap = "7.0.0-rc2"
 futures = "0.3.31"
-git-version = "0.3.9"
 kameo = { version = "0.19.2", features = ["tracing"] }
 mimalloc = "0.1.48"
 prost = "0.14.1"
+rustls = "0.23.35"
 serde = { version = "1.0.228", features = ["derive"] }
 time = "0.3.44"
 tokio = { version = "1.49.0", features = ["macros", "rt", "rt-multi-thread", "signal"] }
@@ -42,6 +42,7 @@ hartex-discord-grpc = { path = "hartex-discord-grpc" }
 hartex-discord-utils = { path = "hartex-discord-utils" }
 hartex-termios-utils = { path = "../rust-utilities/hartex-termios-utils" }
 hartex-tracing = { path = "../rust-utilities/hartex-tracing" }
+hartex-version = { path = "../rust-utilities/hartex-version" }
 
 [workspace.lints.clippy]
 allow_attributes_without_reason = "forbid"

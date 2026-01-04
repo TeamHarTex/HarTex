@@ -20,16 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use clap::Parser;
 use color_eyre::Result;
-use git_version::git_version;
 use hartex_discord_actors::leader::ShardManager;
-use hartex_discord_utils::initialize_env;
+use hartex_discord_envconf::load_configuration;
+use hartex_discord_grpc::manager::{IdentifyRequest, manager_client::ManagerClient};
 use hartex_tracing::{self, eyre};
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
 use tokio::signal;
 use tracing::subscriber;
 
+use crate::args::WorkerCliArgs;
+
+mod args;
 mod shards;
 
 #[global_allocator]
@@ -41,20 +45,29 @@ pub async fn main() -> Result<()> {
     eyre::initialize_eyre()?;
     subscriber::set_global_default(hartex_tracing::subscriber())?;
 
-    // todo: communicate with shard manager first
+    let args = WorkerCliArgs::parse();
 
-    tracing::info!(
-        "HarTex {} ({} {})",
-        env!("CARGO_PKG_VERSION"),
-        git_version!(),
-        env!("CARGO_BUILD_DATE")
-    );
-    tracing::info!("worker starting up...");
+    tracing::info!("{}", hartex_version::version());
 
     tracing::trace!("loading environment variables...");
-    initialize_env()?;
+    let config = load_configuration()?;
 
-    let shards = shards::create().await?.collect::<Vec<_>>();
+    let addr = args.manger_addr();
+    tracing::trace!("trying to connect to manager via gRPC at {addr}");
+    let mut client = ManagerClient::connect(format!("http://{addr}")).await?;
+    let ready = client
+        .identify(IdentifyRequest {
+            capacity: args.capacity(),
+        })
+        .await?
+        .into_inner();
+
+    tracing::info!("{}", hartex_version::version());
+    tracing::info!("worker {} starting up...", ready.worker_id);
+
+    let shards = shards::create(config.token().to_owned(), ready)
+        .await?
+        .collect::<Vec<_>>();
     let shard_manager_ref = ShardManager::spawn(shards);
 
     signal::ctrl_c().await?;

@@ -20,39 +20,41 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-syntax = "proto3";
+use std::net::SocketAddr;
 
-package dev.teamhartex.hartex.protobufs.manager;
+use clap::Parser;
 
-message IdentifyRequest {
-  uint32 capacity = 1;
+#[derive(Parser)]
+#[command(
+    name = "worker",
+    about = "Worker instance of HarTex.",
+    long_about = None
+)]
+pub struct WorkerCliArgs {
+    #[arg(
+        value_name = "CAP",
+        default_value_t = 1,
+        short,
+        long,
+        long_help = "maximum number of shards this worker is capable of running"
+    )]
+    capacity: u32,
+    #[arg(
+        value_name = "ADDR",
+        default_value_t = SocketAddr::from(([127, 0, 0, 1], 3000)),
+        short,
+        long,
+        long_help = "the address and port the worker instance manager listens on",
+    )]
+    manager: SocketAddr,
 }
 
-message ShardResumeData {
-  string session_id = 1;
-  uint64 seq = 2;
-  string resume_gateway_url = 3;
-}
+impl WorkerCliArgs {
+    pub fn capacity(&self) -> u32 {
+        self.capacity
+    }
 
-message ShardAssignment {
-  uint32 shard_id = 1;
-  uint32 shard_count = 2;
-  optional ShardResumeData resume_data = 3;
-}
-
-message WorkerSessionStartLimit {
-  uint32 max_concurrency = 1;
-  uint32 remaining = 2;
-  uint64 reset_after = 3;
-  uint32 total = 4;
-}
-
-message ReadyResponse {
-  uint32 worker_id = 1;
-  repeated ShardAssignment initial_assignments = 2;
-  WorkerSessionStartLimit session_start_limit = 3;
-}
-
-service Manager {
-  rpc Identify(IdentifyRequest) returns (ReadyResponse);
+    pub fn manger_addr(&self) -> SocketAddr {
+        self.manager
+    }
 }
