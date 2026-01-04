@@ -30,6 +30,11 @@ use clap::Parser;
 )]
 pub struct ManagerCliArgs {
     #[arg(
+        long,
+        long_help = "whether to expose the manager to devices in the same network"
+    )]
+    exposed: bool,
+    #[arg(
         value_name = "PORT",
         default_value_t = 3000,
         short,
@@ -40,6 +45,10 @@ pub struct ManagerCliArgs {
 }
 
 impl ManagerCliArgs {
+    pub fn exposed(&self) -> bool {
+        self.exposed
+    }
+
     pub fn port(&self) -> u16 {
         self.port
     }

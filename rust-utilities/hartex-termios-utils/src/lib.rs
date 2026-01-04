@@ -34,10 +34,10 @@ pub fn no_echoctl() {
         )]
         unsafe {
             let mut term = mem::zeroed();
-            tcgetattr(fd, &mut term);
+            tcgetattr(fd, &raw mut term);
 
             term.c_lflag &= !ECHOCTL;
-            tcsetattr(fd, TCSANOW, &term);
+            tcsetattr(fd, TCSANOW, &raw const term);
         }
     }
 }

@@ -30,7 +30,7 @@ use kameo::{
 };
 use tokio::sync::{Mutex, watch::Receiver};
 use tracing::{Instrument, instrument};
-use twilight_gateway::{MessageSender, Shard as TwilightShard, Message as GatewayMessage};
+use twilight_gateway::{Message as GatewayMessage, MessageSender, Shard as TwilightShard};
 use twilight_model::gateway::{CloseFrame, payload::outgoing::RequestGuildMembers};
 
 use crate::leader::{

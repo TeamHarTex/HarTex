@@ -65,8 +65,7 @@ pub async fn main() -> Result<()> {
     tracing::info!("{}", hartex_version::version());
     tracing::info!("worker {} starting up...", ready.worker_id);
 
-    let shards = shards::create(config.token().to_owned(), ready)
-        .await?
+    let shards = shards::create(config.token().to_owned(), ready)?
         .collect::<Vec<_>>();
     let shard_manager_ref = ShardManager::spawn(shards);
 

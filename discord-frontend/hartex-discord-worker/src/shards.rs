@@ -31,7 +31,7 @@ use twilight_model::gateway::{
     presence::{Activity, ActivityType, Status},
 };
 
-pub async fn create(token: String, ready: ReadyResponse) -> Result<impl Iterator<Item = Shard>> {
+pub fn create(token: String, ready: ReadyResponse) -> Result<impl Iterator<Item = Shard>> {
     let Some(WorkerSessionStartLimit {
         max_concurrency,
         remaining,
@@ -44,7 +44,7 @@ pub async fn create(token: String, ready: ReadyResponse) -> Result<impl Iterator
 
     let config = ConfigBuilder::new(token, Intents::all())
         .queue(InMemoryQueue::new(
-            max_concurrency as u16,
+            u16::try_from(max_concurrency)?,
             remaining,
             Duration::from_secs(reset_after),
             total,
@@ -58,7 +58,7 @@ pub async fn create(token: String, ready: ReadyResponse) -> Result<impl Iterator
 
     Ok(create_iterator(
         numbers,
-        total as u32,
+        u32::try_from(total)?,
         config,
         |shard_id, builder| {
             builder

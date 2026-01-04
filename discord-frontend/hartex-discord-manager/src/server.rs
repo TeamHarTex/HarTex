@@ -65,13 +65,16 @@ impl Manager for ManagerServerImpl {
             .collect();
 
         locked.assigned_shards.extend(for_this_shard.clone());
-        tracing::info!("worker ID: {worker_id}, initial assignment: {:?}", &for_this_shard);
+        tracing::info!(
+            "worker ID: {worker_id}, initial assignment: {:?}",
+            &for_this_shard
+        );
 
         let initial_assignments: Vec<_> = for_this_shard
             .iter()
             .map(|shard_id| ShardAssignment {
                 shard_id: *shard_id,
-                shard_count: locked.all_shards.len() as u32,
+                shard_count: u32::try_from(locked.all_shards.len()).unwrap(),
                 resume_data: None,
             })
             .collect();
@@ -87,7 +90,7 @@ impl Manager for ManagerServerImpl {
             worker_id,
             initial_assignments,
             session_start_limit: Some(WorkerSessionStartLimit {
-                max_concurrency: locked.session_start_limit.max_concurrency as u32,
+                max_concurrency: u32::from(locked.session_start_limit.max_concurrency),
                 remaining: locked.session_start_limit.remaining,
                 reset_after: locked.session_start_limit.reset_after,
                 total: locked.session_start_limit.total,

@@ -28,5 +28,5 @@ pub fn main() {
     tonic_prost_build::configure()
         .file_descriptor_set_path(outdir.join("grpc-descriptor.bin"))
         .compile_protos(&["protobufs/manager.proto"], &["protobufs"])
-        .unwrap()
+        .unwrap();
 }

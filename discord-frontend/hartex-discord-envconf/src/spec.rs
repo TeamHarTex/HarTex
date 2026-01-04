@@ -28,6 +28,7 @@ pub struct Configuration {
 }
 
 impl Configuration {
+    #[must_use]
     pub fn token(&self) -> &str {
         self.token.as_ref()
     }
