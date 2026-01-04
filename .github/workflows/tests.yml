@@ -5,6 +5,7 @@ on:
   merge_group:
     types:
       - checks_requested
+  pull_request:
   push:
     branches:
       - stable
@@ -15,6 +16,7 @@ env:
 jobs:
   BuildAll:
     name: Build
+    if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +40,7 @@ jobs:
     name: Test
     needs:
       - BuildAll
+    if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
 
     steps:
