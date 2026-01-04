@@ -20,9 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use clap::Parser;
 use color_eyre::Result;
 use hartex_discord_actors::leader::ShardManager;
 use hartex_discord_envconf::load_configuration;
+use hartex_discord_grpc::manager::manager_client::ManagerClient;
 use hartex_tracing::{self, eyre};
 use kameo::actor::Spawn;
 use mimalloc::MiMalloc;
@@ -30,6 +32,9 @@ use tokio::signal;
 use tracing::subscriber;
 use twilight_http::Client;
 
+use crate::args::WorkerCliArgs;
+
+mod args;
 mod shards;
 
 #[global_allocator]
@@ -44,7 +49,9 @@ pub async fn main() -> Result<()> {
     tracing::trace!("loading environment variables...");
     let config = load_configuration()?;
 
-    // todo: communicate with shard manager first
+    let addr = WorkerCliArgs::parse().manger_addr();
+    tracing::trace!("trying to connect to gRPC server at {addr}");
+    let _ = ManagerClient::connect(addr.to_string()).await?;
 
     tracing::info!("{}", hartex_version::version());
     tracing::info!("worker starting up...");

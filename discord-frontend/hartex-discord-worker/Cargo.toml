@@ -8,6 +8,7 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+clap = { workspace = true }
 color-eyre = { workspace = true }
 kameo = { workspace = true }
 mimalloc = { workspace = true }

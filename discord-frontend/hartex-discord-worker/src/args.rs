@@ -20,20 +20,18 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod spec;
+use std::net::SocketAddr;
 
-use config::{Config, ConfigError, Environment};
+use clap::Parser;
 
-pub use crate::spec::Configuration;
+#[derive(Parser)]
+#[command(name = "worker", about = "Worker instance of HarTex.", long_about = None)]
+pub struct WorkerCliArgs {
+    manager: SocketAddr,
+}
 
-pub fn load_configuration() -> Result<Configuration, ConfigError> {
-    let config = Config::builder()
-        .add_source(
-            Environment::with_prefix("HARTEX")
-                .separator("_")
-                .list_separator(","),
-        )
-        .build()?;
-
-    config.try_deserialize()
+impl WorkerCliArgs {
+    pub fn manger_addr(&self) -> SocketAddr {
+        self.manager
+    }
 }
