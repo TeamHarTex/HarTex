@@ -4,6 +4,7 @@ members = [
     "hartex-discord-envconf",
     "hartex-discord-grpc",
     "hartex-discord-manager",
+    "hartex-discord-tui",
     "hartex-discord-utils",
     "hartex-discord-worker"
 ]
@@ -24,6 +25,7 @@ futures = "0.3.31"
 kameo = { version = "0.19.2", features = ["tracing"] }
 mimalloc = "0.1.48"
 prost = "0.14.1"
+ratatui = "0.30.0"
 rustls = "0.23.35"
 serde = { version = "1.0.228", features = ["derive"] }
 time = "0.3.44"
