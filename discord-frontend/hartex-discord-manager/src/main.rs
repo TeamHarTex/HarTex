@@ -65,9 +65,14 @@ pub async fn main() -> Result<()> {
     let http = Client::new(config.token().to_owned());
     let info = http.gateway().authed().await?.model().await?;
 
+    let current_user = http.current_user().await?.model().await?;
+
     tracing::info!("starting gRPC server on {addr}");
     Server::builder()
-        .serve(addr, ManagerServer::new(ManagerServerImpl::new(info)))
+        .serve(
+            addr,
+            ManagerServer::new(ManagerServerImpl::new(info, current_user)),
+        )
         .await?;
 
     Ok(())

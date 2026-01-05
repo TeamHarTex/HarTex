@@ -23,13 +23,13 @@
 use std::sync::{Arc, atomic::Ordering};
 
 use hartex_discord_grpc::manager::{
-    IdentifyRequest, ReadyResponse, ShardAssignment, WorkerSessionStartLimit,
-    manager_server::Manager,
+    IdentifyRequest, ReadyResponse, ShardAssignment, WhoamiRequest, WhoamiResponse,
+    WorkerSessionStartLimit, manager_server::Manager,
 };
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
 use tracing::instrument;
-use twilight_model::gateway::connection_info::BotConnectionInfo;
+use twilight_model::{gateway::connection_info::BotConnectionInfo, user::CurrentUser};
 
 use crate::state::{ManagerServerState, Worker};
 
@@ -38,9 +38,9 @@ pub struct ManagerServerImpl {
 }
 
 impl ManagerServerImpl {
-    pub fn new(info: BotConnectionInfo) -> Self {
+    pub fn new(info: BotConnectionInfo, current_user: CurrentUser) -> Self {
         Self {
-            state: Arc::new(Mutex::new(ManagerServerState::new(info))),
+            state: Arc::new(Mutex::new(ManagerServerState::new(info, current_user))),
         }
     }
 }
@@ -95,6 +95,14 @@ impl Manager for ManagerServerImpl {
                 reset_after: locked.session_start_limit.reset_after,
                 total: locked.session_start_limit.total,
             }),
+        }))
+    }
+
+    async fn whoami(&self, _: Request<WhoamiRequest>) -> Result<Response<WhoamiResponse>, Status> {
+        let locked = self.state.lock().await;
+        Ok(Response::new(WhoamiResponse {
+            username: locked.current_user.name.clone(),
+            discriminator: locked.current_user.discriminator().to_string(),
         }))
     }
 }
