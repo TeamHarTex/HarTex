@@ -53,6 +53,15 @@ message ReadyResponse {
   WorkerSessionStartLimit session_start_limit = 3;
 }
 
+message WhoamiRequest {}
+
+message WhoamiResponse {
+  string username = 1;
+  string discriminator = 2;
+}
+
 service Manager {
   rpc Identify(IdentifyRequest) returns (ReadyResponse);
+
+  rpc Whoami(WhoamiRequest) returns (WhoamiResponse);
 }
