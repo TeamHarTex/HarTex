@@ -20,13 +20,22 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::eyre::Result;
+use std::panic;
 
-mod errorhandler;
+use color_eyre::{config::HookBuilder, eyre::Result};
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    errorhandler::initialize()?;
+pub fn initialize() -> Result<()> {
+    let (_, eyre_hook) = HookBuilder::new()
+        .capture_span_trace_by_default(false)
+        .display_env_section(false)
+        .display_location_section(false)
+        .into_hooks();
+
+    eyre_hook.install()?;
+
+    panic::set_hook(Box::new(move |_| {
+        todo!()
+    }));
 
     Ok(())
 }

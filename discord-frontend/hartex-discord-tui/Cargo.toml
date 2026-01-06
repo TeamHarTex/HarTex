@@ -1,11 +1,16 @@
 [package]
 name = "hartex-discord-tui"
-description = "TUI interface for bot management."
+description = """
+TUI instance manager for HarTex.
+"""
 edition = { workspace = true }
 license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+color-eyre = { workspace = true }
+ratatui = { workspace = true }
+tokio = { workspace = true }
 
 [[bin]]
 name = "tui"
