@@ -20,19 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::eyre::Result;
-use crate::app::App;
-
-mod errorhandler;
-mod tui;
-mod app;
-
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    errorhandler::initialize()?;
-
-    let mut app = App::new(60.0, 4.0)?;
-    app.run().await?;
-
-    Ok(())
+pub enum TuiEvent {
+    Initialized,
+    Render,
+    Tick,
 }

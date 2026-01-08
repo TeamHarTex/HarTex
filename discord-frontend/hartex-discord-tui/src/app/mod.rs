@@ -21,18 +21,45 @@
  */
 
 use color_eyre::eyre::Result;
-use crate::app::App;
+use tokio::sync::mpsc;
+use tokio::sync::mpsc::{UnboundedSender, UnboundedReceiver};
 
-mod errorhandler;
-mod tui;
-mod app;
+pub use action::Action;
+use crate::tui::Tui;
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    errorhandler::initialize()?;
+mod action;
 
-    let mut app = App::new(60.0, 4.0)?;
-    app.run().await?;
+pub struct App {
+    action_rx: UnboundedReceiver<Action>,
+    action_tx: UnboundedSender<Action>,
+    fps: f64,
+    tps: f64,
+}
 
-    Ok(())
+impl App {
+    pub fn new(fps: f64, tps: f64) -> Result<Self> {
+        let (action_tx, action_rx) = mpsc::unbounded_channel();
+
+        Ok(Self {
+            action_rx,
+            action_tx,
+            fps,
+            tps,
+        })
+    }
+
+    pub async fn run(&mut self) -> Result<()> {
+        let mut tui = Tui::new()?
+            .fps(self.fps)
+            .tps(self.tps);
+        tui.enter()?;
+
+        // let action_tx = self.action_tx.clone();
+        // loop {
+        //
+        // }
+
+        tui.exit()?;
+        Ok(())
+    }
 }

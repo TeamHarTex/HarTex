@@ -491,6 +491,7 @@ dependencies = [
  "crossterm_winapi",
  "derive_more",
  "document-features",
+ "futures-core",
  "mio",
  "parking_lot",
  "rustix",
@@ -982,8 +983,12 @@ name = "hartex-discord-tui"
 version = "0.17.0"
 dependencies = [
  "color-eyre",
+ "crossterm",
+ "futures",
  "ratatui",
  "tokio",
+ "tokio-util",
+ "tracing",
 ]
 
 [[package]]

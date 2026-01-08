@@ -20,12 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::panic;
+use std::{panic, process};
 
 use color_eyre::{config::HookBuilder, eyre::Result};
+use tracing::error;
+
+use crate::tui::Tui;
 
 pub fn initialize() -> Result<()> {
-    let (_, eyre_hook) = HookBuilder::new()
+    let (panic_hook, eyre_hook) = HookBuilder::new()
         .capture_span_trace_by_default(false)
         .display_env_section(false)
         .display_location_section(false)
@@ -33,8 +36,17 @@ pub fn initialize() -> Result<()> {
 
     eyre_hook.install()?;
 
-    panic::set_hook(Box::new(move |_| {
-        todo!()
+    panic::set_hook(Box::new(move |info| {
+        if let Ok(mut tui) = Tui::new() {
+            if let Err(e) = tui.exit() {
+                error!("unable to exit terminal: {e:?}")
+            }
+        }
+
+        let msg = format!("{}", panic_hook.panic_report(info));
+        error!("{msg}");
+
+        process::exit(1)
     }));
 
     Ok(())
