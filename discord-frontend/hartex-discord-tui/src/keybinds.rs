@@ -28,7 +28,7 @@ use lazy_static::lazy_static;
 use crate::app::{Action, Menu};
 
 lazy_static! {
-    static ref KEYBINDS: HashMap<Menu, HashMap<Vec<KeyEvent>, Action>> = {
+    pub static ref KEYBINDS: HashMap<Menu, HashMap<Vec<KeyEvent>, Action>> = {
         let mut map = HashMap::new();
 
         let entry: &mut HashMap<_, _> = map.entry(Menu::Main).or_default();

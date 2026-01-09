@@ -33,6 +33,7 @@ use tokio::sync::{
 pub use self::{action::Action, menu::Menu};
 use crate::{
     component::Component,
+    keybinds::KEYBINDS,
     tui::{Tui, TuiEvent},
 };
 
@@ -60,7 +61,7 @@ impl App {
             action_tx,
             components: Vec::new(),
             fps,
-            keybinds: HashMap::new(),
+            keybinds: KEYBINDS.clone(),
             last_tick_key_events: Vec::new(),
             menu: Menu::Main,
             quitting: false,

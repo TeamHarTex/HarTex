@@ -23,7 +23,6 @@
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Action {
     Error(String),
-    #[expect(dead_code, reason = "temporary")]
     Quit,
     Resize(u16, u16),
     Tick,
