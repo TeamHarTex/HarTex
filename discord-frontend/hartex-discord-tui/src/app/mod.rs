@@ -20,6 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+pub use action::Action;
 use color_eyre::eyre::Result;
 use tokio::sync::{
     mpsc,
@@ -27,8 +28,6 @@ use tokio::sync::{
 };
 
 use crate::{component::Component, tui::Tui};
-
-pub use action::Action;
 
 mod action;
 
@@ -42,17 +41,17 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(fps: f64, tps: f64) -> Result<Self> {
+    pub fn new(fps: f64, tps: f64) -> Self {
         let (action_tx, action_rx) = mpsc::unbounded_channel();
 
-        Ok(Self {
+        Self {
             action_rx,
             action_tx,
             components: Vec::new(),
             fps,
             quitting: false,
             tps,
-        })
+        }
     }
 
     pub async fn run(&mut self) -> Result<()> {
@@ -87,9 +86,16 @@ impl App {
     }
 
     async fn handle_events(&mut self, tui: &mut Tui) -> Result<()> {
-        let Some(_) = tui.next_event().await else {
+        let Some(event) = tui.next_event().await else {
             return Ok(());
         };
+
+        let action_tx = self.action_tx.clone();
+        for component in &mut self.components {
+            if let Some(action) = component.handle_event(Some(event.clone()))? {
+                action_tx.send(action)?;
+            }
+        }
 
         Ok(())
     }

@@ -20,7 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use crossterm::event::KeyEvent;
+
+#[derive(Clone)]
 pub enum TuiEvent {
+    Key(KeyEvent),
     Initialized,
     Render,
     Tick,

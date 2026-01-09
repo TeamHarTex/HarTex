@@ -21,15 +21,27 @@
  */
 
 use color_eyre::eyre::Result;
+use crossterm::event::KeyEvent;
 use ratatui::layout::Size;
 use tokio::sync::mpsc::UnboundedSender;
 
-use crate::app::Action;
+use crate::{app::Action, tui::TuiEvent};
 
 pub trait Component {
     fn action_sender(&mut self, _: UnboundedSender<Action>) -> Result<()> {
         Ok(())
     }
+
+    fn handle_event(&mut self, event: Option<TuiEvent>) -> Result<Option<Action>> {
+        let action = match event {
+            Some(TuiEvent::Key(key)) => self.handle_key_event(key)?,
+            _ => None,
+        };
+
+        Ok(action)
+    }
+
+    fn handle_key_event(&mut self, _: KeyEvent) -> Result<Option<Action>>;
 
     fn initialize(&mut self, _: Size) -> Result<()> {
         Ok(())

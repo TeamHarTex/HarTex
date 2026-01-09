@@ -29,7 +29,7 @@ use std::{
 use color_eyre::eyre::Result;
 use crossterm::{
     cursor,
-    event::EventStream,
+    event::{Event as CrosstermEvent, EventStream, KeyEventKind},
     execute, terminal,
     terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -153,6 +153,7 @@ impl Tui {
                 _ = fps_interval.tick() => TuiEvent::Render,
                 _ = tps_interval.tick() => TuiEvent::Tick,
                 ct_event = event_stream.next().fuse() => match ct_event {
+                    Some(Ok(CrosstermEvent::Key(key))) if key.kind == KeyEventKind::Press => TuiEvent::Key(key),
                     _ => continue,
                 }
             };

@@ -33,7 +33,7 @@ mod tui;
 pub async fn main() -> Result<()> {
     errorhandler::initialize()?;
 
-    let mut app = App::new(60.0, 4.0)?;
+    let mut app = App::new(60.0, 4.0);
     app.run().await?;
 
     Ok(())
