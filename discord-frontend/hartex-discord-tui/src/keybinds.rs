@@ -20,15 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::LazyLock};
 
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
-use lazy_static::lazy_static;
 
 use crate::app::{Action, Menu};
 
-lazy_static! {
-    pub static ref KEYBINDS: HashMap<Menu, HashMap<Vec<KeyEvent>, Action>> = {
+pub static KEYBINDS: LazyLock<HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>> =
+    LazyLock::new(|| {
         let mut map = HashMap::new();
 
         let entry: &mut HashMap<_, _> = map.entry(Menu::Main).or_default();
@@ -42,5 +41,4 @@ lazy_static! {
         );
 
         map
-    };
-}
+    });

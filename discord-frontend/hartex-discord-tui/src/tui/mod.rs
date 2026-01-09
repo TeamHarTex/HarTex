@@ -98,7 +98,7 @@ impl Tui {
     }
 
     pub fn exit(&mut self) -> Result<()> {
-        self.stop()?;
+        self.stop();
 
         if terminal::is_raw_mode_enabled()? {
             self.flush()?;
@@ -129,9 +129,8 @@ impl Tui {
         });
     }
 
-    pub fn stop(&mut self) -> Result<()> {
+    pub fn stop(&mut self) {
         self.cancel();
-        Ok(())
     }
 
     async fn event_loop(
@@ -150,7 +149,7 @@ impl Tui {
 
         loop {
             let event = tokio::select! {
-                _ = cancellation_token.cancelled() => break,
+                () = cancellation_token.cancelled() => break,
                 _ = fps_interval.tick() => TuiEvent::Render,
                 _ = tps_interval.tick() => TuiEvent::Tick,
                 ct_event = event_stream.next().fuse() => match ct_event {

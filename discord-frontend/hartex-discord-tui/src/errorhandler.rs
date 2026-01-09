@@ -37,11 +37,9 @@ pub fn initialize() -> Result<()> {
     eyre_hook.install()?;
 
     panic::set_hook(Box::new(move |info| {
-        if let Ok(mut tui) = Tui::new() {
-            if let Err(e) = tui.exit() {
-                error!("unable to exit terminal: {e:?}")
+        if let Ok(mut tui) = Tui::new() && let Err(e) = tui.exit() {
+                error!("unable to exit terminal: {e:?}");
             }
-        }
 
         let msg = format!("{}", panic_hook.panic_report(info));
         error!("{msg}");

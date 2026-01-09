@@ -83,7 +83,7 @@ impl App {
             self.handle_actions(&mut tui)?;
 
             if self.quitting {
-                tui.stop()?;
+                tui.stop();
                 break;
             }
         }
@@ -100,7 +100,7 @@ impl App {
                 Action::Tick => {
                     self.last_tick_key_events.drain(..);
                 }
-                _ => {}
+                Action::Error(_) => {}
             }
 
             for component in &mut self.components {
@@ -141,12 +141,9 @@ impl App {
             return Ok(());
         };
 
-        let Some(action) = (match keymap.get(&vec![event]) {
-            Some(action) => Some(action),
-            _ => {
-                self.last_tick_key_events.push(event);
-                keymap.get(&self.last_tick_key_events)
-            }
+        let Some(action) = keymap.get(&vec![event]).or_else(|| {
+            self.last_tick_key_events.push(event);
+            keymap.get(&self.last_tick_key_events)
         }) else {
             return Ok(());
         };

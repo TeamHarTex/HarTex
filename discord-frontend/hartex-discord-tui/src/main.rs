@@ -19,10 +19,11 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use std::sync::LazyLock;
 
 use color_eyre::eyre::Result;
 
-use crate::app::App;
+use crate::{app::App, keybinds::KEYBINDS};
 
 mod app;
 mod component;
@@ -33,6 +34,8 @@ mod tui;
 #[tokio::main]
 pub async fn main() -> Result<()> {
     errorhandler::initialize()?;
+
+    LazyLock::force(&KEYBINDS);
 
     let mut app = App::new(60.0, 4.0);
     app.run().await?;
