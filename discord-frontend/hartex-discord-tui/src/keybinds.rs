@@ -20,13 +20,27 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crossterm::event::KeyEvent;
+use std::collections::HashMap;
 
-#[derive(Clone)]
-pub enum TuiEvent {
-    Initialized,
-    Key(KeyEvent),
-    Render,
-    Resize(u16, u16),
-    Tick,
+use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
+use lazy_static::lazy_static;
+
+use crate::app::{Action, Menu};
+
+lazy_static! {
+    static ref KEYBINDS: HashMap<Menu, HashMap<Vec<KeyEvent>, Action>> = {
+        let mut map = HashMap::new();
+
+        let entry: &mut HashMap<_, _> = map.entry(Menu::Main).or_default();
+        entry.insert(
+            vec![KeyEvent::new_with_kind(
+                KeyCode::Char('q'),
+                KeyModifiers::CONTROL,
+                KeyEventKind::Press,
+            )],
+            Action::Quit,
+        );
+
+        map
+    };
 }

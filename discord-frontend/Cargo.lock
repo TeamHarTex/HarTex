@@ -985,6 +985,7 @@ dependencies = [
  "color-eyre",
  "crossterm",
  "futures",
+ "lazy_static",
  "ratatui",
  "tokio",
  "tokio-util",

@@ -20,13 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crossterm::event::KeyEvent;
-
-#[derive(Clone)]
-pub enum TuiEvent {
-    Initialized,
-    Key(KeyEvent),
-    Render,
-    Resize(u16, u16),
-    Tick,
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum Menu {
+    #[default]
+    Main,
 }

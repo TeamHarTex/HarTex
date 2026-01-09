@@ -27,6 +27,7 @@ use crate::app::App;
 mod app;
 mod component;
 mod errorhandler;
+mod keybinds;
 mod tui;
 
 #[tokio::main]

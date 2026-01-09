@@ -20,23 +20,33 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use action::Action;
+use std::collections::HashMap;
+
 use color_eyre::eyre::Result;
+use crossterm::event::KeyEvent;
 use ratatui::layout::Rect;
 use tokio::sync::{
     mpsc,
     mpsc::{UnboundedReceiver, UnboundedSender},
 };
 
-use crate::{component::Component, tui::Tui};
+pub use self::{action::Action, menu::Menu};
+use crate::{
+    component::Component,
+    tui::{Tui, TuiEvent},
+};
 
 mod action;
+mod menu;
 
 pub struct App {
     action_rx: UnboundedReceiver<Action>,
     action_tx: UnboundedSender<Action>,
     components: Vec<Box<dyn Component>>,
     fps: f64,
+    keybinds: HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>,
+    last_tick_key_events: Vec<KeyEvent>,
+    menu: Menu,
     quitting: bool,
     tps: f64,
 }
@@ -50,6 +60,9 @@ impl App {
             action_tx,
             components: Vec::new(),
             fps,
+            keybinds: HashMap::new(),
+            last_tick_key_events: Vec::new(),
+            menu: Menu::Main,
             quitting: false,
             tps,
         }
@@ -81,9 +94,18 @@ impl App {
     fn handle_actions(&mut self, tui: &mut Tui) -> Result<()> {
         while let Ok(action) = self.action_rx.try_recv() {
             match action {
-                Action::Resize(w, h) => self.resize(tui, w, h)?,
                 Action::Quit => self.quitting = true,
+                Action::Resize(w, h) => self.resize(tui, w, h)?,
+                Action::Tick => {
+                    self.last_tick_key_events.drain(..);
+                }
                 _ => {}
+            }
+
+            for component in &mut self.components {
+                if let Some(action) = component.update(action.clone())? {
+                    self.action_tx.send(action)?;
+                }
             }
         }
 
@@ -96,11 +118,39 @@ impl App {
         };
 
         let action_tx = self.action_tx.clone();
+        match event {
+            TuiEvent::Key(key) => self.handle_key_event(key)?,
+            TuiEvent::Resize(w, h) => action_tx.send(Action::Resize(w, h))?,
+            TuiEvent::Tick => action_tx.send(Action::Tick)?,
+            _ => {}
+        }
+
         for component in &mut self.components {
             if let Some(action) = component.handle_event(Some(event.clone()))? {
                 action_tx.send(action)?;
             }
         }
+
+        Ok(())
+    }
+
+    fn handle_key_event(&mut self, event: KeyEvent) -> Result<()> {
+        let action_tx = self.action_tx.clone();
+        let Some(keymap) = self.keybinds.get(&self.menu) else {
+            return Ok(());
+        };
+
+        let Some(action) = (match keymap.get(&vec![event]) {
+            Some(action) => Some(action),
+            _ => {
+                self.last_tick_key_events.push(event);
+                keymap.get(&self.last_tick_key_events)
+            }
+        }) else {
+            return Ok(());
+        };
+
+        action_tx.send(action.clone())?;
 
         Ok(())
     }

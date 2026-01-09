@@ -51,4 +51,6 @@ pub trait Component {
     fn initialize(&mut self, _: Size) -> Result<()> {
         Ok(())
     }
+
+    fn update(&mut self, action: Action) -> Result<Option<Action>>;
 }

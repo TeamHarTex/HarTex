@@ -33,7 +33,6 @@ use crossterm::{
     execute, terminal,
     terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
-pub use event::TuiEvent;
 use futures::{FutureExt, StreamExt};
 use ratatui::{Terminal, backend::CrosstermBackend};
 use tokio::{
@@ -45,6 +44,8 @@ use tokio::{
     time::interval,
 };
 use tokio_util::sync::CancellationToken;
+
+pub use self::event::TuiEvent;
 
 mod event;
 
@@ -154,6 +155,7 @@ impl Tui {
                 _ = tps_interval.tick() => TuiEvent::Tick,
                 ct_event = event_stream.next().fuse() => match ct_event {
                     Some(Ok(CrosstermEvent::Key(key))) if key.kind == KeyEventKind::Press => TuiEvent::Key(key),
+                    Some(Ok(CrosstermEvent::Resize(w, h))) => TuiEvent::Resize(w, h),
                     _ => continue,
                 }
             };

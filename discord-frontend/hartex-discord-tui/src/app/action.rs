@@ -20,8 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Action {
     Error(String),
-    Resize(u16, u16),
+    #[expect(dead_code, reason = "temporary")]
     Quit,
+    Resize(u16, u16),
+    Tick,
 }
