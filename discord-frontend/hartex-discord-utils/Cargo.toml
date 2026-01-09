@@ -8,3 +8,6 @@ version = { workspace = true }
 [dependencies]
 color-eyre = { workspace = true }
 twilight-http = { workspace = true }
+
+[lints]
+workspace = true

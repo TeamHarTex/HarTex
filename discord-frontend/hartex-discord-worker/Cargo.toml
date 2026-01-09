@@ -15,7 +15,6 @@ mimalloc = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 twilight-gateway = { workspace = true }
-twilight-http = { workspace = true }
 twilight-model = { workspace = true }
 
 hartex-discord-actors = { workspace = true }

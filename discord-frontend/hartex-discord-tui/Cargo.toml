@@ -1,0 +1,24 @@
+[package]
+name = "hartex-discord-tui"
+description = """
+TUI instance manager for HarTex.
+"""
+edition = { workspace = true }
+license = { workspace = true }
+version = { workspace = true }
+
+[dependencies]
+color-eyre = { workspace = true }
+crossterm = { workspace = true }
+futures = { workspace = true }
+ratatui = { workspace = true }
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+tracing = { workspace = true }
+
+[[bin]]
+name = "tui"
+path = "./src/main.rs"
+
+[lints]
+workspace = true
