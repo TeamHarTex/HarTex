@@ -20,4 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub enum Action {}
+pub enum Action {
+    Error(String),
+    Resize(u16, u16),
+    Quit,
+}

@@ -22,6 +22,7 @@
 
 pub use action::Action;
 use color_eyre::eyre::Result;
+use ratatui::layout::Rect;
 use tokio::sync::{
     mpsc,
     mpsc::{UnboundedReceiver, UnboundedSender},
@@ -77,9 +78,13 @@ impl App {
         Ok(())
     }
 
-    fn handle_actions(&mut self, _: &mut Tui) -> Result<()> {
-        while let Ok(_) = self.action_rx.try_recv() {
-            todo!()
+    fn handle_actions(&mut self, tui: &mut Tui) -> Result<()> {
+        while let Ok(action) = self.action_rx.try_recv() {
+            match action {
+                Action::Resize(w, h) => self.resize(tui, w, h)?,
+                Action::Quit => self.quitting = true,
+                _ => {}
+            }
         }
 
         Ok(())
@@ -96,6 +101,27 @@ impl App {
                 action_tx.send(action)?;
             }
         }
+
+        Ok(())
+    }
+
+    fn render(&mut self, tui: &mut Tui) -> Result<()> {
+        tui.draw(|frame| {
+            for component in &mut self.components {
+                if let Err(e) = component.draw(frame, frame.area()) {
+                    let _ = self
+                        .action_tx
+                        .send(Action::Error(format!("failed to draw component: {e}")));
+                }
+            }
+        })?;
+
+        Ok(())
+    }
+
+    fn resize(&mut self, tui: &mut Tui, w: u16, h: u16) -> Result<()> {
+        tui.resize(Rect::new(0, 0, w, h))?;
+        self.render(tui)?;
 
         Ok(())
     }

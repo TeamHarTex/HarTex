@@ -22,7 +22,10 @@
 
 use color_eyre::eyre::Result;
 use crossterm::event::KeyEvent;
-use ratatui::layout::Size;
+use ratatui::{
+    Frame,
+    layout::{Rect, Size},
+};
 use tokio::sync::mpsc::UnboundedSender;
 
 use crate::{app::Action, tui::TuiEvent};
@@ -31,6 +34,8 @@ pub trait Component {
     fn action_sender(&mut self, _: UnboundedSender<Action>) -> Result<()> {
         Ok(())
     }
+
+    fn draw(&mut self, frame: &mut Frame, area: Rect) -> Result<()>;
 
     fn handle_event(&mut self, event: Option<TuiEvent>) -> Result<Option<Action>> {
         let action = match event {
