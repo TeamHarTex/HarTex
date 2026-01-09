@@ -72,12 +72,12 @@ impl Tui {
             tps: 4.0,
         })
     }
-    
+
     pub fn fps(mut self, fps: f64) -> Self {
         self.fps = fps;
         self
     }
-    
+
     pub fn tps(mut self, tps: f64) -> Self {
         self.tps = tps;
         self

@@ -21,18 +21,23 @@
  */
 
 use color_eyre::eyre::Result;
-use tokio::sync::mpsc;
-use tokio::sync::mpsc::{UnboundedSender, UnboundedReceiver};
+use tokio::sync::{
+    mpsc,
+    mpsc::{UnboundedReceiver, UnboundedSender},
+};
+
+use crate::{component::Component, tui::Tui};
 
 pub use action::Action;
-use crate::tui::Tui;
 
 mod action;
 
 pub struct App {
     action_rx: UnboundedReceiver<Action>,
     action_tx: UnboundedSender<Action>,
+    components: Vec<Box<dyn Component>>,
     fps: f64,
+    quitting: bool,
     tps: f64,
 }
 
@@ -43,23 +48,49 @@ impl App {
         Ok(Self {
             action_rx,
             action_tx,
+            components: Vec::new(),
             fps,
+            quitting: false,
             tps,
         })
     }
 
     pub async fn run(&mut self) -> Result<()> {
-        let mut tui = Tui::new()?
-            .fps(self.fps)
-            .tps(self.tps);
+        let mut tui = Tui::new()?.fps(self.fps).tps(self.tps);
         tui.enter()?;
 
-        // let action_tx = self.action_tx.clone();
-        // loop {
-        //
-        // }
+        for component in &mut self.components {
+            component.action_sender(self.action_tx.clone())?;
+            component.initialize(tui.size()?)?;
+        }
+
+        loop {
+            self.handle_events(&mut tui).await?;
+            self.handle_actions(&mut tui)?;
+
+            if self.quitting {
+                tui.stop()?;
+                break;
+            }
+        }
 
         tui.exit()?;
+        Ok(())
+    }
+
+    fn handle_actions(&mut self, _: &mut Tui) -> Result<()> {
+        while let Ok(_) = self.action_rx.try_recv() {
+            todo!()
+        }
+
+        Ok(())
+    }
+
+    async fn handle_events(&mut self, tui: &mut Tui) -> Result<()> {
+        let Some(_) = tui.next_event().await else {
+            return Ok(());
+        };
+
         Ok(())
     }
 }

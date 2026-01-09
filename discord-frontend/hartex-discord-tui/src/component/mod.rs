@@ -21,20 +21,17 @@
  */
 
 use color_eyre::eyre::Result;
+use ratatui::layout::Size;
+use tokio::sync::mpsc::UnboundedSender;
 
-use crate::app::App;
+use crate::app::Action;
 
-mod app;
-mod component;
-mod errorhandler;
-mod tui;
+pub trait Component {
+    fn action_sender(&mut self, _: UnboundedSender<Action>) -> Result<()> {
+        Ok(())
+    }
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    errorhandler::initialize()?;
-
-    let mut app = App::new(60.0, 4.0)?;
-    app.run().await?;
-
-    Ok(())
+    fn initialize(&mut self, _: Size) -> Result<()> {
+        Ok(())
+    }
 }
