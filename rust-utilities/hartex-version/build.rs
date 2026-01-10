@@ -25,7 +25,7 @@ use time::{Month, OffsetDateTime};
 pub fn main() {
     let time = OffsetDateTime::now_utc();
     println!(
-        "cargo::rustc-env=CARGO_BUILD_DATE={}-{}-{}",
+        "cargo::rustc-env=CARGO_BUILD_DATE={:04}-{:02}-{:02}",
         time.year(),
         <Month as Into<u8>>::into(time.month()),
         time.day()
