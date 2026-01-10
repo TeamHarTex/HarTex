@@ -50,7 +50,7 @@ impl Component for TabSelector {
             .border_type(BorderType::Rounded)
             .title_top(Line::from("Pages").centered());
 
-        let list = List::new(Tab::VARIANTS.iter().map(|s| *s)).block(block);
+        let list = List::new(Tab::VARIANTS.iter().copied()).block(block);
 
         frame.render_stateful_widget(list, area, &mut self.state);
 
