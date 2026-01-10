@@ -121,11 +121,11 @@ impl App {
 
         let action_tx = self.action_tx.clone();
         match event {
+            TuiEvent::Initialized => {}
             TuiEvent::Key(key) => self.handle_key_event(key)?,
             TuiEvent::Resize(w, h) => action_tx.send(Action::Resize(w, h))?,
             TuiEvent::Render => action_tx.send(Action::Render)?,
             TuiEvent::Tick => action_tx.send(Action::Tick)?,
-            _ => {}
         }
 
         for component in &mut self.components {
