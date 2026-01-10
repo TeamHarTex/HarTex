@@ -987,6 +987,7 @@ dependencies = [
  "futures",
  "hartex-version",
  "ratatui",
+ "strum",
  "tokio",
  "tokio-util",
  "tracing",

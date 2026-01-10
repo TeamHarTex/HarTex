@@ -59,7 +59,7 @@ impl App {
         Self {
             action_rx,
             action_tx,
-            components: vec![Box::new(Main)],
+            components: vec![Box::new(Main::new())],
             fps,
             keybinds: KEYBINDS.clone(),
             last_tick_key_events: Vec::new(),

@@ -31,6 +31,7 @@ use tokio::sync::mpsc::UnboundedSender;
 use crate::{app::Action, tui::TuiEvent};
 
 pub mod main;
+pub mod tab_selector;
 
 pub trait Component {
     fn action_sender(&mut self, _: UnboundedSender<Action>) -> Result<()> {

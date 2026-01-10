@@ -21,56 +21,53 @@
  */
 
 use crossterm::event::KeyEvent;
-use hartex_version::version;
 use ratatui::{
     Frame,
-    layout::{Constraint, Direction, Layout, Rect},
-    style::Stylize,
+    layout::Rect,
     text::Line,
-    widgets::{Block, BorderType},
+    widgets::{Block, BorderType, List, ListState},
 };
+use strum::{FromRepr, VariantNames};
 
-use super::{Component, tab_selector::TabSelector};
+use super::Component;
 use crate::app::Action;
 
-pub struct Main {
-    tab_selector: TabSelector,
+pub struct TabSelector {
+    state: ListState,
 }
 
-impl Main {
+impl TabSelector {
     pub fn new() -> Self {
         Self {
-            tab_selector: TabSelector::new(),
+            state: ListState::default(),
         }
     }
 }
 
-impl Component for Main {
+impl Component for TabSelector {
     fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {
         let block = Block::bordered()
             .border_type(BorderType::Rounded)
-            .title_top(Line::from("HarTex Management TUI").centered().bold())
-            .title_bottom(Line::from(version()).centered().light_cyan());
-        let inner = block.inner(area);
+            .title_top(Line::from("Pages").centered());
 
-        frame.render_widget(block, area);
+        let list = List::new(Tab::VARIANTS.iter().map(|s| *s)).block(block);
 
-        let [left, _] = Layout::new(
-            Direction::Horizontal,
-            [Constraint::Percentage(15), Constraint::Fill(1)],
-        )
-        .areas(inner);
-
-        self.tab_selector.draw(frame, left)?;
+        frame.render_stateful_widget(list, area, &mut self.state);
 
         Ok(())
     }
 
-    fn handle_key_event(&mut self, key: KeyEvent) -> color_eyre::Result<Option<Action>> {
-        self.tab_selector.handle_key_event(key)
+    fn handle_key_event(&mut self, _: KeyEvent) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
     }
 
-    fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
-        self.tab_selector.update(action)
+    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
     }
+}
+
+#[derive(FromRepr, VariantNames)]
+enum Tab {
+    #[expect(dead_code, reason = "temporary")]
+    Overview,
 }
