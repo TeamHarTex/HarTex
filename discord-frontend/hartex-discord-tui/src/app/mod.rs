@@ -32,7 +32,7 @@ use tokio::sync::{
 
 pub use self::{action::Action, menu::Menu};
 use crate::{
-    component::Component,
+    component::{Component, main::Main},
     keybinds::KEYBINDS,
     tui::{Tui, TuiEvent},
 };
@@ -59,7 +59,7 @@ impl App {
         Self {
             action_rx,
             action_tx,
-            components: Vec::new(),
+            components: vec![Box::new(Main)],
             fps,
             keybinds: KEYBINDS.clone(),
             last_tick_key_events: Vec::new(),
@@ -97,6 +97,7 @@ impl App {
             match action {
                 Action::Quit => self.quitting = true,
                 Action::Resize(w, h) => self.resize(tui, w, h)?,
+                Action::Render => self.render(tui)?,
                 Action::Tick => {
                     self.last_tick_key_events.drain(..);
                 }
@@ -122,6 +123,7 @@ impl App {
         match event {
             TuiEvent::Key(key) => self.handle_key_event(key)?,
             TuiEvent::Resize(w, h) => action_tx.send(Action::Resize(w, h))?,
+            TuiEvent::Render => action_tx.send(Action::Render)?,
             TuiEvent::Tick => action_tx.send(Action::Tick)?,
             _ => {}
         }

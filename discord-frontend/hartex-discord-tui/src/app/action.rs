@@ -24,6 +24,7 @@
 pub enum Action {
     Error(String),
     Quit,
+    Render,
     Resize(u16, u16),
     Tick,
 }

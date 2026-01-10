@@ -20,39 +20,38 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use color_eyre::eyre::Result;
 use crossterm::event::KeyEvent;
 use ratatui::{
     Frame,
-    layout::{Rect, Size},
+    layout::{HorizontalAlignment, Rect},
+    style::Style,
+    widgets::{Block, BorderType},
 };
-use tokio::sync::mpsc::UnboundedSender;
 
-use crate::{app::Action, tui::TuiEvent};
+use super::Component;
+use crate::app::Action;
 
-pub mod main;
+pub struct Main;
 
-pub trait Component {
-    fn action_sender(&mut self, _: UnboundedSender<Action>) -> Result<()> {
+impl Component for Main {
+    fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {
+        frame.render_widget(
+            Block::bordered()
+                .border_type(BorderType::Rounded)
+                .title("HarTex TUI Manager")
+                .title_alignment(HorizontalAlignment::Center)
+                .title_style(Style::new().bold()),
+            area,
+        );
+
         Ok(())
     }
 
-    fn draw(&mut self, frame: &mut Frame, area: Rect) -> Result<()>;
-
-    fn handle_event(&mut self, event: Option<TuiEvent>) -> Result<Option<Action>> {
-        let action = match event {
-            Some(TuiEvent::Key(key)) => self.handle_key_event(key)?,
-            _ => None,
-        };
-
-        Ok(action)
+    fn handle_key_event(&mut self, _: KeyEvent) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
     }
 
-    fn handle_key_event(&mut self, _: KeyEvent) -> Result<Option<Action>>;
-
-    fn initialize(&mut self, _: Size) -> Result<()> {
-        Ok(())
+    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
     }
-
-    fn update(&mut self, action: Action) -> Result<Option<Action>>;
 }
