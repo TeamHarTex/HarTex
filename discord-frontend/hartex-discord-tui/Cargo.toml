@@ -12,9 +12,12 @@ color-eyre = { workspace = true }
 crossterm = { workspace = true }
 futures = { workspace = true }
 ratatui = { workspace = true }
+strum = { workspace = true }
 tokio = { workspace = true }
 tokio-util = { workspace = true }
 tracing = { workspace = true }
+
+hartex-version = { workspace = true }
 
 [[bin]]
 name = "tui"
