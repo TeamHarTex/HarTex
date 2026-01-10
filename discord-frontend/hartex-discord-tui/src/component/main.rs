@@ -21,10 +21,12 @@
  */
 
 use crossterm::event::KeyEvent;
+use hartex_version::version;
 use ratatui::{
     Frame,
-    layout::{HorizontalAlignment, Rect},
-    style::Style,
+    layout::Rect,
+    style::Stylize,
+    text::Line,
     widgets::{Block, BorderType},
 };
 
@@ -38,9 +40,8 @@ impl Component for Main {
         frame.render_widget(
             Block::bordered()
                 .border_type(BorderType::Rounded)
-                .title("HarTex TUI Manager")
-                .title_alignment(HorizontalAlignment::Center)
-                .title_style(Style::new().bold()),
+                .title(Line::from("HarTex Management TUI").centered().bold())
+                .title_bottom(Line::from(version()).centered().light_cyan()),
             area,
         );
 

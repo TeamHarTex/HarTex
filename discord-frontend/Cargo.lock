@@ -985,6 +985,7 @@ dependencies = [
  "color-eyre",
  "crossterm",
  "futures",
+ "hartex-version",
  "ratatui",
  "tokio",
  "tokio-util",
