@@ -21,15 +21,34 @@
  */
 
 use crossterm::event::KeyEvent;
-use ratatui::{Frame, layout::Rect};
+use ratatui::{
+    Frame,
+    layout::Rect,
+    text::Line,
+    widgets::{Block, BorderType},
+};
 
 use super::Component;
-use crate::app::Action;
+use crate::{app::Action, component::tab_selector::Tab};
 
-pub struct Page;
+pub struct Page {
+    tab: Tab,
+}
+
+impl Page {
+    pub fn new() -> Self {
+        Self { tab: Tab::Overview }
+    }
+}
 
 impl Component for Page {
-    fn draw(&mut self, _: &mut Frame, _: Rect) -> color_eyre::Result<()> {
+    fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
+        let block = Block::bordered()
+            .border_type(BorderType::Rounded)
+            .title_top(Line::from(self.tab.as_ref()).centered());
+
+        frame.render_widget(block, rect);
+
         Ok(())
     }
 
@@ -37,7 +56,13 @@ impl Component for Page {
         Ok(None)
     }
 
-    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
-        Ok(None)
+    fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
+        match action {
+            Action::SelectedPageChanged(tab) => {
+                self.tab = tab;
+                Ok(Some(Action::Render))
+            }
+            _ => Ok(None),
+        }
     }
 }

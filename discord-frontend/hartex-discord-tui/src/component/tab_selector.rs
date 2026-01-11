@@ -28,7 +28,7 @@ use ratatui::{
     text::Line,
     widgets::{Block, BorderType, List, ListState},
 };
-use strum::{FromRepr, VariantNames};
+use strum::{AsRefStr, FromRepr, VariantNames};
 
 use super::Component;
 use crate::app::Action;
@@ -72,12 +72,14 @@ impl Component for TabSelector {
             _ => {}
         }
 
-        Ok(Some(Action::SelectedPageChanged))
+        Ok(Some(Action::SelectedPageChanged(
+            self.state.selected().and_then(Tab::from_repr).unwrap(),
+        )))
     }
 }
 
-#[derive(FromRepr, VariantNames)]
-enum Tab {
-    #[expect(dead_code, reason = "temporary")]
+#[derive(AsRefStr, Clone, Debug, Eq, FromRepr, PartialEq, VariantNames)]
+pub enum Tab {
     Overview,
+    Test,
 }

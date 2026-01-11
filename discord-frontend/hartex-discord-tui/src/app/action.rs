@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use crate::component::tab_selector::Tab;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Action {
     Error(String),
@@ -28,6 +30,6 @@ pub enum Action {
     Quit,
     Render,
     Resize(u16, u16),
-    SelectedPageChanged,
+    SelectedPageChanged(Tab),
     Tick,
 }

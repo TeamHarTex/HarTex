@@ -41,7 +41,7 @@ pub struct Main {
 impl Main {
     pub fn new() -> Self {
         Self {
-            page: Page,
+            page: Page::new(),
             tab_selector: TabSelector::new(),
         }
     }
