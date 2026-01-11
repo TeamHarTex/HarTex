@@ -23,6 +23,7 @@
 use std::sync::LazyLock;
 
 use color_eyre::eyre::Result;
+use hartex_version::version;
 
 use crate::{app::App, keybinds::KEYBINDS};
 
@@ -38,10 +39,16 @@ pub async fn main() -> Result<()> {
     errorhandler::initialize()?;
     logging::initialize()?;
 
+    tracing::info!("HarTex Management TUI: {}", version());
+
+    tracing::trace!("loading keybinds");
     LazyLock::force(&KEYBINDS);
 
+    tracing::trace!("creating and running app");
     let mut app = App::new(60.0, 4.0);
     app.run().await?;
+
+    tracing::warn!("stopping HarTex Management TUI");
 
     Ok(())
 }

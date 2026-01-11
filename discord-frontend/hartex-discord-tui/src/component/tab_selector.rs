@@ -67,8 +67,20 @@ impl Component for TabSelector {
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
         match action {
-            Action::Next => self.state.select_next(),
-            Action::Previous => self.state.select_previous(),
+            Action::Next => {
+                let Some(i) = self.state.selected_mut() else {
+                    unreachable!()
+                };
+
+                *i = (*i + 1) % Tab::VARIANTS.len();
+            },
+            Action::Previous => {
+                let Some(i) = self.state.selected_mut() else {
+                    unreachable!()
+                };
+
+                *i = (*i - 1) % Tab::VARIANTS.len();
+            },
             _ => {}
         }
 
