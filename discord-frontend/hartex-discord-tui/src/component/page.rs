@@ -20,14 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum Action {
-    Error(String),
-    Next,
-    Previous,
-    Quit,
-    Render,
-    Resize(u16, u16),
-    SelectedPageChanged,
-    Tick,
+use crossterm::event::KeyEvent;
+use ratatui::{Frame, layout::Rect};
+
+use super::Component;
+use crate::app::Action;
+
+pub struct Page;
+
+impl Component for Page {
+    fn draw(&mut self, _: &mut Frame, _: Rect) -> color_eyre::Result<()> {
+        Ok(())
+    }
+
+    fn handle_key_event(&mut self, _: KeyEvent) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
+    }
+
+    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
+    }
 }

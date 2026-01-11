@@ -72,7 +72,7 @@ impl Component for TabSelector {
             _ => {}
         }
 
-        Ok(None)
+        Ok(Some(Action::SelectedPageChanged))
     }
 }
 

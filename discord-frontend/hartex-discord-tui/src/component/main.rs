@@ -30,16 +30,18 @@ use ratatui::{
     widgets::{Block, BorderType},
 };
 
-use super::{Component, tab_selector::TabSelector};
+use super::{Component, page::Page, tab_selector::TabSelector};
 use crate::app::Action;
 
 pub struct Main {
+    page: Page,
     tab_selector: TabSelector,
 }
 
 impl Main {
     pub fn new() -> Self {
         Self {
+            page: Page,
             tab_selector: TabSelector::new(),
         }
     }
@@ -55,22 +57,25 @@ impl Component for Main {
 
         frame.render_widget(block, area);
 
-        let [left, _] = Layout::new(
+        let [left, right] = Layout::new(
             Direction::Horizontal,
             [Constraint::Percentage(15), Constraint::Fill(1)],
         )
         .areas(inner);
 
         self.tab_selector.draw(frame, left)?;
+        self.page.draw(frame, right)?;
 
         Ok(())
     }
 
     fn handle_key_event(&mut self, key: KeyEvent) -> color_eyre::Result<Option<Action>> {
-        self.tab_selector.handle_key_event(key)
+        self.tab_selector.handle_key_event(key)?;
+        self.page.handle_key_event(key)
     }
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
-        self.tab_selector.update(action)
+        self.tab_selector.update(action.clone())?;
+        self.page.update(action)
     }
 }
