@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
 use std::sync::LazyLock;
 
 use color_eyre::eyre::Result;

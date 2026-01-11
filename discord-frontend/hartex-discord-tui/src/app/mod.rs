@@ -101,7 +101,7 @@ impl App {
                 Action::Tick => {
                     self.last_tick_key_events.drain(..);
                 }
-                Action::Error(_) => {}
+                _ => {}
             }
 
             for component in &mut self.components {

@@ -24,39 +24,30 @@ use crossterm::event::KeyEvent;
 use ratatui::{
     Frame,
     layout::Rect,
-    style::Style,
     text::Line,
-    widgets::{Block, BorderType, List, ListState},
+    widgets::{Block, BorderType},
 };
-use strum::{AsRefStr, FromRepr, VariantNames};
 
 use super::Component;
-use crate::app::Action;
+use crate::{app::Action, component::tab_selector::Tab};
 
-pub struct TabSelector {
-    state: ListState,
+pub struct Page {
+    tab: Tab,
 }
 
-impl TabSelector {
+impl Page {
     pub fn new() -> Self {
-        let mut state = ListState::default();
-        state.select(Some(0));
-
-        Self { state }
+        Self { tab: Tab::Overview }
     }
 }
 
-impl Component for TabSelector {
-    fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {
+impl Component for Page {
+    fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
         let block = Block::bordered()
             .border_type(BorderType::Rounded)
-            .title_top(Line::from("Pages").centered());
+            .title_top(Line::from(self.tab.as_ref()).centered());
 
-        let list = List::new(Tab::VARIANTS.iter().copied())
-            .block(block)
-            .highlight_style(Style::new().black().on_white().bold());
-
-        frame.render_stateful_widget(list, area, &mut self.state);
+        frame.render_widget(block, rect);
 
         Ok(())
     }
@@ -67,19 +58,11 @@ impl Component for TabSelector {
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
         match action {
-            Action::Next => self.state.select_next(),
-            Action::Previous => self.state.select_previous(),
-            _ => {}
+            Action::SelectedPageChanged(tab) => {
+                self.tab = tab;
+                Ok(Some(Action::Render))
+            }
+            _ => Ok(None),
         }
-
-        Ok(Some(Action::SelectedPageChanged(
-            self.state.selected().and_then(Tab::from_repr).unwrap(),
-        )))
     }
-}
-
-#[derive(AsRefStr, Clone, Debug, Eq, FromRepr, PartialEq, VariantNames)]
-pub enum Tab {
-    Overview,
-    Test,
 }
