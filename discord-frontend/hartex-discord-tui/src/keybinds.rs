@@ -39,6 +39,22 @@ pub static KEYBINDS: LazyLock<HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>> =
             )],
             Action::Quit,
         );
+        entry.insert(
+            vec![KeyEvent::new_with_kind(
+                KeyCode::Down,
+                KeyModifiers::NONE,
+                KeyEventKind::Press,
+            )],
+            Action::Next,
+        );
+        entry.insert(
+            vec![KeyEvent::new_with_kind(
+                KeyCode::Up,
+                KeyModifiers::NONE,
+                KeyEventKind::Press,
+            )],
+            Action::Previous,
+        );
 
         map
     });

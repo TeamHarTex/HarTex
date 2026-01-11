@@ -24,6 +24,7 @@ use crossterm::event::KeyEvent;
 use ratatui::{
     Frame,
     layout::Rect,
+    style::Style,
     text::Line,
     widgets::{Block, BorderType, List, ListState},
 };
@@ -38,9 +39,10 @@ pub struct TabSelector {
 
 impl TabSelector {
     pub fn new() -> Self {
-        Self {
-            state: ListState::default(),
-        }
+        let mut state = ListState::default();
+        state.select(Some(0));
+
+        Self { state }
     }
 }
 
@@ -50,7 +52,9 @@ impl Component for TabSelector {
             .border_type(BorderType::Rounded)
             .title_top(Line::from("Pages").centered());
 
-        let list = List::new(Tab::VARIANTS.iter().copied()).block(block);
+        let list = List::new(Tab::VARIANTS.iter().copied())
+            .block(block)
+            .highlight_style(Style::new().black().on_white().bold());
 
         frame.render_stateful_widget(list, area, &mut self.state);
 
@@ -61,7 +65,13 @@ impl Component for TabSelector {
         Ok(None)
     }
 
-    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
+    fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
+        match action {
+            Action::Next => self.state.select_next(),
+            Action::Previous => self.state.select_previous(),
+            _ => {}
+        }
+
         Ok(None)
     }
 }

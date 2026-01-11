@@ -23,6 +23,8 @@
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Action {
     Error(String),
+    Next,
+    Previous,
     Quit,
     Render,
     Resize(u16, u16),
