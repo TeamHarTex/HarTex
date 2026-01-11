@@ -20,28 +20,31 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::LazyLock;
+use std::{env, fs, fs::File};
 
 use color_eyre::eyre::Result;
+use tracing_error::ErrorLayer;
+use tracing_subscriber::{Registry, fmt::Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{app::App, keybinds::KEYBINDS};
+pub fn initialize() -> Result<()> {
+    let mut log = env::current_dir()?;
+    log.push("logs");
+    fs::create_dir_all(&log)?;
 
-mod app;
-mod component;
-mod errorhandler;
-mod keybinds;
-mod logging;
-mod tui;
+    log.push("hartex-tui.log");
+    let file = File::create(log)?;
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    errorhandler::initialize()?;
-    logging::initialize()?;
+    let file_subscriber = Layer::default()
+        .with_level(true)
+        .with_file(true)
+        .with_line_number(true)
+        .with_ansi(false)
+        .with_writer(file);
 
-    LazyLock::force(&KEYBINDS);
-
-    let mut app = App::new(60.0, 4.0);
-    app.run().await?;
+    Registry::default()
+        .with(file_subscriber)
+        .with(ErrorLayer::default())
+        .try_init()?;
 
     Ok(())
 }
