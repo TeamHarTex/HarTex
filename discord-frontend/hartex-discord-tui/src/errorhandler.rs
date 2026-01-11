@@ -22,7 +22,10 @@
 
 use std::{panic, process};
 
-use color_eyre::{config::HookBuilder, eyre::Result};
+use color_eyre::{
+    config::{HookBuilder, Theme},
+    eyre::Result,
+};
 use tracing::error;
 
 use crate::tui::Tui;
@@ -32,6 +35,7 @@ pub fn initialize() -> Result<()> {
         .capture_span_trace_by_default(false)
         .display_env_section(false)
         .display_location_section(false)
+        .theme(Theme::new())
         .into_hooks();
 
     eyre_hook.install()?;
