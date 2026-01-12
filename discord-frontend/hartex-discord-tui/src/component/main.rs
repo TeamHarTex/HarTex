@@ -31,9 +31,10 @@ use ratatui::{
 };
 use tokio::sync::mpsc::UnboundedSender;
 
-use super::{Component, page::Page, tab_selector::TabSelector};
+use super::{Component, pages::Page, tab_selector::TabSelector};
 use crate::app::Action;
 
+#[derive(Clone)]
 pub struct Main {
     page: Page,
     tab_selector: TabSelector,

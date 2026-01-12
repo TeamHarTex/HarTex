@@ -33,7 +33,7 @@ use tokio::sync::{
 pub use self::{action::Action, menu::Menu};
 use crate::{
     component::{Component, main::Main},
-    keybinds::KEYBINDS,
+    lazies::KEYBINDS,
     tui::{Tui, TuiEvent},
 };
 

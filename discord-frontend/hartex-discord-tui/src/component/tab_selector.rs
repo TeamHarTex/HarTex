@@ -34,6 +34,7 @@ use tokio::sync::mpsc::UnboundedSender;
 use super::Component;
 use crate::app::Action;
 
+#[derive(Clone)]
 pub struct TabSelector {
     action_tx: Option<UnboundedSender<Action>>,
     state: ListState,
@@ -106,8 +107,8 @@ impl Component for TabSelector {
     }
 }
 
-#[derive(AsRefStr, Clone, Debug, Display, Eq, FromRepr, PartialEq, VariantNames)]
+#[derive(AsRefStr, Clone, Debug, Display, Eq, FromRepr, Hash, PartialEq, VariantNames)]
 pub enum Tab {
     Overview,
-    Test,
+    Shards,
 }

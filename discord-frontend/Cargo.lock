@@ -984,6 +984,7 @@ version = "0.17.0"
 dependencies = [
  "color-eyre",
  "crossterm",
+ "dyn-clone",
  "futures",
  "hartex-version",
  "ratatui",

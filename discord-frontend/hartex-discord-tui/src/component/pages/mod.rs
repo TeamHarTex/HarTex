@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+
 use crossterm::event::KeyEvent;
 use ratatui::{
     Frame,
@@ -29,15 +31,22 @@ use ratatui::{
 };
 
 use super::Component;
-use crate::{app::Action, component::tab_selector::Tab};
+use crate::{app::Action, component::tab_selector::Tab, lazies::PAGES};
 
+pub mod overview;
+
+#[derive(Clone)]
 pub struct Page {
+    contents: HashMap<Tab, Box<dyn Component + Send + Sync>>,
     tab: Tab,
 }
 
 impl Page {
     pub fn new() -> Self {
-        Self { tab: Tab::Overview }
+        Self {
+            contents: PAGES.clone(),
+            tab: Tab::Overview,
+        }
     }
 }
 
@@ -47,9 +56,15 @@ impl Component for Page {
             .border_type(BorderType::Rounded)
             .title_top(Line::from(self.tab.as_ref()).centered());
 
+        let inner = block.inner(rect);
+
         frame.render_widget(block, rect);
 
-        Ok(())
+        let Some(tab) = self.contents.get_mut(&self.tab) else {
+            return Ok(());
+        };
+
+        tab.draw(frame, inner)
     }
 
     fn handle_key_event(&mut self, _: KeyEvent) -> color_eyre::Result<Option<Action>> {
