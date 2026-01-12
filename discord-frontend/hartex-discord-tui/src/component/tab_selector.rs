@@ -44,7 +44,10 @@ impl TabSelector {
         let mut state = ListState::default();
         state.select(Some(0));
 
-        Self { action_tx: None, state }
+        Self {
+            action_tx: None,
+            state,
+        }
     }
 }
 
@@ -81,20 +84,23 @@ impl Component for TabSelector {
                 };
 
                 *i = (*i + 1) % Tab::VARIANTS.len();
-            },
+            }
             Action::Previous => {
                 let Some(i) = self.state.selected_mut() else {
                     unreachable!()
                 };
 
                 *i = (*i - 1) % Tab::VARIANTS.len();
-            },
-            _ => return Ok(None)
+            }
+            _ => return Ok(None),
         }
 
-        self.action_tx.as_ref().unwrap().send(Action::SelectedPageChanged(
-            self.state.selected().and_then(Tab::from_repr).unwrap(),
-        ))?;
+        self.action_tx
+            .as_ref()
+            .unwrap()
+            .send(Action::SelectedPageChanged(
+                self.state.selected().and_then(Tab::from_repr).unwrap(),
+            ))?;
 
         Ok(None)
     }
