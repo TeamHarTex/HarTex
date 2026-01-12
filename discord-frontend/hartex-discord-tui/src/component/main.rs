@@ -29,7 +29,7 @@ use ratatui::{
     text::Line,
     widgets::{Block, BorderType},
 };
-
+use tokio::sync::mpsc::UnboundedSender;
 use super::{Component, page::Page, tab_selector::TabSelector};
 use crate::app::Action;
 
@@ -48,6 +48,10 @@ impl Main {
 }
 
 impl Component for Main {
+    fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
+        self.tab_selector.action_sender(sender)
+    }
+
     fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {
         let block = Block::bordered()
             .border_type(BorderType::Rounded)

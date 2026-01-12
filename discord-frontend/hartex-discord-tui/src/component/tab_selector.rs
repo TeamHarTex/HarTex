@@ -28,12 +28,14 @@ use ratatui::{
     text::Line,
     widgets::{Block, BorderType, List, ListState},
 };
-use strum::{AsRefStr, FromRepr, VariantNames};
+use strum::{AsRefStr, Display, FromRepr, VariantNames};
+use tokio::sync::mpsc::UnboundedSender;
 
 use super::Component;
 use crate::app::Action;
 
 pub struct TabSelector {
+    action_tx: Option<UnboundedSender<Action>>,
     state: ListState,
 }
 
@@ -42,11 +44,17 @@ impl TabSelector {
         let mut state = ListState::default();
         state.select(Some(0));
 
-        Self { state }
+        Self { action_tx: None, state }
     }
 }
 
 impl Component for TabSelector {
+    fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
+        self.action_tx.replace(sender);
+
+        Ok(())
+    }
+
     fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {
         let block = Block::bordered()
             .border_type(BorderType::Rounded)
@@ -81,16 +89,18 @@ impl Component for TabSelector {
 
                 *i = (*i - 1) % Tab::VARIANTS.len();
             },
-            _ => {}
+            _ => return Ok(None)
         }
 
-        Ok(Some(Action::SelectedPageChanged(
+        self.action_tx.as_ref().unwrap().send(Action::SelectedPageChanged(
             self.state.selected().and_then(Tab::from_repr).unwrap(),
-        )))
+        ))?;
+
+        Ok(None)
     }
 }
 
-#[derive(AsRefStr, Clone, Debug, Eq, FromRepr, PartialEq, VariantNames)]
+#[derive(AsRefStr, Clone, Debug, Display, Eq, FromRepr, PartialEq, VariantNames)]
 pub enum Tab {
     Overview,
     Test,

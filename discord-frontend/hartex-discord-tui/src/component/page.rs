@@ -59,6 +59,8 @@ impl Component for Page {
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
         match action {
             Action::SelectedPageChanged(tab) => {
+                tracing::trace!("selected tab changed: {tab}");
+
                 self.tab = tab;
                 Ok(Some(Action::Render))
             }
