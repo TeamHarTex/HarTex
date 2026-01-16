@@ -24,14 +24,14 @@ use std::collections::HashMap;
 
 use color_eyre::eyre::Result;
 use crossterm::event::KeyEvent;
+use hartex_discord_grpc::manager::{WhoamiRequest, manager_client::ManagerClient};
 use ratatui::layout::Rect;
 use tokio::sync::{
     mpsc,
     mpsc::{UnboundedReceiver, UnboundedSender},
 };
 use tonic::transport::Channel;
-use hartex_discord_grpc::manager::manager_client::ManagerClient;
-use hartex_discord_grpc::manager::WhoamiRequest;
+
 pub use self::{action::Action, menu::Menu};
 use crate::{
     component::{Component, main::Main},
@@ -74,9 +74,13 @@ impl App {
     }
 
     pub async fn run(&mut self) -> Result<()> {
-        let whoami = self.client.whoami(WhoamiRequest::default()).await?.into_inner();
-        let _ = format!("{}#{}", whoami.username, whoami.discriminator);
-        
+        let whoami = self
+            .client
+            .whoami(WhoamiRequest::default())
+            .await?
+            .into_inner();
+        let username = format!("{}#{}", whoami.username, whoami.discriminator);
+
         let mut tui = Tui::new()?.fps(self.fps).tps(self.tps);
         tui.enter()?;
 
@@ -84,6 +88,8 @@ impl App {
             component.action_sender(self.action_tx.clone())?;
             component.initialize(tui.size()?)?;
         }
+
+        self.action_tx.send(Action::Username(username))?;
 
         loop {
             self.handle_events(&mut tui).await?;

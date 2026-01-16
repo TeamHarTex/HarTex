@@ -29,7 +29,7 @@ use ratatui::{
     text::Line,
     widgets::{Block, BorderType},
 };
-
+use tokio::sync::mpsc::UnboundedSender;
 use super::Component;
 use crate::{app::Action, component::tab_selector::Tab, lazies::PAGES};
 
@@ -37,6 +37,7 @@ pub mod overview;
 
 #[derive(Clone)]
 pub struct Page {
+    action_tx: Option<UnboundedSender<Action>>,
     contents: HashMap<Tab, Box<dyn Component + Send + Sync>>,
     tab: Tab,
 }
@@ -44,6 +45,7 @@ pub struct Page {
 impl Page {
     pub fn new() -> Self {
         Self {
+            action_tx: None,
             contents: PAGES.clone(),
             tab: Tab::Overview,
         }
@@ -51,6 +53,12 @@ impl Page {
 }
 
 impl Component for Page {
+    fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
+        self.action_tx.replace(sender.clone());
+        
+        self.contents.get_mut(&self.tab).unwrap().action_sender(sender)
+    }
+
     fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
         let block = Block::bordered()
             .border_type(BorderType::Rounded)
@@ -72,6 +80,10 @@ impl Component for Page {
     }
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
+        if let Some(action) = self.contents.get_mut(&self.tab).unwrap().update(action.clone())? {
+            self.action_tx.as_ref().unwrap().send(action)?;
+        }
+
         match action {
             Action::SelectedPageChanged(tab) => {
                 tracing::trace!("selected tab changed: {tab}");

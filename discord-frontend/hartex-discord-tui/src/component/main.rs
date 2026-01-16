@@ -51,7 +51,8 @@ impl Main {
 
 impl Component for Main {
     fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
-        self.tab_selector.action_sender(sender)
+        self.tab_selector.action_sender(sender.clone())?;
+        self.page.action_sender(sender)
     }
 
     fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {

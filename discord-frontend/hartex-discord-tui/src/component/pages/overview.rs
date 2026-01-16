@@ -29,12 +29,23 @@ use ratatui::{
 use crate::{app::Action, component::Component, widgets::overview_table::OverviewTable};
 
 #[derive(Clone)]
-pub struct OverviewPage;
+pub struct OverviewPage {
+    username: Option<String>,
+}
+
+impl OverviewPage {
+    pub fn new() -> Self {
+        Self { username: None }
+    }
+}
 
 impl Component for OverviewPage {
     fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
         let centering = rect.centered(Constraint::Percentage(75), Constraint::Percentage(75));
-        frame.render_widget(OverviewTable::new("Test"), centering);
+        frame.render_widget(
+            OverviewTable::new(self.username.as_ref().unwrap_or(&String::from("........"))),
+            centering,
+        );
         Ok(())
     }
 
@@ -42,7 +53,14 @@ impl Component for OverviewPage {
         Ok(None)
     }
 
-    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
-        Ok(None)
+    fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
+        match action {
+            Action::Username(username) => {
+                self.username.replace(username);
+                
+                Ok(Some(Action::Render))
+            }
+            _ => Ok(None),
+        }
     }
 }

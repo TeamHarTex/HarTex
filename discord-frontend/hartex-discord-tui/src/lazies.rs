@@ -65,7 +65,8 @@ pub static KEYBINDS: LazyLock<HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>> =
 pub static PAGES: LazyLock<HashMap<Tab, Box<dyn Component + Send + Sync>>> = LazyLock::new(|| {
     let mut map: HashMap<Tab, Box<dyn Component + Send + Sync>> = HashMap::new();
 
-    map.insert(Tab::Overview, Box::new(OverviewPage));
+    map.insert(Tab::Overview, Box::new(OverviewPage::new()));
+    map.insert(Tab::Shards, Box::new(OverviewPage::new()));
 
     map
 });
