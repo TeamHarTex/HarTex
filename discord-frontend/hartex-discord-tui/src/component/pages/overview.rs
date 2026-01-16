@@ -21,17 +21,20 @@
  */
 
 use crossterm::event::KeyEvent;
-use ratatui::{Frame, layout::Rect, text::Line};
+use ratatui::{
+    Frame,
+    layout::{Constraint, Rect},
+};
 
-use crate::{app::Action, component::Component};
+use crate::{app::Action, component::Component, widgets::overview_table::OverviewTable};
 
 #[derive(Clone)]
 pub struct OverviewPage;
 
 impl Component for OverviewPage {
     fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
-        frame.render_widget(Line::from("Hi"), rect);
-
+        let centering = rect.centered(Constraint::Percentage(75), Constraint::Percentage(75));
+        frame.render_widget(OverviewTable::new("Test"), centering);
         Ok(())
     }
 

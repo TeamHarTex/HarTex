@@ -24,7 +24,7 @@ use crossterm::event::KeyEvent;
 use hartex_version::version;
 use ratatui::{
     Frame,
-    layout::{Constraint, Direction, Layout, Rect},
+    layout::{Constraint, Layout, Rect},
     style::Stylize,
     text::Line,
     widgets::{Block, BorderType},
@@ -63,11 +63,8 @@ impl Component for Main {
 
         frame.render_widget(block, area);
 
-        let [left, right] = Layout::new(
-            Direction::Horizontal,
-            [Constraint::Percentage(15), Constraint::Fill(1)],
-        )
-        .areas(inner);
+        let [left, right] =
+            Layout::horizontal([Constraint::Percentage(15), Constraint::Fill(1)]).areas(inner);
 
         self.tab_selector.draw(frame, left)?;
         self.page.draw(frame, right)?;

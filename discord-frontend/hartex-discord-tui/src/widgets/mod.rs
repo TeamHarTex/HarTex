@@ -20,40 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::LazyLock;
-
-use color_eyre::eyre::Result;
-use hartex_version::version;
-
-use crate::{
-    app::App,
-    lazies::{KEYBINDS, PAGES},
-};
-
-mod app;
-mod component;
-mod errorhandler;
-mod lazies;
-mod logging;
-mod tui;
-mod widgets;
-
-#[tokio::main]
-pub async fn main() -> Result<()> {
-    errorhandler::initialize()?;
-    logging::initialize()?;
-
-    tracing::info!("HarTex Management TUI: {}", version());
-
-    tracing::trace!("loading keybinds and pages");
-    LazyLock::force(&KEYBINDS);
-    LazyLock::force(&PAGES);
-
-    tracing::trace!("creating and running app");
-    let mut app = App::new(60.0, 4.0);
-    app.run().await?;
-
-    tracing::warn!("stopping HarTex Management TUI");
-
-    Ok(())
-}
+pub mod overview_table;
