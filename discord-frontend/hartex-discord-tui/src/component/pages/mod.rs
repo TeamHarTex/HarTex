@@ -35,6 +35,7 @@ use super::Component;
 use crate::{app::Action, component::tab_selector::Tab, lazies::PAGES};
 
 pub mod overview;
+pub mod shards;
 
 #[derive(Clone)]
 pub struct Page {
