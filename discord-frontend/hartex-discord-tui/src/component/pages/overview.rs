@@ -57,7 +57,7 @@ impl Component for OverviewPage {
         match action {
             Action::Username(username) => {
                 self.username.replace(username);
-                
+
                 Ok(Some(Action::Render))
             }
             _ => Ok(None),

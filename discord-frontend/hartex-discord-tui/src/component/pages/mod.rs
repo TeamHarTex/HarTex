@@ -30,6 +30,7 @@ use ratatui::{
     widgets::{Block, BorderType},
 };
 use tokio::sync::mpsc::UnboundedSender;
+
 use super::Component;
 use crate::{app::Action, component::tab_selector::Tab, lazies::PAGES};
 
@@ -55,8 +56,11 @@ impl Page {
 impl Component for Page {
     fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
         self.action_tx.replace(sender.clone());
-        
-        self.contents.get_mut(&self.tab).unwrap().action_sender(sender)
+
+        self.contents
+            .get_mut(&self.tab)
+            .unwrap()
+            .action_sender(sender)
     }
 
     fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
@@ -80,7 +84,12 @@ impl Component for Page {
     }
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
-        if let Some(action) = self.contents.get_mut(&self.tab).unwrap().update(action.clone())? {
+        if let Some(action) = self
+            .contents
+            .get_mut(&self.tab)
+            .unwrap()
+            .update(action.clone())?
+        {
             self.action_tx.as_ref().unwrap().send(action)?;
         }
 
