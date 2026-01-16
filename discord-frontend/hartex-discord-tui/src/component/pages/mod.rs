@@ -20,6 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
+
 use crossterm::event::KeyEvent;
 use ratatui::{
     Frame,
@@ -27,29 +29,55 @@ use ratatui::{
     text::Line,
     widgets::{Block, BorderType},
 };
+use tokio::sync::mpsc::UnboundedSender;
 
 use super::Component;
-use crate::{app::Action, component::tab_selector::Tab};
+use crate::{app::Action, component::tab_selector::Tab, lazies::PAGES};
 
+pub mod overview;
+pub mod shards;
+
+#[derive(Clone)]
 pub struct Page {
+    action_tx: Option<UnboundedSender<Action>>,
+    contents: HashMap<Tab, Box<dyn Component + Send + Sync>>,
     tab: Tab,
 }
 
 impl Page {
     pub fn new() -> Self {
-        Self { tab: Tab::Overview }
+        Self {
+            action_tx: None,
+            contents: PAGES.clone(),
+            tab: Tab::Overview,
+        }
     }
 }
 
 impl Component for Page {
+    fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
+        self.action_tx.replace(sender.clone());
+
+        self.contents
+            .get_mut(&self.tab)
+            .unwrap()
+            .action_sender(sender)
+    }
+
     fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
         let block = Block::bordered()
             .border_type(BorderType::Rounded)
             .title_top(Line::from(self.tab.as_ref()).centered());
 
+        let inner = block.inner(rect);
+
         frame.render_widget(block, rect);
 
-        Ok(())
+        let Some(tab) = self.contents.get_mut(&self.tab) else {
+            return Ok(());
+        };
+
+        tab.draw(frame, inner)
     }
 
     fn handle_key_event(&mut self, _: KeyEvent) -> color_eyre::Result<Option<Action>> {
@@ -57,6 +85,15 @@ impl Component for Page {
     }
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
+        if let Some(action) = self
+            .contents
+            .get_mut(&self.tab)
+            .unwrap()
+            .update(action.clone())?
+        {
+            self.action_tx.as_ref().unwrap().send(action)?;
+        }
+
         match action {
             Action::SelectedPageChanged(tab) => {
                 tracing::trace!("selected tab changed: {tab}");

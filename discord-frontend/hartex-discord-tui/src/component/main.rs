@@ -24,16 +24,17 @@ use crossterm::event::KeyEvent;
 use hartex_version::version;
 use ratatui::{
     Frame,
-    layout::{Constraint, Direction, Layout, Rect},
+    layout::{Constraint, Layout, Rect},
     style::Stylize,
     text::Line,
     widgets::{Block, BorderType},
 };
 use tokio::sync::mpsc::UnboundedSender;
 
-use super::{Component, page::Page, tab_selector::TabSelector};
+use super::{Component, pages::Page, tab_selector::TabSelector};
 use crate::app::Action;
 
+#[derive(Clone)]
 pub struct Main {
     page: Page,
     tab_selector: TabSelector,
@@ -50,7 +51,8 @@ impl Main {
 
 impl Component for Main {
     fn action_sender(&mut self, sender: UnboundedSender<Action>) -> color_eyre::Result<()> {
-        self.tab_selector.action_sender(sender)
+        self.tab_selector.action_sender(sender.clone())?;
+        self.page.action_sender(sender)
     }
 
     fn draw(&mut self, frame: &mut Frame, area: Rect) -> color_eyre::Result<()> {
@@ -62,11 +64,8 @@ impl Component for Main {
 
         frame.render_widget(block, area);
 
-        let [left, right] = Layout::new(
-            Direction::Horizontal,
-            [Constraint::Percentage(15), Constraint::Fill(1)],
-        )
-        .areas(inner);
+        let [left, right] =
+            Layout::horizontal([Constraint::Percentage(15), Constraint::Fill(1)]).areas(inner);
 
         self.tab_selector.draw(frame, left)?;
         self.page.draw(frame, right)?;

@@ -54,7 +54,7 @@ impl WorkerCliArgs {
         self.capacity
     }
 
-    pub fn manger_addr(&self) -> SocketAddr {
+    pub fn manager_addr(&self) -> SocketAddr {
         self.manager
     }
 }

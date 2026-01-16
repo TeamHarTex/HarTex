@@ -20,17 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::component::tab_selector::Tab;
+use crossterm::event::KeyEvent;
+use ratatui::{Frame, layout::Rect};
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum Action {
-    Error(String),
-    Next,
-    Previous,
-    Quit,
-    Render,
-    Resize(u16, u16),
-    SelectedPageChanged(Tab),
-    Tick,
-    Username(String),
+use crate::{app::Action, component::Component};
+
+#[derive(Clone)]
+pub struct ShardsPage;
+
+impl Component for ShardsPage {
+    fn draw(&mut self, _: &mut Frame, _: Rect) -> color_eyre::Result<()> {
+        Ok(())
+    }
+
+    fn handle_key_event(&mut self, _: KeyEvent) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
+    }
+
+    fn update(&mut self, _: Action) -> color_eyre::Result<Option<Action>> {
+        Ok(None)
+    }
 }

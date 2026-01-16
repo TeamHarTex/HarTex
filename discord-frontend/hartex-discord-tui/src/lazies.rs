@@ -24,7 +24,14 @@ use std::{collections::HashMap, sync::LazyLock};
 
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
-use crate::app::{Action, Menu};
+use crate::{
+    app::{Action, Menu},
+    component::{
+        Component,
+        pages::{overview::OverviewPage, shards::ShardsPage},
+        tab_selector::Tab,
+    },
+};
 
 pub static KEYBINDS: LazyLock<HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>> =
     LazyLock::new(|| {
@@ -58,3 +65,12 @@ pub static KEYBINDS: LazyLock<HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>> =
 
         map
     });
+
+pub static PAGES: LazyLock<HashMap<Tab, Box<dyn Component + Send + Sync>>> = LazyLock::new(|| {
+    let mut map: HashMap<Tab, Box<dyn Component + Send + Sync>> = HashMap::new();
+
+    map.insert(Tab::Overview, Box::new(OverviewPage::new()));
+    map.insert(Tab::Shards, Box::new(ShardsPage));
+
+    map
+});

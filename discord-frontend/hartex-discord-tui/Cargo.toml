@@ -8,17 +8,21 @@ license = { workspace = true }
 version = { workspace = true }
 
 [dependencies]
+clap = { workspace = true }
 color-eyre = { workspace = true }
 crossterm = { workspace = true }
+dyn-clone = { workspace = true }
 futures = { workspace = true }
 ratatui = { workspace = true }
 strum = { workspace = true }
 tokio = { workspace = true }
 tokio-util = { workspace = true }
+tonic = { workspace = true }
 tracing = { workspace = true }
 tracing-error = { workspace = true }
 tracing-subscriber = { workspace = true }
 
+hartex-discord-grpc = { workspace = true }
 hartex-version = { workspace = true }
 
 [[bin]]

@@ -22,6 +22,7 @@
 
 use color_eyre::eyre::Result;
 use crossterm::event::KeyEvent;
+use dyn_clone::DynClone;
 use ratatui::{
     Frame,
     layout::{Rect, Size},
@@ -31,10 +32,10 @@ use tokio::sync::mpsc::UnboundedSender;
 use crate::{app::Action, tui::TuiEvent};
 
 pub mod main;
-mod page;
+pub mod pages;
 pub mod tab_selector;
 
-pub trait Component {
+pub trait Component: DynClone {
     fn action_sender(&mut self, _: UnboundedSender<Action>) -> Result<()> {
         Ok(())
     }
@@ -58,3 +59,5 @@ pub trait Component {
 
     fn update(&mut self, action: Action) -> Result<Option<Action>>;
 }
+
+dyn_clone::clone_trait_object!(Component);

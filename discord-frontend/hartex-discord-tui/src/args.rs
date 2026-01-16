@@ -20,17 +20,24 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::component::tab_selector::Tab;
+use std::net::SocketAddr;
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum Action {
-    Error(String),
-    Next,
-    Previous,
-    Quit,
-    Render,
-    Resize(u16, u16),
-    SelectedPageChanged(Tab),
-    Tick,
-    Username(String),
+use clap::Parser;
+
+#[derive(Parser)]
+pub struct TuiCliArgs {
+    #[arg(
+        value_name = "ADDR",
+        default_value_t = SocketAddr::from(([127, 0, 0, 1], 3000)),
+        short,
+        long,
+        long_help = "the address and port the worker instance manager listens on",
+    )]
+    manager_addr: SocketAddr,
+}
+
+impl TuiCliArgs {
+    pub fn manager_addr(&self) -> SocketAddr {
+        self.manager_addr
+    }
 }
