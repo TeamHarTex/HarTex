@@ -22,15 +22,19 @@
 
 use std::sync::LazyLock;
 
+use clap::Parser;
 use color_eyre::eyre::Result;
+use hartex_discord_grpc::manager::manager_client::ManagerClient;
 use hartex_version::version;
 
 use crate::{
     app::App,
+    args::TuiCliArgs,
     lazies::{KEYBINDS, PAGES},
 };
 
 mod app;
+mod args;
 mod component;
 mod errorhandler;
 mod lazies;
@@ -43,14 +47,20 @@ pub async fn main() -> Result<()> {
     errorhandler::initialize()?;
     logging::initialize()?;
 
+    let args = TuiCliArgs::parse();
+    let addr = args.manager_addr();
+
     tracing::info!("HarTex Management TUI: {}", version());
 
     tracing::trace!("loading keybinds and pages");
     LazyLock::force(&KEYBINDS);
     LazyLock::force(&PAGES);
 
+    tracing::trace!("connecting to instance manager at {addr}");
+    let client = ManagerClient::connect(format!("http://{addr}")).await?;
+
     tracing::trace!("creating and running app");
-    let mut app = App::new(60.0, 4.0);
+    let mut app = App::new(60.0, 4.0, client);
     app.run().await?;
 
     tracing::warn!("stopping HarTex Management TUI");

@@ -982,15 +982,18 @@ dependencies = [
 name = "hartex-discord-tui"
 version = "0.17.0"
 dependencies = [
+ "clap",
  "color-eyre",
  "crossterm",
  "dyn-clone",
  "futures",
+ "hartex-discord-grpc",
  "hartex-version",
  "ratatui",
  "strum",
  "tokio",
  "tokio-util",
+ "tonic",
  "tracing",
  "tracing-error",
  "tracing-subscriber",

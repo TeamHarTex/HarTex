@@ -29,7 +29,9 @@ use tokio::sync::{
     mpsc,
     mpsc::{UnboundedReceiver, UnboundedSender},
 };
-
+use tonic::transport::Channel;
+use hartex_discord_grpc::manager::manager_client::ManagerClient;
+use hartex_discord_grpc::manager::WhoamiRequest;
 pub use self::{action::Action, menu::Menu};
 use crate::{
     component::{Component, main::Main},
@@ -43,6 +45,7 @@ mod menu;
 pub struct App {
     action_rx: UnboundedReceiver<Action>,
     action_tx: UnboundedSender<Action>,
+    client: ManagerClient<Channel>,
     components: Vec<Box<dyn Component>>,
     fps: f64,
     keybinds: HashMap<Menu, HashMap<Vec<KeyEvent>, Action>>,
@@ -53,12 +56,13 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(fps: f64, tps: f64) -> Self {
+    pub fn new(fps: f64, tps: f64, client: ManagerClient<Channel>) -> Self {
         let (action_tx, action_rx) = mpsc::unbounded_channel();
 
         Self {
             action_rx,
             action_tx,
+            client,
             components: vec![Box::new(Main::new())],
             fps,
             keybinds: KEYBINDS.clone(),
@@ -70,6 +74,9 @@ impl App {
     }
 
     pub async fn run(&mut self) -> Result<()> {
+        let whoami = self.client.whoami(WhoamiRequest::default()).await?.into_inner();
+        let _ = format!("{}#{}", whoami.username, whoami.discriminator);
+        
         let mut tui = Tui::new()?.fps(self.fps).tps(self.tps);
         tui.enter()?;
 

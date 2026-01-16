@@ -52,7 +52,7 @@ pub async fn main() -> Result<()> {
     tracing::trace!("loading environment variables...");
     let config = load_configuration()?;
 
-    let addr = args.manger_addr();
+    let addr = args.manager_addr();
     tracing::trace!("trying to connect to manager via gRPC at {addr}");
     let mut client = ManagerClient::connect(format!("http://{addr}")).await?;
     let ready = client

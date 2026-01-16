@@ -25,20 +25,7 @@ use std::net::SocketAddr;
 use clap::Parser;
 
 #[derive(Parser)]
-#[command(
-    name = "worker",
-    about = "Worker instance of HarTex.",
-    long_about = None
-)]
-pub struct WorkerCliArgs {
-    #[arg(
-        value_name = "CAP",
-        default_value_t = 1,
-        short,
-        long,
-        long_help = "maximum number of shards this worker is capable of running"
-    )]
-    capacity: u32,
+pub struct TuiCliArgs {
     #[arg(
         value_name = "ADDR",
         default_value_t = SocketAddr::from(([127, 0, 0, 1], 3000)),
@@ -46,15 +33,11 @@ pub struct WorkerCliArgs {
         long,
         long_help = "the address and port the worker instance manager listens on",
     )]
-    manager: SocketAddr,
+    manager_addr: SocketAddr,
 }
 
-impl WorkerCliArgs {
-    pub fn capacity(&self) -> u32 {
-        self.capacity
-    }
-
+impl TuiCliArgs {
     pub fn manager_addr(&self) -> SocketAddr {
-        self.manager
+        self.manager_addr
     }
 }
