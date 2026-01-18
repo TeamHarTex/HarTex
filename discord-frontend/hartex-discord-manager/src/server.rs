@@ -103,6 +103,7 @@ impl Manager for ManagerServerImpl {
         Ok(Response::new(WhoamiResponse {
             username: locked.current_user.name.clone(),
             discriminator: locked.current_user.discriminator().to_string(),
+            user_id: locked.current_user.id.to_string(),
         }))
     }
 }

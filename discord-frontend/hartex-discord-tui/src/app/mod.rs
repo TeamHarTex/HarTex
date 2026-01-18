@@ -89,7 +89,10 @@ impl App {
             component.initialize(tui.size()?)?;
         }
 
-        self.action_tx.send(Action::Username(username))?;
+        self.action_tx.send(Action::Whoami {
+            username,
+            user_id: whoami.user_id,
+        })?;
 
         loop {
             self.handle_events(&mut tui).await?;

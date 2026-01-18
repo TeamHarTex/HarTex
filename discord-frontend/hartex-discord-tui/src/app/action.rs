@@ -32,5 +32,5 @@ pub enum Action {
     Resize(u16, u16),
     SelectedPageChanged(Tab),
     Tick,
-    Username(String),
+    Whoami { username: String, user_id: String },
 }
