@@ -31,11 +31,15 @@ use crate::{app::Action, component::Component, widgets::overview_table::Overview
 #[derive(Clone)]
 pub struct OverviewPage {
     username: Option<String>,
+    user_id: Option<String>,
 }
 
 impl OverviewPage {
     pub fn new() -> Self {
-        Self { username: None }
+        Self {
+            username: None,
+            user_id: None,
+        }
     }
 }
 
@@ -43,7 +47,10 @@ impl Component for OverviewPage {
     fn draw(&mut self, frame: &mut Frame, rect: Rect) -> color_eyre::Result<()> {
         let centering = rect.centered(Constraint::Percentage(75), Constraint::Percentage(75));
         frame.render_widget(
-            OverviewTable::new(self.username.as_ref().unwrap_or(&String::from("........"))),
+            OverviewTable::new(
+                self.username.as_ref().unwrap_or(&String::from("........")),
+                self.user_id.as_ref().unwrap_or(&String::from("")),
+            ),
             centering,
         );
         Ok(())
@@ -55,8 +62,9 @@ impl Component for OverviewPage {
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
         match action {
-            Action::Username(username) => {
+            Action::Whoami { username, user_id } => {
                 self.username.replace(username);
+                self.user_id.replace(user_id);
 
                 Ok(Some(Action::Render))
             }
