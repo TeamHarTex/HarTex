@@ -49,7 +49,7 @@ impl Component for OverviewPage {
         frame.render_widget(
             OverviewTable::new(
                 self.username.as_ref().unwrap_or(&String::from("........")),
-                self.user_id.as_ref().unwrap_or(&String::from("")),
+                self.user_id.as_ref().unwrap_or(&String::from("........")),
             ),
             centering,
         );
