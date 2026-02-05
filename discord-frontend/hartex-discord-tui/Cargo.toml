@@ -15,6 +15,7 @@ dyn-clone = { workspace = true }
 futures = { workspace = true }
 ratatui = { workspace = true }
 strum = { workspace = true }
+time = { workspace = true }
 tokio = { workspace = true }
 tokio-util = { workspace = true }
 tonic = { workspace = true }

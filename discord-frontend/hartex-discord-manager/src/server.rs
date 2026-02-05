@@ -23,8 +23,8 @@
 use std::sync::{Arc, atomic::Ordering};
 
 use hartex_discord_grpc::manager::{
-    IdentifyRequest, ReadyResponse, ShardAssignment, WhoamiRequest, WhoamiResponse,
-    WorkerSessionStartLimit, manager_server::Manager,
+    ConnectionInfoRequest, ConnectionInfoResponse, IdentifyRequest, ReadyResponse, ShardAssignment,
+    WhoamiRequest, WhoamiResponse, WorkerSessionStartLimit, manager_server::Manager,
 };
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status, async_trait};
@@ -47,6 +47,23 @@ impl ManagerServerImpl {
 
 #[async_trait]
 impl Manager for ManagerServerImpl {
+    #[instrument(skip_all)]
+    async fn connection_info(
+        &self,
+        _: Request<ConnectionInfoRequest>,
+    ) -> Result<Response<ConnectionInfoResponse>, Status> {
+        let locked = self.state.lock().await;
+        Ok(Response::new(ConnectionInfoResponse {
+            session_start_limit: Some(WorkerSessionStartLimit {
+                max_concurrency: u32::from(locked.session_start_limit.max_concurrency),
+                remaining: locked.session_start_limit.remaining,
+                reset_after: locked.session_start_limit.reset_after,
+                total: locked.session_start_limit.total,
+            }),
+            recommended_shards: locked.all_shards.len() as u32,
+        }))
+    }
+
     #[instrument(skip_all)]
     async fn identify(
         &self,

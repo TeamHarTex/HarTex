@@ -21,6 +21,7 @@
  */
 
 use crossterm::event::KeyEvent;
+use hartex_discord_grpc::manager::WorkerSessionStartLimit;
 use ratatui::{
     Frame,
     layout::{Constraint, Rect},
@@ -32,6 +33,8 @@ use crate::{app::Action, component::Component, widgets::overview_table::Overview
 pub struct OverviewPage {
     username: Option<String>,
     user_id: Option<String>,
+    session_start_limit: Option<WorkerSessionStartLimit>,
+    shards: Option<u32>,
 }
 
 impl OverviewPage {
@@ -39,6 +42,8 @@ impl OverviewPage {
         Self {
             username: None,
             user_id: None,
+            session_start_limit: None,
+            shards: None,
         }
     }
 }
@@ -50,6 +55,8 @@ impl Component for OverviewPage {
             OverviewTable::new(
                 self.username.as_ref().unwrap_or(&String::from("........")),
                 self.user_id.as_ref().unwrap_or(&String::from("........")),
+                self.session_start_limit,
+                self.shards,
             ),
             centering,
         );
@@ -62,6 +69,12 @@ impl Component for OverviewPage {
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
         match action {
+            Action::ConnectionInfo(limit, shards) => {
+                self.session_start_limit.replace(limit);
+                self.shards.replace(shards);
+
+                Ok(Some(Action::Render))
+            }
             Action::Whoami { username, user_id } => {
                 self.username.replace(username);
                 self.user_id.replace(user_id);
