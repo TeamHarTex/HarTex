@@ -24,7 +24,9 @@ use std::collections::HashMap;
 
 use color_eyre::eyre::Result;
 use crossterm::event::KeyEvent;
-use hartex_discord_grpc::manager::{WhoamiRequest, manager_client::ManagerClient};
+use hartex_discord_grpc::manager::{
+    ConnectionInfoRequest, WhoamiRequest, manager_client::ManagerClient,
+};
 use ratatui::layout::Rect;
 use tokio::sync::{
     mpsc,
@@ -81,6 +83,12 @@ impl App {
             .into_inner();
         let username = format!("{}#{}", whoami.username, whoami.discriminator);
 
+        let connection_info = self
+            .client
+            .connection_info(ConnectionInfoRequest::default())
+            .await?
+            .into_inner();
+
         let mut tui = Tui::new()?.fps(self.fps).tps(self.tps);
         tui.enter()?;
 
@@ -93,6 +101,11 @@ impl App {
             username,
             user_id: whoami.user_id,
         })?;
+
+        self.action_tx.send(Action::ConnectionInfo(
+            connection_info.session_start_limit.unwrap(),
+            connection_info.recommended_shards,
+        ))?;
 
         loop {
             self.handle_events(&mut tui).await?;

@@ -991,6 +991,7 @@ dependencies = [
  "hartex-version",
  "ratatui",
  "strum",
+ "time",
  "tokio",
  "tokio-util",
  "tonic",

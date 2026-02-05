@@ -24,6 +24,13 @@ syntax = "proto3";
 
 package dev.teamhartex.hartex.protobufs.manager;
 
+message ConnectionInfoRequest {}
+
+message ConnectionInfoResponse {
+  WorkerSessionStartLimit session_start_limit = 1;
+  uint32 recommended_shards = 2;
+}
+
 message IdentifyRequest {
   uint32 capacity = 1;
 }
@@ -62,6 +69,8 @@ message WhoamiResponse {
 }
 
 service Manager {
+  rpc ConnectionInfo(ConnectionInfoRequest) returns (ConnectionInfoResponse);
+
   rpc Identify(IdentifyRequest) returns (ReadyResponse);
 
   rpc Whoami(WhoamiRequest) returns (WhoamiResponse);

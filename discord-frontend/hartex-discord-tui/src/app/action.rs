@@ -20,10 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use hartex_discord_grpc::manager::WorkerSessionStartLimit;
+
 use crate::component::tab_selector::Tab;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Action {
+    ConnectionInfo(WorkerSessionStartLimit, u32),
     Error(String),
     Next,
     Previous,
