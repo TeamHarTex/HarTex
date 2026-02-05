@@ -28,7 +28,7 @@ use ratatui::{
     text::Line,
     widgets::Widget,
 };
-use time::{format_description::well_known::Rfc2822, Duration, OffsetDateTime};
+// use time::{format_description::well_known::Rfc2822, Duration, OffsetDateTime};
 
 pub struct OverviewTable {
     username: String,
