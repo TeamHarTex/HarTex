@@ -60,7 +60,7 @@ impl Manager for ManagerServerImpl {
                 reset_after: locked.session_start_limit.reset_after,
                 total: locked.session_start_limit.total,
             }),
-            recommended_shards: locked.all_shards.len() as u32,
+            recommended_shards: u32::try_from(locked.all_shards.len()).unwrap(),
         }))
     }
 
