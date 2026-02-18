@@ -105,6 +105,7 @@ impl App {
         self.action_tx.send(Action::ConnectionInfo(
             connection_info.session_start_limit.unwrap(),
             connection_info.recommended_shards,
+            connection_info.start_timestamp,
         ))?;
 
         loop {

@@ -61,6 +61,7 @@ impl Manager for ManagerServerImpl {
                 total: locked.session_start_limit.total,
             }),
             recommended_shards: u32::try_from(locked.all_shards.len()).unwrap(),
+            start_timestamp: locked.start_timestamp.unix_timestamp() as u64,
         }))
     }
 

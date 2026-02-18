@@ -28,13 +28,14 @@ use ratatui::{
     text::Line,
     widgets::Widget,
 };
-// use time::{format_description::well_known::Rfc2822, Duration, OffsetDateTime};
+use time::{Duration, OffsetDateTime, format_description::well_known::Rfc2822};
 
 pub struct OverviewTable {
     username: String,
     user_id: String,
     limits: Option<WorkerSessionStartLimit>,
     shards: Option<u32>,
+    start_timestamp: Option<OffsetDateTime>,
 }
 
 impl OverviewTable {
@@ -43,12 +44,14 @@ impl OverviewTable {
         user_id: impl Into<String>,
         limits: Option<WorkerSessionStartLimit>,
         shards: Option<u32>,
+        start_timestamp: Option<OffsetDateTime>,
     ) -> Self {
         Self {
             username: username.into(),
             user_id: user_id.into(),
             limits,
             shards,
+            start_timestamp,
         }
     }
 }
@@ -130,19 +133,24 @@ impl Widget for OverviewTable {
         .render(available_right, buf);
 
         let reset_after_left = grid[4][0];
-        // let reset_after_right = grid[4][1];
+        let reset_after_right = grid[4][1];
 
         Line::raw("Session resets at:")
             .bold()
             .right_aligned()
             .render(reset_after_left, buf);
-        // Line::raw(
-        //     (OffsetDateTime::now_local().unwrap() + Duration::milliseconds(limits.reset_after as i64))
-        //         .format(&Rfc2822)
-        //         .unwrap(),
-        // )
-        // .light_cyan()
-        // .render(reset_after_right, buf);
+        let line = if let Some(start) = self.start_timestamp {
+            let dur = Duration::milliseconds(limits.reset_after as i64);
+            let pretty = dur::pretty(dur.try_into().unwrap());
+
+            Line::raw(format!(
+                "{} (in {pretty})",
+                (start + dur).format(&Rfc2822).unwrap()
+            ))
+        } else {
+            Line::raw("<unknown>")
+        };
+        line.light_cyan().render(reset_after_right, buf);
 
         let concurrency_left = grid[5][0];
         let concurrency_right = grid[5][1];
