@@ -26,7 +26,7 @@ use crate::component::tab_selector::Tab;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Action {
-    ConnectionInfo(WorkerSessionStartLimit, u32),
+    ConnectionInfo(WorkerSessionStartLimit, u32, i64),
     Error(String),
     Next,
     Previous,

@@ -24,6 +24,7 @@ use std::{collections::HashSet, sync::atomic::AtomicU32};
 
 use dashmap::DashMap;
 use hartex_discord_grpc::manager::ShardAssignment;
+use time::OffsetDateTime;
 use twilight_model::{
     gateway::{SessionStartLimit, connection_info::BotConnectionInfo},
     user::CurrentUser,
@@ -35,6 +36,7 @@ pub struct ManagerServerState {
     pub current_user: CurrentUser,
     pub next_worker_id: AtomicU32,
     pub session_start_limit: SessionStartLimit,
+    pub start_timestamp: OffsetDateTime,
     pub workers: DashMap<u32, Worker>,
 }
 
@@ -46,6 +48,7 @@ impl ManagerServerState {
             current_user,
             next_worker_id: AtomicU32::new(0),
             session_start_limit: info.session_start_limit,
+            start_timestamp: OffsetDateTime::now_local().unwrap(),
             workers: DashMap::new(),
         }
     }

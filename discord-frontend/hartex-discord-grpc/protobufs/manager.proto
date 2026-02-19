@@ -29,6 +29,7 @@ message ConnectionInfoRequest {}
 message ConnectionInfoResponse {
   WorkerSessionStartLimit session_start_limit = 1;
   uint32 recommended_shards = 2;
+  int64 start_timestamp = 4;
 }
 
 message IdentifyRequest {

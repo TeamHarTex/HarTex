@@ -26,6 +26,7 @@ use ratatui::{
     Frame,
     layout::{Constraint, Rect},
 };
+use time::OffsetDateTime;
 
 use crate::{app::Action, component::Component, widgets::overview_table::OverviewTable};
 
@@ -35,6 +36,7 @@ pub struct OverviewPage {
     user_id: Option<String>,
     session_start_limit: Option<WorkerSessionStartLimit>,
     shards: Option<u32>,
+    start_timestamp: Option<OffsetDateTime>,
 }
 
 impl OverviewPage {
@@ -44,6 +46,7 @@ impl OverviewPage {
             user_id: None,
             session_start_limit: None,
             shards: None,
+            start_timestamp: None,
         }
     }
 }
@@ -57,6 +60,7 @@ impl Component for OverviewPage {
                 self.user_id.as_ref().unwrap_or(&String::from("........")),
                 self.session_start_limit,
                 self.shards,
+                self.start_timestamp,
             ),
             centering,
         );
@@ -69,9 +73,11 @@ impl Component for OverviewPage {
 
     fn update(&mut self, action: Action) -> color_eyre::Result<Option<Action>> {
         match action {
-            Action::ConnectionInfo(limit, shards) => {
+            Action::ConnectionInfo(limit, shards, start_timestamp) => {
                 self.session_start_limit.replace(limit);
                 self.shards.replace(shards);
+                self.start_timestamp
+                    .replace(OffsetDateTime::from_unix_timestamp(start_timestamp)?);
 
                 Ok(Some(Action::Render))
             }

@@ -11,6 +11,7 @@ version = { workspace = true }
 clap = { workspace = true }
 color-eyre = { workspace = true }
 crossterm = { workspace = true }
+dur = { workspace = true }
 dyn-clone = { workspace = true }
 futures = { workspace = true }
 ratatui = { workspace = true }
