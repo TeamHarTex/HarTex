@@ -77,7 +77,7 @@ impl Component for OverviewPage {
                 self.session_start_limit.replace(limit);
                 self.shards.replace(shards);
                 self.start_timestamp
-                    .replace(OffsetDateTime::from_unix_timestamp(start_timestamp as i64)?);
+                    .replace(OffsetDateTime::from_unix_timestamp(start_timestamp.cast_signed())?);
 
                 Ok(Some(Action::Render))
             }
