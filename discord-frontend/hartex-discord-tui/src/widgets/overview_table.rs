@@ -140,7 +140,7 @@ impl Widget for OverviewTable {
             .right_aligned()
             .render(reset_after_left, buf);
         let line = if let Some(start) = self.start_timestamp {
-            let dur = Duration::milliseconds(limits.reset_after as i64);
+            let dur = Duration::milliseconds(limits.reset_after.cast_signed());
             let pretty = dur::pretty(dur.try_into().unwrap());
 
             Line::raw(format!(
