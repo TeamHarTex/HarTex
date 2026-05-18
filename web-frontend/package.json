@@ -23,7 +23,7 @@
     "@vueuse/core": "^14.0.0",
     "@vueuse/nuxt": "^14.0.0",
     "nuxt": "^4.0.0",
-    "typescript": "^5.3.3",
+    "typescript": "^6.0.0",
     "unocss": "^66.0.0"
   }
 }
