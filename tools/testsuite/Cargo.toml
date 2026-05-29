@@ -19,7 +19,7 @@ clap = { version = "4.5.48", default-features = false, features = [
 console = "0.16.1"
 owo-colors = "4.2.3"
 path-slash = "0.2.1"
-similar = { version = "2.7.0", features = ["inline"] }
+similar = { version = "3.0.0", features = ["inline"] }
 walkdir = "2.5.0"
 
 [[bin]]
