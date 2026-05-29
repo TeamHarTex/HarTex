@@ -26,7 +26,7 @@ hartex_async_lazy = { path = "../hartex-async-lazy" }
 
 log = "0.4.28"
 miette = "7.6.0"
-sqlx = { version = "0.8.6", features = [
+sqlx = { version = "0.9.0", features = [
     "runtime-tokio",
     "tls-native-tls",
     "postgres",
