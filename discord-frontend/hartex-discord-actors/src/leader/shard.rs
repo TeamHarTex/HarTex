@@ -28,10 +28,14 @@ use kameo::{
     error::ActorStopReason,
     message::{Context, Message},
 };
+use serde::de::DeserializeSeed;
+use serde_json::Deserializer;
 use tokio::sync::{Mutex, watch::Receiver};
 use tracing::{Instrument, instrument};
 use twilight_gateway::{Message as GatewayMessage, MessageSender, Shard as TwilightShard};
-use twilight_model::gateway::{CloseFrame, payload::outgoing::RequestGuildMembers};
+use twilight_model::gateway::{
+    CloseFrame, event::GatewayEventDeserializer, payload::outgoing::RequestGuildMembers,
+};
 
 use crate::leader::{
     messages::{ShardLatency, ShardRequestGuildMembers},
@@ -71,7 +75,21 @@ impl Actor for Shard {
                     && !receiver.has_changed().unwrap()
                 {
                     match message {
-                        Ok(GatewayMessage::Text(_)) => todo!(),
+                        Ok(GatewayMessage::Text(text)) => {
+                            let Some(deserializer) =
+                                GatewayEventDeserializer::from_json(text.as_str())
+                            else {
+                                tracing::warn!("failed to create deserializer for event: {text}");
+                                continue;
+                            };
+                            let mut json = Deserializer::from_str(text.as_str());
+
+                            let Ok(_) = deserializer.deserialize(&mut json).inspect_err(|e| {
+                                tracing::warn!("failed to deserialize event: {e}; payload: {text}");
+                            }) else {
+                                continue;
+                            };
+                        }
                         _ => continue,
                     }
                 }

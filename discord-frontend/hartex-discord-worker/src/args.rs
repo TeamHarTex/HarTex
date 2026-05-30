@@ -44,7 +44,7 @@ pub struct WorkerCliArgs {
         default_value_t = SocketAddr::from(([127, 0, 0, 1], 3000)),
         short,
         long,
-        long_help = "the address and port the worker instance manager listens on",
+        long_help = "the address and port the worker instance manager listens on"
     )]
     manager: SocketAddr,
 }

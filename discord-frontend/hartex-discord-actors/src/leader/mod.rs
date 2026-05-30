@@ -23,7 +23,7 @@
 pub mod messages;
 pub mod replies;
 
-mod shard_actor;
+mod shard;
 mod shard_manager;
 
-pub use self::{shard_actor::Shard, shard_manager::ShardManager};
+pub use self::{shard::Shard, shard_manager::ShardManager};
