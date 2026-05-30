@@ -31,6 +31,7 @@ prost = "0.14.3"
 ratatui = "0.30.0"
 rustls = "0.23.37"
 serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
 strum = { version = "0.28.0", features = ["derive"] }
 time = "0.3.47"
 tokio = { version = "1.50.0", features = ["macros", "rt", "rt-multi-thread", "signal", "time"] }
