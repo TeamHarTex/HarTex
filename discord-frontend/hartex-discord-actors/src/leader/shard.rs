@@ -85,7 +85,7 @@ impl Actor for Shard {
                             let mut json = Deserializer::from_str(text.as_str());
 
                             let Ok(_) = deserializer.deserialize(&mut json).inspect_err(|e| {
-                                tracing::warn!("failed to deserialize event: {e}; payload: {text}")
+                                tracing::warn!("failed to deserialize event: {e}; payload: {text}");
                             }) else {
                                 continue;
                             };

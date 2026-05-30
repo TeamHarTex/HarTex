@@ -43,6 +43,7 @@ impl Actor for ShardManager {
 
     type Error = ();
 
+    #[allow(clippy::unused_async_trait_impl)]
     async fn on_start(args: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
         tracing::info!("starting {} shards...", args.len());
 
