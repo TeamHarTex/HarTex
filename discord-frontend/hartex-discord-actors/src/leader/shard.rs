@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use futures::StreamExt;
 use kameo::{
@@ -32,7 +32,7 @@ use serde::de::DeserializeSeed;
 use serde_json::Deserializer;
 use tokio::sync::{Mutex, watch::Receiver};
 use tracing::{Instrument, instrument};
-use twilight_gateway::{Message as GatewayMessage, MessageSender, Shard as TwilightShard};
+use twilight_gateway::{Latency, Message as GatewayMessage, MessageSender, Shard as TwilightShard};
 use twilight_model::gateway::{
     CloseFrame, event::GatewayEventDeserializer, payload::outgoing::RequestGuildMembers,
 };
@@ -43,9 +43,9 @@ use crate::leader::{
 };
 
 pub struct Shard {
-    shard_id: u32,
+    latency_lock: Arc<RwLock<Latency>>,
     sender: MessageSender,
-    shard: Arc<Mutex<TwilightShard>>,
+    shard_id: u32,
 }
 
 impl Actor for Shard {
@@ -58,49 +58,58 @@ impl Actor for Shard {
         fields(shard_id = shard.id().number())
     )]
     async fn on_start(
-        (shard, receiver): Self::Args,
+        (mut shard, receiver): Self::Args,
         _: ActorRef<Self>,
     ) -> Result<Self, Self::Error> {
         let id = shard.id();
         let id_num = id.number();
 
         let sender = shard.sender();
-        let shard_arc = Arc::new(Mutex::new(shard));
 
-        let shard_cloned = shard_arc.clone();
+        let latency_lock = Arc::new(RwLock::new(shard.latency().clone()));
+        let latency_cloned = latency_lock.clone();
 
         tokio::spawn(
             async move {
-                while let Some(message) = shard_cloned.lock().await.next().await
-                    && !receiver.has_changed().unwrap()
-                {
-                    match message {
-                        Ok(GatewayMessage::Text(text)) => {
-                            let Some(deserializer) =
-                                GatewayEventDeserializer::from_json(text.as_str())
-                            else {
-                                tracing::warn!("failed to create deserializer for event: {text}");
-                                continue;
-                            };
-                            let mut json = Deserializer::from_str(text.as_str());
+                let mut watch_receiver = receiver;
 
-                            let Ok(_) = deserializer.deserialize(&mut json).inspect_err(|e| {
-                                tracing::warn!("failed to deserialize event: {e}; payload: {text}");
-                            }) else {
-                                continue;
-                            };
+                loop {
+                    tokio::select! {
+                        _ = watch_receiver.changed() => {
+                            if *watch_receiver.borrow() {
+                                break;
+                            }
                         }
-                        _ => continue,
+                        Some(message) = shard.next() => {
+                            if let Ok(mut guard) = latency_cloned.write() {
+                                *guard = shard.latency().clone();
+                            }
+
+                            match message {
+                                Ok(GatewayMessage::Text(text)) => {
+                                    let Some(deserializer) = GatewayEventDeserializer::from_json(text.as_str()) else {
+                                        continue;
+                                    };
+                                    let mut json = Deserializer::from_slice(text.as_bytes());
+
+                                    if let Ok(event) = deserializer.deserialize(&mut json) {
+                                    }
+                                }
+                                Ok(GatewayMessage::Close(_)) => break,
+                                _ => continue,
+                            }
+                        }
                     }
                 }
-            }
-            .in_current_span(),
+
+                shard.close(CloseFrame::NORMAL).await;
+            }.in_current_span(),
         );
 
         Ok(Self {
-            shard_id: id_num,
+            latency_lock,
             sender,
-            shard: shard_arc,
+            shard_id: id_num,
         })
     }
 
@@ -111,8 +120,6 @@ impl Actor for Shard {
         _: ActorStopReason,
     ) -> Result<(), Self::Error> {
         tracing::warn!("shard stopping");
-        self.shard.lock().await.close(CloseFrame::NORMAL);
-
         Ok(())
     }
 }
@@ -121,7 +128,7 @@ impl Message<ShardLatency> for Shard {
     type Reply = ShardLatencyReply;
 
     async fn handle(&mut self, _: ShardLatency, _: &mut Context<Self, Self::Reply>) -> Self::Reply {
-        let latency = self.shard.lock().await.latency().clone();
+        let latency = self.latency_lock.read().unwrap().clone();
         ShardLatencyReply { latency }
     }
 }
