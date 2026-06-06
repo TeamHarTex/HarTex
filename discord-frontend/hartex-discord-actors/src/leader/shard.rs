@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 
 use futures::StreamExt;
 use kameo::{
@@ -30,7 +30,7 @@ use kameo::{
 };
 use serde::de::DeserializeSeed;
 use serde_json::Deserializer;
-use tokio::sync::{Mutex, watch::Receiver};
+use tokio::sync::{RwLock, watch::Receiver};
 use tracing::{Instrument, instrument};
 use twilight_gateway::{Latency, Message as GatewayMessage, MessageSender, Shard as TwilightShard};
 use twilight_model::gateway::{
@@ -71,19 +71,18 @@ impl Actor for Shard {
 
         tokio::spawn(
             async move {
-                let mut watch_receiver = receiver;
+                let mut shutdown = receiver;
 
                 loop {
                     tokio::select! {
-                        _ = watch_receiver.changed() => {
-                            if *watch_receiver.borrow() {
+                        _ = shutdown.changed() => {
+                            if *shutdown.borrow() {
                                 break;
                             }
                         }
                         Some(message) = shard.next() => {
-                            if let Ok(mut guard) = latency_cloned.write() {
-                                *guard = shard.latency().clone();
-                            }
+                            let mut guard = latency_cloned.write().await;
+                            *guard = shard.latency().clone();
 
                             match message {
                                 Ok(GatewayMessage::Text(text)) => {
@@ -92,7 +91,7 @@ impl Actor for Shard {
                                     };
                                     let mut json = Deserializer::from_slice(text.as_bytes());
 
-                                    if let Ok(event) = deserializer.deserialize(&mut json) {
+                                    if let Ok(_) = deserializer.deserialize(&mut json) {
                                     }
                                 }
                                 Ok(GatewayMessage::Close(_)) => break,
@@ -102,7 +101,7 @@ impl Actor for Shard {
                     }
                 }
 
-                shard.close(CloseFrame::NORMAL).await;
+                shard.close(CloseFrame::NORMAL);
             }.in_current_span(),
         );
 
@@ -128,7 +127,7 @@ impl Message<ShardLatency> for Shard {
     type Reply = ShardLatencyReply;
 
     async fn handle(&mut self, _: ShardLatency, _: &mut Context<Self, Self::Reply>) -> Self::Reply {
-        let latency = self.latency_lock.read().unwrap().clone();
+        let latency = self.latency_lock.read().await.clone();
         ShardLatencyReply { latency }
     }
 }
