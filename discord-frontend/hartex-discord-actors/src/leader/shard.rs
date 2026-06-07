@@ -89,13 +89,10 @@ impl Actor for Shard {
                                     let Some(deserializer) = GatewayEventDeserializer::from_json(text.as_str()) else {
                                         continue;
                                     };
-                                    let mut json = Deserializer::from_slice(text.as_bytes());
-
-                                    if let Ok(_) = deserializer.deserialize(&mut json) {
-                                    }
+                                    let _ = deserializer.event_type();
                                 }
                                 Ok(GatewayMessage::Close(_)) => break,
-                                _ => continue,
+                                _ => {},
                             }
                         }
                     }
