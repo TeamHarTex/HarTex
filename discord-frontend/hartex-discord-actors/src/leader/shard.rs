@@ -28,8 +28,6 @@ use kameo::{
     error::ActorStopReason,
     message::{Context, Message},
 };
-use serde::de::DeserializeSeed;
-use serde_json::Deserializer;
 use tokio::sync::{RwLock, watch::Receiver};
 use tracing::{Instrument, instrument};
 use twilight_gateway::{Latency, Message as GatewayMessage, MessageSender, Shard as TwilightShard};

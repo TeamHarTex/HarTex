@@ -17,6 +17,7 @@ rust-version = "1.96.0"
 version = "0.17.0"
 
 [workspace.dependencies]
+async-nats = "0.49.1"
 clap = { version = "4.6.1", features = ["color", "derive", "suggestions"] }
 color-eyre = "0.6.5"
 config = { version = "0.15.23", default-features = false }
@@ -31,7 +32,7 @@ prost = "0.14.3"
 ratatui = "0.30.0"
 rustls = "0.23.40"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.150"
+simd-json = "0.17.0"
 strum = { version = "0.28.0", features = ["derive"] }
 time = "0.3.47"
 tokio = { version = "1.52.3", features = ["macros", "rt", "rt-multi-thread", "signal", "time"] }

@@ -95,7 +95,10 @@ where
         if let Some((_, shard_ref)) = self.shards.get(&msg.id) {
             Some(ctx.forward(shard_ref, msg.message).await)
         } else {
-            tracing::error!("attempted to forward message to non-existent shard: {:?}", msg.id);
+            tracing::error!(
+                "attempted to forward message to non-existent shard: {:?}",
+                msg.id
+            );
             None
         }
     }
