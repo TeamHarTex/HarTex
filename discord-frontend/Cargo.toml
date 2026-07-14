@@ -25,7 +25,7 @@ dashmap = "7.0.0-rc2"
 dur = "0.5.3"
 dyn-clone = "1.0.20"
 futures = "0.3.32"
-kameo = { version = "0.21.0", features = ["tracing"] }
+kameo = { version = "0.22.0", features = ["tracing"] }
 mimalloc = "0.1.52"
 prost = "0.14.3"
 ratatui = "0.30.0"
