@@ -20,11 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod messages;
-pub mod replies;
+use kameo::{Actor, actor::ActorRef};
 
-mod nats;
-mod shard;
-mod shard_manager;
+pub struct Nats;
 
-pub use self::{shard::Shard, shard_manager::ShardManager};
+impl Actor for Nats {
+    type Args = ();
+    type Error = ();
+
+    async fn on_start(_: Self::Args, _: ActorRef<Self>) -> Result<Self, Self::Error> {
+        todo!()
+    }
+}

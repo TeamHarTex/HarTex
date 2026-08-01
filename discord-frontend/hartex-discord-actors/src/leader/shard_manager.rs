@@ -85,14 +85,21 @@ where
     Shard: Message<M>,
     M: Send + 'static,
 {
-    type Reply = ForwardedReply<M, <Shard as Message<M>>::Reply>;
+    type Reply = Option<ForwardedReply<M, <Shard as Message<M>>::Reply>>;
 
     async fn handle(
         &mut self,
         msg: ForwardToShard<M>,
         ctx: &mut Context<Self, Self::Reply>,
     ) -> Self::Reply {
-        let (_, shard_ref) = self.shards.get(&msg.id).unwrap();
-        ctx.forward(shard_ref, msg.message).await
+        if let Some((_, shard_ref)) = self.shards.get(&msg.id) {
+            Some(ctx.forward(shard_ref, msg.message).await)
+        } else {
+            tracing::error!(
+                "attempted to forward message to non-existent shard: {:?}",
+                msg.id
+            );
+            None
+        }
     }
 }
