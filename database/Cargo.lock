@@ -662,7 +662,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "sqlparser",
- "syn 2.0.119",
+ "syn 3.0.0",
  "walkdir",
 ]
 
@@ -1942,6 +1942,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2fac314a64dc9a36e61a9eb4261a5e9bbfbc922b27e518af97bc32b926cf967"
 dependencies = [
  "proc-macro2",
+ "quote",
  "unicode-ident",
 ]
 
