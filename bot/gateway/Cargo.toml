@@ -1,9 +1,9 @@
 [package]
-name = "shared-types"
+name = "bot-gateway"
 version = "0.17.0"
 edition = "2024"
 authors = ["HarTex Project Developers"]
 license = "AGPL-3"
 
 [dependencies]
-twilight-model = { workspace = true }
+tokio = { workspace = true }

@@ -1,7 +1,12 @@
 [workspace]
 members = [
+    "bot/gateway",
     "shared/types"
 ]
 
 [workspace.dependencies]
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["full"] }
+tracing = "0.1.44"
+twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git" }
 twilight-model = { git = "https://github.com/twilight-rs/twilight.git" }

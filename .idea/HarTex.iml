@@ -55,6 +55,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-envconf/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-termios-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-tui/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bot/gateway/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-version/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/shared/types/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
