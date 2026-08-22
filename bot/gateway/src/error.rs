@@ -20,15 +20,13 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tracing::subscriber;
+use thiserror::Error;
+use tracing::subscriber::SetGlobalDefaultError;
 
-use crate::error::GatewayResult;
-
-mod error;
-
-#[tokio::main]
-async fn main() -> GatewayResult<()> {
-    subscriber::set_global_default(shared_tracing::subscriber())?;
-
-    Ok(())
+#[derive(Error)]
+pub enum GatewayError {
+    #[error("failed to set global tracing subscriber: {0:?}")]
+    SetGlobalSubscriber(#[from] SetGlobalDefaultError),
 }
+
+pub type GatewayResult<T> = Result<T, GatewayError>;

@@ -1,12 +1,24 @@
 [workspace]
 members = [
     "bot/gateway",
+    "shared/tracing",
     "shared/types"
 ]
+
+[workspace.package]
+version = "0.17.0"
+edition = "2024"
+authors = ["HarTex Project Developers"]
+license = "AGPL-3"
 
 [workspace.dependencies]
 thiserror = "2.0.20"
 tokio = { version = "1.53.1", features = ["full"] }
 tracing = "0.1.44"
+tracing-core = "0.1.36"
+tracing-error = "0.2.1"
+tracing-subscriber = "0.3.23"
 twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git" }
 twilight-model = { git = "https://github.com/twilight-rs/twilight.git" }
+
+shared-tracing = { path = "shared/tracing" }

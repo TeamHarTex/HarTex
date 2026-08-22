@@ -1,9 +1,11 @@
 [package]
-name = "shared-types"
+name = "shared-tracing"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 
 [dependencies]
-twilight-model = { workspace = true }
+tracing-core = { workspace = true }
+tracing-error = { workspace = true }
+tracing-subscriber = { workspace = true }

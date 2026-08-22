@@ -20,15 +20,14 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tracing::subscriber;
+use tracing_core::{LevelFilter, Subscriber};
+use tracing_error::ErrorLayer;
+use tracing_subscriber::{Registry, filter::Targets, fmt::Layer as FmtLayer, layer::SubscriberExt};
 
-use crate::error::GatewayResult;
+pub fn subscriber() -> impl Subscriber {
+    let fmt = FmtLayer::default().with_target(true).with_level(true);
+    let targets = Targets::new().with_default(LevelFilter::TRACE);
+    let error = ErrorLayer::default();
 
-mod error;
-
-#[tokio::main]
-async fn main() -> GatewayResult<()> {
-    subscriber::set_global_default(shared_tracing::subscriber())?;
-
-    Ok(())
+    Registry::default().with(fmt).with(targets).with(error)
 }

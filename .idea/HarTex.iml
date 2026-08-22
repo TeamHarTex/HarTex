@@ -57,6 +57,7 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-tui/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bot/gateway/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-version/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/shared/tracing/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/shared/types/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/target" />

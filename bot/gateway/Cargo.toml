@@ -1,9 +1,13 @@
 [package]
 name = "bot-gateway"
-version = "0.17.0"
-edition = "2024"
-authors = ["HarTex Project Developers"]
-license = "AGPL-3"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 
 [dependencies]
+shared-tracing = { workspace = true }
+thiserror = { workspace = true }
 tokio = { workspace = true }
+tracing = { workspace = true }
+twilight-gateway = { workspace = true }
