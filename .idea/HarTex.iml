@@ -56,6 +56,7 @@
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-termios-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-tui/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-version/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/shared/types/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
@@ -64,6 +65,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/hartex-database-queries/target" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="jdk" jdkName="~/Documents/dev/HarTex/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,0 +1,7 @@
+[package]
+name = "shared-types"
+version = "0.17.0"
+edition = "2024"
+
+[dependencies]
+twilight-model = { workspace = true }
