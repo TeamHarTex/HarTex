@@ -26,7 +26,7 @@ use crate::command::GatewayCommand;
 
 #[derive(Clone)]
 pub struct GatewayHandle {
-    tx: Sender<GatewayCommand>
+    tx: Sender<GatewayCommand>,
 }
 
 impl GatewayHandle {

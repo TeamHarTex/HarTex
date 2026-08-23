@@ -7,8 +7,7 @@ license = { workspace = true }
 
 [dependencies]
 config = { workspace = true }
-futures = { workspace = true }
-itertools = { workspace = true }
+futures-util = { workspace = true }
 regex = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true }
@@ -16,5 +15,6 @@ tokio = { workspace = true }
 tracing = { workspace = true }
 twilight-gateway = { workspace = true }
 twilight-http = { workspace = true }
+twilight-model = { workspace = true }
 
 shared-tracing = { workspace = true }

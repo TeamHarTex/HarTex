@@ -25,28 +25,41 @@ use std::{
     task::{Context, Poll},
 };
 
-use futures::StreamExt;
+use futures_util::future::BoxFuture;
 pub use handle::ShardHandle;
-use twilight_gateway::Shard;
+use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
+use twilight_model::gateway::CloseFrame;
 
 use crate::error::GatewayResult;
 
 mod handle;
 
 pub struct ShardFuture {
-    shard: Shard,
+    fut: BoxFuture<'static, GatewayResult<()>>,
 }
 
 impl ShardFuture {
-    pub fn new(shard: Shard) -> Self {
-        Self { shard }
+    pub fn new(mut shard: Shard) -> Self {
+        let fut = Box::pin(async move {
+            while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
+                match result {
+                    _ => todo!(),
+                }
+            }
+
+            shard.close(CloseFrame::RESUME);
+
+            Ok(())
+        });
+
+        Self { fut }
     }
 }
 
 impl Future for ShardFuture {
     type Output = GatewayResult<()>;
 
-    fn poll(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<Self::Output> {
-        todo!()
+    fn poll(self: Pin<&mut Self>, ctx: &mut Context<'_>) -> Poll<Self::Output> {
+        self.get_mut().fut.as_mut().poll(ctx)
     }
 }
