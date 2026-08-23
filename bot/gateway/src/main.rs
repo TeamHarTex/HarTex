@@ -31,6 +31,7 @@ use crate::{boot::Settings, error::GatewayResult, gateway::Gateway};
 mod boot;
 mod error;
 mod gateway;
+mod shard;
 
 #[tokio::main]
 async fn main() -> GatewayResult<()> {
@@ -47,7 +48,8 @@ async fn main() -> GatewayResult<()> {
             |captures| env::var(&captures[0]),
         )?;
 
-    let _ = Gateway::new(token).await?;
+    let (gateway, _) = Gateway::new(token).await?;
+    tokio::spawn(async move { gateway.run().await });
 
     Ok(())
 }

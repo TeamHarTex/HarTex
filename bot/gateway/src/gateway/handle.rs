@@ -20,29 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::iter;
+use tokio::sync::mpsc::Sender;
 
-use twilight_gateway::{Config, Intents, Shard};
-use twilight_http::Client;
+use crate::gateway::command::GatewayCommand;
 
-use crate::error::GatewayResult;
-
-pub struct Gateway {
-    shards: Vec<Shard>,
-}
-
-impl Gateway {
-    pub async fn new(token: String) -> GatewayResult<Self> {
-        let client = Client::new(token.clone());
-        let connect_info = client.gateway().authed().await?.model().await?;
-
-        // todo: use only necessary intents
-        let shard_config = Config::new(token, Intents::all());
-        let shards = twilight_gateway::bucket(0, 1, connect_info.shards)
-            .zip(iter::repeat_n(shard_config, connect_info.shards as usize))
-            .map(|(id, config)| Shard::with_config(id, config))
-            .collect::<Vec<_>>();
-
-        Ok(Gateway { shards })
-    }
-}
+#[derive(Clone)]
+pub struct GatewayHandle(Sender<GatewayCommand>);
