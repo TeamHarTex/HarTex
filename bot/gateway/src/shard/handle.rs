@@ -21,6 +21,7 @@
  */
 
 use twilight_gateway::{Command, MessageSender};
+
 use crate::error::GatewayResult;
 
 pub struct ShardHandle {

@@ -20,8 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::HashMap;
-use std::iter;
+use std::{collections::HashMap, iter};
 
 use tokio::{
     signal,
@@ -31,6 +30,7 @@ use tokio::{
 use twilight_gateway::{Config, Intents, Shard};
 use twilight_http::Client;
 use twilight_model::gateway::ShardId;
+
 pub use crate::gateway::handle::GatewayHandle;
 use crate::{
     command::GatewayCommand,
@@ -78,23 +78,31 @@ impl GatewayRunner {
         ))
     }
 
-    pub async fn run(mut self) {
+    pub async fn run(self) -> GatewayResult<()> {
+        let Self {
+            futures,
+            handles,
+            mut rx,
+        } = self;
+
         let mut tasks = JoinSet::new();
-        self.futures.into_iter().for_each(|f| {
+        futures.into_iter().for_each(|f| {
             tasks.spawn(f);
         });
 
         loop {
             tokio::select! {
-                Some(command) = self.rx.recv() => self.dispatch_command(command)?,
+                Some(command) = rx.recv() => Self::dispatch_command(&handles, command)?,
                 _ = tasks.join_next() => {},
                 _ = signal::ctrl_c() => break,
             }
         }
+
+        Ok(())
     }
 
-    fn dispatch_command(&self, command: GatewayCommand) -> GatewayResult<()> {
-        let Some(handle) = self.handles.get(&command.shard()) else {
+    fn dispatch_command(handles: &HashMap<ShardId, ShardHandle>, command: GatewayCommand) -> GatewayResult<()> {
+        let Some(handle) = handles.get(&command.shard()) else {
             unreachable!("shard handle not found, this should never happen");
         };
 
