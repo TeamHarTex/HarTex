@@ -8,6 +8,7 @@ license = { workspace = true }
 [dependencies]
 config = { workspace = true }
 futures = { workspace = true }
+itertools = { workspace = true }
 regex = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true }

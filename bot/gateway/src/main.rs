@@ -26,7 +26,7 @@ use config::{Config, File};
 use regex::regex;
 use tracing::subscriber;
 
-use crate::{boot::Settings, error::GatewayResult, gateway::Gateway};
+use crate::{boot::Settings, error::GatewayResult, gateway::GatewayRunner};
 
 mod boot;
 mod command;
@@ -49,7 +49,7 @@ async fn main() -> GatewayResult<()> {
             |captures| env::var(&captures[0]),
         )?;
 
-    let (gateway, _) = Gateway::new(token).await?;
+    let (gateway, _) = GatewayRunner::new(token).await?;
     tokio::spawn(async move { gateway.run().await });
 
     Ok(())

@@ -31,37 +31,55 @@ use twilight_gateway::{Config, Intents, Shard};
 use twilight_http::Client;
 
 pub use crate::gateway::handle::GatewayHandle;
-use crate::{command::GatewayCommand, error::GatewayResult, shard};
+use crate::{
+    command::GatewayCommand,
+    error::GatewayResult,
+    shard::{ShardFuture, ShardHandle},
+};
 
 mod handle;
 
-pub struct Gateway {
-    shards: Vec<Shard>,
+pub struct GatewayRunner {
+    futures: Vec<ShardFuture>,
+    handles: Vec<ShardHandle>,
     rx: Receiver<GatewayCommand>,
 }
 
-impl Gateway {
+impl GatewayRunner {
     pub async fn new(token: String) -> GatewayResult<(Self, GatewayHandle)> {
         let client = Client::new(token.clone());
         let connect_info = client.gateway().authed().await?.model().await?;
 
         // todo: use only necessary intents
         let shard_config = Config::new(token, Intents::all());
-        let shards = twilight_gateway::bucket(0, 1, connect_info.shards)
+        let (handles, futures) = twilight_gateway::bucket(0, 1, connect_info.shards)
             .zip(iter::repeat_n(shard_config, connect_info.shards as usize))
             .map(|(id, config)| Shard::with_config(id, config))
-            .collect();
+            .map(|shard| {
+                let handle = ShardHandle::new(shard.id(), shard.sender());
+                let runner = ShardFuture::new(shard);
+
+                (handle, runner)
+            })
+            .unzip();
 
         let (tx, rx) = mpsc::channel(1024);
-        let handle = GatewayHandle(tx);
+        let handle = GatewayHandle::new(tx);
 
-        Ok((Gateway { shards, rx }, handle))
+        Ok((
+            GatewayRunner {
+                futures,
+                handles,
+                rx,
+            },
+            handle,
+        ))
     }
 
     pub async fn run(mut self) {
         let mut tasks = JoinSet::new();
-        self.shards.into_iter().for_each(|shard| {
-            tasks.spawn(shard::runner(shard));
+        self.futures.into_iter().for_each(|f| {
+            tasks.spawn(f);
         });
 
         loop {

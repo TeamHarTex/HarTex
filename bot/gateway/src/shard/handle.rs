@@ -20,4 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct ShardHandle;
+use twilight_gateway::{MessageSender, ShardId};
+
+pub struct ShardHandle {
+    id: ShardId,
+    tx: MessageSender,
+}
+
+impl ShardHandle {
+    pub fn new(id: ShardId, tx: MessageSender) -> Self {
+        ShardHandle { id, tx }
+    }
+}

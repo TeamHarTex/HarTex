@@ -25,4 +25,12 @@ use tokio::sync::mpsc::Sender;
 use crate::command::GatewayCommand;
 
 #[derive(Clone)]
-pub struct GatewayHandle(Sender<GatewayCommand>);
+pub struct GatewayHandle {
+    tx: Sender<GatewayCommand>
+}
+
+impl GatewayHandle {
+    pub fn new(tx: Sender<GatewayCommand>) -> Self {
+        Self { tx }
+    }
+}

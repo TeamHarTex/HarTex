@@ -20,12 +20,33 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::{
+    pin::Pin,
+    task::{Context, Poll},
+};
+
 use futures::StreamExt;
 pub use handle::ShardHandle;
 use twilight_gateway::Shard;
 
+use crate::error::GatewayResult;
+
 mod handle;
 
-pub async fn runner(mut shard: Shard) {
-    while let Some(result) = shard.next().await {}
+pub struct ShardFuture {
+    shard: Shard,
+}
+
+impl ShardFuture {
+    pub fn new(shard: Shard) -> Self {
+        Self { shard }
+    }
+}
+
+impl Future for ShardFuture {
+    type Output = GatewayResult<()>;
+
+    fn poll(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<Self::Output> {
+        todo!()
+    }
 }
