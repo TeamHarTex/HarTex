@@ -20,15 +20,20 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use twilight_gateway::{MessageSender, ShardId};
+use twilight_gateway::{Command, MessageSender};
+use crate::error::GatewayResult;
 
 pub struct ShardHandle {
-    id: ShardId,
     tx: MessageSender,
 }
 
 impl ShardHandle {
-    pub fn new(id: ShardId, tx: MessageSender) -> Self {
-        ShardHandle { id, tx }
+    pub fn new(tx: MessageSender) -> Self {
+        ShardHandle { tx }
+    }
+
+    pub fn send(&self, command: impl Command) -> GatewayResult<()> {
+        self.tx.send(command)?;
+        Ok(())
     }
 }

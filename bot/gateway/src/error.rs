@@ -19,15 +19,19 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+
 use std::env::VarError;
 
 use config::ConfigError;
 use thiserror::Error;
 use tracing::subscriber::SetGlobalDefaultError;
+use twilight_gateway::error::ChannelError;
 use twilight_http::{Error as TwilightHttpError, response::DeserializeBodyError};
 
 #[derive(Debug, Error)]
 pub enum GatewayError {
+    #[error("channel error: {0:?}")]
+    ChannelError(#[from] ChannelError),
     #[error("configuration error: {0:?}")]
     ConfigError(#[from] ConfigError),
     #[error("environment error: {0:?}")]
