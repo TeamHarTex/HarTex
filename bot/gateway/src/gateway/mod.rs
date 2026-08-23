@@ -19,17 +19,21 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-mod command;
-mod handle;
 
 use std::iter;
 
-use tokio::{signal, sync::mpsc::{self, Receiver}, task::JoinSet};
+use tokio::{
+    signal,
+    sync::mpsc::{self, Receiver},
+    task::JoinSet,
+};
 use twilight_gateway::{Config, Intents, Shard};
 use twilight_http::Client;
 
 pub use crate::gateway::handle::GatewayHandle;
-use crate::{error::GatewayResult, gateway::command::GatewayCommand, shard};
+use crate::{command::GatewayCommand, error::GatewayResult, shard};
+
+mod handle;
 
 pub struct Gateway {
     shards: Vec<Shard>,

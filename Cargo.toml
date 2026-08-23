@@ -14,6 +14,7 @@ license = "AGPL-3"
 
 [workspace.dependencies]
 config = "0.15.25"
+futures = "0.3.34"
 regex = "1.13.1"
 serde = { version = "1.0.229", features = ["derive"] }
 thiserror = "2.0.20"

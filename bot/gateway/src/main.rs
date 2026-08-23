@@ -29,6 +29,7 @@ use tracing::subscriber;
 use crate::{boot::Settings, error::GatewayResult, gateway::Gateway};
 
 mod boot;
+mod command;
 mod error;
 mod gateway;
 mod shard;

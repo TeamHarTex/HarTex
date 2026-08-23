@@ -20,6 +20,12 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use futures::StreamExt;
+pub use handle::ShardHandle;
 use twilight_gateway::Shard;
 
-pub async fn runner(_: Shard) {}
+mod handle;
+
+pub async fn runner(mut shard: Shard) {
+    while let Some(result) = shard.next().await {}
+}

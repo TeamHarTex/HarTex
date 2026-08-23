@@ -20,9 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tokio::sync::mpsc::Sender;
-
-use crate::command::GatewayCommand;
-
-#[derive(Clone)]
-pub struct GatewayHandle(Sender<GatewayCommand>);
+pub struct ShardHandle;
