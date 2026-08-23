@@ -20,34 +20,29 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
+use std::iter;
 
-use config::{Config, File};
-use regex::regex;
-use tracing::subscriber;
+use twilight_gateway::{Config, Intents, Shard};
+use twilight_http::Client;
 
-use crate::{boot::Settings, error::GatewayResult, gateway::Gateway};
+use crate::error::GatewayResult;
 
-mod boot;
-mod error;
-mod gateway;
+pub struct Gateway {
+    shards: Vec<Shard>,
+}
 
-#[tokio::main]
-async fn main() -> GatewayResult<()> {
-    subscriber::set_global_default(shared_tracing::subscriber())?;
+impl Gateway {
+    pub async fn new(token: String) -> GatewayResult<Self> {
+        let client = Client::new(token.clone());
+        let connect_info = client.gateway().authed().await?.model().await?;
 
-    let config = Config::builder()
-        .add_source(File::with_name("boot.settings.yml"))
-        .build()?;
-    let settings = config.try_deserialize::<Settings>()?;
-    let token = regex!(r#"<%= ENV\[\"(.*)\"\] %>"#)
-        .captures(&settings.token)
-        .map_or_else(
-            || Ok(settings.token.to_string()),
-            |captures| env::var(&captures[0]),
-        )?;
+        // todo: use only necessary intents
+        let shard_config = Config::new(token, Intents::all());
+        let shards = twilight_gateway::bucket(0, 1, connect_info.shards)
+            .zip(iter::repeat_n(shard_config, connect_info.shards as usize))
+            .map(|(id, config)| Shard::with_config(id, config))
+            .collect::<Vec<_>>();
 
-    let _ = Gateway::new(token).await?;
-
-    Ok(())
+        Ok(Gateway { shards })
+    }
 }

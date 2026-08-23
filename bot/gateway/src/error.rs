@@ -24,6 +24,7 @@ use std::env::VarError;
 use config::ConfigError;
 use thiserror::Error;
 use tracing::subscriber::SetGlobalDefaultError;
+use twilight_http::{Error as TwilightHttpError, response::DeserializeBodyError};
 
 #[derive(Debug, Error)]
 pub enum GatewayError {
@@ -31,8 +32,12 @@ pub enum GatewayError {
     ConfigError(#[from] ConfigError),
     #[error("environment error: {0:?}")]
     EnvironmentError(#[from] VarError),
+    #[error("body deserialization error: {0:?}")]
+    JsonDeserializationError(#[from] DeserializeBodyError),
     #[error("set global default error: {0:?}")]
-    SetGlobalDefault(#[from] SetGlobalDefaultError),
+    SetGlobalDefaultError(#[from] SetGlobalDefaultError),
+    #[error("http error: {0:?}")]
+    TwilightHttpError(#[from] TwilightHttpError),
 }
 
 pub type GatewayResult<T> = Result<T, GatewayError>;
