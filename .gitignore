@@ -38,4 +38,4 @@ discord-frontend/hartex-discord-entitycache-macros/generated
 logs
 
 **/rustc-ice-*.txt
-hartex.conf
+boot.settings.yml

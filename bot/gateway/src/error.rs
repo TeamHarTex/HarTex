@@ -19,14 +19,20 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
+use std::env::VarError;
 
+use config::ConfigError;
 use thiserror::Error;
 use tracing::subscriber::SetGlobalDefaultError;
 
-#[derive(Error)]
+#[derive(Debug, Error)]
 pub enum GatewayError {
-    #[error("failed to set global tracing subscriber: {0:?}")]
-    SetGlobalSubscriber(#[from] SetGlobalDefaultError),
+    #[error("configuration error: {0:?}")]
+    ConfigError(#[from] ConfigError),
+    #[error("environment error: {0:?}")]
+    EnvironmentError(#[from] VarError),
+    #[error("set global default error: {0:?}")]
+    SetGlobalDefault(#[from] SetGlobalDefaultError),
 }
 
 pub type GatewayResult<T> = Result<T, GatewayError>;

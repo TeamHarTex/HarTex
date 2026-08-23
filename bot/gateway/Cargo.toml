@@ -6,8 +6,13 @@ authors = { workspace = true }
 license = { workspace = true }
 
 [dependencies]
-shared-tracing = { workspace = true }
+config = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 twilight-gateway = { workspace = true }
+twilight-http = { workspace = true }
+
+shared-tracing = { workspace = true }

@@ -20,31 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env;
+use std::borrow::Cow;
 
-use config::{Config, File};
-use regex::regex;
-use tracing::subscriber;
+use serde::Deserialize;
 
-use crate::{boot::Settings, error::GatewayResult};
-
-mod boot;
-mod error;
-
-#[tokio::main]
-async fn main() -> GatewayResult<()> {
-    subscriber::set_global_default(shared_tracing::subscriber())?;
-
-    let config = Config::builder()
-        .add_source(File::with_name("boot.settings.yml"))
-        .build()?;
-    let settings = config.try_deserialize::<Settings>()?;
-    let _ = regex!(r#"<%= ENV\[\"(.*)\"\] %>"#)
-        .captures(&settings.token)
-        .map_or_else(
-            || Ok(settings.token.to_string()),
-            |captures| env::var(&captures[0]),
-        )?;
-
-    Ok(())
+#[derive(Deserialize)]
+pub struct Settings<'a> {
+    pub token: Cow<'a, str>,
 }
