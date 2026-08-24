@@ -20,12 +20,34 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::borrow::Cow;
+use std::{
+    pin::Pin,
+    task::{Context, Poll},
+};
 
-use serde::Deserialize;
+use async_nats::{Client, Subscriber};
+use futures_util::Stream;
 
-#[derive(Deserialize)]
-pub struct Settings<'a> {
-    pub nats_server: Cow<'a, str>,
-    pub token: Cow<'a, str>,
+use crate::error::GatewayResult;
+
+const GATEWAY_COMMANDS: &'static str = "gateway.commands";
+
+pub struct GatewayCommandStream {
+    subscriber: Subscriber,
+}
+
+impl GatewayCommandStream {
+    pub async fn new(client: Client) -> GatewayResult<Self> {
+        Ok(Self {
+            subscriber: client.subscribe(GATEWAY_COMMANDS).await?,
+        })
+    }
+}
+
+impl Stream for GatewayCommandStream {
+    type Item = ();
+
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        todo!()
+    }
 }

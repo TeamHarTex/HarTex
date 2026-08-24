@@ -29,9 +29,9 @@ use tracing::subscriber;
 use crate::{boot::Settings, error::GatewayResult, gateway::GatewayRunner};
 
 mod boot;
-mod command;
 mod error;
 mod gateway;
+mod nats;
 mod shard;
 
 #[tokio::main]
@@ -49,7 +49,7 @@ async fn main() -> GatewayResult<()> {
             |captures| env::var(&captures[0]),
         )?;
 
-    let (gateway, _) = GatewayRunner::new(token).await?;
+    let gateway = GatewayRunner::new(token, settings.nats_server.to_string()).await?;
     tokio::spawn(async move { gateway.run().await });
 
     Ok(())

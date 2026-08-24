@@ -22,6 +22,7 @@
 
 use std::env::VarError;
 
+use async_nats::{ConnectError, SubscribeError};
 use config::ConfigError;
 use thiserror::Error;
 use tracing::subscriber::SetGlobalDefaultError;
@@ -38,6 +39,10 @@ pub enum GatewayError {
     EnvironmentError(#[from] VarError),
     #[error("body deserialization error: {0:?}")]
     JsonDeserializationError(#[from] DeserializeBodyError),
+    #[error("NATS connection error: {0:?}")]
+    NatsConnectionError(#[from] ConnectError),
+    #[error("NATS subscriber error: {0:?}")]
+    NatsSubscriberError(#[from] SubscribeError),
     #[error("set global default error: {0:?}")]
     SetGlobalDefaultError(#[from] SetGlobalDefaultError),
     #[error("http error: {0:?}")]

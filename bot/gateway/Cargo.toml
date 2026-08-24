@@ -6,6 +6,7 @@ authors = { workspace = true }
 license = { workspace = true }
 
 [dependencies]
+async-nats = { workspace = true }
 config = { workspace = true }
 futures-util = { workspace = true }
 regex = { workspace = true }

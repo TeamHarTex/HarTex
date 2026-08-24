@@ -1,0 +1,2 @@
+nats_server: "localhost:4222"
+token: <%= ENV["BOT_TOKEN"] %>

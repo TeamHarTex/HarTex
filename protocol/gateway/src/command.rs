@@ -20,17 +20,9 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use tokio::sync::mpsc::Sender;
+use serde::{Deserialize, Serialize};
 
-use crate::command::GatewayCommand;
-
-#[derive(Clone)]
-pub struct GatewayHandle {
-    tx: Sender<GatewayCommand>,
-}
-
-impl GatewayHandle {
-    pub fn new(tx: Sender<GatewayCommand>) -> Self {
-        Self { tx }
-    }
+#[derive(Clone, Deserialize, Serialize)]
+pub enum GatewayCommand {
+    RequestGuildMembers,
 }

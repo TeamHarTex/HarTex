@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "bot/gateway",
+    "protocol/gateway",
     "shared/tracing",
     "shared/types"
 ]
@@ -13,6 +14,7 @@ authors = ["HarTex Project Developers"]
 license = "AGPL-3"
 
 [workspace.dependencies]
+async-nats = "0.50.0"
 config = "0.15.25"
 futures-util = "0.3.34"
 regex = "1.13.1"

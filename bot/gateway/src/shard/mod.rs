@@ -43,8 +43,8 @@ impl ShardFuture {
         let fut = Box::pin(async move {
             while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
                 match result {
-                    Ok(event) => {},
-                    Err(err) => {},
+                    Ok(event) => {}
+                    Err(err) => {}
                 }
             }
 

@@ -20,26 +20,4 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use twilight_gateway::Command;
-use twilight_model::gateway::ShardId;
-
-pub struct GatewayCommand {
-    kind: GatewayCommandKind,
-    shard: ShardId,
-}
-
-impl GatewayCommand {
-    pub fn into_command(self) -> impl Command {
-        todo!()
-    }
-
-    pub fn shard(&self) -> ShardId {
-        self.shard
-    }
-}
-
-#[derive(Clone)]
-pub enum GatewayCommandKind {
-    RequestGuildMembers,
-    Resume,
-}
+pub mod command;

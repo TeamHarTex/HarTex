@@ -22,34 +22,31 @@
 
 use std::{collections::HashMap, iter};
 
-use tokio::{
-    signal,
-    sync::mpsc::{self, Receiver},
-    task::JoinSet,
-};
+use futures_util::StreamExt;
+use tokio::{signal, task::JoinSet};
 use twilight_gateway::{Config, Intents, Shard};
 use twilight_http::Client;
 use twilight_model::gateway::ShardId;
 
-pub use crate::gateway::handle::GatewayHandle;
 use crate::{
-    command::GatewayCommand,
     error::GatewayResult,
+    nats::GatewayCommandStream,
     shard::{ShardFuture, ShardHandle},
 };
 
-mod handle;
-
 pub struct GatewayRunner {
+    commands: GatewayCommandStream,
     futures: Vec<ShardFuture>,
     handles: HashMap<ShardId, ShardHandle>,
-    rx: Receiver<GatewayCommand>,
 }
 
 impl GatewayRunner {
-    pub async fn new(token: String) -> GatewayResult<(Self, GatewayHandle)> {
+    pub async fn new(token: String, nats_server: String) -> GatewayResult<Self> {
         let client = Client::new(token.clone());
         let connect_info = client.gateway().authed().await?.model().await?;
+
+        let nats_client = async_nats::connect(nats_server).await?;
+        let commands = GatewayCommandStream::new(nats_client).await?;
 
         // todo: use only necessary intents
         let shard_config = Config::new(token, Intents::all());
@@ -65,24 +62,18 @@ impl GatewayRunner {
             })
             .unzip();
 
-        let (tx, rx) = mpsc::channel(1024);
-        let handle = GatewayHandle::new(tx);
-
-        Ok((
-            GatewayRunner {
-                futures,
-                handles,
-                rx,
-            },
-            handle,
-        ))
+        Ok(GatewayRunner {
+            commands,
+            futures,
+            handles,
+        })
     }
 
     pub async fn run(self) -> GatewayResult<()> {
         let Self {
+            mut commands,
             futures,
-            handles,
-            mut rx,
+            ..
         } = self;
 
         let mut tasks = JoinSet::new();
@@ -92,21 +83,12 @@ impl GatewayRunner {
 
         loop {
             tokio::select! {
-                Some(command) = rx.recv() => Self::dispatch_command(&handles, command)?,
+                _ = commands.next() => {}
                 _ = tasks.join_next() => {},
                 _ = signal::ctrl_c() => break,
             }
         }
 
-        Ok(())
-    }
-
-    fn dispatch_command(handles: &HashMap<ShardId, ShardHandle>, command: GatewayCommand) -> GatewayResult<()> {
-        let Some(handle) = handles.get(&command.shard()) else {
-            unreachable!("shard handle not found, this should never happen");
-        };
-
-        handle.send(command.into_command())?;
         Ok(())
     }
 }
