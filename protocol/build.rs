@@ -20,9 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use serde::{Deserialize, Serialize};
+use prost_build::Config;
 
-#[derive(Clone, Deserialize, Serialize)]
-pub enum GatewayCommand {
-    RequestGuildMembers,
+pub fn main() {
+    let mut config = Config::new();
+    let mut to_compile = vec![];
+
+    if cfg!(feature = "gateway") {
+        to_compile.push("buffers/gateway.command.proto");
+    }
+
+    config.compile_protos(&to_compile, &["buffers"]).unwrap();
 }

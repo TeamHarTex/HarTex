@@ -27,6 +27,8 @@ use std::{
 
 use async_nats::{Client, Subscriber};
 use futures_util::Stream;
+use prost::Message;
+use protocol::buffers::gateway::GatewayCommand;
 
 use crate::error::GatewayResult;
 
@@ -45,9 +47,15 @@ impl GatewayCommandStream {
 }
 
 impl Stream for GatewayCommandStream {
-    type Item = ();
+    type Item = GatewayResult<GatewayCommand>;
 
-    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        todo!()
+    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        match Pin::new(&mut self.subscriber).poll_next(cx) {
+            Poll::Pending => Poll::Pending,
+            Poll::Ready(None) => Poll::Ready(None),
+            Poll::Ready(Some(message)) => Poll::Ready(Some(
+                GatewayCommand::decode(message.payload).map_err(From::from),
+            )),
+        }
     }
 }

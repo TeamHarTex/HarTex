@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package gateway.command;
+
+message GatewayCommand {
+  oneof command {
+    RequestGuildMembers request_guild_members = 1;
+  }
+}
+
+message RequestGuildMembers {
+}

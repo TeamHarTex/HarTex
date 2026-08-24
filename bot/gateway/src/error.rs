@@ -24,6 +24,7 @@ use std::env::VarError;
 
 use async_nats::{ConnectError, SubscribeError};
 use config::ConfigError;
+use prost::DecodeError;
 use thiserror::Error;
 use tracing::subscriber::SetGlobalDefaultError;
 use twilight_gateway::error::ChannelError;
@@ -41,6 +42,8 @@ pub enum GatewayError {
     JsonDeserializationError(#[from] DeserializeBodyError),
     #[error("NATS connection error: {0:?}")]
     NatsConnectionError(#[from] ConnectError),
+    #[error("protobuf payload decode error: {0:?}")]
+    NatsProtobufPayloadDecodeError(#[from] DecodeError),
     #[error("NATS subscriber error: {0:?}")]
     NatsSubscriberError(#[from] SubscribeError),
     #[error("set global default error: {0:?}")]

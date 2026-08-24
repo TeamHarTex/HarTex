@@ -1,9 +1,17 @@
 [package]
-name = "protocol-gateway"
+name = "protocol"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 
 [dependencies]
-serde = { workspace = true }
+prost = { workspace = true }
+
+[build-dependencies]
+prost-build = { workspace = true }
+
+[features]
+default = []
+
+gateway = []

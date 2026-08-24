@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "bot/gateway",
-    "protocol/gateway",
+    "protocol",
     "shared/tracing",
     "shared/types"
 ]
@@ -17,6 +17,8 @@ license = "AGPL-3"
 async-nats = "0.50.0"
 config = "0.15.25"
 futures-util = "0.3.34"
+prost = "0.14.4"
+prost-build = "0.14.4"
 regex = "1.13.1"
 serde = { version = "1.0.229", features = ["derive"] }
 thiserror = "2.0.20"
@@ -29,4 +31,5 @@ twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git" }
 twilight-http = { git = "https://github.com/twilight-rs/twilight.git" }
 twilight-model = { git = "https://github.com/twilight-rs/twilight.git" }
 
+protocol = { path = "protocol" }
 shared-tracing = { path = "shared/tracing" }

@@ -20,21 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use twilight_gateway::{Command, MessageSender};
+#[cfg(feature = "gateway")]
+pub mod gateway {
+    pub use generated::{GatewayCommand, RequestGuildMembers, gateway_command::Command};
 
-use crate::error::GatewayResult;
-
-pub struct ShardHandle {
-    tx: MessageSender,
-}
-
-impl ShardHandle {
-    pub fn new(tx: MessageSender) -> Self {
-        ShardHandle { tx }
-    }
-
-    pub fn send(&self, command: impl Command) -> GatewayResult<()> {
-        self.tx.command(&command)?;
-        Ok(())
+    mod generated {
+        include!(concat!(env!("OUT_DIR"), "/gateway.command.rs"));
     }
 }

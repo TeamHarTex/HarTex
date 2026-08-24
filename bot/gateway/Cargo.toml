@@ -9,6 +9,7 @@ license = { workspace = true }
 async-nats = { workspace = true }
 config = { workspace = true }
 futures-util = { workspace = true }
+prost = { workspace = true }
 regex = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true }
@@ -18,4 +19,5 @@ twilight-gateway = { workspace = true }
 twilight-http = { workspace = true }
 twilight-model = { workspace = true }
 
+protocol = { workspace = true, features = ["gateway"] }
 shared-tracing = { workspace = true }
