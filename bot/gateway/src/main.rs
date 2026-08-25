@@ -38,6 +38,7 @@ mod shard;
 async fn main() -> GatewayResult<()> {
     subscriber::set_global_default(shared_tracing::subscriber())?;
 
+    tracing::trace!("loading boot configuration...");
     let config = Config::builder()
         .add_source(File::with_name("boot.settings.yml"))
         .build()?;

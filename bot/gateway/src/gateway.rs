@@ -81,6 +81,9 @@ impl GatewayRunner {
             tasks.spawn(f);
         });
 
+        let ctrl_c = signal::ctrl_c();
+        tokio::pin!(ctrl_c);
+
         loop {
             tokio::select! {
                 Some(result) = commands.next() => match result {
@@ -88,7 +91,7 @@ impl GatewayRunner {
                     Err(_) => continue,
                 },
                 _ = tasks.join_next() => {},
-                _ = signal::ctrl_c() => break,
+                _ = &mut ctrl_c => break,
             }
         }
 
