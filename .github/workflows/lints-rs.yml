@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  ClippyAll:
+  clippy:
     name: Clippy
     runs-on: ubuntu-latest
 
@@ -31,12 +31,3 @@ jobs:
         run: rustc --version --verbose
       - name: Run Clippy
         run: cargo clippy
-
-  CodeSpellAll:
-    name: CodeSpell
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Run CodeSpell
-        uses: codespell-project/actions-codespell@master

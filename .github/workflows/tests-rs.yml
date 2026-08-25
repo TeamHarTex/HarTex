@@ -14,7 +14,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  BuildAll:
+  build:
     name: Build
     if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
@@ -36,10 +36,10 @@ jobs:
       - name: Run Build
         run: cargo build
 
-  TestAll:
+  test:
     name: Test
     needs:
-      - BuildAll
+      - build
     if: ${{ github.event_name == 'merge_group' }}
     runs-on: ubuntu-latest
 
