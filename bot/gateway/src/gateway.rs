@@ -83,7 +83,10 @@ impl GatewayRunner {
 
         loop {
             tokio::select! {
-                Some(Ok(command)) = commands.next() => Self::dispatch_command(&handles, command)?,
+                Some(result) = commands.next() => match result {
+                    Ok(command) => Self::dispatch_command(&handles, command)?,
+                    Err(_) => continue,
+                },
                 _ = tasks.join_next() => {},
                 _ = signal::ctrl_c() => break,
             }

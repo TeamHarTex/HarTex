@@ -23,20 +23,35 @@
 use std::str::FromStr;
 
 use protocol::buffers::gateway::RequestGuildMembers;
-use shared_types::id::GuildId;
+use shared_types::id::{GuildId, UserId};
 use twilight_model::gateway::{
     OpCode,
     payload::outgoing::{
         RequestGuildMembers as TwilightRequestGuildMembers,
-        request_guild_members::RequestGuildMembersInfo,
+        request_guild_members::{RequestGuildMemberId, RequestGuildMembersInfo},
     },
 };
 
-use crate::error::GatewayResult;
+use crate::error::{GatewayError, GatewayResult};
 
 pub fn request_guild_members(
     request: RequestGuildMembers,
 ) -> GatewayResult<TwilightRequestGuildMembers> {
+    let length = request.user_ids.len();
+    let user_ids = match length {
+        0 => None,
+        1 => Some(RequestGuildMemberId::One(UserId::from_str(
+            &request.user_ids[0],
+        )?)),
+        2.. => Some(RequestGuildMemberId::Multiple(
+            request
+                .user_ids
+                .into_iter()
+                .map(|id| UserId::from_str(&id).map_err(GatewayError::from))
+                .collect::<GatewayResult<Vec<UserId>>>()?,
+        )),
+    };
+
     Ok(TwilightRequestGuildMembers {
         op: OpCode::RequestGuildMembers,
         d: RequestGuildMembersInfo {
@@ -45,7 +60,7 @@ pub fn request_guild_members(
             nonce: request.nonce,
             presences: request.presences,
             query: request.query,
-            user_ids: request.user_ids,
+            user_ids,
         },
     })
 }
