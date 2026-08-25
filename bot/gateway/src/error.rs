@@ -20,7 +20,11 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{env::VarError, num::ParseIntError};
+use std::{
+    env::VarError,
+    num::ParseIntError,
+    process::{ExitCode, Termination},
+};
 
 use async_nats::{ConnectError, SubscribeError};
 use config::ConfigError;
@@ -32,26 +36,46 @@ use twilight_http::{Error as TwilightHttpError, response::DeserializeBodyError};
 
 #[derive(Debug, Error)]
 pub enum GatewayError {
-    #[error("channel error: {0:?}")]
+    #[error("channel error: {0}")]
     ChannelError(#[from] ChannelError),
-    #[error("configuration error: {0:?}")]
+    #[error("configuration error: {0}")]
     ConfigError(#[from] ConfigError),
-    #[error("environment error: {0:?}")]
+    #[error("environment error: {0}")]
     EnvironmentError(#[from] VarError),
-    #[error("body deserialization error: {0:?}")]
+    #[error("body deserialization error: {0}")]
     JsonDeserializationError(#[from] DeserializeBodyError),
-    #[error("NATS connection error: {0:?}")]
+    #[error("NATS connection error: {0}")]
     NatsConnectionError(#[from] ConnectError),
-    #[error("protobuf payload decode error: {0:?}")]
+    #[error("protobuf payload decode error: {0}")]
     NatsProtobufPayloadDecodeError(#[from] DecodeError),
-    #[error("NATS subscriber error: {0:?}")]
+    #[error("NATS subscriber error: {0}")]
     NatsSubscriberError(#[from] SubscribeError),
-    #[error("parse int error: {0:?}")]
+    #[error("parse int error: {0}")]
     ParseIntError(#[from] ParseIntError),
-    #[error("set global default error: {0:?}")]
+    #[error("set global default error: {0}")]
     SetGlobalDefaultError(#[from] SetGlobalDefaultError),
-    #[error("http error: {0:?}")]
+    #[error("http error: {0}")]
     TwilightHttpError(#[from] TwilightHttpError),
 }
 
 pub type GatewayResult<T> = Result<T, GatewayError>;
+
+pub struct GatewayTermination<T>(GatewayResult<T>);
+
+impl<T> From<GatewayResult<T>> for GatewayTermination<T> {
+    fn from(result: GatewayResult<T>) -> Self {
+        GatewayTermination(result)
+    }
+}
+
+impl<T: Termination> Termination for GatewayTermination<T> {
+    fn report(self) -> ExitCode {
+        match self.0 {
+            Ok(value) => value.report(),
+            Err(err) => {
+                tracing::error!("{err}");
+                ExitCode::FAILURE
+            }
+        }
+    }
+}

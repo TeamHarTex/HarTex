@@ -26,7 +26,11 @@ use config::{Config, File};
 use regex::regex;
 use tracing::subscriber;
 
-use crate::{boot::Settings, error::GatewayResult, gateway::GatewayRunner};
+use crate::{
+    boot::Settings,
+    error::{GatewayResult, GatewayTermination},
+    gateway::GatewayRunner,
+};
 
 mod boot;
 mod error;
@@ -35,7 +39,11 @@ mod nats;
 mod shard;
 
 #[tokio::main]
-async fn main() -> GatewayResult<()> {
+async fn main() -> GatewayTermination<()> {
+    main_impl().await.into()
+}
+
+async fn main_impl() -> GatewayResult<()> {
     subscriber::set_global_default(shared_tracing::subscriber())?;
 
     tracing::trace!("loading boot configuration...");
