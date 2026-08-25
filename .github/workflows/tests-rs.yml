@@ -34,7 +34,7 @@ jobs:
       - name: Print Rust Version
         run: rustc --version --verbose
       - name: Run Build
-        run: python ./x.py build -- python ./x.py clippy -- discord-frontend rust-utilities
+        run: cargo build
 
   TestAll:
     name: Test

@@ -1,4 +1,4 @@
-name: Lints
+name: Lints (Rust)
 
 on:
   workflow_dispatch:
@@ -30,7 +30,7 @@ jobs:
       - name: Print Rust Version
         run: rustc --version --verbose
       - name: Run Clippy
-        run: python ./x.py clippy -- discord-frontend rust-utilities
+        run: cargo clippy
 
   CodeSpellAll:
     name: CodeSpell
