@@ -7,6 +7,7 @@ on:
 
 jobs:
   scan_ruby:
+    name: Scan Ruby
     runs-on: ubuntu-latest
 
     steps:
@@ -22,12 +23,13 @@ jobs:
         run: cd dashboard
 
       - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+        run: ./bin/brakeman --no-pager
       
       - name: Scan for known security vulnerabilities in gems used
-        run: bin/bundler-audit
+        run: ./bin/bundler-audit
       
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
@@ -54,4 +56,4 @@ jobs:
         run: cd dashboard
 
       - name: Lint code for consistent style
-        run: bin/rubocop -f github
+        run: ./bin/rubocop -f github
