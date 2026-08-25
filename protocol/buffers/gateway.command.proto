@@ -6,7 +6,14 @@ message GatewayCommand {
   oneof command {
     RequestGuildMembers request_guild_members = 1;
   }
+  uint32 shard_id = 2;
 }
 
 message RequestGuildMembers {
+  string guild_id = 1;
+  optional uint64 limit = 2;
+  optional string nonce = 3;
+  optional bool presences = 4;
+  optional string query = 5;
+  repeated string user_ids = 6;
 }

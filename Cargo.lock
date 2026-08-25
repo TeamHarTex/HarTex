@@ -139,6 +139,7 @@ dependencies = [
  "regex",
  "serde",
  "shared-tracing",
+ "shared-types",
  "thiserror",
  "tokio",
  "tracing",

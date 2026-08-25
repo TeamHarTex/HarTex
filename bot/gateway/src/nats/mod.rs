@@ -32,6 +32,8 @@ use protocol::buffers::gateway::GatewayCommand;
 
 use crate::error::GatewayResult;
 
+pub mod conversion;
+
 const GATEWAY_COMMANDS: &'static str = "gateway.commands";
 
 pub struct GatewayCommandStream {

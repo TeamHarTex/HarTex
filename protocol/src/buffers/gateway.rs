@@ -20,11 +20,8 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(feature = "gateway")]
-pub mod gateway {
-    pub use generated::{GatewayCommand, RequestGuildMembers, gateway_command::Command};
+pub use generated::{GatewayCommand, RequestGuildMembers, gateway_command::Command};
 
-    mod generated {
-        include!(concat!(env!("OUT_DIR"), "/gateway.command.rs"));
-    }
+mod generated {
+    include!(concat!(env!("OUT_DIR"), "/gateway.command.rs"));
 }

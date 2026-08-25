@@ -33,3 +33,4 @@ twilight-model = { git = "https://github.com/twilight-rs/twilight.git" }
 
 protocol = { path = "protocol" }
 shared-tracing = { path = "shared/tracing" }
+shared-types = { path = "shared/types" }

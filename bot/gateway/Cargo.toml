@@ -21,3 +21,4 @@ twilight-model = { workspace = true }
 
 protocol = { workspace = true, features = ["gateway"] }
 shared-tracing = { workspace = true }
+shared-types = { workspace = true }

@@ -20,17 +20,5 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use prost_build::Config;
-
-pub fn main() {
-    println!("cargo:rerun-if-changed=buffers");
-
-    let mut config = Config::new();
-    let mut to_compile = vec![];
-
-    if cfg!(feature = "gateway") {
-        to_compile.push("buffers/gateway.command.proto");
-    }
-
-    config.compile_protos(&to_compile, &["buffers"]).unwrap();
-}
+#[cfg(feature = "gateway")]
+pub mod gateway;

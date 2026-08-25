@@ -20,7 +20,7 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::env::VarError;
+use std::{env::VarError, num::ParseIntError};
 
 use async_nats::{ConnectError, SubscribeError};
 use config::ConfigError;
@@ -46,6 +46,8 @@ pub enum GatewayError {
     NatsProtobufPayloadDecodeError(#[from] DecodeError),
     #[error("NATS subscriber error: {0:?}")]
     NatsSubscriberError(#[from] SubscribeError),
+    #[error("parse int error: {0:?}")]
+    ParseIntError(#[from] ParseIntError),
     #[error("set global default error: {0:?}")]
     SetGlobalDefaultError(#[from] SetGlobalDefaultError),
     #[error("http error: {0:?}")]

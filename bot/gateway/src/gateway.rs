@@ -23,21 +23,21 @@
 use std::{collections::HashMap, iter};
 
 use futures_util::StreamExt;
+use protocol::buffers::gateway::{Command, GatewayCommand};
 use tokio::{signal, task::JoinSet};
 use twilight_gateway::{Config, Intents, Shard};
 use twilight_http::Client;
-use twilight_model::gateway::ShardId;
 
 use crate::{
     error::GatewayResult,
-    nats::GatewayCommandStream,
+    nats::{GatewayCommandStream, conversion},
     shard::{ShardFuture, ShardHandle},
 };
 
 pub struct GatewayRunner {
     commands: GatewayCommandStream,
     futures: Vec<ShardFuture>,
-    handles: HashMap<ShardId, ShardHandle>,
+    handles: HashMap<u32, ShardHandle>,
 }
 
 impl GatewayRunner {
@@ -54,7 +54,7 @@ impl GatewayRunner {
             .zip(iter::repeat_n(shard_config, connect_info.shards as usize))
             .map(|(id, config)| Shard::with_config(id, config))
             .map(|shard| {
-                let shard_id = shard.id();
+                let shard_id = shard.id().number();
                 let handle = ShardHandle::new(shard.sender());
                 let runner = ShardFuture::new(shard);
 
@@ -73,7 +73,7 @@ impl GatewayRunner {
         let Self {
             mut commands,
             futures,
-            ..
+            handles,
         } = self;
 
         let mut tasks = JoinSet::new();
@@ -83,12 +83,31 @@ impl GatewayRunner {
 
         loop {
             tokio::select! {
-                _ = commands.next() => {}
+                Some(Ok(command)) = commands.next() => Self::dispatch_command(&handles, command)?,
                 _ = tasks.join_next() => {},
                 _ = signal::ctrl_c() => break,
             }
         }
 
         Ok(())
+    }
+
+    fn dispatch_command(
+        handles: &HashMap<u32, ShardHandle>,
+        gateway_command: GatewayCommand,
+    ) -> GatewayResult<()> {
+        let Some(handle) = handles.get(&gateway_command.shard_id) else {
+            unreachable!("invalid shard id in command: {}", gateway_command.shard_id);
+        };
+
+        let Some(command) = gateway_command.command else {
+            unreachable!("command must be one of the variants");
+        };
+
+        let cmd = match command {
+            Command::RequestGuildMembers(request) => conversion::request_guild_members(request)?,
+        };
+
+        handle.send(cmd)
     }
 }
