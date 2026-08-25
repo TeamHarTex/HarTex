@@ -37,25 +37,25 @@ use twilight_http::{Error as TwilightHttpError, response::DeserializeBodyError};
 #[derive(Debug, Error)]
 pub enum GatewayError {
     #[error("channel error: {0}")]
-    ChannelError(#[from] ChannelError),
+    Channel(#[from] ChannelError),
     #[error("configuration error: {0}")]
-    ConfigError(#[from] ConfigError),
+    Config(#[from] ConfigError),
     #[error("environment error: {0}")]
-    EnvironmentError(#[from] VarError),
+    Environment(#[from] VarError),
     #[error("body deserialization error: {0}")]
-    JsonDeserializationError(#[from] DeserializeBodyError),
+    JsonDeserialization(#[from] DeserializeBodyError),
     #[error("NATS connection error: {0}")]
-    NatsConnectionError(#[from] ConnectError),
+    NatsConnection(#[from] ConnectError),
     #[error("protobuf payload decode error: {0}")]
-    NatsProtobufPayloadDecodeError(#[from] DecodeError),
+    NatsProtobufPayloadDecode(#[from] DecodeError),
     #[error("NATS subscriber error: {0}")]
-    NatsSubscriberError(#[from] SubscribeError),
+    NatsSubscriber(#[from] SubscribeError),
     #[error("parse int error: {0}")]
-    ParseIntError(#[from] ParseIntError),
+    ParseInt(#[from] ParseIntError),
     #[error("set global default error: {0}")]
-    SetGlobalDefaultError(#[from] SetGlobalDefaultError),
+    SetGlobalDefault(#[from] SetGlobalDefaultError),
     #[error("http error: {0}")]
-    TwilightHttpError(#[from] TwilightHttpError),
+    TwilightHttp(#[from] TwilightHttpError),
 }
 
 pub type GatewayResult<T> = Result<T, GatewayError>;
