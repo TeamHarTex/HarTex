@@ -11,7 +11,7 @@ rust-version = "1.92.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-convert_case = "0.11.0"
+convert_case = "0.12.0"
 itertools = "0.15.0"
 prettyplease = "0.3.0"
 proc-macro2 = "1.0.101"
