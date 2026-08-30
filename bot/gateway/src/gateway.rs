@@ -88,9 +88,23 @@ impl GatewayRunner {
             tokio::select! {
                 Some(result) = commands.next() => match result {
                     Ok(command) => Self::dispatch_command(&handles, command)?,
-                    Err(_) => continue,
+                    Err(err) => {
+                        tracing::warn!("failed to receive shard command: {err}");
+                        continue;
+                    },
                 },
-                _ = tasks.join_next() => {},
+                option = tasks.join_next() => {
+                    let Some(result) = option else {
+                        tracing::info!("all shard tasks have completed, gateway runner stopping");
+                        break;
+                    };
+
+                    match result {
+                        Ok(Ok(())) => continue,
+                        Ok(Err(gateway)) => todo!(),
+                        Err(join) => todo!(),
+                    }
+                }
                 _ = &mut ctrl_c => break,
             }
         }
