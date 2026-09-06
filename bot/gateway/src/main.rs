@@ -31,6 +31,7 @@ use crate::{
     error::{GatewayResult, GatewayTermination},
     gateway::GatewayRunner,
 };
+use crate::error::GatewayError;
 
 mod boot;
 mod error;
@@ -55,8 +56,9 @@ async fn main_impl() -> GatewayResult<()> {
         .captures(&settings.token)
         .map_or_else(
             || Ok(settings.token.to_string()),
-            |captures| env::var(&captures[0]),
-        )?;
+            |captures| env::var(captures.get(1).unwrap().as_str()),
+        )
+        .map_err(GatewayError::BotToken)?;
 
     let gateway = GatewayRunner::new(token, settings.nats_server.to_string()).await?;
     tokio::spawn(async move { gateway.run().await });

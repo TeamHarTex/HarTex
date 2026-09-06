@@ -2,7 +2,7 @@
 <module type="EMPTY_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python facet">
-      <configuration sdkName="uv (HarTex)" />
+      <configuration sdkName="~/Documents/dev/HarTex/.venv" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -73,6 +73,6 @@
     </content>
     <orderEntry type="jdk" jdkName="~/Documents/dev/HarTex/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="uv (HarTex) interpreter library" level="application" />
+    <orderEntry type="library" name="~/Documents/dev/HarTex/.venv interpreter library" level="application" />
   </component>
 </module>

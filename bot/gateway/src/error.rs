@@ -36,12 +36,12 @@ use twilight_http::{Error as TwilightHttpError, response::DeserializeBodyError};
 
 #[derive(Debug, Error)]
 pub enum GatewayError {
+    #[error("boot error: bot token not set or invalid")]
+    BotToken,
     #[error("channel error: {0}")]
     Channel(#[from] ChannelError),
     #[error("configuration error: {0}")]
     Config(#[from] ConfigError),
-    #[error("environment error: {0}")]
-    Environment(#[from] VarError),
     #[error("body deserialization error: {0}")]
     JsonDeserialization(#[from] DeserializeBodyError),
     #[error("NATS connection error: {0}")]
