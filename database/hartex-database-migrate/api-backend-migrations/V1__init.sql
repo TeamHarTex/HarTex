@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS "StartTimestamps" (
-    "component" TEXT NOT NULL PRIMARY KEY,
-    "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL
-);

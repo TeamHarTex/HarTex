@@ -2,7 +2,7 @@
 <module type="EMPTY_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python facet">
-      <configuration sdkName="uv (HarTex)" />
+      <configuration sdkName="~/Documents/dev/HarTex/.venv" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -55,7 +55,12 @@
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-envconf/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-termios-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/discord-frontend/hartex-discord-tui/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bot/gateway/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rust-utilities/hartex-version/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/shared/tracing/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/protocol/gateway/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/protocol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/shared/types/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/api-backend/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/target" />
       <excludeFolder url="file://$MODULE_DIR$/discord-frontend/target" />
@@ -64,9 +69,10 @@
       <excludeFolder url="file://$MODULE_DIR$/tools/target" />
       <excludeFolder url="file://$MODULE_DIR$/database/hartex-database-queries/target" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="~/Documents/dev/HarTex/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="uv (HarTex) interpreter library" level="application" />
+    <orderEntry type="library" name="~/Documents/dev/HarTex/.venv interpreter library" level="application" />
   </component>
 </module>
