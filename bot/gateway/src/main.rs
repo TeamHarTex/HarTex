@@ -60,7 +60,5 @@ async fn main_impl() -> GatewayResult<()> {
         .map_err(|_| GatewayError::BotToken)?;
 
     let gateway = GatewayRunner::new(token, settings.nats_server.to_string()).await?;
-    tokio::spawn(async move { gateway.run().await });
-
-    Ok(())
+    gateway.run().await
 }

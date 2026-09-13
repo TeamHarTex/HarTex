@@ -25,13 +25,13 @@ use std::{collections::HashMap, iter};
 use futures_util::StreamExt;
 use protocol::buffers::gateway::{Command, GatewayCommand};
 use tokio::{signal, task::JoinSet};
-use twilight_gateway::{Config, Intents, Shard};
+use twilight_gateway::{Config, Intents};
 use twilight_http::Client;
 
 use crate::{
     error::GatewayResult,
     nats::{GatewayCommandStream, conversion},
-    shard::{ShardSupervisor, ShardTermination},
+    shard::ShardSupervisor,
 };
 
 pub struct GatewayRunner {
@@ -57,22 +57,24 @@ impl GatewayRunner {
         Ok(GatewayRunner { commands, shards })
     }
 
-    pub async fn run(self) -> GatewayResult<()> {
+    pub async fn run(mut self) -> GatewayResult<()> {
         let Self {
             mut commands,
-            shards,
+            ..
         } = self;
 
         let ctrl_c = signal::ctrl_c();
         tokio::pin!(ctrl_c);
 
         let mut tasks = JoinSet::new();
-        shards.values().for_each(|mut supervisor| supervisor.spawn(&mut tasks));
+        for shard in self.shards.values_mut() {
+            shard.spawn(&mut tasks);
+        }
 
         loop {
             tokio::select! {
                 Some(result) = commands.next() => match result {
-                    Ok(command) => Self::dispatch_command(&shards, command)?,
+                    Ok(command) => Self::dispatch_command(&self.shards, command)?,
                     Err(err) => {
                         tracing::warn!("failed to receive shard command: {err}");
                         continue;
@@ -85,9 +87,11 @@ impl GatewayRunner {
                     };
 
                     match result {
-                        Ok(Ok(())) => continue,
-                        Ok(Err(gateway)) => todo!(),
-                        Err(join) => todo!(),
+                        Ok(termination) => {
+                            let supervisor = self.shards.get_mut(&termination.id.number()).unwrap();
+                            supervisor.handle_termination(termination, &mut tasks);
+                        },
+                        Err(error) => todo!(),
                     }
                 }
                 _ = &mut ctrl_c => break,

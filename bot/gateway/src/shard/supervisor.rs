@@ -23,8 +23,12 @@
 use tokio::task::JoinSet;
 use twilight_gateway::{Command, Config, Shard};
 use twilight_model::gateway::ShardId;
-use crate::error::GatewayResult;
-use crate::shard::{ShardFuture, ShardTermination, ShardHandle};
+
+use crate::{
+    error::GatewayResult,
+    shard::{ShardFuture, ShardHandle, ShardTermination},
+};
+use crate::shard::termination::TerminationReason;
 
 pub struct ShardSupervisor {
     id: ShardId,
@@ -41,8 +45,22 @@ impl ShardSupervisor {
         }
     }
 
+    pub fn handle_termination(
+        &mut self,
+        termination: ShardTermination,
+        _: &mut JoinSet<ShardTermination>,
+    ) {
+        match termination.reason {
+            TerminationReason::Reconnect | TerminationReason::SessionInvalidated => {
+                tracing::info!("shard {} instructed to reconnect", self.id.number());
+                // self.spawn(tasks);
+            }
+            _ => {}
+        }
+    }
+
     pub fn send(&self, command: impl Command) -> GatewayResult<()> {
-        if let Some(handle) = self.handle {
+        if let Some(ref handle) = self.handle {
             handle.send(command)?;
         }
 
@@ -50,7 +68,7 @@ impl ShardSupervisor {
     }
 
     pub fn spawn(&mut self, tasks: &mut JoinSet<ShardTermination>) {
-        let shard = Shard::with_config(self.id, self.config);
+        let shard = Shard::with_config(self.id, self.config.clone());
         self.handle = Some(ShardHandle::new(shard.sender()));
 
         tasks.spawn(ShardFuture::new(shard));

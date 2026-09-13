@@ -21,7 +21,6 @@
  */
 
 use std::{
-    env::VarError,
     num::ParseIntError,
     process::{ExitCode, Termination},
 };
@@ -31,7 +30,7 @@ use config::ConfigError;
 use prost::DecodeError;
 use thiserror::Error;
 use tracing::subscriber::SetGlobalDefaultError;
-use twilight_gateway::error::ChannelError;
+use twilight_gateway::error::{ChannelError, ReceiveMessageError, ReceiveMessageErrorType};
 use twilight_http::{Error as TwilightHttpError, response::DeserializeBodyError};
 
 #[derive(Debug, Error)]
@@ -42,6 +41,8 @@ pub enum GatewayError {
     Channel(#[from] ChannelError),
     #[error("configuration error: {0}")]
     Config(#[from] ConfigError),
+    #[error("gateway message receive error: {0}")]
+    GatewayMessage(#[from] ReceiveMessageError),
     #[error("body deserialization error: {0}")]
     JsonDeserialization(#[from] DeserializeBodyError),
     #[error("NATS connection error: {0}")]
@@ -56,6 +57,27 @@ pub enum GatewayError {
     SetGlobalDefault(#[from] SetGlobalDefaultError),
     #[error("http error: {0}")]
     TwilightHttp(#[from] TwilightHttpError),
+}
+
+impl GatewayError {
+    pub fn shard_recoverable(&self) -> bool {
+        match self {
+            GatewayError::Channel(_) => true,
+            GatewayError::Config(_) => false,
+            GatewayError::GatewayMessage(err) => match err.kind() {
+                ReceiveMessageErrorType::Reconnect => false,
+                _ => true,
+            },
+            GatewayError::JsonDeserialization(_) => false,
+            GatewayError::NatsConnection(_) => true,
+            GatewayError::NatsProtobufPayloadDecode(_) => false,
+            GatewayError::NatsSubscriber(_) => true,
+            GatewayError::ParseInt(_) => false,
+            GatewayError::SetGlobalDefault(_) => false,
+            GatewayError::TwilightHttp(_) => true,
+            GatewayError::BotToken => false,
+        }
+    }
 }
 
 pub type GatewayResult<T> = Result<T, GatewayError>;

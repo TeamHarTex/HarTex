@@ -22,9 +22,43 @@
 
 use twilight_model::gateway::ShardId;
 
-pub struct ShardTermination {
-    id: ShardId,
-    reason: ShardReason,
+use crate::error::GatewayError;
+
+pub enum TerminationReason {
+    Disconnected,
+    Error(GatewayError),
+    Reconnect,
+    SessionInvalidated,
+    Shutdown,
 }
 
-pub enum ShardReason {}
+pub struct ShardTermination {
+    pub(crate) id: ShardId,
+    pub(crate) reason: TerminationReason,
+}
+
+impl ShardTermination {
+    fn new(id: ShardId, reason: TerminationReason) -> Self {
+        Self { id, reason }
+    }
+
+    pub fn disconnected(id: ShardId) -> Self {
+        Self::new(id, TerminationReason::Disconnected)
+    }
+
+    pub fn error(id: ShardId, error: GatewayError) -> Self {
+        Self::new(id, TerminationReason::Error(error))
+    }
+
+    pub fn reconnect(id: ShardId) -> Self {
+        Self::new(id, TerminationReason::Reconnect)
+    }
+
+    pub fn session_invalidated(id: ShardId) -> Self {
+        Self::new(id, TerminationReason::SessionInvalidated)
+    }
+
+    pub fn shutdown(id: ShardId) -> Self {
+        Self::new(id, TerminationReason::Shutdown)
+    }
+}

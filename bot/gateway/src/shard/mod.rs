@@ -30,6 +30,10 @@ pub use handle::ShardHandle;
 pub use supervisor::ShardSupervisor;
 pub use termination::ShardTermination;
 use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
+use twilight_model::gateway::CloseCode;
+use twilight_model::gateway::event::Event;
+
+use crate::error::GatewayError;
 
 mod handle;
 mod supervisor;
@@ -44,10 +48,44 @@ impl ShardFuture {
         let fut = Box::pin(async move {
             while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
                 match result {
-                    Ok(event) => {}
-                    Err(err) => {}
+                    Ok(event) => match event {
+                        Event::GatewayClose(close) => {
+                            let Some(frame) = close else {
+                                return ShardTermination::disconnected(shard.id());
+                            };
+                            let Ok(code) = CloseCode::try_from(frame.code) else {
+                                tracing::error!("unknown gateway close code: {}", frame.code);
+                                return ShardTermination::disconnected(shard.id());
+                            };
+
+                            return if code.can_reconnect() {
+                                ShardTermination::reconnect(shard.id())
+                            } else {
+                                ShardTermination::disconnected(shard.id())
+                            }
+                        }
+                        Event::GatewayInvalidateSession(resumable) => {
+                            return if resumable {
+                                ShardTermination::session_invalidated(shard.id())
+                            } else {
+                                ShardTermination::reconnect(shard.id())
+                            };
+                        }
+                        Event::GatewayReconnect => {
+                            return ShardTermination::reconnect(shard.id());
+                        }
+                        _ => continue,
+                    },
+                    Err(err) => {
+                        let error = GatewayError::from(err);
+                        if !error.shard_recoverable() {
+                            return ShardTermination::error(shard.id(), error);
+                        }
+                    }
                 }
             }
+
+            ShardTermination::disconnected(shard.id())
         });
 
         Self { fut }
