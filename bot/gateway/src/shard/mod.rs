@@ -27,15 +27,16 @@ use std::{
 
 use futures_util::future::BoxFuture;
 pub use handle::ShardHandle;
+pub use supervisor::ShardSupervisor;
+pub use termination::ShardTermination;
 use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
-use twilight_model::gateway::CloseFrame;
-
-use crate::error::GatewayResult;
 
 mod handle;
+mod supervisor;
+mod termination;
 
 pub struct ShardFuture {
-    fut: BoxFuture<'static, GatewayResult<()>>,
+    fut: BoxFuture<'static, ShardTermination>,
 }
 
 impl ShardFuture {
@@ -47,10 +48,6 @@ impl ShardFuture {
                     Err(err) => {}
                 }
             }
-
-            shard.close(CloseFrame::RESUME);
-
-            Ok(())
         });
 
         Self { fut }
@@ -58,7 +55,7 @@ impl ShardFuture {
 }
 
 impl Future for ShardFuture {
-    type Output = GatewayResult<()>;
+    type Output = ShardTermination;
 
     fn poll(self: Pin<&mut Self>, ctx: &mut Context<'_>) -> Poll<Self::Output> {
         self.get_mut().fut.as_mut().poll(ctx)

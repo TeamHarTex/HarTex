@@ -31,13 +31,12 @@ use twilight_http::Client;
 use crate::{
     error::GatewayResult,
     nats::{GatewayCommandStream, conversion},
-    shard::{ShardFuture, ShardHandle},
+    shard::{ShardSupervisor, ShardTermination},
 };
 
 pub struct GatewayRunner {
     commands: GatewayCommandStream,
-    futures: Vec<ShardFuture>,
-    handles: HashMap<u32, ShardHandle>,
+    shards: HashMap<u32, ShardSupervisor>,
 }
 
 impl GatewayRunner {
@@ -50,44 +49,30 @@ impl GatewayRunner {
 
         // todo: use only necessary intents
         let shard_config = Config::new(token, Intents::all());
-        let (handles, futures) = twilight_gateway::bucket(0, 1, connect_info.shards)
+        let shards = twilight_gateway::bucket(0, 1, connect_info.shards)
             .zip(iter::repeat_n(shard_config, connect_info.shards as usize))
-            .map(|(id, config)| Shard::with_config(id, config))
-            .map(|shard| {
-                let shard_id = shard.id().number();
-                let handle = ShardHandle::new(shard.sender());
-                let runner = ShardFuture::new(shard);
+            .map(|(id, config)| (id.number(), ShardSupervisor::new(id, config)))
+            .collect();
 
-                ((shard_id, handle), runner)
-            })
-            .unzip();
-
-        Ok(GatewayRunner {
-            commands,
-            futures,
-            handles,
-        })
+        Ok(GatewayRunner { commands, shards })
     }
 
     pub async fn run(self) -> GatewayResult<()> {
         let Self {
             mut commands,
-            futures,
-            handles,
+            shards,
         } = self;
-
-        let mut tasks = JoinSet::new();
-        futures.into_iter().for_each(|f| {
-            tasks.spawn(f);
-        });
 
         let ctrl_c = signal::ctrl_c();
         tokio::pin!(ctrl_c);
 
+        let mut tasks = JoinSet::new();
+        shards.values().for_each(|mut supervisor| supervisor.spawn(&mut tasks));
+
         loop {
             tokio::select! {
                 Some(result) = commands.next() => match result {
-                    Ok(command) => Self::dispatch_command(&handles, command)?,
+                    Ok(command) => Self::dispatch_command(&shards, command)?,
                     Err(err) => {
                         tracing::warn!("failed to receive shard command: {err}");
                         continue;
@@ -113,10 +98,10 @@ impl GatewayRunner {
     }
 
     fn dispatch_command(
-        handles: &HashMap<u32, ShardHandle>,
+        shards: &HashMap<u32, ShardSupervisor>,
         gateway_command: GatewayCommand,
     ) -> GatewayResult<()> {
-        let Some(handle) = handles.get(&gateway_command.shard_id) else {
+        let Some(supervisor) = shards.get(&gateway_command.shard_id) else {
             unreachable!("invalid shard id in command: {}", gateway_command.shard_id);
         };
 
@@ -128,6 +113,6 @@ impl GatewayRunner {
             Command::RequestGuildMembers(request) => conversion::request_guild_members(request)?,
         };
 
-        handle.send(cmd)
+        supervisor.send(cmd)
     }
 }
