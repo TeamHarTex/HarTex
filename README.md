@@ -1,4 +1,4 @@
-![HarTex](./meta/images/hartexbanner.png)
+![HarTex](./meta/images/banner.png)
 
 <h1 align="center">HarTex</h1>
 
