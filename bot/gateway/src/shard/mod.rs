@@ -30,8 +30,7 @@ pub use handle::ShardHandle;
 pub use supervisor::ShardSupervisor;
 pub use termination::ShardTermination;
 use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
-use twilight_model::gateway::CloseCode;
-use twilight_model::gateway::event::Event;
+use twilight_model::gateway::{CloseCode, event::Event};
 
 use crate::error::GatewayError;
 
@@ -62,11 +61,11 @@ impl ShardFuture {
                                 ShardTermination::reconnect(shard.id())
                             } else {
                                 ShardTermination::disconnected(shard.id())
-                            }
+                            };
                         }
                         Event::GatewayInvalidateSession(resumable) => {
                             return if resumable {
-                                ShardTermination::session_invalidated(shard.id())
+                                ShardTermination::resume(shard.id())
                             } else {
                                 ShardTermination::reconnect(shard.id())
                             };

@@ -26,9 +26,8 @@ use twilight_model::gateway::ShardId;
 
 use crate::{
     error::GatewayResult,
-    shard::{ShardFuture, ShardHandle, ShardTermination},
+    shard::{ShardFuture, ShardHandle, ShardTermination, termination::TerminationReason},
 };
-use crate::shard::termination::TerminationReason;
 
 pub struct ShardSupervisor {
     id: ShardId,
@@ -51,11 +50,25 @@ impl ShardSupervisor {
         _: &mut JoinSet<ShardTermination>,
     ) {
         match termination.reason {
-            TerminationReason::Reconnect | TerminationReason::SessionInvalidated => {
-                tracing::info!("shard {} instructed to reconnect", self.id.number());
-                // self.spawn(tasks);
+            TerminationReason::Disconnected => {
+                tracing::info!("shard {} disconnected", self.id.number());
             }
-            _ => {}
+            TerminationReason::Error(error) => {
+                tracing::error!(
+                    "shard {} encountered an error: {}",
+                    self.id.number(),
+                    error
+                );
+            }
+            TerminationReason::Reconnect => {
+                tracing::info!("shard {} instructed to reconnect", self.id.number());
+            }
+            TerminationReason::Resume => {
+                tracing::info!("shard {} instructed to resume", self.id.number());
+            }
+            TerminationReason::Shutdown => {
+                tracing::info!("shard {} instructed to shut down", self.id.number());
+            }
         }
     }
 

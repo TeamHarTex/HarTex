@@ -58,10 +58,7 @@ impl GatewayRunner {
     }
 
     pub async fn run(mut self) -> GatewayResult<()> {
-        let Self {
-            mut commands,
-            ..
-        } = self;
+        let Self { mut commands, .. } = self;
 
         let ctrl_c = signal::ctrl_c();
         tokio::pin!(ctrl_c);

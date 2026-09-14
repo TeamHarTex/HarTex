@@ -64,10 +64,8 @@ impl GatewayError {
         match self {
             GatewayError::Channel(_) => true,
             GatewayError::Config(_) => false,
-            GatewayError::GatewayMessage(err) => match err.kind() {
-                ReceiveMessageErrorType::Reconnect => false,
-                _ => true,
-            },
+            GatewayError::GatewayMessage(err) =>
+                !matches!(err.kind(), ReceiveMessageErrorType::Reconnect),
             GatewayError::JsonDeserialization(_) => false,
             GatewayError::NatsConnection(_) => true,
             GatewayError::NatsProtobufPayloadDecode(_) => false,
