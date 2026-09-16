@@ -22,6 +22,8 @@
 
 use std::{collections::HashMap, iter};
 
+use async_nats::jetstream;
+use async_nats::jetstream::Context;
 use futures_util::StreamExt;
 use protocol::buffers::gateway::{Command, GatewayCommand};
 use tokio::{signal, task::JoinSet};
@@ -30,12 +32,13 @@ use twilight_http::Client;
 
 use crate::{
     error::GatewayResult,
-    nats::{GatewayCommandStream, conversion},
+    nats::{GatewayCommandStream, conversion, events},
     shard::ShardSupervisor,
 };
 
 pub struct GatewayRunner {
     commands: GatewayCommandStream,
+    jetstream: Context,
     shards: HashMap<u32, ShardSupervisor>,
 }
 
@@ -45,7 +48,10 @@ impl GatewayRunner {
         let connect_info = client.gateway().authed().await?.model().await?;
 
         let nats_client = async_nats::connect(nats_server).await?;
+        let jetstream = jetstream::new(nats_client.clone());
         let commands = GatewayCommandStream::new(nats_client).await?;
+
+        events::ensure_stream(&jetstream).await?;
 
         // todo: use only necessary intents
         let shard_config = Config::new(token, Intents::all());
@@ -54,7 +60,7 @@ impl GatewayRunner {
             .map(|(id, config)| (id.number(), ShardSupervisor::new(id, config)))
             .collect();
 
-        Ok(GatewayRunner { commands, shards })
+        Ok(GatewayRunner { commands, jetstream, shards })
     }
 
     pub async fn run(mut self) -> GatewayResult<()> {
@@ -65,7 +71,7 @@ impl GatewayRunner {
 
         let mut tasks = JoinSet::new();
         for shard in self.shards.values_mut() {
-            shard.spawn(&mut tasks);
+            shard.spawn(&mut tasks, self.jetstream.clone());
         }
 
         loop {
@@ -86,7 +92,7 @@ impl GatewayRunner {
                     match result {
                         Ok(termination) => {
                             let supervisor = self.shards.get_mut(&termination.id.number()).unwrap();
-                            supervisor.handle_termination(termination, &mut tasks);
+                            supervisor.handle_termination(termination, &mut tasks, self.jetstream.clone());
                         },
                         Err(_) => todo!(),
                     }

@@ -25,6 +25,7 @@ use std::{
     task::{Context, Poll},
 };
 
+use async_nats::jetstream::Context as JetstreamContext;
 use futures_util::future::BoxFuture;
 pub use handle::ShardHandle;
 pub use supervisor::ShardSupervisor;
@@ -43,7 +44,7 @@ pub struct ShardFuture {
 }
 
 impl ShardFuture {
-    pub fn new(mut shard: Shard) -> Self {
+    pub fn new(mut shard: Shard, _: JetstreamContext) -> Self {
         let fut = Box::pin(async move {
             while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
                 match result {
@@ -76,7 +77,7 @@ impl ShardFuture {
                         Event::GatewayReconnect => {
                             return ShardTermination::reconnect(shard.id());
                         }
-                        _ => continue,
+                        event => continue,
                     },
                     Err(err) => {
                         let error = GatewayError::from(err);

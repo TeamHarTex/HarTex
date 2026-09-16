@@ -33,6 +33,7 @@ use protocol::buffers::gateway::GatewayCommand;
 use crate::error::GatewayResult;
 
 pub mod conversion;
+pub mod events;
 
 const GATEWAY_COMMANDS: &str = "gateway.commands";
 

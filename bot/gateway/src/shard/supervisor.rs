@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
+use async_nats::jetstream::Context;
 use tokio::task::JoinSet;
 use twilight_gateway::{Command, Config, ConfigBuilder, Session, Shard};
 use twilight_model::gateway::ShardId;
@@ -48,6 +48,7 @@ impl ShardSupervisor {
         &mut self,
         termination: ShardTermination,
         tasks: &mut JoinSet<ShardTermination>,
+        jetstream: Context,
     ) {
         match termination.reason {
             TerminationReason::Disconnected => {
@@ -58,7 +59,7 @@ impl ShardSupervisor {
             }
             TerminationReason::Reconnect => {
                 tracing::info!("shard {} instructed to reconnect", self.id.number());
-                self.spawn(tasks);
+                self.spawn(tasks, jetstream);
             }
             TerminationReason::Resume { session, url } => {
                 tracing::info!("shard {} instructed to resume", self.id.number());
@@ -66,11 +67,11 @@ impl ShardSupervisor {
                 let Some(session) = session else {
                     tracing::error!("cannot resume shard {}, reconnecting instead", self.id.number());
 
-                    self.spawn(tasks);
+                    self.spawn(tasks, jetstream);
                     return;
                 };
 
-                self.spawn_resuming(tasks, session, url);
+                self.spawn_resuming(tasks, session, url, jetstream);
             }
             TerminationReason::Shutdown => {
                 tracing::info!("shard {} instructed to shut down", self.id.number());
@@ -86,11 +87,11 @@ impl ShardSupervisor {
         Ok(())
     }
 
-    pub fn spawn(&mut self, tasks: &mut JoinSet<ShardTermination>) {
+    pub fn spawn(&mut self, tasks: &mut JoinSet<ShardTermination>, jetstream: Context) {
         let shard = Shard::with_config(self.id, self.config.clone());
         self.handle = Some(ShardHandle::new(shard.sender()));
 
-        tasks.spawn(ShardFuture::new(shard));
+        tasks.spawn(ShardFuture::new(shard, jetstream));
     }
 
     fn spawn_resuming(
@@ -98,6 +99,7 @@ impl ShardSupervisor {
         tasks: &mut JoinSet<ShardTermination>,
         session: Session,
         url: Option<String>,
+        jetstream: Context,
     ) {
         let mut builder = ConfigBuilder::from(self.config.clone()).session(session);
         if let Some(url) = url {
@@ -107,6 +109,6 @@ impl ShardSupervisor {
 
         let shard = Shard::with_config(self.id, config);
         self.handle = Some(ShardHandle::new(shard.sender()));
-        tasks.spawn(ShardFuture::new(shard));
+        tasks.spawn(ShardFuture::new(shard, jetstream));
     }
 }
