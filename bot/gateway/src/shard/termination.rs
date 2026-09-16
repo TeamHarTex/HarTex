@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
-
+use twilight_gateway::Session;
 use twilight_model::gateway::ShardId;
 
 use crate::error::GatewayError;
@@ -28,7 +28,7 @@ pub enum TerminationReason {
     Disconnected,
     Error(GatewayError),
     Reconnect,
-    Resume,
+    Resume { session: Option<Session>, url: Option<String> },
     Shutdown,
 }
 
@@ -54,8 +54,8 @@ impl ShardTermination {
         Self::new(id, TerminationReason::Reconnect)
     }
 
-    pub fn resume(id: ShardId) -> Self {
-        Self::new(id, TerminationReason::Resume)
+    pub fn resume(id: ShardId, session: Option<Session>, resume_url: Option<String>) -> Self {
+        Self::new(id, TerminationReason::Resume { session, url: resume_url })
     }
 
     pub fn shutdown(id: ShardId) -> Self {

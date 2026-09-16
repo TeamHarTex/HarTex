@@ -21,7 +21,7 @@
  */
 
 use tokio::task::JoinSet;
-use twilight_gateway::{Command, Config, Shard};
+use twilight_gateway::{Command, Config, ConfigBuilder, Session, Shard};
 use twilight_model::gateway::ShardId;
 
 use crate::{
@@ -47,24 +47,30 @@ impl ShardSupervisor {
     pub fn handle_termination(
         &mut self,
         termination: ShardTermination,
-        _: &mut JoinSet<ShardTermination>,
+        tasks: &mut JoinSet<ShardTermination>,
     ) {
         match termination.reason {
             TerminationReason::Disconnected => {
                 tracing::info!("shard {} disconnected", self.id.number());
             }
             TerminationReason::Error(error) => {
-                tracing::error!(
-                    "shard {} encountered an error: {}",
-                    self.id.number(),
-                    error
-                );
+                tracing::error!("shard {} encountered an error: {}", self.id.number(), error);
             }
             TerminationReason::Reconnect => {
                 tracing::info!("shard {} instructed to reconnect", self.id.number());
+                self.spawn(tasks);
             }
-            TerminationReason::Resume => {
+            TerminationReason::Resume { session, url } => {
                 tracing::info!("shard {} instructed to resume", self.id.number());
+
+                let Some(session) = session else {
+                    tracing::error!("cannot resume shard {}, reconnecting instead", self.id.number());
+
+                    self.spawn(tasks);
+                    return;
+                };
+
+                self.spawn_resuming(tasks, session, url);
             }
             TerminationReason::Shutdown => {
                 tracing::info!("shard {} instructed to shut down", self.id.number());
@@ -84,6 +90,23 @@ impl ShardSupervisor {
         let shard = Shard::with_config(self.id, self.config.clone());
         self.handle = Some(ShardHandle::new(shard.sender()));
 
+        tasks.spawn(ShardFuture::new(shard));
+    }
+
+    fn spawn_resuming(
+        &mut self,
+        tasks: &mut JoinSet<ShardTermination>,
+        session: Session,
+        url: Option<String>,
+    ) {
+        let mut builder = ConfigBuilder::from(self.config.clone()).session(session);
+        if let Some(url) = url {
+            builder = builder.resume_url(url);
+        }
+        let config = builder.build();
+
+        let shard = Shard::with_config(self.id, config);
+        self.handle = Some(ShardHandle::new(shard.sender()));
         tasks.spawn(ShardFuture::new(shard));
     }
 }

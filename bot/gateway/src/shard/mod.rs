@@ -65,7 +65,10 @@ impl ShardFuture {
                         }
                         Event::GatewayInvalidateSession(resumable) => {
                             return if resumable {
-                                ShardTermination::resume(shard.id())
+                                let session = shard.session().cloned();
+                                let resume_url = shard.resume_url().map(ToOwned::to_owned);
+
+                                ShardTermination::resume(shard.id(), session, resume_url)
                             } else {
                                 ShardTermination::reconnect(shard.id())
                             };

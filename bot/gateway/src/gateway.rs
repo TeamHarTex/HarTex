@@ -88,7 +88,7 @@ impl GatewayRunner {
                             let supervisor = self.shards.get_mut(&termination.id.number()).unwrap();
                             supervisor.handle_termination(termination, &mut tasks);
                         },
-                        Err(error) => todo!(),
+                        Err(_) => todo!(),
                     }
                 }
                 _ = &mut ctrl_c => break,
