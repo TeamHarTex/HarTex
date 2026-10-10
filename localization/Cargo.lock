@@ -149,7 +149,7 @@ dependencies = [
  "miette",
  "proc-macro2",
  "quote",
- "syn 3.0.3",
+ "syn 3.0.7",
  "unic-langid",
 ]
 
@@ -510,9 +510,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "3.0.3"
+version = "3.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "53e9bae58849f64dfa4f5d5ae372c8341f7305f82a3868709269343628b659a3"
+checksum = "d62a2e0561533f2ca2561d0cf27fd9fedb640a1bf2616ff5d5c80d99017faadc"
 dependencies = [
  "proc-macro2",
  "quote",
