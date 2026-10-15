@@ -38,16 +38,14 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Change Directory
-        run: cd dashboard && pwd && ls
-
       - name: Run tests
+        working-directory: dashboard
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-        run: ./bin/rails db:test:prepare test
+        run: bin/rails db:test:prepare test
 
   system-test:
     name: System Test
@@ -81,16 +79,14 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Change Directory
-        run: cd dashboard && pwd && ls
-
       - name: Run System Tests
+        working-directory: dashboard
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-        run: ./bin/rails db:test:prepare test:system
+        run: bin/rails db:test:prepare test:system
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4

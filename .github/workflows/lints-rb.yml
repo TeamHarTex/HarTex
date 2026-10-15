@@ -19,14 +19,13 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Change Directory
-        run: cd dashboard && pwd && ls
-
       - name: Scan for common Rails security vulnerabilities using static analysis
-        run: ./bin/brakeman --no-pager
+        working-directory: dashboard
+        run: bin/brakeman --no-pager
       
       - name: Scan for known security vulnerabilities in gems used
-        run: ./bin/bundler-audit
+        working-directory: dashboard
+        run: bin/bundler-audit
       
   lint:
     name: Lint
@@ -52,8 +51,6 @@ jobs:
           restore-keys: |
             rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
 
-      - name: Change Directory
-        run: cd dashboard && pwd && ls
-
       - name: Lint code for consistent style
-        run: ./bin/rubocop -f github
+        working-directory: dashboard
+        run: bin/rubocop -f github
