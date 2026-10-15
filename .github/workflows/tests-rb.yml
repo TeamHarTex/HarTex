@@ -38,6 +38,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Change Directory
+        run: cd dashboard && pwd && ls
+
       - name: Run tests
         env:
           RAILS_ENV: test
@@ -77,6 +80,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Change Directory
+        run: cd dashboard && pwd && ls
 
       - name: Run System Tests
         env:
