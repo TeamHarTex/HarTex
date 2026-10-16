@@ -37,6 +37,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+          working-directory: dashboard
 
       - name: Run tests
         working-directory: dashboard
@@ -78,6 +79,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+          working-directory: dashboard
 
       - name: Run System Tests
         working-directory: dashboard
