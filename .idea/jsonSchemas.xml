@@ -9,7 +9,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="Commands Manager Global Application Command Spec" />
               <option name="relativePathToSchema" value="schemas/cmdmgr-spec-schema-v1.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -55,7 +55,7 @@
             <SchemaInfo>
               <option name="name" value="JSON Schema version 7" />
               <option name="relativePathToSchema" value="http://json-schema.org/draft-07/schema" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>
@@ -118,6 +118,22 @@
                 </list>
               </option>
               <option name="isIgnoredFile" value="true" />
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="rustfmt">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="rustfmt" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/rustfmt.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="rustfmt.toml" />
+                  </Item>
+                </list>
+              </option>
             </SchemaInfo>
           </value>
         </entry>
