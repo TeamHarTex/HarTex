@@ -38,4 +38,6 @@ discord-frontend/hartex-discord-entitycache-macros/generated
 logs
 
 **/master.key
+**/log
+**/tmp
 **/rustc-ice-*.txt

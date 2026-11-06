@@ -34,6 +34,7 @@ use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
 use twilight_model::gateway::{CloseCode, event::Event};
 
 use crate::error::GatewayError;
+use crate::nats::events::publish_event;
 
 mod handle;
 mod supervisor;
@@ -44,7 +45,7 @@ pub struct ShardFuture {
 }
 
 impl ShardFuture {
-    pub fn new(mut shard: Shard, _: JetstreamContext) -> Self {
+    pub fn new(mut shard: Shard, jetstream: JetstreamContext) -> Self {
         let fut = Box::pin(async move {
             while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
                 match result {
@@ -77,7 +78,13 @@ impl ShardFuture {
                         Event::GatewayReconnect => {
                             return ShardTermination::reconnect(shard.id());
                         }
-                        event => continue,
+                        event => if let Err(error) = publish_event(&jetstream, &event).await {
+                            tracing::warn!(
+                                shard = shard.id().number(),
+                                error = %error,
+                                "failed to publish gateway event"
+                            );
+                        }
                     },
                     Err(err) => {
                         let error = GatewayError::from(err);

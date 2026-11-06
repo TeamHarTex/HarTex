@@ -26,6 +26,7 @@ use std::{
 };
 
 use async_nats::{ConnectError, SubscribeError};
+use async_nats::jetstream::context::CreateStreamError;
 use config::ConfigError;
 use prost::DecodeError;
 use thiserror::Error;
@@ -47,6 +48,8 @@ pub enum GatewayError {
     JsonDeserialization(#[from] DeserializeBodyError),
     #[error("NATS connection error: {0}")]
     NatsConnection(#[from] ConnectError),
+    #[error("NATS stream creation error: {0}")]
+    NatsCreateStreamError(#[from] CreateStreamError),
     #[error("protobuf payload decode error: {0}")]
     NatsProtobufPayloadDecode(#[from] DecodeError),
     #[error("NATS subscriber error: {0}")]
@@ -70,6 +73,7 @@ impl GatewayError {
             GatewayError::JsonDeserialization(_) => false,
             GatewayError::NatsConnection(_) => true,
             GatewayError::NatsProtobufPayloadDecode(_) => false,
+            GatewayError::NatsCreateStreamError(_) => false,
             GatewayError::NatsSubscriber(_) => true,
             GatewayError::ParseInt(_) => false,
             GatewayError::SetGlobalDefault(_) => false,
