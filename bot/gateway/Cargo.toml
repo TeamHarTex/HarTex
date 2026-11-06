@@ -1,0 +1,24 @@
+[package]
+name = "bot-gateway"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+
+[dependencies]
+async-nats = { workspace = true }
+config = { workspace = true }
+futures-util = { workspace = true }
+prost = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+twilight-gateway = { workspace = true }
+twilight-http = { workspace = true }
+twilight-model = { workspace = true }
+
+protocol = { workspace = true, features = ["gateway"] }
+shared-tracing = { workspace = true }
+shared-types = { workspace = true }
