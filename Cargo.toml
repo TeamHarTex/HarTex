@@ -14,7 +14,7 @@ authors = ["HarTex Project Developers"]
 license = "AGPL-3"
 
 [workspace.dependencies]
-async-nats = "0.50.0"
+async-nats = "0.52.0"
 config = "0.15.25"
 futures-util = "0.3.34"
 prost = "0.14.4"
