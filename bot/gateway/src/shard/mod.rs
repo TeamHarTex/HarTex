@@ -33,8 +33,7 @@ pub use termination::ShardTermination;
 use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
 use twilight_model::gateway::{CloseCode, event::Event};
 
-use crate::error::GatewayError;
-use crate::nats::events::publish_event;
+use crate::{error::GatewayError, nats::events::publish_event};
 
 mod handle;
 mod supervisor;
@@ -78,12 +77,14 @@ impl ShardFuture {
                         Event::GatewayReconnect => {
                             return ShardTermination::reconnect(shard.id());
                         }
-                        event => if let Err(error) = publish_event(&jetstream, &event).await {
-                            tracing::warn!(
-                                shard = shard.id().number(),
-                                error = %error,
-                                "failed to publish gateway event"
-                            );
+                        event => {
+                            if let Err(error) = publish_event(&jetstream, &event).await {
+                                tracing::warn!(
+                                    shard = shard.id().number(),
+                                    error = %error,
+                                    "failed to publish gateway event"
+                                );
+                            }
                         }
                     },
                     Err(err) => {

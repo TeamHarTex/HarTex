@@ -28,7 +28,10 @@ pub enum TerminationReason {
     Disconnected,
     Error(GatewayError),
     Reconnect,
-    Resume { session: Option<Session>, url: Option<String> },
+    Resume {
+        session: Option<Session>,
+        url: Option<String>,
+    },
     Shutdown,
 }
 
@@ -55,7 +58,13 @@ impl ShardTermination {
     }
 
     pub fn resume(id: ShardId, session: Option<Session>, resume_url: Option<String>) -> Self {
-        Self::new(id, TerminationReason::Resume { session, url: resume_url })
+        Self::new(
+            id,
+            TerminationReason::Resume {
+                session,
+                url: resume_url,
+            },
+        )
     }
 
     pub fn shutdown(id: ShardId) -> Self {

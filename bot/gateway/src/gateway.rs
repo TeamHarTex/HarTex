@@ -22,10 +22,9 @@
 
 use std::{collections::HashMap, iter};
 
-use async_nats::jetstream;
-use async_nats::jetstream::Context;
+use async_nats::{jetstream, jetstream::Context};
 use futures_util::StreamExt;
-use protocol::buffers::gateway::{Command, GatewayCommand};
+use protocol::buffers::gateway::command::{Command, GatewayCommand};
 use tokio::{signal, task::JoinSet};
 use twilight_gateway::{Config, Intents};
 use twilight_http::Client;
@@ -60,7 +59,11 @@ impl GatewayRunner {
             .map(|(id, config)| (id.number(), ShardSupervisor::new(id, config)))
             .collect();
 
-        Ok(GatewayRunner { commands, jetstream, shards })
+        Ok(GatewayRunner {
+            commands,
+            jetstream,
+            shards,
+        })
     }
 
     pub async fn run(mut self) -> GatewayResult<()> {

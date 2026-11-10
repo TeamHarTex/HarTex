@@ -22,21 +22,27 @@
 
 use std::time::Duration;
 
-use async_nats::jetstream::{Context, stream::{Config, RetentionPolicy, StorageType}};
+use async_nats::jetstream::{
+    Context,
+    stream::{Config, RetentionPolicy, StorageType},
+};
 use twilight_model::gateway::event::Event;
+
 use crate::error::GatewayResult;
 
 const STREAM_NAME: &str = "gateway-nats-events";
 
 pub async fn ensure_stream(jetstream: &Context) -> GatewayResult<()> {
-    jetstream.get_or_create_stream(Config {
-        name: STREAM_NAME.to_owned(),
-        subjects: vec!["gateway.events.>".to_owned()],
-        retention: RetentionPolicy::Limits,
-        storage: StorageType::File,
-        max_age: Duration::from_secs(60 * 60 * 24),
-        ..Default::default()
-    }).await?;
+    jetstream
+        .get_or_create_stream(Config {
+            name: STREAM_NAME.to_owned(),
+            subjects: vec!["gateway.events.>".to_owned()],
+            retention: RetentionPolicy::Limits,
+            storage: StorageType::File,
+            max_age: Duration::from_secs(60 * 60 * 24),
+            ..Default::default()
+        })
+        .await?;
 
     Ok(())
 }
