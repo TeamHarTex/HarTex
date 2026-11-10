@@ -20,8 +20,15 @@
  * with HarTex. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use generated::{GatewayCommand, RequestGuildMembers, gateway_command::Command};
+pub mod command {
+    pub use super::generated::{GatewayCommand, RequestGuildMembers, gateway_command::Command};
+}
+
+pub mod event {
+    pub use super::generated::{GatewayEvent, RawEvent, gateway_event::Body};
+}
 
 mod generated {
     include!(concat!(env!("OUT_DIR"), "/gateway.command.rs"));
+    include!(concat!(env!("OUT_DIR"), "/gateway.event.rs"));
 }

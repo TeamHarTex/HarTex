@@ -65,7 +65,10 @@ impl ShardSupervisor {
                 tracing::info!("shard {} instructed to resume", self.id.number());
 
                 let Some(session) = session else {
-                    tracing::error!("cannot resume shard {}, reconnecting instead", self.id.number());
+                    tracing::error!(
+                        "cannot resume shard {}, reconnecting instead",
+                        self.id.number()
+                    );
 
                     self.spawn(tasks, jetstream);
                     return;

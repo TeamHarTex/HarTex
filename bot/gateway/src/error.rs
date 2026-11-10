@@ -25,8 +25,7 @@ use std::{
     process::{ExitCode, Termination},
 };
 
-use async_nats::{ConnectError, SubscribeError};
-use async_nats::jetstream::context::CreateStreamError;
+use async_nats::{ConnectError, SubscribeError, jetstream::context::CreateStreamError};
 use config::ConfigError;
 use prost::DecodeError;
 use thiserror::Error;

@@ -28,7 +28,7 @@ use std::{
 use async_nats::{Client, Subscriber};
 use futures_util::Stream;
 use prost::Message;
-use protocol::buffers::gateway::GatewayCommand;
+use protocol::buffers::gateway::command::GatewayCommand;
 
 use crate::error::GatewayResult;
 
