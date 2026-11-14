@@ -27,12 +27,12 @@ use std::{
 
 use async_nats::jetstream::Context as JetstreamContext;
 use futures_util::future::BoxFuture;
-pub use handle::ShardHandle;
-pub use supervisor::ShardSupervisor;
-pub use termination::ShardTermination;
 use twilight_gateway::{EventTypeFlags, Shard, StreamExt};
 use twilight_model::gateway::{CloseCode, event::Event};
 
+pub use crate::shard::{
+    handle::ShardHandle, supervisor::ShardSupervisor, termination::ShardTermination,
+};
 use crate::{error::GatewayError, nats::events::publish_event};
 
 mod handle;
