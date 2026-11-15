@@ -24,8 +24,11 @@ use std::time::Duration;
 
 use async_nats::jetstream::{
     Context,
+    message::PublishMessage,
     stream::{Config, RetentionPolicy, StorageType},
 };
+use prost::Message;
+use protocol::buffers::gateway::event::Ready;
 use twilight_model::gateway::event::Event;
 
 use crate::error::GatewayResult;
@@ -47,6 +50,24 @@ pub async fn ensure_stream(jetstream: &Context) -> GatewayResult<()> {
     Ok(())
 }
 
-pub async fn publish_event(_: &Context, _: &Event) -> GatewayResult<()> {
-    todo!()
+pub async fn publish_event(jetstream: &Context, event: &Event) -> GatewayResult<()> {
+    let payload = match event {
+        Event::Ready(ready) => Ready {
+            gateway_version: ready.version as u32,
+            application_id: ready.application.id.to_string(),
+            user_id: ready.user.id.to_string(),
+            session_id: ready.session_id.to_string(),
+            resume_gateway_url: ready.resume_gateway_url,
+            guild_ids: ready.guilds.iter().map(|g| g.id.to_string()).collect(),
+        },
+        _ => return Ok(()),
+    }
+    .encode_to_vec();
+    // unwrap won't panic here (all 6 None branches are handled before the entering this function).
+    let subject = format!("gateway.events.{}", event.kind().name().unwrap());
+    let _ = jetstream
+        .send_publish(subject, PublishMessage::build().payload(payload.into()))
+        .await?;
+
+    Ok(())
 }

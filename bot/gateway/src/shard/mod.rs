@@ -47,50 +47,61 @@ impl ShardFuture {
     pub fn new(mut shard: Shard, jetstream: JetstreamContext) -> Self {
         let fut = Box::pin(async move {
             while let Some(result) = shard.next_event(EventTypeFlags::all()).await {
-                match result {
-                    Ok(event) => match event {
-                        Event::GatewayClose(close) => {
-                            let Some(frame) = close else {
-                                return ShardTermination::disconnected(shard.id());
-                            };
-                            let Ok(code) = CloseCode::try_from(frame.code) else {
-                                tracing::error!("unknown gateway close code: {}", frame.code);
-                                return ShardTermination::disconnected(shard.id());
-                            };
-
-                            return if code.can_reconnect() {
-                                ShardTermination::reconnect(shard.id())
-                            } else {
-                                ShardTermination::disconnected(shard.id())
-                            };
-                        }
-                        Event::GatewayInvalidateSession(resumable) => {
-                            return if resumable {
-                                let session = shard.session().cloned();
-                                let resume_url = shard.resume_url().map(ToOwned::to_owned);
-
-                                ShardTermination::resume(shard.id(), session, resume_url)
-                            } else {
-                                ShardTermination::reconnect(shard.id())
-                            };
-                        }
-                        Event::GatewayReconnect => {
-                            return ShardTermination::reconnect(shard.id());
-                        }
-                        event => {
-                            if let Err(error) = publish_event(&jetstream, &event).await {
-                                tracing::warn!(
-                                    shard = shard.id().number(),
-                                    error = %error,
-                                    "failed to publish gateway event"
-                                );
-                            }
-                        }
-                    },
+                let event = match result {
+                    Ok(event) => event,
                     Err(err) => {
                         let error = GatewayError::from(err);
                         if !error.shard_recoverable() {
                             return ShardTermination::error(shard.id(), error);
+                        }
+
+                        continue;
+                    }
+                };
+
+                match event {
+                    Event::GatewayClose(close) => {
+                        let Some(frame) = close else {
+                            return ShardTermination::disconnected(shard.id());
+                        };
+                        let Ok(code) = CloseCode::try_from(frame.code) else {
+                            tracing::error!("unknown gateway close code: {}", frame.code);
+                            return ShardTermination::disconnected(shard.id());
+                        };
+
+                        return if code.can_reconnect() {
+                            ShardTermination::reconnect(shard.id())
+                        } else {
+                            ShardTermination::disconnected(shard.id())
+                        };
+                    }
+                    Event::GatewayInvalidateSession(resumable) => {
+                        return if resumable {
+                            let session = shard.session().cloned();
+                            let resume_url = shard.resume_url().map(ToOwned::to_owned);
+
+                            ShardTermination::resume(shard.id(), session, resume_url)
+                        } else {
+                            ShardTermination::reconnect(shard.id())
+                        };
+                    }
+                    Event::GatewayReconnect => {
+                        return ShardTermination::reconnect(shard.id());
+                    }
+                    Event::GatewayHeartbeat
+                    | Event::GatewayHeartbeatAck
+                    | Event::GatewayHello(_) => {
+                        // this is a do nothing branch so these don't reach the
+                        // publish_event call, where we call unwrap() on the name method from
+                        // EventType.
+                    }
+                    event => {
+                        if let Err(error) = publish_event(&jetstream, &event).await {
+                            tracing::warn!(
+                                shard = shard.id().number(),
+                                error = %error,
+                                "failed to publish gateway event"
+                            );
                         }
                     }
                 }

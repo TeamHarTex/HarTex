@@ -25,7 +25,7 @@ pub mod command {
 }
 
 pub mod event {
-    pub use super::generated::{GatewayEvent, RawEvent, gateway_event::Body};
+    pub use super::generated::{GatewayEvent, Ready, gateway_event::Body};
 }
 
 mod generated {

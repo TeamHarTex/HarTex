@@ -3,6 +3,25 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
+        <entry key="Cargo Config">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Cargo Config" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/cargo-config.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value=".cargo/config" />
+                  </Item>
+                  <Item>
+                    <option name="path" value=".cargo/config.toml" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="Commands Manager Global Application Command Spec">
           <value>
             <SchemaInfo>

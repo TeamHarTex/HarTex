@@ -29,11 +29,15 @@ message GatewayEvent {
   optional uint64 sequence = 2;
 
   oneof body {
-    RawEvent raw = 10;
+    Ready ready = 11;
   }
 }
 
-message RawEvent {
-  string kind = 1;
-  bytes json = 2;
+message Ready {
+  uint32 gateway_version = 1;
+  string application_id = 2;
+  string user_id = 3;
+  string session_id = 4;
+  string resume_gateway_url = 5;
+  repeated string guild_ids = 6;
 }
