@@ -25,8 +25,10 @@ use std::{
     process::{ExitCode, Termination},
 };
 
-use async_nats::{ConnectError, SubscribeError};
-use async_nats::jetstream::context::CreateStreamError;
+use async_nats::{
+    ConnectError, SubscribeError,
+    jetstream::context::{CreateStreamError, PublishError},
+};
 use config::ConfigError;
 use prost::DecodeError;
 use thiserror::Error;
@@ -52,6 +54,8 @@ pub enum GatewayError {
     NatsCreateStreamError(#[from] CreateStreamError),
     #[error("protobuf payload decode error: {0}")]
     NatsProtobufPayloadDecode(#[from] DecodeError),
+    #[error("NATS publish error: {0}")]
+    NatsPublishError(#[from] PublishError),
     #[error("NATS subscriber error: {0}")]
     NatsSubscriber(#[from] SubscribeError),
     #[error("parse int error: {0}")]
@@ -65,20 +69,21 @@ pub enum GatewayError {
 impl GatewayError {
     pub fn shard_recoverable(&self) -> bool {
         match self {
-            GatewayError::Channel(_) => true,
-            GatewayError::Config(_) => false,
+            GatewayError::Channel(_)
+            | GatewayError::NatsConnection(_)
+            | GatewayError::NatsPublishError(_)
+            | GatewayError::NatsSubscriber(_)
+            | GatewayError::TwilightHttp(_) => true,
+            GatewayError::BotToken
+            | GatewayError::Config(_)
+            | GatewayError::JsonDeserialization(_)
+            | GatewayError::NatsProtobufPayloadDecode(_)
+            | GatewayError::NatsCreateStreamError(_)
+            | GatewayError::ParseInt(_)
+            | GatewayError::SetGlobalDefault(_) => false,
             GatewayError::GatewayMessage(err) => {
                 !matches!(err.kind(), ReceiveMessageErrorType::Reconnect)
             }
-            GatewayError::JsonDeserialization(_) => false,
-            GatewayError::NatsConnection(_) => true,
-            GatewayError::NatsProtobufPayloadDecode(_) => false,
-            GatewayError::NatsCreateStreamError(_) => false,
-            GatewayError::NatsSubscriber(_) => true,
-            GatewayError::ParseInt(_) => false,
-            GatewayError::SetGlobalDefault(_) => false,
-            GatewayError::TwilightHttp(_) => true,
-            GatewayError::BotToken => false,
         }
     }
 }

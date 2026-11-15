@@ -22,7 +22,7 @@
 
 use std::str::FromStr;
 
-use protocol::buffers::gateway::RequestGuildMembers;
+use protocol::buffers::gateway::command::RequestGuildMembers;
 use shared_types::id::{GuildId, UserId};
 use twilight_model::gateway::{
     OpCode,

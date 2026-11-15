@@ -27,7 +27,7 @@ tracing = "0.1.44"
 tracing-core = "0.1.36"
 tracing-error = "0.2.1"
 tracing-subscriber = "0.3.23"
-twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git" }
+twilight-gateway = { git = "https://github.com/twilight-rs/twilight.git", features = ["simd-json"] }
 twilight-http = { git = "https://github.com/twilight-rs/twilight.git" }
 twilight-model = { git = "https://github.com/twilight-rs/twilight.git" }
 

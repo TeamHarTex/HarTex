@@ -29,7 +29,10 @@ pub fn main() {
     let mut to_compile = vec![];
 
     if cfg!(feature = "gateway") {
-        to_compile.push("buffers/gateway.command.proto");
+        to_compile.extend_from_slice(&[
+            "buffers/gateway.command.proto",
+            "buffers/gateway.event.proto",
+        ]);
     }
 
     config.compile_protos(&to_compile, &["buffers"]).unwrap();
