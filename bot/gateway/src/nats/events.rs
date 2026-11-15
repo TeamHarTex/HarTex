@@ -57,7 +57,7 @@ pub async fn publish_event(jetstream: &Context, event: &Event) -> GatewayResult<
             application_id: ready.application.id.to_string(),
             user_id: ready.user.id.to_string(),
             session_id: ready.session_id.to_string(),
-            resume_gateway_url: ready.resume_gateway_url,
+            resume_gateway_url: ready.resume_gateway_url.clone(),
             guild_ids: ready.guilds.iter().map(|g| g.id.to_string()).collect(),
         },
         _ => return Ok(()),
@@ -67,7 +67,7 @@ pub async fn publish_event(jetstream: &Context, event: &Event) -> GatewayResult<
     let subject = format!("gateway.events.{}", event.kind().name().unwrap());
     let _ = jetstream
         .send_publish(subject, PublishMessage::build().payload(payload.into()))
-        .await?;
+        .await?.await?;
 
     Ok(())
 }
