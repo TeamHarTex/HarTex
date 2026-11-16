@@ -96,9 +96,12 @@ impl ShardFuture {
                         // EventType.
                     }
                     event => {
-                        if let Err(error) = publish_event(&jetstream, &event).await {
+                        let shard = shard.id().number();
+                        if let Err(error) =
+                            publish_event(shard, &jetstream, &event).await
+                        {
                             tracing::warn!(
-                                shard = shard.id().number(),
+                                shard = shard,
                                 error = %error,
                                 "failed to publish gateway event"
                             );
