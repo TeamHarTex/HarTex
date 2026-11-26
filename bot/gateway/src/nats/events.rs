@@ -50,7 +50,7 @@ pub async fn ensure_stream(jetstream: &Context) -> GatewayResult<()> {
     Ok(())
 }
 
-pub async fn publish_event(jetstream: &Context, event: &Event) -> GatewayResult<()> {
+pub async fn publish_event(shard_id: u32, jetstream: &Context, event: &Event) -> GatewayResult<()> {
     let payload = match event {
         Event::Ready(ready) => Ready {
             gateway_version: ready.version as u32,
@@ -64,10 +64,12 @@ pub async fn publish_event(jetstream: &Context, event: &Event) -> GatewayResult<
     }
     .encode_to_vec();
     // unwrap won't panic here (all 6 None branches are handled before the entering this function).
-    let subject = format!("gateway.events.{}", event.kind().name().unwrap());
+    let subject = format!("gateway.events.{shard_id}.{}", event.kind().name().unwrap());
+
     let _ = jetstream
         .send_publish(subject, PublishMessage::build().payload(payload.into()))
-        .await?.await?;
+        .await?
+        .await?;
 
     Ok(())
 }
